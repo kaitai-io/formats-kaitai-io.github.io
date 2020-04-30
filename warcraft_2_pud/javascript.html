@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -284,542 +281,542 @@ var data = new Warcraft2Pud(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.Warcraft2Pud = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-/**
- * Warcraft II game engine uses this format for map files. External
- * maps can be edited by official Warcraft II map editor and saved in
- * .pud files. Maps supplied with the game (i.e. single player
- * campaign) follow the same format, but are instead embedded inside
- * the game container files.
- * 
- * There are two major versions: 0x11 (original one) and 0x13 (roughly
- * corresponds to v1.33 of the game engine, although some of the
- * features got limited support in v1.3).
- * 
- * File consists of a sequence of typed sections.
- * @see {@link http://cade.datamax.bg/war2x/pudspec.html|Source}
- */
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">Warcraft2Pud</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * Warcraft II game engine uses this format for map files. External</span>
+<span class="cm"> * maps can be edited by official Warcraft II map editor and saved in</span>
+<span class="cm"> * .pud files. Maps supplied with the game (i.e. single player</span>
+<span class="cm"> * campaign) follow the same format, but are instead embedded inside</span>
+<span class="cm"> * the game container files.</span>
+<span class="cm"> * </span>
+<span class="cm"> * There are two major versions: 0x11 (original one) and 0x13 (roughly</span>
+<span class="cm"> * corresponds to v1.33 of the game engine, although some of the</span>
+<span class="cm"> * features got limited support in v1.3).</span>
+<span class="cm"> * </span>
+<span class="cm"> * File consists of a sequence of typed sections.</span>
+<span class="cm"> * @see {@link http://cade.datamax.bg/war2x/pudspec.html|Source}</span>
+<span class="cm"> */</span>
 
-var Warcraft2Pud = (function() {
-  Warcraft2Pud.Controller = Object.freeze({
-    COMPUTER: 1,
-    PASSIVE_COMPUTER: 2,
-    NOBODY: 3,
-    COMPUTER: 4,
-    HUMAN: 5,
-    RESCUE_PASSIVE: 6,
-    RESCUE_ACTIVE: 7,
+<span class="kd">var</span> <span class="nx">Warcraft2Pud</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">Controller</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">COMPUTER</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">PASSIVE_COMPUTER</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">NOBODY</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nx">COMPUTER</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nx">HUMAN</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nx">RESCUE_PASSIVE</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="nx">RESCUE_ACTIVE</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
 
-    1: &quot;COMPUTER&quot;,
-    2: &quot;PASSIVE_COMPUTER&quot;,
-    3: &quot;NOBODY&quot;,
-    4: &quot;COMPUTER&quot;,
-    5: &quot;HUMAN&quot;,
-    6: &quot;RESCUE_PASSIVE&quot;,
-    7: &quot;RESCUE_ACTIVE&quot;,
-  });
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;COMPUTER&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;PASSIVE_COMPUTER&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;NOBODY&quot;</span><span class="p">,</span>
+    <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;COMPUTER&quot;</span><span class="p">,</span>
+    <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;HUMAN&quot;</span><span class="p">,</span>
+    <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;RESCUE_PASSIVE&quot;</span><span class="p">,</span>
+    <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;RESCUE_ACTIVE&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
 
-  Warcraft2Pud.TerrainType = Object.freeze({
-    FOREST: 0,
-    WINTER: 1,
-    WASTELAND: 2,
-    SWAMP: 3,
+  <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">TerrainType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">FOREST</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">WINTER</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">WASTELAND</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">SWAMP</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
 
-    0: &quot;FOREST&quot;,
-    1: &quot;WINTER&quot;,
-    2: &quot;WASTELAND&quot;,
-    3: &quot;SWAMP&quot;,
-  });
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;FOREST&quot;</span><span class="p">,</span>
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;WINTER&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;WASTELAND&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;SWAMP&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
 
-  Warcraft2Pud.UnitType = Object.freeze({
-    INFANTRY: 0,
-    GRUNT: 1,
-    PEASANT: 2,
-    PEON: 3,
-    BALLISTA: 4,
-    CATAPULT: 5,
-    KNIGHT: 6,
-    OGRE: 7,
-    ARCHER: 8,
-    AXETHROWER: 9,
-    MAGE: 10,
-    DEATH_KNIGHT: 11,
-    PALADIN: 12,
-    OGRE_MAGE: 13,
-    DWARVES: 14,
-    GOBLIN_SAPPER: 15,
-    ATTACK_PEASANT: 16,
-    ATTACK_PEON: 17,
-    RANGER: 18,
-    BERSERKER: 19,
-    ALLERIA: 20,
-    TERON_GOREFIEND: 21,
-    KURDAN_AND_SKY_REE: 22,
-    DENTARG: 23,
-    KHADGAR: 24,
-    GROM_HELLSCREAM: 25,
-    HUMAN_TANKER: 26,
-    ORC_TANKER: 27,
-    HUMAN_TRANSPORT: 28,
-    ORC_TRANSPORT: 29,
-    ELVEN_DESTROYER: 30,
-    TROLL_DESTROYER: 31,
-    BATTLESHIP: 32,
-    JUGGERNAUGHT: 33,
-    DEATHWING: 35,
-    GNOMISH_SUBMARINE: 38,
-    GIANT_TURTLE: 39,
-    GNOMISH_FLYING_MACHINE: 40,
-    GOBLIN_ZEPPLIN: 41,
-    GRYPHON_RIDER: 42,
-    DRAGON: 43,
-    TURALYON: 44,
-    EYE_OF_KILROGG: 45,
-    DANATH: 46,
-    KHORGATH_BLADEFIST: 47,
-    CHO_GALL: 49,
-    LOTHAR: 50,
-    GUL_DAN: 51,
-    UTHER_LIGHTBRINGER: 52,
-    ZULJIN: 53,
-    SKELETON: 55,
-    DAEMON: 56,
-    CRITTER: 57,
-    FARM: 58,
-    PIG_FARM: 59,
-    HUMAN_BARRACKS: 60,
-    ORC_BARRACKS: 61,
-    CHURCH: 62,
-    ALTAR_OF_STORMS: 63,
-    HUMAN_SCOUT_TOWER: 64,
-    ORC_SCOUT_TOWER: 65,
-    STABLES: 66,
-    OGRE_MOUND: 67,
-    GNOMISH_INVENTOR: 68,
-    GOBLIN_ALCHEMIST: 69,
-    GRYPHON_AVIARY: 70,
-    DRAGON_ROOST: 71,
-    HUMAN_SHIPYARD: 72,
-    ORC_SHIPYARD: 73,
-    TOWN_HALL: 74,
-    GREAT_HALL: 75,
-    ELVEN_LUMBER_MILL: 76,
-    TROLL_LUMBER_MILL: 77,
-    HUMAN_FOUNDRY: 78,
-    ORC_FOUNDRY: 79,
-    MAGE_TOWER: 80,
-    TEMPLE_OF_THE_DAMNED: 81,
-    HUMAN_BLACKSMITH: 82,
-    ORC_BLACKSMITH: 83,
-    HUMAN_REFINERY: 84,
-    ORC_REFINERY: 85,
-    HUMAN_OIL_WELL: 86,
-    ORC_OIL_WELL: 87,
-    KEEP: 88,
-    STRONGHOLD: 89,
-    CASTLE: 90,
-    FORTRESS: 91,
-    GOLD_MINE: 92,
-    OIL_PATCH: 93,
-    HUMAN_START: 94,
-    ORC_START: 95,
-    HUMAN_GUARD_TOWER: 96,
-    ORC_GUARD_TOWER: 97,
-    HUMAN_CANNON_TOWER: 98,
-    ORC_CANNON_TOWER: 99,
-    CIRCLE_OF_POWER: 100,
-    DARK_PORTAL: 101,
-    RUNESTONE: 102,
-    HUMAN_WALL: 103,
-    ORC_WALL: 104,
+  <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">UnitType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">INFANTRY</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">GRUNT</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">PEASANT</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">PEON</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nx">BALLISTA</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nx">CATAPULT</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nx">KNIGHT</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="nx">OGRE</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="nx">ARCHER</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="nx">AXETHROWER</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="nx">MAGE</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="nx">DEATH_KNIGHT</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
+    <span class="nx">PALADIN</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
+    <span class="nx">OGRE_MAGE</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
+    <span class="nx">DWARVES</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="nx">GOBLIN_SAPPER</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="nx">ATTACK_PEASANT</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="nx">ATTACK_PEON</span><span class="o">:</span> <span class="mi">17</span><span class="p">,</span>
+    <span class="nx">RANGER</span><span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
+    <span class="nx">BERSERKER</span><span class="o">:</span> <span class="mi">19</span><span class="p">,</span>
+    <span class="nx">ALLERIA</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="nx">TERON_GOREFIEND</span><span class="o">:</span> <span class="mi">21</span><span class="p">,</span>
+    <span class="nx">KURDAN_AND_SKY_REE</span><span class="o">:</span> <span class="mi">22</span><span class="p">,</span>
+    <span class="nx">DENTARG</span><span class="o">:</span> <span class="mi">23</span><span class="p">,</span>
+    <span class="nx">KHADGAR</span><span class="o">:</span> <span class="mi">24</span><span class="p">,</span>
+    <span class="nx">GROM_HELLSCREAM</span><span class="o">:</span> <span class="mi">25</span><span class="p">,</span>
+    <span class="nx">HUMAN_TANKER</span><span class="o">:</span> <span class="mi">26</span><span class="p">,</span>
+    <span class="nx">ORC_TANKER</span><span class="o">:</span> <span class="mi">27</span><span class="p">,</span>
+    <span class="nx">HUMAN_TRANSPORT</span><span class="o">:</span> <span class="mi">28</span><span class="p">,</span>
+    <span class="nx">ORC_TRANSPORT</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span>
+    <span class="nx">ELVEN_DESTROYER</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span>
+    <span class="nx">TROLL_DESTROYER</span><span class="o">:</span> <span class="mi">31</span><span class="p">,</span>
+    <span class="nx">BATTLESHIP</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span>
+    <span class="nx">JUGGERNAUGHT</span><span class="o">:</span> <span class="mi">33</span><span class="p">,</span>
+    <span class="nx">DEATHWING</span><span class="o">:</span> <span class="mi">35</span><span class="p">,</span>
+    <span class="nx">GNOMISH_SUBMARINE</span><span class="o">:</span> <span class="mi">38</span><span class="p">,</span>
+    <span class="nx">GIANT_TURTLE</span><span class="o">:</span> <span class="mi">39</span><span class="p">,</span>
+    <span class="nx">GNOMISH_FLYING_MACHINE</span><span class="o">:</span> <span class="mi">40</span><span class="p">,</span>
+    <span class="nx">GOBLIN_ZEPPLIN</span><span class="o">:</span> <span class="mi">41</span><span class="p">,</span>
+    <span class="nx">GRYPHON_RIDER</span><span class="o">:</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="nx">DRAGON</span><span class="o">:</span> <span class="mi">43</span><span class="p">,</span>
+    <span class="nx">TURALYON</span><span class="o">:</span> <span class="mi">44</span><span class="p">,</span>
+    <span class="nx">EYE_OF_KILROGG</span><span class="o">:</span> <span class="mi">45</span><span class="p">,</span>
+    <span class="nx">DANATH</span><span class="o">:</span> <span class="mi">46</span><span class="p">,</span>
+    <span class="nx">KHORGATH_BLADEFIST</span><span class="o">:</span> <span class="mi">47</span><span class="p">,</span>
+    <span class="nx">CHO_GALL</span><span class="o">:</span> <span class="mi">49</span><span class="p">,</span>
+    <span class="nx">LOTHAR</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="nx">GUL_DAN</span><span class="o">:</span> <span class="mi">51</span><span class="p">,</span>
+    <span class="nx">UTHER_LIGHTBRINGER</span><span class="o">:</span> <span class="mi">52</span><span class="p">,</span>
+    <span class="nx">ZULJIN</span><span class="o">:</span> <span class="mi">53</span><span class="p">,</span>
+    <span class="nx">SKELETON</span><span class="o">:</span> <span class="mi">55</span><span class="p">,</span>
+    <span class="nx">DAEMON</span><span class="o">:</span> <span class="mi">56</span><span class="p">,</span>
+    <span class="nx">CRITTER</span><span class="o">:</span> <span class="mi">57</span><span class="p">,</span>
+    <span class="nx">FARM</span><span class="o">:</span> <span class="mi">58</span><span class="p">,</span>
+    <span class="nx">PIG_FARM</span><span class="o">:</span> <span class="mi">59</span><span class="p">,</span>
+    <span class="nx">HUMAN_BARRACKS</span><span class="o">:</span> <span class="mi">60</span><span class="p">,</span>
+    <span class="nx">ORC_BARRACKS</span><span class="o">:</span> <span class="mi">61</span><span class="p">,</span>
+    <span class="nx">CHURCH</span><span class="o">:</span> <span class="mi">62</span><span class="p">,</span>
+    <span class="nx">ALTAR_OF_STORMS</span><span class="o">:</span> <span class="mi">63</span><span class="p">,</span>
+    <span class="nx">HUMAN_SCOUT_TOWER</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
+    <span class="nx">ORC_SCOUT_TOWER</span><span class="o">:</span> <span class="mi">65</span><span class="p">,</span>
+    <span class="nx">STABLES</span><span class="o">:</span> <span class="mi">66</span><span class="p">,</span>
+    <span class="nx">OGRE_MOUND</span><span class="o">:</span> <span class="mi">67</span><span class="p">,</span>
+    <span class="nx">GNOMISH_INVENTOR</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
+    <span class="nx">GOBLIN_ALCHEMIST</span><span class="o">:</span> <span class="mi">69</span><span class="p">,</span>
+    <span class="nx">GRYPHON_AVIARY</span><span class="o">:</span> <span class="mi">70</span><span class="p">,</span>
+    <span class="nx">DRAGON_ROOST</span><span class="o">:</span> <span class="mi">71</span><span class="p">,</span>
+    <span class="nx">HUMAN_SHIPYARD</span><span class="o">:</span> <span class="mi">72</span><span class="p">,</span>
+    <span class="nx">ORC_SHIPYARD</span><span class="o">:</span> <span class="mi">73</span><span class="p">,</span>
+    <span class="nx">TOWN_HALL</span><span class="o">:</span> <span class="mi">74</span><span class="p">,</span>
+    <span class="nx">GREAT_HALL</span><span class="o">:</span> <span class="mi">75</span><span class="p">,</span>
+    <span class="nx">ELVEN_LUMBER_MILL</span><span class="o">:</span> <span class="mi">76</span><span class="p">,</span>
+    <span class="nx">TROLL_LUMBER_MILL</span><span class="o">:</span> <span class="mi">77</span><span class="p">,</span>
+    <span class="nx">HUMAN_FOUNDRY</span><span class="o">:</span> <span class="mi">78</span><span class="p">,</span>
+    <span class="nx">ORC_FOUNDRY</span><span class="o">:</span> <span class="mi">79</span><span class="p">,</span>
+    <span class="nx">MAGE_TOWER</span><span class="o">:</span> <span class="mi">80</span><span class="p">,</span>
+    <span class="nx">TEMPLE_OF_THE_DAMNED</span><span class="o">:</span> <span class="mi">81</span><span class="p">,</span>
+    <span class="nx">HUMAN_BLACKSMITH</span><span class="o">:</span> <span class="mi">82</span><span class="p">,</span>
+    <span class="nx">ORC_BLACKSMITH</span><span class="o">:</span> <span class="mi">83</span><span class="p">,</span>
+    <span class="nx">HUMAN_REFINERY</span><span class="o">:</span> <span class="mi">84</span><span class="p">,</span>
+    <span class="nx">ORC_REFINERY</span><span class="o">:</span> <span class="mi">85</span><span class="p">,</span>
+    <span class="nx">HUMAN_OIL_WELL</span><span class="o">:</span> <span class="mi">86</span><span class="p">,</span>
+    <span class="nx">ORC_OIL_WELL</span><span class="o">:</span> <span class="mi">87</span><span class="p">,</span>
+    <span class="nx">KEEP</span><span class="o">:</span> <span class="mi">88</span><span class="p">,</span>
+    <span class="nx">STRONGHOLD</span><span class="o">:</span> <span class="mi">89</span><span class="p">,</span>
+    <span class="nx">CASTLE</span><span class="o">:</span> <span class="mi">90</span><span class="p">,</span>
+    <span class="nx">FORTRESS</span><span class="o">:</span> <span class="mi">91</span><span class="p">,</span>
+    <span class="nx">GOLD_MINE</span><span class="o">:</span> <span class="mi">92</span><span class="p">,</span>
+    <span class="nx">OIL_PATCH</span><span class="o">:</span> <span class="mi">93</span><span class="p">,</span>
+    <span class="nx">HUMAN_START</span><span class="o">:</span> <span class="mi">94</span><span class="p">,</span>
+    <span class="nx">ORC_START</span><span class="o">:</span> <span class="mi">95</span><span class="p">,</span>
+    <span class="nx">HUMAN_GUARD_TOWER</span><span class="o">:</span> <span class="mi">96</span><span class="p">,</span>
+    <span class="nx">ORC_GUARD_TOWER</span><span class="o">:</span> <span class="mi">97</span><span class="p">,</span>
+    <span class="nx">HUMAN_CANNON_TOWER</span><span class="o">:</span> <span class="mi">98</span><span class="p">,</span>
+    <span class="nx">ORC_CANNON_TOWER</span><span class="o">:</span> <span class="mi">99</span><span class="p">,</span>
+    <span class="nx">CIRCLE_OF_POWER</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="nx">DARK_PORTAL</span><span class="o">:</span> <span class="mi">101</span><span class="p">,</span>
+    <span class="nx">RUNESTONE</span><span class="o">:</span> <span class="mi">102</span><span class="p">,</span>
+    <span class="nx">HUMAN_WALL</span><span class="o">:</span> <span class="mi">103</span><span class="p">,</span>
+    <span class="nx">ORC_WALL</span><span class="o">:</span> <span class="mi">104</span><span class="p">,</span>
 
-    0: &quot;INFANTRY&quot;,
-    1: &quot;GRUNT&quot;,
-    2: &quot;PEASANT&quot;,
-    3: &quot;PEON&quot;,
-    4: &quot;BALLISTA&quot;,
-    5: &quot;CATAPULT&quot;,
-    6: &quot;KNIGHT&quot;,
-    7: &quot;OGRE&quot;,
-    8: &quot;ARCHER&quot;,
-    9: &quot;AXETHROWER&quot;,
-    10: &quot;MAGE&quot;,
-    11: &quot;DEATH_KNIGHT&quot;,
-    12: &quot;PALADIN&quot;,
-    13: &quot;OGRE_MAGE&quot;,
-    14: &quot;DWARVES&quot;,
-    15: &quot;GOBLIN_SAPPER&quot;,
-    16: &quot;ATTACK_PEASANT&quot;,
-    17: &quot;ATTACK_PEON&quot;,
-    18: &quot;RANGER&quot;,
-    19: &quot;BERSERKER&quot;,
-    20: &quot;ALLERIA&quot;,
-    21: &quot;TERON_GOREFIEND&quot;,
-    22: &quot;KURDAN_AND_SKY_REE&quot;,
-    23: &quot;DENTARG&quot;,
-    24: &quot;KHADGAR&quot;,
-    25: &quot;GROM_HELLSCREAM&quot;,
-    26: &quot;HUMAN_TANKER&quot;,
-    27: &quot;ORC_TANKER&quot;,
-    28: &quot;HUMAN_TRANSPORT&quot;,
-    29: &quot;ORC_TRANSPORT&quot;,
-    30: &quot;ELVEN_DESTROYER&quot;,
-    31: &quot;TROLL_DESTROYER&quot;,
-    32: &quot;BATTLESHIP&quot;,
-    33: &quot;JUGGERNAUGHT&quot;,
-    35: &quot;DEATHWING&quot;,
-    38: &quot;GNOMISH_SUBMARINE&quot;,
-    39: &quot;GIANT_TURTLE&quot;,
-    40: &quot;GNOMISH_FLYING_MACHINE&quot;,
-    41: &quot;GOBLIN_ZEPPLIN&quot;,
-    42: &quot;GRYPHON_RIDER&quot;,
-    43: &quot;DRAGON&quot;,
-    44: &quot;TURALYON&quot;,
-    45: &quot;EYE_OF_KILROGG&quot;,
-    46: &quot;DANATH&quot;,
-    47: &quot;KHORGATH_BLADEFIST&quot;,
-    49: &quot;CHO_GALL&quot;,
-    50: &quot;LOTHAR&quot;,
-    51: &quot;GUL_DAN&quot;,
-    52: &quot;UTHER_LIGHTBRINGER&quot;,
-    53: &quot;ZULJIN&quot;,
-    55: &quot;SKELETON&quot;,
-    56: &quot;DAEMON&quot;,
-    57: &quot;CRITTER&quot;,
-    58: &quot;FARM&quot;,
-    59: &quot;PIG_FARM&quot;,
-    60: &quot;HUMAN_BARRACKS&quot;,
-    61: &quot;ORC_BARRACKS&quot;,
-    62: &quot;CHURCH&quot;,
-    63: &quot;ALTAR_OF_STORMS&quot;,
-    64: &quot;HUMAN_SCOUT_TOWER&quot;,
-    65: &quot;ORC_SCOUT_TOWER&quot;,
-    66: &quot;STABLES&quot;,
-    67: &quot;OGRE_MOUND&quot;,
-    68: &quot;GNOMISH_INVENTOR&quot;,
-    69: &quot;GOBLIN_ALCHEMIST&quot;,
-    70: &quot;GRYPHON_AVIARY&quot;,
-    71: &quot;DRAGON_ROOST&quot;,
-    72: &quot;HUMAN_SHIPYARD&quot;,
-    73: &quot;ORC_SHIPYARD&quot;,
-    74: &quot;TOWN_HALL&quot;,
-    75: &quot;GREAT_HALL&quot;,
-    76: &quot;ELVEN_LUMBER_MILL&quot;,
-    77: &quot;TROLL_LUMBER_MILL&quot;,
-    78: &quot;HUMAN_FOUNDRY&quot;,
-    79: &quot;ORC_FOUNDRY&quot;,
-    80: &quot;MAGE_TOWER&quot;,
-    81: &quot;TEMPLE_OF_THE_DAMNED&quot;,
-    82: &quot;HUMAN_BLACKSMITH&quot;,
-    83: &quot;ORC_BLACKSMITH&quot;,
-    84: &quot;HUMAN_REFINERY&quot;,
-    85: &quot;ORC_REFINERY&quot;,
-    86: &quot;HUMAN_OIL_WELL&quot;,
-    87: &quot;ORC_OIL_WELL&quot;,
-    88: &quot;KEEP&quot;,
-    89: &quot;STRONGHOLD&quot;,
-    90: &quot;CASTLE&quot;,
-    91: &quot;FORTRESS&quot;,
-    92: &quot;GOLD_MINE&quot;,
-    93: &quot;OIL_PATCH&quot;,
-    94: &quot;HUMAN_START&quot;,
-    95: &quot;ORC_START&quot;,
-    96: &quot;HUMAN_GUARD_TOWER&quot;,
-    97: &quot;ORC_GUARD_TOWER&quot;,
-    98: &quot;HUMAN_CANNON_TOWER&quot;,
-    99: &quot;ORC_CANNON_TOWER&quot;,
-    100: &quot;CIRCLE_OF_POWER&quot;,
-    101: &quot;DARK_PORTAL&quot;,
-    102: &quot;RUNESTONE&quot;,
-    103: &quot;HUMAN_WALL&quot;,
-    104: &quot;ORC_WALL&quot;,
-  });
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;INFANTRY&quot;</span><span class="p">,</span>
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;GRUNT&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;PEASANT&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;PEON&quot;</span><span class="p">,</span>
+    <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;BALLISTA&quot;</span><span class="p">,</span>
+    <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;CATAPULT&quot;</span><span class="p">,</span>
+    <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;KNIGHT&quot;</span><span class="p">,</span>
+    <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;OGRE&quot;</span><span class="p">,</span>
+    <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;ARCHER&quot;</span><span class="p">,</span>
+    <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;AXETHROWER&quot;</span><span class="p">,</span>
+    <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;MAGE&quot;</span><span class="p">,</span>
+    <span class="mi">11</span><span class="o">:</span> <span class="s2">&quot;DEATH_KNIGHT&quot;</span><span class="p">,</span>
+    <span class="mi">12</span><span class="o">:</span> <span class="s2">&quot;PALADIN&quot;</span><span class="p">,</span>
+    <span class="mi">13</span><span class="o">:</span> <span class="s2">&quot;OGRE_MAGE&quot;</span><span class="p">,</span>
+    <span class="mi">14</span><span class="o">:</span> <span class="s2">&quot;DWARVES&quot;</span><span class="p">,</span>
+    <span class="mi">15</span><span class="o">:</span> <span class="s2">&quot;GOBLIN_SAPPER&quot;</span><span class="p">,</span>
+    <span class="mi">16</span><span class="o">:</span> <span class="s2">&quot;ATTACK_PEASANT&quot;</span><span class="p">,</span>
+    <span class="mi">17</span><span class="o">:</span> <span class="s2">&quot;ATTACK_PEON&quot;</span><span class="p">,</span>
+    <span class="mi">18</span><span class="o">:</span> <span class="s2">&quot;RANGER&quot;</span><span class="p">,</span>
+    <span class="mi">19</span><span class="o">:</span> <span class="s2">&quot;BERSERKER&quot;</span><span class="p">,</span>
+    <span class="mi">20</span><span class="o">:</span> <span class="s2">&quot;ALLERIA&quot;</span><span class="p">,</span>
+    <span class="mi">21</span><span class="o">:</span> <span class="s2">&quot;TERON_GOREFIEND&quot;</span><span class="p">,</span>
+    <span class="mi">22</span><span class="o">:</span> <span class="s2">&quot;KURDAN_AND_SKY_REE&quot;</span><span class="p">,</span>
+    <span class="mi">23</span><span class="o">:</span> <span class="s2">&quot;DENTARG&quot;</span><span class="p">,</span>
+    <span class="mi">24</span><span class="o">:</span> <span class="s2">&quot;KHADGAR&quot;</span><span class="p">,</span>
+    <span class="mi">25</span><span class="o">:</span> <span class="s2">&quot;GROM_HELLSCREAM&quot;</span><span class="p">,</span>
+    <span class="mi">26</span><span class="o">:</span> <span class="s2">&quot;HUMAN_TANKER&quot;</span><span class="p">,</span>
+    <span class="mi">27</span><span class="o">:</span> <span class="s2">&quot;ORC_TANKER&quot;</span><span class="p">,</span>
+    <span class="mi">28</span><span class="o">:</span> <span class="s2">&quot;HUMAN_TRANSPORT&quot;</span><span class="p">,</span>
+    <span class="mi">29</span><span class="o">:</span> <span class="s2">&quot;ORC_TRANSPORT&quot;</span><span class="p">,</span>
+    <span class="mi">30</span><span class="o">:</span> <span class="s2">&quot;ELVEN_DESTROYER&quot;</span><span class="p">,</span>
+    <span class="mi">31</span><span class="o">:</span> <span class="s2">&quot;TROLL_DESTROYER&quot;</span><span class="p">,</span>
+    <span class="mi">32</span><span class="o">:</span> <span class="s2">&quot;BATTLESHIP&quot;</span><span class="p">,</span>
+    <span class="mi">33</span><span class="o">:</span> <span class="s2">&quot;JUGGERNAUGHT&quot;</span><span class="p">,</span>
+    <span class="mi">35</span><span class="o">:</span> <span class="s2">&quot;DEATHWING&quot;</span><span class="p">,</span>
+    <span class="mi">38</span><span class="o">:</span> <span class="s2">&quot;GNOMISH_SUBMARINE&quot;</span><span class="p">,</span>
+    <span class="mi">39</span><span class="o">:</span> <span class="s2">&quot;GIANT_TURTLE&quot;</span><span class="p">,</span>
+    <span class="mi">40</span><span class="o">:</span> <span class="s2">&quot;GNOMISH_FLYING_MACHINE&quot;</span><span class="p">,</span>
+    <span class="mi">41</span><span class="o">:</span> <span class="s2">&quot;GOBLIN_ZEPPLIN&quot;</span><span class="p">,</span>
+    <span class="mi">42</span><span class="o">:</span> <span class="s2">&quot;GRYPHON_RIDER&quot;</span><span class="p">,</span>
+    <span class="mi">43</span><span class="o">:</span> <span class="s2">&quot;DRAGON&quot;</span><span class="p">,</span>
+    <span class="mi">44</span><span class="o">:</span> <span class="s2">&quot;TURALYON&quot;</span><span class="p">,</span>
+    <span class="mi">45</span><span class="o">:</span> <span class="s2">&quot;EYE_OF_KILROGG&quot;</span><span class="p">,</span>
+    <span class="mi">46</span><span class="o">:</span> <span class="s2">&quot;DANATH&quot;</span><span class="p">,</span>
+    <span class="mi">47</span><span class="o">:</span> <span class="s2">&quot;KHORGATH_BLADEFIST&quot;</span><span class="p">,</span>
+    <span class="mi">49</span><span class="o">:</span> <span class="s2">&quot;CHO_GALL&quot;</span><span class="p">,</span>
+    <span class="mi">50</span><span class="o">:</span> <span class="s2">&quot;LOTHAR&quot;</span><span class="p">,</span>
+    <span class="mi">51</span><span class="o">:</span> <span class="s2">&quot;GUL_DAN&quot;</span><span class="p">,</span>
+    <span class="mi">52</span><span class="o">:</span> <span class="s2">&quot;UTHER_LIGHTBRINGER&quot;</span><span class="p">,</span>
+    <span class="mi">53</span><span class="o">:</span> <span class="s2">&quot;ZULJIN&quot;</span><span class="p">,</span>
+    <span class="mi">55</span><span class="o">:</span> <span class="s2">&quot;SKELETON&quot;</span><span class="p">,</span>
+    <span class="mi">56</span><span class="o">:</span> <span class="s2">&quot;DAEMON&quot;</span><span class="p">,</span>
+    <span class="mi">57</span><span class="o">:</span> <span class="s2">&quot;CRITTER&quot;</span><span class="p">,</span>
+    <span class="mi">58</span><span class="o">:</span> <span class="s2">&quot;FARM&quot;</span><span class="p">,</span>
+    <span class="mi">59</span><span class="o">:</span> <span class="s2">&quot;PIG_FARM&quot;</span><span class="p">,</span>
+    <span class="mi">60</span><span class="o">:</span> <span class="s2">&quot;HUMAN_BARRACKS&quot;</span><span class="p">,</span>
+    <span class="mi">61</span><span class="o">:</span> <span class="s2">&quot;ORC_BARRACKS&quot;</span><span class="p">,</span>
+    <span class="mi">62</span><span class="o">:</span> <span class="s2">&quot;CHURCH&quot;</span><span class="p">,</span>
+    <span class="mi">63</span><span class="o">:</span> <span class="s2">&quot;ALTAR_OF_STORMS&quot;</span><span class="p">,</span>
+    <span class="mi">64</span><span class="o">:</span> <span class="s2">&quot;HUMAN_SCOUT_TOWER&quot;</span><span class="p">,</span>
+    <span class="mi">65</span><span class="o">:</span> <span class="s2">&quot;ORC_SCOUT_TOWER&quot;</span><span class="p">,</span>
+    <span class="mi">66</span><span class="o">:</span> <span class="s2">&quot;STABLES&quot;</span><span class="p">,</span>
+    <span class="mi">67</span><span class="o">:</span> <span class="s2">&quot;OGRE_MOUND&quot;</span><span class="p">,</span>
+    <span class="mi">68</span><span class="o">:</span> <span class="s2">&quot;GNOMISH_INVENTOR&quot;</span><span class="p">,</span>
+    <span class="mi">69</span><span class="o">:</span> <span class="s2">&quot;GOBLIN_ALCHEMIST&quot;</span><span class="p">,</span>
+    <span class="mi">70</span><span class="o">:</span> <span class="s2">&quot;GRYPHON_AVIARY&quot;</span><span class="p">,</span>
+    <span class="mi">71</span><span class="o">:</span> <span class="s2">&quot;DRAGON_ROOST&quot;</span><span class="p">,</span>
+    <span class="mi">72</span><span class="o">:</span> <span class="s2">&quot;HUMAN_SHIPYARD&quot;</span><span class="p">,</span>
+    <span class="mi">73</span><span class="o">:</span> <span class="s2">&quot;ORC_SHIPYARD&quot;</span><span class="p">,</span>
+    <span class="mi">74</span><span class="o">:</span> <span class="s2">&quot;TOWN_HALL&quot;</span><span class="p">,</span>
+    <span class="mi">75</span><span class="o">:</span> <span class="s2">&quot;GREAT_HALL&quot;</span><span class="p">,</span>
+    <span class="mi">76</span><span class="o">:</span> <span class="s2">&quot;ELVEN_LUMBER_MILL&quot;</span><span class="p">,</span>
+    <span class="mi">77</span><span class="o">:</span> <span class="s2">&quot;TROLL_LUMBER_MILL&quot;</span><span class="p">,</span>
+    <span class="mi">78</span><span class="o">:</span> <span class="s2">&quot;HUMAN_FOUNDRY&quot;</span><span class="p">,</span>
+    <span class="mi">79</span><span class="o">:</span> <span class="s2">&quot;ORC_FOUNDRY&quot;</span><span class="p">,</span>
+    <span class="mi">80</span><span class="o">:</span> <span class="s2">&quot;MAGE_TOWER&quot;</span><span class="p">,</span>
+    <span class="mi">81</span><span class="o">:</span> <span class="s2">&quot;TEMPLE_OF_THE_DAMNED&quot;</span><span class="p">,</span>
+    <span class="mi">82</span><span class="o">:</span> <span class="s2">&quot;HUMAN_BLACKSMITH&quot;</span><span class="p">,</span>
+    <span class="mi">83</span><span class="o">:</span> <span class="s2">&quot;ORC_BLACKSMITH&quot;</span><span class="p">,</span>
+    <span class="mi">84</span><span class="o">:</span> <span class="s2">&quot;HUMAN_REFINERY&quot;</span><span class="p">,</span>
+    <span class="mi">85</span><span class="o">:</span> <span class="s2">&quot;ORC_REFINERY&quot;</span><span class="p">,</span>
+    <span class="mi">86</span><span class="o">:</span> <span class="s2">&quot;HUMAN_OIL_WELL&quot;</span><span class="p">,</span>
+    <span class="mi">87</span><span class="o">:</span> <span class="s2">&quot;ORC_OIL_WELL&quot;</span><span class="p">,</span>
+    <span class="mi">88</span><span class="o">:</span> <span class="s2">&quot;KEEP&quot;</span><span class="p">,</span>
+    <span class="mi">89</span><span class="o">:</span> <span class="s2">&quot;STRONGHOLD&quot;</span><span class="p">,</span>
+    <span class="mi">90</span><span class="o">:</span> <span class="s2">&quot;CASTLE&quot;</span><span class="p">,</span>
+    <span class="mi">91</span><span class="o">:</span> <span class="s2">&quot;FORTRESS&quot;</span><span class="p">,</span>
+    <span class="mi">92</span><span class="o">:</span> <span class="s2">&quot;GOLD_MINE&quot;</span><span class="p">,</span>
+    <span class="mi">93</span><span class="o">:</span> <span class="s2">&quot;OIL_PATCH&quot;</span><span class="p">,</span>
+    <span class="mi">94</span><span class="o">:</span> <span class="s2">&quot;HUMAN_START&quot;</span><span class="p">,</span>
+    <span class="mi">95</span><span class="o">:</span> <span class="s2">&quot;ORC_START&quot;</span><span class="p">,</span>
+    <span class="mi">96</span><span class="o">:</span> <span class="s2">&quot;HUMAN_GUARD_TOWER&quot;</span><span class="p">,</span>
+    <span class="mi">97</span><span class="o">:</span> <span class="s2">&quot;ORC_GUARD_TOWER&quot;</span><span class="p">,</span>
+    <span class="mi">98</span><span class="o">:</span> <span class="s2">&quot;HUMAN_CANNON_TOWER&quot;</span><span class="p">,</span>
+    <span class="mi">99</span><span class="o">:</span> <span class="s2">&quot;ORC_CANNON_TOWER&quot;</span><span class="p">,</span>
+    <span class="mi">100</span><span class="o">:</span> <span class="s2">&quot;CIRCLE_OF_POWER&quot;</span><span class="p">,</span>
+    <span class="mi">101</span><span class="o">:</span> <span class="s2">&quot;DARK_PORTAL&quot;</span><span class="p">,</span>
+    <span class="mi">102</span><span class="o">:</span> <span class="s2">&quot;RUNESTONE&quot;</span><span class="p">,</span>
+    <span class="mi">103</span><span class="o">:</span> <span class="s2">&quot;HUMAN_WALL&quot;</span><span class="p">,</span>
+    <span class="mi">104</span><span class="o">:</span> <span class="s2">&quot;ORC_WALL&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
 
-  function Warcraft2Pud(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
+  <span class="kd">function</span> <span class="nx">Warcraft2Pud</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-    this._read();
-  }
-  Warcraft2Pud.prototype._read = function() {
-    this.sections = [];
-    var i = 0;
-    while (!this._io.isEof()) {
-      this.sections.push(new Section(this._io, this, this._root));
-      i++;
-    }
-  }
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">sections</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sections</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Section</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+      <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
 
-  var SectionStartingResource = Warcraft2Pud.SectionStartingResource = (function() {
-    function SectionStartingResource(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">SectionStartingResource</span> <span class="o">=</span> <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">SectionStartingResource</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">SectionStartingResource</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    SectionStartingResource.prototype._read = function() {
-      this.resourcesByPlayer = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.resourcesByPlayer.push(this._io.readU2le());
-        i++;
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">SectionStartingResource</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">resourcesByPlayer</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">resourcesByPlayer</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">());</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return SectionStartingResource;
-  })();
+    <span class="k">return</span> <span class="nx">SectionStartingResource</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * Section that specifies terrain type for this map.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Section that specifies terrain type for this map.</span>
+<span class="cm">   */</span>
 
-  var SectionEra = Warcraft2Pud.SectionEra = (function() {
-    function SectionEra(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">SectionEra</span> <span class="o">=</span> <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">SectionEra</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">SectionEra</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    SectionEra.prototype._read = function() {
-      this.terrain = this._io.readU2le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">SectionEra</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">terrain</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return SectionEra;
-  })();
+    <span class="k">return</span> <span class="nx">SectionEra</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * Section that specifies format version.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Section that specifies format version.</span>
+<span class="cm">   */</span>
 
-  var SectionVer = Warcraft2Pud.SectionVer = (function() {
-    function SectionVer(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">SectionVer</span> <span class="o">=</span> <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">SectionVer</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">SectionVer</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    SectionVer.prototype._read = function() {
-      this.version = this._io.readU2le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">SectionVer</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return SectionVer;
-  })();
+    <span class="k">return</span> <span class="nx">SectionVer</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var SectionDim = Warcraft2Pud.SectionDim = (function() {
-    function SectionDim(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">SectionDim</span> <span class="o">=</span> <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">SectionDim</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">SectionDim</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    SectionDim.prototype._read = function() {
-      this.x = this._io.readU2le();
-      this.y = this._io.readU2le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">SectionDim</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return SectionDim;
-  })();
+    <span class="k">return</span> <span class="nx">SectionDim</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * Section that confirms that this file is a &quot;map file&quot; by certain
-   * magic string and supplies a tag that could be used in
-   * multiplayer to check that all player use the same version of the
-   * map.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Section that confirms that this file is a &quot;map file&quot; by certain</span>
+<span class="cm">   * magic string and supplies a tag that could be used in</span>
+<span class="cm">   * multiplayer to check that all player use the same version of the</span>
+<span class="cm">   * map.</span>
+<span class="cm">   */</span>
 
-  var SectionType = Warcraft2Pud.SectionType = (function() {
-    function SectionType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">SectionType</span> <span class="o">=</span> <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">SectionType</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">SectionType</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    SectionType.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([87, 65, 82, 50, 32, 77, 65, 80, 0, 0]);
-      this.unused = this._io.readBytes(2);
-      this.idTag = this._io.readU4le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">SectionType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">87</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">unused</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">idTag</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    /**
-     * unused (always set to $0a and $ff by editor, but can be anything for the game)
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * unused (always set to $0a and $ff by editor, but can be anything for the game)</span>
+<span class="cm">     */</span>
 
-    /**
-     * id tag (for consistency check in multiplayer)
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * id tag (for consistency check in multiplayer)</span>
+<span class="cm">     */</span>
 
-    return SectionType;
-  })();
+    <span class="k">return</span> <span class="nx">SectionType</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var SectionUnit = Warcraft2Pud.SectionUnit = (function() {
-    function SectionUnit(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">SectionUnit</span> <span class="o">=</span> <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">SectionUnit</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">SectionUnit</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    SectionUnit.prototype._read = function() {
-      this.units = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.units.push(new Unit(this._io, this, this._root));
-        i++;
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">SectionUnit</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">units</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">units</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Unit</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return SectionUnit;
-  })();
+    <span class="k">return</span> <span class="nx">SectionUnit</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var Section = Warcraft2Pud.Section = (function() {
-    function Section(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Section</span> <span class="o">=</span> <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">Section</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Section</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Section.prototype._read = function() {
-      this.name = KaitaiStream.bytesToStr(this._io.readBytes(4), &quot;ASCII&quot;);
-      this.size = this._io.readU4le();
-      switch (this.name) {
-      case &quot;SLBR&quot;:
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionStartingResource(_io__raw_body, this, this._root);
-        break;
-      case &quot;ERAX&quot;:
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionEra(_io__raw_body, this, this._root);
-        break;
-      case &quot;OWNR&quot;:
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionOwnr(_io__raw_body, this, this._root);
-        break;
-      case &quot;ERA &quot;:
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionEra(_io__raw_body, this, this._root);
-        break;
-      case &quot;SGLD&quot;:
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionStartingResource(_io__raw_body, this, this._root);
-        break;
-      case &quot;VER &quot;:
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionVer(_io__raw_body, this, this._root);
-        break;
-      case &quot;SOIL&quot;:
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionStartingResource(_io__raw_body, this, this._root);
-        break;
-      case &quot;UNIT&quot;:
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionUnit(_io__raw_body, this, this._root);
-        break;
-      case &quot;DIM &quot;:
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionDim(_io__raw_body, this, this._root);
-        break;
-      case &quot;TYPE&quot;:
-        this._raw_body = this._io.readBytes(this.size);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SectionType(_io__raw_body, this, this._root);
-        break;
-      default:
-        this.body = this._io.readBytes(this.size);
-        break;
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Section</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="s2">&quot;SLBR&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SectionStartingResource</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;ERAX&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SectionEra</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;OWNR&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SectionOwnr</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;ERA &quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SectionEra</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;SGLD&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SectionStartingResource</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;VER &quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SectionVer</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;SOIL&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SectionStartingResource</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;UNIT&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SectionUnit</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;DIM &quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SectionDim</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;TYPE&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SectionType</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">default</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return Section;
-  })();
+    <span class="k">return</span> <span class="nx">Section</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * Section that specifies who controls each player.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Section that specifies who controls each player.</span>
+<span class="cm">   */</span>
 
-  var SectionOwnr = Warcraft2Pud.SectionOwnr = (function() {
-    function SectionOwnr(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">SectionOwnr</span> <span class="o">=</span> <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">SectionOwnr</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">SectionOwnr</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    SectionOwnr.prototype._read = function() {
-      this.controllerByPlayer = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.controllerByPlayer.push(this._io.readU1());
-        i++;
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">SectionOwnr</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">controllerByPlayer</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">controllerByPlayer</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">());</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return SectionOwnr;
-  })();
+    <span class="k">return</span> <span class="nx">SectionOwnr</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var Unit = Warcraft2Pud.Unit = (function() {
-    function Unit(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Unit</span> <span class="o">=</span> <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">Unit</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Unit</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Unit.prototype._read = function() {
-      this.x = this._io.readU2le();
-      this.y = this._io.readU2le();
-      this.uType = this._io.readU1();
-      this.owner = this._io.readU1();
-      this.options = this._io.readU2le();
-    }
-    Object.defineProperty(Unit.prototype, &#39;resource&#39;, {
-      get: function() {
-        if (this._m_resource !== undefined)
-          return this._m_resource;
-        if ( ((this.uType == Warcraft2Pud.UnitType.GOLD_MINE) || (this.uType == Warcraft2Pud.UnitType.HUMAN_OIL_WELL) || (this.uType == Warcraft2Pud.UnitType.ORC_OIL_WELL) || (this.uType == Warcraft2Pud.UnitType.OIL_PATCH)) ) {
-          this._m_resource = (this.options * 2500);
-        }
-        return this._m_resource;
-      }
-    });
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Unit</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">uType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">owner</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">options</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Unit</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;resource&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_resource</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_resource</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">uType</span> <span class="o">==</span> <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">UnitType</span><span class="p">.</span><span class="nx">GOLD_MINE</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">uType</span> <span class="o">==</span> <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">UnitType</span><span class="p">.</span><span class="nx">HUMAN_OIL_WELL</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">uType</span> <span class="o">==</span> <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">UnitType</span><span class="p">.</span><span class="nx">ORC_OIL_WELL</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">uType</span> <span class="o">==</span> <span class="nx">Warcraft2Pud</span><span class="p">.</span><span class="nx">UnitType</span><span class="p">.</span><span class="nx">OIL_PATCH</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_resource</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">options</span> <span class="o">*</span> <span class="mi">2500</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_resource</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    /**
-     * if gold mine or oil well, contains 2500 * this, otherwise 0 passive 1 active
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * if gold mine or oil well, contains 2500 * this, otherwise 0 passive 1 active</span>
+<span class="cm">     */</span>
 
-    return Unit;
-  })();
+    <span class="k">return</span> <span class="nx">Unit</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  return Warcraft2Pud;
-})();
-return Warcraft2Pud;
-}));
-</code></pre>
+  <span class="k">return</span> <span class="nx">Warcraft2Pud</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">Warcraft2Pud</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -846,8 +843,8 @@ return Warcraft2Pud;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

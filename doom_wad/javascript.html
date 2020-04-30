@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -271,630 +268,630 @@ var data = new DoomWad(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.DoomWad = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-var DoomWad = (function() {
-  function DoomWad(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
-
-    this._read();
-  }
-  DoomWad.prototype._read = function() {
-    this.magic = KaitaiStream.bytesToStr(this._io.readBytes(4), &quot;ASCII&quot;);
-    this.numIndexEntries = this._io.readS4le();
-    this.indexOffset = this._io.readS4le();
-  }
-
-  var Sectors = DoomWad.Sectors = (function() {
-    function Sectors(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Sectors.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new Sector(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return Sectors;
-  })();
-
-  var Vertex = DoomWad.Vertex = (function() {
-    function Vertex(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Vertex.prototype._read = function() {
-      this.x = this._io.readS2le();
-      this.y = this._io.readS2le();
-    }
-
-    return Vertex;
-  })();
-
-  /**
-   * Used for TEXTURE1 and TEXTURE2 lumps, which designate how to
-   * combine wall patches to make wall textures. This essentially
-   * provides a very simple form of image compression, allowing
-   * certain elements (&quot;patches&quot;) to be reused / recombined on
-   * different textures for more variety in the game.
-   * @see {@link http://doom.wikia.com/wiki/TEXTURE1|Source}
-   */
-
-  var Texture12 = DoomWad.Texture12 = (function() {
-    function Texture12(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Texture12.prototype._read = function() {
-      this.numTextures = this._io.readS4le();
-      this.textures = new Array(this.numTextures);
-      for (var i = 0; i &lt; this.numTextures; i++) {
-        this.textures[i] = new TextureIndex(this._io, this, this._root);
-      }
-    }
-
-    var TextureIndex = Texture12.TextureIndex = (function() {
-      function TextureIndex(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      TextureIndex.prototype._read = function() {
-        this.offset = this._io.readS4le();
-      }
-      Object.defineProperty(TextureIndex.prototype, &#39;body&#39;, {
-        get: function() {
-          if (this._m_body !== undefined)
-            return this._m_body;
-          var _pos = this._io.pos;
-          this._io.seek(this.offset);
-          this._m_body = new TextureBody(this._io, this, this._root);
-          this._io.seek(_pos);
-          return this._m_body;
-        }
-      });
-
-      return TextureIndex;
-    })();
-
-    var TextureBody = Texture12.TextureBody = (function() {
-      function TextureBody(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      TextureBody.prototype._read = function() {
-        this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), &quot;ASCII&quot;);
-        this.masked = this._io.readU4le();
-        this.width = this._io.readU2le();
-        this.height = this._io.readU2le();
-        this.columnDirectory = this._io.readU4le();
-        this.numPatches = this._io.readU2le();
-        this.patches = new Array(this.numPatches);
-        for (var i = 0; i &lt; this.numPatches; i++) {
-          this.patches[i] = new Patch(this._io, this, this._root);
-        }
-      }
-
-      /**
-       * Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid
-       */
-
-      /**
-       * Obsolete, ignored by all DOOM versions
-       */
-
-      /**
-       * Number of patches that are used in a texture
-       */
-
-      return TextureBody;
-    })();
-
-    var Patch = Texture12.Patch = (function() {
-      function Patch(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Patch.prototype._read = function() {
-        this.originX = this._io.readS2le();
-        this.originY = this._io.readS2le();
-        this.patchId = this._io.readU2le();
-        this.stepDir = this._io.readU2le();
-        this.colormap = this._io.readU2le();
-      }
-
-      /**
-       * X offset to draw a patch at (pixels from left boundary of a texture)
-       */
-
-      /**
-       * Y offset to draw a patch at (pixels from upper boundary of a texture)
-       */
-
-      /**
-       * Identifier of a patch (as listed in PNAMES lump) to draw
-       */
-
-      return Patch;
-    })();
-
-    /**
-     * Number of wall textures
-     */
-
-    return Texture12;
-  })();
-
-  var Linedef = DoomWad.Linedef = (function() {
-    function Linedef(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Linedef.prototype._read = function() {
-      this.vertexStartIdx = this._io.readU2le();
-      this.vertexEndIdx = this._io.readU2le();
-      this.flags = this._io.readU2le();
-      this.lineType = this._io.readU2le();
-      this.sectorTag = this._io.readU2le();
-      this.sidedefRightIdx = this._io.readU2le();
-      this.sidedefLeftIdx = this._io.readU2le();
-    }
-
-    return Linedef;
-  })();
-
-  /**
-   * @see {@link http://doom.wikia.com/wiki/PNAMES|Source}
-   */
-
-  var Pnames = DoomWad.Pnames = (function() {
-    function Pnames(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Pnames.prototype._read = function() {
-      this.numPatches = this._io.readU4le();
-      this.names = new Array(this.numPatches);
-      for (var i = 0; i &lt; this.numPatches; i++) {
-        this.names[i] = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), &quot;ASCII&quot;);
-      }
-    }
-
-    /**
-     * Number of patches registered in this global game directory
-     */
-
-    return Pnames;
-  })();
-
-  var Thing = DoomWad.Thing = (function() {
-    function Thing(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Thing.prototype._read = function() {
-      this.x = this._io.readS2le();
-      this.y = this._io.readS2le();
-      this.angle = this._io.readU2le();
-      this.type = this._io.readU2le();
-      this.flags = this._io.readU2le();
-    }
-
-    return Thing;
-  })();
-
-  var Sector = DoomWad.Sector = (function() {
-    Sector.SpecialSector = Object.freeze({
-      NORMAL: 0,
-      D_LIGHT_FLICKER: 1,
-      D_LIGHT_STROBE_FAST: 2,
-      D_LIGHT_STROBE_SLOW: 3,
-      D_LIGHT_STROBE_HURT: 4,
-      D_DAMAGE_HELLSLIME: 5,
-      D_DAMAGE_NUKAGE: 7,
-      D_LIGHT_GLOW: 8,
-      SECRET: 9,
-      D_SECTOR_DOOR_CLOSE_IN_30: 10,
-      D_DAMAGE_END: 11,
-      D_LIGHT_STROBE_SLOW_SYNC: 12,
-      D_LIGHT_STROBE_FAST_SYNC: 13,
-      D_SECTOR_DOOR_RAISE_IN_5_MINS: 14,
-      D_FRICTION_LOW: 15,
-      D_DAMAGE_SUPER_HELLSLIME: 16,
-      D_LIGHT_FIRE_FLICKER: 17,
-      D_DAMAGE_LAVA_WIMPY: 18,
-      D_DAMAGE_LAVA_HEFTY: 19,
-      D_SCROLL_EAST_LAVA_DAMAGE: 20,
-      LIGHT_PHASED: 21,
-      LIGHT_SEQUENCE_START: 22,
-      LIGHT_SEQUENCE_SPECIAL1: 23,
-      LIGHT_SEQUENCE_SPECIAL2: 24,
-
-      0: &quot;NORMAL&quot;,
-      1: &quot;D_LIGHT_FLICKER&quot;,
-      2: &quot;D_LIGHT_STROBE_FAST&quot;,
-      3: &quot;D_LIGHT_STROBE_SLOW&quot;,
-      4: &quot;D_LIGHT_STROBE_HURT&quot;,
-      5: &quot;D_DAMAGE_HELLSLIME&quot;,
-      7: &quot;D_DAMAGE_NUKAGE&quot;,
-      8: &quot;D_LIGHT_GLOW&quot;,
-      9: &quot;SECRET&quot;,
-      10: &quot;D_SECTOR_DOOR_CLOSE_IN_30&quot;,
-      11: &quot;D_DAMAGE_END&quot;,
-      12: &quot;D_LIGHT_STROBE_SLOW_SYNC&quot;,
-      13: &quot;D_LIGHT_STROBE_FAST_SYNC&quot;,
-      14: &quot;D_SECTOR_DOOR_RAISE_IN_5_MINS&quot;,
-      15: &quot;D_FRICTION_LOW&quot;,
-      16: &quot;D_DAMAGE_SUPER_HELLSLIME&quot;,
-      17: &quot;D_LIGHT_FIRE_FLICKER&quot;,
-      18: &quot;D_DAMAGE_LAVA_WIMPY&quot;,
-      19: &quot;D_DAMAGE_LAVA_HEFTY&quot;,
-      20: &quot;D_SCROLL_EAST_LAVA_DAMAGE&quot;,
-      21: &quot;LIGHT_PHASED&quot;,
-      22: &quot;LIGHT_SEQUENCE_START&quot;,
-      23: &quot;LIGHT_SEQUENCE_SPECIAL1&quot;,
-      24: &quot;LIGHT_SEQUENCE_SPECIAL2&quot;,
-    });
-
-    function Sector(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Sector.prototype._read = function() {
-      this.floorZ = this._io.readS2le();
-      this.ceilZ = this._io.readS2le();
-      this.floorFlat = KaitaiStream.bytesToStr(this._io.readBytes(8), &quot;ASCII&quot;);
-      this.ceilFlat = KaitaiStream.bytesToStr(this._io.readBytes(8), &quot;ASCII&quot;);
-      this.light = this._io.readS2le();
-      this.specialType = this._io.readU2le();
-      this.tag = this._io.readU2le();
-    }
-
-    /**
-     * Light level of the sector [0..255]. Original engine uses
-     * COLORMAP to render lighting, so only 32 actual levels are
-     * available (i.e. 0..7, 8..15, etc).
-     */
-
-    /**
-     * Tag number. When the linedef with the same tag number is
-     * activated, some effect will be triggered in this sector.
-     */
-
-    return Sector;
-  })();
-
-  var Vertexes = DoomWad.Vertexes = (function() {
-    function Vertexes(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Vertexes.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new Vertex(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return Vertexes;
-  })();
-
-  var Sidedef = DoomWad.Sidedef = (function() {
-    function Sidedef(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Sidedef.prototype._read = function() {
-      this.offsetX = this._io.readS2le();
-      this.offsetY = this._io.readS2le();
-      this.upperTextureName = KaitaiStream.bytesToStr(this._io.readBytes(8), &quot;ASCII&quot;);
-      this.lowerTextureName = KaitaiStream.bytesToStr(this._io.readBytes(8), &quot;ASCII&quot;);
-      this.normalTextureName = KaitaiStream.bytesToStr(this._io.readBytes(8), &quot;ASCII&quot;);
-      this.sectorId = this._io.readS2le();
-    }
-
-    return Sidedef;
-  })();
-
-  var Things = DoomWad.Things = (function() {
-    function Things(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Things.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new Thing(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return Things;
-  })();
-
-  var Linedefs = DoomWad.Linedefs = (function() {
-    function Linedefs(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Linedefs.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new Linedef(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return Linedefs;
-  })();
-
-  var IndexEntry = DoomWad.IndexEntry = (function() {
-    function IndexEntry(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    IndexEntry.prototype._read = function() {
-      this.offset = this._io.readS4le();
-      this.size = this._io.readS4le();
-      this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesStripRight(this._io.readBytes(8), 0), &quot;ASCII&quot;);
-    }
-    Object.defineProperty(IndexEntry.prototype, &#39;contents&#39;, {
-      get: function() {
-        if (this._m_contents !== undefined)
-          return this._m_contents;
-        var io = this._root._io;
-        var _pos = io.pos;
-        io.seek(this.offset);
-        switch (this.name) {
-        case &quot;SECTORS&quot;:
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Sectors(_io__raw__m_contents, this, this._root);
-          break;
-        case &quot;TEXTURE1&quot;:
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Texture12(_io__raw__m_contents, this, this._root);
-          break;
-        case &quot;VERTEXES&quot;:
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Vertexes(_io__raw__m_contents, this, this._root);
-          break;
-        case &quot;BLOCKMAP&quot;:
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Blockmap(_io__raw__m_contents, this, this._root);
-          break;
-        case &quot;PNAMES&quot;:
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Pnames(_io__raw__m_contents, this, this._root);
-          break;
-        case &quot;TEXTURE2&quot;:
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Texture12(_io__raw__m_contents, this, this._root);
-          break;
-        case &quot;THINGS&quot;:
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Things(_io__raw__m_contents, this, this._root);
-          break;
-        case &quot;LINEDEFS&quot;:
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Linedefs(_io__raw__m_contents, this, this._root);
-          break;
-        case &quot;SIDEDEFS&quot;:
-          this._raw__m_contents = io.readBytes(this.size);
-          var _io__raw__m_contents = new KaitaiStream(this._raw__m_contents);
-          this._m_contents = new Sidedefs(_io__raw__m_contents, this, this._root);
-          break;
-        default:
-          this._m_contents = io.readBytes(this.size);
-          break;
-        }
-        io.seek(_pos);
-        return this._m_contents;
-      }
-    });
-
-    return IndexEntry;
-  })();
-
-  var Sidedefs = DoomWad.Sidedefs = (function() {
-    function Sidedefs(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Sidedefs.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new Sidedef(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return Sidedefs;
-  })();
-
-  var Blockmap = DoomWad.Blockmap = (function() {
-    function Blockmap(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Blockmap.prototype._read = function() {
-      this.originX = this._io.readS2le();
-      this.originY = this._io.readS2le();
-      this.numCols = this._io.readS2le();
-      this.numRows = this._io.readS2le();
-      this.linedefsInBlock = new Array((this.numCols * this.numRows));
-      for (var i = 0; i &lt; (this.numCols * this.numRows); i++) {
-        this.linedefsInBlock[i] = new Blocklist(this._io, this, this._root);
-      }
-    }
-
-    var Blocklist = Blockmap.Blocklist = (function() {
-      function Blocklist(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Blocklist.prototype._read = function() {
-        this.offset = this._io.readU2le();
-      }
-
-      /**
-       * List of linedefs found in this block
-       */
-      Object.defineProperty(Blocklist.prototype, &#39;linedefs&#39;, {
-        get: function() {
-          if (this._m_linedefs !== undefined)
-            return this._m_linedefs;
-          var _pos = this._io.pos;
-          this._io.seek((this.offset * 2));
-          this._m_linedefs = []
-          var i = 0;
-          do {
-            var _ = this._io.readS2le();
-            this._m_linedefs.push(_);
-            i++;
-          } while (!(_ == -1));
-          this._io.seek(_pos);
-          return this._m_linedefs;
-        }
-      });
-
-      /**
-       * Offset to the list of linedefs
-       */
-
-      return Blocklist;
-    })();
-
-    /**
-     * Grid origin, X coord
-     */
-
-    /**
-     * Grid origin, Y coord
-     */
-
-    /**
-     * Number of columns
-     */
-
-    /**
-     * Number of rows
-     */
-
-    /**
-     * Lists of linedefs for every block
-     */
-
-    return Blockmap;
-  })();
-  Object.defineProperty(DoomWad.prototype, &#39;index&#39;, {
-    get: function() {
-      if (this._m_index !== undefined)
-        return this._m_index;
-      var _pos = this._io.pos;
-      this._io.seek(this.indexOffset);
-      this._m_index = new Array(this.numIndexEntries);
-      for (var i = 0; i &lt; this.numIndexEntries; i++) {
-        this._m_index[i] = new IndexEntry(this._io, this, this._root);
-      }
-      this._io.seek(_pos);
-      return this._m_index;
-    }
-  });
-
-  /**
-   * Number of entries in the lump index
-   */
-
-  /**
-   * Offset to the start of the index
-   */
-
-  return DoomWad;
-})();
-return DoomWad;
-}));
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">DoomWad</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">var</span> <span class="nx">DoomWad</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">DoomWad</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">numIndexEntries</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">indexOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">Sectors</span> <span class="o">=</span> <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">Sectors</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Sectors</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Sectors</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Sector</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Sectors</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Vertex</span> <span class="o">=</span> <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">Vertex</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Vertex</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Vertex</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Vertex</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Used for TEXTURE1 and TEXTURE2 lumps, which designate how to</span>
+<span class="cm">   * combine wall patches to make wall textures. This essentially</span>
+<span class="cm">   * provides a very simple form of image compression, allowing</span>
+<span class="cm">   * certain elements (&quot;patches&quot;) to be reused / recombined on</span>
+<span class="cm">   * different textures for more variety in the game.</span>
+<span class="cm">   * @see {@link http://doom.wikia.com/wiki/TEXTURE1|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Texture12</span> <span class="o">=</span> <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">Texture12</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Texture12</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Texture12</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numTextures</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">textures</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numTextures</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numTextures</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">textures</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TextureIndex</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nx">TextureIndex</span> <span class="o">=</span> <span class="nx">Texture12</span><span class="p">.</span><span class="nx">TextureIndex</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">TextureIndex</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">TextureIndex</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">TextureIndex</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;body&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span><span class="p">;</span>
+          <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">offset</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TextureBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="k">return</span> <span class="nx">TextureIndex</span><span class="p">;</span>
+    <span class="p">})();</span>
+
+    <span class="kd">var</span> <span class="nx">TextureBody</span> <span class="o">=</span> <span class="nx">Texture12</span><span class="p">.</span><span class="nx">TextureBody</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">TextureBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">TextureBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesStripRight</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">masked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">columnDirectory</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">numPatches</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">patches</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numPatches</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numPatches</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">patches</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Patch</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * Name of a texture, only `A-Z`, `0-9`, `[]_-` are valid</span>
+<span class="cm">       */</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * Obsolete, ignored by all DOOM versions</span>
+<span class="cm">       */</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * Number of patches that are used in a texture</span>
+<span class="cm">       */</span>
+
+      <span class="k">return</span> <span class="nx">TextureBody</span><span class="p">;</span>
+    <span class="p">})();</span>
+
+    <span class="kd">var</span> <span class="nx">Patch</span> <span class="o">=</span> <span class="nx">Texture12</span><span class="p">.</span><span class="nx">Patch</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">Patch</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">Patch</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">originX</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">originY</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">patchId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">stepDir</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">colormap</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="p">}</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * X offset to draw a patch at (pixels from left boundary of a texture)</span>
+<span class="cm">       */</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * Y offset to draw a patch at (pixels from upper boundary of a texture)</span>
+<span class="cm">       */</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * Identifier of a patch (as listed in PNAMES lump) to draw</span>
+<span class="cm">       */</span>
+
+      <span class="k">return</span> <span class="nx">Patch</span><span class="p">;</span>
+    <span class="p">})();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Number of wall textures</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">Texture12</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Linedef</span> <span class="o">=</span> <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">Linedef</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Linedef</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Linedef</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">vertexStartIdx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">vertexEndIdx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lineType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sectorTag</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sidedefRightIdx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sidedefLeftIdx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Linedef</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link http://doom.wikia.com/wiki/PNAMES|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Pnames</span> <span class="o">=</span> <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">Pnames</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Pnames</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Pnames</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numPatches</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">names</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numPatches</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numPatches</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">names</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesStripRight</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Number of patches registered in this global game directory</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">Pnames</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Thing</span> <span class="o">=</span> <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">Thing</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Thing</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Thing</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">angle</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Thing</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Sector</span> <span class="o">=</span> <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">Sector</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">Sector</span><span class="p">.</span><span class="nx">SpecialSector</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+      <span class="nx">NORMAL</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_FLICKER</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_STROBE_FAST</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_STROBE_SLOW</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_STROBE_HURT</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+      <span class="nx">D_DAMAGE_HELLSLIME</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+      <span class="nx">D_DAMAGE_NUKAGE</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_GLOW</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+      <span class="nx">SECRET</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
+      <span class="nx">D_SECTOR_DOOR_CLOSE_IN_30</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+      <span class="nx">D_DAMAGE_END</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_STROBE_SLOW_SYNC</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_STROBE_FAST_SYNC</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
+      <span class="nx">D_SECTOR_DOOR_RAISE_IN_5_MINS</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
+      <span class="nx">D_FRICTION_LOW</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
+      <span class="nx">D_DAMAGE_SUPER_HELLSLIME</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
+      <span class="nx">D_LIGHT_FIRE_FLICKER</span><span class="o">:</span> <span class="mi">17</span><span class="p">,</span>
+      <span class="nx">D_DAMAGE_LAVA_WIMPY</span><span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
+      <span class="nx">D_DAMAGE_LAVA_HEFTY</span><span class="o">:</span> <span class="mi">19</span><span class="p">,</span>
+      <span class="nx">D_SCROLL_EAST_LAVA_DAMAGE</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
+      <span class="nx">LIGHT_PHASED</span><span class="o">:</span> <span class="mi">21</span><span class="p">,</span>
+      <span class="nx">LIGHT_SEQUENCE_START</span><span class="o">:</span> <span class="mi">22</span><span class="p">,</span>
+      <span class="nx">LIGHT_SEQUENCE_SPECIAL1</span><span class="o">:</span> <span class="mi">23</span><span class="p">,</span>
+      <span class="nx">LIGHT_SEQUENCE_SPECIAL2</span><span class="o">:</span> <span class="mi">24</span><span class="p">,</span>
+
+      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_FLICKER&quot;</span><span class="p">,</span>
+      <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_STROBE_FAST&quot;</span><span class="p">,</span>
+      <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_STROBE_SLOW&quot;</span><span class="p">,</span>
+      <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_STROBE_HURT&quot;</span><span class="p">,</span>
+      <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_HELLSLIME&quot;</span><span class="p">,</span>
+      <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_NUKAGE&quot;</span><span class="p">,</span>
+      <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_GLOW&quot;</span><span class="p">,</span>
+      <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;SECRET&quot;</span><span class="p">,</span>
+      <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;D_SECTOR_DOOR_CLOSE_IN_30&quot;</span><span class="p">,</span>
+      <span class="mi">11</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_END&quot;</span><span class="p">,</span>
+      <span class="mi">12</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_STROBE_SLOW_SYNC&quot;</span><span class="p">,</span>
+      <span class="mi">13</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_STROBE_FAST_SYNC&quot;</span><span class="p">,</span>
+      <span class="mi">14</span><span class="o">:</span> <span class="s2">&quot;D_SECTOR_DOOR_RAISE_IN_5_MINS&quot;</span><span class="p">,</span>
+      <span class="mi">15</span><span class="o">:</span> <span class="s2">&quot;D_FRICTION_LOW&quot;</span><span class="p">,</span>
+      <span class="mi">16</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_SUPER_HELLSLIME&quot;</span><span class="p">,</span>
+      <span class="mi">17</span><span class="o">:</span> <span class="s2">&quot;D_LIGHT_FIRE_FLICKER&quot;</span><span class="p">,</span>
+      <span class="mi">18</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_LAVA_WIMPY&quot;</span><span class="p">,</span>
+      <span class="mi">19</span><span class="o">:</span> <span class="s2">&quot;D_DAMAGE_LAVA_HEFTY&quot;</span><span class="p">,</span>
+      <span class="mi">20</span><span class="o">:</span> <span class="s2">&quot;D_SCROLL_EAST_LAVA_DAMAGE&quot;</span><span class="p">,</span>
+      <span class="mi">21</span><span class="o">:</span> <span class="s2">&quot;LIGHT_PHASED&quot;</span><span class="p">,</span>
+      <span class="mi">22</span><span class="o">:</span> <span class="s2">&quot;LIGHT_SEQUENCE_START&quot;</span><span class="p">,</span>
+      <span class="mi">23</span><span class="o">:</span> <span class="s2">&quot;LIGHT_SEQUENCE_SPECIAL1&quot;</span><span class="p">,</span>
+      <span class="mi">24</span><span class="o">:</span> <span class="s2">&quot;LIGHT_SEQUENCE_SPECIAL2&quot;</span><span class="p">,</span>
+    <span class="p">});</span>
+
+    <span class="kd">function</span> <span class="nx">Sector</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Sector</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">floorZ</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">ceilZ</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">floorFlat</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">ceilFlat</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">light</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">specialType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">tag</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Light level of the sector [0..255]. Original engine uses</span>
+<span class="cm">     * COLORMAP to render lighting, so only 32 actual levels are</span>
+<span class="cm">     * available (i.e. 0..7, 8..15, etc).</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Tag number. When the linedef with the same tag number is</span>
+<span class="cm">     * activated, some effect will be triggered in this sector.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">Sector</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Vertexes</span> <span class="o">=</span> <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">Vertexes</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Vertexes</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Vertexes</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Vertex</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Vertexes</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Sidedef</span> <span class="o">=</span> <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">Sidedef</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Sidedef</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Sidedef</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">offsetX</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">offsetY</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">upperTextureName</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lowerTextureName</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">normalTextureName</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sectorId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Sidedef</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Things</span> <span class="o">=</span> <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">Things</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Things</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Things</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Thing</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Things</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Linedefs</span> <span class="o">=</span> <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">Linedefs</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Linedefs</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Linedefs</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Linedef</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Linedefs</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">IndexEntry</span> <span class="o">=</span> <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">IndexEntry</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">IndexEntry</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">IndexEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesStripRight</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">IndexEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;contents&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+        <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">offset</span><span class="p">);</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="s2">&quot;SECTORS&quot;</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Sectors</span><span class="p">(</span><span class="nx">_io__raw__m_contents</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s2">&quot;TEXTURE1&quot;</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Texture12</span><span class="p">(</span><span class="nx">_io__raw__m_contents</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s2">&quot;VERTEXES&quot;</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vertexes</span><span class="p">(</span><span class="nx">_io__raw__m_contents</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s2">&quot;BLOCKMAP&quot;</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Blockmap</span><span class="p">(</span><span class="nx">_io__raw__m_contents</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s2">&quot;PNAMES&quot;</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Pnames</span><span class="p">(</span><span class="nx">_io__raw__m_contents</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s2">&quot;TEXTURE2&quot;</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Texture12</span><span class="p">(</span><span class="nx">_io__raw__m_contents</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s2">&quot;THINGS&quot;</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Things</span><span class="p">(</span><span class="nx">_io__raw__m_contents</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s2">&quot;LINEDEFS&quot;</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Linedefs</span><span class="p">(</span><span class="nx">_io__raw__m_contents</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="s2">&quot;SIDEDEFS&quot;</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_contents</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Sidedefs</span><span class="p">(</span><span class="nx">_io__raw__m_contents</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">default</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">IndexEntry</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Sidedefs</span> <span class="o">=</span> <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">Sidedefs</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Sidedefs</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Sidedefs</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Sidedef</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Sidedefs</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Blockmap</span> <span class="o">=</span> <span class="nx">DoomWad</span><span class="p">.</span><span class="nx">Blockmap</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Blockmap</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Blockmap</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">originX</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">originY</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numCols</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numRows</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">linedefsInBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">numCols</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">numRows</span><span class="p">));</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numCols</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">numRows</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">linedefsInBlock</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Blocklist</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nx">Blocklist</span> <span class="o">=</span> <span class="nx">Blockmap</span><span class="p">.</span><span class="nx">Blocklist</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">Blocklist</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">Blocklist</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="p">}</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * List of linedefs found in this block</span>
+<span class="cm">       */</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Blocklist</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;linedefs&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_linedefs</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_linedefs</span><span class="p">;</span>
+          <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_linedefs</span> <span class="o">=</span> <span class="p">[]</span>
+          <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="k">do</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_linedefs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_</span><span class="p">);</span>
+            <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+          <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">_</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">));</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_linedefs</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * Offset to the list of linedefs</span>
+<span class="cm">       */</span>
+
+      <span class="k">return</span> <span class="nx">Blocklist</span><span class="p">;</span>
+    <span class="p">})();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Grid origin, X coord</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Grid origin, Y coord</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Number of columns</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Number of rows</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Lists of linedefs for every block</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">Blockmap</span><span class="p">;</span>
+  <span class="p">})();</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DoomWad</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_index</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_index</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">indexOffset</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_index</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numIndexEntries</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numIndexEntries</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_index</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">IndexEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_index</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Number of entries in the lump index</span>
+<span class="cm">   */</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Offset to the start of the index</span>
+<span class="cm">   */</span>
+
+  <span class="k">return</span> <span class="nx">DoomWad</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">DoomWad</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -921,8 +918,8 @@ return DoomWad;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

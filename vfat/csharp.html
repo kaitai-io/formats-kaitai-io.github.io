@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -236,652 +233,652 @@ var data = new Vfat(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
-    public partial class Vfat : KaitaiStruct
-    {
-        public static Vfat FromFile(string fileName)
-        {
-            return new Vfat(new KaitaiStream(fileName));
-        }
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Vfat</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">Vfat</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Vfat</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Vfat(KaitaiStream p__io, KaitaiStruct p__parent = null, Vfat p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            f_fats = false;
-            f_rootDir = false;
-            _read();
-        }
-        private void _read()
-        {
-            _bootSector = new BootSector(m_io, this, m_root);
-        }
+        <span class="k">public</span> <span class="nf">Vfat</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Vfat</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">f_fats</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_rootDir</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_bootSector</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BootSector</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Extended BIOS Parameter Block for FAT32
-        /// &lt;/summary&gt;
-        public partial class ExtBiosParamBlockFat32 : KaitaiStruct
-        {
-            public static ExtBiosParamBlockFat32 FromFile(string fileName)
-            {
-                return new ExtBiosParamBlockFat32(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Extended BIOS Parameter Block for FAT32</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ExtBiosParamBlockFat32</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">ExtBiosParamBlockFat32</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">ExtBiosParamBlockFat32</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public ExtBiosParamBlockFat32(KaitaiStream p__io, Vfat.BootSector p__parent = null, Vfat p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _lsPerFat = m_io.ReadU4le();
-                _hasActiveFat = m_io.ReadBitsInt(1) != 0;
-                _reserved1 = m_io.ReadBitsInt(3);
-                _activeFatId = m_io.ReadBitsInt(4);
-                m_io.AlignToByte();
-                _reserved2 = m_io.EnsureFixedContents(new byte[] { 0 });
-                _fatVersion = m_io.ReadU2le();
-                _rootDirStartClus = m_io.ReadU4le();
-                _lsFsInfo = m_io.ReadU2le();
-                _bootSectorsCopyStartLs = m_io.ReadU2le();
-                _reserved3 = m_io.ReadBytes(12);
-                _physDriveNum = m_io.ReadU1();
-                _reserved4 = m_io.ReadU1();
-                _extBootSign = m_io.ReadU1();
-                _volumeId = m_io.ReadBytes(4);
-                _partitionVolumeLabel = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(11), 32));
-                _fsTypeStr = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 32));
-            }
-            private uint _lsPerFat;
-            private bool _hasActiveFat;
-            private ulong _reserved1;
-            private ulong _activeFatId;
-            private byte[] _reserved2;
-            private ushort _fatVersion;
-            private uint _rootDirStartClus;
-            private ushort _lsFsInfo;
-            private ushort _bootSectorsCopyStartLs;
-            private byte[] _reserved3;
-            private byte _physDriveNum;
-            private byte _reserved4;
-            private byte _extBootSign;
-            private byte[] _volumeId;
-            private string _partitionVolumeLabel;
-            private string _fsTypeStr;
-            private Vfat m_root;
-            private Vfat.BootSector m_parent;
+            <span class="k">public</span> <span class="nf">ExtBiosParamBlockFat32</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Vfat</span><span class="p">.</span><span class="n">BootSector</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Vfat</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_lsPerFat</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_hasActiveFat</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_reserved1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">3</span><span class="p">);</span>
+                <span class="n">_activeFatId</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                <span class="n">m_io</span><span class="p">.</span><span class="n">AlignToByte</span><span class="p">();</span>
+                <span class="n">_reserved2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span> <span class="p">});</span>
+                <span class="n">_fatVersion</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_rootDirStartClus</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_lsFsInfo</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_bootSectorsCopyStartLs</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_reserved3</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">12</span><span class="p">);</span>
+                <span class="n">_physDriveNum</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_reserved4</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_extBootSign</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_volumeId</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                <span class="n">_partitionVolumeLabel</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesStripRight</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">11</span><span class="p">),</span> <span class="m">32</span><span class="p">));</span>
+                <span class="n">_fsTypeStr</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesStripRight</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">8</span><span class="p">),</span> <span class="m">32</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lsPerFat</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_hasActiveFat</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_reserved1</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_activeFatId</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_reserved2</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_fatVersion</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_rootDirStartClus</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_lsFsInfo</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_bootSectorsCopyStartLs</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_reserved3</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_physDriveNum</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_reserved4</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_extBootSign</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_volumeId</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_partitionVolumeLabel</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_fsTypeStr</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Vfat</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Vfat</span><span class="p">.</span><span class="n">BootSector</span> <span class="n">m_parent</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Logical sectors per file allocation table (corresponds with
-            /// the old entry `ls_per_fat` in the DOS 2.0 BPB).
-            /// &lt;/summary&gt;
-            public uint LsPerFat { get { return _lsPerFat; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Logical sectors per file allocation table (corresponds with</span>
+            <span class="c1">/// the old entry `ls_per_fat` in the DOS 2.0 BPB).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LsPerFat</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lsPerFat</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// If true, then there is &amp;quot;active&amp;quot; FAT, which is designated in
-            /// `active_fat` attribute. If false, all FATs are mirrored as
-            /// usual.
-            /// &lt;/summary&gt;
-            public bool HasActiveFat { get { return _hasActiveFat; } }
-            public ulong Reserved1 { get { return _reserved1; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// If true, then there is &amp;quot;active&amp;quot; FAT, which is designated in</span>
+            <span class="c1">/// `active_fat` attribute. If false, all FATs are mirrored as</span>
+            <span class="c1">/// usual.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">HasActiveFat</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_hasActiveFat</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Reserved1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reserved1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Zero-based number of active FAT, if `has_active_fat`
-            /// attribute is true.
-            /// &lt;/summary&gt;
-            public ulong ActiveFatId { get { return _activeFatId; } }
-            public byte[] Reserved2 { get { return _reserved2; } }
-            public ushort FatVersion { get { return _fatVersion; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Zero-based number of active FAT, if `has_active_fat`</span>
+            <span class="c1">/// attribute is true.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">ActiveFatId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_activeFatId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Reserved2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reserved2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">FatVersion</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fatVersion</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Cluster number of root directory start, typically 2 if it
-            /// contains no bad sector. (Microsoft&#39;s FAT32 implementation
-            /// imposes an artificial limit of 65,535 entries per directory,
-            /// whilst many third-party implementations do not.)
-            /// &lt;/summary&gt;
-            public uint RootDirStartClus { get { return _rootDirStartClus; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Cluster number of root directory start, typically 2 if it</span>
+            <span class="c1">/// contains no bad sector. (Microsoft&#39;s FAT32 implementation</span>
+            <span class="c1">/// imposes an artificial limit of 65,535 entries per directory,</span>
+            <span class="c1">/// whilst many third-party implementations do not.)</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">RootDirStartClus</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_rootDirStartClus</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Logical sector number of FS Information Sector, typically 1,
-            /// i.e., the second of the three FAT32 boot sectors. Values
-            /// like 0 and 0xFFFF are used by some FAT32 implementations to
-            /// designate abscence of FS Information Sector.
-            /// &lt;/summary&gt;
-            public ushort LsFsInfo { get { return _lsFsInfo; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Logical sector number of FS Information Sector, typically 1,</span>
+            <span class="c1">/// i.e., the second of the three FAT32 boot sectors. Values</span>
+            <span class="c1">/// like 0 and 0xFFFF are used by some FAT32 implementations to</span>
+            <span class="c1">/// designate abscence of FS Information Sector.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">LsFsInfo</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lsFsInfo</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// First logical sector number of a copy of the three FAT32
-            /// boot sectors, typically 6.
-            /// &lt;/summary&gt;
-            public ushort BootSectorsCopyStartLs { get { return _bootSectorsCopyStartLs; } }
-            public byte[] Reserved3 { get { return _reserved3; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// First logical sector number of a copy of the three FAT32</span>
+            <span class="c1">/// boot sectors, typically 6.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">BootSectorsCopyStartLs</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_bootSectorsCopyStartLs</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Reserved3</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reserved3</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Physical drive number (0x00 for (first) removable media,
-            /// 0x80 for (first) fixed disk as per INT 13h).
-            /// &lt;/summary&gt;
-            public byte PhysDriveNum { get { return _physDriveNum; } }
-            public byte Reserved4 { get { return _reserved4; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Physical drive number (0x00 for (first) removable media,</span>
+            <span class="c1">/// 0x80 for (first) fixed disk as per INT 13h).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">PhysDriveNum</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_physDriveNum</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Reserved4</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reserved4</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Should be 0x29 to indicate that an EBPB with the following 3
-            /// entries exists.
-            /// &lt;/summary&gt;
-            public byte ExtBootSign { get { return _extBootSign; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Should be 0x29 to indicate that an EBPB with the following 3</span>
+            <span class="c1">/// entries exists.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">ExtBootSign</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_extBootSign</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Volume ID (serial number).
-            /// 
-            /// Typically the serial number &amp;quot;xxxx-xxxx&amp;quot; is created by a
-            /// 16-bit addition of both DX values returned by INT 21h/AH=2Ah
-            /// (get system date) and INT 21h/AH=2Ch (get system time) for
-            /// the high word and another 16-bit addition of both CX values
-            /// for the low word of the serial number. Alternatively, some
-            /// DR-DOS disk utilities provide a /# option to generate a
-            /// human-readable time stamp &amp;quot;mmdd-hhmm&amp;quot; build from BCD-encoded
-            /// 8-bit values for the month, day, hour and minute instead of
-            /// a serial number.
-            /// &lt;/summary&gt;
-            public byte[] VolumeId { get { return _volumeId; } }
-            public string PartitionVolumeLabel { get { return _partitionVolumeLabel; } }
-            public string FsTypeStr { get { return _fsTypeStr; } }
-            public Vfat M_Root { get { return m_root; } }
-            public Vfat.BootSector M_Parent { get { return m_parent; } }
-        }
-        public partial class BootSector : KaitaiStruct
-        {
-            public static BootSector FromFile(string fileName)
-            {
-                return new BootSector(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Volume ID (serial number).</span>
+            <span class="c1">/// </span>
+            <span class="c1">/// Typically the serial number &amp;quot;xxxx-xxxx&amp;quot; is created by a</span>
+            <span class="c1">/// 16-bit addition of both DX values returned by INT 21h/AH=2Ah</span>
+            <span class="c1">/// (get system date) and INT 21h/AH=2Ch (get system time) for</span>
+            <span class="c1">/// the high word and another 16-bit addition of both CX values</span>
+            <span class="c1">/// for the low word of the serial number. Alternatively, some</span>
+            <span class="c1">/// DR-DOS disk utilities provide a /# option to generate a</span>
+            <span class="c1">/// human-readable time stamp &amp;quot;mmdd-hhmm&amp;quot; build from BCD-encoded</span>
+            <span class="c1">/// 8-bit values for the month, day, hour and minute instead of</span>
+            <span class="c1">/// a serial number.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">VolumeId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_volumeId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">PartitionVolumeLabel</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_partitionVolumeLabel</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">FsTypeStr</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fsTypeStr</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Vfat</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Vfat</span><span class="p">.</span><span class="n">BootSector</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">BootSector</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">BootSector</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">BootSector</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public BootSector(KaitaiStream p__io, Vfat p__parent = null, Vfat p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_posFats = false;
-                f_lsPerFat = false;
-                f_lsPerRootDir = false;
-                f_isFat32 = false;
-                f_sizeFat = false;
-                f_posRootDir = false;
-                f_sizeRootDir = false;
-                _read();
-            }
-            private void _read()
-            {
-                _jmpInstruction = m_io.ReadBytes(3);
-                _oemName = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 32));
-                _bpb = new BiosParamBlock(m_io, this, m_root);
-                if (!(IsFat32)) {
-                    _ebpbFat16 = new ExtBiosParamBlockFat16(m_io, this, m_root);
-                }
-                if (IsFat32) {
-                    _ebpbFat32 = new ExtBiosParamBlockFat32(m_io, this, m_root);
-                }
-            }
-            private bool f_posFats;
-            private int _posFats;
+            <span class="k">public</span> <span class="nf">BootSector</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Vfat</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Vfat</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_posFats</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_lsPerFat</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_lsPerRootDir</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_isFat32</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_sizeFat</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_posRootDir</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_sizeRootDir</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_jmpInstruction</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">3</span><span class="p">);</span>
+                <span class="n">_oemName</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesStripRight</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">8</span><span class="p">),</span> <span class="m">32</span><span class="p">));</span>
+                <span class="n">_bpb</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BiosParamBlock</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(!(</span><span class="n">IsFat32</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="n">_ebpbFat16</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ExtBiosParamBlockFat16</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">IsFat32</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_ebpbFat32</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ExtBiosParamBlockFat32</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_posFats</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_posFats</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Offset of FATs in bytes from start of filesystem
-            /// &lt;/summary&gt;
-            public int PosFats
-            {
-                get
-                {
-                    if (f_posFats)
-                        return _posFats;
-                    _posFats = (int) ((Bpb.BytesPerLs * Bpb.NumReservedLs));
-                    f_posFats = true;
-                    return _posFats;
-                }
-            }
-            private bool f_lsPerFat;
-            private uint _lsPerFat;
-            public uint LsPerFat
-            {
-                get
-                {
-                    if (f_lsPerFat)
-                        return _lsPerFat;
-                    _lsPerFat = (uint) ((IsFat32 ? EbpbFat32.LsPerFat : Bpb.LsPerFat));
-                    f_lsPerFat = true;
-                    return _lsPerFat;
-                }
-            }
-            private bool f_lsPerRootDir;
-            private int _lsPerRootDir;
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Offset of FATs in bytes from start of filesystem</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">PosFats</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_posFats</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_posFats</span><span class="p">;</span>
+                    <span class="n">_posFats</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">Bpb</span><span class="p">.</span><span class="n">BytesPerLs</span> <span class="p">*</span> <span class="n">Bpb</span><span class="p">.</span><span class="n">NumReservedLs</span><span class="p">));</span>
+                    <span class="n">f_posFats</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_posFats</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_lsPerFat</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lsPerFat</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LsPerFat</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_lsPerFat</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_lsPerFat</span><span class="p">;</span>
+                    <span class="n">_lsPerFat</span> <span class="p">=</span> <span class="p">(</span><span class="kt">uint</span><span class="p">)</span> <span class="p">((</span><span class="n">IsFat32</span> <span class="p">?</span> <span class="n">EbpbFat32</span><span class="p">.</span><span class="n">LsPerFat</span> <span class="p">:</span> <span class="n">Bpb</span><span class="p">.</span><span class="n">LsPerFat</span><span class="p">));</span>
+                    <span class="n">f_lsPerFat</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_lsPerFat</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_lsPerRootDir</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_lsPerRootDir</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Size of root directory in logical sectors
-            /// &lt;/summary&gt;
-            /// &lt;remarks&gt;
-            /// Reference: FAT: General Overview of On-Disk Format, section &amp;quot;FAT Data Structure&amp;quot;
-            /// &lt;/remarks&gt;
-            public int LsPerRootDir
-            {
-                get
-                {
-                    if (f_lsPerRootDir)
-                        return _lsPerRootDir;
-                    _lsPerRootDir = (int) (((((Bpb.MaxRootDirRec * 32) + Bpb.BytesPerLs) - 1) / Bpb.BytesPerLs));
-                    f_lsPerRootDir = true;
-                    return _lsPerRootDir;
-                }
-            }
-            private bool f_isFat32;
-            private bool _isFat32;
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Size of root directory in logical sectors</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="c1">/// &lt;remarks&gt;</span>
+            <span class="c1">/// Reference: FAT: General Overview of On-Disk Format, section &amp;quot;FAT Data Structure&amp;quot;</span>
+            <span class="c1">/// &lt;/remarks&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">LsPerRootDir</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_lsPerRootDir</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_lsPerRootDir</span><span class="p">;</span>
+                    <span class="n">_lsPerRootDir</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((((</span><span class="n">Bpb</span><span class="p">.</span><span class="n">MaxRootDirRec</span> <span class="p">*</span> <span class="m">32</span><span class="p">)</span> <span class="p">+</span> <span class="n">Bpb</span><span class="p">.</span><span class="n">BytesPerLs</span><span class="p">)</span> <span class="p">-</span> <span class="m">1</span><span class="p">)</span> <span class="p">/</span> <span class="n">Bpb</span><span class="p">.</span><span class="n">BytesPerLs</span><span class="p">));</span>
+                    <span class="n">f_lsPerRootDir</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_lsPerRootDir</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isFat32</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isFat32</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Determines if filesystem is FAT32 (true) or FAT12/16 (false)
-            /// by analyzing some preliminary conditions in BPB. Used to
-            /// determine whether we should parse post-BPB data as
-            /// `ext_bios_param_block_fat16` or `ext_bios_param_block_fat32`.
-            /// &lt;/summary&gt;
-            public bool IsFat32
-            {
-                get
-                {
-                    if (f_isFat32)
-                        return _isFat32;
-                    _isFat32 = (bool) (Bpb.MaxRootDirRec == 0);
-                    f_isFat32 = true;
-                    return _isFat32;
-                }
-            }
-            private bool f_sizeFat;
-            private int _sizeFat;
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Determines if filesystem is FAT32 (true) or FAT12/16 (false)</span>
+            <span class="c1">/// by analyzing some preliminary conditions in BPB. Used to</span>
+            <span class="c1">/// determine whether we should parse post-BPB data as</span>
+            <span class="c1">/// `ext_bios_param_block_fat16` or `ext_bios_param_block_fat32`.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsFat32</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isFat32</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_isFat32</span><span class="p">;</span>
+                    <span class="n">_isFat32</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">Bpb</span><span class="p">.</span><span class="n">MaxRootDirRec</span> <span class="p">==</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_isFat32</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_isFat32</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_sizeFat</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_sizeFat</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Size of one FAT in bytes
-            /// &lt;/summary&gt;
-            public int SizeFat
-            {
-                get
-                {
-                    if (f_sizeFat)
-                        return _sizeFat;
-                    _sizeFat = (int) ((Bpb.BytesPerLs * LsPerFat));
-                    f_sizeFat = true;
-                    return _sizeFat;
-                }
-            }
-            private bool f_posRootDir;
-            private int _posRootDir;
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Size of one FAT in bytes</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">SizeFat</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_sizeFat</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_sizeFat</span><span class="p">;</span>
+                    <span class="n">_sizeFat</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">Bpb</span><span class="p">.</span><span class="n">BytesPerLs</span> <span class="p">*</span> <span class="n">LsPerFat</span><span class="p">));</span>
+                    <span class="n">f_sizeFat</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_sizeFat</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_posRootDir</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_posRootDir</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Offset of root directory in bytes from start of filesystem
-            /// &lt;/summary&gt;
-            public int PosRootDir
-            {
-                get
-                {
-                    if (f_posRootDir)
-                        return _posRootDir;
-                    _posRootDir = (int) ((Bpb.BytesPerLs * (Bpb.NumReservedLs + (LsPerFat * Bpb.NumFats))));
-                    f_posRootDir = true;
-                    return _posRootDir;
-                }
-            }
-            private bool f_sizeRootDir;
-            private int _sizeRootDir;
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Offset of root directory in bytes from start of filesystem</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">PosRootDir</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_posRootDir</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_posRootDir</span><span class="p">;</span>
+                    <span class="n">_posRootDir</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">Bpb</span><span class="p">.</span><span class="n">BytesPerLs</span> <span class="p">*</span> <span class="p">(</span><span class="n">Bpb</span><span class="p">.</span><span class="n">NumReservedLs</span> <span class="p">+</span> <span class="p">(</span><span class="n">LsPerFat</span> <span class="p">*</span> <span class="n">Bpb</span><span class="p">.</span><span class="n">NumFats</span><span class="p">))));</span>
+                    <span class="n">f_posRootDir</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_posRootDir</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_sizeRootDir</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_sizeRootDir</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Size of root directory in bytes
-            /// &lt;/summary&gt;
-            public int SizeRootDir
-            {
-                get
-                {
-                    if (f_sizeRootDir)
-                        return _sizeRootDir;
-                    _sizeRootDir = (int) ((LsPerRootDir * Bpb.BytesPerLs));
-                    f_sizeRootDir = true;
-                    return _sizeRootDir;
-                }
-            }
-            private byte[] _jmpInstruction;
-            private string _oemName;
-            private BiosParamBlock _bpb;
-            private ExtBiosParamBlockFat16 _ebpbFat16;
-            private ExtBiosParamBlockFat32 _ebpbFat32;
-            private Vfat m_root;
-            private Vfat m_parent;
-            public byte[] JmpInstruction { get { return _jmpInstruction; } }
-            public string OemName { get { return _oemName; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Size of root directory in bytes</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">SizeRootDir</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_sizeRootDir</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_sizeRootDir</span><span class="p">;</span>
+                    <span class="n">_sizeRootDir</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">LsPerRootDir</span> <span class="p">*</span> <span class="n">Bpb</span><span class="p">.</span><span class="n">BytesPerLs</span><span class="p">));</span>
+                    <span class="n">f_sizeRootDir</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_sizeRootDir</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_jmpInstruction</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_oemName</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">BiosParamBlock</span> <span class="n">_bpb</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">ExtBiosParamBlockFat16</span> <span class="n">_ebpbFat16</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">ExtBiosParamBlockFat32</span> <span class="n">_ebpbFat32</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Vfat</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Vfat</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">JmpInstruction</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_jmpInstruction</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">OemName</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_oemName</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Basic BIOS parameter block, present in all versions of FAT
-            /// &lt;/summary&gt;
-            public BiosParamBlock Bpb { get { return _bpb; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Basic BIOS parameter block, present in all versions of FAT</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">BiosParamBlock</span> <span class="n">Bpb</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_bpb</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// FAT12/16-specific extended BIOS parameter block
-            /// &lt;/summary&gt;
-            public ExtBiosParamBlockFat16 EbpbFat16 { get { return _ebpbFat16; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// FAT12/16-specific extended BIOS parameter block</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">ExtBiosParamBlockFat16</span> <span class="n">EbpbFat16</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ebpbFat16</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// FAT32-specific extended BIOS parameter block
-            /// &lt;/summary&gt;
-            public ExtBiosParamBlockFat32 EbpbFat32 { get { return _ebpbFat32; } }
-            public Vfat M_Root { get { return m_root; } }
-            public Vfat M_Parent { get { return m_parent; } }
-        }
-        public partial class BiosParamBlock : KaitaiStruct
-        {
-            public static BiosParamBlock FromFile(string fileName)
-            {
-                return new BiosParamBlock(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// FAT32-specific extended BIOS parameter block</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">ExtBiosParamBlockFat32</span> <span class="n">EbpbFat32</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ebpbFat32</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Vfat</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Vfat</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">BiosParamBlock</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">BiosParamBlock</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">BiosParamBlock</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public BiosParamBlock(KaitaiStream p__io, Vfat.BootSector p__parent = null, Vfat p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _bytesPerLs = m_io.ReadU2le();
-                _lsPerClus = m_io.ReadU1();
-                _numReservedLs = m_io.ReadU2le();
-                _numFats = m_io.ReadU1();
-                _maxRootDirRec = m_io.ReadU2le();
-                _totalLs2 = m_io.ReadU2le();
-                _mediaCode = m_io.ReadU1();
-                _lsPerFat = m_io.ReadU2le();
-                _psPerTrack = m_io.ReadU2le();
-                _numHeads = m_io.ReadU2le();
-                _numHiddenSectors = m_io.ReadU4le();
-                _totalLs4 = m_io.ReadU4le();
-            }
-            private ushort _bytesPerLs;
-            private byte _lsPerClus;
-            private ushort _numReservedLs;
-            private byte _numFats;
-            private ushort _maxRootDirRec;
-            private ushort _totalLs2;
-            private byte _mediaCode;
-            private ushort _lsPerFat;
-            private ushort _psPerTrack;
-            private ushort _numHeads;
-            private uint _numHiddenSectors;
-            private uint _totalLs4;
-            private Vfat m_root;
-            private Vfat.BootSector m_parent;
+            <span class="k">public</span> <span class="nf">BiosParamBlock</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Vfat</span><span class="p">.</span><span class="n">BootSector</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Vfat</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_bytesPerLs</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_lsPerClus</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_numReservedLs</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_numFats</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_maxRootDirRec</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_totalLs2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_mediaCode</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_lsPerFat</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_psPerTrack</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_numHeads</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_numHiddenSectors</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_totalLs4</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_bytesPerLs</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_lsPerClus</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_numReservedLs</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_numFats</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_maxRootDirRec</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_totalLs2</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_mediaCode</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_lsPerFat</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_psPerTrack</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_numHeads</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numHiddenSectors</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_totalLs4</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Vfat</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Vfat</span><span class="p">.</span><span class="n">BootSector</span> <span class="n">m_parent</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Bytes per logical sector
-            /// &lt;/summary&gt;
-            public ushort BytesPerLs { get { return _bytesPerLs; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Bytes per logical sector</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">BytesPerLs</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_bytesPerLs</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Logical sectors per cluster
-            /// &lt;/summary&gt;
-            public byte LsPerClus { get { return _lsPerClus; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Logical sectors per cluster</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">LsPerClus</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lsPerClus</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Count of reserved logical sectors. The number of logical
-            /// sectors before the first FAT in the file system image.
-            /// &lt;/summary&gt;
-            public ushort NumReservedLs { get { return _numReservedLs; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Count of reserved logical sectors. The number of logical</span>
+            <span class="c1">/// sectors before the first FAT in the file system image.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">NumReservedLs</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numReservedLs</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Number of File Allocation Tables
-            /// &lt;/summary&gt;
-            public byte NumFats { get { return _numFats; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Number of File Allocation Tables</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">NumFats</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numFats</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Maximum number of FAT12 or FAT16 root directory entries. 0
-            /// for FAT32, where the root directory is stored in ordinary
-            /// data clusters.
-            /// &lt;/summary&gt;
-            public ushort MaxRootDirRec { get { return _maxRootDirRec; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Maximum number of FAT12 or FAT16 root directory entries. 0</span>
+            <span class="c1">/// for FAT32, where the root directory is stored in ordinary</span>
+            <span class="c1">/// data clusters.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">MaxRootDirRec</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_maxRootDirRec</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Total logical sectors (if zero, use total_ls_4)
-            /// &lt;/summary&gt;
-            public ushort TotalLs2 { get { return _totalLs2; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Total logical sectors (if zero, use total_ls_4)</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">TotalLs2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_totalLs2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Media descriptor
-            /// &lt;/summary&gt;
-            public byte MediaCode { get { return _mediaCode; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Media descriptor</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">MediaCode</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_mediaCode</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Logical sectors per File Allocation Table for
-            /// FAT12/FAT16. FAT32 sets this to 0 and uses the 32-bit value
-            /// at offset 0x024 instead.
-            /// &lt;/summary&gt;
-            public ushort LsPerFat { get { return _lsPerFat; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Logical sectors per File Allocation Table for</span>
+            <span class="c1">/// FAT12/FAT16. FAT32 sets this to 0 and uses the 32-bit value</span>
+            <span class="c1">/// at offset 0x024 instead.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">LsPerFat</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lsPerFat</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Physical sectors per track for disks with INT 13h CHS
-            /// geometry, e.g., 15 for a “1.20 MB” (1200 KB) floppy. A zero
-            /// entry indicates that this entry is reserved, but not used.
-            /// &lt;/summary&gt;
-            public ushort PsPerTrack { get { return _psPerTrack; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Physical sectors per track for disks with INT 13h CHS</span>
+            <span class="c1">/// geometry, e.g., 15 for a “1.20 MB” (1200 KB) floppy. A zero</span>
+            <span class="c1">/// entry indicates that this entry is reserved, but not used.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">PsPerTrack</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_psPerTrack</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Number of heads for disks with INT 13h CHS geometry,[9]
-            /// e.g., 2 for a double sided floppy.
-            /// &lt;/summary&gt;
-            public ushort NumHeads { get { return _numHeads; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Number of heads for disks with INT 13h CHS geometry,[9]</span>
+            <span class="c1">/// e.g., 2 for a double sided floppy.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">NumHeads</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numHeads</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Number of hidden sectors preceding the partition that
-            /// contains this FAT volume. This field should always be zero
-            /// on media that are not partitioned. This DOS 3.0 entry is
-            /// incompatible with a similar entry at offset 0x01C in BPBs
-            /// since DOS 3.31.  It must not be used if the logical sectors
-            /// entry at offset 0x013 is zero.
-            /// &lt;/summary&gt;
-            public uint NumHiddenSectors { get { return _numHiddenSectors; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Number of hidden sectors preceding the partition that</span>
+            <span class="c1">/// contains this FAT volume. This field should always be zero</span>
+            <span class="c1">/// on media that are not partitioned. This DOS 3.0 entry is</span>
+            <span class="c1">/// incompatible with a similar entry at offset 0x01C in BPBs</span>
+            <span class="c1">/// since DOS 3.31.  It must not be used if the logical sectors</span>
+            <span class="c1">/// entry at offset 0x013 is zero.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumHiddenSectors</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numHiddenSectors</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Total logical sectors including hidden sectors. This DOS 3.2
-            /// entry is incompatible with a similar entry at offset 0x020
-            /// in BPBs since DOS 3.31. It must not be used if the logical
-            /// sectors entry at offset 0x013 is zero.
-            /// &lt;/summary&gt;
-            public uint TotalLs4 { get { return _totalLs4; } }
-            public Vfat M_Root { get { return m_root; } }
-            public Vfat.BootSector M_Parent { get { return m_parent; } }
-        }
-        public partial class RootDirectoryRec : KaitaiStruct
-        {
-            public static RootDirectoryRec FromFile(string fileName)
-            {
-                return new RootDirectoryRec(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Total logical sectors including hidden sectors. This DOS 3.2</span>
+            <span class="c1">/// entry is incompatible with a similar entry at offset 0x020</span>
+            <span class="c1">/// in BPBs since DOS 3.31. It must not be used if the logical</span>
+            <span class="c1">/// sectors entry at offset 0x013 is zero.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">TotalLs4</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_totalLs4</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Vfat</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Vfat</span><span class="p">.</span><span class="n">BootSector</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">RootDirectoryRec</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">RootDirectoryRec</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">RootDirectoryRec</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public RootDirectoryRec(KaitaiStream p__io, Vfat.RootDirectory p__parent = null, Vfat p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _fileName = m_io.ReadBytes(11);
-                _attribute = m_io.ReadU1();
-                _reserved = m_io.ReadBytes(10);
-                _time = m_io.ReadU2le();
-                _date = m_io.ReadU2le();
-                _startClus = m_io.ReadU2le();
-                _fileSize = m_io.ReadU4le();
-            }
-            private byte[] _fileName;
-            private byte _attribute;
-            private byte[] _reserved;
-            private ushort _time;
-            private ushort _date;
-            private ushort _startClus;
-            private uint _fileSize;
-            private Vfat m_root;
-            private Vfat.RootDirectory m_parent;
-            public byte[] FileName { get { return _fileName; } }
-            public byte Attribute { get { return _attribute; } }
-            public byte[] Reserved { get { return _reserved; } }
-            public ushort Time { get { return _time; } }
-            public ushort Date { get { return _date; } }
-            public ushort StartClus { get { return _startClus; } }
-            public uint FileSize { get { return _fileSize; } }
-            public Vfat M_Root { get { return m_root; } }
-            public Vfat.RootDirectory M_Parent { get { return m_parent; } }
-        }
-        public partial class RootDirectory : KaitaiStruct
-        {
-            public static RootDirectory FromFile(string fileName)
-            {
-                return new RootDirectory(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">RootDirectoryRec</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Vfat</span><span class="p">.</span><span class="n">RootDirectory</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Vfat</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_fileName</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">11</span><span class="p">);</span>
+                <span class="n">_attribute</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_reserved</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">10</span><span class="p">);</span>
+                <span class="n">_time</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_date</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_startClus</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_fileSize</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_fileName</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_attribute</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_reserved</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_time</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_date</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_startClus</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_fileSize</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Vfat</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Vfat</span><span class="p">.</span><span class="n">RootDirectory</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">FileName</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fileName</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Attribute</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_attribute</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Reserved</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reserved</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Time</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_time</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Date</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_date</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">StartClus</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_startClus</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">FileSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fileSize</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Vfat</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Vfat</span><span class="p">.</span><span class="n">RootDirectory</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">RootDirectory</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">RootDirectory</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">RootDirectory</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public RootDirectory(KaitaiStream p__io, Vfat p__parent = null, Vfat p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _records = new List&lt;RootDirectoryRec&gt;((int) (M_Root.BootSector.Bpb.MaxRootDirRec));
-                for (var i = 0; i &lt; M_Root.BootSector.Bpb.MaxRootDirRec; i++)
-                {
-                    _records.Add(new RootDirectoryRec(m_io, this, m_root));
-                }
-            }
-            private List&lt;RootDirectoryRec&gt; _records;
-            private Vfat m_root;
-            private Vfat m_parent;
-            public List&lt;RootDirectoryRec&gt; Records { get { return _records; } }
-            public Vfat M_Root { get { return m_root; } }
-            public Vfat M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">RootDirectory</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Vfat</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Vfat</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_records</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RootDirectoryRec</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">BootSector</span><span class="p">.</span><span class="n">Bpb</span><span class="p">.</span><span class="n">MaxRootDirRec</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">BootSector</span><span class="p">.</span><span class="n">Bpb</span><span class="p">.</span><span class="n">MaxRootDirRec</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_records</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">RootDirectoryRec</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RootDirectoryRec</span><span class="p">&gt;</span> <span class="n">_records</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Vfat</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Vfat</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RootDirectoryRec</span><span class="p">&gt;</span> <span class="n">Records</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_records</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Vfat</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Vfat</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Extended BIOS Parameter Block (DOS 4.0+, OS/2 1.0+). Used only
-        /// for FAT12 and FAT16.
-        /// &lt;/summary&gt;
-        public partial class ExtBiosParamBlockFat16 : KaitaiStruct
-        {
-            public static ExtBiosParamBlockFat16 FromFile(string fileName)
-            {
-                return new ExtBiosParamBlockFat16(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Extended BIOS Parameter Block (DOS 4.0+, OS/2 1.0+). Used only</span>
+        <span class="c1">/// for FAT12 and FAT16.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ExtBiosParamBlockFat16</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">ExtBiosParamBlockFat16</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">ExtBiosParamBlockFat16</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public ExtBiosParamBlockFat16(KaitaiStream p__io, Vfat.BootSector p__parent = null, Vfat p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _physDriveNum = m_io.ReadU1();
-                _reserved1 = m_io.ReadU1();
-                _extBootSign = m_io.ReadU1();
-                _volumeId = m_io.ReadBytes(4);
-                _partitionVolumeLabel = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(11), 32));
-                _fsTypeStr = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(8), 32));
-            }
-            private byte _physDriveNum;
-            private byte _reserved1;
-            private byte _extBootSign;
-            private byte[] _volumeId;
-            private string _partitionVolumeLabel;
-            private string _fsTypeStr;
-            private Vfat m_root;
-            private Vfat.BootSector m_parent;
+            <span class="k">public</span> <span class="nf">ExtBiosParamBlockFat16</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Vfat</span><span class="p">.</span><span class="n">BootSector</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Vfat</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_physDriveNum</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_reserved1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_extBootSign</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_volumeId</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                <span class="n">_partitionVolumeLabel</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesStripRight</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">11</span><span class="p">),</span> <span class="m">32</span><span class="p">));</span>
+                <span class="n">_fsTypeStr</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesStripRight</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">8</span><span class="p">),</span> <span class="m">32</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_physDriveNum</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_reserved1</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_extBootSign</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_volumeId</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_partitionVolumeLabel</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_fsTypeStr</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Vfat</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Vfat</span><span class="p">.</span><span class="n">BootSector</span> <span class="n">m_parent</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Physical drive number (0x00 for (first) removable media,
-            /// 0x80 for (first) fixed disk as per INT 13h).
-            /// &lt;/summary&gt;
-            public byte PhysDriveNum { get { return _physDriveNum; } }
-            public byte Reserved1 { get { return _reserved1; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Physical drive number (0x00 for (first) removable media,</span>
+            <span class="c1">/// 0x80 for (first) fixed disk as per INT 13h).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">PhysDriveNum</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_physDriveNum</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Reserved1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reserved1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Should be 0x29 to indicate that an EBPB with the following 3
-            /// entries exists.
-            /// &lt;/summary&gt;
-            public byte ExtBootSign { get { return _extBootSign; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Should be 0x29 to indicate that an EBPB with the following 3</span>
+            <span class="c1">/// entries exists.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">ExtBootSign</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_extBootSign</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Volume ID (serial number).
-            /// 
-            /// Typically the serial number &amp;quot;xxxx-xxxx&amp;quot; is created by a
-            /// 16-bit addition of both DX values returned by INT 21h/AH=2Ah
-            /// (get system date) and INT 21h/AH=2Ch (get system time) for
-            /// the high word and another 16-bit addition of both CX values
-            /// for the low word of the serial number. Alternatively, some
-            /// DR-DOS disk utilities provide a /# option to generate a
-            /// human-readable time stamp &amp;quot;mmdd-hhmm&amp;quot; build from BCD-encoded
-            /// 8-bit values for the month, day, hour and minute instead of
-            /// a serial number.
-            /// &lt;/summary&gt;
-            public byte[] VolumeId { get { return _volumeId; } }
-            public string PartitionVolumeLabel { get { return _partitionVolumeLabel; } }
-            public string FsTypeStr { get { return _fsTypeStr; } }
-            public Vfat M_Root { get { return m_root; } }
-            public Vfat.BootSector M_Parent { get { return m_parent; } }
-        }
-        private bool f_fats;
-        private List&lt;byte[]&gt; _fats;
-        public List&lt;byte[]&gt; Fats
-        {
-            get
-            {
-                if (f_fats)
-                    return _fats;
-                long _pos = m_io.Pos;
-                m_io.Seek(BootSector.PosFats);
-                _fats = new List&lt;byte[]&gt;((int) (BootSector.Bpb.NumFats));
-                for (var i = 0; i &lt; BootSector.Bpb.NumFats; i++)
-                {
-                    _fats.Add(m_io.ReadBytes(BootSector.SizeFat));
-                }
-                m_io.Seek(_pos);
-                f_fats = true;
-                return _fats;
-            }
-        }
-        private bool f_rootDir;
-        private RootDirectory _rootDir;
-        public RootDirectory RootDir
-        {
-            get
-            {
-                if (f_rootDir)
-                    return _rootDir;
-                long _pos = m_io.Pos;
-                m_io.Seek(BootSector.PosRootDir);
-                __raw_rootDir = m_io.ReadBytes(BootSector.SizeRootDir);
-                var io___raw_rootDir = new KaitaiStream(__raw_rootDir);
-                _rootDir = new RootDirectory(io___raw_rootDir, this, m_root);
-                m_io.Seek(_pos);
-                f_rootDir = true;
-                return _rootDir;
-            }
-        }
-        private BootSector _bootSector;
-        private Vfat m_root;
-        private KaitaiStruct m_parent;
-        private byte[] __raw_rootDir;
-        public BootSector BootSector { get { return _bootSector; } }
-        public Vfat M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-        public byte[] M_RawRootDir { get { return __raw_rootDir; } }
-    }
-}
-</code></pre>
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Volume ID (serial number).</span>
+            <span class="c1">/// </span>
+            <span class="c1">/// Typically the serial number &amp;quot;xxxx-xxxx&amp;quot; is created by a</span>
+            <span class="c1">/// 16-bit addition of both DX values returned by INT 21h/AH=2Ah</span>
+            <span class="c1">/// (get system date) and INT 21h/AH=2Ch (get system time) for</span>
+            <span class="c1">/// the high word and another 16-bit addition of both CX values</span>
+            <span class="c1">/// for the low word of the serial number. Alternatively, some</span>
+            <span class="c1">/// DR-DOS disk utilities provide a /# option to generate a</span>
+            <span class="c1">/// human-readable time stamp &amp;quot;mmdd-hhmm&amp;quot; build from BCD-encoded</span>
+            <span class="c1">/// 8-bit values for the month, day, hour and minute instead of</span>
+            <span class="c1">/// a serial number.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">VolumeId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_volumeId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">PartitionVolumeLabel</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_partitionVolumeLabel</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">FsTypeStr</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fsTypeStr</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Vfat</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Vfat</span><span class="p">.</span><span class="n">BootSector</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_fats</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">_fats</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">Fats</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_fats</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_fats</span><span class="p">;</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">BootSector</span><span class="p">.</span><span class="n">PosFats</span><span class="p">);</span>
+                <span class="n">_fats</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">BootSector</span><span class="p">.</span><span class="n">Bpb</span><span class="p">.</span><span class="n">NumFats</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">BootSector</span><span class="p">.</span><span class="n">Bpb</span><span class="p">.</span><span class="n">NumFats</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_fats</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">BootSector</span><span class="p">.</span><span class="n">SizeFat</span><span class="p">));</span>
+                <span class="p">}</span>
+                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                <span class="n">f_fats</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_fats</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_rootDir</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">RootDirectory</span> <span class="n">_rootDir</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">RootDirectory</span> <span class="n">RootDir</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_rootDir</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_rootDir</span><span class="p">;</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">BootSector</span><span class="p">.</span><span class="n">PosRootDir</span><span class="p">);</span>
+                <span class="n">__raw_rootDir</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">BootSector</span><span class="p">.</span><span class="n">SizeRootDir</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_rootDir</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_rootDir</span><span class="p">);</span>
+                <span class="n">_rootDir</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RootDirectory</span><span class="p">(</span><span class="n">io___raw_rootDir</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                <span class="n">f_rootDir</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_rootDir</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="n">BootSector</span> <span class="n">_bootSector</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Vfat</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_rootDir</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">BootSector</span> <span class="n">BootSector</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_bootSector</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Vfat</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawRootDir</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_rootDir</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -908,8 +905,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

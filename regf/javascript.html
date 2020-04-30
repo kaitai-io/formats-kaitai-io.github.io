@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -257,501 +254,501 @@ var data = new Regf(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.Regf = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-/**
- * This spec allows to parse files used by Microsoft Windows family of
- * operating systems to store parts of its &quot;registry&quot;. &quot;Registry&quot; is a
- * hierarchical database that is used to store system settings (global
- * configuration, per-user, per-application configuration, etc).
- * 
- * Typically, registry files are stored in:
- * 
- * * System-wide: several files in `%SystemRoot%\System32\Config\`
- * * User-wide:
- *   * `%USERPROFILE%\Ntuser.dat`
- *   * `%USERPROFILE%\Local Settings\Application Data\Microsoft\Windows\Usrclass.dat` (localized, Windows 2000, Server 2003 and Windows XP)
- *   * `%USERPROFILE%\AppData\Local\Microsoft\Windows\Usrclass.dat` (non-localized, Windows Vista and later)
- * 
- * Note that one typically can&#39;t access files directly on a mounted
- * filesystem with a running Windows OS.
- * @see {@link https://github.com/libyal/libregf/blob/master/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc|Source}
- */
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">Regf</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * This spec allows to parse files used by Microsoft Windows family of</span>
+<span class="cm"> * operating systems to store parts of its &quot;registry&quot;. &quot;Registry&quot; is a</span>
+<span class="cm"> * hierarchical database that is used to store system settings (global</span>
+<span class="cm"> * configuration, per-user, per-application configuration, etc).</span>
+<span class="cm"> * </span>
+<span class="cm"> * Typically, registry files are stored in:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * System-wide: several files in `%SystemRoot%\System32\Config\`</span>
+<span class="cm"> * * User-wide:</span>
+<span class="cm"> *   * `%USERPROFILE%\Ntuser.dat`</span>
+<span class="cm"> *   * `%USERPROFILE%\Local Settings\Application Data\Microsoft\Windows\Usrclass.dat` (localized, Windows 2000, Server 2003 and Windows XP)</span>
+<span class="cm"> *   * `%USERPROFILE%\AppData\Local\Microsoft\Windows\Usrclass.dat` (non-localized, Windows Vista and later)</span>
+<span class="cm"> * </span>
+<span class="cm"> * Note that one typically can&#39;t access files directly on a mounted</span>
+<span class="cm"> * filesystem with a running Windows OS.</span>
+<span class="cm"> * @see {@link https://github.com/libyal/libregf/blob/master/documentation/Windows%20NT%20Registry%20File%20(REGF)%20format.asciidoc|Source}</span>
+<span class="cm"> */</span>
 
-var Regf = (function() {
-  function Regf(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
+<span class="kd">var</span> <span class="nx">Regf</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">Regf</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-    this._read();
-  }
-  Regf.prototype._read = function() {
-    this.header = new FileHeader(this._io, this, this._root);
-    this._raw_hiveBins = [];
-    this.hiveBins = [];
-    var i = 0;
-    while (!this._io.isEof()) {
-      this._raw_hiveBins.push(this._io.readBytes(4096));
-      var _io__raw_hiveBins = new KaitaiStream(this._raw_hiveBins[this._raw_hiveBins.length - 1]);
-      this.hiveBins.push(new HiveBin(_io__raw_hiveBins, this, this._root));
-      i++;
-    }
-  }
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">Regf</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FileHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_raw_hiveBins</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">hiveBins</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_hiveBins</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4096</span><span class="p">));</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_hiveBins</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_hiveBins</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_hiveBins</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">hiveBins</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">HiveBin</span><span class="p">(</span><span class="nx">_io__raw_hiveBins</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+      <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
 
-  var Filetime = Regf.Filetime = (function() {
-    function Filetime(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Filetime</span> <span class="o">=</span> <span class="nx">Regf</span><span class="p">.</span><span class="nx">Filetime</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Filetime</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Filetime.prototype._read = function() {
-      this.value = this._io.readU8le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Filetime</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return Filetime;
-  })();
+    <span class="k">return</span> <span class="nx">Filetime</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var HiveBin = Regf.HiveBin = (function() {
-    function HiveBin(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">HiveBin</span> <span class="o">=</span> <span class="nx">Regf</span><span class="p">.</span><span class="nx">HiveBin</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">HiveBin</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    HiveBin.prototype._read = function() {
-      this.header = new HiveBinHeader(this._io, this, this._root);
-      this.cells = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.cells.push(new HiveBinCell(this._io, this, this._root));
-        i++;
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">HiveBin</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HiveBinHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">cells</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">cells</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">HiveBinCell</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return HiveBin;
-  })();
+    <span class="k">return</span> <span class="nx">HiveBin</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var HiveBinHeader = Regf.HiveBinHeader = (function() {
-    function HiveBinHeader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">HiveBinHeader</span> <span class="o">=</span> <span class="nx">Regf</span><span class="p">.</span><span class="nx">HiveBinHeader</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">HiveBinHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    HiveBinHeader.prototype._read = function() {
-      this.signature = this._io.ensureFixedContents([104, 98, 105, 110]);
-      this.offset = this._io.readU4le();
-      this.size = this._io.readU4le();
-      this.unknown1 = this._io.readU4le();
-      this.unknown2 = this._io.readU4le();
-      this.timestamp = new Filetime(this._io, this, this._root);
-      this.unknown4 = this._io.readU4le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">HiveBinHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">signature</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">104</span><span class="p">,</span> <span class="mi">98</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span> <span class="mi">110</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">unknown1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">unknown2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">timestamp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Filetime</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">unknown4</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    /**
-     * The offset of the hive bin, Value in bytes and relative from
-     * the start of the hive bin data
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * The offset of the hive bin, Value in bytes and relative from</span>
+<span class="cm">     * the start of the hive bin data</span>
+<span class="cm">     */</span>
 
-    /**
-     * Size of the hive bin
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Size of the hive bin</span>
+<span class="cm">     */</span>
 
-    /**
-     * 0 most of the time, can contain remnant data
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * 0 most of the time, can contain remnant data</span>
+<span class="cm">     */</span>
 
-    /**
-     * 0 most of the time, can contain remnant data
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * 0 most of the time, can contain remnant data</span>
+<span class="cm">     */</span>
 
-    /**
-     * Only the root (first) hive bin seems to contain a valid FILETIME
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Only the root (first) hive bin seems to contain a valid FILETIME</span>
+<span class="cm">     */</span>
 
-    /**
-     * Contains number of bytes
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Contains number of bytes</span>
+<span class="cm">     */</span>
 
-    return HiveBinHeader;
-  })();
+    <span class="k">return</span> <span class="nx">HiveBinHeader</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var HiveBinCell = Regf.HiveBinCell = (function() {
-    function HiveBinCell(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">HiveBinCell</span> <span class="o">=</span> <span class="nx">Regf</span><span class="p">.</span><span class="nx">HiveBinCell</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">HiveBinCell</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    HiveBinCell.prototype._read = function() {
-      this.cellSizeRaw = this._io.readS4le();
-      this.identifier = KaitaiStream.bytesToStr(this._io.readBytes(2), &quot;ascii&quot;);
-      switch (this.identifier) {
-      case &quot;li&quot;:
-        this._raw_data = this._io.readBytes(((this.cellSize - 2) - 4));
-        var _io__raw_data = new KaitaiStream(this._raw_data);
-        this.data = new SubKeyListLi(_io__raw_data, this, this._root);
-        break;
-      case &quot;vk&quot;:
-        this._raw_data = this._io.readBytes(((this.cellSize - 2) - 4));
-        var _io__raw_data = new KaitaiStream(this._raw_data);
-        this.data = new SubKeyListVk(_io__raw_data, this, this._root);
-        break;
-      case &quot;lf&quot;:
-        this._raw_data = this._io.readBytes(((this.cellSize - 2) - 4));
-        var _io__raw_data = new KaitaiStream(this._raw_data);
-        this.data = new SubKeyListLhLf(_io__raw_data, this, this._root);
-        break;
-      case &quot;ri&quot;:
-        this._raw_data = this._io.readBytes(((this.cellSize - 2) - 4));
-        var _io__raw_data = new KaitaiStream(this._raw_data);
-        this.data = new SubKeyListRi(_io__raw_data, this, this._root);
-        break;
-      case &quot;lh&quot;:
-        this._raw_data = this._io.readBytes(((this.cellSize - 2) - 4));
-        var _io__raw_data = new KaitaiStream(this._raw_data);
-        this.data = new SubKeyListLhLf(_io__raw_data, this, this._root);
-        break;
-      case &quot;nk&quot;:
-        this._raw_data = this._io.readBytes(((this.cellSize - 2) - 4));
-        var _io__raw_data = new KaitaiStream(this._raw_data);
-        this.data = new NamedKey(_io__raw_data, this, this._root);
-        break;
-      case &quot;sk&quot;:
-        this._raw_data = this._io.readBytes(((this.cellSize - 2) - 4));
-        var _io__raw_data = new KaitaiStream(this._raw_data);
-        this.data = new SubKeyListSk(_io__raw_data, this, this._root);
-        break;
-      default:
-        this.data = this._io.readBytes(((this.cellSize - 2) - 4));
-        break;
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">HiveBinCell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">cellSizeRaw</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">identifier</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">identifier</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="s2">&quot;li&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">cellSize</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SubKeyListLi</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;vk&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">cellSize</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SubKeyListVk</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;lf&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">cellSize</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SubKeyListLhLf</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;ri&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">cellSize</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SubKeyListRi</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;lh&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">cellSize</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SubKeyListLhLf</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;nk&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">cellSize</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NamedKey</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;sk&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">cellSize</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SubKeyListSk</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">default</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">cellSize</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    var SubKeyListVk = HiveBinCell.SubKeyListVk = (function() {
-      SubKeyListVk.DataTypeEnum = Object.freeze({
-        REG_NONE: 0,
-        REG_SZ: 1,
-        REG_EXPAND_SZ: 2,
-        REG_BINARY: 3,
-        REG_DWORD: 4,
-        REG_DWORD_BIG_ENDIAN: 5,
-        REG_LINK: 6,
-        REG_MULTI_SZ: 7,
-        REG_RESOURCE_LIST: 8,
-        REG_FULL_RESOURCE_DESCRIPTOR: 9,
-        REG_RESOURCE_REQUIREMENTS_LIST: 10,
-        REG_QWORD: 11,
+    <span class="kd">var</span> <span class="nx">SubKeyListVk</span> <span class="o">=</span> <span class="nx">HiveBinCell</span><span class="p">.</span><span class="nx">SubKeyListVk</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">SubKeyListVk</span><span class="p">.</span><span class="nx">DataTypeEnum</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+        <span class="nx">REG_NONE</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nx">REG_SZ</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">REG_EXPAND_SZ</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="nx">REG_BINARY</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="nx">REG_DWORD</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="nx">REG_DWORD_BIG_ENDIAN</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="nx">REG_LINK</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="nx">REG_MULTI_SZ</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="nx">REG_RESOURCE_LIST</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="nx">REG_FULL_RESOURCE_DESCRIPTOR</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="nx">REG_RESOURCE_REQUIREMENTS_LIST</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="nx">REG_QWORD</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
 
-        0: &quot;REG_NONE&quot;,
-        1: &quot;REG_SZ&quot;,
-        2: &quot;REG_EXPAND_SZ&quot;,
-        3: &quot;REG_BINARY&quot;,
-        4: &quot;REG_DWORD&quot;,
-        5: &quot;REG_DWORD_BIG_ENDIAN&quot;,
-        6: &quot;REG_LINK&quot;,
-        7: &quot;REG_MULTI_SZ&quot;,
-        8: &quot;REG_RESOURCE_LIST&quot;,
-        9: &quot;REG_FULL_RESOURCE_DESCRIPTOR&quot;,
-        10: &quot;REG_RESOURCE_REQUIREMENTS_LIST&quot;,
-        11: &quot;REG_QWORD&quot;,
-      });
+        <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;REG_NONE&quot;</span><span class="p">,</span>
+        <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;REG_SZ&quot;</span><span class="p">,</span>
+        <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;REG_EXPAND_SZ&quot;</span><span class="p">,</span>
+        <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;REG_BINARY&quot;</span><span class="p">,</span>
+        <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;REG_DWORD&quot;</span><span class="p">,</span>
+        <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;REG_DWORD_BIG_ENDIAN&quot;</span><span class="p">,</span>
+        <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;REG_LINK&quot;</span><span class="p">,</span>
+        <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;REG_MULTI_SZ&quot;</span><span class="p">,</span>
+        <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;REG_RESOURCE_LIST&quot;</span><span class="p">,</span>
+        <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;REG_FULL_RESOURCE_DESCRIPTOR&quot;</span><span class="p">,</span>
+        <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;REG_RESOURCE_REQUIREMENTS_LIST&quot;</span><span class="p">,</span>
+        <span class="mi">11</span><span class="o">:</span> <span class="s2">&quot;REG_QWORD&quot;</span><span class="p">,</span>
+      <span class="p">});</span>
 
-      SubKeyListVk.VkFlags = Object.freeze({
-        VALUE_COMP_NAME: 1,
+      <span class="nx">SubKeyListVk</span><span class="p">.</span><span class="nx">VkFlags</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+        <span class="nx">VALUE_COMP_NAME</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
 
-        1: &quot;VALUE_COMP_NAME&quot;,
-      });
+        <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;VALUE_COMP_NAME&quot;</span><span class="p">,</span>
+      <span class="p">});</span>
 
-      function SubKeyListVk(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+      <span class="kd">function</span> <span class="nx">SubKeyListVk</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      SubKeyListVk.prototype._read = function() {
-        this.valueNameSize = this._io.readU2le();
-        this.dataSize = this._io.readU4le();
-        this.dataOffset = this._io.readU4le();
-        this.dataType = this._io.readU4le();
-        this.flags = this._io.readU2le();
-        this.padding = this._io.readU2le();
-        if (this.flags == Regf.HiveBinCell.SubKeyListVk.VkFlags.VALUE_COMP_NAME) {
-          this.valueName = KaitaiStream.bytesToStr(this._io.readBytes(this.valueNameSize), &quot;ascii&quot;);
-        }
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">SubKeyListVk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">valueNameSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">dataSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">dataOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">dataType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">padding</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">==</span> <span class="nx">Regf</span><span class="p">.</span><span class="nx">HiveBinCell</span><span class="p">.</span><span class="nx">SubKeyListVk</span><span class="p">.</span><span class="nx">VkFlags</span><span class="p">.</span><span class="nx">VALUE_COMP_NAME</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">valueName</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">valueNameSize</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
 
-      return SubKeyListVk;
-    })();
+      <span class="k">return</span> <span class="nx">SubKeyListVk</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    var SubKeyListLhLf = HiveBinCell.SubKeyListLhLf = (function() {
-      function SubKeyListLhLf(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">SubKeyListLhLf</span> <span class="o">=</span> <span class="nx">HiveBinCell</span><span class="p">.</span><span class="nx">SubKeyListLhLf</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">SubKeyListLhLf</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      SubKeyListLhLf.prototype._read = function() {
-        this.count = this._io.readU2le();
-        this.items = new Array(this.count);
-        for (var i = 0; i &lt; this.count; i++) {
-          this.items[i] = new Item(this._io, this, this._root);
-        }
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">SubKeyListLhLf</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">count</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">items</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Item</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
 
-      var Item = SubKeyListLhLf.Item = (function() {
-        function Item(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
+      <span class="kd">var</span> <span class="nx">Item</span> <span class="o">=</span> <span class="nx">SubKeyListLhLf</span><span class="p">.</span><span class="nx">Item</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">function</span> <span class="nx">Item</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-          this._read();
-        }
-        Item.prototype._read = function() {
-          this.namedKeyOffset = this._io.readU4le();
-          this.hashValue = this._io.readU4le();
-        }
+          <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nx">Item</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">namedKeyOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">hashValue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
 
-        return Item;
-      })();
+        <span class="k">return</span> <span class="nx">Item</span><span class="p">;</span>
+      <span class="p">})();</span>
 
-      return SubKeyListLhLf;
-    })();
+      <span class="k">return</span> <span class="nx">SubKeyListLhLf</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    var SubKeyListSk = HiveBinCell.SubKeyListSk = (function() {
-      function SubKeyListSk(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">SubKeyListSk</span> <span class="o">=</span> <span class="nx">HiveBinCell</span><span class="p">.</span><span class="nx">SubKeyListSk</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">SubKeyListSk</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      SubKeyListSk.prototype._read = function() {
-        this.unknown1 = this._io.readU2le();
-        this.previousSecurityKeyOffset = this._io.readU4le();
-        this.nextSecurityKeyOffset = this._io.readU4le();
-        this.referenceCount = this._io.readU4le();
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">SubKeyListSk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">unknown1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">previousSecurityKeyOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">nextSecurityKeyOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">referenceCount</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="p">}</span>
 
-      return SubKeyListSk;
-    })();
+      <span class="k">return</span> <span class="nx">SubKeyListSk</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    var SubKeyListLi = HiveBinCell.SubKeyListLi = (function() {
-      function SubKeyListLi(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">SubKeyListLi</span> <span class="o">=</span> <span class="nx">HiveBinCell</span><span class="p">.</span><span class="nx">SubKeyListLi</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">SubKeyListLi</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      SubKeyListLi.prototype._read = function() {
-        this.count = this._io.readU2le();
-        this.items = new Array(this.count);
-        for (var i = 0; i &lt; this.count; i++) {
-          this.items[i] = new Item(this._io, this, this._root);
-        }
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">SubKeyListLi</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">count</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">items</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Item</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
 
-      var Item = SubKeyListLi.Item = (function() {
-        function Item(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
+      <span class="kd">var</span> <span class="nx">Item</span> <span class="o">=</span> <span class="nx">SubKeyListLi</span><span class="p">.</span><span class="nx">Item</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">function</span> <span class="nx">Item</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-          this._read();
-        }
-        Item.prototype._read = function() {
-          this.namedKeyOffset = this._io.readU4le();
-        }
+          <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nx">Item</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">namedKeyOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
 
-        return Item;
-      })();
+        <span class="k">return</span> <span class="nx">Item</span><span class="p">;</span>
+      <span class="p">})();</span>
 
-      return SubKeyListLi;
-    })();
+      <span class="k">return</span> <span class="nx">SubKeyListLi</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    var NamedKey = HiveBinCell.NamedKey = (function() {
-      NamedKey.NkFlags = Object.freeze({
-        KEY_IS_VOLATILE: 1,
-        KEY_HIVE_EXIT: 2,
-        KEY_HIVE_ENTRY: 4,
-        KEY_NO_DELETE: 8,
-        KEY_SYM_LINK: 16,
-        KEY_COMP_NAME: 32,
-        KEY_PREFEF_HANDLE: 64,
-        KEY_VIRT_MIRRORED: 128,
-        KEY_VIRT_TARGET: 256,
-        KEY_VIRTUAL_STORE: 512,
-        UNKNOWN1: 4096,
-        UNKNOWN2: 16384,
+    <span class="kd">var</span> <span class="nx">NamedKey</span> <span class="o">=</span> <span class="nx">HiveBinCell</span><span class="p">.</span><span class="nx">NamedKey</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">NamedKey</span><span class="p">.</span><span class="nx">NkFlags</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+        <span class="nx">KEY_IS_VOLATILE</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">KEY_HIVE_EXIT</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="nx">KEY_HIVE_ENTRY</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="nx">KEY_NO_DELETE</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="nx">KEY_SYM_LINK</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="nx">KEY_COMP_NAME</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="nx">KEY_PREFEF_HANDLE</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
+        <span class="nx">KEY_VIRT_MIRRORED</span><span class="o">:</span> <span class="mi">128</span><span class="p">,</span>
+        <span class="nx">KEY_VIRT_TARGET</span><span class="o">:</span> <span class="mi">256</span><span class="p">,</span>
+        <span class="nx">KEY_VIRTUAL_STORE</span><span class="o">:</span> <span class="mi">512</span><span class="p">,</span>
+        <span class="nx">UNKNOWN1</span><span class="o">:</span> <span class="mi">4096</span><span class="p">,</span>
+        <span class="nx">UNKNOWN2</span><span class="o">:</span> <span class="mi">16384</span><span class="p">,</span>
 
-        1: &quot;KEY_IS_VOLATILE&quot;,
-        2: &quot;KEY_HIVE_EXIT&quot;,
-        4: &quot;KEY_HIVE_ENTRY&quot;,
-        8: &quot;KEY_NO_DELETE&quot;,
-        16: &quot;KEY_SYM_LINK&quot;,
-        32: &quot;KEY_COMP_NAME&quot;,
-        64: &quot;KEY_PREFEF_HANDLE&quot;,
-        128: &quot;KEY_VIRT_MIRRORED&quot;,
-        256: &quot;KEY_VIRT_TARGET&quot;,
-        512: &quot;KEY_VIRTUAL_STORE&quot;,
-        4096: &quot;UNKNOWN1&quot;,
-        16384: &quot;UNKNOWN2&quot;,
-      });
+        <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;KEY_IS_VOLATILE&quot;</span><span class="p">,</span>
+        <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;KEY_HIVE_EXIT&quot;</span><span class="p">,</span>
+        <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;KEY_HIVE_ENTRY&quot;</span><span class="p">,</span>
+        <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;KEY_NO_DELETE&quot;</span><span class="p">,</span>
+        <span class="mi">16</span><span class="o">:</span> <span class="s2">&quot;KEY_SYM_LINK&quot;</span><span class="p">,</span>
+        <span class="mi">32</span><span class="o">:</span> <span class="s2">&quot;KEY_COMP_NAME&quot;</span><span class="p">,</span>
+        <span class="mi">64</span><span class="o">:</span> <span class="s2">&quot;KEY_PREFEF_HANDLE&quot;</span><span class="p">,</span>
+        <span class="mi">128</span><span class="o">:</span> <span class="s2">&quot;KEY_VIRT_MIRRORED&quot;</span><span class="p">,</span>
+        <span class="mi">256</span><span class="o">:</span> <span class="s2">&quot;KEY_VIRT_TARGET&quot;</span><span class="p">,</span>
+        <span class="mi">512</span><span class="o">:</span> <span class="s2">&quot;KEY_VIRTUAL_STORE&quot;</span><span class="p">,</span>
+        <span class="mi">4096</span><span class="o">:</span> <span class="s2">&quot;UNKNOWN1&quot;</span><span class="p">,</span>
+        <span class="mi">16384</span><span class="o">:</span> <span class="s2">&quot;UNKNOWN2&quot;</span><span class="p">,</span>
+      <span class="p">});</span>
 
-      function NamedKey(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+      <span class="kd">function</span> <span class="nx">NamedKey</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      NamedKey.prototype._read = function() {
-        this.flags = this._io.readU2le();
-        this.lastKeyWrittenDateAndTime = new Filetime(this._io, this, this._root);
-        this.unknown1 = this._io.readU4le();
-        this.parentKeyOffset = this._io.readU4le();
-        this.numberOfSubKeys = this._io.readU4le();
-        this.numberOfVolatileSubKeys = this._io.readU4le();
-        this.subKeysListOffset = this._io.readU4le();
-        this.numberOfValues = this._io.readU4le();
-        this.valuesListOffset = this._io.readU4le();
-        this.securityKeyOffset = this._io.readU4le();
-        this.classNameOffset = this._io.readU4le();
-        this.largestSubKeyNameSize = this._io.readU4le();
-        this.largestSubKeyClassNameSize = this._io.readU4le();
-        this.largestValueNameSize = this._io.readU4le();
-        this.largestValueDataSize = this._io.readU4le();
-        this.unknown2 = this._io.readU4le();
-        this.keyNameSize = this._io.readU2le();
-        this.classNameSize = this._io.readU2le();
-        this.unknownStringSize = this._io.readU4le();
-        this.unknownString = KaitaiStream.bytesToStr(this._io.readBytes(this.unknownStringSize), &quot;ascii&quot;);
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">NamedKey</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">lastKeyWrittenDateAndTime</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Filetime</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">unknown1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">parentKeyOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">numberOfSubKeys</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">numberOfVolatileSubKeys</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">subKeysListOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">numberOfValues</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">valuesListOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">securityKeyOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">classNameOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">largestSubKeyNameSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">largestSubKeyClassNameSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">largestValueNameSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">largestValueDataSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">unknown2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">keyNameSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">classNameSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">unknownStringSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">unknownString</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">unknownStringSize</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
 
-      return NamedKey;
-    })();
+      <span class="k">return</span> <span class="nx">NamedKey</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    var SubKeyListRi = HiveBinCell.SubKeyListRi = (function() {
-      function SubKeyListRi(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">SubKeyListRi</span> <span class="o">=</span> <span class="nx">HiveBinCell</span><span class="p">.</span><span class="nx">SubKeyListRi</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">SubKeyListRi</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      SubKeyListRi.prototype._read = function() {
-        this.count = this._io.readU2le();
-        this.items = new Array(this.count);
-        for (var i = 0; i &lt; this.count; i++) {
-          this.items[i] = new Item(this._io, this, this._root);
-        }
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">SubKeyListRi</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">count</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">items</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Item</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
 
-      var Item = SubKeyListRi.Item = (function() {
-        function Item(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
+      <span class="kd">var</span> <span class="nx">Item</span> <span class="o">=</span> <span class="nx">SubKeyListRi</span><span class="p">.</span><span class="nx">Item</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">function</span> <span class="nx">Item</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-          this._read();
-        }
-        Item.prototype._read = function() {
-          this.subKeyListOffset = this._io.readU4le();
-        }
+          <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nx">Item</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">subKeyListOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
 
-        return Item;
-      })();
+        <span class="k">return</span> <span class="nx">Item</span><span class="p">;</span>
+      <span class="p">})();</span>
 
-      return SubKeyListRi;
-    })();
-    Object.defineProperty(HiveBinCell.prototype, &#39;cellSize&#39;, {
-      get: function() {
-        if (this._m_cellSize !== undefined)
-          return this._m_cellSize;
-        this._m_cellSize = ((this.cellSizeRaw &lt; 0 ? -1 : 1) * this.cellSizeRaw);
-        return this._m_cellSize;
-      }
-    });
-    Object.defineProperty(HiveBinCell.prototype, &#39;isAllocated&#39;, {
-      get: function() {
-        if (this._m_isAllocated !== undefined)
-          return this._m_isAllocated;
-        this._m_isAllocated = this.cellSizeRaw &lt; 0;
-        return this._m_isAllocated;
-      }
-    });
+      <span class="k">return</span> <span class="nx">SubKeyListRi</span><span class="p">;</span>
+    <span class="p">})();</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">HiveBinCell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;cellSize&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_cellSize</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_cellSize</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_cellSize</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">cellSizeRaw</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="o">-</span><span class="mi">1</span> <span class="o">:</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">cellSizeRaw</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_cellSize</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">HiveBinCell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isAllocated&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isAllocated</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isAllocated</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isAllocated</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">cellSizeRaw</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isAllocated</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    return HiveBinCell;
-  })();
+    <span class="k">return</span> <span class="nx">HiveBinCell</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var FileHeader = Regf.FileHeader = (function() {
-    FileHeader.FileType = Object.freeze({
-      NORMAL: 0,
-      TRANSACTION_LOG: 1,
+  <span class="kd">var</span> <span class="nx">FileHeader</span> <span class="o">=</span> <span class="nx">Regf</span><span class="p">.</span><span class="nx">FileHeader</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">FileHeader</span><span class="p">.</span><span class="nx">FileType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+      <span class="nx">NORMAL</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">TRANSACTION_LOG</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
 
-      0: &quot;NORMAL&quot;,
-      1: &quot;TRANSACTION_LOG&quot;,
-    });
+      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;NORMAL&quot;</span><span class="p">,</span>
+      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;TRANSACTION_LOG&quot;</span><span class="p">,</span>
+    <span class="p">});</span>
 
-    FileHeader.FileFormat = Object.freeze({
-      DIRECT_MEMORY_LOAD: 1,
+    <span class="nx">FileHeader</span><span class="p">.</span><span class="nx">FileFormat</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+      <span class="nx">DIRECT_MEMORY_LOAD</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
 
-      1: &quot;DIRECT_MEMORY_LOAD&quot;,
-    });
+      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;DIRECT_MEMORY_LOAD&quot;</span><span class="p">,</span>
+    <span class="p">});</span>
 
-    function FileHeader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+    <span class="kd">function</span> <span class="nx">FileHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    FileHeader.prototype._read = function() {
-      this.signature = this._io.ensureFixedContents([114, 101, 103, 102]);
-      this.primarySequenceNumber = this._io.readU4le();
-      this.secondarySequenceNumber = this._io.readU4le();
-      this.lastModificationDateAndTime = new Filetime(this._io, this, this._root);
-      this.majorVersion = this._io.readU4le();
-      this.minorVersion = this._io.readU4le();
-      this.type = this._io.readU4le();
-      this.format = this._io.readU4le();
-      this.rootKeyOffset = this._io.readU4le();
-      this.hiveBinsDataSize = this._io.readU4le();
-      this.clusteringFactor = this._io.readU4le();
-      this.unknown1 = this._io.readBytes(64);
-      this.unknown2 = this._io.readBytes(396);
-      this.checksum = this._io.readU4le();
-      this.reserved = this._io.readBytes(3576);
-      this.bootType = this._io.readU4le();
-      this.bootRecover = this._io.readU4le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">FileHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">signature</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">114</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">102</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">primarySequenceNumber</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">secondarySequenceNumber</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lastModificationDateAndTime</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Filetime</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">majorVersion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">minorVersion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">format</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">rootKeyOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">hiveBinsDataSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">clusteringFactor</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">unknown1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">64</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">unknown2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">396</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">checksum</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">3576</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">bootType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">bootRecover</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return FileHeader;
-  })();
+    <span class="k">return</span> <span class="nx">FileHeader</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  return Regf;
-})();
-return Regf;
-}));
-</code></pre>
+  <span class="k">return</span> <span class="nx">Regf</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">Regf</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -778,8 +775,8 @@ return Regf;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -262,312 +259,312 @@ data = WindowsEvtLog.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# EVT files are Windows Event Log files written by older Windows
-# operating systems (2000, XP, 2003). They are used as binary log
-# files by several major Windows subsystems and
-# applications. Typically, several of them can be found in
-# `%WINDIR%\system32\config` directory:
-# 
-# * Application = `AppEvent.evt`
-# * System = `SysEvent.evt`
-# * Security = `SecEvent.evt`
-# 
-# Alternatively, one can export any system event log as distinct .evt
-# file using relevant option in Event Viewer application.
-# 
-# A Windows application can submit an entry into these logs using
-# [ReportEvent](https://msdn.microsoft.com/en-us/library/aa363679(v=vs.85).aspx)
-# function of Windows API.
-# 
-# Internally, EVT files consist of a fixed-size header and event
-# records. There are several usage scenarios (non-wrapping vs wrapping
-# log files) which result in slightly different organization of
-# records.
-# @see https://msdn.microsoft.com/en-us/library/bb309026(v=vs.85).aspx Source
-class WindowsEvtLog &lt; Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+<span class="c1">##</span>
+<span class="c1"># EVT files are Windows Event Log files written by older Windows</span>
+<span class="c1"># operating systems (2000, XP, 2003). They are used as binary log</span>
+<span class="c1"># files by several major Windows subsystems and</span>
+<span class="c1"># applications. Typically, several of them can be found in</span>
+<span class="c1"># `%WINDIR%\system32\config` directory:</span>
+<span class="c1"># </span>
+<span class="c1"># * Application = `AppEvent.evt`</span>
+<span class="c1"># * System = `SysEvent.evt`</span>
+<span class="c1"># * Security = `SecEvent.evt`</span>
+<span class="c1"># </span>
+<span class="c1"># Alternatively, one can export any system event log as distinct .evt</span>
+<span class="c1"># file using relevant option in Event Viewer application.</span>
+<span class="c1"># </span>
+<span class="c1"># A Windows application can submit an entry into these logs using</span>
+<span class="c1"># [ReportEvent](https://msdn.microsoft.com/en-us/library/aa363679(v=vs.85).aspx)</span>
+<span class="c1"># function of Windows API.</span>
+<span class="c1"># </span>
+<span class="c1"># Internally, EVT files consist of a fixed-size header and event</span>
+<span class="c1"># records. There are several usage scenarios (non-wrapping vs wrapping</span>
+<span class="c1"># log files) which result in slightly different organization of</span>
+<span class="c1"># records.</span>
+<span class="c1"># @see https://msdn.microsoft.com/en-us/library/bb309026(v=vs.85).aspx Source</span>
+<span class="k">class</span> <span class="nc">WindowsEvtLog</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @header = Header.new(@_io, self, @_root)
-    @records = []
-    i = 0
-    while not @_io.eof?
-      @records &lt;&lt; Record.new(@_io, self, @_root)
-      i += 1
-    end
-    self
-  end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@header</span> <span class="o">=</span> <span class="no">Header</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@records</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+      <span class="vi">@records</span> <span class="o">&lt;&lt;</span> <span class="no">Record</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://msdn.microsoft.com/en-us/library/bb309024(v=vs.85).aspx Source
-  class Header &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/bb309024(v=vs.85).aspx Source</span>
+  <span class="k">class</span> <span class="nc">Header</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len_header = @_io.read_u4le
-      @magic = @_io.ensure_fixed_contents([76, 102, 76, 101].pack(&#39;C*&#39;))
-      @version_major = @_io.read_u4le
-      @version_minor = @_io.read_u4le
-      @ofs_start = @_io.read_u4le
-      @ofs_end = @_io.read_u4le
-      @cur_rec_idx = @_io.read_u4le
-      @oldest_rec_idx = @_io.read_u4le
-      @len_file_max = @_io.read_u4le
-      @flags = Flags.new(@_io, self, @_root)
-      @retention = @_io.read_u4le
-      @len_header_2 = @_io.read_u4le
-      self
-    end
-    class Flags &lt; Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">76</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">101</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@version_major</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@version_minor</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@ofs_start</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@ofs_end</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@cur_rec_idx</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@oldest_rec_idx</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@len_file_max</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="no">Flags</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@retention</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@len_header_2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">Flags</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
 
-      def _read
-        @reserved = @_io.read_bits_int(28)
-        @archive = @_io.read_bits_int(1) != 0
-        @log_full = @_io.read_bits_int(1) != 0
-        @wrap = @_io.read_bits_int(1) != 0
-        @dirty = @_io.read_bits_int(1) != 0
-        self
-      end
-      attr_reader :reserved
+      <span class="k">def</span> <span class="nf">_read</span>
+        <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">28</span><span class="p">)</span>
+        <span class="vi">@archive</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@log_full</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@wrap</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@dirty</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
+      <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
 
-      ##
-      # True if archive attribute has been set for this log file.
-      attr_reader :archive
+      <span class="c1">##</span>
+      <span class="c1"># True if archive attribute has been set for this log file.</span>
+      <span class="kp">attr_reader</span> <span class="ss">:archive</span>
 
-      ##
-      # True if last write operation failed due to log being full.
-      attr_reader :log_full
+      <span class="c1">##</span>
+      <span class="c1"># True if last write operation failed due to log being full.</span>
+      <span class="kp">attr_reader</span> <span class="ss">:log_full</span>
 
-      ##
-      # True if wrapping of record has occured.
-      attr_reader :wrap
+      <span class="c1">##</span>
+      <span class="c1"># True if wrapping of record has occured.</span>
+      <span class="kp">attr_reader</span> <span class="ss">:wrap</span>
 
-      ##
-      # True if write operation was in progress, but log file
-      # wasn&#39;t properly closed.
-      attr_reader :dirty
-    end
+      <span class="c1">##</span>
+      <span class="c1"># True if write operation was in progress, but log file</span>
+      <span class="c1"># wasn&#39;t properly closed.</span>
+      <span class="kp">attr_reader</span> <span class="ss">:dirty</span>
+    <span class="k">end</span>
 
-    ##
-    # Size of the header structure, must be 0x30.
-    attr_reader :len_header
-    attr_reader :magic
-    attr_reader :version_major
-    attr_reader :version_minor
+    <span class="c1">##</span>
+    <span class="c1"># Size of the header structure, must be 0x30.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_header</span>
+    <span class="kp">attr_reader</span> <span class="ss">:magic</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version_major</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version_minor</span>
 
-    ##
-    # Offset of oldest record kept in this log file.
-    attr_reader :ofs_start
+    <span class="c1">##</span>
+    <span class="c1"># Offset of oldest record kept in this log file.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_start</span>
 
-    ##
-    # Offset of EOF log record, which is a placeholder for new record.
-    attr_reader :ofs_end
+    <span class="c1">##</span>
+    <span class="c1"># Offset of EOF log record, which is a placeholder for new record.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_end</span>
 
-    ##
-    # Index of current record, where a new submission would be
-    # written to (normally there should to EOF log record there).
-    attr_reader :cur_rec_idx
+    <span class="c1">##</span>
+    <span class="c1"># Index of current record, where a new submission would be</span>
+    <span class="c1"># written to (normally there should to EOF log record there).</span>
+    <span class="kp">attr_reader</span> <span class="ss">:cur_rec_idx</span>
 
-    ##
-    # Index of oldest record in the log file
-    attr_reader :oldest_rec_idx
+    <span class="c1">##</span>
+    <span class="c1"># Index of oldest record in the log file</span>
+    <span class="kp">attr_reader</span> <span class="ss">:oldest_rec_idx</span>
 
-    ##
-    # Total maximum size of the log file
-    attr_reader :len_file_max
-    attr_reader :flags
-    attr_reader :retention
+    <span class="c1">##</span>
+    <span class="c1"># Total maximum size of the log file</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_file_max</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:retention</span>
 
-    ##
-    # Size of the header structure repeated again, and again it must be 0x30.
-    attr_reader :len_header_2
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Size of the header structure repeated again, and again it must be 0x30.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_header_2</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx Source
-  class Record &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx Source</span>
+  <span class="k">class</span> <span class="nc">Record</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len_record = @_io.read_u4le
-      @type = @_io.read_u4le
-      case type
-      when 1699505740
-        @_raw_body = @_io.read_bytes((len_record - 12))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = RecordBody.new(io, self, @_root)
-      when 286331153
-        @_raw_body = @_io.read_bytes((len_record - 12))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = CursorRecordBody.new(io, self, @_root)
-      else
-        @body = @_io.read_bytes((len_record - 12))
-      end
-      @len_record2 = @_io.read_u4le
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len_record</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@type</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">case</span> <span class="n">type</span>
+      <span class="k">when</span> <span class="mi">1699505740</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_record</span> <span class="o">-</span> <span class="mi">12</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">RecordBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="mi">286331153</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_record</span> <span class="o">-</span> <span class="mi">12</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">CursorRecordBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_record</span> <span class="o">-</span> <span class="mi">12</span><span class="p">))</span>
+      <span class="k">end</span>
+      <span class="vi">@len_record2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Size of whole record, including all headers, footers and data
-    attr_reader :len_record
+    <span class="c1">##</span>
+    <span class="c1"># Size of whole record, including all headers, footers and data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_record</span>
 
-    ##
-    # Type of record. Normal log records specify &quot;LfLe&quot;
-    # (0x654c664c) in this field, cursor records use 0x11111111.
-    attr_reader :type
+    <span class="c1">##</span>
+    <span class="c1"># Type of record. Normal log records specify &quot;LfLe&quot;</span>
+    <span class="c1"># (0x654c664c) in this field, cursor records use 0x11111111.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:type</span>
 
-    ##
-    # Record body interpretation depends on type of record. Body
-    # size is specified in a way that it won&#39;t include a 8-byte
-    # &quot;header&quot; (`len_record` + `type`) and a &quot;footer&quot;
-    # (`len_record2`).
-    attr_reader :body
+    <span class="c1">##</span>
+    <span class="c1"># Record body interpretation depends on type of record. Body</span>
+    <span class="c1"># size is specified in a way that it won&#39;t include a 8-byte</span>
+    <span class="c1"># &quot;header&quot; (`len_record` + `type`) and a &quot;footer&quot;</span>
+    <span class="c1"># (`len_record2`).</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body</span>
 
-    ##
-    # Size of whole record again.
-    attr_reader :len_record2
-    attr_reader :_raw_body
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Size of whole record again.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_record2</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_body</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx Source
-  class RecordBody &lt; Kaitai::Struct::Struct
+  <span class="c1">##</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx Source</span>
+  <span class="k">class</span> <span class="nc">RecordBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-    EVENT_TYPES = {
-      1 =&gt; :event_types_error,
-      2 =&gt; :event_types_audit_failure,
-      3 =&gt; :event_types_audit_success,
-      4 =&gt; :event_types_info,
-      5 =&gt; :event_types_warning,
-    }
-    I__EVENT_TYPES = EVENT_TYPES.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="no">EVENT_TYPES</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:event_types_error</span><span class="p">,</span>
+      <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:event_types_audit_failure</span><span class="p">,</span>
+      <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:event_types_audit_success</span><span class="p">,</span>
+      <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:event_types_info</span><span class="p">,</span>
+      <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:event_types_warning</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="no">I__EVENT_TYPES</span> <span class="o">=</span> <span class="no">EVENT_TYPES</span><span class="o">.</span><span class="n">invert</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @idx = @_io.read_u4le
-      @time_generated = @_io.read_u4le
-      @time_written = @_io.read_u4le
-      @event_id = @_io.read_u4le
-      @event_type = Kaitai::Struct::Stream::resolve_enum(EVENT_TYPES, @_io.read_u2le)
-      @num_strings = @_io.read_u2le
-      @event_category = @_io.read_u2le
-      @reserved = @_io.read_bytes(6)
-      @ofs_strings = @_io.read_u4le
-      @len_user_sid = @_io.read_u4le
-      @ofs_user_sid = @_io.read_u4le
-      @len_data = @_io.read_u4le
-      @ofs_data = @_io.read_u4le
-      self
-    end
-    def user_sid
-      return @user_sid unless @user_sid.nil?
-      _pos = @_io.pos
-      @_io.seek((ofs_user_sid - 8))
-      @user_sid = @_io.read_bytes(len_user_sid)
-      @_io.seek(_pos)
-      @user_sid
-    end
-    def data
-      return @data unless @data.nil?
-      _pos = @_io.pos
-      @_io.seek((ofs_data - 8))
-      @data = @_io.read_bytes(len_data)
-      @_io.seek(_pos)
-      @data
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@idx</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@time_generated</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@time_written</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@event_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@event_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">EVENT_TYPES</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="vi">@num_strings</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@event_category</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+      <span class="vi">@ofs_strings</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@len_user_sid</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@ofs_user_sid</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@len_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@ofs_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">user_sid</span>
+      <span class="k">return</span> <span class="vi">@user_sid</span> <span class="k">unless</span> <span class="vi">@user_sid</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="n">ofs_user_sid</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
+      <span class="vi">@user_sid</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_user_sid</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@user_sid</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">data</span>
+      <span class="k">return</span> <span class="vi">@data</span> <span class="k">unless</span> <span class="vi">@data</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="n">ofs_data</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
+      <span class="vi">@data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@data</span>
+    <span class="k">end</span>
 
-    ##
-    # Index of record in the file.
-    attr_reader :idx
+    <span class="c1">##</span>
+    <span class="c1"># Index of record in the file.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:idx</span>
 
-    ##
-    # Time when this record was generated, POSIX timestamp format.
-    attr_reader :time_generated
+    <span class="c1">##</span>
+    <span class="c1"># Time when this record was generated, POSIX timestamp format.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:time_generated</span>
 
-    ##
-    # Time when thsi record was written into the log file, POSIX timestamp format.
-    attr_reader :time_written
+    <span class="c1">##</span>
+    <span class="c1"># Time when thsi record was written into the log file, POSIX timestamp format.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:time_written</span>
 
-    ##
-    # Identifier of an event, meaning is specific to particular
-    # source of events / event type.
-    attr_reader :event_id
+    <span class="c1">##</span>
+    <span class="c1"># Identifier of an event, meaning is specific to particular</span>
+    <span class="c1"># source of events / event type.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:event_id</span>
 
-    ##
-    # Type of event.
-    # @see https://msdn.microsoft.com/en-us/library/windows/desktop/aa363662(v=vs.85).aspx Source
-    attr_reader :event_type
+    <span class="c1">##</span>
+    <span class="c1"># Type of event.</span>
+    <span class="c1"># @see https://msdn.microsoft.com/en-us/library/windows/desktop/aa363662(v=vs.85).aspx Source</span>
+    <span class="kp">attr_reader</span> <span class="ss">:event_type</span>
 
-    ##
-    # Number of strings present in the log.
-    attr_reader :num_strings
+    <span class="c1">##</span>
+    <span class="c1"># Number of strings present in the log.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_strings</span>
 
-    ##
-    # @see https://msdn.microsoft.com/en-us/library/windows/desktop/aa363649(v=vs.85).aspx Source
-    attr_reader :event_category
-    attr_reader :reserved
+    <span class="c1">##</span>
+    <span class="c1"># @see https://msdn.microsoft.com/en-us/library/windows/desktop/aa363649(v=vs.85).aspx Source</span>
+    <span class="kp">attr_reader</span> <span class="ss">:event_category</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
 
-    ##
-    # Offset of strings present in the log
-    attr_reader :ofs_strings
-    attr_reader :len_user_sid
-    attr_reader :ofs_user_sid
-    attr_reader :len_data
-    attr_reader :ofs_data
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Offset of strings present in the log</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_strings</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_user_sid</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_user_sid</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_data</span>
+  <span class="k">end</span>
 
-  ##
-  # @see http://www.forensicswiki.xyz/page/Windows_Event_Log_(EVT)#Cursor_Record Source
-  class CursorRecordBody &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see http://www.forensicswiki.xyz/page/Windows_Event_Log_(EVT)#Cursor_Record Source</span>
+  <span class="k">class</span> <span class="nc">CursorRecordBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @magic = @_io.ensure_fixed_contents([34, 34, 34, 34, 51, 51, 51, 51, 68, 68, 68, 68].pack(&#39;C*&#39;))
-      @ofs_first_record = @_io.read_u4le
-      @ofs_next_record = @_io.read_u4le
-      @idx_next_record = @_io.read_u4le
-      @idx_first_record = @_io.read_u4le
-      self
-    end
-    attr_reader :magic
-    attr_reader :ofs_first_record
-    attr_reader :ofs_next_record
-    attr_reader :idx_next_record
-    attr_reader :idx_first_record
-  end
-  attr_reader :header
-  attr_reader :records
-end
-</code></pre>
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">34</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">68</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@ofs_first_record</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@ofs_next_record</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@idx_next_record</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@idx_first_record</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:magic</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_first_record</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_next_record</span>
+    <span class="kp">attr_reader</span> <span class="ss">:idx_next_record</span>
+    <span class="kp">attr_reader</span> <span class="ss">:idx_first_record</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:header</span>
+  <span class="kp">attr_reader</span> <span class="ss">:records</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -594,8 +591,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

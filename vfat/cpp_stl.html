@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -269,546 +266,546 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef VFAT_H_
-#define VFAT_H_
-
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-#include &quot;kaitai/kaitaistruct.h&quot;
-
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
-
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
-
-class vfat_t : public kaitai::kstruct {
-
-public:
-    class ext_bios_param_block_fat32_t;
-    class boot_sector_t;
-    class bios_param_block_t;
-    class root_directory_rec_t;
-    class root_directory_t;
-    class ext_bios_param_block_fat16_t;
-
-    vfat_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, vfat_t* p__root = 0);
-
-private:
-    void _read();
-
-public:
-    ~vfat_t();
-
-    /**
-     * Extended BIOS Parameter Block for FAT32
-     */
-
-    class ext_bios_param_block_fat32_t : public kaitai::kstruct {
-
-    public:
-
-        ext_bios_param_block_fat32_t(kaitai::kstream* p__io, vfat_t::boot_sector_t* p__parent = 0, vfat_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~ext_bios_param_block_fat32_t();
-
-    private:
-        uint32_t m_ls_per_fat;
-        bool m_has_active_fat;
-        uint64_t m_reserved1;
-        uint64_t m_active_fat_id;
-        std::string m_reserved2;
-        uint16_t m_fat_version;
-        uint32_t m_root_dir_start_clus;
-        uint16_t m_ls_fs_info;
-        uint16_t m_boot_sectors_copy_start_ls;
-        std::string m_reserved3;
-        uint8_t m_phys_drive_num;
-        uint8_t m_reserved4;
-        uint8_t m_ext_boot_sign;
-        std::string m_volume_id;
-        std::string m_partition_volume_label;
-        std::string m_fs_type_str;
-        vfat_t* m__root;
-        vfat_t::boot_sector_t* m__parent;
-
-    public:
-
-        /**
-         * Logical sectors per file allocation table (corresponds with
-         * the old entry `ls_per_fat` in the DOS 2.0 BPB).
-         */
-        uint32_t ls_per_fat() const { return m_ls_per_fat; }
-
-        /**
-         * If true, then there is &quot;active&quot; FAT, which is designated in
-         * `active_fat` attribute. If false, all FATs are mirrored as
-         * usual.
-         */
-        bool has_active_fat() const { return m_has_active_fat; }
-        uint64_t reserved1() const { return m_reserved1; }
-
-        /**
-         * Zero-based number of active FAT, if `has_active_fat`
-         * attribute is true.
-         */
-        uint64_t active_fat_id() const { return m_active_fat_id; }
-        std::string reserved2() const { return m_reserved2; }
-        uint16_t fat_version() const { return m_fat_version; }
-
-        /**
-         * Cluster number of root directory start, typically 2 if it
-         * contains no bad sector. (Microsoft&#39;s FAT32 implementation
-         * imposes an artificial limit of 65,535 entries per directory,
-         * whilst many third-party implementations do not.)
-         */
-        uint32_t root_dir_start_clus() const { return m_root_dir_start_clus; }
-
-        /**
-         * Logical sector number of FS Information Sector, typically 1,
-         * i.e., the second of the three FAT32 boot sectors. Values
-         * like 0 and 0xFFFF are used by some FAT32 implementations to
-         * designate abscence of FS Information Sector.
-         */
-        uint16_t ls_fs_info() const { return m_ls_fs_info; }
-
-        /**
-         * First logical sector number of a copy of the three FAT32
-         * boot sectors, typically 6.
-         */
-        uint16_t boot_sectors_copy_start_ls() const { return m_boot_sectors_copy_start_ls; }
-        std::string reserved3() const { return m_reserved3; }
-
-        /**
-         * Physical drive number (0x00 for (first) removable media,
-         * 0x80 for (first) fixed disk as per INT 13h).
-         */
-        uint8_t phys_drive_num() const { return m_phys_drive_num; }
-        uint8_t reserved4() const { return m_reserved4; }
-
-        /**
-         * Should be 0x29 to indicate that an EBPB with the following 3
-         * entries exists.
-         */
-        uint8_t ext_boot_sign() const { return m_ext_boot_sign; }
-
-        /**
-         * Volume ID (serial number).
-         * 
-         * Typically the serial number &quot;xxxx-xxxx&quot; is created by a
-         * 16-bit addition of both DX values returned by INT 21h/AH=2Ah
-         * (get system date) and INT 21h/AH=2Ch (get system time) for
-         * the high word and another 16-bit addition of both CX values
-         * for the low word of the serial number. Alternatively, some
-         * DR-DOS disk utilities provide a /# option to generate a
-         * human-readable time stamp &quot;mmdd-hhmm&quot; build from BCD-encoded
-         * 8-bit values for the month, day, hour and minute instead of
-         * a serial number.
-         */
-        std::string volume_id() const { return m_volume_id; }
-        std::string partition_volume_label() const { return m_partition_volume_label; }
-        std::string fs_type_str() const { return m_fs_type_str; }
-        vfat_t* _root() const { return m__root; }
-        vfat_t::boot_sector_t* _parent() const { return m__parent; }
-    };
-
-    class boot_sector_t : public kaitai::kstruct {
-
-    public:
-
-        boot_sector_t(kaitai::kstream* p__io, vfat_t* p__parent = 0, vfat_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~boot_sector_t();
-
-    private:
-        bool f_pos_fats;
-        int32_t m_pos_fats;
-
-    public:
-
-        /**
-         * Offset of FATs in bytes from start of filesystem
-         */
-        int32_t pos_fats();
-
-    private:
-        bool f_ls_per_fat;
-        uint32_t m_ls_per_fat;
-
-    public:
-        uint32_t ls_per_fat();
-
-    private:
-        bool f_ls_per_root_dir;
-        int32_t m_ls_per_root_dir;
-
-    public:
-
-        /**
-         * Size of root directory in logical sectors
-         * \sa FAT: General Overview of On-Disk Format, section &quot;FAT Data Structure&quot;
-         */
-        int32_t ls_per_root_dir();
-
-    private:
-        bool f_is_fat32;
-        bool m_is_fat32;
-
-    public:
-
-        /**
-         * Determines if filesystem is FAT32 (true) or FAT12/16 (false)
-         * by analyzing some preliminary conditions in BPB. Used to
-         * determine whether we should parse post-BPB data as
-         * `ext_bios_param_block_fat16` or `ext_bios_param_block_fat32`.
-         */
-        bool is_fat32();
-
-    private:
-        bool f_size_fat;
-        int32_t m_size_fat;
-
-    public:
-
-        /**
-         * Size of one FAT in bytes
-         */
-        int32_t size_fat();
-
-    private:
-        bool f_pos_root_dir;
-        int32_t m_pos_root_dir;
-
-    public:
-
-        /**
-         * Offset of root directory in bytes from start of filesystem
-         */
-        int32_t pos_root_dir();
-
-    private:
-        bool f_size_root_dir;
-        int32_t m_size_root_dir;
-
-    public:
-
-        /**
-         * Size of root directory in bytes
-         */
-        int32_t size_root_dir();
-
-    private:
-        std::string m_jmp_instruction;
-        std::string m_oem_name;
-        bios_param_block_t* m_bpb;
-        ext_bios_param_block_fat16_t* m_ebpb_fat16;
-        bool n_ebpb_fat16;
-
-    public:
-        bool _is_null_ebpb_fat16() { ebpb_fat16(); return n_ebpb_fat16; };
-
-    private:
-        ext_bios_param_block_fat32_t* m_ebpb_fat32;
-        bool n_ebpb_fat32;
-
-    public:
-        bool _is_null_ebpb_fat32() { ebpb_fat32(); return n_ebpb_fat32; };
-
-    private:
-        vfat_t* m__root;
-        vfat_t* m__parent;
-
-    public:
-        std::string jmp_instruction() const { return m_jmp_instruction; }
-        std::string oem_name() const { return m_oem_name; }
-
-        /**
-         * Basic BIOS parameter block, present in all versions of FAT
-         */
-        bios_param_block_t* bpb() const { return m_bpb; }
-
-        /**
-         * FAT12/16-specific extended BIOS parameter block
-         */
-        ext_bios_param_block_fat16_t* ebpb_fat16() const { return m_ebpb_fat16; }
-
-        /**
-         * FAT32-specific extended BIOS parameter block
-         */
-        ext_bios_param_block_fat32_t* ebpb_fat32() const { return m_ebpb_fat32; }
-        vfat_t* _root() const { return m__root; }
-        vfat_t* _parent() const { return m__parent; }
-    };
-
-    class bios_param_block_t : public kaitai::kstruct {
-
-    public:
-
-        bios_param_block_t(kaitai::kstream* p__io, vfat_t::boot_sector_t* p__parent = 0, vfat_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~bios_param_block_t();
-
-    private:
-        uint16_t m_bytes_per_ls;
-        uint8_t m_ls_per_clus;
-        uint16_t m_num_reserved_ls;
-        uint8_t m_num_fats;
-        uint16_t m_max_root_dir_rec;
-        uint16_t m_total_ls_2;
-        uint8_t m_media_code;
-        uint16_t m_ls_per_fat;
-        uint16_t m_ps_per_track;
-        uint16_t m_num_heads;
-        uint32_t m_num_hidden_sectors;
-        uint32_t m_total_ls_4;
-        vfat_t* m__root;
-        vfat_t::boot_sector_t* m__parent;
-
-    public:
-
-        /**
-         * Bytes per logical sector
-         */
-        uint16_t bytes_per_ls() const { return m_bytes_per_ls; }
-
-        /**
-         * Logical sectors per cluster
-         */
-        uint8_t ls_per_clus() const { return m_ls_per_clus; }
-
-        /**
-         * Count of reserved logical sectors. The number of logical
-         * sectors before the first FAT in the file system image.
-         */
-        uint16_t num_reserved_ls() const { return m_num_reserved_ls; }
-
-        /**
-         * Number of File Allocation Tables
-         */
-        uint8_t num_fats() const { return m_num_fats; }
-
-        /**
-         * Maximum number of FAT12 or FAT16 root directory entries. 0
-         * for FAT32, where the root directory is stored in ordinary
-         * data clusters.
-         */
-        uint16_t max_root_dir_rec() const { return m_max_root_dir_rec; }
-
-        /**
-         * Total logical sectors (if zero, use total_ls_4)
-         */
-        uint16_t total_ls_2() const { return m_total_ls_2; }
-
-        /**
-         * Media descriptor
-         */
-        uint8_t media_code() const { return m_media_code; }
-
-        /**
-         * Logical sectors per File Allocation Table for
-         * FAT12/FAT16. FAT32 sets this to 0 and uses the 32-bit value
-         * at offset 0x024 instead.
-         */
-        uint16_t ls_per_fat() const { return m_ls_per_fat; }
-
-        /**
-         * Physical sectors per track for disks with INT 13h CHS
-         * geometry, e.g., 15 for a “1.20 MB” (1200 KB) floppy. A zero
-         * entry indicates that this entry is reserved, but not used.
-         */
-        uint16_t ps_per_track() const { return m_ps_per_track; }
-
-        /**
-         * Number of heads for disks with INT 13h CHS geometry,[9]
-         * e.g., 2 for a double sided floppy.
-         */
-        uint16_t num_heads() const { return m_num_heads; }
-
-        /**
-         * Number of hidden sectors preceding the partition that
-         * contains this FAT volume. This field should always be zero
-         * on media that are not partitioned. This DOS 3.0 entry is
-         * incompatible with a similar entry at offset 0x01C in BPBs
-         * since DOS 3.31.  It must not be used if the logical sectors
-         * entry at offset 0x013 is zero.
-         */
-        uint32_t num_hidden_sectors() const { return m_num_hidden_sectors; }
-
-        /**
-         * Total logical sectors including hidden sectors. This DOS 3.2
-         * entry is incompatible with a similar entry at offset 0x020
-         * in BPBs since DOS 3.31. It must not be used if the logical
-         * sectors entry at offset 0x013 is zero.
-         */
-        uint32_t total_ls_4() const { return m_total_ls_4; }
-        vfat_t* _root() const { return m__root; }
-        vfat_t::boot_sector_t* _parent() const { return m__parent; }
-    };
-
-    class root_directory_rec_t : public kaitai::kstruct {
-
-    public:
-
-        root_directory_rec_t(kaitai::kstream* p__io, vfat_t::root_directory_t* p__parent = 0, vfat_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~root_directory_rec_t();
-
-    private:
-        std::string m_file_name;
-        uint8_t m_attribute;
-        std::string m_reserved;
-        uint16_t m_time;
-        uint16_t m_date;
-        uint16_t m_start_clus;
-        uint32_t m_file_size;
-        vfat_t* m__root;
-        vfat_t::root_directory_t* m__parent;
-
-    public:
-        std::string file_name() const { return m_file_name; }
-        uint8_t attribute() const { return m_attribute; }
-        std::string reserved() const { return m_reserved; }
-        uint16_t time() const { return m_time; }
-        uint16_t date() const { return m_date; }
-        uint16_t start_clus() const { return m_start_clus; }
-        uint32_t file_size() const { return m_file_size; }
-        vfat_t* _root() const { return m__root; }
-        vfat_t::root_directory_t* _parent() const { return m__parent; }
-    };
-
-    class root_directory_t : public kaitai::kstruct {
-
-    public:
-
-        root_directory_t(kaitai::kstream* p__io, vfat_t* p__parent = 0, vfat_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~root_directory_t();
-
-    private:
-        std::vector&lt;root_directory_rec_t*&gt;* m_records;
-        vfat_t* m__root;
-        vfat_t* m__parent;
-
-    public:
-        std::vector&lt;root_directory_rec_t*&gt;* records() const { return m_records; }
-        vfat_t* _root() const { return m__root; }
-        vfat_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * Extended BIOS Parameter Block (DOS 4.0+, OS/2 1.0+). Used only
-     * for FAT12 and FAT16.
-     */
-
-    class ext_bios_param_block_fat16_t : public kaitai::kstruct {
-
-    public:
-
-        ext_bios_param_block_fat16_t(kaitai::kstream* p__io, vfat_t::boot_sector_t* p__parent = 0, vfat_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~ext_bios_param_block_fat16_t();
-
-    private:
-        uint8_t m_phys_drive_num;
-        uint8_t m_reserved1;
-        uint8_t m_ext_boot_sign;
-        std::string m_volume_id;
-        std::string m_partition_volume_label;
-        std::string m_fs_type_str;
-        vfat_t* m__root;
-        vfat_t::boot_sector_t* m__parent;
-
-    public:
-
-        /**
-         * Physical drive number (0x00 for (first) removable media,
-         * 0x80 for (first) fixed disk as per INT 13h).
-         */
-        uint8_t phys_drive_num() const { return m_phys_drive_num; }
-        uint8_t reserved1() const { return m_reserved1; }
-
-        /**
-         * Should be 0x29 to indicate that an EBPB with the following 3
-         * entries exists.
-         */
-        uint8_t ext_boot_sign() const { return m_ext_boot_sign; }
-
-        /**
-         * Volume ID (serial number).
-         * 
-         * Typically the serial number &quot;xxxx-xxxx&quot; is created by a
-         * 16-bit addition of both DX values returned by INT 21h/AH=2Ah
-         * (get system date) and INT 21h/AH=2Ch (get system time) for
-         * the high word and another 16-bit addition of both CX values
-         * for the low word of the serial number. Alternatively, some
-         * DR-DOS disk utilities provide a /# option to generate a
-         * human-readable time stamp &quot;mmdd-hhmm&quot; build from BCD-encoded
-         * 8-bit values for the month, day, hour and minute instead of
-         * a serial number.
-         */
-        std::string volume_id() const { return m_volume_id; }
-        std::string partition_volume_label() const { return m_partition_volume_label; }
-        std::string fs_type_str() const { return m_fs_type_str; }
-        vfat_t* _root() const { return m__root; }
-        vfat_t::boot_sector_t* _parent() const { return m__parent; }
-    };
-
-private:
-    bool f_fats;
-    std::vector&lt;std::string&gt;* m_fats;
-
-public:
-    std::vector&lt;std::string&gt;* fats();
-
-private:
-    bool f_root_dir;
-    root_directory_t* m_root_dir;
-
-public:
-    root_directory_t* root_dir();
-
-private:
-    boot_sector_t* m_boot_sector;
-    vfat_t* m__root;
-    kaitai::kstruct* m__parent;
-    std::string m__raw_root_dir;
-    kaitai::kstream* m__io__raw_root_dir;
-
-public:
-    boot_sector_t* boot_sector() const { return m_boot_sector; }
-    vfat_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-    std::string _raw_root_dir() const { return m__raw_root_dir; }
-    kaitai::kstream* _io__raw_root_dir() const { return m__io__raw_root_dir; }
-};
-
-#endif  // VFAT_H_
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef VFAT_H_</span>
+<span class="cp">#define VFAT_H_</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
+
+<span class="k">class</span> <span class="nc">vfat_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">ext_bios_param_block_fat32_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">boot_sector_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">bios_param_block_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">root_directory_rec_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">root_directory_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">ext_bios_param_block_fat16_t</span><span class="p">;</span>
+
+    <span class="n">vfat_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">vfat_t</span><span class="p">();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Extended BIOS Parameter Block for FAT32</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">ext_bios_param_block_fat32_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">ext_bios_param_block_fat32_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">ext_bios_param_block_fat32_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">m_ls_per_fat</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_has_active_fat</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_reserved1</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_active_fat_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_reserved2</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_fat_version</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_root_dir_start_clus</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_ls_fs_info</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_boot_sectors_copy_start_ls</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_reserved3</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_phys_drive_num</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_reserved4</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_ext_boot_sign</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_volume_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_partition_volume_label</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_fs_type_str</span><span class="p">;</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Logical sectors per file allocation table (corresponds with</span>
+<span class="cm">         * the old entry `ls_per_fat` in the DOS 2.0 BPB).</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">ls_per_fat</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ls_per_fat</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * If true, then there is &quot;active&quot; FAT, which is designated in</span>
+<span class="cm">         * `active_fat` attribute. If false, all FATs are mirrored as</span>
+<span class="cm">         * usual.</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">has_active_fat</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_has_active_fat</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">reserved1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved1</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Zero-based number of active FAT, if `has_active_fat`</span>
+<span class="cm">         * attribute is true.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint64_t</span> <span class="n">active_fat_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_active_fat_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reserved2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">fat_version</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_fat_version</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Cluster number of root directory start, typically 2 if it</span>
+<span class="cm">         * contains no bad sector. (Microsoft&#39;s FAT32 implementation</span>
+<span class="cm">         * imposes an artificial limit of 65,535 entries per directory,</span>
+<span class="cm">         * whilst many third-party implementations do not.)</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">root_dir_start_clus</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root_dir_start_clus</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Logical sector number of FS Information Sector, typically 1,</span>
+<span class="cm">         * i.e., the second of the three FAT32 boot sectors. Values</span>
+<span class="cm">         * like 0 and 0xFFFF are used by some FAT32 implementations to</span>
+<span class="cm">         * designate abscence of FS Information Sector.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">ls_fs_info</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ls_fs_info</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * First logical sector number of a copy of the three FAT32</span>
+<span class="cm">         * boot sectors, typically 6.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">boot_sectors_copy_start_ls</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_boot_sectors_copy_start_ls</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reserved3</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved3</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Physical drive number (0x00 for (first) removable media,</span>
+<span class="cm">         * 0x80 for (first) fixed disk as per INT 13h).</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">phys_drive_num</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_phys_drive_num</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">reserved4</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved4</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Should be 0x29 to indicate that an EBPB with the following 3</span>
+<span class="cm">         * entries exists.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">ext_boot_sign</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ext_boot_sign</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Volume ID (serial number).</span>
+<span class="cm">         * </span>
+<span class="cm">         * Typically the serial number &quot;xxxx-xxxx&quot; is created by a</span>
+<span class="cm">         * 16-bit addition of both DX values returned by INT 21h/AH=2Ah</span>
+<span class="cm">         * (get system date) and INT 21h/AH=2Ch (get system time) for</span>
+<span class="cm">         * the high word and another 16-bit addition of both CX values</span>
+<span class="cm">         * for the low word of the serial number. Alternatively, some</span>
+<span class="cm">         * DR-DOS disk utilities provide a /# option to generate a</span>
+<span class="cm">         * human-readable time stamp &quot;mmdd-hhmm&quot; build from BCD-encoded</span>
+<span class="cm">         * 8-bit values for the month, day, hour and minute instead of</span>
+<span class="cm">         * a serial number.</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">volume_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_volume_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">partition_volume_label</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_partition_volume_label</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fs_type_str</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_fs_type_str</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">boot_sector_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">boot_sector_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">boot_sector_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_pos_fats</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_pos_fats</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Offset of FATs in bytes from start of filesystem</span>
+<span class="cm">         */</span>
+        <span class="kt">int32_t</span> <span class="n">pos_fats</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_ls_per_fat</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_ls_per_fat</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">ls_per_fat</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_ls_per_root_dir</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_ls_per_root_dir</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Size of root directory in logical sectors</span>
+<span class="cm">         * \sa FAT: General Overview of On-Disk Format, section &quot;FAT Data Structure&quot;</span>
+<span class="cm">         */</span>
+        <span class="kt">int32_t</span> <span class="n">ls_per_root_dir</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_fat32</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_fat32</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Determines if filesystem is FAT32 (true) or FAT12/16 (false)</span>
+<span class="cm">         * by analyzing some preliminary conditions in BPB. Used to</span>
+<span class="cm">         * determine whether we should parse post-BPB data as</span>
+<span class="cm">         * `ext_bios_param_block_fat16` or `ext_bios_param_block_fat32`.</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">is_fat32</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_size_fat</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_size_fat</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Size of one FAT in bytes</span>
+<span class="cm">         */</span>
+        <span class="kt">int32_t</span> <span class="n">size_fat</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_pos_root_dir</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_pos_root_dir</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Offset of root directory in bytes from start of filesystem</span>
+<span class="cm">         */</span>
+        <span class="kt">int32_t</span> <span class="n">pos_root_dir</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_size_root_dir</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_size_root_dir</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Size of root directory in bytes</span>
+<span class="cm">         */</span>
+        <span class="kt">int32_t</span> <span class="n">size_root_dir</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_jmp_instruction</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_oem_name</span><span class="p">;</span>
+        <span class="n">bios_param_block_t</span><span class="o">*</span> <span class="n">m_bpb</span><span class="p">;</span>
+        <span class="n">ext_bios_param_block_fat16_t</span><span class="o">*</span> <span class="n">m_ebpb_fat16</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_ebpb_fat16</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_ebpb_fat16</span><span class="p">()</span> <span class="p">{</span> <span class="n">ebpb_fat16</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_ebpb_fat16</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">ext_bios_param_block_fat32_t</span><span class="o">*</span> <span class="n">m_ebpb_fat32</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_ebpb_fat32</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_ebpb_fat32</span><span class="p">()</span> <span class="p">{</span> <span class="n">ebpb_fat32</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_ebpb_fat32</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">jmp_instruction</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_jmp_instruction</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">oem_name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_oem_name</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Basic BIOS parameter block, present in all versions of FAT</span>
+<span class="cm">         */</span>
+        <span class="n">bios_param_block_t</span><span class="o">*</span> <span class="n">bpb</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_bpb</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * FAT12/16-specific extended BIOS parameter block</span>
+<span class="cm">         */</span>
+        <span class="n">ext_bios_param_block_fat16_t</span><span class="o">*</span> <span class="n">ebpb_fat16</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ebpb_fat16</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * FAT32-specific extended BIOS parameter block</span>
+<span class="cm">         */</span>
+        <span class="n">ext_bios_param_block_fat32_t</span><span class="o">*</span> <span class="n">ebpb_fat32</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ebpb_fat32</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">bios_param_block_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">bios_param_block_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">bios_param_block_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">m_bytes_per_ls</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_ls_per_clus</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_num_reserved_ls</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_num_fats</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_max_root_dir_rec</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_total_ls_2</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_media_code</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_ls_per_fat</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_ps_per_track</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_num_heads</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_num_hidden_sectors</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_total_ls_4</span><span class="p">;</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Bytes per logical sector</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">bytes_per_ls</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_bytes_per_ls</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Logical sectors per cluster</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">ls_per_clus</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ls_per_clus</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Count of reserved logical sectors. The number of logical</span>
+<span class="cm">         * sectors before the first FAT in the file system image.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">num_reserved_ls</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_reserved_ls</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Number of File Allocation Tables</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">num_fats</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_fats</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Maximum number of FAT12 or FAT16 root directory entries. 0</span>
+<span class="cm">         * for FAT32, where the root directory is stored in ordinary</span>
+<span class="cm">         * data clusters.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">max_root_dir_rec</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_max_root_dir_rec</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Total logical sectors (if zero, use total_ls_4)</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">total_ls_2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_total_ls_2</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Media descriptor</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">media_code</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_media_code</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Logical sectors per File Allocation Table for</span>
+<span class="cm">         * FAT12/FAT16. FAT32 sets this to 0 and uses the 32-bit value</span>
+<span class="cm">         * at offset 0x024 instead.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">ls_per_fat</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ls_per_fat</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Physical sectors per track for disks with INT 13h CHS</span>
+<span class="cm">         * geometry, e.g., 15 for a “1.20 MB” (1200 KB) floppy. A zero</span>
+<span class="cm">         * entry indicates that this entry is reserved, but not used.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">ps_per_track</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ps_per_track</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Number of heads for disks with INT 13h CHS geometry,[9]</span>
+<span class="cm">         * e.g., 2 for a double sided floppy.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">num_heads</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_heads</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Number of hidden sectors preceding the partition that</span>
+<span class="cm">         * contains this FAT volume. This field should always be zero</span>
+<span class="cm">         * on media that are not partitioned. This DOS 3.0 entry is</span>
+<span class="cm">         * incompatible with a similar entry at offset 0x01C in BPBs</span>
+<span class="cm">         * since DOS 3.31.  It must not be used if the logical sectors</span>
+<span class="cm">         * entry at offset 0x013 is zero.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">num_hidden_sectors</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_hidden_sectors</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Total logical sectors including hidden sectors. This DOS 3.2</span>
+<span class="cm">         * entry is incompatible with a similar entry at offset 0x020</span>
+<span class="cm">         * in BPBs since DOS 3.31. It must not be used if the logical</span>
+<span class="cm">         * sectors entry at offset 0x013 is zero.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">total_ls_4</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_total_ls_4</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">root_directory_rec_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">root_directory_rec_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">root_directory_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">root_directory_rec_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_file_name</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_attribute</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_reserved</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_time</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_date</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_start_clus</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_file_size</span><span class="p">;</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">vfat_t</span><span class="o">::</span><span class="n">root_directory_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">file_name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_file_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">attribute</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_attribute</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reserved</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_time</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">date</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_date</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">start_clus</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_start_clus</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">file_size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_file_size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">vfat_t</span><span class="o">::</span><span class="n">root_directory_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">root_directory_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">root_directory_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">root_directory_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">root_directory_rec_t</span><span class="o">*&gt;*</span> <span class="n">m_records</span><span class="p">;</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">root_directory_rec_t</span><span class="o">*&gt;*</span> <span class="n">records</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_records</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Extended BIOS Parameter Block (DOS 4.0+, OS/2 1.0+). Used only</span>
+<span class="cm">     * for FAT12 and FAT16.</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">ext_bios_param_block_fat16_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">ext_bios_param_block_fat16_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">ext_bios_param_block_fat16_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_phys_drive_num</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_reserved1</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_ext_boot_sign</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_volume_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_partition_volume_label</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_fs_type_str</span><span class="p">;</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Physical drive number (0x00 for (first) removable media,</span>
+<span class="cm">         * 0x80 for (first) fixed disk as per INT 13h).</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">phys_drive_num</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_phys_drive_num</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">reserved1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved1</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Should be 0x29 to indicate that an EBPB with the following 3</span>
+<span class="cm">         * entries exists.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">ext_boot_sign</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ext_boot_sign</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Volume ID (serial number).</span>
+<span class="cm">         * </span>
+<span class="cm">         * Typically the serial number &quot;xxxx-xxxx&quot; is created by a</span>
+<span class="cm">         * 16-bit addition of both DX values returned by INT 21h/AH=2Ah</span>
+<span class="cm">         * (get system date) and INT 21h/AH=2Ch (get system time) for</span>
+<span class="cm">         * the high word and another 16-bit addition of both CX values</span>
+<span class="cm">         * for the low word of the serial number. Alternatively, some</span>
+<span class="cm">         * DR-DOS disk utilities provide a /# option to generate a</span>
+<span class="cm">         * human-readable time stamp &quot;mmdd-hhmm&quot; build from BCD-encoded</span>
+<span class="cm">         * 8-bit values for the month, day, hour and minute instead of</span>
+<span class="cm">         * a serial number.</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">volume_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_volume_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">partition_volume_label</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_partition_volume_label</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fs_type_str</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_fs_type_str</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">vfat_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_fats</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;*</span> <span class="n">m_fats</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;*</span> <span class="n">fats</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_root_dir</span><span class="p">;</span>
+    <span class="n">root_directory_t</span><span class="o">*</span> <span class="n">m_root_dir</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">root_directory_t</span><span class="o">*</span> <span class="n">root_dir</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">boot_sector_t</span><span class="o">*</span> <span class="n">m_boot_sector</span><span class="p">;</span>
+    <span class="n">vfat_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_root_dir</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_root_dir</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">boot_sector_t</span><span class="o">*</span> <span class="n">boot_sector</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_boot_sector</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">vfat_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_root_dir</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_root_dir</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_root_dir</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_root_dir</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cp">#endif  </span><span class="c1">// VFAT_H_</span>
+</pre></div>
 
         </div>
         
@@ -824,271 +821,271 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;vfat.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;vfat.h&quot;</span><span class="cp"></span>
 
 
 
-vfat_t::vfat_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    f_fats = false;
-    f_root_dir = false;
-    _read();
-}
+<span class="n">vfat_t</span><span class="o">::</span><span class="n">vfat_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">f_fats</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_root_dir</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void vfat_t::_read() {
-    m_boot_sector = new boot_sector_t(m__io, this, m__root);
-}
+<span class="kt">void</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_boot_sector</span> <span class="o">=</span> <span class="k">new</span> <span class="n">boot_sector_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+<span class="p">}</span>
 
-vfat_t::~vfat_t() {
-    delete m_boot_sector;
-    if (f_fats) {
-        delete m_fats;
-    }
-    if (f_root_dir) {
-        delete m__io__raw_root_dir;
-        delete m_root_dir;
-    }
-}
+<span class="n">vfat_t</span><span class="o">::~</span><span class="n">vfat_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_boot_sector</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_fats</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_fats</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_root_dir</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_root_dir</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="n">m_root_dir</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-vfat_t::ext_bios_param_block_fat32_t::ext_bios_param_block_fat32_t(kaitai::kstream* p__io, vfat_t::boot_sector_t* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">vfat_t</span><span class="o">::</span><span class="n">ext_bios_param_block_fat32_t</span><span class="o">::</span><span class="n">ext_bios_param_block_fat32_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void vfat_t::ext_bios_param_block_fat32_t::_read() {
-    m_ls_per_fat = m__io-&gt;read_u4le();
-    m_has_active_fat = m__io-&gt;read_bits_int(1);
-    m_reserved1 = m__io-&gt;read_bits_int(3);
-    m_active_fat_id = m__io-&gt;read_bits_int(4);
-    m__io-&gt;align_to_byte();
-    m_reserved2 = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x00&quot;, 1));
-    m_fat_version = m__io-&gt;read_u2le();
-    m_root_dir_start_clus = m__io-&gt;read_u4le();
-    m_ls_fs_info = m__io-&gt;read_u2le();
-    m_boot_sectors_copy_start_ls = m__io-&gt;read_u2le();
-    m_reserved3 = m__io-&gt;read_bytes(12);
-    m_phys_drive_num = m__io-&gt;read_u1();
-    m_reserved4 = m__io-&gt;read_u1();
-    m_ext_boot_sign = m__io-&gt;read_u1();
-    m_volume_id = m__io-&gt;read_bytes(4);
-    m_partition_volume_label = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io-&gt;read_bytes(11), 32), std::string(&quot;ASCII&quot;));
-    m_fs_type_str = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io-&gt;read_bytes(8), 32), std::string(&quot;ASCII&quot;));
-}
+<span class="kt">void</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">ext_bios_param_block_fat32_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_ls_per_fat</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_has_active_fat</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_reserved1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+    <span class="n">m_active_fat_id</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">align_to_byte</span><span class="p">();</span>
+    <span class="n">m_reserved2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+    <span class="n">m_fat_version</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_root_dir_start_clus</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_ls_fs_info</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_boot_sectors_copy_start_ls</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_reserved3</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+    <span class="n">m_phys_drive_num</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_reserved4</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_ext_boot_sign</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_volume_id</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+    <span class="n">m_partition_volume_label</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span> <span class="mi">32</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_fs_type_str</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">32</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+<span class="p">}</span>
 
-vfat_t::ext_bios_param_block_fat32_t::~ext_bios_param_block_fat32_t() {
-}
+<span class="n">vfat_t</span><span class="o">::</span><span class="n">ext_bios_param_block_fat32_t</span><span class="o">::~</span><span class="n">ext_bios_param_block_fat32_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-vfat_t::boot_sector_t::boot_sector_t(kaitai::kstream* p__io, vfat_t* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_pos_fats = false;
-    f_ls_per_fat = false;
-    f_ls_per_root_dir = false;
-    f_is_fat32 = false;
-    f_size_fat = false;
-    f_pos_root_dir = false;
-    f_size_root_dir = false;
-    _read();
-}
+<span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_pos_fats</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_ls_per_fat</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_ls_per_root_dir</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_fat32</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_size_fat</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_pos_root_dir</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_size_root_dir</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void vfat_t::boot_sector_t::_read() {
-    m_jmp_instruction = m__io-&gt;read_bytes(3);
-    m_oem_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io-&gt;read_bytes(8), 32), std::string(&quot;ASCII&quot;));
-    m_bpb = new bios_param_block_t(m__io, this, m__root);
-    n_ebpb_fat16 = true;
-    if (!(is_fat32())) {
-        n_ebpb_fat16 = false;
-        m_ebpb_fat16 = new ext_bios_param_block_fat16_t(m__io, this, m__root);
-    }
-    n_ebpb_fat32 = true;
-    if (is_fat32()) {
-        n_ebpb_fat32 = false;
-        m_ebpb_fat32 = new ext_bios_param_block_fat32_t(m__io, this, m__root);
-    }
-}
+<span class="kt">void</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_jmp_instruction</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+    <span class="n">m_oem_name</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">32</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_bpb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">bios_param_block_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">n_ebpb_fat16</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">is_fat32</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="n">n_ebpb_fat16</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_ebpb_fat16</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ext_bios_param_block_fat16_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">n_ebpb_fat32</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">is_fat32</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">n_ebpb_fat32</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_ebpb_fat32</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ext_bios_param_block_fat32_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-vfat_t::boot_sector_t::~boot_sector_t() {
-    delete m_bpb;
-    if (!n_ebpb_fat16) {
-        delete m_ebpb_fat16;
-    }
-    if (!n_ebpb_fat32) {
-        delete m_ebpb_fat32;
-    }
-}
+<span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">::~</span><span class="n">boot_sector_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_bpb</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_ebpb_fat16</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_ebpb_fat16</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_ebpb_fat32</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_ebpb_fat32</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-int32_t vfat_t::boot_sector_t::pos_fats() {
-    if (f_pos_fats)
-        return m_pos_fats;
-    m_pos_fats = (bpb()-&gt;bytes_per_ls() * bpb()-&gt;num_reserved_ls());
-    f_pos_fats = true;
-    return m_pos_fats;
-}
+<span class="kt">int32_t</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">::</span><span class="n">pos_fats</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_pos_fats</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_pos_fats</span><span class="p">;</span>
+    <span class="n">m_pos_fats</span> <span class="o">=</span> <span class="p">(</span><span class="n">bpb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bytes_per_ls</span><span class="p">()</span> <span class="o">*</span> <span class="n">bpb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_reserved_ls</span><span class="p">());</span>
+    <span class="n">f_pos_fats</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_pos_fats</span><span class="p">;</span>
+<span class="p">}</span>
 
-uint32_t vfat_t::boot_sector_t::ls_per_fat() {
-    if (f_ls_per_fat)
-        return m_ls_per_fat;
-    m_ls_per_fat = ((is_fat32()) ? (ebpb_fat32()-&gt;ls_per_fat()) : (bpb()-&gt;ls_per_fat()));
-    f_ls_per_fat = true;
-    return m_ls_per_fat;
-}
+<span class="kt">uint32_t</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">::</span><span class="n">ls_per_fat</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_ls_per_fat</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_ls_per_fat</span><span class="p">;</span>
+    <span class="n">m_ls_per_fat</span> <span class="o">=</span> <span class="p">((</span><span class="n">is_fat32</span><span class="p">())</span> <span class="o">?</span> <span class="p">(</span><span class="n">ebpb_fat32</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">ls_per_fat</span><span class="p">())</span> <span class="o">:</span> <span class="p">(</span><span class="n">bpb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">ls_per_fat</span><span class="p">()));</span>
+    <span class="n">f_ls_per_fat</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_ls_per_fat</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t vfat_t::boot_sector_t::ls_per_root_dir() {
-    if (f_ls_per_root_dir)
-        return m_ls_per_root_dir;
-    m_ls_per_root_dir = ((((bpb()-&gt;max_root_dir_rec() * 32) + bpb()-&gt;bytes_per_ls()) - 1) / bpb()-&gt;bytes_per_ls());
-    f_ls_per_root_dir = true;
-    return m_ls_per_root_dir;
-}
+<span class="kt">int32_t</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">::</span><span class="n">ls_per_root_dir</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_ls_per_root_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_ls_per_root_dir</span><span class="p">;</span>
+    <span class="n">m_ls_per_root_dir</span> <span class="o">=</span> <span class="p">((((</span><span class="n">bpb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">max_root_dir_rec</span><span class="p">()</span> <span class="o">*</span> <span class="mi">32</span><span class="p">)</span> <span class="o">+</span> <span class="n">bpb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bytes_per_ls</span><span class="p">())</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">bpb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bytes_per_ls</span><span class="p">());</span>
+    <span class="n">f_ls_per_root_dir</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_ls_per_root_dir</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool vfat_t::boot_sector_t::is_fat32() {
-    if (f_is_fat32)
-        return m_is_fat32;
-    m_is_fat32 = bpb()-&gt;max_root_dir_rec() == 0;
-    f_is_fat32 = true;
-    return m_is_fat32;
-}
+<span class="kt">bool</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">::</span><span class="n">is_fat32</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_fat32</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_fat32</span><span class="p">;</span>
+    <span class="n">m_is_fat32</span> <span class="o">=</span> <span class="n">bpb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">max_root_dir_rec</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">f_is_fat32</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_fat32</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t vfat_t::boot_sector_t::size_fat() {
-    if (f_size_fat)
-        return m_size_fat;
-    m_size_fat = (bpb()-&gt;bytes_per_ls() * ls_per_fat());
-    f_size_fat = true;
-    return m_size_fat;
-}
+<span class="kt">int32_t</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">::</span><span class="n">size_fat</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_size_fat</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_size_fat</span><span class="p">;</span>
+    <span class="n">m_size_fat</span> <span class="o">=</span> <span class="p">(</span><span class="n">bpb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bytes_per_ls</span><span class="p">()</span> <span class="o">*</span> <span class="n">ls_per_fat</span><span class="p">());</span>
+    <span class="n">f_size_fat</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_size_fat</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t vfat_t::boot_sector_t::pos_root_dir() {
-    if (f_pos_root_dir)
-        return m_pos_root_dir;
-    m_pos_root_dir = (bpb()-&gt;bytes_per_ls() * (bpb()-&gt;num_reserved_ls() + (ls_per_fat() * bpb()-&gt;num_fats())));
-    f_pos_root_dir = true;
-    return m_pos_root_dir;
-}
+<span class="kt">int32_t</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">::</span><span class="n">pos_root_dir</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_pos_root_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_pos_root_dir</span><span class="p">;</span>
+    <span class="n">m_pos_root_dir</span> <span class="o">=</span> <span class="p">(</span><span class="n">bpb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bytes_per_ls</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">bpb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_reserved_ls</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="n">ls_per_fat</span><span class="p">()</span> <span class="o">*</span> <span class="n">bpb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_fats</span><span class="p">())));</span>
+    <span class="n">f_pos_root_dir</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_pos_root_dir</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t vfat_t::boot_sector_t::size_root_dir() {
-    if (f_size_root_dir)
-        return m_size_root_dir;
-    m_size_root_dir = (ls_per_root_dir() * bpb()-&gt;bytes_per_ls());
-    f_size_root_dir = true;
-    return m_size_root_dir;
-}
+<span class="kt">int32_t</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">::</span><span class="n">size_root_dir</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_size_root_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_size_root_dir</span><span class="p">;</span>
+    <span class="n">m_size_root_dir</span> <span class="o">=</span> <span class="p">(</span><span class="n">ls_per_root_dir</span><span class="p">()</span> <span class="o">*</span> <span class="n">bpb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bytes_per_ls</span><span class="p">());</span>
+    <span class="n">f_size_root_dir</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_size_root_dir</span><span class="p">;</span>
+<span class="p">}</span>
 
-vfat_t::bios_param_block_t::bios_param_block_t(kaitai::kstream* p__io, vfat_t::boot_sector_t* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">vfat_t</span><span class="o">::</span><span class="n">bios_param_block_t</span><span class="o">::</span><span class="n">bios_param_block_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void vfat_t::bios_param_block_t::_read() {
-    m_bytes_per_ls = m__io-&gt;read_u2le();
-    m_ls_per_clus = m__io-&gt;read_u1();
-    m_num_reserved_ls = m__io-&gt;read_u2le();
-    m_num_fats = m__io-&gt;read_u1();
-    m_max_root_dir_rec = m__io-&gt;read_u2le();
-    m_total_ls_2 = m__io-&gt;read_u2le();
-    m_media_code = m__io-&gt;read_u1();
-    m_ls_per_fat = m__io-&gt;read_u2le();
-    m_ps_per_track = m__io-&gt;read_u2le();
-    m_num_heads = m__io-&gt;read_u2le();
-    m_num_hidden_sectors = m__io-&gt;read_u4le();
-    m_total_ls_4 = m__io-&gt;read_u4le();
-}
+<span class="kt">void</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">bios_param_block_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_bytes_per_ls</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_ls_per_clus</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_num_reserved_ls</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_num_fats</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_max_root_dir_rec</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_total_ls_2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_media_code</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_ls_per_fat</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_ps_per_track</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_num_heads</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_num_hidden_sectors</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_total_ls_4</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="p">}</span>
 
-vfat_t::bios_param_block_t::~bios_param_block_t() {
-}
+<span class="n">vfat_t</span><span class="o">::</span><span class="n">bios_param_block_t</span><span class="o">::~</span><span class="n">bios_param_block_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-vfat_t::root_directory_rec_t::root_directory_rec_t(kaitai::kstream* p__io, vfat_t::root_directory_t* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">vfat_t</span><span class="o">::</span><span class="n">root_directory_rec_t</span><span class="o">::</span><span class="n">root_directory_rec_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">root_directory_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void vfat_t::root_directory_rec_t::_read() {
-    m_file_name = m__io-&gt;read_bytes(11);
-    m_attribute = m__io-&gt;read_u1();
-    m_reserved = m__io-&gt;read_bytes(10);
-    m_time = m__io-&gt;read_u2le();
-    m_date = m__io-&gt;read_u2le();
-    m_start_clus = m__io-&gt;read_u2le();
-    m_file_size = m__io-&gt;read_u4le();
-}
+<span class="kt">void</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">root_directory_rec_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_file_name</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">11</span><span class="p">);</span>
+    <span class="n">m_attribute</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_reserved</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+    <span class="n">m_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_date</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_start_clus</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_file_size</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="p">}</span>
 
-vfat_t::root_directory_rec_t::~root_directory_rec_t() {
-}
+<span class="n">vfat_t</span><span class="o">::</span><span class="n">root_directory_rec_t</span><span class="o">::~</span><span class="n">root_directory_rec_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-vfat_t::root_directory_t::root_directory_t(kaitai::kstream* p__io, vfat_t* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">vfat_t</span><span class="o">::</span><span class="n">root_directory_t</span><span class="o">::</span><span class="n">root_directory_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void vfat_t::root_directory_t::_read() {
-    int l_records = _root()-&gt;boot_sector()-&gt;bpb()-&gt;max_root_dir_rec();
-    m_records = new std::vector&lt;root_directory_rec_t*&gt;();
-    m_records-&gt;reserve(l_records);
-    for (int i = 0; i &lt; l_records; i++) {
-        m_records-&gt;push_back(new root_directory_rec_t(m__io, this, m__root));
-    }
-}
+<span class="kt">void</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">root_directory_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">l_records</span> <span class="o">=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">boot_sector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bpb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">max_root_dir_rec</span><span class="p">();</span>
+    <span class="n">m_records</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">root_directory_rec_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="n">m_records</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_records</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_records</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_records</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">root_directory_rec_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-vfat_t::root_directory_t::~root_directory_t() {
-    for (std::vector&lt;root_directory_rec_t*&gt;::iterator it = m_records-&gt;begin(); it != m_records-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_records;
-}
+<span class="n">vfat_t</span><span class="o">::</span><span class="n">root_directory_t</span><span class="o">::~</span><span class="n">root_directory_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">root_directory_rec_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_records</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_records</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_records</span><span class="p">;</span>
+<span class="p">}</span>
 
-vfat_t::ext_bios_param_block_fat16_t::ext_bios_param_block_fat16_t(kaitai::kstream* p__io, vfat_t::boot_sector_t* p__parent, vfat_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">vfat_t</span><span class="o">::</span><span class="n">ext_bios_param_block_fat16_t</span><span class="o">::</span><span class="n">ext_bios_param_block_fat16_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">boot_sector_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">vfat_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void vfat_t::ext_bios_param_block_fat16_t::_read() {
-    m_phys_drive_num = m__io-&gt;read_u1();
-    m_reserved1 = m__io-&gt;read_u1();
-    m_ext_boot_sign = m__io-&gt;read_u1();
-    m_volume_id = m__io-&gt;read_bytes(4);
-    m_partition_volume_label = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io-&gt;read_bytes(11), 32), std::string(&quot;ASCII&quot;));
-    m_fs_type_str = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_strip_right(m__io-&gt;read_bytes(8), 32), std::string(&quot;ASCII&quot;));
-}
+<span class="kt">void</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">ext_bios_param_block_fat16_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_phys_drive_num</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_reserved1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_ext_boot_sign</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_volume_id</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+    <span class="n">m_partition_volume_label</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span> <span class="mi">32</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_fs_type_str</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">32</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+<span class="p">}</span>
 
-vfat_t::ext_bios_param_block_fat16_t::~ext_bios_param_block_fat16_t() {
-}
+<span class="n">vfat_t</span><span class="o">::</span><span class="n">ext_bios_param_block_fat16_t</span><span class="o">::~</span><span class="n">ext_bios_param_block_fat16_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-std::vector&lt;std::string&gt;* vfat_t::fats() {
-    if (f_fats)
-        return m_fats;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek(boot_sector()-&gt;pos_fats());
-    int l_fats = boot_sector()-&gt;bpb()-&gt;num_fats();
-    m_fats = new std::vector&lt;std::string&gt;();
-    m_fats-&gt;reserve(l_fats);
-    for (int i = 0; i &lt; l_fats; i++) {
-        m_fats-&gt;push_back(m__io-&gt;read_bytes(boot_sector()-&gt;size_fat()));
-    }
-    m__io-&gt;seek(_pos);
-    f_fats = true;
-    return m_fats;
-}
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;*</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">fats</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_fats</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_fats</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">boot_sector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">pos_fats</span><span class="p">());</span>
+    <span class="kt">int</span> <span class="n">l_fats</span> <span class="o">=</span> <span class="n">boot_sector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bpb</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_fats</span><span class="p">();</span>
+    <span class="n">m_fats</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="n">m_fats</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_fats</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_fats</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_fats</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">boot_sector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">size_fat</span><span class="p">()));</span>
+    <span class="p">}</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_fats</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_fats</span><span class="p">;</span>
+<span class="p">}</span>
 
-vfat_t::root_directory_t* vfat_t::root_dir() {
-    if (f_root_dir)
-        return m_root_dir;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek(boot_sector()-&gt;pos_root_dir());
-    m__raw_root_dir = m__io-&gt;read_bytes(boot_sector()-&gt;size_root_dir());
-    m__io__raw_root_dir = new kaitai::kstream(m__raw_root_dir);
-    m_root_dir = new root_directory_t(m__io__raw_root_dir, this, m__root);
-    m__io-&gt;seek(_pos);
-    f_root_dir = true;
-    return m_root_dir;
-}
-</code></pre>
+<span class="n">vfat_t</span><span class="o">::</span><span class="n">root_directory_t</span><span class="o">*</span> <span class="n">vfat_t</span><span class="o">::</span><span class="n">root_dir</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_root_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_root_dir</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">boot_sector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">pos_root_dir</span><span class="p">());</span>
+    <span class="n">m__raw_root_dir</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">boot_sector</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">size_root_dir</span><span class="p">());</span>
+    <span class="n">m__io__raw_root_dir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_root_dir</span><span class="p">);</span>
+    <span class="n">m_root_dir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">root_directory_t</span><span class="p">(</span><span class="n">m__io__raw_root_dir</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_root_dir</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_root_dir</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1115,8 +1112,8 @@ vfat_t::root_directory_t* vfat_t::root_dir() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

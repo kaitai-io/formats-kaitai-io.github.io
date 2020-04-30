@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -246,291 +243,291 @@ are actually ZIP archives.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: zip
-  title: ZIP archive file
-  file-extension: zip
-  xref:
-    iso: 21320-1
-    justsolve: ZIP
-    loc:
-      - fdd000354
-      - fdd000355
-      - fdd000362
-      - fdd000361
-    pronom: x-fmt/263
-    wikidata: Q136218
-  endian: le
-  license: CC0-1.0
-doc: |
-  ZIP is a popular archive file format, introduced in 1989 by Phil Katz
-  and originally implemented in PKZIP utility by PKWARE.
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zip</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ZIP archive file</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zip</span>
+  <span class="nt">xref</span><span class="p">:</span>
+    <span class="nt">iso</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">21320-1</span>
+    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ZIP</span>
+    <span class="nt">loc</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">fdd000354</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">fdd000355</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">fdd000362</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">fdd000361</span>
+    <span class="nt">pronom</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x-fmt/263</span>
+    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q136218</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">ZIP is a popular archive file format, introduced in 1989 by Phil Katz</span>
+  <span class="no">and originally implemented in PKZIP utility by PKWARE.</span>
 
-  Thanks to solid support of it in most desktop environments and
-  operating systems, and algorithms / specs availability in public
-  domain, it quickly became tool of choice for implementing file
-  containers.
+  <span class="no">Thanks to solid support of it in most desktop environments and</span>
+  <span class="no">operating systems, and algorithms / specs availability in public</span>
+  <span class="no">domain, it quickly became tool of choice for implementing file</span>
+  <span class="no">containers.</span>
 
-  For example, Java .jar files, OpenDocument, Office Open XML, EPUB files
-  are actually ZIP archives.
-doc-ref: https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT
-seq:
-  - id: sections
-    type: pk_section
-    repeat: eos
-types:
-  pk_section:
-    seq:
-      - id: magic
-        contents: &#39;PK&#39;
-      - id: section_type
-        type: u2
-      - id: body
-        type:
-          switch-on: section_type
-          cases:
-            0x0201: central_dir_entry
-            0x0403: local_file
-            0x0605: end_of_central_dir
-            0x0807: data_descriptor
-  data_descriptor:
-    seq:
-      - id: crc32
-        type: u4
-      - id: len_body_compressed
-        type: u4
-      - id: len_body_uncompressed
-        type: u4
-  local_file:
-    seq:
-      - id: header
-        type: local_file_header
-      - id: body
-        size: header.len_body_compressed
-  local_file_header:
-    seq:
-      - id: version
-        type: u2
-      - id: flags
-        type: u2
-      - id: compression_method
-        type: u2
-        enum: compression
-      - id: file_mod_time
-        type: u2
-      - id: file_mod_date
-        type: u2
-      - id: crc32
-        type: u4
-      - id: len_body_compressed
-        type: u4
-      - id: len_body_uncompressed
-        type: u4
-      - id: len_file_name
-        type: u2
-      - id: len_extra
-        type: u2
-      - id: file_name
-        type: str
-        size: len_file_name
-        encoding: UTF-8
-      - id: extra
-        size: len_extra
-        type: extras
-  central_dir_entry:
-    doc-ref: https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT - 4.3.12
-    seq:
-      - id: version_made_by
-        type: u2
-      - id: version_needed_to_extract
-        type: u2
-      - id: flags
-        type: u2
-      - id: compression_method
-        type: u2
-        enum: compression
-      - id: last_mod_file_time
-        type: u2
-      - id: last_mod_file_date
-        type: u2
-      - id: crc32
-        type: u4
-      - id: len_body_compressed
-        type: u4
-      - id: len_body_uncompressed
-        type: u4
-      - id: len_file_name
-        type: u2
-      - id: len_extra
-        type: u2
-      - id: len_comment
-        type: u2
-      - id: disk_number_start
-        type: u2
-      - id: int_file_attr
-        type: u2
-      - id: ext_file_attr
-        type: u4
-      - id: ofs_local_header
-        type: s4
-      - id: file_name
-        type: str
-        size: len_file_name
-        encoding: UTF-8
-      - id: extra
-        size: len_extra
-        type: extras
-      - id: comment
-        type: str
-        size: len_comment
-        encoding: UTF-8
-    instances:
-      local_header:
-        pos: ofs_local_header
-        type: pk_section
-  # https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT - 4.3.16
-  end_of_central_dir:
-    seq:
-      - id: disk_of_end_of_central_dir
-        type: u2
-      - id: disk_of_central_dir
-        type: u2
-      - id: num_central_dir_entries_on_disk
-        type: u2
-      - id: num_central_dir_entries_total
-        type: u2
-      - id: len_central_dir
-        type: u4
-      - id: ofs_central_dir
-        type: u4
-      - id: len_comment
-        type: u2
-      - id: comment
-        type: str
-        size: len_comment
-        encoding: UTF-8
-  extras:
-    seq:
-      - id: entries
-        type: extra_field
-        repeat: eos
-  extra_field:
-    seq:
-      - id: code
-        type: u2
-        enum: extra_codes
-      - id: len_body
-        type: u2
-      - id: body
-        size: len_body
-        type:
-          switch-on: code
-          cases:
-            &#39;extra_codes::ntfs&#39;: ntfs
-            &#39;extra_codes::extended_timestamp&#39;: extended_timestamp
-            &#39;extra_codes::infozip_unix_var_size&#39;: infozip_unix_var_size
-    types:
-      ntfs:
-        doc-ref: &#39;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191&#39;
-        seq:
-          - id: reserved
-            type: u4
-          - id: attributes
-            type: attribute
-            repeat: eos
-        types:
-          attribute:
-            seq:
-              - id: tag
-                type: u2
-              - id: len_body
-                type: u2
-              - id: body
-                size: len_body
-                type:
-                  switch-on: tag
-                  cases:
-                    1: attribute_1
-          attribute_1:
-            seq:
-              - id: last_mod_time
-                type: u8
-              - id: last_access_time
-                type: u8
-              - id: creation_time
-                type: u8
-      extended_timestamp:
-        doc-ref: &#39;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817&#39;
-        seq:
-          - id: flags
-            type: u1
-          - id: mod_time
-            type: u4
-          - id: access_time
-            type: u4
-            if: not _io.eof
-          - id: create_time
-            type: u4
-            if: not _io.eof
-      infozip_unix_var_size:
-        doc-ref: &#39;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339&#39;
-        seq:
-          - id: version
-            type: u1
-            doc: Version of this extra field, currently 1
-          - id: len_uid
-            type: u1
-            doc: Size of UID field
-          - id: uid
-            size: len_uid
-            doc: UID (User ID) for a file
-          - id: len_gid
-            type: u1
-            doc: Size of GID field
-          - id: gid
-            size: len_gid
-            doc: GID (Group ID) for a file
-enums:
-  compression:
-    0: none
-    1: shrunk
-    2: reduced_1
-    3: reduced_2
-    4: reduced_3
-    5: reduced_4
-    6: imploded
-    8: deflated
-    9: enhanced_deflated
-    10: pkware_dcl_imploded
-    12: bzip2
-    14: lzma
-    18: ibm_terse
-    19: ibm_lz77_z
-    98: ppmd
-  extra_codes:
-    # https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt
-    0x0001: zip64
-    0x0007: av_info
-#    0x0008: reserved for extended language encoding data (PFS) (see APPENDIX D)
-    0x0009: os2
-    0x000a: ntfs
-    0x000c: openvms
-    0x000d: pkware_unix
-    0x000e: file_stream_and_fork_descriptors
-    0x000f: patch_descriptor
-    0x0014: pkcs7
-    0x0015: x509_cert_id_and_signature_for_file
-    0x0016: x509_cert_id_for_central_dir
-    0x0017: strong_encryption_header
-    0x0018: record_management_controls
-    0x0019: pkcs7_enc_recip_cert_list
-    0x0065: ibm_s390_uncomp
-    0x0066: ibm_s390_comp
-    0x4690: poszip_4690
-    0x5455: extended_timestamp
-    0x7855: infozip_unix
-    0x7875: infozip_unix_var_size
-</code></pre>
+  <span class="no">For example, Java .jar files, OpenDocument, Office Open XML, EPUB files</span>
+  <span class="no">are actually ZIP archives.</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sections</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pk_section</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">pk_section</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;PK&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section_type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="nt">0x0201</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">central_dir_entry</span>
+            <span class="nt">0x0403</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">local_file</span>
+            <span class="nt">0x0605</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end_of_central_dir</span>
+            <span class="nt">0x0807</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_descriptor</span>
+  <span class="nt">data_descriptor</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">crc32</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body_compressed</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body_uncompressed</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="nt">local_file</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">local_file_header</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.len_body_compressed</span>
+  <span class="nt">local_file_header</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression_method</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_mod_time</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_mod_date</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">crc32</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body_compressed</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body_uncompressed</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_file_name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_extra</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_file_name</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extra</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_extra</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extras</span>
+  <span class="nt">central_dir_entry</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT - 4.3.12</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version_made_by</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version_needed_to_extract</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression_method</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">last_mod_file_time</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">last_mod_file_date</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">crc32</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body_compressed</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body_uncompressed</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_file_name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_extra</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_comment</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">disk_number_start</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">int_file_attr</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ext_file_attr</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_local_header</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_file_name</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extra</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_extra</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extras</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">comment</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_comment</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">local_header</span><span class="p">:</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_local_header</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pk_section</span>
+  <span class="c1"># https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT - 4.3.16</span>
+  <span class="nt">end_of_central_dir</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">disk_of_end_of_central_dir</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">disk_of_central_dir</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_central_dir_entries_on_disk</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_central_dir_entries_total</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_central_dir</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_central_dir</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_comment</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">comment</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_comment</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+  <span class="nt">extras</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extra_field</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+  <span class="nt">extra_field</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">code</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extra_codes</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">code</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;extra_codes::ntfs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ntfs</span>
+            <span class="s">&#39;extra_codes::extended_timestamp&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">extended_timestamp</span>
+            <span class="s">&#39;extra_codes::infozip_unix_var_size&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">infozip_unix_var_size</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">ntfs</span><span class="p">:</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L191&#39;</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attributes</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attribute</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+        <span class="nt">types</span><span class="p">:</span>
+          <span class="nt">attribute</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+                <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body</span>
+                <span class="nt">type</span><span class="p">:</span>
+                  <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+                  <span class="nt">cases</span><span class="p">:</span>
+                    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attribute_1</span>
+          <span class="nt">attribute_1</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">last_mod_time</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">last_access_time</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">creation_time</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="nt">extended_timestamp</span><span class="p">:</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L817&#39;</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mod_time</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">access_time</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not _io.eof</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">create_time</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not _io.eof</span>
+      <span class="nt">infozip_unix_var_size</span><span class="p">:</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt#L1339&#39;</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Version of this extra field, currently 1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_uid</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Size of UID field</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uid</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_uid</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UID (User ID) for a file</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_gid</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Size of GID field</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gid</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_gid</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GID (Group ID) for a file</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">compression</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">shrunk</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reduced_1</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reduced_2</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reduced_3</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reduced_4</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">imploded</span>
+    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deflated</span>
+    <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">enhanced_deflated</span>
+    <span class="nt">10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pkware_dcl_imploded</span>
+    <span class="nt">12</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bzip2</span>
+    <span class="nt">14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lzma</span>
+    <span class="nt">18</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ibm_terse</span>
+    <span class="nt">19</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ibm_lz77_z</span>
+    <span class="nt">98</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ppmd</span>
+  <span class="nt">extra_codes</span><span class="p">:</span>
+    <span class="c1"># https://github.com/LuaDist/zip/blob/master/proginfo/extrafld.txt</span>
+    <span class="nt">0x0001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zip64</span>
+    <span class="nt">0x0007</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">av_info</span>
+<span class="c1">#    0x0008: reserved for extended language encoding data (PFS) (see APPENDIX D)</span>
+    <span class="nt">0x0009</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">os2</span>
+    <span class="nt">0x000a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ntfs</span>
+    <span class="nt">0x000c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">openvms</span>
+    <span class="nt">0x000d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pkware_unix</span>
+    <span class="nt">0x000e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_stream_and_fork_descriptors</span>
+    <span class="nt">0x000f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">patch_descriptor</span>
+    <span class="nt">0x0014</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pkcs7</span>
+    <span class="nt">0x0015</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x509_cert_id_and_signature_for_file</span>
+    <span class="nt">0x0016</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x509_cert_id_for_central_dir</span>
+    <span class="nt">0x0017</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strong_encryption_header</span>
+    <span class="nt">0x0018</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record_management_controls</span>
+    <span class="nt">0x0019</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pkcs7_enc_recip_cert_list</span>
+    <span class="nt">0x0065</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ibm_s390_uncomp</span>
+    <span class="nt">0x0066</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ibm_s390_comp</span>
+    <span class="nt">0x4690</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">poszip_4690</span>
+    <span class="nt">0x5455</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extended_timestamp</span>
+    <span class="nt">0x7855</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">infozip_unix</span>
+    <span class="nt">0x7875</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">infozip_unix_var_size</span>
+</pre></div>
     </div>
 </section>
 
@@ -554,8 +551,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

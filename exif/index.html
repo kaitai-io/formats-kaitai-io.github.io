@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -194,540 +191,540 @@ section#format-index .row {
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: exif
-seq:
-  - id: endianness
-    type: u2le
-  - id: body
-    type: exif_body
-types:
-  exif_body:
-    meta:
-      endian:
-        switch-on: _root.endianness
-        cases:
-          0x4949: le
-          0x4d4d: be
-    seq:
-      - id: version
-        type: u2
-      - id: ifd0_ofs
-        type: u4
-    instances:
-      ifd0:
-        type: ifd
-        pos: ifd0_ofs
-    types:
-      ifd:
-        seq:
-          - id: num_fields
-            type: u2
-          - id: fields
-            type: ifd_field
-            repeat: expr
-            repeat-expr: num_fields
-          - id: next_ifd_ofs
-            type: u4
-        instances:
-          next_ifd:
-            pos: next_ifd_ofs
-            type: ifd
-            if: next_ifd_ofs != 0
-      ifd_field:
-        seq:
-          - id: tag
-            type: u2
-            enum: tag_enum
-          - id: field_type
-            type: u2
-            enum: field_type_enum
-          - id: length
-            type: u4
-          - id: ofs_or_data
-            type: u4
-        instances:
-          type_byte_length:
-            value: &#39;field_type == field_type_enum::word ? 2 : (field_type == field_type_enum::dword ? 4 : 1)&#39;
-          byte_length:
-            value: length * type_byte_length
-          is_immediate_data:
-            value: &#39;byte_length &lt;= 4&#39;
-          data:
-            pos: ofs_or_data
-            size: byte_length
-            if: not is_immediate_data
-            io: _root._io
-        enums:
-          field_type_enum:
-            1: byte
-            2: ascii_string
-            3: word
-            4: dword
-            5: rational
-            7: undefined
-            9: slong
-            10: srational
-          tag_enum:
-            0x0100: image_width
-            0x0101: image_height
-            0x0102: bits_per_sample
-            0x0103: compression
-            0x0106: photometric_interpretation
-            0x0107: thresholding
-            0x0108: cell_width
-            0x0109: cell_length
-            0x010a: fill_order
-            0x010d: document_name
-            0x010e: image_description
-            0x010f: make
-            0x0110: model
-            0x0111: strip_offsets
-            0x0112: orientation
-            0x0115: samples_per_pixel
-            0x0116: rows_per_strip
-            0x0117: strip_byte_counts
-            0x0118: min_sample_value
-            0x0119: max_sample_value
-            0x011a: x_resolution
-            0x011b: y_resolution
-            0x011c: planar_configuration
-            0x011d: page_name
-            0x011e: x_position
-            0x011f: y_position
-            0x0120: free_offsets
-            0x0121: free_byte_counts
-            0x0122: gray_response_unit
-            0x0123: gray_response_curve
-            0x0124: t4_options
-            0x0125: t6_options
-            0x0128: resolution_unit
-            0x0129: page_number
-            0x012c: color_response_unit
-            0x012d: transfer_function
-            0x0131: software
-            0x0132: modify_date
-            0x013b: artist
-            0x013c: host_computer
-            0x013d: predictor
-            0x013e: white_point
-            0x013f: primary_chromaticities
-            0x0140: color_map
-            0x0141: halftone_hints
-            0x0142: tile_width
-            0x0143: tile_length
-            0x0144: tile_offsets
-            0x0145: tile_byte_counts
-            0x0146: bad_fax_lines
-            0x0147: clean_fax_data
-            0x0148: consecutive_bad_fax_lines
-            0x014a: sub_ifd
-            0x014c: ink_set
-            0x014d: ink_names
-            0x014e: numberof_inks
-            0x0150: dot_range
-            0x0151: target_printer
-            0x0152: extra_samples
-            0x0153: sample_format
-            0x0154: s_min_sample_value
-            0x0155: s_max_sample_value
-            0x0156: transfer_range
-            0x0157: clip_path
-            0x0158: x_clip_path_units
-            0x0159: y_clip_path_units
-            0x015a: indexed
-            0x015b: jpeg_tables
-            0x015f: opi_proxy
-            0x0190: global_parameters_ifd
-            0x0191: profile_type
-            0x0192: fax_profile
-            0x0193: coding_methods
-            0x0194: version_year
-            0x0195: mode_number
-            0x01b1: decode
-            0x01b2: default_image_color
-            0x01b3: t82_options
-            0x01b5: jpeg_tables2
-            0x0200: jpeg_proc
-            0x0201: thumbnail_offset
-            0x0202: thumbnail_length
-            0x0203: jpeg_restart_interval
-            0x0205: jpeg_lossless_predictors
-            0x0206: jpeg_point_transforms
-            0x0207: jpegq_tables
-            0x0208: jpegdc_tables
-            0x0209: jpegac_tables
-            0x0211: y_cb_cr_coefficients
-            0x0212: y_cb_cr_sub_sampling
-            0x0213: y_cb_cr_positioning
-            0x0214: reference_black_white
-            0x022f: strip_row_counts
-            0x02bc: application_notes
-            0x03e7: uspto_miscellaneous
-            0x1000: related_image_file_format
-            0x1001: related_image_width
-            0x1002: related_image_height
-            0x4746: rating
-            0x4747: xp_dip_xml
-            0x4748: stitch_info
-            0x4749: rating_percent
-            0x7000: sony_raw_file_type
-            0x7032: light_falloff_params
-            0x7035: chromatic_aberration_corr_params
-            0x7037: distortion_corr_params
-            0x800d: image_id
-            0x80a3: wang_tag1
-            0x80a4: wang_annotation
-            0x80a5: wang_tag3
-            0x80a6: wang_tag4
-            0x80b9: image_reference_points
-            0x80ba: region_xform_tack_point
-            0x80bb: warp_quadrilateral
-            0x80bc: affine_transform_mat
-            0x80e3: matteing
-            0x80e4: data_type
-            0x80e5: image_depth
-            0x80e6: tile_depth
-            0x8214: image_full_width
-            0x8215: image_full_height
-            0x8216: texture_format
-            0x8217: wrap_modes
-            0x8218: fov_cot
-            0x8219: matrix_world_to_screen
-            0x821a: matrix_world_to_camera
-            0x827d: model2
-            0x828d: cfa_repeat_pattern_dim
-            0x828e: cfa_pattern2
-            0x828f: battery_level
-            0x8290: kodak_ifd
-            0x8298: copyright
-            0x829a: exposure_time
-            0x829d: f_number
-            0x82a5: md_file_tag
-            0x82a6: md_scale_pixel
-            0x82a7: md_color_table
-            0x82a8: md_lab_name
-            0x82a9: md_sample_info
-            0x82aa: md_prep_date
-            0x82ab: md_prep_time
-            0x82ac: md_file_units
-            0x830e: pixel_scale
-            0x8335: advent_scale
-            0x8336: advent_revision
-            0x835c: uic1_tag
-            0x835d: uic2_tag
-            0x835e: uic3_tag
-            0x835f: uic4_tag
-            0x83bb: iptc_naa
-            0x847e: intergraph_packet_data
-            0x847f: intergraph_flag_registers
-            0x8480: intergraph_matrix
-            0x8481: ingr_reserved
-            0x8482: model_tie_point
-            0x84e0: site
-            0x84e1: color_sequence
-            0x84e2: it8_header
-            0x84e3: raster_padding
-            0x84e4: bits_per_run_length
-            0x84e5: bits_per_extended_run_length
-            0x84e6: color_table
-            0x84e7: image_color_indicator
-            0x84e8: background_color_indicator
-            0x84e9: image_color_value
-            0x84ea: background_color_value
-            0x84eb: pixel_intensity_range
-            0x84ec: transparency_indicator
-            0x84ed: color_characterization
-            0x84ee: hc_usage
-            0x84ef: trap_indicator
-            0x84f0: cmyk_equivalent
-            0x8546: sem_info
-            0x8568: afcp_iptc
-            0x85b8: pixel_magic_jbig_options
-            0x85d7: jpl_carto_ifd
-            0x85d8: model_transform
-            0x8602: wb_grgb_levels
-            0x8606: leaf_data
-            0x8649: photoshop_settings
-            0x8769: exif_offset
-            0x8773: icc_profile
-            0x877f: tiff_fx_extensions
-            0x8780: multi_profiles
-            0x8781: shared_data
-            0x8782: t88_options
-            0x87ac: image_layer
-            0x87af: geo_tiff_directory
-            0x87b0: geo_tiff_double_params
-            0x87b1: geo_tiff_ascii_params
-            0x87be: jbig_options
-            0x8822: exposure_program
-            0x8824: spectral_sensitivity
-            0x8825: gps_info
-            0x8827: iso
-            0x8828: opto_electric_conv_factor
-            0x8829: interlace
-            0x882a: time_zone_offset
-            0x882b: self_timer_mode
-            0x8830: sensitivity_type
-            0x8831: standard_output_sensitivity
-            0x8832: recommended_exposure_index
-            0x8833: iso_speed
-            0x8834: iso_speed_latitudeyyy
-            0x8835: iso_speed_latitudezzz
-            0x885c: fax_recv_params
-            0x885d: fax_sub_address
-            0x885e: fax_recv_time
-            0x8871: fedex_edr
-            0x888a: leaf_sub_ifd
-            0x9000: exif_version
-            0x9003: date_time_original
-            0x9004: create_date
-            0x9009: google_plus_upload_code
-            0x9010: offset_time
-            0x9011: offset_time_original
-            0x9012: offset_time_digitized
-            0x9101: components_configuration
-            0x9102: compressed_bits_per_pixel
-            0x9201: shutter_speed_value
-            0x9202: aperture_value
-            0x9203: brightness_value
-            0x9204: exposure_compensation
-            0x9205: max_aperture_value
-            0x9206: subject_distance
-            0x9207: metering_mode
-            0x9208: light_source
-            0x9209: flash
-            0x920a: focal_length
-            0x920b: flash_energy
-            0x920c: spatial_frequency_response
-            0x920d: noise
-            0x920e: focal_plane_x_resolution
-            0x920f: focal_plane_y_resolution
-            0x9210: focal_plane_resolution_unit
-            0x9211: image_number
-            0x9212: security_classification
-            0x9213: image_history
-            0x9214: subject_area
-            0x9215: exposure_index
-            0x9216: tiff_ep_standard_id
-            0x9217: sensing_method
-            0x923a: cip3_data_file
-            0x923b: cip3_sheet
-            0x923c: cip3_side
-            0x923f: sto_nits
-            0x927c: maker_note
-            0x9286: user_comment
-            0x9290: sub_sec_time
-            0x9291: sub_sec_time_original
-            0x9292: sub_sec_time_digitized
-            0x932f: ms_document_text
-            0x9330: ms_property_set_storage
-            0x9331: ms_document_text_position
-            0x935c: image_source_data
-            0x9400: ambient_temperature
-            0x9401: humidity
-            0x9402: pressure
-            0x9403: water_depth
-            0x9404: acceleration
-            0x9405: camera_elevation_angle
-            0x9c9b: xp_title
-            0x9c9c: xp_comment
-            0x9c9d: xp_author
-            0x9c9e: xp_keywords
-            0x9c9f: xp_subject
-            0xa000: flashpix_version
-            0xa001: color_space
-            0xa002: exif_image_width
-            0xa003: exif_image_height
-            0xa004: related_sound_file
-            0xa005: interop_offset
-            0xa010: samsung_raw_pointers_offset
-            0xa011: samsung_raw_pointers_length
-            0xa101: samsung_raw_byte_order
-            0xa102: samsung_raw_unknown
-            0xa20b: flash_energy2
-            0xa20c: spatial_frequency_response2
-            0xa20d: noise2
-            0xa20e: focal_plane_x_resolution2
-            0xa20f: focal_plane_y_resolution2
-            0xa210: focal_plane_resolution_unit2
-            0xa211: image_number2
-            0xa212: security_classification2
-            0xa213: image_history2
-            0xa214: subject_location
-            0xa215: exposure_index2
-            0xa216: tiff_ep_standard_id2
-            0xa217: sensing_method2
-            0xa300: file_source
-            0xa301: scene_type
-            0xa302: cfa_pattern
-            0xa401: custom_rendered
-            0xa402: exposure_mode
-            0xa403: white_balance
-            0xa404: digital_zoom_ratio
-            0xa405: focal_length_in35mm_format
-            0xa406: scene_capture_type
-            0xa407: gain_control
-            0xa408: contrast
-            0xa409: saturation
-            0xa40a: sharpness
-            0xa40b: device_setting_description
-            0xa40c: subject_distance_range
-            0xa420: image_unique_id
-            0xa430: owner_name
-            0xa431: serial_number
-            0xa432: lens_info
-            0xa433: lens_make
-            0xa434: lens_model
-            0xa435: lens_serial_number
-            0xa480: gdal_metadata
-            0xa481: gdal_no_data
-            0xa500: gamma
-            0xafc0: expand_software
-            0xafc1: expand_lens
-            0xafc2: expand_film
-            0xafc3: expand_filter_lens
-            0xafc4: expand_scanner
-            0xafc5: expand_flash_lamp
-            0xbc01: pixel_format
-            0xbc02: transformation
-            0xbc03: uncompressed
-            0xbc04: image_type
-            0xbc80: image_width2
-            0xbc81: image_height2
-            0xbc82: width_resolution
-            0xbc83: height_resolution
-            0xbcc0: image_offset
-            0xbcc1: image_byte_count
-            0xbcc2: alpha_offset
-            0xbcc3: alpha_byte_count
-            0xbcc4: image_data_discard
-            0xbcc5: alpha_data_discard
-            0xc427: oce_scanjob_desc
-            0xc428: oce_application_selector
-            0xc429: oce_id_number
-            0xc42a: oce_image_logic
-            0xc44f: annotations
-            0xc4a5: print_im
-            0xc573: original_file_name
-            0xc580: uspto_original_content_type
-            0xc612: dng_version
-            0xc613: dng_backward_version
-            0xc614: unique_camera_model
-            0xc615: localized_camera_model
-            0xc616: cfa_plane_color
-            0xc617: cfa_layout
-            0xc618: linearization_table
-            0xc619: black_level_repeat_dim
-            0xc61a: black_level
-            0xc61b: black_level_delta_h
-            0xc61c: black_level_delta_v
-            0xc61d: white_level
-            0xc61e: default_scale
-            0xc61f: default_crop_origin
-            0xc620: default_crop_size
-            0xc621: color_matrix1
-            0xc622: color_matrix2
-            0xc623: camera_calibration1
-            0xc624: camera_calibration2
-            0xc625: reduction_matrix1
-            0xc626: reduction_matrix2
-            0xc627: analog_balance
-            0xc628: as_shot_neutral
-            0xc629: as_shot_white_xy
-            0xc62a: baseline_exposure
-            0xc62b: baseline_noise
-            0xc62c: baseline_sharpness
-            0xc62d: bayer_green_split
-            0xc62e: linear_response_limit
-            0xc62f: camera_serial_number
-            0xc630: dng_lens_info
-            0xc631: chroma_blur_radius
-            0xc632: anti_alias_strength
-            0xc633: shadow_scale
-            0xc634: sr2_private
-            0xc635: maker_note_safety
-            0xc640: raw_image_segmentation
-            0xc65a: calibration_illuminant1
-            0xc65b: calibration_illuminant2
-            0xc65c: best_quality_scale
-            0xc65d: raw_data_unique_id
-            0xc660: alias_layer_metadata
-            0xc68b: original_raw_file_name
-            0xc68c: original_raw_file_data
-            0xc68d: active_area
-            0xc68e: masked_areas
-            0xc68f: as_shot_icc_profile
-            0xc690: as_shot_pre_profile_matrix
-            0xc691: current_icc_profile
-            0xc692: current_pre_profile_matrix
-            0xc6bf: colorimetric_reference
-            0xc6c5: s_raw_type
-            0xc6d2: panasonic_title
-            0xc6d3: panasonic_title2
-            0xc6f3: camera_calibration_sig
-            0xc6f4: profile_calibration_sig
-            0xc6f5: profile_ifd
-            0xc6f6: as_shot_profile_name
-            0xc6f7: noise_reduction_applied
-            0xc6f8: profile_name
-            0xc6f9: profile_hue_sat_map_dims
-            0xc6fa: profile_hue_sat_map_data1
-            0xc6fb: profile_hue_sat_map_data2
-            0xc6fc: profile_tone_curve
-            0xc6fd: profile_embed_policy
-            0xc6fe: profile_copyright
-            0xc714: forward_matrix1
-            0xc715: forward_matrix2
-            0xc716: preview_application_name
-            0xc717: preview_application_version
-            0xc718: preview_settings_name
-            0xc719: preview_settings_digest
-            0xc71a: preview_color_space
-            0xc71b: preview_date_time
-            0xc71c: raw_image_digest
-            0xc71d: original_raw_file_digest
-            0xc71e: sub_tile_block_size
-            0xc71f: row_interleave_factor
-            0xc725: profile_look_table_dims
-            0xc726: profile_look_table_data
-            0xc740: opcode_list1
-            0xc741: opcode_list2
-            0xc74e: opcode_list3
-            0xc761: noise_profile
-            0xc763: time_codes
-            0xc764: frame_rate
-            0xc772: t_stop
-            0xc789: reel_name
-            0xc791: original_default_final_size
-            0xc792: original_best_quality_size
-            0xc793: original_default_crop_size
-            0xc7a1: camera_label
-            0xc7a3: profile_hue_sat_map_encoding
-            0xc7a4: profile_look_table_encoding
-            0xc7a5: baseline_exposure_offset
-            0xc7a6: default_black_render
-            0xc7a7: new_raw_image_digest
-            0xc7a8: raw_to_preview_gain
-            0xc7b5: default_user_crop
-            0xea1c: padding
-            0xea1d: offset_schema
-            0xfde8: owner_name2
-            0xfde9: serial_number2
-            0xfdea: lens
-            0xfe00: kdc_ifd
-            0xfe4c: raw_file
-            0xfe4d: converter
-            0xfe4e: white_balance2
-            0xfe51: exposure
-            0xfe52: shadows
-            0xfe53: brightness
-            0xfe54: contrast2
-            0xfe55: saturation2
-            0xfe56: sharpness2
-            0xfe57: smoothness
-            0xfe58: moire_filter
-</code></pre>
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exif</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">endianness</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2le</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exif_body</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">exif_body</span><span class="p">:</span>
+    <span class="nt">meta</span><span class="p">:</span>
+      <span class="nt">endian</span><span class="p">:</span>
+        <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.endianness</span>
+        <span class="nt">cases</span><span class="p">:</span>
+          <span class="nt">0x4949</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+          <span class="nt">0x4d4d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ifd0_ofs</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">ifd0</span><span class="p">:</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ifd</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ifd0_ofs</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">ifd</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_fields</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fields</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ifd_field</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_fields</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">next_ifd_ofs</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">next_ifd</span><span class="p">:</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">next_ifd_ofs</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ifd</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">next_ifd_ofs != 0</span>
+      <span class="nt">ifd_field</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_enum</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">field_type</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">field_type_enum</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_or_data</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">type_byte_length</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;field_type</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">field_type_enum::word</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">2</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">(field_type</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">field_type_enum::dword</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">4</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">1)&#39;</span>
+          <span class="nt">byte_length</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length * type_byte_length</span>
+          <span class="nt">is_immediate_data</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;byte_length</span><span class="nv"> </span><span class="s">&lt;=</span><span class="nv"> </span><span class="s">4&#39;</span>
+          <span class="nt">data</span><span class="p">:</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_or_data</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">byte_length</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not is_immediate_data</span>
+            <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
+        <span class="nt">enums</span><span class="p">:</span>
+          <span class="nt">field_type_enum</span><span class="p">:</span>
+            <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">byte</span>
+            <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii_string</span>
+            <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">word</span>
+            <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dword</span>
+            <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rational</span>
+            <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">undefined</span>
+            <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">slong</span>
+            <span class="nt">10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">srational</span>
+          <span class="nt">tag_enum</span><span class="p">:</span>
+            <span class="nt">0x0100</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_width</span>
+            <span class="nt">0x0101</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_height</span>
+            <span class="nt">0x0102</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bits_per_sample</span>
+            <span class="nt">0x0103</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression</span>
+            <span class="nt">0x0106</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">photometric_interpretation</span>
+            <span class="nt">0x0107</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">thresholding</span>
+            <span class="nt">0x0108</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cell_width</span>
+            <span class="nt">0x0109</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cell_length</span>
+            <span class="nt">0x010a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fill_order</span>
+            <span class="nt">0x010d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">document_name</span>
+            <span class="nt">0x010e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_description</span>
+            <span class="nt">0x010f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">make</span>
+            <span class="nt">0x0110</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">model</span>
+            <span class="nt">0x0111</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strip_offsets</span>
+            <span class="nt">0x0112</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orientation</span>
+            <span class="nt">0x0115</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">samples_per_pixel</span>
+            <span class="nt">0x0116</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rows_per_strip</span>
+            <span class="nt">0x0117</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strip_byte_counts</span>
+            <span class="nt">0x0118</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">min_sample_value</span>
+            <span class="nt">0x0119</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">max_sample_value</span>
+            <span class="nt">0x011a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x_resolution</span>
+            <span class="nt">0x011b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y_resolution</span>
+            <span class="nt">0x011c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">planar_configuration</span>
+            <span class="nt">0x011d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">page_name</span>
+            <span class="nt">0x011e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x_position</span>
+            <span class="nt">0x011f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y_position</span>
+            <span class="nt">0x0120</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">free_offsets</span>
+            <span class="nt">0x0121</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">free_byte_counts</span>
+            <span class="nt">0x0122</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gray_response_unit</span>
+            <span class="nt">0x0123</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gray_response_curve</span>
+            <span class="nt">0x0124</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t4_options</span>
+            <span class="nt">0x0125</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t6_options</span>
+            <span class="nt">0x0128</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">resolution_unit</span>
+            <span class="nt">0x0129</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">page_number</span>
+            <span class="nt">0x012c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">color_response_unit</span>
+            <span class="nt">0x012d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">transfer_function</span>
+            <span class="nt">0x0131</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">software</span>
+            <span class="nt">0x0132</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">modify_date</span>
+            <span class="nt">0x013b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">artist</span>
+            <span class="nt">0x013c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">host_computer</span>
+            <span class="nt">0x013d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">predictor</span>
+            <span class="nt">0x013e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">white_point</span>
+            <span class="nt">0x013f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">primary_chromaticities</span>
+            <span class="nt">0x0140</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">color_map</span>
+            <span class="nt">0x0141</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">halftone_hints</span>
+            <span class="nt">0x0142</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tile_width</span>
+            <span class="nt">0x0143</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tile_length</span>
+            <span class="nt">0x0144</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tile_offsets</span>
+            <span class="nt">0x0145</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tile_byte_counts</span>
+            <span class="nt">0x0146</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bad_fax_lines</span>
+            <span class="nt">0x0147</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">clean_fax_data</span>
+            <span class="nt">0x0148</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">consecutive_bad_fax_lines</span>
+            <span class="nt">0x014a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sub_ifd</span>
+            <span class="nt">0x014c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ink_set</span>
+            <span class="nt">0x014d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ink_names</span>
+            <span class="nt">0x014e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">numberof_inks</span>
+            <span class="nt">0x0150</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dot_range</span>
+            <span class="nt">0x0151</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">target_printer</span>
+            <span class="nt">0x0152</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extra_samples</span>
+            <span class="nt">0x0153</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sample_format</span>
+            <span class="nt">0x0154</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s_min_sample_value</span>
+            <span class="nt">0x0155</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s_max_sample_value</span>
+            <span class="nt">0x0156</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">transfer_range</span>
+            <span class="nt">0x0157</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">clip_path</span>
+            <span class="nt">0x0158</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x_clip_path_units</span>
+            <span class="nt">0x0159</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y_clip_path_units</span>
+            <span class="nt">0x015a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">indexed</span>
+            <span class="nt">0x015b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jpeg_tables</span>
+            <span class="nt">0x015f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opi_proxy</span>
+            <span class="nt">0x0190</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">global_parameters_ifd</span>
+            <span class="nt">0x0191</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">profile_type</span>
+            <span class="nt">0x0192</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fax_profile</span>
+            <span class="nt">0x0193</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">coding_methods</span>
+            <span class="nt">0x0194</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version_year</span>
+            <span class="nt">0x0195</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mode_number</span>
+            <span class="nt">0x01b1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">decode</span>
+            <span class="nt">0x01b2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default_image_color</span>
+            <span class="nt">0x01b3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t82_options</span>
+            <span class="nt">0x01b5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jpeg_tables2</span>
+            <span class="nt">0x0200</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jpeg_proc</span>
+            <span class="nt">0x0201</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">thumbnail_offset</span>
+            <span class="nt">0x0202</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">thumbnail_length</span>
+            <span class="nt">0x0203</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jpeg_restart_interval</span>
+            <span class="nt">0x0205</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jpeg_lossless_predictors</span>
+            <span class="nt">0x0206</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jpeg_point_transforms</span>
+            <span class="nt">0x0207</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jpegq_tables</span>
+            <span class="nt">0x0208</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jpegdc_tables</span>
+            <span class="nt">0x0209</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jpegac_tables</span>
+            <span class="nt">0x0211</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y_cb_cr_coefficients</span>
+            <span class="nt">0x0212</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y_cb_cr_sub_sampling</span>
+            <span class="nt">0x0213</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y_cb_cr_positioning</span>
+            <span class="nt">0x0214</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reference_black_white</span>
+            <span class="nt">0x022f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strip_row_counts</span>
+            <span class="nt">0x02bc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">application_notes</span>
+            <span class="nt">0x03e7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uspto_miscellaneous</span>
+            <span class="nt">0x1000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">related_image_file_format</span>
+            <span class="nt">0x1001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">related_image_width</span>
+            <span class="nt">0x1002</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">related_image_height</span>
+            <span class="nt">0x4746</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rating</span>
+            <span class="nt">0x4747</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xp_dip_xml</span>
+            <span class="nt">0x4748</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stitch_info</span>
+            <span class="nt">0x4749</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rating_percent</span>
+            <span class="nt">0x7000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sony_raw_file_type</span>
+            <span class="nt">0x7032</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">light_falloff_params</span>
+            <span class="nt">0x7035</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chromatic_aberration_corr_params</span>
+            <span class="nt">0x7037</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">distortion_corr_params</span>
+            <span class="nt">0x800d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_id</span>
+            <span class="nt">0x80a3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wang_tag1</span>
+            <span class="nt">0x80a4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wang_annotation</span>
+            <span class="nt">0x80a5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wang_tag3</span>
+            <span class="nt">0x80a6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wang_tag4</span>
+            <span class="nt">0x80b9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_reference_points</span>
+            <span class="nt">0x80ba</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">region_xform_tack_point</span>
+            <span class="nt">0x80bb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">warp_quadrilateral</span>
+            <span class="nt">0x80bc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">affine_transform_mat</span>
+            <span class="nt">0x80e3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">matteing</span>
+            <span class="nt">0x80e4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_type</span>
+            <span class="nt">0x80e5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_depth</span>
+            <span class="nt">0x80e6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tile_depth</span>
+            <span class="nt">0x8214</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_full_width</span>
+            <span class="nt">0x8215</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_full_height</span>
+            <span class="nt">0x8216</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">texture_format</span>
+            <span class="nt">0x8217</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wrap_modes</span>
+            <span class="nt">0x8218</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fov_cot</span>
+            <span class="nt">0x8219</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">matrix_world_to_screen</span>
+            <span class="nt">0x821a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">matrix_world_to_camera</span>
+            <span class="nt">0x827d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">model2</span>
+            <span class="nt">0x828d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cfa_repeat_pattern_dim</span>
+            <span class="nt">0x828e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cfa_pattern2</span>
+            <span class="nt">0x828f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">battery_level</span>
+            <span class="nt">0x8290</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kodak_ifd</span>
+            <span class="nt">0x8298</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">copyright</span>
+            <span class="nt">0x829a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exposure_time</span>
+            <span class="nt">0x829d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f_number</span>
+            <span class="nt">0x82a5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_file_tag</span>
+            <span class="nt">0x82a6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_scale_pixel</span>
+            <span class="nt">0x82a7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_color_table</span>
+            <span class="nt">0x82a8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_lab_name</span>
+            <span class="nt">0x82a9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_sample_info</span>
+            <span class="nt">0x82aa</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_prep_date</span>
+            <span class="nt">0x82ab</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_prep_time</span>
+            <span class="nt">0x82ac</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md_file_units</span>
+            <span class="nt">0x830e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pixel_scale</span>
+            <span class="nt">0x8335</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">advent_scale</span>
+            <span class="nt">0x8336</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">advent_revision</span>
+            <span class="nt">0x835c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uic1_tag</span>
+            <span class="nt">0x835d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uic2_tag</span>
+            <span class="nt">0x835e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uic3_tag</span>
+            <span class="nt">0x835f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uic4_tag</span>
+            <span class="nt">0x83bb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iptc_naa</span>
+            <span class="nt">0x847e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">intergraph_packet_data</span>
+            <span class="nt">0x847f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">intergraph_flag_registers</span>
+            <span class="nt">0x8480</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">intergraph_matrix</span>
+            <span class="nt">0x8481</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ingr_reserved</span>
+            <span class="nt">0x8482</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">model_tie_point</span>
+            <span class="nt">0x84e0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">site</span>
+            <span class="nt">0x84e1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">color_sequence</span>
+            <span class="nt">0x84e2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">it8_header</span>
+            <span class="nt">0x84e3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">raster_padding</span>
+            <span class="nt">0x84e4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bits_per_run_length</span>
+            <span class="nt">0x84e5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bits_per_extended_run_length</span>
+            <span class="nt">0x84e6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">color_table</span>
+            <span class="nt">0x84e7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_color_indicator</span>
+            <span class="nt">0x84e8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">background_color_indicator</span>
+            <span class="nt">0x84e9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_color_value</span>
+            <span class="nt">0x84ea</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">background_color_value</span>
+            <span class="nt">0x84eb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pixel_intensity_range</span>
+            <span class="nt">0x84ec</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">transparency_indicator</span>
+            <span class="nt">0x84ed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">color_characterization</span>
+            <span class="nt">0x84ee</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hc_usage</span>
+            <span class="nt">0x84ef</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trap_indicator</span>
+            <span class="nt">0x84f0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cmyk_equivalent</span>
+            <span class="nt">0x8546</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sem_info</span>
+            <span class="nt">0x8568</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">afcp_iptc</span>
+            <span class="nt">0x85b8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pixel_magic_jbig_options</span>
+            <span class="nt">0x85d7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jpl_carto_ifd</span>
+            <span class="nt">0x85d8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">model_transform</span>
+            <span class="nt">0x8602</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wb_grgb_levels</span>
+            <span class="nt">0x8606</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">leaf_data</span>
+            <span class="nt">0x8649</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">photoshop_settings</span>
+            <span class="nt">0x8769</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exif_offset</span>
+            <span class="nt">0x8773</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">icc_profile</span>
+            <span class="nt">0x877f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tiff_fx_extensions</span>
+            <span class="nt">0x8780</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">multi_profiles</span>
+            <span class="nt">0x8781</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">shared_data</span>
+            <span class="nt">0x8782</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t88_options</span>
+            <span class="nt">0x87ac</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_layer</span>
+            <span class="nt">0x87af</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">geo_tiff_directory</span>
+            <span class="nt">0x87b0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">geo_tiff_double_params</span>
+            <span class="nt">0x87b1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">geo_tiff_ascii_params</span>
+            <span class="nt">0x87be</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jbig_options</span>
+            <span class="nt">0x8822</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exposure_program</span>
+            <span class="nt">0x8824</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">spectral_sensitivity</span>
+            <span class="nt">0x8825</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gps_info</span>
+            <span class="nt">0x8827</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iso</span>
+            <span class="nt">0x8828</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opto_electric_conv_factor</span>
+            <span class="nt">0x8829</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">interlace</span>
+            <span class="nt">0x882a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time_zone_offset</span>
+            <span class="nt">0x882b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">self_timer_mode</span>
+            <span class="nt">0x8830</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sensitivity_type</span>
+            <span class="nt">0x8831</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">standard_output_sensitivity</span>
+            <span class="nt">0x8832</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">recommended_exposure_index</span>
+            <span class="nt">0x8833</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iso_speed</span>
+            <span class="nt">0x8834</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iso_speed_latitudeyyy</span>
+            <span class="nt">0x8835</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iso_speed_latitudezzz</span>
+            <span class="nt">0x885c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fax_recv_params</span>
+            <span class="nt">0x885d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fax_sub_address</span>
+            <span class="nt">0x885e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fax_recv_time</span>
+            <span class="nt">0x8871</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fedex_edr</span>
+            <span class="nt">0x888a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">leaf_sub_ifd</span>
+            <span class="nt">0x9000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exif_version</span>
+            <span class="nt">0x9003</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">date_time_original</span>
+            <span class="nt">0x9004</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">create_date</span>
+            <span class="nt">0x9009</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">google_plus_upload_code</span>
+            <span class="nt">0x9010</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offset_time</span>
+            <span class="nt">0x9011</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offset_time_original</span>
+            <span class="nt">0x9012</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offset_time_digitized</span>
+            <span class="nt">0x9101</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">components_configuration</span>
+            <span class="nt">0x9102</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compressed_bits_per_pixel</span>
+            <span class="nt">0x9201</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">shutter_speed_value</span>
+            <span class="nt">0x9202</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">aperture_value</span>
+            <span class="nt">0x9203</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">brightness_value</span>
+            <span class="nt">0x9204</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exposure_compensation</span>
+            <span class="nt">0x9205</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">max_aperture_value</span>
+            <span class="nt">0x9206</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">subject_distance</span>
+            <span class="nt">0x9207</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">metering_mode</span>
+            <span class="nt">0x9208</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">light_source</span>
+            <span class="nt">0x9209</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flash</span>
+            <span class="nt">0x920a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">focal_length</span>
+            <span class="nt">0x920b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flash_energy</span>
+            <span class="nt">0x920c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">spatial_frequency_response</span>
+            <span class="nt">0x920d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">noise</span>
+            <span class="nt">0x920e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">focal_plane_x_resolution</span>
+            <span class="nt">0x920f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">focal_plane_y_resolution</span>
+            <span class="nt">0x9210</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">focal_plane_resolution_unit</span>
+            <span class="nt">0x9211</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_number</span>
+            <span class="nt">0x9212</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">security_classification</span>
+            <span class="nt">0x9213</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_history</span>
+            <span class="nt">0x9214</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">subject_area</span>
+            <span class="nt">0x9215</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exposure_index</span>
+            <span class="nt">0x9216</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tiff_ep_standard_id</span>
+            <span class="nt">0x9217</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sensing_method</span>
+            <span class="nt">0x923a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cip3_data_file</span>
+            <span class="nt">0x923b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cip3_sheet</span>
+            <span class="nt">0x923c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cip3_side</span>
+            <span class="nt">0x923f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sto_nits</span>
+            <span class="nt">0x927c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">maker_note</span>
+            <span class="nt">0x9286</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user_comment</span>
+            <span class="nt">0x9290</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sub_sec_time</span>
+            <span class="nt">0x9291</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sub_sec_time_original</span>
+            <span class="nt">0x9292</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sub_sec_time_digitized</span>
+            <span class="nt">0x932f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ms_document_text</span>
+            <span class="nt">0x9330</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ms_property_set_storage</span>
+            <span class="nt">0x9331</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ms_document_text_position</span>
+            <span class="nt">0x935c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_source_data</span>
+            <span class="nt">0x9400</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ambient_temperature</span>
+            <span class="nt">0x9401</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">humidity</span>
+            <span class="nt">0x9402</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pressure</span>
+            <span class="nt">0x9403</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">water_depth</span>
+            <span class="nt">0x9404</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">acceleration</span>
+            <span class="nt">0x9405</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">camera_elevation_angle</span>
+            <span class="nt">0x9c9b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xp_title</span>
+            <span class="nt">0x9c9c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xp_comment</span>
+            <span class="nt">0x9c9d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xp_author</span>
+            <span class="nt">0x9c9e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xp_keywords</span>
+            <span class="nt">0x9c9f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xp_subject</span>
+            <span class="nt">0xa000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flashpix_version</span>
+            <span class="nt">0xa001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">color_space</span>
+            <span class="nt">0xa002</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exif_image_width</span>
+            <span class="nt">0xa003</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exif_image_height</span>
+            <span class="nt">0xa004</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">related_sound_file</span>
+            <span class="nt">0xa005</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">interop_offset</span>
+            <span class="nt">0xa010</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">samsung_raw_pointers_offset</span>
+            <span class="nt">0xa011</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">samsung_raw_pointers_length</span>
+            <span class="nt">0xa101</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">samsung_raw_byte_order</span>
+            <span class="nt">0xa102</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">samsung_raw_unknown</span>
+            <span class="nt">0xa20b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flash_energy2</span>
+            <span class="nt">0xa20c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">spatial_frequency_response2</span>
+            <span class="nt">0xa20d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">noise2</span>
+            <span class="nt">0xa20e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">focal_plane_x_resolution2</span>
+            <span class="nt">0xa20f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">focal_plane_y_resolution2</span>
+            <span class="nt">0xa210</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">focal_plane_resolution_unit2</span>
+            <span class="nt">0xa211</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_number2</span>
+            <span class="nt">0xa212</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">security_classification2</span>
+            <span class="nt">0xa213</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_history2</span>
+            <span class="nt">0xa214</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">subject_location</span>
+            <span class="nt">0xa215</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exposure_index2</span>
+            <span class="nt">0xa216</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tiff_ep_standard_id2</span>
+            <span class="nt">0xa217</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sensing_method2</span>
+            <span class="nt">0xa300</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_source</span>
+            <span class="nt">0xa301</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scene_type</span>
+            <span class="nt">0xa302</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cfa_pattern</span>
+            <span class="nt">0xa401</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">custom_rendered</span>
+            <span class="nt">0xa402</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exposure_mode</span>
+            <span class="nt">0xa403</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">white_balance</span>
+            <span class="nt">0xa404</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">digital_zoom_ratio</span>
+            <span class="nt">0xa405</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">focal_length_in35mm_format</span>
+            <span class="nt">0xa406</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scene_capture_type</span>
+            <span class="nt">0xa407</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gain_control</span>
+            <span class="nt">0xa408</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">contrast</span>
+            <span class="nt">0xa409</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">saturation</span>
+            <span class="nt">0xa40a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sharpness</span>
+            <span class="nt">0xa40b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">device_setting_description</span>
+            <span class="nt">0xa40c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">subject_distance_range</span>
+            <span class="nt">0xa420</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_unique_id</span>
+            <span class="nt">0xa430</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">owner_name</span>
+            <span class="nt">0xa431</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">serial_number</span>
+            <span class="nt">0xa432</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lens_info</span>
+            <span class="nt">0xa433</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lens_make</span>
+            <span class="nt">0xa434</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lens_model</span>
+            <span class="nt">0xa435</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lens_serial_number</span>
+            <span class="nt">0xa480</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gdal_metadata</span>
+            <span class="nt">0xa481</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gdal_no_data</span>
+            <span class="nt">0xa500</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gamma</span>
+            <span class="nt">0xafc0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expand_software</span>
+            <span class="nt">0xafc1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expand_lens</span>
+            <span class="nt">0xafc2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expand_film</span>
+            <span class="nt">0xafc3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expand_filter_lens</span>
+            <span class="nt">0xafc4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expand_scanner</span>
+            <span class="nt">0xafc5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expand_flash_lamp</span>
+            <span class="nt">0xbc01</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pixel_format</span>
+            <span class="nt">0xbc02</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">transformation</span>
+            <span class="nt">0xbc03</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uncompressed</span>
+            <span class="nt">0xbc04</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_type</span>
+            <span class="nt">0xbc80</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_width2</span>
+            <span class="nt">0xbc81</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_height2</span>
+            <span class="nt">0xbc82</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">width_resolution</span>
+            <span class="nt">0xbc83</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">height_resolution</span>
+            <span class="nt">0xbcc0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_offset</span>
+            <span class="nt">0xbcc1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_byte_count</span>
+            <span class="nt">0xbcc2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alpha_offset</span>
+            <span class="nt">0xbcc3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alpha_byte_count</span>
+            <span class="nt">0xbcc4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_data_discard</span>
+            <span class="nt">0xbcc5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alpha_data_discard</span>
+            <span class="nt">0xc427</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">oce_scanjob_desc</span>
+            <span class="nt">0xc428</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">oce_application_selector</span>
+            <span class="nt">0xc429</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">oce_id_number</span>
+            <span class="nt">0xc42a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">oce_image_logic</span>
+            <span class="nt">0xc44f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">annotations</span>
+            <span class="nt">0xc4a5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">print_im</span>
+            <span class="nt">0xc573</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">original_file_name</span>
+            <span class="nt">0xc580</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uspto_original_content_type</span>
+            <span class="nt">0xc612</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dng_version</span>
+            <span class="nt">0xc613</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dng_backward_version</span>
+            <span class="nt">0xc614</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unique_camera_model</span>
+            <span class="nt">0xc615</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">localized_camera_model</span>
+            <span class="nt">0xc616</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cfa_plane_color</span>
+            <span class="nt">0xc617</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cfa_layout</span>
+            <span class="nt">0xc618</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">linearization_table</span>
+            <span class="nt">0xc619</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">black_level_repeat_dim</span>
+            <span class="nt">0xc61a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">black_level</span>
+            <span class="nt">0xc61b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">black_level_delta_h</span>
+            <span class="nt">0xc61c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">black_level_delta_v</span>
+            <span class="nt">0xc61d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">white_level</span>
+            <span class="nt">0xc61e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default_scale</span>
+            <span class="nt">0xc61f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default_crop_origin</span>
+            <span class="nt">0xc620</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default_crop_size</span>
+            <span class="nt">0xc621</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">color_matrix1</span>
+            <span class="nt">0xc622</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">color_matrix2</span>
+            <span class="nt">0xc623</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">camera_calibration1</span>
+            <span class="nt">0xc624</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">camera_calibration2</span>
+            <span class="nt">0xc625</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reduction_matrix1</span>
+            <span class="nt">0xc626</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reduction_matrix2</span>
+            <span class="nt">0xc627</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">analog_balance</span>
+            <span class="nt">0xc628</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">as_shot_neutral</span>
+            <span class="nt">0xc629</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">as_shot_white_xy</span>
+            <span class="nt">0xc62a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">baseline_exposure</span>
+            <span class="nt">0xc62b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">baseline_noise</span>
+            <span class="nt">0xc62c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">baseline_sharpness</span>
+            <span class="nt">0xc62d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bayer_green_split</span>
+            <span class="nt">0xc62e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">linear_response_limit</span>
+            <span class="nt">0xc62f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">camera_serial_number</span>
+            <span class="nt">0xc630</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dng_lens_info</span>
+            <span class="nt">0xc631</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chroma_blur_radius</span>
+            <span class="nt">0xc632</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">anti_alias_strength</span>
+            <span class="nt">0xc633</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">shadow_scale</span>
+            <span class="nt">0xc634</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sr2_private</span>
+            <span class="nt">0xc635</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">maker_note_safety</span>
+            <span class="nt">0xc640</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">raw_image_segmentation</span>
+            <span class="nt">0xc65a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">calibration_illuminant1</span>
+            <span class="nt">0xc65b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">calibration_illuminant2</span>
+            <span class="nt">0xc65c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">best_quality_scale</span>
+            <span class="nt">0xc65d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">raw_data_unique_id</span>
+            <span class="nt">0xc660</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alias_layer_metadata</span>
+            <span class="nt">0xc68b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">original_raw_file_name</span>
+            <span class="nt">0xc68c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">original_raw_file_data</span>
+            <span class="nt">0xc68d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">active_area</span>
+            <span class="nt">0xc68e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">masked_areas</span>
+            <span class="nt">0xc68f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">as_shot_icc_profile</span>
+            <span class="nt">0xc690</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">as_shot_pre_profile_matrix</span>
+            <span class="nt">0xc691</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">current_icc_profile</span>
+            <span class="nt">0xc692</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">current_pre_profile_matrix</span>
+            <span class="nt">0xc6bf</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colorimetric_reference</span>
+            <span class="nt">0xc6c5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s_raw_type</span>
+            <span class="nt">0xc6d2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">panasonic_title</span>
+            <span class="nt">0xc6d3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">panasonic_title2</span>
+            <span class="nt">0xc6f3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">camera_calibration_sig</span>
+            <span class="nt">0xc6f4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">profile_calibration_sig</span>
+            <span class="nt">0xc6f5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">profile_ifd</span>
+            <span class="nt">0xc6f6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">as_shot_profile_name</span>
+            <span class="nt">0xc6f7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">noise_reduction_applied</span>
+            <span class="nt">0xc6f8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">profile_name</span>
+            <span class="nt">0xc6f9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">profile_hue_sat_map_dims</span>
+            <span class="nt">0xc6fa</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">profile_hue_sat_map_data1</span>
+            <span class="nt">0xc6fb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">profile_hue_sat_map_data2</span>
+            <span class="nt">0xc6fc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">profile_tone_curve</span>
+            <span class="nt">0xc6fd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">profile_embed_policy</span>
+            <span class="nt">0xc6fe</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">profile_copyright</span>
+            <span class="nt">0xc714</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">forward_matrix1</span>
+            <span class="nt">0xc715</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">forward_matrix2</span>
+            <span class="nt">0xc716</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">preview_application_name</span>
+            <span class="nt">0xc717</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">preview_application_version</span>
+            <span class="nt">0xc718</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">preview_settings_name</span>
+            <span class="nt">0xc719</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">preview_settings_digest</span>
+            <span class="nt">0xc71a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">preview_color_space</span>
+            <span class="nt">0xc71b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">preview_date_time</span>
+            <span class="nt">0xc71c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">raw_image_digest</span>
+            <span class="nt">0xc71d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">original_raw_file_digest</span>
+            <span class="nt">0xc71e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sub_tile_block_size</span>
+            <span class="nt">0xc71f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">row_interleave_factor</span>
+            <span class="nt">0xc725</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">profile_look_table_dims</span>
+            <span class="nt">0xc726</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">profile_look_table_data</span>
+            <span class="nt">0xc740</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opcode_list1</span>
+            <span class="nt">0xc741</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opcode_list2</span>
+            <span class="nt">0xc74e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opcode_list3</span>
+            <span class="nt">0xc761</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">noise_profile</span>
+            <span class="nt">0xc763</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time_codes</span>
+            <span class="nt">0xc764</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame_rate</span>
+            <span class="nt">0xc772</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t_stop</span>
+            <span class="nt">0xc789</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reel_name</span>
+            <span class="nt">0xc791</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">original_default_final_size</span>
+            <span class="nt">0xc792</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">original_best_quality_size</span>
+            <span class="nt">0xc793</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">original_default_crop_size</span>
+            <span class="nt">0xc7a1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">camera_label</span>
+            <span class="nt">0xc7a3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">profile_hue_sat_map_encoding</span>
+            <span class="nt">0xc7a4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">profile_look_table_encoding</span>
+            <span class="nt">0xc7a5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">baseline_exposure_offset</span>
+            <span class="nt">0xc7a6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default_black_render</span>
+            <span class="nt">0xc7a7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">new_raw_image_digest</span>
+            <span class="nt">0xc7a8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">raw_to_preview_gain</span>
+            <span class="nt">0xc7b5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default_user_crop</span>
+            <span class="nt">0xea1c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">padding</span>
+            <span class="nt">0xea1d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offset_schema</span>
+            <span class="nt">0xfde8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">owner_name2</span>
+            <span class="nt">0xfde9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">serial_number2</span>
+            <span class="nt">0xfdea</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lens</span>
+            <span class="nt">0xfe00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kdc_ifd</span>
+            <span class="nt">0xfe4c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">raw_file</span>
+            <span class="nt">0xfe4d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">converter</span>
+            <span class="nt">0xfe4e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">white_balance2</span>
+            <span class="nt">0xfe51</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exposure</span>
+            <span class="nt">0xfe52</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">shadows</span>
+            <span class="nt">0xfe53</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">brightness</span>
+            <span class="nt">0xfe54</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">contrast2</span>
+            <span class="nt">0xfe55</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">saturation2</span>
+            <span class="nt">0xfe56</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sharpness2</span>
+            <span class="nt">0xfe57</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">smoothness</span>
+            <span class="nt">0xfe58</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">moire_filter</span>
+</pre></div>
     </div>
 </section>
 
@@ -751,8 +748,8 @@ types:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

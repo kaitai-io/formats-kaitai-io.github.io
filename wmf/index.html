@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -241,280 +238,280 @@ printer, etc).</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: wmf
-  title: Windows Metafile (WMF) vector image
-  file-extension: wmf
-  xref:
-    justsolve: Windows Metafile
-    mime: image/wmf
-    pronom: x-fmt/119
-    wikidata: Q1072083
-  license: CC0-1.0
-  endian: le
-doc: |
-  WMF (Windows Metafile) is a relatively early vector image format
-  introduced for Microsoft Windows in 1990.
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wmf</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Windows Metafile (WMF) vector image</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wmf</span>
+  <span class="nt">xref</span><span class="p">:</span>
+    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Windows Metafile</span>
+    <span class="nt">mime</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image/wmf</span>
+    <span class="nt">pronom</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x-fmt/119</span>
+    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q1072083</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">WMF (Windows Metafile) is a relatively early vector image format</span>
+  <span class="no">introduced for Microsoft Windows in 1990.</span>
 
-  Inside, it provides a serialized list of Windows GDI (Graphics
-  Device Interface) function calls, which, if played back, result in
-  an image being drawn on a given surface (display, off-screen buffer,
-  printer, etc).
-doc-ref: http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf
-seq:
-  - id: special_header
-    type: special_header
-  - id: header
-    type: header
-  - id: records
-    type: record
-    repeat: until
-    repeat-until: _.function == func::eof
-types:
-  special_header:
-    seq:
-      - id: magic
-        contents: [0xd7, 0xcd, 0xc6, 0x9a]
-      - id: handle
-        contents: [0, 0]
-      - id: left
-        type: s2
-      - id: top
-        type: s2
-      - id: right
-        type: s2
-      - id: bottom
-        type: s2
-      - id: inch
-        type: u2
-      - id: reserved
-        contents: [0, 0, 0, 0]
-      - id: checksum
-        type: u2
-  header:
-    seq:
-      - id: metafile_type
-        type: u2
-        enum: metafile_type
-      - id: header_size
-        type: u2
-      - id: version
-        type: u2
-      - id: size
-        type: u4
-      - id: number_of_objects
-        type: u2
-      - id: max_record
-        type: u4
-      - id: number_of_members
-        type: u2
-    enums:
-      metafile_type:
-        # section 2.1.20
-        1: memory_metafile
-        2: disk_metafile
-  record:
-    seq:
-      - id: size
-        type: u4
-      - id: function
-        type: u2
-        enum: func
-      - id: params
-        size: (size - 3) * 2
-        type:
-          switch-on: function
-          cases:
-            &#39;func::polyline&#39;: params_polyline
-            &#39;func::polygon&#39;: params_polygon
-            &#39;func::setbkcolor&#39;: color_ref
-            &#39;func::setbkmode&#39;: params_setbkmode
-            &#39;func::setpolyfillmode&#39;: params_setpolyfillmode
-            #&#39;func::params_setrelabs&#39;: reserved
-            &#39;func::setrop2&#39;: params_setrop2
-            &#39;func::setwindowext&#39;: params_setwindowext
-            &#39;func::setwindoworg&#39;: params_setwindoworg
-  params_polyline:
-    doc-ref: section 2.3.3.14
-    seq:
-      - id: num_points
-        type: s2
-      - id: points
-        repeat: expr
-        repeat-expr: num_points
-        type: point_s
-  params_polygon:
-    doc-ref: section 2.3.3.15 = params_polyline
-    seq:
-      - id: num_points
-        type: s2
-      - id: points
-        repeat: expr
-        repeat-expr: num_points
-        type: point_s
-  # section 2.3.5.14
-  #params_setbkcolor:
-  #  seq:
-  #    - id: color_ref
-  #      type: color_ref
-  params_setbkmode:
-    doc-ref: section 2.3.5.15
-    seq:
-      - id: bk_mode
-        type: u2
-        enum: mix_mode
-        doc: Defines current graphic context background mix mode.
-  params_setpolyfillmode:
-    doc-ref: section 2.3.5.20
-    seq:
-      - id: poly_fill_mode
-        type: u2
-        enum: poly_fill_mode
-        doc: Defines current polygon fill mode.
-  params_setrop2:
-    doc-ref: section 2.3.5.22
-    seq:
-      - id: draw_mode
-        type: u2
-        enum: bin_raster_op
-        doc: Defines current foreground binary raster operation mixing mode.
-  params_setwindowext:
-    doc-ref: section 2.3.5.30
-    seq:
-      - id: y
-        type: s2
-        doc: Vertical extent of the window in logical units.
-      - id: x
-        type: s2
-        doc: Horizontal extent of the window in logical units.
-  params_setwindoworg:
-    doc-ref: section 2.3.5.31
-    seq:
-      - id: y
-        type: s2
-        doc: Y coordinate of the window origin, in logical units.
-      - id: x
-        type: s2
-        doc: X coordinate of the window origin, in logical units.
-  color_ref:
-    doc-ref: section 2.2.1.7
-    seq:
-      - id: red
-        type: u1
-      - id: green
-        type: u1
-      - id: blue
-        type: u1
-      - id: reserved
-        type: u1
-  point_s:
-    doc-ref: section 2.2.1.12
-    seq:
-      - id: x
-        type: s2
-        doc: X coordinate of the point, in logical units.
-      - id: y
-        type: s2
-        doc: Y coordinate of the point, in logical units.
-enums:
-  func:
-    0x0000: eof
-    0x0035: realizepalette
-    0x0037: setpalentries
-    0x0102: setbkmode
-    0x0103: setmapmode
-    0x0104: setrop2
-    0x0105: setrelabs
-    0x0106: setpolyfillmode
-    0x0107: setstretchbltmode
-    0x0108: settextcharextra
-    0x0127: restoredc
-    0x0139: resizepalette
-    0x0142: dibcreatepatternbrush
-    0x0149: setlayout
-    0x0201: setbkcolor
-    0x0209: settextcolor
-    0x0211: offsetviewportorg
-    0x0213: lineto
-    0x0214: moveto
-    0x0220: offsetcliprgn
-    0x0228: fillregion
-    0x0231: setmapperflags
-    0x0234: selectpalette
-    0x0324: polygon
-    0x0325: polyline
-    0x020a: settextjustification
-    0x020b: setwindoworg
-    0x020c: setwindowext
-    0x020d: setviewportorg
-    0x020e: setviewportext
-    0x020f: offsetwindoworg
-    0x0410: scalewindowext
-    0x0412: scaleviewportext
-    0x0415: excludecliprect
-    0x0416: intersectcliprect
-    0x0418: ellipse
-    0x0419: floodfill
-    0x0429: frameregion
-    0x0436: animatepalette
-    0x0521: textout
-    0x0538: polypolygon
-    0x0548: extfloodfill
-    0x041b: rectangle
-    0x041f: setpixel
-    0x061c: roundrect
-    0x061d: patblt
-    0x001e: savedc
-    0x081a: pie
-    0x0b23: stretchblt
-    0x0626: escape
-    0x012a: invertregion
-    0x012b: paintregion
-    0x012c: selectclipregion
-    0x012d: selectobject
-    0x012e: settextalign
-    0x0817: arc
-    0x0830: chord
-    0x0922: bitblt
-    0x0a32: exttextout
-    0x0d33: setdibtodev
-    0x0940: dibbitblt
-    0x0b41: dibstretchblt
-    0x0f43: stretchdib
-    0x01f0: deleteobject
-    0x00f7: createpalette
-    0x01f9: createpatternbrush
-    0x02fa: createpenindirect
-    0x02fb: createfontindirect
-    0x02fc: createbrushindirect
-    0x06ff: createregion
-  # section 2.1.2
-  bin_raster_op:
-    0x0001: black
-    0x0002: notmergepen
-    0x0003: masknotpen
-    0x0004: notcopypen
-    0x0005: maskpennot
-    0x0006: not
-    0x0007: xorpen
-    0x0008: notmaskpen
-    0x0009: maskpen
-    0x000a: notxorpen
-    0x000b: nop
-    0x000c: mergenotpen
-    0x000d: copypen
-    0x000e: mergepennot
-    0x000f: mergepen
-    0x0010: white
-  # section 2.1.22
-  mix_mode:
-    0x0001: transparent
-    0x0002: opaque
-  # section 2.1.27
-  poly_fill_mode:
-    0x0001: alternate
-    0x0002: winding
-</code></pre>
+  <span class="no">Inside, it provides a serialized list of Windows GDI (Graphics</span>
+  <span class="no">Device Interface) function calls, which, if played back, result in</span>
+  <span class="no">an image being drawn on a given surface (display, off-screen buffer,</span>
+  <span class="no">printer, etc).</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">special_header</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">special_header</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">records</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">until</span>
+    <span class="nt">repeat-until</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_.function == func::eof</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">special_header</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0xd7</span><span class="p p-Indicator">,</span> <span class="nv">0xcd</span><span class="p p-Indicator">,</span> <span class="nv">0xc6</span><span class="p p-Indicator">,</span> <span class="nv">0x9a</span><span class="p p-Indicator">]</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">handle</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">]</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">left</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">top</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">right</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bottom</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inch</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">]</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">checksum</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+  <span class="nt">header</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">metafile_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">metafile_type</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">number_of_objects</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">max_record</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">number_of_members</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+    <span class="nt">enums</span><span class="p">:</span>
+      <span class="nt">metafile_type</span><span class="p">:</span>
+        <span class="c1"># section 2.1.20</span>
+        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">memory_metafile</span>
+        <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">disk_metafile</span>
+  <span class="nt">record</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">function</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">func</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">params</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(size - 3) * 2</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">function</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;func::polyline&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">params_polyline</span>
+            <span class="s">&#39;func::polygon&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">params_polygon</span>
+            <span class="s">&#39;func::setbkcolor&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">color_ref</span>
+            <span class="s">&#39;func::setbkmode&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">params_setbkmode</span>
+            <span class="s">&#39;func::setpolyfillmode&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">params_setpolyfillmode</span>
+            <span class="c1">#&#39;func::params_setrelabs&#39;: reserved</span>
+            <span class="s">&#39;func::setrop2&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">params_setrop2</span>
+            <span class="s">&#39;func::setwindowext&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">params_setwindowext</span>
+            <span class="s">&#39;func::setwindoworg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">params_setwindoworg</span>
+  <span class="nt">params_polyline</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section 2.3.3.14</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_points</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">points</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_points</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">point_s</span>
+  <span class="nt">params_polygon</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section 2.3.3.15 = params_polyline</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_points</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">points</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_points</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">point_s</span>
+  <span class="c1"># section 2.3.5.14</span>
+  <span class="c1">#params_setbkcolor:</span>
+  <span class="c1">#  seq:</span>
+  <span class="c1">#    - id: color_ref</span>
+  <span class="c1">#      type: color_ref</span>
+  <span class="nt">params_setbkmode</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section 2.3.5.15</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bk_mode</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mix_mode</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Defines current graphic context background mix mode.</span>
+  <span class="nt">params_setpolyfillmode</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section 2.3.5.20</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">poly_fill_mode</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">poly_fill_mode</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Defines current polygon fill mode.</span>
+  <span class="nt">params_setrop2</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section 2.3.5.22</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">draw_mode</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bin_raster_op</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Defines current foreground binary raster operation mixing mode.</span>
+  <span class="nt">params_setwindowext</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section 2.3.5.30</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Vertical extent of the window in logical units.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Horizontal extent of the window in logical units.</span>
+  <span class="nt">params_setwindoworg</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section 2.3.5.31</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Y coordinate of the window origin, in logical units.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">X coordinate of the window origin, in logical units.</span>
+  <span class="nt">color_ref</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section 2.2.1.7</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">red</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">green</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blue</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+  <span class="nt">point_s</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section 2.2.1.12</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">X coordinate of the point, in logical units.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Y coordinate of the point, in logical units.</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">func</span><span class="p">:</span>
+    <span class="nt">0x0000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eof</span>
+    <span class="nt">0x0035</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">realizepalette</span>
+    <span class="nt">0x0037</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setpalentries</span>
+    <span class="nt">0x0102</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setbkmode</span>
+    <span class="nt">0x0103</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setmapmode</span>
+    <span class="nt">0x0104</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setrop2</span>
+    <span class="nt">0x0105</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setrelabs</span>
+    <span class="nt">0x0106</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setpolyfillmode</span>
+    <span class="nt">0x0107</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setstretchbltmode</span>
+    <span class="nt">0x0108</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">settextcharextra</span>
+    <span class="nt">0x0127</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">restoredc</span>
+    <span class="nt">0x0139</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">resizepalette</span>
+    <span class="nt">0x0142</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dibcreatepatternbrush</span>
+    <span class="nt">0x0149</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setlayout</span>
+    <span class="nt">0x0201</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setbkcolor</span>
+    <span class="nt">0x0209</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">settextcolor</span>
+    <span class="nt">0x0211</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offsetviewportorg</span>
+    <span class="nt">0x0213</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lineto</span>
+    <span class="nt">0x0214</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">moveto</span>
+    <span class="nt">0x0220</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offsetcliprgn</span>
+    <span class="nt">0x0228</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fillregion</span>
+    <span class="nt">0x0231</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setmapperflags</span>
+    <span class="nt">0x0234</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">selectpalette</span>
+    <span class="nt">0x0324</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">polygon</span>
+    <span class="nt">0x0325</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">polyline</span>
+    <span class="nt">0x020a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">settextjustification</span>
+    <span class="nt">0x020b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setwindoworg</span>
+    <span class="nt">0x020c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setwindowext</span>
+    <span class="nt">0x020d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setviewportorg</span>
+    <span class="nt">0x020e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setviewportext</span>
+    <span class="nt">0x020f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offsetwindoworg</span>
+    <span class="nt">0x0410</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scalewindowext</span>
+    <span class="nt">0x0412</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scaleviewportext</span>
+    <span class="nt">0x0415</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">excludecliprect</span>
+    <span class="nt">0x0416</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">intersectcliprect</span>
+    <span class="nt">0x0418</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ellipse</span>
+    <span class="nt">0x0419</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">floodfill</span>
+    <span class="nt">0x0429</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frameregion</span>
+    <span class="nt">0x0436</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">animatepalette</span>
+    <span class="nt">0x0521</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">textout</span>
+    <span class="nt">0x0538</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">polypolygon</span>
+    <span class="nt">0x0548</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extfloodfill</span>
+    <span class="nt">0x041b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rectangle</span>
+    <span class="nt">0x041f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setpixel</span>
+    <span class="nt">0x061c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">roundrect</span>
+    <span class="nt">0x061d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">patblt</span>
+    <span class="nt">0x001e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">savedc</span>
+    <span class="nt">0x081a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pie</span>
+    <span class="nt">0x0b23</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stretchblt</span>
+    <span class="nt">0x0626</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">escape</span>
+    <span class="nt">0x012a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">invertregion</span>
+    <span class="nt">0x012b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">paintregion</span>
+    <span class="nt">0x012c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">selectclipregion</span>
+    <span class="nt">0x012d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">selectobject</span>
+    <span class="nt">0x012e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">settextalign</span>
+    <span class="nt">0x0817</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arc</span>
+    <span class="nt">0x0830</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chord</span>
+    <span class="nt">0x0922</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bitblt</span>
+    <span class="nt">0x0a32</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exttextout</span>
+    <span class="nt">0x0d33</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setdibtodev</span>
+    <span class="nt">0x0940</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dibbitblt</span>
+    <span class="nt">0x0b41</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dibstretchblt</span>
+    <span class="nt">0x0f43</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stretchdib</span>
+    <span class="nt">0x01f0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deleteobject</span>
+    <span class="nt">0x00f7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">createpalette</span>
+    <span class="nt">0x01f9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">createpatternbrush</span>
+    <span class="nt">0x02fa</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">createpenindirect</span>
+    <span class="nt">0x02fb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">createfontindirect</span>
+    <span class="nt">0x02fc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">createbrushindirect</span>
+    <span class="nt">0x06ff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">createregion</span>
+  <span class="c1"># section 2.1.2</span>
+  <span class="nt">bin_raster_op</span><span class="p">:</span>
+    <span class="nt">0x0001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">black</span>
+    <span class="nt">0x0002</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">notmergepen</span>
+    <span class="nt">0x0003</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">masknotpen</span>
+    <span class="nt">0x0004</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">notcopypen</span>
+    <span class="nt">0x0005</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">maskpennot</span>
+    <span class="nt">0x0006</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not</span>
+    <span class="nt">0x0007</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xorpen</span>
+    <span class="nt">0x0008</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">notmaskpen</span>
+    <span class="nt">0x0009</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">maskpen</span>
+    <span class="nt">0x000a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">notxorpen</span>
+    <span class="nt">0x000b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nop</span>
+    <span class="nt">0x000c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mergenotpen</span>
+    <span class="nt">0x000d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">copypen</span>
+    <span class="nt">0x000e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mergepennot</span>
+    <span class="nt">0x000f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mergepen</span>
+    <span class="nt">0x0010</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">white</span>
+  <span class="c1"># section 2.1.22</span>
+  <span class="nt">mix_mode</span><span class="p">:</span>
+    <span class="nt">0x0001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">transparent</span>
+    <span class="nt">0x0002</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opaque</span>
+  <span class="c1"># section 2.1.27</span>
+  <span class="nt">poly_fill_mode</span><span class="p">:</span>
+    <span class="nt">0x0001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alternate</span>
+    <span class="nt">0x0002</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">winding</span>
+</pre></div>
     </div>
 </section>
 
@@ -538,8 +535,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -230,796 +227,796 @@ any of:</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: nt_mdt
-  title: NT-MDT data
-  application:
-    - Nova
-    - Image Analysis
-    - NanoEducator
-    - Gwyddion
-    - Callisto
-  file-extension: mdt
-  license: GPL-3.0+
-  endian: le
-doc: |
-  A native file format of NT-MDT scientific software. Usually contains
-  any of:
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nt_mdt</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NT-MDT data</span>
+  <span class="nt">application</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Nova</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Image Analysis</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">NanoEducator</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Gwyddion</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Callisto</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mdt</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GPL-3.0+</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">A native file format of NT-MDT scientific software. Usually contains</span>
+  <span class="no">any of:</span>
 
-  * [Scanning probe](https://en.wikipedia.org/wiki/Scanning_probe_microscopy) microscopy scans and spectra
-  * [Raman spectra](https://en.wikipedia.org/wiki/Raman_spectroscopy)
-  * results of their analysis
+  <span class="no">* [Scanning probe](https://en.wikipedia.org/wiki/Scanning_probe_microscopy) microscopy scans and spectra</span>
+  <span class="no">* [Raman spectra](https://en.wikipedia.org/wiki/Raman_spectroscopy)</span>
+  <span class="no">* results of their analysis</span>
 
-  Some examples of mdt files can be downloaded at:
+  <span class="no">Some examples of mdt files can be downloaded at:</span>
 
-  * http://www.ntmdt-si.ru/scan-gallery
-  * http://callistosoft.narod.ru/Resources/Mdt.zip
-doc-ref: https://svn.code.sf.net/p/gwyddion/code/trunk/gwyddion/modules/file/nt-mdt.c
-seq:
-  - id: signature
-    contents: [0x01, 0xb0, 0x93, 0xff]
-  - id: size
-    type: u4
-    doc: File size (w/o header)
-  - id: reserved0
-    size: 4
-  - id: last_frame
-    type: u2
-  - id: reserved1
-    size: 18
-  - id: wrond_doc
-    size: 1
-    doc: &quot;documentation specifies 32 bytes long header, but zeroth frame starts at 33th byte in reality&quot;
-  - id: frames
-    size: size
-    type: framez
-types:
-  uuid:
-    seq:
-      - id: data
-        type: u1
-        repeat: expr
-        repeat-expr: 16
-  framez:
-    seq:
-      - id: frames
-        type: frame
-        repeat: expr
-        repeat-expr: &#39;_root.last_frame+1&#39;
-  title:
-    seq:
-      - id: title_len
-        type: u4
-      - id: title
-        type: str
-        encoding: cp1251
-        size: title_len
-  xml:
-    seq:
-      - id: xml_len
-        type: u4
-      - id: xml
-        type: str
-        encoding: UTF-16LE
-        size: xml_len
-  version:
-    seq:
-      - id: minor
-        type: u1
-      - id: major
-        type: u1
-  frame:
-    seq:
-      - id: size
-        type: u4
-        doc: &quot;h_sz&quot;
-      - id: main
-        type: frame_main
-        size: size - 4
-    enums:
-      frame_type:
-        0: scanned
-        1: spectroscopy
-        3: text
-        105: old_mda
-        106: mda
-        107: palette
-        190: curves_new
-        201: curves
-    types:
-      date_time:
-        seq:
-          - id: date
-            type: date
-          - id: time
-            type: time
-        types:
-          date:
-            seq:
-              - id: year
-                type: u2
-                doc: &quot;h_yea&quot;
-              - id: month
-                type: u2
-                doc: &quot;h_mon&quot;
-              - id: day
-                type: u2
-                doc: &quot;h_day&quot;
-          time:
-            seq:
-              - id: hour
-                type: u2
-                doc: &quot;h_h&quot;
-              - id: min
-                type: u2
-                doc: &quot;h_m&quot;
-              - id: sec
-                type: u2
-                doc: &quot;h_s&quot;
-      frame_main:
-        seq:
-          - id: type
-            type: u2
-            enum: frame_type
-            doc: &quot;h_what&quot;
-          - id: version
-            type: version
-          - id: date_time
-            type: date_time
-          - id: var_size
-            type: u2
-            doc: &quot;h_am, v6 and older only&quot;
-          - id: frame_data
-            -orig-id: dataframe
-            size-eos: true
-            type:
-              switch-on: type
-              cases:
-                &#39;frame_type::scanned&#39;: fd_scanned
-                &#39;frame_type::mda&#39;: fd_meta_data
-                &#39;frame_type::spectroscopy&#39;: fd_spectroscopy
-                &#39;frame_type::curves&#39;: fd_spectroscopy
-                &#39;frame_type::curves_new&#39;: fd_curves_new
-            doc: &quot;&quot;
-      dots:
-        seq:
-          - id: fm_ndots
-            type: u2
-          - id: coord_header
-            -orig-id: coordheader
-            type: dots_header
-            if: fm_ndots &gt; 0
-          - id: coordinates
-            type: dots_data
-            repeat: expr
-            repeat-expr: fm_ndots
-          - id: data
-            type: data_linez(_index)
-            repeat: expr
-            repeat-expr: fm_ndots
-        types:
-          dots_header:
-            seq:
-              - id: header_size
-                -orig-id: headersize
-                type: s4
-              - id: header
-                size: header_size
-                type: header_
-            types:
-              header_:
-                seq:
-                  - id: coord_size
-                    -orig-id: coordsize
-                    type: s4
-                  - id: version
-                    type: s4
-                  - id: xyunits
-                    type: s2
-                    enum: unit
-          dots_data:
-            seq:
-              - id: coord_x
-                type: f4
-              - id: coord_y
-                type: f4
-              - id: forward_size
-                type: s4
-              - id: backward_size
-                type: s4
-          data_linez:
-            params:
-              - id: index
-                type: u2
-            seq:
-              - id: forward
-                type: s2
-                repeat: expr
-                repeat-expr: _parent.coordinates[index].forward_size
-              - id: backward
-                type: s2
-                repeat: expr
-                repeat-expr: _parent.coordinates[index].backward_size
-      axis_scale:
-        seq:
-          - id: offset
-            type: f4
-            doc: &quot;x_scale-&gt;offset = gwy_get_gfloat_le(&amp;p);# r0 (physical units)&quot;
-          - id: step
-            type: f4
-            doc: &gt;
-              x_scale-&gt;step = gwy_get_gfloat_le(&amp;p);
-              r (physical units)
-              x_scale-&gt;step = fabs(x_scale-&gt;step);
-              if (!x_scale-&gt;step) {
-                g_warning(&quot;x_scale.step == 0, changing to 1&quot;);
-                x_scale-&gt;step = 1.0;
-              }
-          - id: unit
-            type: s2 # x_scale-&gt;unit = (gint16)gwy_get_guint16_le(&amp;p);
-            enum: unit
-            doc: &quot;U&quot;
+  <span class="no">* http://www.ntmdt-si.ru/scan-gallery</span>
+  <span class="no">* http://callistosoft.narod.ru/Resources/Mdt.zip</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://svn.code.sf.net/p/gwyddion/code/trunk/gwyddion/modules/file/nt-mdt.c</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature</span>
+    <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0x01</span><span class="p p-Indicator">,</span> <span class="nv">0xb0</span><span class="p p-Indicator">,</span> <span class="nv">0x93</span><span class="p p-Indicator">,</span> <span class="nv">0xff</span><span class="p p-Indicator">]</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">File size (w/o header)</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved0</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">last_frame</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved1</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">18</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wrond_doc</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;documentation</span><span class="nv"> </span><span class="s">specifies</span><span class="nv"> </span><span class="s">32</span><span class="nv"> </span><span class="s">bytes</span><span class="nv"> </span><span class="s">long</span><span class="nv"> </span><span class="s">header,</span><span class="nv"> </span><span class="s">but</span><span class="nv"> </span><span class="s">zeroth</span><span class="nv"> </span><span class="s">frame</span><span class="nv"> </span><span class="s">starts</span><span class="nv"> </span><span class="s">at</span><span class="nv"> </span><span class="s">33th</span><span class="nv"> </span><span class="s">byte</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">reality&quot;</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frames</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">framez</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">uuid</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+  <span class="nt">framez</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frames</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="s">&#39;_root.last_frame+1&#39;</span>
+  <span class="nt">title</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">title_len</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">title</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cp1251</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">title_len</span>
+  <span class="nt">xml</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xml_len</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xml</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-16LE</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xml_len</span>
+  <span class="nt">version</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minor</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">major</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+  <span class="nt">frame</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;h_sz&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">main</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame_main</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size - 4</span>
+    <span class="nt">enums</span><span class="p">:</span>
+      <span class="nt">frame_type</span><span class="p">:</span>
+        <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scanned</span>
+        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">spectroscopy</span>
+        <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">text</span>
+        <span class="nt">105</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">old_mda</span>
+        <span class="nt">106</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mda</span>
+        <span class="nt">107</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">palette</span>
+        <span class="nt">190</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">curves_new</span>
+        <span class="nt">201</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">curves</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">date_time</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">date</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">date</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time</span>
+        <span class="nt">types</span><span class="p">:</span>
+          <span class="nt">date</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">year</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;h_yea&quot;</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">month</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;h_mon&quot;</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">day</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;h_day&quot;</span>
+          <span class="nt">time</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hour</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;h_h&quot;</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">min</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;h_m&quot;</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sec</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;h_s&quot;</span>
+      <span class="nt">frame_main</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame_type</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;h_what&quot;</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">date_time</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">date_time</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">var_size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;h_am,</span><span class="nv"> </span><span class="s">v6</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">older</span><span class="nv"> </span><span class="s">only&quot;</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame_data</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dataframe</span>
+            <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;frame_type::scanned&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">fd_scanned</span>
+                <span class="s">&#39;frame_type::mda&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">fd_meta_data</span>
+                <span class="s">&#39;frame_type::spectroscopy&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">fd_spectroscopy</span>
+                <span class="s">&#39;frame_type::curves&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">fd_spectroscopy</span>
+                <span class="s">&#39;frame_type::curves_new&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">fd_curves_new</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;&quot;</span>
+      <span class="nt">dots</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fm_ndots</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">coord_header</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">coordheader</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dots_header</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fm_ndots &gt; 0</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">coordinates</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dots_data</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fm_ndots</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_linez(_index)</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fm_ndots</span>
+        <span class="nt">types</span><span class="p">:</span>
+          <span class="nt">dots_header</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_size</span>
+                <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">headersize</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+                <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_size</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_</span>
+            <span class="nt">types</span><span class="p">:</span>
+              <span class="nt">header_</span><span class="p">:</span>
+                <span class="nt">seq</span><span class="p">:</span>
+                  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">coord_size</span>
+                    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">coordsize</span>
+                    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+                  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+                    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+                  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xyunits</span>
+                    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+                    <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unit</span>
+          <span class="nt">dots_data</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">coord_x</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">coord_y</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">forward_size</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">backward_size</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+          <span class="nt">data_linez</span><span class="p">:</span>
+            <span class="nt">params</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">index</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">forward</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+                <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+                <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.coordinates[index].forward_size</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">backward</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+                <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+                <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.coordinates[index].backward_size</span>
+      <span class="nt">axis_scale</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offset</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;x_scale-&gt;offset</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">gwy_get_gfloat_le(&amp;p);#</span><span class="nv"> </span><span class="s">r0</span><span class="nv"> </span><span class="s">(physical</span><span class="nv"> </span><span class="s">units)&quot;</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">step</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">&gt;</span>
+              <span class="no">x_scale-&gt;step = gwy_get_gfloat_le(&amp;p);</span>
+              <span class="no">r (physical units)</span>
+              <span class="no">x_scale-&gt;step = fabs(x_scale-&gt;step);</span>
+              <span class="no">if (!x_scale-&gt;step) {</span>
+                <span class="no">g_warning(&quot;x_scale.step == 0, changing to 1&quot;);</span>
+                <span class="no">x_scale-&gt;step = 1.0;</span>
+              <span class="no">}</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unit</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span> <span class="c1"># x_scale-&gt;unit = (gint16)gwy_get_guint16_le(&amp;p);</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unit</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;U&quot;</span>
 
-      fd_curves_new:
-        seq:
-          - id: block_count
-            type: u4
-          - id: blocks_headers
-            type: block_descr
-            repeat: expr
-            repeat-expr: block_count
-          - id: blocks_names
-            type: str
-            encoding: UTF-8
-            size: blocks_headers[_index].name_len
-            repeat: expr
-            repeat-expr: block_count
-          - id: blocks_data
-            size: blocks_headers[_index].len
-            repeat: expr
-            repeat-expr: block_count
-        types:
-          block_descr:
-            seq:
-              - id: name_len
-                type: u4
-              - id: len
-                type: u4
-      fd_spectroscopy:
-        seq:
-          - id: vars
-            type: vars
-            size: _parent.var_size
-          - id: fm_mode
-            type: u2
-          - id: fm_xres
-            type: u2
-          - id: fm_yres
-            type: u2
+      <span class="nt">fd_curves_new</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">block_count</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blocks_headers</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">block_descr</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">block_count</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blocks_names</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blocks_headers[_index].name_len</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">block_count</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blocks_data</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blocks_headers[_index].len</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">block_count</span>
+        <span class="nt">types</span><span class="p">:</span>
+          <span class="nt">block_descr</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name_len</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="nt">fd_spectroscopy</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vars</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vars</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.var_size</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fm_mode</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fm_xres</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fm_yres</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
 
-          - id: dots
-            type: dots
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dots</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dots</span>
 
-          - id: data
-            type: s2
-            repeat: expr
-            repeat-expr: fm_xres*fm_yres
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fm_xres*fm_yres</span>
 
-          - id: title
-            type: title
-          - id: xml
-            type: xml
-        types:
-          vars:
-            seq:
-              - id: x_scale
-                type: axis_scale
-              - id: y_scale
-                type: axis_scale
-              - id: z_scale
-                type: axis_scale
-              - id: sp_mode
-                type: u2
-              - id: sp_filter
-                type: u2
-              - id: u_begin
-                type: f4
-              - id: u_end
-                type: f4
-              - id: z_up
-                type: s2
-              - id: z_down
-                type: s2
-              - id: sp_averaging
-                type: u2
-              - id: sp_repeat
-                type: u1 # bool
-              - id: sp_back
-                type: u1 # bool
-              - id: sp_4nx
-                type: s2
-              - id: sp_osc
-                type: u1 # bool
-              - id: sp_n4
-                type: u1
-              - id: sp_4x0
-                type: f4
-              - id: sp_4xr
-                type: f4
-              - id: sp_4u
-                type: s2
-              - id: sp_4i
-                type: s2
-              - id: sp_nx
-                type: s2
-      fd_meta_data:
-        seq:
-          - id: head_size
-            type: u4
-          - id: tot_len
-            type: u4
-          - id: guids
-            type: uuid
-            repeat: expr
-            repeat-expr: 2
-          - id: frame_status
-            size: 4
-          - id: name_size
-            type: u4
-          - id: comm_size
-            type: u4
-          - id: view_info_size
-            type: u4
-          - id: spec_size
-            type: u4
-          - id: source_info_size
-            type: u4
-          - id: var_size
-            type: u4
-          - id: data_offset
-            type: u4
-          - id: data_size
-            type: u4
-          - id: title
-            type: str
-            size: name_size
-            encoding: UTF-8
-          - id: xml
-            type: str
-            size: comm_size
-            encoding: UTF-8
-          - id: struct_len
-            type: u4
-          - id: array_size
-            type: u8
-          - id: cell_size
-            type: u4
-          - id: n_dimensions
-            type: u4
-          - id: n_mesurands
-            type: u4
-          - id: dimensions
-            type: calibration
-            repeat: expr
-            repeat-expr: n_dimensions
-          - id: mesurands
-            type: calibration
-            repeat: expr
-            repeat-expr: n_mesurands
-        instances:
-          image:
-            pos: data_offset
-            type: image
-            size: data_size
-        types:
-          image:
-            seq:
-              - id: image
-                type: vec
-                repeat: eos
-            types:
-              vec:
-                seq:
-                  - id: items
-                    type:
-                      switch-on: _parent._parent.mesurands[_index].data_type
-                      cases:
-                        &quot;data_type::uint8&quot;: u1
-                        &quot;data_type::uint16&quot;: u2
-                        &quot;data_type::uint32&quot;: u4
-                        &quot;data_type::uint64&quot;: u8
-                        &quot;data_type::int8&quot;: s1
-                        &quot;data_type::int16&quot;: s2
-                        &quot;data_type::int32&quot;: s4
-                        &quot;data_type::int64&quot;: s8
-                        &quot;data_type::float32&quot;: f4
-                        &quot;data_type::float64&quot;: f8
-                        #&quot;data_type::float48&quot;: s8
-                        #&quot;data_type::float80&quot;: s8
-                        #&quot;data_type::floatfix&quot;: s8
-                    repeat: expr
-                    repeat-expr: _parent._parent.n_mesurands
-          calibration:
-            seq:
-              - id: len_tot
-                type: u4
-              - id: len_struct
-                type: u4
-              - id: len_name
-                type: u4
-              - id: len_comment
-                type: u4
-              - id: len_unit
-                type: u4
-              - id: si_unit
-                type: u8
-              - id: accuracy
-                type: f8
-              - id: function_id_and_dimensions
-                type: u8
-              - id: bias
-                type: f8
-              - id: scale
-                type: f8
-              - id: min_index
-                type: u8
-              - id: max_index
-                type: u8
-              - id: data_type
-                type: s4
-                enum: data_type
-              - id: len_author
-                type: u4
-              - id: name
-                type: str
-                encoding: utf-8
-                size: len_name
-              - id: comment
-                type: str
-                encoding: utf-8
-                size: len_comment
-              - id: unit
-                type: str
-                encoding: utf-8
-                size: len_unit
-              - id: author
-                type: str
-                encoding: utf-8
-                size: len_author
-            instances:
-              count:
-                -orig-id: nx, ny and nz
-                value: max_index - min_index + 1
-      fd_scanned:
-        seq:
-          - id: vars
-            type: vars
-            size: _parent.var_size
-          - id: orig_format
-            type: u4
-            doc: &quot;s_oem&quot;
-            if: false
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">title</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">title</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xml</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xml</span>
+        <span class="nt">types</span><span class="p">:</span>
+          <span class="nt">vars</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x_scale</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">axis_scale</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y_scale</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">axis_scale</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">z_scale</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">axis_scale</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sp_mode</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sp_filter</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u_begin</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u_end</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">z_up</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">z_down</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sp_averaging</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sp_repeat</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span> <span class="c1"># bool</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sp_back</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span> <span class="c1"># bool</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sp_4nx</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sp_osc</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span> <span class="c1"># bool</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sp_n4</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sp_4x0</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sp_4xr</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sp_4u</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sp_4i</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sp_nx</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+      <span class="nt">fd_meta_data</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">head_size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tot_len</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">guids</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uuid</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame_status</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name_size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">comm_size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">view_info_size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">spec_size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">source_info_size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">var_size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_offset</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">title</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name_size</span>
+            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xml</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">comm_size</span>
+            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">struct_len</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">array_size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cell_size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">n_dimensions</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">n_mesurands</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dimensions</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">calibration</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">n_dimensions</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mesurands</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">calibration</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">n_mesurands</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">image</span><span class="p">:</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_offset</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_size</span>
+        <span class="nt">types</span><span class="p">:</span>
+          <span class="nt">image</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vec</span>
+                <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+            <span class="nt">types</span><span class="p">:</span>
+              <span class="nt">vec</span><span class="p">:</span>
+                <span class="nt">seq</span><span class="p">:</span>
+                  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">items</span>
+                    <span class="nt">type</span><span class="p">:</span>
+                      <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent._parent.mesurands[_index].data_type</span>
+                      <span class="nt">cases</span><span class="p">:</span>
+                        <span class="s">&quot;data_type::uint8&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                        <span class="s">&quot;data_type::uint16&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                        <span class="s">&quot;data_type::uint32&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                        <span class="s">&quot;data_type::uint64&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+                        <span class="s">&quot;data_type::int8&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+                        <span class="s">&quot;data_type::int16&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+                        <span class="s">&quot;data_type::int32&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+                        <span class="s">&quot;data_type::int64&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s8</span>
+                        <span class="s">&quot;data_type::float32&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+                        <span class="s">&quot;data_type::float64&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">f8</span>
+                        <span class="c1">#&quot;data_type::float48&quot;: s8</span>
+                        <span class="c1">#&quot;data_type::float80&quot;: s8</span>
+                        <span class="c1">#&quot;data_type::floatfix&quot;: s8</span>
+                    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+                    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent._parent.n_mesurands</span>
+          <span class="nt">calibration</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_tot</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_struct</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_name</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_comment</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_unit</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">si_unit</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">accuracy</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f8</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">function_id_and_dimensions</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bias</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f8</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scale</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f8</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">min_index</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">max_index</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_type</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+                <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_type</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_author</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+                <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf-8</span>
+                <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_name</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">comment</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+                <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf-8</span>
+                <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_comment</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unit</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+                <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf-8</span>
+                <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_unit</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">author</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+                <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf-8</span>
+                <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_author</span>
+            <span class="nt">instances</span><span class="p">:</span>
+              <span class="nt">count</span><span class="p">:</span>
+                <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nx, ny and nz</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">max_index - min_index + 1</span>
+      <span class="nt">fd_scanned</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vars</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vars</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.var_size</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orig_format</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_oem&quot;</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
 
-          - id: tune
-            type: u4
-            enum: lift_mode
-            doc: &quot;z_tune&quot;
-            if: false
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tune</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lift_mode</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;z_tune&quot;</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
 
-          - id: feedback_gain
-            type: f8
-            doc: &quot;s_fbg&quot;
-            if: false
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">feedback_gain</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f8</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_fbg&quot;</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
 
-          - id: dac_scale
-            type: s4
-            doc: &quot;s_s&quot;
-            if: false
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dac_scale</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_s&quot;</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
 
-          - id: overscan
-            type: s4
-            doc: &quot;s_xov (in %)&quot;
-            if: false
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">overscan</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_xov</span><span class="nv"> </span><span class="s">(in</span><span class="nv"> </span><span class="s">%)&quot;</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
 
-            #Frame mode stuff
-          - id: fm_mode
-            type: u2
-            doc: &quot;m_mode&quot;
-          - id: fm_xres
-            type: u2
-            doc: &quot;m_nx&quot;
-          - id: fm_yres
-            type: u2
-            doc: &quot;m_ny&quot;
-          - id: dots
-            type: dots
-
-
-          - id: image
-            type: s2
-            repeat: expr
-            repeat-expr: fm_xres * fm_yres
-
-            #Stuff after data
-          - id: title
-            type: title
-          - id: xml
-            type: xml
-        types:
-          vars:
-            seq:
-              - id: x_scale
-                type: axis_scale
-              - id: y_scale
-                type: axis_scale
-              - id: z_scale
-                type: axis_scale
-
-              - id: channel_index
-                type: u1
-                enum: adc_mode
-                doc: &quot;s_mode&quot;
-
-              - id: mode
-                type: u1
-                enum: mode
-                doc: &quot;s_dev&quot;
-
-              - id: xres
-                type: u2
-                doc: &quot;s_nx&quot;
-              - id: yres
-                type: u2
-                doc: &quot;s_ny&quot;
-              - id: ndacq
-                type: u2
-                doc: &quot;Step (DAC)&quot;
-              - id: step_length
-                type: f4
-                doc: &quot;s_rs in Angstrom&#39;s (Angstrom*gwy_get_gfloat_le(&amp;p))&quot;
-
-              - id: adt
-                type: u2
-                doc: &quot;s_adt&quot;
-
-              - id: adc_gain_amp_log10
-                type: u1
-                doc: &quot;s_adc_a&quot;
-
-              - id: adc_index
-                type: u1
-                doc: &quot;ADC index&quot;
-
-                #XXX: Some fields have different meaning in different versions
-              - id: input_signal_or_version
-                type: u1
-                doc: &quot;MDTInputSignal smp_in; s_smp_in (for signal) s_8xx (for version)&quot;
-
-              - id: substr_plane_order_or_pass_num
-                type: u1
-                doc: &quot;s_spl or z_03&quot;
-
-              - id: scan_dir
-                type: scan_dir
-                doc: &quot;s_xy TODO: interpretation&quot;
-              - id: power_of_2
-                type: u1
-                doc: &quot;s_2n (bool)&quot;
-
-              - id: velocity
-                type: f4 # frame-&gt;velocity = Angstrom*gwy_get_gfloat_le(&amp;p);
-                doc: &quot;s_vel (Angstrom/second)&quot;
-
-              - id: setpoint
-                type: f4 # frame-&gt;setpoint = Nano*gwy_get_gfloat_le(&amp;p);
-                doc: &quot;s_i0&quot;
-
-              - id: bias_voltage
-                type: f4 # frame-&gt;bias_voltage = gwy_get_gfloat_le(&amp;p);
-                doc: &quot;s_ut&quot;
-
-              - id: draw
-                type: u1
-                doc: &quot;s_draw (bool)&quot;
-
-              - id: reserved
-                type: u1
-
-              - id: xoff
-                type: s4
-                doc: &quot;s_x00 (in DAC quants)&quot;
-
-              - id: yoff
-                type: s4
-                doc: &quot;s_y00 (in DAC quants)&quot;
-
-              - id: nl_corr
-                type: u1
-                doc: &quot;s_cor (bool)&quot;
-          dot:
-            seq:
-              - id: x
-                type: s2
-              - id: y
-                type: s2
-          scan_dir:
-            seq:
-              - id: unkn
-                type: b4
-              - id: double_pass
-                type: b1
-              - id: bottom
-                type: b1
-                doc: &quot;Bottom - 1 Top - 0&quot;
-              - id: left
-                type: b1
-                doc: &quot;Left - 1 Right - 0&quot;
-              - id: horizontal
-                type: b1
-                doc: &quot;Horizontal - 1 Vertical - 0&quot;
-        enums:
-          mode:
-            0: stm
-            1: afm
-            2: unknown2
-            3: unknown3
-            4: unknown4
-          input_signal:
-            0: extension_slot
-            1: bias_v
-            2: ground
-          lift_mode:
-            0: step
-            1: fine
-            2: slope
-enums:
-  spm_technique:
-    0: contact_mode
-    1: semicontact_mode
-    2: tunnel_current
-    3: snom
-
-  data_type:
-    0: unknown0
-    &#39;-1&#39;: int8
-    1: uint8
-    &#39;-2&#39;: int16
-    2: uint16
-    &#39;-4&#39;: int32
-    4: uint32
-    &#39;-8&#39;: int64
-    8: uint64
-    &#39;-5892&#39;: float32
-    &#39;-9990&#39;: float48
-    &#39;-13320&#39;: float64
-    &#39;-16138&#39;: float80
-    &#39;-65544&#39;: floatfix
+            <span class="c1">#Frame mode stuff</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fm_mode</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;m_mode&quot;</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fm_xres</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;m_nx&quot;</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fm_yres</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;m_ny&quot;</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dots</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dots</span>
 
 
-  xml_scan_location:
-    0: hlt
-    1: hlb
-    2: hrt
-    3: hrb
-    4: vlt
-    5: vlb
-    6: vrt
-    7: vrb
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fm_xres * fm_yres</span>
 
-  xml_param_type:
-    0: none
-    1: laser_wavelength
-    2: units
-    0xff: data_array
+            <span class="c1">#Stuff after data</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">title</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">title</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xml</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xml</span>
+        <span class="nt">types</span><span class="p">:</span>
+          <span class="nt">vars</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x_scale</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">axis_scale</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y_scale</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">axis_scale</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">z_scale</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">axis_scale</span>
 
-  spm_mode:
-    0: constant_force
-    1: contact_constant_height
-    2: contact_error
-    3: lateral_force
-    4: force_modulation
-    5: spreading_resistance_imaging
-    6: semicontact_topography
-    7: semicontact_error
-    8: phase_contrast
-    9: ac_magnetic_force
-    10: dc_magnetic_force
-    11: electrostatic_force
-    12: capacitance_contrast
-    13: kelvin_probe
-    14: constant_current
-    15: barrier_height
-    16: constant_height
-    17: afam
-    18: contact_efm
-    19: shear_force_topography
-    20: sfom
-    21: contact_capacitance
-    22: snom_transmission
-    23: snom_reflection
-    24: snom_all
-    25: snom
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_index</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adc_mode</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_mode&quot;</span>
 
-  adc_mode:
-    0xFF: off
-    0: height
-    1: dfl
-    2: lateral_f
-    3: bias_v
-    4: current
-    5: fb_out
-    6: mag
-    7: mag_sin #MAG*Sin
-    8: mag_cos #MAG*Cos
-    9: rms
-    10: calc_mag
-    11: phase1
-    12: phase2
-    13: calc_phase
-    14: ex1
-    15: ex2
-    16: hv_x
-    17: hv_y
-    18: snap_back
-  consts:
-    32: file_header_size
-    22: frame_header_size
-    8: frame_mode_size
-    30: axis_scales_size
-    77: scan_vars_min_size
-    38: spectro_vars_min_size
-  unit:
-    -10: raman_shift
-    -9: reserved0
-    -8: reserved1
-    -7: reserved2
-    -6: reserved3
-    -5: meter
-    -4: centi_meter
-    -3: milli_meter
-    -2: micro_meter
-    -1: nano_meter
-    0: angstrom
-    1: nano_ampere
-    2: volt
-    3: none
-    4: kilo_hertz
-    5: degrees
-    6: percent
-    7: celsius_degree # -orig-id: celsium_degree
-    8: volt_high
-    9: second
-    10: milli_second
-    11: micro_second
-    12: nano_second
-    13: counts
-    14: pixels
-    15: reserved_sfom0
-    16: reserved_sfom1
-    17: reserved_sfom2
-    18: reserved_sfom3
-    19: reserved_sfom4
-    20: ampere2
-    21: milli_ampere
-    22: micro_ampere
-    23: nano_ampere2
-    24: pico_ampere
-    25: volt2
-    26: milli_volt
-    27: micro_volt
-    28: nano_volt
-    29: pico_volt
-    30: newton
-    31: milli_newton
-    32: micro_newton
-    33: nano_newton
-    34: pico_newton
-    35: reserved_dos0
-    36: reserved_dos1
-    37: reserved_dos2
-    38: reserved_dos3
-    39: reserved_dos4
-</code></pre>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mode</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mode</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_dev&quot;</span>
+
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xres</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_nx&quot;</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">yres</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_ny&quot;</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ndacq</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Step</span><span class="nv"> </span><span class="s">(DAC)&quot;</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">step_length</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_rs</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">Angstrom&#39;s</span><span class="nv"> </span><span class="s">(Angstrom*gwy_get_gfloat_le(&amp;p))&quot;</span>
+
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adt</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_adt&quot;</span>
+
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adc_gain_amp_log10</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_adc_a&quot;</span>
+
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adc_index</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;ADC</span><span class="nv"> </span><span class="s">index&quot;</span>
+
+                <span class="c1">#XXX: Some fields have different meaning in different versions</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">input_signal_or_version</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;MDTInputSignal</span><span class="nv"> </span><span class="s">smp_in;</span><span class="nv"> </span><span class="s">s_smp_in</span><span class="nv"> </span><span class="s">(for</span><span class="nv"> </span><span class="s">signal)</span><span class="nv"> </span><span class="s">s_8xx</span><span class="nv"> </span><span class="s">(for</span><span class="nv"> </span><span class="s">version)&quot;</span>
+
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">substr_plane_order_or_pass_num</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_spl</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">z_03&quot;</span>
+
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scan_dir</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scan_dir</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_xy</span><span class="nv"> </span><span class="s">TODO:</span><span class="nv"> </span><span class="s">interpretation&quot;</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">power_of_2</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_2n</span><span class="nv"> </span><span class="s">(bool)&quot;</span>
+
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">velocity</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span> <span class="c1"># frame-&gt;velocity = Angstrom*gwy_get_gfloat_le(&amp;p);</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_vel</span><span class="nv"> </span><span class="s">(Angstrom/second)&quot;</span>
+
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setpoint</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span> <span class="c1"># frame-&gt;setpoint = Nano*gwy_get_gfloat_le(&amp;p);</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_i0&quot;</span>
+
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bias_voltage</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span> <span class="c1"># frame-&gt;bias_voltage = gwy_get_gfloat_le(&amp;p);</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_ut&quot;</span>
+
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">draw</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_draw</span><span class="nv"> </span><span class="s">(bool)&quot;</span>
+
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xoff</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_x00</span><span class="nv"> </span><span class="s">(in</span><span class="nv"> </span><span class="s">DAC</span><span class="nv"> </span><span class="s">quants)&quot;</span>
+
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">yoff</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_y00</span><span class="nv"> </span><span class="s">(in</span><span class="nv"> </span><span class="s">DAC</span><span class="nv"> </span><span class="s">quants)&quot;</span>
+
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nl_corr</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;s_cor</span><span class="nv"> </span><span class="s">(bool)&quot;</span>
+          <span class="nt">dot</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+          <span class="nt">scan_dir</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unkn</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">double_pass</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bottom</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Bottom</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">Top</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">0&quot;</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">left</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Left</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">Right</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">0&quot;</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">horizontal</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Horizontal</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">Vertical</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">0&quot;</span>
+        <span class="nt">enums</span><span class="p">:</span>
+          <span class="nt">mode</span><span class="p">:</span>
+            <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stm</span>
+            <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">afm</span>
+            <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown2</span>
+            <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown3</span>
+            <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown4</span>
+          <span class="nt">input_signal</span><span class="p">:</span>
+            <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extension_slot</span>
+            <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bias_v</span>
+            <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ground</span>
+          <span class="nt">lift_mode</span><span class="p">:</span>
+            <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">step</span>
+            <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fine</span>
+            <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">slope</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">spm_technique</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">contact_mode</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">semicontact_mode</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tunnel_current</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">snom</span>
+
+  <span class="nt">data_type</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown0</span>
+    <span class="s">&#39;-1&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">int8</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uint8</span>
+    <span class="s">&#39;-2&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">int16</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uint16</span>
+    <span class="s">&#39;-4&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">int32</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uint32</span>
+    <span class="s">&#39;-8&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">int64</span>
+    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uint64</span>
+    <span class="s">&#39;-5892&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">float32</span>
+    <span class="s">&#39;-9990&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">float48</span>
+    <span class="s">&#39;-13320&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">float64</span>
+    <span class="s">&#39;-16138&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">float80</span>
+    <span class="s">&#39;-65544&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">floatfix</span>
+
+
+  <span class="nt">xml_scan_location</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hlt</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hlb</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hrt</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hrb</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vlt</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vlb</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vrt</span>
+    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vrb</span>
+
+  <span class="nt">xml_param_type</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">laser_wavelength</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">units</span>
+    <span class="nt">0xff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_array</span>
+
+  <span class="nt">spm_mode</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">constant_force</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">contact_constant_height</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">contact_error</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lateral_force</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">force_modulation</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">spreading_resistance_imaging</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">semicontact_topography</span>
+    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">semicontact_error</span>
+    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">phase_contrast</span>
+    <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ac_magnetic_force</span>
+    <span class="nt">10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dc_magnetic_force</span>
+    <span class="nt">11</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">electrostatic_force</span>
+    <span class="nt">12</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">capacitance_contrast</span>
+    <span class="nt">13</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kelvin_probe</span>
+    <span class="nt">14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">constant_current</span>
+    <span class="nt">15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">barrier_height</span>
+    <span class="nt">16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">constant_height</span>
+    <span class="nt">17</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">afam</span>
+    <span class="nt">18</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">contact_efm</span>
+    <span class="nt">19</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">shear_force_topography</span>
+    <span class="nt">20</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sfom</span>
+    <span class="nt">21</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">contact_capacitance</span>
+    <span class="nt">22</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">snom_transmission</span>
+    <span class="nt">23</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">snom_reflection</span>
+    <span class="nt">24</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">snom_all</span>
+    <span class="nt">25</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">snom</span>
+
+  <span class="nt">adc_mode</span><span class="p">:</span>
+    <span class="nt">0xFF</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">off</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">height</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dfl</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lateral_f</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bias_v</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">current</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fb_out</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mag</span>
+    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mag_sin</span> <span class="c1">#MAG*Sin</span>
+    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mag_cos</span> <span class="c1">#MAG*Cos</span>
+    <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rms</span>
+    <span class="nt">10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">calc_mag</span>
+    <span class="nt">11</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">phase1</span>
+    <span class="nt">12</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">phase2</span>
+    <span class="nt">13</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">calc_phase</span>
+    <span class="nt">14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ex1</span>
+    <span class="nt">15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ex2</span>
+    <span class="nt">16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hv_x</span>
+    <span class="nt">17</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hv_y</span>
+    <span class="nt">18</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">snap_back</span>
+  <span class="nt">consts</span><span class="p">:</span>
+    <span class="nt">32</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_header_size</span>
+    <span class="nt">22</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame_header_size</span>
+    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame_mode_size</span>
+    <span class="nt">30</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">axis_scales_size</span>
+    <span class="nt">77</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scan_vars_min_size</span>
+    <span class="nt">38</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">spectro_vars_min_size</span>
+  <span class="nt">unit</span><span class="p">:</span>
+    <span class="nt">-10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">raman_shift</span>
+    <span class="nt">-9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved0</span>
+    <span class="nt">-8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved1</span>
+    <span class="nt">-7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved2</span>
+    <span class="nt">-6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved3</span>
+    <span class="nt">-5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">meter</span>
+    <span class="nt">-4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">centi_meter</span>
+    <span class="nt">-3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">milli_meter</span>
+    <span class="nt">-2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">micro_meter</span>
+    <span class="nt">-1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nano_meter</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">angstrom</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nano_ampere</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">volt</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kilo_hertz</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">degrees</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">percent</span>
+    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">celsius_degree</span> <span class="c1"># -orig-id: celsium_degree</span>
+    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">volt_high</span>
+    <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">second</span>
+    <span class="nt">10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">milli_second</span>
+    <span class="nt">11</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">micro_second</span>
+    <span class="nt">12</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nano_second</span>
+    <span class="nt">13</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">counts</span>
+    <span class="nt">14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pixels</span>
+    <span class="nt">15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_sfom0</span>
+    <span class="nt">16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_sfom1</span>
+    <span class="nt">17</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_sfom2</span>
+    <span class="nt">18</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_sfom3</span>
+    <span class="nt">19</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_sfom4</span>
+    <span class="nt">20</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ampere2</span>
+    <span class="nt">21</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">milli_ampere</span>
+    <span class="nt">22</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">micro_ampere</span>
+    <span class="nt">23</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nano_ampere2</span>
+    <span class="nt">24</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pico_ampere</span>
+    <span class="nt">25</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">volt2</span>
+    <span class="nt">26</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">milli_volt</span>
+    <span class="nt">27</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">micro_volt</span>
+    <span class="nt">28</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nano_volt</span>
+    <span class="nt">29</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pico_volt</span>
+    <span class="nt">30</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">newton</span>
+    <span class="nt">31</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">milli_newton</span>
+    <span class="nt">32</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">micro_newton</span>
+    <span class="nt">33</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nano_newton</span>
+    <span class="nt">34</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pico_newton</span>
+    <span class="nt">35</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_dos0</span>
+    <span class="nt">36</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_dos1</span>
+    <span class="nt">37</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_dos2</span>
+    <span class="nt">38</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_dos3</span>
+    <span class="nt">39</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_dos4</span>
+</pre></div>
     </div>
 </section>
 
@@ -1043,8 +1040,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

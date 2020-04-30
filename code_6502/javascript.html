@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -237,735 +234,735 @@ var data = new Code6502(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.Code6502 = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-/**
- * This spec can be used to disassemble raw stream of 6502 CPU machine
- * code into individual operations. Each operation includes an opcode
- * and, optionally, an argument. Register arguments are part of the
- * `opcode` enum.
- */
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">Code6502</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * This spec can be used to disassemble raw stream of 6502 CPU machine</span>
+<span class="cm"> * code into individual operations. Each operation includes an opcode</span>
+<span class="cm"> * and, optionally, an argument. Register arguments are part of the</span>
+<span class="cm"> * `opcode` enum.</span>
+<span class="cm"> */</span>
 
-var Code6502 = (function() {
-  Code6502.Opcode = Object.freeze({
-    BRK_IMPL: 0,
-    ORA_X_IND: 1,
-    ORA_ZPG: 5,
-    ASL_ZPG: 6,
-    PHP_IMPL: 8,
-    ORA_IMM: 9,
-    ASL_A: 10,
-    ORA_ABS: 13,
-    ASL_ABS: 14,
-    BPL_REL: 16,
-    ORA_IND_Y: 17,
-    ORA_ZPG_X: 21,
-    ASL_ZPG_X: 22,
-    CLC_IMPL: 24,
-    ORA_ABS_Y: 25,
-    ORA_ABS_X: 29,
-    ASL_ABS_X: 30,
-    JSR_ABS: 32,
-    AND_X_IND: 33,
-    BIT_ZPG: 36,
-    AND_ZPG: 37,
-    ROL_ZPG: 38,
-    PLP_IMPL: 40,
-    AND_IMM: 41,
-    ROL_A: 42,
-    BIT_ABS: 44,
-    AND_ABS: 45,
-    ROL_ABS: 46,
-    BMI_REL: 48,
-    AND_IND_Y: 49,
-    AND_ZPG_X: 53,
-    ROL_ZPG_X: 54,
-    SEC_IMPL: 56,
-    AND_ABS_Y: 57,
-    AND_ABS_X: 61,
-    ROL_ABS_X: 62,
-    RTI_IMPL: 64,
-    EOR_X_IND: 65,
-    EOR_ZPG: 69,
-    LSR_ZPG: 70,
-    PHA_IMPL: 72,
-    EOR_IMM: 73,
-    LSR_A: 74,
-    JMP_ABS: 76,
-    EOR_ABS: 77,
-    LSR_ABS: 78,
-    BVC_REL: 80,
-    EOR_IND_Y: 81,
-    EOR_ZPG_X: 85,
-    LSR_ZPG_X: 86,
-    CLI_IMPL: 88,
-    EOR_ABS_Y: 89,
-    EOR_ABS_X: 93,
-    LSR_ABS_X: 94,
-    RTS_IMPL: 96,
-    ADC_X_IND: 97,
-    ADC_ZPG: 101,
-    ROR_ZPG: 102,
-    PLA_IMPL: 104,
-    ADC_IMM: 105,
-    ROR_A: 106,
-    JMP_IND: 108,
-    ADC_ABS: 109,
-    ROR_ABS: 110,
-    BVS_REL: 112,
-    ADC_IND_Y: 113,
-    ADC_ZPG_X: 117,
-    ROR_ZPG_X: 118,
-    SEI_IMPL: 120,
-    ADC_ABS_Y: 121,
-    ADC_ABS_X: 125,
-    ROR_ABS_X: 126,
-    STA_X_IND: 129,
-    STY_ZPG: 132,
-    STA_ZPG: 133,
-    STX_ZPG: 134,
-    DEY_IMPL: 136,
-    TXA_IMPL: 138,
-    STY_ABS: 140,
-    STA_ABS: 141,
-    STX_ABS: 142,
-    BCC_REL: 144,
-    STA_IND_Y: 145,
-    STY_ZPG_X: 148,
-    STA_ZPG_X: 149,
-    STX_ZPG_Y: 150,
-    TYA_IMPL: 152,
-    STA_ABS_Y: 153,
-    TXS_IMPL: 154,
-    STA_ABS_X: 157,
-    LDY_IMM: 160,
-    LDA_X_IND: 161,
-    LDX_IMM: 162,
-    LDY_ZPG: 164,
-    LDA_ZPG: 165,
-    LDX_ZPG: 166,
-    TAY_IMPL: 168,
-    LDA_IMM: 169,
-    TAX_IMPL: 170,
-    LDY_ABS: 172,
-    LDA_ABS: 173,
-    LDX_ABS: 174,
-    BCS_REL: 176,
-    LDA_IND_Y: 177,
-    LDY_ZPG_X: 180,
-    LDA_ZPG_X: 181,
-    LDX_ZPG_Y: 182,
-    CLV_IMPL: 184,
-    LDA_ABS_Y: 185,
-    TSX_IMPL: 186,
-    LDY_ABS_X: 188,
-    LDA_ABS_X: 189,
-    LDX_ABS_Y: 190,
-    CPY_IMM: 192,
-    CMP_X_IND: 193,
-    CPY_ZPG: 196,
-    CMP_ZPG: 197,
-    DEC_ZPG: 198,
-    INY_IMPL: 200,
-    CMP_IMM: 201,
-    DEX_IMPL: 202,
-    CPY_ABS: 204,
-    CMP_ABS: 205,
-    DEC_ABS: 206,
-    BNE_REL: 208,
-    CMP_IND_Y: 209,
-    CMP_ZPG_X: 213,
-    DEC_ZPG_X: 214,
-    CLD_IMPL: 216,
-    CMP_ABS_Y: 217,
-    CMP_ABS_X: 221,
-    DEC_ABS_X: 222,
-    CPX_IMM: 224,
-    SBC_X_IND: 225,
-    CPX_ZPG: 228,
-    SBC_ZPG: 229,
-    INC_ZPG: 230,
-    INX_IMPL: 232,
-    SBC_IMM: 233,
-    NOP_IMPL: 234,
-    CPX_ABS: 236,
-    SBC_ABS: 237,
-    INC_ABS: 238,
-    BEQ_REL: 240,
-    SBC_IND_Y: 241,
-    SBC_ZPG_X: 245,
-    INC_ZPG_X: 246,
-    SED_IMPL: 248,
-    SBC_ABS_Y: 249,
-    SBC_ABS_X: 253,
-    INC_ABS_X: 254,
+<span class="kd">var</span> <span class="nx">Code6502</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">BRK_IMPL</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">ORA_X_IND</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">ORA_ZPG</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nx">ASL_ZPG</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="nx">PHP_IMPL</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="nx">ORA_IMM</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="nx">ASL_A</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="nx">ORA_ABS</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
+    <span class="nx">ASL_ABS</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="nx">BPL_REL</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="nx">ORA_IND_Y</span><span class="o">:</span> <span class="mi">17</span><span class="p">,</span>
+    <span class="nx">ORA_ZPG_X</span><span class="o">:</span> <span class="mi">21</span><span class="p">,</span>
+    <span class="nx">ASL_ZPG_X</span><span class="o">:</span> <span class="mi">22</span><span class="p">,</span>
+    <span class="nx">CLC_IMPL</span><span class="o">:</span> <span class="mi">24</span><span class="p">,</span>
+    <span class="nx">ORA_ABS_Y</span><span class="o">:</span> <span class="mi">25</span><span class="p">,</span>
+    <span class="nx">ORA_ABS_X</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span>
+    <span class="nx">ASL_ABS_X</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span>
+    <span class="nx">JSR_ABS</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span>
+    <span class="nx">AND_X_IND</span><span class="o">:</span> <span class="mi">33</span><span class="p">,</span>
+    <span class="nx">BIT_ZPG</span><span class="o">:</span> <span class="mi">36</span><span class="p">,</span>
+    <span class="nx">AND_ZPG</span><span class="o">:</span> <span class="mi">37</span><span class="p">,</span>
+    <span class="nx">ROL_ZPG</span><span class="o">:</span> <span class="mi">38</span><span class="p">,</span>
+    <span class="nx">PLP_IMPL</span><span class="o">:</span> <span class="mi">40</span><span class="p">,</span>
+    <span class="nx">AND_IMM</span><span class="o">:</span> <span class="mi">41</span><span class="p">,</span>
+    <span class="nx">ROL_A</span><span class="o">:</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="nx">BIT_ABS</span><span class="o">:</span> <span class="mi">44</span><span class="p">,</span>
+    <span class="nx">AND_ABS</span><span class="o">:</span> <span class="mi">45</span><span class="p">,</span>
+    <span class="nx">ROL_ABS</span><span class="o">:</span> <span class="mi">46</span><span class="p">,</span>
+    <span class="nx">BMI_REL</span><span class="o">:</span> <span class="mi">48</span><span class="p">,</span>
+    <span class="nx">AND_IND_Y</span><span class="o">:</span> <span class="mi">49</span><span class="p">,</span>
+    <span class="nx">AND_ZPG_X</span><span class="o">:</span> <span class="mi">53</span><span class="p">,</span>
+    <span class="nx">ROL_ZPG_X</span><span class="o">:</span> <span class="mi">54</span><span class="p">,</span>
+    <span class="nx">SEC_IMPL</span><span class="o">:</span> <span class="mi">56</span><span class="p">,</span>
+    <span class="nx">AND_ABS_Y</span><span class="o">:</span> <span class="mi">57</span><span class="p">,</span>
+    <span class="nx">AND_ABS_X</span><span class="o">:</span> <span class="mi">61</span><span class="p">,</span>
+    <span class="nx">ROL_ABS_X</span><span class="o">:</span> <span class="mi">62</span><span class="p">,</span>
+    <span class="nx">RTI_IMPL</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
+    <span class="nx">EOR_X_IND</span><span class="o">:</span> <span class="mi">65</span><span class="p">,</span>
+    <span class="nx">EOR_ZPG</span><span class="o">:</span> <span class="mi">69</span><span class="p">,</span>
+    <span class="nx">LSR_ZPG</span><span class="o">:</span> <span class="mi">70</span><span class="p">,</span>
+    <span class="nx">PHA_IMPL</span><span class="o">:</span> <span class="mi">72</span><span class="p">,</span>
+    <span class="nx">EOR_IMM</span><span class="o">:</span> <span class="mi">73</span><span class="p">,</span>
+    <span class="nx">LSR_A</span><span class="o">:</span> <span class="mi">74</span><span class="p">,</span>
+    <span class="nx">JMP_ABS</span><span class="o">:</span> <span class="mi">76</span><span class="p">,</span>
+    <span class="nx">EOR_ABS</span><span class="o">:</span> <span class="mi">77</span><span class="p">,</span>
+    <span class="nx">LSR_ABS</span><span class="o">:</span> <span class="mi">78</span><span class="p">,</span>
+    <span class="nx">BVC_REL</span><span class="o">:</span> <span class="mi">80</span><span class="p">,</span>
+    <span class="nx">EOR_IND_Y</span><span class="o">:</span> <span class="mi">81</span><span class="p">,</span>
+    <span class="nx">EOR_ZPG_X</span><span class="o">:</span> <span class="mi">85</span><span class="p">,</span>
+    <span class="nx">LSR_ZPG_X</span><span class="o">:</span> <span class="mi">86</span><span class="p">,</span>
+    <span class="nx">CLI_IMPL</span><span class="o">:</span> <span class="mi">88</span><span class="p">,</span>
+    <span class="nx">EOR_ABS_Y</span><span class="o">:</span> <span class="mi">89</span><span class="p">,</span>
+    <span class="nx">EOR_ABS_X</span><span class="o">:</span> <span class="mi">93</span><span class="p">,</span>
+    <span class="nx">LSR_ABS_X</span><span class="o">:</span> <span class="mi">94</span><span class="p">,</span>
+    <span class="nx">RTS_IMPL</span><span class="o">:</span> <span class="mi">96</span><span class="p">,</span>
+    <span class="nx">ADC_X_IND</span><span class="o">:</span> <span class="mi">97</span><span class="p">,</span>
+    <span class="nx">ADC_ZPG</span><span class="o">:</span> <span class="mi">101</span><span class="p">,</span>
+    <span class="nx">ROR_ZPG</span><span class="o">:</span> <span class="mi">102</span><span class="p">,</span>
+    <span class="nx">PLA_IMPL</span><span class="o">:</span> <span class="mi">104</span><span class="p">,</span>
+    <span class="nx">ADC_IMM</span><span class="o">:</span> <span class="mi">105</span><span class="p">,</span>
+    <span class="nx">ROR_A</span><span class="o">:</span> <span class="mi">106</span><span class="p">,</span>
+    <span class="nx">JMP_IND</span><span class="o">:</span> <span class="mi">108</span><span class="p">,</span>
+    <span class="nx">ADC_ABS</span><span class="o">:</span> <span class="mi">109</span><span class="p">,</span>
+    <span class="nx">ROR_ABS</span><span class="o">:</span> <span class="mi">110</span><span class="p">,</span>
+    <span class="nx">BVS_REL</span><span class="o">:</span> <span class="mi">112</span><span class="p">,</span>
+    <span class="nx">ADC_IND_Y</span><span class="o">:</span> <span class="mi">113</span><span class="p">,</span>
+    <span class="nx">ADC_ZPG_X</span><span class="o">:</span> <span class="mi">117</span><span class="p">,</span>
+    <span class="nx">ROR_ZPG_X</span><span class="o">:</span> <span class="mi">118</span><span class="p">,</span>
+    <span class="nx">SEI_IMPL</span><span class="o">:</span> <span class="mi">120</span><span class="p">,</span>
+    <span class="nx">ADC_ABS_Y</span><span class="o">:</span> <span class="mi">121</span><span class="p">,</span>
+    <span class="nx">ADC_ABS_X</span><span class="o">:</span> <span class="mi">125</span><span class="p">,</span>
+    <span class="nx">ROR_ABS_X</span><span class="o">:</span> <span class="mi">126</span><span class="p">,</span>
+    <span class="nx">STA_X_IND</span><span class="o">:</span> <span class="mi">129</span><span class="p">,</span>
+    <span class="nx">STY_ZPG</span><span class="o">:</span> <span class="mi">132</span><span class="p">,</span>
+    <span class="nx">STA_ZPG</span><span class="o">:</span> <span class="mi">133</span><span class="p">,</span>
+    <span class="nx">STX_ZPG</span><span class="o">:</span> <span class="mi">134</span><span class="p">,</span>
+    <span class="nx">DEY_IMPL</span><span class="o">:</span> <span class="mi">136</span><span class="p">,</span>
+    <span class="nx">TXA_IMPL</span><span class="o">:</span> <span class="mi">138</span><span class="p">,</span>
+    <span class="nx">STY_ABS</span><span class="o">:</span> <span class="mi">140</span><span class="p">,</span>
+    <span class="nx">STA_ABS</span><span class="o">:</span> <span class="mi">141</span><span class="p">,</span>
+    <span class="nx">STX_ABS</span><span class="o">:</span> <span class="mi">142</span><span class="p">,</span>
+    <span class="nx">BCC_REL</span><span class="o">:</span> <span class="mi">144</span><span class="p">,</span>
+    <span class="nx">STA_IND_Y</span><span class="o">:</span> <span class="mi">145</span><span class="p">,</span>
+    <span class="nx">STY_ZPG_X</span><span class="o">:</span> <span class="mi">148</span><span class="p">,</span>
+    <span class="nx">STA_ZPG_X</span><span class="o">:</span> <span class="mi">149</span><span class="p">,</span>
+    <span class="nx">STX_ZPG_Y</span><span class="o">:</span> <span class="mi">150</span><span class="p">,</span>
+    <span class="nx">TYA_IMPL</span><span class="o">:</span> <span class="mi">152</span><span class="p">,</span>
+    <span class="nx">STA_ABS_Y</span><span class="o">:</span> <span class="mi">153</span><span class="p">,</span>
+    <span class="nx">TXS_IMPL</span><span class="o">:</span> <span class="mi">154</span><span class="p">,</span>
+    <span class="nx">STA_ABS_X</span><span class="o">:</span> <span class="mi">157</span><span class="p">,</span>
+    <span class="nx">LDY_IMM</span><span class="o">:</span> <span class="mi">160</span><span class="p">,</span>
+    <span class="nx">LDA_X_IND</span><span class="o">:</span> <span class="mi">161</span><span class="p">,</span>
+    <span class="nx">LDX_IMM</span><span class="o">:</span> <span class="mi">162</span><span class="p">,</span>
+    <span class="nx">LDY_ZPG</span><span class="o">:</span> <span class="mi">164</span><span class="p">,</span>
+    <span class="nx">LDA_ZPG</span><span class="o">:</span> <span class="mi">165</span><span class="p">,</span>
+    <span class="nx">LDX_ZPG</span><span class="o">:</span> <span class="mi">166</span><span class="p">,</span>
+    <span class="nx">TAY_IMPL</span><span class="o">:</span> <span class="mi">168</span><span class="p">,</span>
+    <span class="nx">LDA_IMM</span><span class="o">:</span> <span class="mi">169</span><span class="p">,</span>
+    <span class="nx">TAX_IMPL</span><span class="o">:</span> <span class="mi">170</span><span class="p">,</span>
+    <span class="nx">LDY_ABS</span><span class="o">:</span> <span class="mi">172</span><span class="p">,</span>
+    <span class="nx">LDA_ABS</span><span class="o">:</span> <span class="mi">173</span><span class="p">,</span>
+    <span class="nx">LDX_ABS</span><span class="o">:</span> <span class="mi">174</span><span class="p">,</span>
+    <span class="nx">BCS_REL</span><span class="o">:</span> <span class="mi">176</span><span class="p">,</span>
+    <span class="nx">LDA_IND_Y</span><span class="o">:</span> <span class="mi">177</span><span class="p">,</span>
+    <span class="nx">LDY_ZPG_X</span><span class="o">:</span> <span class="mi">180</span><span class="p">,</span>
+    <span class="nx">LDA_ZPG_X</span><span class="o">:</span> <span class="mi">181</span><span class="p">,</span>
+    <span class="nx">LDX_ZPG_Y</span><span class="o">:</span> <span class="mi">182</span><span class="p">,</span>
+    <span class="nx">CLV_IMPL</span><span class="o">:</span> <span class="mi">184</span><span class="p">,</span>
+    <span class="nx">LDA_ABS_Y</span><span class="o">:</span> <span class="mi">185</span><span class="p">,</span>
+    <span class="nx">TSX_IMPL</span><span class="o">:</span> <span class="mi">186</span><span class="p">,</span>
+    <span class="nx">LDY_ABS_X</span><span class="o">:</span> <span class="mi">188</span><span class="p">,</span>
+    <span class="nx">LDA_ABS_X</span><span class="o">:</span> <span class="mi">189</span><span class="p">,</span>
+    <span class="nx">LDX_ABS_Y</span><span class="o">:</span> <span class="mi">190</span><span class="p">,</span>
+    <span class="nx">CPY_IMM</span><span class="o">:</span> <span class="mi">192</span><span class="p">,</span>
+    <span class="nx">CMP_X_IND</span><span class="o">:</span> <span class="mi">193</span><span class="p">,</span>
+    <span class="nx">CPY_ZPG</span><span class="o">:</span> <span class="mi">196</span><span class="p">,</span>
+    <span class="nx">CMP_ZPG</span><span class="o">:</span> <span class="mi">197</span><span class="p">,</span>
+    <span class="nx">DEC_ZPG</span><span class="o">:</span> <span class="mi">198</span><span class="p">,</span>
+    <span class="nx">INY_IMPL</span><span class="o">:</span> <span class="mi">200</span><span class="p">,</span>
+    <span class="nx">CMP_IMM</span><span class="o">:</span> <span class="mi">201</span><span class="p">,</span>
+    <span class="nx">DEX_IMPL</span><span class="o">:</span> <span class="mi">202</span><span class="p">,</span>
+    <span class="nx">CPY_ABS</span><span class="o">:</span> <span class="mi">204</span><span class="p">,</span>
+    <span class="nx">CMP_ABS</span><span class="o">:</span> <span class="mi">205</span><span class="p">,</span>
+    <span class="nx">DEC_ABS</span><span class="o">:</span> <span class="mi">206</span><span class="p">,</span>
+    <span class="nx">BNE_REL</span><span class="o">:</span> <span class="mi">208</span><span class="p">,</span>
+    <span class="nx">CMP_IND_Y</span><span class="o">:</span> <span class="mi">209</span><span class="p">,</span>
+    <span class="nx">CMP_ZPG_X</span><span class="o">:</span> <span class="mi">213</span><span class="p">,</span>
+    <span class="nx">DEC_ZPG_X</span><span class="o">:</span> <span class="mi">214</span><span class="p">,</span>
+    <span class="nx">CLD_IMPL</span><span class="o">:</span> <span class="mi">216</span><span class="p">,</span>
+    <span class="nx">CMP_ABS_Y</span><span class="o">:</span> <span class="mi">217</span><span class="p">,</span>
+    <span class="nx">CMP_ABS_X</span><span class="o">:</span> <span class="mi">221</span><span class="p">,</span>
+    <span class="nx">DEC_ABS_X</span><span class="o">:</span> <span class="mi">222</span><span class="p">,</span>
+    <span class="nx">CPX_IMM</span><span class="o">:</span> <span class="mi">224</span><span class="p">,</span>
+    <span class="nx">SBC_X_IND</span><span class="o">:</span> <span class="mi">225</span><span class="p">,</span>
+    <span class="nx">CPX_ZPG</span><span class="o">:</span> <span class="mi">228</span><span class="p">,</span>
+    <span class="nx">SBC_ZPG</span><span class="o">:</span> <span class="mi">229</span><span class="p">,</span>
+    <span class="nx">INC_ZPG</span><span class="o">:</span> <span class="mi">230</span><span class="p">,</span>
+    <span class="nx">INX_IMPL</span><span class="o">:</span> <span class="mi">232</span><span class="p">,</span>
+    <span class="nx">SBC_IMM</span><span class="o">:</span> <span class="mi">233</span><span class="p">,</span>
+    <span class="nx">NOP_IMPL</span><span class="o">:</span> <span class="mi">234</span><span class="p">,</span>
+    <span class="nx">CPX_ABS</span><span class="o">:</span> <span class="mi">236</span><span class="p">,</span>
+    <span class="nx">SBC_ABS</span><span class="o">:</span> <span class="mi">237</span><span class="p">,</span>
+    <span class="nx">INC_ABS</span><span class="o">:</span> <span class="mi">238</span><span class="p">,</span>
+    <span class="nx">BEQ_REL</span><span class="o">:</span> <span class="mi">240</span><span class="p">,</span>
+    <span class="nx">SBC_IND_Y</span><span class="o">:</span> <span class="mi">241</span><span class="p">,</span>
+    <span class="nx">SBC_ZPG_X</span><span class="o">:</span> <span class="mi">245</span><span class="p">,</span>
+    <span class="nx">INC_ZPG_X</span><span class="o">:</span> <span class="mi">246</span><span class="p">,</span>
+    <span class="nx">SED_IMPL</span><span class="o">:</span> <span class="mi">248</span><span class="p">,</span>
+    <span class="nx">SBC_ABS_Y</span><span class="o">:</span> <span class="mi">249</span><span class="p">,</span>
+    <span class="nx">SBC_ABS_X</span><span class="o">:</span> <span class="mi">253</span><span class="p">,</span>
+    <span class="nx">INC_ABS_X</span><span class="o">:</span> <span class="mi">254</span><span class="p">,</span>
 
-    0: &quot;BRK_IMPL&quot;,
-    1: &quot;ORA_X_IND&quot;,
-    5: &quot;ORA_ZPG&quot;,
-    6: &quot;ASL_ZPG&quot;,
-    8: &quot;PHP_IMPL&quot;,
-    9: &quot;ORA_IMM&quot;,
-    10: &quot;ASL_A&quot;,
-    13: &quot;ORA_ABS&quot;,
-    14: &quot;ASL_ABS&quot;,
-    16: &quot;BPL_REL&quot;,
-    17: &quot;ORA_IND_Y&quot;,
-    21: &quot;ORA_ZPG_X&quot;,
-    22: &quot;ASL_ZPG_X&quot;,
-    24: &quot;CLC_IMPL&quot;,
-    25: &quot;ORA_ABS_Y&quot;,
-    29: &quot;ORA_ABS_X&quot;,
-    30: &quot;ASL_ABS_X&quot;,
-    32: &quot;JSR_ABS&quot;,
-    33: &quot;AND_X_IND&quot;,
-    36: &quot;BIT_ZPG&quot;,
-    37: &quot;AND_ZPG&quot;,
-    38: &quot;ROL_ZPG&quot;,
-    40: &quot;PLP_IMPL&quot;,
-    41: &quot;AND_IMM&quot;,
-    42: &quot;ROL_A&quot;,
-    44: &quot;BIT_ABS&quot;,
-    45: &quot;AND_ABS&quot;,
-    46: &quot;ROL_ABS&quot;,
-    48: &quot;BMI_REL&quot;,
-    49: &quot;AND_IND_Y&quot;,
-    53: &quot;AND_ZPG_X&quot;,
-    54: &quot;ROL_ZPG_X&quot;,
-    56: &quot;SEC_IMPL&quot;,
-    57: &quot;AND_ABS_Y&quot;,
-    61: &quot;AND_ABS_X&quot;,
-    62: &quot;ROL_ABS_X&quot;,
-    64: &quot;RTI_IMPL&quot;,
-    65: &quot;EOR_X_IND&quot;,
-    69: &quot;EOR_ZPG&quot;,
-    70: &quot;LSR_ZPG&quot;,
-    72: &quot;PHA_IMPL&quot;,
-    73: &quot;EOR_IMM&quot;,
-    74: &quot;LSR_A&quot;,
-    76: &quot;JMP_ABS&quot;,
-    77: &quot;EOR_ABS&quot;,
-    78: &quot;LSR_ABS&quot;,
-    80: &quot;BVC_REL&quot;,
-    81: &quot;EOR_IND_Y&quot;,
-    85: &quot;EOR_ZPG_X&quot;,
-    86: &quot;LSR_ZPG_X&quot;,
-    88: &quot;CLI_IMPL&quot;,
-    89: &quot;EOR_ABS_Y&quot;,
-    93: &quot;EOR_ABS_X&quot;,
-    94: &quot;LSR_ABS_X&quot;,
-    96: &quot;RTS_IMPL&quot;,
-    97: &quot;ADC_X_IND&quot;,
-    101: &quot;ADC_ZPG&quot;,
-    102: &quot;ROR_ZPG&quot;,
-    104: &quot;PLA_IMPL&quot;,
-    105: &quot;ADC_IMM&quot;,
-    106: &quot;ROR_A&quot;,
-    108: &quot;JMP_IND&quot;,
-    109: &quot;ADC_ABS&quot;,
-    110: &quot;ROR_ABS&quot;,
-    112: &quot;BVS_REL&quot;,
-    113: &quot;ADC_IND_Y&quot;,
-    117: &quot;ADC_ZPG_X&quot;,
-    118: &quot;ROR_ZPG_X&quot;,
-    120: &quot;SEI_IMPL&quot;,
-    121: &quot;ADC_ABS_Y&quot;,
-    125: &quot;ADC_ABS_X&quot;,
-    126: &quot;ROR_ABS_X&quot;,
-    129: &quot;STA_X_IND&quot;,
-    132: &quot;STY_ZPG&quot;,
-    133: &quot;STA_ZPG&quot;,
-    134: &quot;STX_ZPG&quot;,
-    136: &quot;DEY_IMPL&quot;,
-    138: &quot;TXA_IMPL&quot;,
-    140: &quot;STY_ABS&quot;,
-    141: &quot;STA_ABS&quot;,
-    142: &quot;STX_ABS&quot;,
-    144: &quot;BCC_REL&quot;,
-    145: &quot;STA_IND_Y&quot;,
-    148: &quot;STY_ZPG_X&quot;,
-    149: &quot;STA_ZPG_X&quot;,
-    150: &quot;STX_ZPG_Y&quot;,
-    152: &quot;TYA_IMPL&quot;,
-    153: &quot;STA_ABS_Y&quot;,
-    154: &quot;TXS_IMPL&quot;,
-    157: &quot;STA_ABS_X&quot;,
-    160: &quot;LDY_IMM&quot;,
-    161: &quot;LDA_X_IND&quot;,
-    162: &quot;LDX_IMM&quot;,
-    164: &quot;LDY_ZPG&quot;,
-    165: &quot;LDA_ZPG&quot;,
-    166: &quot;LDX_ZPG&quot;,
-    168: &quot;TAY_IMPL&quot;,
-    169: &quot;LDA_IMM&quot;,
-    170: &quot;TAX_IMPL&quot;,
-    172: &quot;LDY_ABS&quot;,
-    173: &quot;LDA_ABS&quot;,
-    174: &quot;LDX_ABS&quot;,
-    176: &quot;BCS_REL&quot;,
-    177: &quot;LDA_IND_Y&quot;,
-    180: &quot;LDY_ZPG_X&quot;,
-    181: &quot;LDA_ZPG_X&quot;,
-    182: &quot;LDX_ZPG_Y&quot;,
-    184: &quot;CLV_IMPL&quot;,
-    185: &quot;LDA_ABS_Y&quot;,
-    186: &quot;TSX_IMPL&quot;,
-    188: &quot;LDY_ABS_X&quot;,
-    189: &quot;LDA_ABS_X&quot;,
-    190: &quot;LDX_ABS_Y&quot;,
-    192: &quot;CPY_IMM&quot;,
-    193: &quot;CMP_X_IND&quot;,
-    196: &quot;CPY_ZPG&quot;,
-    197: &quot;CMP_ZPG&quot;,
-    198: &quot;DEC_ZPG&quot;,
-    200: &quot;INY_IMPL&quot;,
-    201: &quot;CMP_IMM&quot;,
-    202: &quot;DEX_IMPL&quot;,
-    204: &quot;CPY_ABS&quot;,
-    205: &quot;CMP_ABS&quot;,
-    206: &quot;DEC_ABS&quot;,
-    208: &quot;BNE_REL&quot;,
-    209: &quot;CMP_IND_Y&quot;,
-    213: &quot;CMP_ZPG_X&quot;,
-    214: &quot;DEC_ZPG_X&quot;,
-    216: &quot;CLD_IMPL&quot;,
-    217: &quot;CMP_ABS_Y&quot;,
-    221: &quot;CMP_ABS_X&quot;,
-    222: &quot;DEC_ABS_X&quot;,
-    224: &quot;CPX_IMM&quot;,
-    225: &quot;SBC_X_IND&quot;,
-    228: &quot;CPX_ZPG&quot;,
-    229: &quot;SBC_ZPG&quot;,
-    230: &quot;INC_ZPG&quot;,
-    232: &quot;INX_IMPL&quot;,
-    233: &quot;SBC_IMM&quot;,
-    234: &quot;NOP_IMPL&quot;,
-    236: &quot;CPX_ABS&quot;,
-    237: &quot;SBC_ABS&quot;,
-    238: &quot;INC_ABS&quot;,
-    240: &quot;BEQ_REL&quot;,
-    241: &quot;SBC_IND_Y&quot;,
-    245: &quot;SBC_ZPG_X&quot;,
-    246: &quot;INC_ZPG_X&quot;,
-    248: &quot;SED_IMPL&quot;,
-    249: &quot;SBC_ABS_Y&quot;,
-    253: &quot;SBC_ABS_X&quot;,
-    254: &quot;INC_ABS_X&quot;,
-  });
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;BRK_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;ORA_X_IND&quot;</span><span class="p">,</span>
+    <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;ORA_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;ASL_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;PHP_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;ORA_IMM&quot;</span><span class="p">,</span>
+    <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;ASL_A&quot;</span><span class="p">,</span>
+    <span class="mi">13</span><span class="o">:</span> <span class="s2">&quot;ORA_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">14</span><span class="o">:</span> <span class="s2">&quot;ASL_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">16</span><span class="o">:</span> <span class="s2">&quot;BPL_REL&quot;</span><span class="p">,</span>
+    <span class="mi">17</span><span class="o">:</span> <span class="s2">&quot;ORA_IND_Y&quot;</span><span class="p">,</span>
+    <span class="mi">21</span><span class="o">:</span> <span class="s2">&quot;ORA_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">22</span><span class="o">:</span> <span class="s2">&quot;ASL_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">24</span><span class="o">:</span> <span class="s2">&quot;CLC_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">25</span><span class="o">:</span> <span class="s2">&quot;ORA_ABS_Y&quot;</span><span class="p">,</span>
+    <span class="mi">29</span><span class="o">:</span> <span class="s2">&quot;ORA_ABS_X&quot;</span><span class="p">,</span>
+    <span class="mi">30</span><span class="o">:</span> <span class="s2">&quot;ASL_ABS_X&quot;</span><span class="p">,</span>
+    <span class="mi">32</span><span class="o">:</span> <span class="s2">&quot;JSR_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">33</span><span class="o">:</span> <span class="s2">&quot;AND_X_IND&quot;</span><span class="p">,</span>
+    <span class="mi">36</span><span class="o">:</span> <span class="s2">&quot;BIT_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">37</span><span class="o">:</span> <span class="s2">&quot;AND_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">38</span><span class="o">:</span> <span class="s2">&quot;ROL_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">40</span><span class="o">:</span> <span class="s2">&quot;PLP_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">41</span><span class="o">:</span> <span class="s2">&quot;AND_IMM&quot;</span><span class="p">,</span>
+    <span class="mi">42</span><span class="o">:</span> <span class="s2">&quot;ROL_A&quot;</span><span class="p">,</span>
+    <span class="mi">44</span><span class="o">:</span> <span class="s2">&quot;BIT_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">45</span><span class="o">:</span> <span class="s2">&quot;AND_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">46</span><span class="o">:</span> <span class="s2">&quot;ROL_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">48</span><span class="o">:</span> <span class="s2">&quot;BMI_REL&quot;</span><span class="p">,</span>
+    <span class="mi">49</span><span class="o">:</span> <span class="s2">&quot;AND_IND_Y&quot;</span><span class="p">,</span>
+    <span class="mi">53</span><span class="o">:</span> <span class="s2">&quot;AND_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">54</span><span class="o">:</span> <span class="s2">&quot;ROL_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">56</span><span class="o">:</span> <span class="s2">&quot;SEC_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">57</span><span class="o">:</span> <span class="s2">&quot;AND_ABS_Y&quot;</span><span class="p">,</span>
+    <span class="mi">61</span><span class="o">:</span> <span class="s2">&quot;AND_ABS_X&quot;</span><span class="p">,</span>
+    <span class="mi">62</span><span class="o">:</span> <span class="s2">&quot;ROL_ABS_X&quot;</span><span class="p">,</span>
+    <span class="mi">64</span><span class="o">:</span> <span class="s2">&quot;RTI_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">65</span><span class="o">:</span> <span class="s2">&quot;EOR_X_IND&quot;</span><span class="p">,</span>
+    <span class="mi">69</span><span class="o">:</span> <span class="s2">&quot;EOR_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">70</span><span class="o">:</span> <span class="s2">&quot;LSR_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">72</span><span class="o">:</span> <span class="s2">&quot;PHA_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">73</span><span class="o">:</span> <span class="s2">&quot;EOR_IMM&quot;</span><span class="p">,</span>
+    <span class="mi">74</span><span class="o">:</span> <span class="s2">&quot;LSR_A&quot;</span><span class="p">,</span>
+    <span class="mi">76</span><span class="o">:</span> <span class="s2">&quot;JMP_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">77</span><span class="o">:</span> <span class="s2">&quot;EOR_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">78</span><span class="o">:</span> <span class="s2">&quot;LSR_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">80</span><span class="o">:</span> <span class="s2">&quot;BVC_REL&quot;</span><span class="p">,</span>
+    <span class="mi">81</span><span class="o">:</span> <span class="s2">&quot;EOR_IND_Y&quot;</span><span class="p">,</span>
+    <span class="mi">85</span><span class="o">:</span> <span class="s2">&quot;EOR_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">86</span><span class="o">:</span> <span class="s2">&quot;LSR_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">88</span><span class="o">:</span> <span class="s2">&quot;CLI_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">89</span><span class="o">:</span> <span class="s2">&quot;EOR_ABS_Y&quot;</span><span class="p">,</span>
+    <span class="mi">93</span><span class="o">:</span> <span class="s2">&quot;EOR_ABS_X&quot;</span><span class="p">,</span>
+    <span class="mi">94</span><span class="o">:</span> <span class="s2">&quot;LSR_ABS_X&quot;</span><span class="p">,</span>
+    <span class="mi">96</span><span class="o">:</span> <span class="s2">&quot;RTS_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">97</span><span class="o">:</span> <span class="s2">&quot;ADC_X_IND&quot;</span><span class="p">,</span>
+    <span class="mi">101</span><span class="o">:</span> <span class="s2">&quot;ADC_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">102</span><span class="o">:</span> <span class="s2">&quot;ROR_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">104</span><span class="o">:</span> <span class="s2">&quot;PLA_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">105</span><span class="o">:</span> <span class="s2">&quot;ADC_IMM&quot;</span><span class="p">,</span>
+    <span class="mi">106</span><span class="o">:</span> <span class="s2">&quot;ROR_A&quot;</span><span class="p">,</span>
+    <span class="mi">108</span><span class="o">:</span> <span class="s2">&quot;JMP_IND&quot;</span><span class="p">,</span>
+    <span class="mi">109</span><span class="o">:</span> <span class="s2">&quot;ADC_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">110</span><span class="o">:</span> <span class="s2">&quot;ROR_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">112</span><span class="o">:</span> <span class="s2">&quot;BVS_REL&quot;</span><span class="p">,</span>
+    <span class="mi">113</span><span class="o">:</span> <span class="s2">&quot;ADC_IND_Y&quot;</span><span class="p">,</span>
+    <span class="mi">117</span><span class="o">:</span> <span class="s2">&quot;ADC_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">118</span><span class="o">:</span> <span class="s2">&quot;ROR_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">120</span><span class="o">:</span> <span class="s2">&quot;SEI_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">121</span><span class="o">:</span> <span class="s2">&quot;ADC_ABS_Y&quot;</span><span class="p">,</span>
+    <span class="mi">125</span><span class="o">:</span> <span class="s2">&quot;ADC_ABS_X&quot;</span><span class="p">,</span>
+    <span class="mi">126</span><span class="o">:</span> <span class="s2">&quot;ROR_ABS_X&quot;</span><span class="p">,</span>
+    <span class="mi">129</span><span class="o">:</span> <span class="s2">&quot;STA_X_IND&quot;</span><span class="p">,</span>
+    <span class="mi">132</span><span class="o">:</span> <span class="s2">&quot;STY_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">133</span><span class="o">:</span> <span class="s2">&quot;STA_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">134</span><span class="o">:</span> <span class="s2">&quot;STX_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">136</span><span class="o">:</span> <span class="s2">&quot;DEY_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">138</span><span class="o">:</span> <span class="s2">&quot;TXA_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">140</span><span class="o">:</span> <span class="s2">&quot;STY_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">141</span><span class="o">:</span> <span class="s2">&quot;STA_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">142</span><span class="o">:</span> <span class="s2">&quot;STX_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">144</span><span class="o">:</span> <span class="s2">&quot;BCC_REL&quot;</span><span class="p">,</span>
+    <span class="mi">145</span><span class="o">:</span> <span class="s2">&quot;STA_IND_Y&quot;</span><span class="p">,</span>
+    <span class="mi">148</span><span class="o">:</span> <span class="s2">&quot;STY_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">149</span><span class="o">:</span> <span class="s2">&quot;STA_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">150</span><span class="o">:</span> <span class="s2">&quot;STX_ZPG_Y&quot;</span><span class="p">,</span>
+    <span class="mi">152</span><span class="o">:</span> <span class="s2">&quot;TYA_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">153</span><span class="o">:</span> <span class="s2">&quot;STA_ABS_Y&quot;</span><span class="p">,</span>
+    <span class="mi">154</span><span class="o">:</span> <span class="s2">&quot;TXS_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">157</span><span class="o">:</span> <span class="s2">&quot;STA_ABS_X&quot;</span><span class="p">,</span>
+    <span class="mi">160</span><span class="o">:</span> <span class="s2">&quot;LDY_IMM&quot;</span><span class="p">,</span>
+    <span class="mi">161</span><span class="o">:</span> <span class="s2">&quot;LDA_X_IND&quot;</span><span class="p">,</span>
+    <span class="mi">162</span><span class="o">:</span> <span class="s2">&quot;LDX_IMM&quot;</span><span class="p">,</span>
+    <span class="mi">164</span><span class="o">:</span> <span class="s2">&quot;LDY_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">165</span><span class="o">:</span> <span class="s2">&quot;LDA_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">166</span><span class="o">:</span> <span class="s2">&quot;LDX_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">168</span><span class="o">:</span> <span class="s2">&quot;TAY_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">169</span><span class="o">:</span> <span class="s2">&quot;LDA_IMM&quot;</span><span class="p">,</span>
+    <span class="mi">170</span><span class="o">:</span> <span class="s2">&quot;TAX_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">172</span><span class="o">:</span> <span class="s2">&quot;LDY_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">173</span><span class="o">:</span> <span class="s2">&quot;LDA_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">174</span><span class="o">:</span> <span class="s2">&quot;LDX_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">176</span><span class="o">:</span> <span class="s2">&quot;BCS_REL&quot;</span><span class="p">,</span>
+    <span class="mi">177</span><span class="o">:</span> <span class="s2">&quot;LDA_IND_Y&quot;</span><span class="p">,</span>
+    <span class="mi">180</span><span class="o">:</span> <span class="s2">&quot;LDY_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">181</span><span class="o">:</span> <span class="s2">&quot;LDA_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">182</span><span class="o">:</span> <span class="s2">&quot;LDX_ZPG_Y&quot;</span><span class="p">,</span>
+    <span class="mi">184</span><span class="o">:</span> <span class="s2">&quot;CLV_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">185</span><span class="o">:</span> <span class="s2">&quot;LDA_ABS_Y&quot;</span><span class="p">,</span>
+    <span class="mi">186</span><span class="o">:</span> <span class="s2">&quot;TSX_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">188</span><span class="o">:</span> <span class="s2">&quot;LDY_ABS_X&quot;</span><span class="p">,</span>
+    <span class="mi">189</span><span class="o">:</span> <span class="s2">&quot;LDA_ABS_X&quot;</span><span class="p">,</span>
+    <span class="mi">190</span><span class="o">:</span> <span class="s2">&quot;LDX_ABS_Y&quot;</span><span class="p">,</span>
+    <span class="mi">192</span><span class="o">:</span> <span class="s2">&quot;CPY_IMM&quot;</span><span class="p">,</span>
+    <span class="mi">193</span><span class="o">:</span> <span class="s2">&quot;CMP_X_IND&quot;</span><span class="p">,</span>
+    <span class="mi">196</span><span class="o">:</span> <span class="s2">&quot;CPY_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">197</span><span class="o">:</span> <span class="s2">&quot;CMP_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">198</span><span class="o">:</span> <span class="s2">&quot;DEC_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">200</span><span class="o">:</span> <span class="s2">&quot;INY_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">201</span><span class="o">:</span> <span class="s2">&quot;CMP_IMM&quot;</span><span class="p">,</span>
+    <span class="mi">202</span><span class="o">:</span> <span class="s2">&quot;DEX_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">204</span><span class="o">:</span> <span class="s2">&quot;CPY_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">205</span><span class="o">:</span> <span class="s2">&quot;CMP_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">206</span><span class="o">:</span> <span class="s2">&quot;DEC_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">208</span><span class="o">:</span> <span class="s2">&quot;BNE_REL&quot;</span><span class="p">,</span>
+    <span class="mi">209</span><span class="o">:</span> <span class="s2">&quot;CMP_IND_Y&quot;</span><span class="p">,</span>
+    <span class="mi">213</span><span class="o">:</span> <span class="s2">&quot;CMP_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">214</span><span class="o">:</span> <span class="s2">&quot;DEC_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">216</span><span class="o">:</span> <span class="s2">&quot;CLD_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">217</span><span class="o">:</span> <span class="s2">&quot;CMP_ABS_Y&quot;</span><span class="p">,</span>
+    <span class="mi">221</span><span class="o">:</span> <span class="s2">&quot;CMP_ABS_X&quot;</span><span class="p">,</span>
+    <span class="mi">222</span><span class="o">:</span> <span class="s2">&quot;DEC_ABS_X&quot;</span><span class="p">,</span>
+    <span class="mi">224</span><span class="o">:</span> <span class="s2">&quot;CPX_IMM&quot;</span><span class="p">,</span>
+    <span class="mi">225</span><span class="o">:</span> <span class="s2">&quot;SBC_X_IND&quot;</span><span class="p">,</span>
+    <span class="mi">228</span><span class="o">:</span> <span class="s2">&quot;CPX_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">229</span><span class="o">:</span> <span class="s2">&quot;SBC_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">230</span><span class="o">:</span> <span class="s2">&quot;INC_ZPG&quot;</span><span class="p">,</span>
+    <span class="mi">232</span><span class="o">:</span> <span class="s2">&quot;INX_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">233</span><span class="o">:</span> <span class="s2">&quot;SBC_IMM&quot;</span><span class="p">,</span>
+    <span class="mi">234</span><span class="o">:</span> <span class="s2">&quot;NOP_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">236</span><span class="o">:</span> <span class="s2">&quot;CPX_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">237</span><span class="o">:</span> <span class="s2">&quot;SBC_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">238</span><span class="o">:</span> <span class="s2">&quot;INC_ABS&quot;</span><span class="p">,</span>
+    <span class="mi">240</span><span class="o">:</span> <span class="s2">&quot;BEQ_REL&quot;</span><span class="p">,</span>
+    <span class="mi">241</span><span class="o">:</span> <span class="s2">&quot;SBC_IND_Y&quot;</span><span class="p">,</span>
+    <span class="mi">245</span><span class="o">:</span> <span class="s2">&quot;SBC_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">246</span><span class="o">:</span> <span class="s2">&quot;INC_ZPG_X&quot;</span><span class="p">,</span>
+    <span class="mi">248</span><span class="o">:</span> <span class="s2">&quot;SED_IMPL&quot;</span><span class="p">,</span>
+    <span class="mi">249</span><span class="o">:</span> <span class="s2">&quot;SBC_ABS_Y&quot;</span><span class="p">,</span>
+    <span class="mi">253</span><span class="o">:</span> <span class="s2">&quot;SBC_ABS_X&quot;</span><span class="p">,</span>
+    <span class="mi">254</span><span class="o">:</span> <span class="s2">&quot;INC_ABS_X&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
 
-  function Code6502(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
+  <span class="kd">function</span> <span class="nx">Code6502</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-    this._read();
-  }
-  Code6502.prototype._read = function() {
-    this.operations = [];
-    var i = 0;
-    while (!this._io.isEof()) {
-      this.operations.push(new Operation(this._io, this, this._root));
-      i++;
-    }
-  }
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">Code6502</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">operations</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">operations</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Operation</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+      <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
 
-  var Operation = Code6502.Operation = (function() {
-    function Operation(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Operation</span> <span class="o">=</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Operation</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Operation</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Operation.prototype._read = function() {
-      this.code = this._io.readU1();
-      switch (this.code) {
-      case Code6502.Opcode.LSR_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.AND_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.BIT_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ASL_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ROR_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.STY_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.ORA_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.EOR_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.EOR_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.EOR_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ORA_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.ADC_ABS_Y:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.STY_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.EOR_IND_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ROL_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.EOR_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.BMI_REL:
-        this.args = this._io.readS1();
-        break;
-      case Code6502.Opcode.INC_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.CPY_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.JSR_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.AND_ABS_Y:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.CMP_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.SBC_IND_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.AND_X_IND:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.BVC_REL:
-        this.args = this._io.readS1();
-        break;
-      case Code6502.Opcode.ORA_X_IND:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ORA_ABS_Y:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LSR_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LDX_ZPG_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ROL_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.ADC_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.STY_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ORA_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LDY_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.ADC_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.SBC_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LDX_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.BEQ_REL:
-        this.args = this._io.readS1();
-        break;
-      case Code6502.Opcode.SBC_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LDX_ABS_Y:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.ORA_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.BCS_REL:
-        this.args = this._io.readS1();
-        break;
-      case Code6502.Opcode.SBC_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.STA_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.BCC_REL:
-        this.args = this._io.readS1();
-        break;
-      case Code6502.Opcode.AND_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LDY_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ADC_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.BNE_REL:
-        this.args = this._io.readS1();
-        break;
-      case Code6502.Opcode.EOR_ABS_Y:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.CPY_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.STX_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LDY_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LDA_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.CMP_ABS_Y:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LSR_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.EOR_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.CMP_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.INC_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.STA_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.STA_X_IND:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.CMP_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.EOR_X_IND:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.CMP_IND_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.CMP_X_IND:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ASL_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.DEC_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.SBC_ABS_Y:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.STX_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LDA_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.AND_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.SBC_X_IND:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LDA_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.JMP_IND:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.STA_ABS_Y:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.ASL_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.CMP_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LDX_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.ADC_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ROR_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.AND_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.STA_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.ADC_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.BIT_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.DEC_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.STX_ZPG_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LDA_ABS_Y:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LDA_X_IND:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.CPY_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ORA_IND_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ASL_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.AND_IND_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.STA_IND_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ROR_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LDX_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.AND_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.CPX_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.BVS_REL:
-        this.args = this._io.readS1();
-        break;
-      case Code6502.Opcode.LDY_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.INC_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.SBC_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.ROL_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.SBC_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ADC_X_IND:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.STA_ABS_X:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.CPX_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.CMP_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.LDA_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.ROL_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.INC_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LDA_IMM:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.DEC_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.ADC_IND_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LDA_IND_Y:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.BPL_REL:
-        this.args = this._io.readS1();
-        break;
-      case Code6502.Opcode.LSR_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.JMP_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.DEC_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.ORA_ABS:
-        this.args = this._io.readU2le();
-        break;
-      case Code6502.Opcode.ROR_ZPG:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.LDY_ZPG_X:
-        this.args = this._io.readU1();
-        break;
-      case Code6502.Opcode.CPX_ZPG:
-        this.args = this._io.readU1();
-        break;
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Operation</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">code</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LSR_ABS_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">AND_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BIT_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ASL_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ROR_ABS_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STY_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ORA_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">EOR_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">EOR_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">EOR_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ORA_ABS_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ADC_ABS_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STY_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">EOR_IND_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ROL_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">EOR_IMM</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BMI_REL</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">INC_ABS_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">CPY_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">JSR_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">AND_ABS_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">CMP_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">SBC_IND_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">AND_X_IND</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BVC_REL</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ORA_X_IND</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ORA_ABS_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LSR_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDX_ZPG_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ROL_ABS_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ADC_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STY_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ORA_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDY_ABS_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ADC_IMM</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">SBC_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDX_IMM</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BEQ_REL</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">SBC_ABS_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDX_ABS_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ORA_IMM</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BCS_REL</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">SBC_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STA_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BCC_REL</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">AND_IMM</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDY_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ADC_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BNE_REL</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">EOR_ABS_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">CPY_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STX_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDY_IMM</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDA_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">CMP_ABS_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LSR_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">EOR_ABS_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">CMP_ABS_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">INC_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STA_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STA_X_IND</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">CMP_IMM</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">EOR_X_IND</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">CMP_IND_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">CMP_X_IND</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ASL_ABS_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">DEC_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">SBC_ABS_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STX_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDA_ABS_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">AND_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">SBC_X_IND</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDA_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">JMP_IND</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STA_ABS_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ASL_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">CMP_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDX_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ADC_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ROR_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">AND_ABS_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STA_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ADC_ABS_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BIT_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">DEC_ABS_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STX_ZPG_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDA_ABS_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDA_X_IND</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">CPY_IMM</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ORA_IND_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ASL_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">AND_IND_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STA_IND_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ROR_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDX_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">AND_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">CPX_IMM</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BVS_REL</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDY_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">INC_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">SBC_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ROL_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">SBC_IMM</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ADC_X_IND</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STA_ABS_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">CPX_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">CMP_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDA_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ROL_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">INC_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDA_IMM</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">DEC_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ADC_IND_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDA_IND_Y</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BPL_REL</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LSR_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">JMP_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">DEC_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ORA_ABS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ROR_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LDY_ZPG_X</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Code6502</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">CPX_ZPG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">args</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return Operation;
-  })();
+    <span class="k">return</span> <span class="nx">Operation</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  return Code6502;
-})();
-return Code6502;
-}));
-</code></pre>
+  <span class="k">return</span> <span class="nx">Code6502</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">Code6502</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -992,8 +989,8 @@ return Code6502;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

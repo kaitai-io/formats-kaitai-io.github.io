@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -209,273 +206,272 @@ section#format-index .row {
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: rtcp_payload
-  title: rtcp network payload (single udp packet)
-  license: CC0-1.0
-  ks-version: 0.7
-  endian: be
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rtcp_payload</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rtcp network payload (single udp packet)</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.7</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
 
-doc: RTCP is the Real-Time Control Protocol
+<span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RTCP is the Real-Time Control Protocol</span>
 
-doc-ref: https://tools.ietf.org/html/rfc3550
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://tools.ietf.org/html/rfc3550</span>
 
-seq:
-  - id: rtcp_packets
-    type: rtcp_packet
-    repeat: eos
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rtcp_packets</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rtcp_packet</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
 
-types:
-  rtcp_packet:
-    seq:
-      - id: version
-        type: b2
-      - id: padding
-        type: b1
-      - id: subtype
-        type: b5
-      - id: payload_type
-        type: u1
-        enum: payload_type
-      - id: length
-        type: u2
-      - id: body
-        size: 4 * length
-        type:
-          switch-on: payload_type
-          cases:
-            &#39;payload_type::sr&#39;: sr_packet
-            &#39;payload_type::rr&#39;: rr_packet
-            &#39;payload_type::sdes&#39;: sdes_packet
-            &#39;payload_type::psfb&#39;: psfb_packet
-            &#39;payload_type::rtpfb&#39;: rtpfb_packet
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">rtcp_packet</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">padding</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">subtype</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b5</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload_type</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4 * length</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload_type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;payload_type::sr&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sr_packet</span>
+            <span class="s">&#39;payload_type::rr&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">rr_packet</span>
+            <span class="s">&#39;payload_type::sdes&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sdes_packet</span>
+            <span class="s">&#39;payload_type::psfb&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">psfb_packet</span>
+            <span class="s">&#39;payload_type::rtpfb&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">rtpfb_packet</span>
 
-  sr_packet:
-    seq:
-      - id: ssrc
-        type: u4
-      - id: ntp_msw
-        type: u4
-      - id: ntp_lsw
-        type: u4
-      - id: rtp_timestamp
-        type: u4
-      - id: sender_packet_count
-        type: u4
-      - id: sender_octet_count
-        type: u4
-      - id: report_block
-        type: report_block
-        repeat: expr
-        repeat-expr: _parent.subtype
-    instances:
-      ntp:
-        value: (ntp_msw &lt;&lt; 32) &amp; ntp_lsw
+  <span class="nt">sr_packet</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssrc</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ntp_msw</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ntp_lsw</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rtp_timestamp</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sender_packet_count</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sender_octet_count</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">report_block</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">report_block</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.subtype</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">ntp</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(ntp_msw &lt;&lt; 32) &amp; ntp_lsw</span>
 
-  rr_packet:
-    seq:
-      - id: ssrc
-        type: u4
-      - id: report_block
-        type: report_block
-        repeat: expr
-        repeat-expr: _parent.subtype
+  <span class="nt">rr_packet</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssrc</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">report_block</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">report_block</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.subtype</span>
 
-  report_block:
-    seq:
-      - id: ssrc_source
-        type: u4
-      - id: lost_val
-        type: u1
-      - id: highest_seq_num_received
-        type: u4
-      - id: interarrival_jitter
-        type: u4
-      - id: lsr
-        type: u4
-      - id: dlsr
-        type: u4
-    instances:
-      fraction_lost:
-        value: lost_val &gt;&gt; 24
-      cumulative_packets_lost:
-        value: lost_val &amp; 0x00ffffff
+  <span class="nt">report_block</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssrc_source</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lost_val</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">highest_seq_num_received</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">interarrival_jitter</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lsr</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dlsr</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">fraction_lost</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lost_val &gt;&gt; 24</span>
+      <span class="nt">cumulative_packets_lost</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lost_val &amp; 0x00ffffff</span>
 
-  sdes_packet:
-    seq:
-      - id: source_chunk
-        type: source_chunk
-        repeat: expr
-        repeat-expr: source_count
-    instances:
-      source_count:
-        value: _parent.subtype
+  <span class="nt">sdes_packet</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">source_chunk</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">source_chunk</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">source_count</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">source_count</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.subtype</span>
 
-  source_chunk:
-    seq:
-      - id: ssrc
-        type: u4
-      - id: sdes_tlv
-        type: sdes_tlv
-        repeat: eos
+  <span class="nt">source_chunk</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssrc</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sdes_tlv</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sdes_tlv</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
 
-  sdes_tlv:
-    seq:
-      - id: type
-        type: u1
-        enum: sdes_subtype
-      - id: length
-        type: u1
-        if: type != sdes_subtype::pad
-      - id: value
-        size: length
-        if: type != sdes_subtype::pad
+  <span class="nt">sdes_tlv</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sdes_subtype</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type != sdes_subtype::pad</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type != sdes_subtype::pad</span>
 
-  rtpfb_packet:
-    seq:
-      - id: ssrc
-        type: u4
-      - id: ssrc_media_source
-        type: u4
-      - id: fci_block
-        type:
-          switch-on: fmt
-          cases:
-            &#39;rtpfb_subtype::transport_feedback&#39;: rtpfb_transport_feedback_packet
-        size-eos: true
-    instances:
-      fmt:
-        enum: rtpfb_subtype
-        value: _parent.subtype
+  <span class="nt">rtpfb_packet</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssrc</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssrc_media_source</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fci_block</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fmt</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;rtpfb_subtype::transport_feedback&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">rtpfb_transport_feedback_packet</span>
+        <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">fmt</span><span class="p">:</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rtpfb_subtype</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.subtype</span>
 
-  rtpfb_transport_feedback_packet:
-    seq:
-      - id: base_sequence_number
-        type: u2
-      - id: packet_status_count
-        type: u2
-      - id: b4
-        type: u4
-      - id: remaining
-        size-eos: true
-    instances:
-      reference_time:
-        value: b4 &gt;&gt; 8
-      fb_pkt_count:
-        value: b4 &amp; 0xff
-      packet_status:
-        size: 0
-      recv_delta:
-        size: 0
+  <span class="nt">rtpfb_transport_feedback_packet</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">base_sequence_number</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">packet_status_count</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">remaining</span>
+        <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">reference_time</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4 &gt;&gt; 8</span>
+      <span class="nt">fb_pkt_count</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4 &amp; 0xff</span>
+      <span class="nt">packet_status</span><span class="p">:</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+      <span class="nt">recv_delta</span><span class="p">:</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
 
-  packet_status_chunk:
-    seq:
-      - id: t
-        type: b1
-      - id: s2
-        type: b2
-        if: t.to_i == 0
-      - id: s1
-        type: b1
-        if: t.to_i == 1
-      - id: rle
-        type: b13
-        if: t.to_i == 0
-      - id: symbol_list
-        type: b14
-        if: t.to_i == 1
-    instances:
-      s:
-        value: &#39;(t.to_i == 0) ? s2 : (s1.to_i == 0 ? 1 : 0)&#39;
+  <span class="nt">packet_status_chunk</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b2</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t.to_i == 0</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t.to_i == 1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rle</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b13</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t.to_i == 0</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">symbol_list</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b14</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">t.to_i == 1</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">s</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(t.to_i</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">0)</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">s2</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">(s1.to_i</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">0)&#39;</span>
 
-  psfb_packet:
-    seq:
-      - id: ssrc
-        type: u4
-      - id: ssrc_media_source
-        type: u4
-      - id: fci_block
-        type:
-          switch-on: fmt
-          cases:
-            &#39;psfb_subtype::afb&#39;: psfb_afb_packet
-        size-eos: true
-    instances:
-      fmt:
-        enum: psfb_subtype
-        value: _parent.subtype
+  <span class="nt">psfb_packet</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssrc</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssrc_media_source</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fci_block</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fmt</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;psfb_subtype::afb&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">psfb_afb_packet</span>
+        <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">fmt</span><span class="p">:</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">psfb_subtype</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.subtype</span>
 
-  psfb_afb_packet:
-    seq:
-      - id: uid
-        type: u4
-      - id: contents
-        type:
-          switch-on: uid
-          cases:
-            0x52454d42: psfb_afb_remb_packet
-        size-eos: true
+  <span class="nt">psfb_afb_packet</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uid</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">contents</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uid</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="nt">0x52454d42</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">psfb_afb_remb_packet</span>
+        <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
 
-  psfb_afb_remb_packet:
-    seq:
-      - id: num_ssrc
-        type: u1
-      - id: br_exp
-        type: b6
-      - id: br_mantissa
-        type: b18
-      - id: ssrc_list
-        type: u4
-        repeat: expr
-        repeat-expr: num_ssrc
-    instances:
-      max_total_bitrate:
-        value: br_mantissa * (1&lt;&lt;br_exp)
+  <span class="nt">psfb_afb_remb_packet</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_ssrc</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">br_exp</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b6</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">br_mantissa</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b18</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ssrc_list</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_ssrc</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">max_total_bitrate</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">br_mantissa * (1&lt;&lt;br_exp)</span>
 
 
 
-enums:
-  payload_type:
-    192: fir
-    193: nack
-    195: ij
-    200: sr
-    201: rr
-    202: sdes
-    203: bye
-    204: app
-    205: rtpfb
-    206: psfb
-    207: xr
-    208: avb
-    209: rsi
-  sdes_subtype:
-    0: pad
-    1: cname
-    2: name
-    3: email
-    4: phone
-    5: loc
-    6: tool
-    7: note
-    8: priv
-  psfb_subtype:
-    1: pli
-    2: sli
-    3: rpsi
-    4: fir
-    5: tstr
-    6: tstn
-    7: vbcm
-    15: afb
-  rtpfb_subtype:
-    1: nack
-    3: tmmbr
-    4: tmmbn
-    5: rrr
-    15: transport_feedback
-
-</code></pre>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">payload_type</span><span class="p">:</span>
+    <span class="nt">192</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fir</span>
+    <span class="nt">193</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nack</span>
+    <span class="nt">195</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ij</span>
+    <span class="nt">200</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sr</span>
+    <span class="nt">201</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rr</span>
+    <span class="nt">202</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sdes</span>
+    <span class="nt">203</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bye</span>
+    <span class="nt">204</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">app</span>
+    <span class="nt">205</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rtpfb</span>
+    <span class="nt">206</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">psfb</span>
+    <span class="nt">207</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xr</span>
+    <span class="nt">208</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">avb</span>
+    <span class="nt">209</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rsi</span>
+  <span class="nt">sdes_subtype</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pad</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cname</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">email</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">phone</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">loc</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tool</span>
+    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">note</span>
+    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">priv</span>
+  <span class="nt">psfb_subtype</span><span class="p">:</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pli</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sli</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rpsi</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fir</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tstr</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tstn</span>
+    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vbcm</span>
+    <span class="nt">15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">afb</span>
+  <span class="nt">rtpfb_subtype</span><span class="p">:</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nack</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tmmbr</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tmmbn</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rrr</span>
+    <span class="nt">15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">transport_feedback</span>
+</pre></div>
     </div>
 </section>
 
@@ -499,8 +495,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

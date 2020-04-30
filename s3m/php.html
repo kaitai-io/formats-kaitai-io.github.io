@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -260,502 +257,502 @@ for repetitive musical phrases.</li>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * Scream Tracker 3 module is a tracker music file format that, as all
- * tracker music, bundles both sound samples and instructions on which
- * notes to play. It originates from a Scream Tracker 3 music editor
- * (1994) by Future Crew, derived from original Scream Tracker 2 (.stm)
- * module format.
- * 
- * Instrument descriptions in S3M format allow to use either digital
- * samples or setup and control AdLib (OPL2) synth.
- * 
- * Music is organized in so called `patterns`. &quot;Pattern&quot; is a generally
- * a 64-row long table, which instructs which notes to play on which
- * time measure. &quot;Patterns&quot; are played one-by-one in a sequence
- * determined by `orders`, which is essentially an array of pattern IDs
- * - this way it&#39;s possible to reuse certain patterns more than once
- * for repetitive musical phrases.
- */
+<span class="sd">/**</span>
+<span class="sd"> * Scream Tracker 3 module is a tracker music file format that, as all</span>
+<span class="sd"> * tracker music, bundles both sound samples and instructions on which</span>
+<span class="sd"> * notes to play. It originates from a Scream Tracker 3 music editor</span>
+<span class="sd"> * (1994) by Future Crew, derived from original Scream Tracker 2 (.stm)</span>
+<span class="sd"> * module format.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Instrument descriptions in S3M format allow to use either digital</span>
+<span class="sd"> * samples or setup and control AdLib (OPL2) synth.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Music is organized in so called `patterns`. &quot;Pattern&quot; is a generally</span>
+<span class="sd"> * a 64-row long table, which instructs which notes to play on which</span>
+<span class="sd"> * time measure. &quot;Patterns&quot; are played one-by-one in a sequence</span>
+<span class="sd"> * determined by `orders`, which is essentially an array of pattern IDs</span>
+<span class="sd"> * - this way it&#39;s possible to reuse certain patterns more than once</span>
+<span class="sd"> * for repetitive musical phrases.</span>
+<span class="sd"> */</span>
 
-class S3m extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \S3m $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">S3m</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_songName = \Kaitai\Struct\Stream::bytesTerminate($this-&gt;_io-&gt;readBytes(28), 0, false);
-        $this-&gt;_m_magic1 = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x1A&quot;);
-        $this-&gt;_m_fileType = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_reserved1 = $this-&gt;_io-&gt;readBytes(2);
-        $this-&gt;_m_numOrders = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_numInstruments = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_numPatterns = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_flags = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_version = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_samplesFormat = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_magic2 = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x53\x43\x52\x4D&quot;);
-        $this-&gt;_m_globalVolume = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_initialSpeed = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_initialTempo = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_isStereo = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_masterVolume = $this-&gt;_io-&gt;readBitsInt(7);
-        $this-&gt;_io-&gt;alignToByte();
-        $this-&gt;_m_ultraClickRemoval = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_hasCustomPan = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_reserved2 = $this-&gt;_io-&gt;readBytes(8);
-        $this-&gt;_m_ofsSpecial = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_channels = [];
-        $n = 32;
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_channels[] = new \S3m\Channel($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        $this-&gt;_m_orders = $this-&gt;_io-&gt;readBytes($this-&gt;numOrders());
-        $this-&gt;_m_instruments = [];
-        $n = $this-&gt;numInstruments();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_instruments[] = new \S3m\InstrumentPtr($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        $this-&gt;_m_patterns = [];
-        $n = $this-&gt;numPatterns();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_patterns[] = new \S3m\PatternPtr($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        if ($this-&gt;hasCustomPan() == 252) {
-            $this-&gt;_m_channelPans = [];
-            $n = 32;
-            for ($i = 0; $i &lt; $n; $i++) {
-                $this-&gt;_m_channelPans[] = new \S3m\ChannelPan($this-&gt;_io, $this, $this-&gt;_root);
-            }
-        }
-    }
-    protected $_m_songName;
-    protected $_m_magic1;
-    protected $_m_fileType;
-    protected $_m_reserved1;
-    protected $_m_numOrders;
-    protected $_m_numInstruments;
-    protected $_m_numPatterns;
-    protected $_m_flags;
-    protected $_m_version;
-    protected $_m_samplesFormat;
-    protected $_m_magic2;
-    protected $_m_globalVolume;
-    protected $_m_initialSpeed;
-    protected $_m_initialTempo;
-    protected $_m_isStereo;
-    protected $_m_masterVolume;
-    protected $_m_ultraClickRemoval;
-    protected $_m_hasCustomPan;
-    protected $_m_reserved2;
-    protected $_m_ofsSpecial;
-    protected $_m_channels;
-    protected $_m_orders;
-    protected $_m_instruments;
-    protected $_m_patterns;
-    protected $_m_channelPans;
-    public function songName() { return $this-&gt;_m_songName; }
-    public function magic1() { return $this-&gt;_m_magic1; }
-    public function fileType() { return $this-&gt;_m_fileType; }
-    public function reserved1() { return $this-&gt;_m_reserved1; }
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_songName</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesTerminate</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">28</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x1A</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numOrders</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numInstruments</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numPatterns</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_samplesFormat</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic2</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x53\x43\x52\x4D</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_globalVolume</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_initialSpeed</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_initialTempo</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isStereo</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_masterVolume</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">alignToByte</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ultraClickRemoval</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasCustomPan</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved2</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsSpecial</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_channels</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_channels</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\S3m\Channel</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_orders</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numOrders</span><span class="p">());</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_instruments</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numInstruments</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_instruments</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\S3m\InstrumentPtr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_patterns</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numPatterns</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_patterns</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\S3m\PatternPtr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasCustomPan</span><span class="p">()</span> <span class="o">==</span> <span class="mi">252</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_channelPans</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$n</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_channelPans</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\S3m\ChannelPan</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_songName</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_magic1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_fileType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_reserved1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numOrders</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numInstruments</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numPatterns</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_flags</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_version</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_samplesFormat</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_magic2</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_globalVolume</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_initialSpeed</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_initialTempo</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_isStereo</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_masterVolume</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_ultraClickRemoval</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasCustomPan</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_reserved2</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_ofsSpecial</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_channels</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_orders</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_instruments</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_patterns</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_channelPans</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">songName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_songName</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">magic1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fileType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of orders in a song
-     */
-    public function numOrders() { return $this-&gt;_m_numOrders; }
+    <span class="sd">/**</span>
+<span class="sd">     * Number of orders in a song</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numOrders</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numOrders</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of instruments in a song
-     */
-    public function numInstruments() { return $this-&gt;_m_numInstruments; }
+    <span class="sd">/**</span>
+<span class="sd">     * Number of instruments in a song</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numInstruments</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numInstruments</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of patterns in a song
-     */
-    public function numPatterns() { return $this-&gt;_m_numPatterns; }
-    public function flags() { return $this-&gt;_m_flags; }
+    <span class="sd">/**</span>
+<span class="sd">     * Number of patterns in a song</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numPatterns</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numPatterns</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Scream Tracker version that was used to save this file
-     */
-    public function version() { return $this-&gt;_m_version; }
+    <span class="sd">/**</span>
+<span class="sd">     * Scream Tracker version that was used to save this file</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * 1 = signed samples, 2 = unsigned samples
-     */
-    public function samplesFormat() { return $this-&gt;_m_samplesFormat; }
-    public function magic2() { return $this-&gt;_m_magic2; }
-    public function globalVolume() { return $this-&gt;_m_globalVolume; }
-    public function initialSpeed() { return $this-&gt;_m_initialSpeed; }
-    public function initialTempo() { return $this-&gt;_m_initialTempo; }
-    public function isStereo() { return $this-&gt;_m_isStereo; }
-    public function masterVolume() { return $this-&gt;_m_masterVolume; }
-    public function ultraClickRemoval() { return $this-&gt;_m_ultraClickRemoval; }
-    public function hasCustomPan() { return $this-&gt;_m_hasCustomPan; }
-    public function reserved2() { return $this-&gt;_m_reserved2; }
+    <span class="sd">/**</span>
+<span class="sd">     * 1 = signed samples, 2 = unsigned samples</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">samplesFormat</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_samplesFormat</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">magic2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic2</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">globalVolume</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_globalVolume</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">initialSpeed</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_initialSpeed</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">initialTempo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_initialTempo</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isStereo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isStereo</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">masterVolume</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_masterVolume</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">ultraClickRemoval</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ultraClickRemoval</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasCustomPan</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasCustomPan</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved2</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Offset of special data, not used by Scream Tracker directly.
-     */
-    public function ofsSpecial() { return $this-&gt;_m_ofsSpecial; }
-    public function channels() { return $this-&gt;_m_channels; }
-    public function orders() { return $this-&gt;_m_orders; }
-    public function instruments() { return $this-&gt;_m_instruments; }
-    public function patterns() { return $this-&gt;_m_patterns; }
-    public function channelPans() { return $this-&gt;_m_channelPans; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * Offset of special data, not used by Scream Tracker directly.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsSpecial</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsSpecial</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">channels</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_channels</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">orders</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_orders</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">instruments</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_instruments</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">patterns</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_patterns</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">channelPans</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_channelPans</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \S3m;
+<span class="k">namespace</span> <span class="nx">\S3m</span><span class="p">;</span>
 
-class ChannelPan extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \S3m $_parent = null, \S3m $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ChannelPan</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_reserved1 = $this-&gt;_io-&gt;readBitsInt(2);
-        $this-&gt;_m_hasCustomPan = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_reserved2 = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_pan = $this-&gt;_io-&gt;readBitsInt(4);
-    }
-    protected $_m_reserved1;
-    protected $_m_hasCustomPan;
-    protected $_m_reserved2;
-    protected $_m_pan;
-    public function reserved1() { return $this-&gt;_m_reserved1; }
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasCustomPan</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved2</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pan</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_reserved1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasCustomPan</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_reserved2</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_pan</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * If true, then use a custom pan setting provided in the `pan`
-     * field. If false, the channel would use the default setting
-     * (0x7 for mono, 0x3 or 0xc for stereo).
-     */
-    public function hasCustomPan() { return $this-&gt;_m_hasCustomPan; }
-    public function reserved2() { return $this-&gt;_m_reserved2; }
-    public function pan() { return $this-&gt;_m_pan; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * If true, then use a custom pan setting provided in the `pan`</span>
+<span class="sd">     * field. If false, the channel would use the default setting</span>
+<span class="sd">     * (0x7 for mono, 0x3 or 0xc for stereo).</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasCustomPan</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasCustomPan</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved2</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">pan</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pan</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \S3m;
+<span class="k">namespace</span> <span class="nx">\S3m</span><span class="p">;</span>
 
-class PatternCell extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \S3m\PatternCells $_parent = null, \S3m $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">PatternCell</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\S3m\PatternCells</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_hasFx = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_hasVolume = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_hasNoteAndInstrument = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_channelNum = $this-&gt;_io-&gt;readBitsInt(5);
-        $this-&gt;_io-&gt;alignToByte();
-        if ($this-&gt;hasNoteAndInstrument()) {
-            $this-&gt;_m_note = $this-&gt;_io-&gt;readU1();
-        }
-        if ($this-&gt;hasNoteAndInstrument()) {
-            $this-&gt;_m_instrument = $this-&gt;_io-&gt;readU1();
-        }
-        if ($this-&gt;hasVolume()) {
-            $this-&gt;_m_volume = $this-&gt;_io-&gt;readU1();
-        }
-        if ($this-&gt;hasFx()) {
-            $this-&gt;_m_fxType = $this-&gt;_io-&gt;readU1();
-        }
-        if ($this-&gt;hasFx()) {
-            $this-&gt;_m_fxValue = $this-&gt;_io-&gt;readU1();
-        }
-    }
-    protected $_m_hasFx;
-    protected $_m_hasVolume;
-    protected $_m_hasNoteAndInstrument;
-    protected $_m_channelNum;
-    protected $_m_note;
-    protected $_m_instrument;
-    protected $_m_volume;
-    protected $_m_fxType;
-    protected $_m_fxValue;
-    public function hasFx() { return $this-&gt;_m_hasFx; }
-    public function hasVolume() { return $this-&gt;_m_hasVolume; }
-    public function hasNoteAndInstrument() { return $this-&gt;_m_hasNoteAndInstrument; }
-    public function channelNum() { return $this-&gt;_m_channelNum; }
-    public function note() { return $this-&gt;_m_note; }
-    public function instrument() { return $this-&gt;_m_instrument; }
-    public function volume() { return $this-&gt;_m_volume; }
-    public function fxType() { return $this-&gt;_m_fxType; }
-    public function fxValue() { return $this-&gt;_m_fxValue; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasFx</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasVolume</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasNoteAndInstrument</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_channelNum</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">alignToByte</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasNoteAndInstrument</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_note</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasNoteAndInstrument</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_instrument</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasVolume</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volume</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasFx</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fxType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasFx</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fxValue</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasFx</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasVolume</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasNoteAndInstrument</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_channelNum</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_note</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_instrument</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_volume</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_fxType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_fxValue</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasFx</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasFx</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasVolume</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasVolume</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasNoteAndInstrument</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasNoteAndInstrument</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">channelNum</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_channelNum</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">note</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_note</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">instrument</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_instrument</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">volume</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volume</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fxType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fxType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fxValue</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fxValue</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \S3m;
+<span class="k">namespace</span> <span class="nx">\S3m</span><span class="p">;</span>
 
-class PatternCells extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \S3m\Pattern $_parent = null, \S3m $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">PatternCells</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\S3m\Pattern</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_cells = [];
-        $i = 0;
-        while (!$this-&gt;_io-&gt;isEof()) {
-            $this-&gt;_m_cells[] = new \S3m\PatternCell($this-&gt;_io, $this, $this-&gt;_root);
-            $i++;
-        }
-    }
-    protected $_m_cells;
-    public function cells() { return $this-&gt;_m_cells; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cells</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cells</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\S3m\PatternCell</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_cells</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">cells</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cells</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \S3m;
+<span class="k">namespace</span> <span class="nx">\S3m</span><span class="p">;</span>
 
-class Channel extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \S3m $_parent = null, \S3m $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Channel</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_isDisabled = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_chType = $this-&gt;_io-&gt;readBitsInt(7);
-    }
-    protected $_m_isDisabled;
-    protected $_m_chType;
-    public function isDisabled() { return $this-&gt;_m_isDisabled; }
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isDisabled</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_isDisabled</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_chType</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isDisabled</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isDisabled</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
-     */
-    public function chType() { return $this-&gt;_m_chType; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">chType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chType</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-/**
- * Custom 3-byte integer, stored in mixed endian manner.
- */
+<span class="sd">/**</span>
+<span class="sd"> * Custom 3-byte integer, stored in mixed endian manner.</span>
+<span class="sd"> */</span>
 
-namespace \S3m;
+<span class="k">namespace</span> <span class="nx">\S3m</span><span class="p">;</span>
 
-class SwappedU3 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \S3m\Instrument\Sampled $_parent = null, \S3m $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">SwappedU3</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\S3m\Instrument\Sampled</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_hi = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_lo = $this-&gt;_io-&gt;readU2le();
-    }
-    protected $_m_value;
-    public function value() {
-        if ($this-&gt;_m_value !== null)
-            return $this-&gt;_m_value;
-        $this-&gt;_m_value = ($this-&gt;lo() | ($this-&gt;hi() &lt;&lt; 16));
-        return $this-&gt;_m_value;
-    }
-    protected $_m_hi;
-    protected $_m_lo;
-    public function hi() { return $this-&gt;_m_hi; }
-    public function lo() { return $this-&gt;_m_lo; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hi</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lo</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lo</span><span class="p">()</span> <span class="o">|</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hi</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">));</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_hi</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lo</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hi</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hi</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lo</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \S3m;
+<span class="k">namespace</span> <span class="nx">\S3m</span><span class="p">;</span>
 
-class Pattern extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \S3m\PatternPtr $_parent = null, \S3m $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Pattern</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\S3m\PatternPtr</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_size = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes(($this-&gt;size() - 2));
-        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-        $this-&gt;_m_body = new \S3m\PatternCells($io, $this, $this-&gt;_root);
-    }
-    protected $_m_size;
-    protected $_m_body;
-    protected $_m__raw_body;
-    public function size() { return $this-&gt;_m_size; }
-    public function body() { return $this-&gt;_m_body; }
-    public function _raw_body() { return $this-&gt;_m__raw_body; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_size</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">));</span>
+        <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\S3m\PatternCells</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_size</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_body</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_size</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \S3m;
+<span class="k">namespace</span> <span class="nx">\S3m</span><span class="p">;</span>
 
-class PatternPtr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \S3m $_parent = null, \S3m $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">PatternPtr</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_paraptr = $this-&gt;_io-&gt;readU2le();
-    }
-    protected $_m_body;
-    public function body() {
-        if ($this-&gt;_m_body !== null)
-            return $this-&gt;_m_body;
-        $_pos = $this-&gt;_io-&gt;pos();
-        $this-&gt;_io-&gt;seek(($this-&gt;paraptr() * 16));
-        $this-&gt;_m_body = new \S3m\Pattern($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_io-&gt;seek($_pos);
-        return $this-&gt;_m_body;
-    }
-    protected $_m_paraptr;
-    public function paraptr() { return $this-&gt;_m_paraptr; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_paraptr</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span>
+        <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">paraptr</span><span class="p">()</span> <span class="o">*</span> <span class="mi">16</span><span class="p">));</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\S3m\Pattern</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_paraptr</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">paraptr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_paraptr</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \S3m;
+<span class="k">namespace</span> <span class="nx">\S3m</span><span class="p">;</span>
 
-class InstrumentPtr extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \S3m $_parent = null, \S3m $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">InstrumentPtr</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_paraptr = $this-&gt;_io-&gt;readU2le();
-    }
-    protected $_m_body;
-    public function body() {
-        if ($this-&gt;_m_body !== null)
-            return $this-&gt;_m_body;
-        $_pos = $this-&gt;_io-&gt;pos();
-        $this-&gt;_io-&gt;seek(($this-&gt;paraptr() * 16));
-        $this-&gt;_m_body = new \S3m\Instrument($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_io-&gt;seek($_pos);
-        return $this-&gt;_m_body;
-    }
-    protected $_m_paraptr;
-    public function paraptr() { return $this-&gt;_m_paraptr; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_paraptr</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span>
+        <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">paraptr</span><span class="p">()</span> <span class="o">*</span> <span class="mi">16</span><span class="p">));</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\S3m\Instrument</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_paraptr</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">paraptr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_paraptr</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \S3m;
+<span class="k">namespace</span> <span class="nx">\S3m</span><span class="p">;</span>
 
-class Instrument extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \S3m\InstrumentPtr $_parent = null, \S3m $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Instrument</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\S3m\InstrumentPtr</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_type = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_filename = \Kaitai\Struct\Stream::bytesTerminate($this-&gt;_io-&gt;readBytes(12), 0, false);
-        switch ($this-&gt;type()) {
-            case \S3m\Instrument\InstTypes::SAMPLE:
-                $this-&gt;_m_body = new \S3m\Instrument\Sampled($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            default:
-                $this-&gt;_m_body = new \S3m\Instrument\Adlib($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-        }
-        $this-&gt;_m_tuningHz = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_reserved2 = $this-&gt;_io-&gt;readBytes(12);
-        $this-&gt;_m_sampleName = \Kaitai\Struct\Stream::bytesTerminate($this-&gt;_io-&gt;readBytes(28), 0, false);
-        $this-&gt;_m_magic = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x53\x43\x52\x53&quot;);
-    }
-    protected $_m_type;
-    protected $_m_filename;
-    protected $_m_body;
-    protected $_m_tuningHz;
-    protected $_m_reserved2;
-    protected $_m_sampleName;
-    protected $_m_magic;
-    public function type() { return $this-&gt;_m_type; }
-    public function filename() { return $this-&gt;_m_filename; }
-    public function body() { return $this-&gt;_m_body; }
-    public function tuningHz() { return $this-&gt;_m_tuningHz; }
-    public function reserved2() { return $this-&gt;_m_reserved2; }
-    public function sampleName() { return $this-&gt;_m_sampleName; }
-    public function magic() { return $this-&gt;_m_magic; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_filename</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesTerminate</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">12</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">type</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="nx">\S3m\Instrument\InstTypes</span><span class="o">::</span><span class="na">SAMPLE</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\S3m\Instrument\Sampled</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">default</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\S3m\Instrument\Adlib</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tuningHz</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved2</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sampleName</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesTerminate</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">28</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x53\x43\x52\x53</span><span class="s2">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_type</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_filename</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_tuningHz</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_reserved2</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_sampleName</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_magic</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">type</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">filename</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_filename</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">tuningHz</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tuningHz</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved2</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sampleName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sampleName</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \S3m\Instrument;
+<span class="k">namespace</span> <span class="nx">\S3m\Instrument</span><span class="p">;</span>
 
-class Sampled extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \S3m\Instrument $_parent = null, \S3m $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Sampled</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\S3m\Instrument</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_paraptrSample = new \S3m\SwappedU3($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_lenSample = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_loopBegin = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_loopEnd = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_defaultVolume = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_reserved1 = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_isPacked = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_flags = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_sample;
-    public function sample() {
-        if ($this-&gt;_m_sample !== null)
-            return $this-&gt;_m_sample;
-        $_pos = $this-&gt;_io-&gt;pos();
-        $this-&gt;_io-&gt;seek(($this-&gt;paraptrSample()-&gt;value() * 16));
-        $this-&gt;_m_sample = $this-&gt;_io-&gt;readBytes($this-&gt;lenSample());
-        $this-&gt;_io-&gt;seek($_pos);
-        return $this-&gt;_m_sample;
-    }
-    protected $_m_paraptrSample;
-    protected $_m_lenSample;
-    protected $_m_loopBegin;
-    protected $_m_loopEnd;
-    protected $_m_defaultVolume;
-    protected $_m_reserved1;
-    protected $_m_isPacked;
-    protected $_m_flags;
-    public function paraptrSample() { return $this-&gt;_m_paraptrSample; }
-    public function lenSample() { return $this-&gt;_m_lenSample; }
-    public function loopBegin() { return $this-&gt;_m_loopBegin; }
-    public function loopEnd() { return $this-&gt;_m_loopEnd; }
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_paraptrSample</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\S3m\SwappedU3</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenSample</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loopBegin</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loopEnd</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_defaultVolume</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isPacked</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_sample</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sample</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sample</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sample</span><span class="p">;</span>
+        <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">paraptrSample</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">*</span> <span class="mi">16</span><span class="p">));</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sample</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenSample</span><span class="p">());</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sample</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_paraptrSample</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenSample</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_loopBegin</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_loopEnd</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_defaultVolume</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_reserved1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_isPacked</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_flags</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">paraptrSample</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_paraptrSample</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenSample</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenSample</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">loopBegin</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loopBegin</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">loopEnd</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loopEnd</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Default volume
-     */
-    public function defaultVolume() { return $this-&gt;_m_defaultVolume; }
-    public function reserved1() { return $this-&gt;_m_reserved1; }
+    <span class="sd">/**</span>
+<span class="sd">     * Default volume</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">defaultVolume</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_defaultVolume</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * 0 = unpacked, 1 = DP30ADPCM packing
-     */
-    public function isPacked() { return $this-&gt;_m_isPacked; }
-    public function flags() { return $this-&gt;_m_flags; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * 0 = unpacked, 1 = DP30ADPCM packing</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isPacked</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isPacked</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \S3m\Instrument;
+<span class="k">namespace</span> <span class="nx">\S3m\Instrument</span><span class="p">;</span>
 
-class Adlib extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \S3m\Instrument $_parent = null, \S3m $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Adlib</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\S3m\Instrument</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\S3m</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_reserved1 = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00\x00\x00&quot;);
-        $this-&gt;_m__unnamed1 = $this-&gt;_io-&gt;readBytes(16);
-    }
-    protected $_m_reserved1;
-    protected $_m__unnamed1;
-    public function reserved1() { return $this-&gt;_m_reserved1; }
-    public function _unnamed1() { return $this-&gt;_m__unnamed1; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00\x00\x00</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__unnamed1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_reserved1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__unnamed1</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_unnamed1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__unnamed1</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \S3m\Instrument;
+<span class="k">namespace</span> <span class="nx">\S3m\Instrument</span><span class="p">;</span>
 
-class InstTypes {
-    const SAMPLE = 1;
-    const MELODIC = 2;
-    const BASS_DRUM = 3;
-    const SNARE_DRUM = 4;
-    const TOM = 5;
-    const CYMBAL = 6;
-    const HIHAT = 7;
-}
-</code></pre>
+<span class="k">class</span> <span class="nc">InstTypes</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">SAMPLE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MELODIC</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">BASS_DRUM</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SNARE_DRUM</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">TOM</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CYMBAL</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">HIHAT</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -782,8 +779,8 @@ class InstTypes {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

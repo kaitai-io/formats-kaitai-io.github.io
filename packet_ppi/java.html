@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -241,783 +238,783 @@ PacketPpi data = new PacketPpi(new ByteBufferKaitaiStream(someArray));</code></p
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-
-
-/**
- * PPI is a standard for link layer packet encapsulation, proposed as
- * generic extensible container to store both captured in-band data and
- * out-of-band data. Originally it was developed to provide 802.11n
- * radio information, but can be used for other purposes as well.
- * 
- * Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&amp;do=get&amp;target=Http.cap  
- * @see &lt;a href=&quot;https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf&quot;&gt;PPI header format spec, section 3&lt;/a&gt;
- */
-public class PacketPpi extends KaitaiStruct {
-    public static PacketPpi fromFile(String fileName) throws IOException {
-        return new PacketPpi(new ByteBufferKaitaiStream(fileName));
-    }
-
-    public enum PfhType {
-        RADIO_802_11_COMMON(2),
-        RADIO_802_11N_MAC_EXT(3),
-        RADIO_802_11N_MAC_PHY_EXT(4),
-        SPECTRUM_MAP(5),
-        PROCESS_INFO(6),
-        CAPTURE_INFO(7);
-
-        private final long id;
-        PfhType(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, PfhType&gt; byId = new HashMap&lt;Long, PfhType&gt;(6);
-        static {
-            for (PfhType e : PfhType.values())
-                byId.put(e.id(), e);
-        }
-        public static PfhType byId(long id) { return byId.get(id); }
-    }
-
-    public enum Linktype {
-        NULL_LINKTYPE(0),
-        ETHERNET(1),
-        AX25(3),
-        IEEE802_5(6),
-        ARCNET_BSD(7),
-        SLIP(8),
-        PPP(9),
-        FDDI(10),
-        PPP_HDLC(50),
-        PPP_ETHER(51),
-        ATM_RFC1483(100),
-        RAW(101),
-        C_HDLC(104),
-        IEEE802_11(105),
-        FRELAY(107),
-        LOOP(108),
-        LINUX_SLL(113),
-        LTALK(114),
-        PFLOG(117),
-        IEEE802_11_PRISM(119),
-        IP_OVER_FC(122),
-        SUNATM(123),
-        IEEE802_11_RADIOTAP(127),
-        ARCNET_LINUX(129),
-        APPLE_IP_OVER_IEEE1394(138),
-        MTP2_WITH_PHDR(139),
-        MTP2(140),
-        MTP3(141),
-        SCCP(142),
-        DOCSIS(143),
-        LINUX_IRDA(144),
-        USER0(147),
-        USER1(148),
-        USER2(149),
-        USER3(150),
-        USER4(151),
-        USER5(152),
-        USER6(153),
-        USER7(154),
-        USER8(155),
-        USER9(156),
-        USER10(157),
-        USER11(158),
-        USER12(159),
-        USER13(160),
-        USER14(161),
-        USER15(162),
-        IEEE802_11_AVS(163),
-        BACNET_MS_TP(165),
-        PPP_PPPD(166),
-        GPRS_LLC(169),
-        GPF_T(170),
-        GPF_F(171),
-        LINUX_LAPD(177),
-        BLUETOOTH_HCI_H4(187),
-        USB_LINUX(189),
-        PPI(192),
-        IEEE802_15_4(195),
-        SITA(196),
-        ERF(197),
-        BLUETOOTH_HCI_H4_WITH_PHDR(201),
-        AX25_KISS(202),
-        LAPD(203),
-        PPP_WITH_DIR(204),
-        C_HDLC_WITH_DIR(205),
-        FRELAY_WITH_DIR(206),
-        IPMB_LINUX(209),
-        IEEE802_15_4_NONASK_PHY(215),
-        USB_LINUX_MMAPPED(220),
-        FC_2(224),
-        FC_2_WITH_FRAME_DELIMS(225),
-        IPNET(226),
-        CAN_SOCKETCAN(227),
-        IPV4(228),
-        IPV6(229),
-        IEEE802_15_4_NOFCS(230),
-        DBUS(231),
-        DVB_CI(235),
-        MUX27010(236),
-        STANAG_5066_D_PDU(237),
-        NFLOG(239),
-        NETANALYZER(240),
-        NETANALYZER_TRANSPARENT(241),
-        IPOIB(242),
-        MPEG_2_TS(243),
-        NG40(244),
-        NFC_LLCP(245),
-        INFINIBAND(247),
-        SCTP(248),
-        USBPCAP(249),
-        RTAC_SERIAL(250),
-        BLUETOOTH_LE_LL(251),
-        NETLINK(253),
-        BLUETOOTH_LINUX_MONITOR(254),
-        BLUETOOTH_BREDR_BB(255),
-        BLUETOOTH_LE_LL_WITH_PHDR(256),
-        PROFIBUS_DL(257),
-        PKTAP(258),
-        EPON(259),
-        IPMI_HPM_2(260),
-        ZWAVE_R1_R2(261),
-        ZWAVE_R3(262),
-        WATTSTOPPER_DLM(263),
-        ISO_14443(264);
-
-        private final long id;
-        Linktype(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, Linktype&gt; byId = new HashMap&lt;Long, Linktype&gt;(104);
-        static {
-            for (Linktype e : Linktype.values())
-                byId.put(e.id(), e);
-        }
-        public static Linktype byId(long id) { return byId.get(id); }
-    }
-
-    public PacketPpi(KaitaiStream _io) {
-        this(_io, null, null);
-    }
-
-    public PacketPpi(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
-
-    public PacketPpi(KaitaiStream _io, KaitaiStruct _parent, PacketPpi _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.header = new PacketPpiHeader(this._io, this, _root);
-        this._raw_fields = this._io.readBytes((header().pphLen() - 8));
-        KaitaiStream _io__raw_fields = new ByteBufferKaitaiStream(_raw_fields);
-        this.fields = new PacketPpiFields(_io__raw_fields, this, _root);
-        switch (header().pphDlt()) {
-        case PPI: {
-            this._raw_body = this._io.readBytesFull();
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new PacketPpi(_io__raw_body);
-            break;
-        }
-        case ETHERNET: {
-            this._raw_body = this._io.readBytesFull();
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new EthernetFrame(_io__raw_body);
-            break;
-        }
-        default: {
-            this.body = this._io.readBytesFull();
-            break;
-        }
-        }
-    }
-    public static class PacketPpiFields extends KaitaiStruct {
-        public static PacketPpiFields fromFile(String fileName) throws IOException {
-            return new PacketPpiFields(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PacketPpiFields(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PacketPpiFields(KaitaiStream _io, PacketPpi _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PacketPpiFields(KaitaiStream _io, PacketPpi _parent, PacketPpi _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new ArrayList&lt;PacketPpiField&gt;();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.entries.add(new PacketPpiField(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList&lt;PacketPpiField&gt; entries;
-        private PacketPpi _root;
-        private PacketPpi _parent;
-        public ArrayList&lt;PacketPpiField&gt; entries() { return entries; }
-        public PacketPpi _root() { return _root; }
-        public PacketPpi _parent() { return _parent; }
-    }
-
-    /**
-     * @see &lt;a href=&quot;https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf&quot;&gt;PPI header format spec, section 4.1.3&lt;/a&gt;
-     */
-    public static class Radio80211nMacExtBody extends KaitaiStruct {
-        public static Radio80211nMacExtBody fromFile(String fileName) throws IOException {
-            return new Radio80211nMacExtBody(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Radio80211nMacExtBody(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Radio80211nMacExtBody(KaitaiStream _io, PacketPpi.PacketPpiField _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Radio80211nMacExtBody(KaitaiStream _io, PacketPpi.PacketPpiField _parent, PacketPpi _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.flags = new MacFlags(this._io, this, _root);
-            this.aMpduId = this._io.readU4le();
-            this.numDelimiters = this._io.readU1();
-            this.reserved = this._io.readBytes(3);
-        }
-        private MacFlags flags;
-        private long aMpduId;
-        private int numDelimiters;
-        private byte[] reserved;
-        private PacketPpi _root;
-        private PacketPpi.PacketPpiField _parent;
-        public MacFlags flags() { return flags; }
-        public long aMpduId() { return aMpduId; }
-        public int numDelimiters() { return numDelimiters; }
-        public byte[] reserved() { return reserved; }
-        public PacketPpi _root() { return _root; }
-        public PacketPpi.PacketPpiField _parent() { return _parent; }
-    }
-    public static class MacFlags extends KaitaiStruct {
-        public static MacFlags fromFile(String fileName) throws IOException {
-            return new MacFlags(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public MacFlags(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public MacFlags(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
-
-        public MacFlags(KaitaiStream _io, KaitaiStruct _parent, PacketPpi _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.unused1 = this._io.readBitsInt(1) != 0;
-            this.aggregateDelimiter = this._io.readBitsInt(1) != 0;
-            this.moreAggregates = this._io.readBitsInt(1) != 0;
-            this.aggregate = this._io.readBitsInt(1) != 0;
-            this.dupRx = this._io.readBitsInt(1) != 0;
-            this.rxShortGuard = this._io.readBitsInt(1) != 0;
-            this.isHt40 = this._io.readBitsInt(1) != 0;
-            this.greenfield = this._io.readBitsInt(1) != 0;
-            this._io.alignToByte();
-            this.unused2 = this._io.readBytes(3);
-        }
-        private boolean unused1;
-        private boolean aggregateDelimiter;
-        private boolean moreAggregates;
-        private boolean aggregate;
-        private boolean dupRx;
-        private boolean rxShortGuard;
-        private boolean isHt40;
-        private boolean greenfield;
-        private byte[] unused2;
-        private PacketPpi _root;
-        private KaitaiStruct _parent;
-        public boolean unused1() { return unused1; }
-
-        /**
-         * Aggregate delimiter CRC error after this frame
-         */
-        public boolean aggregateDelimiter() { return aggregateDelimiter; }
-
-        /**
-         * More aggregates
-         */
-        public boolean moreAggregates() { return moreAggregates; }
-
-        /**
-         * Aggregate
-         */
-        public boolean aggregate() { return aggregate; }
-
-        /**
-         * Duplicate RX
-         */
-        public boolean dupRx() { return dupRx; }
-
-        /**
-         * RX short guard interval (SGI)
-         */
-        public boolean rxShortGuard() { return rxShortGuard; }
-
-        /**
-         * true = HT40, false = HT20
-         */
-        public boolean isHt40() { return isHt40; }
-
-        /**
-         * Greenfield
-         */
-        public boolean greenfield() { return greenfield; }
-        public byte[] unused2() { return unused2; }
-        public PacketPpi _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-
-    /**
-     * @see &lt;a href=&quot;https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf&quot;&gt;PPI header format spec, section 3.1&lt;/a&gt;
-     */
-    public static class PacketPpiHeader extends KaitaiStruct {
-        public static PacketPpiHeader fromFile(String fileName) throws IOException {
-            return new PacketPpiHeader(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PacketPpiHeader(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PacketPpiHeader(KaitaiStream _io, PacketPpi _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PacketPpiHeader(KaitaiStream _io, PacketPpi _parent, PacketPpi _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.pphVersion = this._io.readU1();
-            this.pphFlags = this._io.readU1();
-            this.pphLen = this._io.readU2le();
-            this.pphDlt = PacketPpi.Linktype.byId(this._io.readU4le());
-        }
-        private int pphVersion;
-        private int pphFlags;
-        private int pphLen;
-        private Linktype pphDlt;
-        private PacketPpi _root;
-        private PacketPpi _parent;
-        public int pphVersion() { return pphVersion; }
-        public int pphFlags() { return pphFlags; }
-        public int pphLen() { return pphLen; }
-        public Linktype pphDlt() { return pphDlt; }
-        public PacketPpi _root() { return _root; }
-        public PacketPpi _parent() { return _parent; }
-    }
-
-    /**
-     * @see &lt;a href=&quot;https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf&quot;&gt;PPI header format spec, section 4.1.2&lt;/a&gt;
-     */
-    public static class Radio80211CommonBody extends KaitaiStruct {
-        public static Radio80211CommonBody fromFile(String fileName) throws IOException {
-            return new Radio80211CommonBody(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Radio80211CommonBody(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Radio80211CommonBody(KaitaiStream _io, PacketPpi.PacketPpiField _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Radio80211CommonBody(KaitaiStream _io, PacketPpi.PacketPpiField _parent, PacketPpi _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.tsfTimer = this._io.readU8le();
-            this.flags = this._io.readU2le();
-            this.rate = this._io.readU2le();
-            this.channelFreq = this._io.readU2le();
-            this.channelFlags = this._io.readU2le();
-            this.fhssHopset = this._io.readU1();
-            this.fhssPattern = this._io.readU1();
-            this.dbmAntsignal = this._io.readS1();
-            this.dbmAntnoise = this._io.readS1();
-        }
-        private long tsfTimer;
-        private int flags;
-        private int rate;
-        private int channelFreq;
-        private int channelFlags;
-        private int fhssHopset;
-        private int fhssPattern;
-        private byte dbmAntsignal;
-        private byte dbmAntnoise;
-        private PacketPpi _root;
-        private PacketPpi.PacketPpiField _parent;
-        public long tsfTimer() { return tsfTimer; }
-        public int flags() { return flags; }
-        public int rate() { return rate; }
-        public int channelFreq() { return channelFreq; }
-        public int channelFlags() { return channelFlags; }
-        public int fhssHopset() { return fhssHopset; }
-        public int fhssPattern() { return fhssPattern; }
-        public byte dbmAntsignal() { return dbmAntsignal; }
-        public byte dbmAntnoise() { return dbmAntnoise; }
-        public PacketPpi _root() { return _root; }
-        public PacketPpi.PacketPpiField _parent() { return _parent; }
-    }
-
-    /**
-     * @see &lt;a href=&quot;https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf&quot;&gt;PPI header format spec, section 3.1&lt;/a&gt;
-     */
-    public static class PacketPpiField extends KaitaiStruct {
-        public static PacketPpiField fromFile(String fileName) throws IOException {
-            return new PacketPpiField(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public PacketPpiField(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public PacketPpiField(KaitaiStream _io, PacketPpi.PacketPpiFields _parent) {
-            this(_io, _parent, null);
-        }
-
-        public PacketPpiField(KaitaiStream _io, PacketPpi.PacketPpiFields _parent, PacketPpi _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.pfhType = PacketPpi.PfhType.byId(this._io.readU2le());
-            this.pfhDatalen = this._io.readU2le();
-            switch (pfhType()) {
-            case RADIO_802_11_COMMON: {
-                this._raw_body = this._io.readBytes(pfhDatalen());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new Radio80211CommonBody(_io__raw_body, this, _root);
-                break;
-            }
-            case RADIO_802_11N_MAC_EXT: {
-                this._raw_body = this._io.readBytes(pfhDatalen());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new Radio80211nMacExtBody(_io__raw_body, this, _root);
-                break;
-            }
-            case RADIO_802_11N_MAC_PHY_EXT: {
-                this._raw_body = this._io.readBytes(pfhDatalen());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new Radio80211nMacPhyExtBody(_io__raw_body, this, _root);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes(pfhDatalen());
-                break;
-            }
-            }
-        }
-        private PfhType pfhType;
-        private int pfhDatalen;
-        private Object body;
-        private PacketPpi _root;
-        private PacketPpi.PacketPpiFields _parent;
-        private byte[] _raw_body;
-        public PfhType pfhType() { return pfhType; }
-        public int pfhDatalen() { return pfhDatalen; }
-        public Object body() { return body; }
-        public PacketPpi _root() { return _root; }
-        public PacketPpi.PacketPpiFields _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
-    }
-
-    /**
-     * @see &lt;a href=&quot;https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf&quot;&gt;PPI header format spec, section 4.1.4&lt;/a&gt;
-     */
-    public static class Radio80211nMacPhyExtBody extends KaitaiStruct {
-        public static Radio80211nMacPhyExtBody fromFile(String fileName) throws IOException {
-            return new Radio80211nMacPhyExtBody(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Radio80211nMacPhyExtBody(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Radio80211nMacPhyExtBody(KaitaiStream _io, PacketPpi.PacketPpiField _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Radio80211nMacPhyExtBody(KaitaiStream _io, PacketPpi.PacketPpiField _parent, PacketPpi _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.flags = new MacFlags(this._io, this, _root);
-            this.aMpduId = this._io.readU4le();
-            this.numDelimiters = this._io.readU1();
-            this.mcs = this._io.readU1();
-            this.numStreams = this._io.readU1();
-            this.rssiCombined = this._io.readU1();
-            rssiAntCtl = new ArrayList&lt;Integer&gt;((int) (4));
-            for (int i = 0; i &lt; 4; i++) {
-                this.rssiAntCtl.add(this._io.readU1());
-            }
-            rssiAntExt = new ArrayList&lt;Integer&gt;((int) (4));
-            for (int i = 0; i &lt; 4; i++) {
-                this.rssiAntExt.add(this._io.readU1());
-            }
-            this.extChannelFreq = this._io.readU2le();
-            this.extChannelFlags = new ChannelFlags(this._io, this, _root);
-            rfSignalNoise = new ArrayList&lt;SignalNoise&gt;((int) (4));
-            for (int i = 0; i &lt; 4; i++) {
-                this.rfSignalNoise.add(new SignalNoise(this._io, this, _root));
-            }
-            evm = new ArrayList&lt;Long&gt;((int) (4));
-            for (int i = 0; i &lt; 4; i++) {
-                this.evm.add(this._io.readU4le());
-            }
-        }
-        public static class ChannelFlags extends KaitaiStruct {
-            public static ChannelFlags fromFile(String fileName) throws IOException {
-                return new ChannelFlags(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public ChannelFlags(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public ChannelFlags(KaitaiStream _io, PacketPpi.Radio80211nMacPhyExtBody _parent) {
-                this(_io, _parent, null);
-            }
-
-            public ChannelFlags(KaitaiStream _io, PacketPpi.Radio80211nMacPhyExtBody _parent, PacketPpi _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.spectrum2ghz = this._io.readBitsInt(1) != 0;
-                this.ofdm = this._io.readBitsInt(1) != 0;
-                this.cck = this._io.readBitsInt(1) != 0;
-                this.turbo = this._io.readBitsInt(1) != 0;
-                this.unused = this._io.readBitsInt(8);
-                this.gfsk = this._io.readBitsInt(1) != 0;
-                this.dynCckOfdm = this._io.readBitsInt(1) != 0;
-                this.onlyPassiveScan = this._io.readBitsInt(1) != 0;
-                this.spectrum5ghz = this._io.readBitsInt(1) != 0;
-            }
-            private boolean spectrum2ghz;
-            private boolean ofdm;
-            private boolean cck;
-            private boolean turbo;
-            private long unused;
-            private boolean gfsk;
-            private boolean dynCckOfdm;
-            private boolean onlyPassiveScan;
-            private boolean spectrum5ghz;
-            private PacketPpi _root;
-            private PacketPpi.Radio80211nMacPhyExtBody _parent;
-
-            /**
-             * 2 GHz spectrum
-             */
-            public boolean spectrum2ghz() { return spectrum2ghz; }
-
-            /**
-             * OFDM (Orthogonal Frequency-Division Multiplexing)
-             */
-            public boolean ofdm() { return ofdm; }
-
-            /**
-             * CCK (Complementary Code Keying)
-             */
-            public boolean cck() { return cck; }
-            public boolean turbo() { return turbo; }
-            public long unused() { return unused; }
-
-            /**
-             * Gaussian Frequency Shift Keying
-             */
-            public boolean gfsk() { return gfsk; }
-
-            /**
-             * Dynamic CCK-OFDM
-             */
-            public boolean dynCckOfdm() { return dynCckOfdm; }
-
-            /**
-             * Only passive scan allowed
-             */
-            public boolean onlyPassiveScan() { return onlyPassiveScan; }
-
-            /**
-             * 5 GHz spectrum
-             */
-            public boolean spectrum5ghz() { return spectrum5ghz; }
-            public PacketPpi _root() { return _root; }
-            public PacketPpi.Radio80211nMacPhyExtBody _parent() { return _parent; }
-        }
-
-        /**
-         * RF signal + noise pair at a single antenna
-         */
-        public static class SignalNoise extends KaitaiStruct {
-            public static SignalNoise fromFile(String fileName) throws IOException {
-                return new SignalNoise(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public SignalNoise(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public SignalNoise(KaitaiStream _io, PacketPpi.Radio80211nMacPhyExtBody _parent) {
-                this(_io, _parent, null);
-            }
-
-            public SignalNoise(KaitaiStream _io, PacketPpi.Radio80211nMacPhyExtBody _parent, PacketPpi _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.signal = this._io.readS1();
-                this.noise = this._io.readS1();
-            }
-            private byte signal;
-            private byte noise;
-            private PacketPpi _root;
-            private PacketPpi.Radio80211nMacPhyExtBody _parent;
-
-            /**
-             * RF signal, dBm
-             */
-            public byte signal() { return signal; }
-
-            /**
-             * RF noise, dBm
-             */
-            public byte noise() { return noise; }
-            public PacketPpi _root() { return _root; }
-            public PacketPpi.Radio80211nMacPhyExtBody _parent() { return _parent; }
-        }
-        private MacFlags flags;
-        private long aMpduId;
-        private int numDelimiters;
-        private int mcs;
-        private int numStreams;
-        private int rssiCombined;
-        private ArrayList&lt;Integer&gt; rssiAntCtl;
-        private ArrayList&lt;Integer&gt; rssiAntExt;
-        private int extChannelFreq;
-        private ChannelFlags extChannelFlags;
-        private ArrayList&lt;SignalNoise&gt; rfSignalNoise;
-        private ArrayList&lt;Long&gt; evm;
-        private PacketPpi _root;
-        private PacketPpi.PacketPpiField _parent;
-        public MacFlags flags() { return flags; }
-        public long aMpduId() { return aMpduId; }
-        public int numDelimiters() { return numDelimiters; }
-
-        /**
-         * Modulation Coding Scheme (MCS)
-         */
-        public int mcs() { return mcs; }
-
-        /**
-         * Number of spatial streams (0 = unknown)
-         */
-        public int numStreams() { return numStreams; }
-
-        /**
-         * RSSI (Received Signal Strength Indication), combined from all active antennas / channels
-         */
-        public int rssiCombined() { return rssiCombined; }
-
-        /**
-         * RSSI (Received Signal Strength Indication) for antennas 0-3, control channel
-         */
-        public ArrayList&lt;Integer&gt; rssiAntCtl() { return rssiAntCtl; }
-
-        /**
-         * RSSI (Received Signal Strength Indication) for antennas 0-3, extension channel
-         */
-        public ArrayList&lt;Integer&gt; rssiAntExt() { return rssiAntExt; }
-
-        /**
-         * Extension channel frequency (MHz)
-         */
-        public int extChannelFreq() { return extChannelFreq; }
-
-        /**
-         * Extension channel flags
-         */
-        public ChannelFlags extChannelFlags() { return extChannelFlags; }
-
-        /**
-         * Signal + noise values for antennas 0-3
-         */
-        public ArrayList&lt;SignalNoise&gt; rfSignalNoise() { return rfSignalNoise; }
-
-        /**
-         * EVM (Error Vector Magnitude) for chains 0-3
-         */
-        public ArrayList&lt;Long&gt; evm() { return evm; }
-        public PacketPpi _root() { return _root; }
-        public PacketPpi.PacketPpiField _parent() { return _parent; }
-    }
-    private PacketPpiHeader header;
-    private PacketPpiFields fields;
-    private Object body;
-    private PacketPpi _root;
-    private KaitaiStruct _parent;
-    private byte[] _raw_fields;
-    private byte[] _raw_body;
-    public PacketPpiHeader header() { return header; }
-    public PacketPpiFields fields() { return fields; }
-    public Object body() { return body; }
-    public PacketPpi _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_fields() { return _raw_fields; }
-    public byte[] _raw_body() { return _raw_body; }
-}
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * PPI is a standard for link layer packet encapsulation, proposed as</span>
+<span class="cm"> * generic extensible container to store both captured in-band data and</span>
+<span class="cm"> * out-of-band data. Originally it was developed to provide 802.11n</span>
+<span class="cm"> * radio information, but can be used for other purposes as well.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&amp;do=get&amp;target=Http.cap  </span>
+<span class="cm"> * @see &lt;a href=&quot;https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf&quot;&gt;PPI header format spec, section 3&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PacketPpi</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">PacketPpi</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">PacketPpi</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">PfhType</span> <span class="p">{</span>
+        <span class="n">RADIO_802_11_COMMON</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">RADIO_802_11N_MAC_EXT</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+        <span class="n">RADIO_802_11N_MAC_PHY_EXT</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+        <span class="n">SPECTRUM_MAP</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">PROCESS_INFO</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span>
+        <span class="n">CAPTURE_INFO</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">PfhType</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">PfhType</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">PfhType</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">PfhType</span> <span class="n">e</span> <span class="p">:</span> <span class="n">PfhType</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PfhType</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">Linktype</span> <span class="p">{</span>
+        <span class="n">NULL_LINKTYPE</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+        <span class="n">ETHERNET</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">AX25</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+        <span class="n">IEEE802_5</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span>
+        <span class="n">ARCNET_BSD</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span>
+        <span class="n">SLIP</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span>
+        <span class="n">PPP</span><span class="p">(</span><span class="mi">9</span><span class="p">),</span>
+        <span class="n">FDDI</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+        <span class="n">PPP_HDLC</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+        <span class="n">PPP_ETHER</span><span class="p">(</span><span class="mi">51</span><span class="p">),</span>
+        <span class="n">ATM_RFC1483</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+        <span class="n">RAW</span><span class="p">(</span><span class="mi">101</span><span class="p">),</span>
+        <span class="n">C_HDLC</span><span class="p">(</span><span class="mi">104</span><span class="p">),</span>
+        <span class="n">IEEE802_11</span><span class="p">(</span><span class="mi">105</span><span class="p">),</span>
+        <span class="n">FRELAY</span><span class="p">(</span><span class="mi">107</span><span class="p">),</span>
+        <span class="n">LOOP</span><span class="p">(</span><span class="mi">108</span><span class="p">),</span>
+        <span class="n">LINUX_SLL</span><span class="p">(</span><span class="mi">113</span><span class="p">),</span>
+        <span class="n">LTALK</span><span class="p">(</span><span class="mi">114</span><span class="p">),</span>
+        <span class="n">PFLOG</span><span class="p">(</span><span class="mi">117</span><span class="p">),</span>
+        <span class="n">IEEE802_11_PRISM</span><span class="p">(</span><span class="mi">119</span><span class="p">),</span>
+        <span class="n">IP_OVER_FC</span><span class="p">(</span><span class="mi">122</span><span class="p">),</span>
+        <span class="n">SUNATM</span><span class="p">(</span><span class="mi">123</span><span class="p">),</span>
+        <span class="n">IEEE802_11_RADIOTAP</span><span class="p">(</span><span class="mi">127</span><span class="p">),</span>
+        <span class="n">ARCNET_LINUX</span><span class="p">(</span><span class="mi">129</span><span class="p">),</span>
+        <span class="n">APPLE_IP_OVER_IEEE1394</span><span class="p">(</span><span class="mi">138</span><span class="p">),</span>
+        <span class="n">MTP2_WITH_PHDR</span><span class="p">(</span><span class="mi">139</span><span class="p">),</span>
+        <span class="n">MTP2</span><span class="p">(</span><span class="mi">140</span><span class="p">),</span>
+        <span class="n">MTP3</span><span class="p">(</span><span class="mi">141</span><span class="p">),</span>
+        <span class="n">SCCP</span><span class="p">(</span><span class="mi">142</span><span class="p">),</span>
+        <span class="n">DOCSIS</span><span class="p">(</span><span class="mi">143</span><span class="p">),</span>
+        <span class="n">LINUX_IRDA</span><span class="p">(</span><span class="mi">144</span><span class="p">),</span>
+        <span class="n">USER0</span><span class="p">(</span><span class="mi">147</span><span class="p">),</span>
+        <span class="n">USER1</span><span class="p">(</span><span class="mi">148</span><span class="p">),</span>
+        <span class="n">USER2</span><span class="p">(</span><span class="mi">149</span><span class="p">),</span>
+        <span class="n">USER3</span><span class="p">(</span><span class="mi">150</span><span class="p">),</span>
+        <span class="n">USER4</span><span class="p">(</span><span class="mi">151</span><span class="p">),</span>
+        <span class="n">USER5</span><span class="p">(</span><span class="mi">152</span><span class="p">),</span>
+        <span class="n">USER6</span><span class="p">(</span><span class="mi">153</span><span class="p">),</span>
+        <span class="n">USER7</span><span class="p">(</span><span class="mi">154</span><span class="p">),</span>
+        <span class="n">USER8</span><span class="p">(</span><span class="mi">155</span><span class="p">),</span>
+        <span class="n">USER9</span><span class="p">(</span><span class="mi">156</span><span class="p">),</span>
+        <span class="n">USER10</span><span class="p">(</span><span class="mi">157</span><span class="p">),</span>
+        <span class="n">USER11</span><span class="p">(</span><span class="mi">158</span><span class="p">),</span>
+        <span class="n">USER12</span><span class="p">(</span><span class="mi">159</span><span class="p">),</span>
+        <span class="n">USER13</span><span class="p">(</span><span class="mi">160</span><span class="p">),</span>
+        <span class="n">USER14</span><span class="p">(</span><span class="mi">161</span><span class="p">),</span>
+        <span class="n">USER15</span><span class="p">(</span><span class="mi">162</span><span class="p">),</span>
+        <span class="n">IEEE802_11_AVS</span><span class="p">(</span><span class="mi">163</span><span class="p">),</span>
+        <span class="n">BACNET_MS_TP</span><span class="p">(</span><span class="mi">165</span><span class="p">),</span>
+        <span class="n">PPP_PPPD</span><span class="p">(</span><span class="mi">166</span><span class="p">),</span>
+        <span class="n">GPRS_LLC</span><span class="p">(</span><span class="mi">169</span><span class="p">),</span>
+        <span class="n">GPF_T</span><span class="p">(</span><span class="mi">170</span><span class="p">),</span>
+        <span class="n">GPF_F</span><span class="p">(</span><span class="mi">171</span><span class="p">),</span>
+        <span class="n">LINUX_LAPD</span><span class="p">(</span><span class="mi">177</span><span class="p">),</span>
+        <span class="n">BLUETOOTH_HCI_H4</span><span class="p">(</span><span class="mi">187</span><span class="p">),</span>
+        <span class="n">USB_LINUX</span><span class="p">(</span><span class="mi">189</span><span class="p">),</span>
+        <span class="n">PPI</span><span class="p">(</span><span class="mi">192</span><span class="p">),</span>
+        <span class="n">IEEE802_15_4</span><span class="p">(</span><span class="mi">195</span><span class="p">),</span>
+        <span class="n">SITA</span><span class="p">(</span><span class="mi">196</span><span class="p">),</span>
+        <span class="n">ERF</span><span class="p">(</span><span class="mi">197</span><span class="p">),</span>
+        <span class="n">BLUETOOTH_HCI_H4_WITH_PHDR</span><span class="p">(</span><span class="mi">201</span><span class="p">),</span>
+        <span class="n">AX25_KISS</span><span class="p">(</span><span class="mi">202</span><span class="p">),</span>
+        <span class="n">LAPD</span><span class="p">(</span><span class="mi">203</span><span class="p">),</span>
+        <span class="n">PPP_WITH_DIR</span><span class="p">(</span><span class="mi">204</span><span class="p">),</span>
+        <span class="n">C_HDLC_WITH_DIR</span><span class="p">(</span><span class="mi">205</span><span class="p">),</span>
+        <span class="n">FRELAY_WITH_DIR</span><span class="p">(</span><span class="mi">206</span><span class="p">),</span>
+        <span class="n">IPMB_LINUX</span><span class="p">(</span><span class="mi">209</span><span class="p">),</span>
+        <span class="n">IEEE802_15_4_NONASK_PHY</span><span class="p">(</span><span class="mi">215</span><span class="p">),</span>
+        <span class="n">USB_LINUX_MMAPPED</span><span class="p">(</span><span class="mi">220</span><span class="p">),</span>
+        <span class="n">FC_2</span><span class="p">(</span><span class="mi">224</span><span class="p">),</span>
+        <span class="n">FC_2_WITH_FRAME_DELIMS</span><span class="p">(</span><span class="mi">225</span><span class="p">),</span>
+        <span class="n">IPNET</span><span class="p">(</span><span class="mi">226</span><span class="p">),</span>
+        <span class="n">CAN_SOCKETCAN</span><span class="p">(</span><span class="mi">227</span><span class="p">),</span>
+        <span class="n">IPV4</span><span class="p">(</span><span class="mi">228</span><span class="p">),</span>
+        <span class="n">IPV6</span><span class="p">(</span><span class="mi">229</span><span class="p">),</span>
+        <span class="n">IEEE802_15_4_NOFCS</span><span class="p">(</span><span class="mi">230</span><span class="p">),</span>
+        <span class="n">DBUS</span><span class="p">(</span><span class="mi">231</span><span class="p">),</span>
+        <span class="n">DVB_CI</span><span class="p">(</span><span class="mi">235</span><span class="p">),</span>
+        <span class="n">MUX27010</span><span class="p">(</span><span class="mi">236</span><span class="p">),</span>
+        <span class="n">STANAG_5066_D_PDU</span><span class="p">(</span><span class="mi">237</span><span class="p">),</span>
+        <span class="n">NFLOG</span><span class="p">(</span><span class="mi">239</span><span class="p">),</span>
+        <span class="n">NETANALYZER</span><span class="p">(</span><span class="mi">240</span><span class="p">),</span>
+        <span class="n">NETANALYZER_TRANSPARENT</span><span class="p">(</span><span class="mi">241</span><span class="p">),</span>
+        <span class="n">IPOIB</span><span class="p">(</span><span class="mi">242</span><span class="p">),</span>
+        <span class="n">MPEG_2_TS</span><span class="p">(</span><span class="mi">243</span><span class="p">),</span>
+        <span class="n">NG40</span><span class="p">(</span><span class="mi">244</span><span class="p">),</span>
+        <span class="n">NFC_LLCP</span><span class="p">(</span><span class="mi">245</span><span class="p">),</span>
+        <span class="n">INFINIBAND</span><span class="p">(</span><span class="mi">247</span><span class="p">),</span>
+        <span class="n">SCTP</span><span class="p">(</span><span class="mi">248</span><span class="p">),</span>
+        <span class="n">USBPCAP</span><span class="p">(</span><span class="mi">249</span><span class="p">),</span>
+        <span class="n">RTAC_SERIAL</span><span class="p">(</span><span class="mi">250</span><span class="p">),</span>
+        <span class="n">BLUETOOTH_LE_LL</span><span class="p">(</span><span class="mi">251</span><span class="p">),</span>
+        <span class="n">NETLINK</span><span class="p">(</span><span class="mi">253</span><span class="p">),</span>
+        <span class="n">BLUETOOTH_LINUX_MONITOR</span><span class="p">(</span><span class="mi">254</span><span class="p">),</span>
+        <span class="n">BLUETOOTH_BREDR_BB</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+        <span class="n">BLUETOOTH_LE_LL_WITH_PHDR</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span>
+        <span class="n">PROFIBUS_DL</span><span class="p">(</span><span class="mi">257</span><span class="p">),</span>
+        <span class="n">PKTAP</span><span class="p">(</span><span class="mi">258</span><span class="p">),</span>
+        <span class="n">EPON</span><span class="p">(</span><span class="mi">259</span><span class="p">),</span>
+        <span class="n">IPMI_HPM_2</span><span class="p">(</span><span class="mi">260</span><span class="p">),</span>
+        <span class="n">ZWAVE_R1_R2</span><span class="p">(</span><span class="mi">261</span><span class="p">),</span>
+        <span class="n">ZWAVE_R3</span><span class="p">(</span><span class="mi">262</span><span class="p">),</span>
+        <span class="n">WATTSTOPPER_DLM</span><span class="p">(</span><span class="mi">263</span><span class="p">),</span>
+        <span class="n">ISO_14443</span><span class="p">(</span><span class="mi">264</span><span class="p">);</span>
+
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">Linktype</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Linktype</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Linktype</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">104</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">Linktype</span> <span class="n">e</span> <span class="p">:</span> <span class="n">Linktype</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Linktype</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="nf">PacketPpi</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="nf">PacketPpi</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="nf">PacketPpi</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PacketPpiHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_raw_fields</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">header</span><span class="p">().</span><span class="na">pphLen</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
+        <span class="n">KaitaiStream</span> <span class="n">_io__raw_fields</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_fields</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">fields</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PacketPpiFields</span><span class="p">(</span><span class="n">_io__raw_fields</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">pphDlt</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">PPI</span><span class="p">:</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PacketPpi</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">case</span> <span class="n">ETHERNET</span><span class="p">:</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">EthernetFrame</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PacketPpiFields</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PacketPpiFields</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">PacketPpiFields</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">PacketPpiFields</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">PacketPpiFields</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">PacketPpiFields</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PacketPpiField</span><span class="o">&gt;</span><span class="p">();</span>
+            <span class="p">{</span>
+                <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">PacketPpiField</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+                    <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PacketPpiField</span><span class="o">&gt;</span> <span class="n">entries</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PacketPpi</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PacketPpiField</span><span class="o">&gt;</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">entries</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PacketPpi</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PacketPpi</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf&quot;&gt;PPI header format spec, section 4.1.3&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Radio80211nMacExtBody</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Radio80211nMacExtBody</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Radio80211nMacExtBody</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Radio80211nMacExtBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Radio80211nMacExtBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiField</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Radio80211nMacExtBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiField</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MacFlags</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">aMpduId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numDelimiters</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">MacFlags</span> <span class="n">flags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">aMpduId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">numDelimiters</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">reserved</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiField</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">MacFlags</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">aMpduId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">aMpduId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numDelimiters</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numDelimiters</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PacketPpi</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiField</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MacFlags</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">MacFlags</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">MacFlags</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">MacFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">MacFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">MacFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">unused1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">aggregateDelimiter</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">moreAggregates</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">aggregate</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">dupRx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">rxShortGuard</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">isHt40</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">greenfield</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">alignToByte</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">unused2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">unused1</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">aggregateDelimiter</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">moreAggregates</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">aggregate</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">dupRx</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">rxShortGuard</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">isHt40</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">greenfield</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">unused2</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">unused1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">unused1</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Aggregate delimiter CRC error after this frame</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">aggregateDelimiter</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">aggregateDelimiter</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * More aggregates</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">moreAggregates</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">moreAggregates</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Aggregate</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">aggregate</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">aggregate</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Duplicate RX</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">dupRx</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">dupRx</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * RX short guard interval (SGI)</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">rxShortGuard</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">rxShortGuard</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * true = HT40, false = HT20</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isHt40</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">isHt40</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Greenfield</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">greenfield</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">greenfield</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">unused2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">unused2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PacketPpi</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf&quot;&gt;PPI header format spec, section 3.1&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PacketPpiHeader</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PacketPpiHeader</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">PacketPpiHeader</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">PacketPpiHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">PacketPpiHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">PacketPpiHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">pphVersion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">pphFlags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">pphLen</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">pphDlt</span> <span class="o">=</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">Linktype</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">pphVersion</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">pphFlags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">pphLen</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Linktype</span> <span class="n">pphDlt</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PacketPpi</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">pphVersion</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pphVersion</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">pphFlags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pphFlags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">pphLen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pphLen</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Linktype</span> <span class="nf">pphDlt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pphDlt</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PacketPpi</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PacketPpi</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf&quot;&gt;PPI header format spec, section 4.1.2&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Radio80211CommonBody</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Radio80211CommonBody</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Radio80211CommonBody</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Radio80211CommonBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Radio80211CommonBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiField</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Radio80211CommonBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiField</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">tsfTimer</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">rate</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">channelFreq</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">channelFlags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fhssHopset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fhssPattern</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">dbmAntsignal</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readS1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">dbmAntnoise</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readS1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">tsfTimer</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">rate</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">channelFreq</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">channelFlags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">fhssHopset</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">fhssPattern</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span> <span class="n">dbmAntsignal</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span> <span class="n">dbmAntnoise</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiField</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">tsfTimer</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">tsfTimer</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">rate</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">rate</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">channelFreq</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">channelFreq</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">channelFlags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">channelFlags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">fhssHopset</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fhssHopset</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">fhssPattern</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fhssPattern</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span> <span class="nf">dbmAntsignal</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">dbmAntsignal</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span> <span class="nf">dbmAntnoise</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">dbmAntnoise</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PacketPpi</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiField</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf&quot;&gt;PPI header format spec, section 3.1&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PacketPpiField</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PacketPpiField</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">PacketPpiField</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">PacketPpiField</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">PacketPpiField</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiFields</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">PacketPpiField</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiFields</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">pfhType</span> <span class="o">=</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PfhType</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">pfhDatalen</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">pfhType</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">RADIO_802_11_COMMON</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">pfhDatalen</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Radio80211CommonBody</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">RADIO_802_11N_MAC_EXT</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">pfhDatalen</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Radio80211nMacExtBody</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">RADIO_802_11N_MAC_PHY_EXT</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">pfhDatalen</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Radio80211nMacPhyExtBody</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">pfhDatalen</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">PfhType</span> <span class="n">pfhType</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">pfhDatalen</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Object</span> <span class="n">body</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiFields</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_body</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">PfhType</span> <span class="nf">pfhType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pfhType</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">pfhDatalen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pfhDatalen</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Object</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PacketPpi</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiFields</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf&quot;&gt;PPI header format spec, section 4.1.4&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Radio80211nMacPhyExtBody</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Radio80211nMacPhyExtBody</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Radio80211nMacPhyExtBody</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Radio80211nMacPhyExtBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Radio80211nMacPhyExtBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiField</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Radio80211nMacPhyExtBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiField</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MacFlags</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">aMpduId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numDelimiters</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">mcs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numStreams</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">rssiCombined</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="n">rssiAntCtl</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">rssiAntCtl</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="n">rssiAntExt</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">rssiAntExt</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">extChannelFreq</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">extChannelFlags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ChannelFlags</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="n">rfSignalNoise</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">SignalNoise</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">rfSignalNoise</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">SignalNoise</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="n">evm</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">evm</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ChannelFlags</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">ChannelFlags</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">ChannelFlags</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">ChannelFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">ChannelFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">Radio80211nMacPhyExtBody</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">ChannelFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">Radio80211nMacPhyExtBody</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">spectrum2ghz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">ofdm</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">cck</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">turbo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">unused</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">gfsk</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">dynCckOfdm</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">onlyPassiveScan</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">spectrum5ghz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">spectrum2ghz</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">ofdm</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">cck</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">turbo</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">unused</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">gfsk</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">dynCckOfdm</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">onlyPassiveScan</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">spectrum5ghz</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">Radio80211nMacPhyExtBody</span> <span class="n">_parent</span><span class="p">;</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * 2 GHz spectrum</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">spectrum2ghz</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">spectrum2ghz</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * OFDM (Orthogonal Frequency-Division Multiplexing)</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">ofdm</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofdm</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * CCK (Complementary Code Keying)</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">cck</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">cck</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">turbo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">turbo</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">unused</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">unused</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Gaussian Frequency Shift Keying</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">gfsk</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">gfsk</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Dynamic CCK-OFDM</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">dynCckOfdm</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">dynCckOfdm</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Only passive scan allowed</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onlyPassiveScan</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">onlyPassiveScan</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * 5 GHz spectrum</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">spectrum5ghz</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">spectrum5ghz</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PacketPpi</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">Radio80211nMacPhyExtBody</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * RF signal + noise pair at a single antenna</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SignalNoise</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">SignalNoise</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">SignalNoise</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">SignalNoise</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">SignalNoise</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">Radio80211nMacPhyExtBody</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">SignalNoise</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">Radio80211nMacPhyExtBody</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">signal</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readS1</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">noise</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readS1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">byte</span> <span class="n">signal</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">byte</span> <span class="n">noise</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">Radio80211nMacPhyExtBody</span> <span class="n">_parent</span><span class="p">;</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * RF signal, dBm</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">byte</span> <span class="nf">signal</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">signal</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * RF noise, dBm</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">byte</span> <span class="nf">noise</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">noise</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PacketPpi</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">Radio80211nMacPhyExtBody</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">MacFlags</span> <span class="n">flags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">aMpduId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">numDelimiters</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">mcs</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">numStreams</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">rssiCombined</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">rssiAntCtl</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">rssiAntExt</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">extChannelFreq</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ChannelFlags</span> <span class="n">extChannelFlags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">SignalNoise</span><span class="o">&gt;</span> <span class="n">rfSignalNoise</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="n">evm</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiField</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">MacFlags</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">aMpduId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">aMpduId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numDelimiters</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numDelimiters</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Modulation Coding Scheme (MCS)</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">mcs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">mcs</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Number of spatial streams (0 = unknown)</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numStreams</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numStreams</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * RSSI (Received Signal Strength Indication), combined from all active antennas / channels</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">rssiCombined</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">rssiCombined</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * RSSI (Received Signal Strength Indication) for antennas 0-3, control channel</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">rssiAntCtl</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">rssiAntCtl</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * RSSI (Received Signal Strength Indication) for antennas 0-3, extension channel</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">rssiAntExt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">rssiAntExt</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Extension channel frequency (MHz)</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">extChannelFreq</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">extChannelFreq</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Extension channel flags</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">ChannelFlags</span> <span class="nf">extChannelFlags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">extChannelFlags</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Signal + noise values for antennas 0-3</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">SignalNoise</span><span class="o">&gt;</span> <span class="nf">rfSignalNoise</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">rfSignalNoise</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * EVM (Error Vector Magnitude) for chains 0-3</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="nf">evm</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">evm</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PacketPpi</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PacketPpi</span><span class="p">.</span><span class="na">PacketPpiField</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">PacketPpiHeader</span> <span class="n">header</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">PacketPpiFields</span> <span class="n">fields</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">Object</span> <span class="n">body</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">PacketPpi</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_fields</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_body</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">PacketPpiHeader</span> <span class="nf">header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">header</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">PacketPpiFields</span> <span class="nf">fields</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fields</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">PacketPpi</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_fields</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_fields</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_body</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1044,8 +1041,8 @@ public class PacketPpi extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

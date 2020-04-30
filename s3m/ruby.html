@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -282,395 +279,395 @@ data = S3m.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# Scream Tracker 3 module is a tracker music file format that, as all
-# tracker music, bundles both sound samples and instructions on which
-# notes to play. It originates from a Scream Tracker 3 music editor
-# (1994) by Future Crew, derived from original Scream Tracker 2 (.stm)
-# module format.
-# 
-# Instrument descriptions in S3M format allow to use either digital
-# samples or setup and control AdLib (OPL2) synth.
-# 
-# Music is organized in so called `patterns`. &quot;Pattern&quot; is a generally
-# a 64-row long table, which instructs which notes to play on which
-# time measure. &quot;Patterns&quot; are played one-by-one in a sequence
-# determined by `orders`, which is essentially an array of pattern IDs
-# - this way it&#39;s possible to reuse certain patterns more than once
-# for repetitive musical phrases.
-# @see http://hackipedia.org/File%20formats/Music/Sample%20based/text/Scream%20Tracker%203.20%20file%20format.cp437.txt.utf-8.txt Source
-class S3m &lt; Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+<span class="c1">##</span>
+<span class="c1"># Scream Tracker 3 module is a tracker music file format that, as all</span>
+<span class="c1"># tracker music, bundles both sound samples and instructions on which</span>
+<span class="c1"># notes to play. It originates from a Scream Tracker 3 music editor</span>
+<span class="c1"># (1994) by Future Crew, derived from original Scream Tracker 2 (.stm)</span>
+<span class="c1"># module format.</span>
+<span class="c1"># </span>
+<span class="c1"># Instrument descriptions in S3M format allow to use either digital</span>
+<span class="c1"># samples or setup and control AdLib (OPL2) synth.</span>
+<span class="c1"># </span>
+<span class="c1"># Music is organized in so called `patterns`. &quot;Pattern&quot; is a generally</span>
+<span class="c1"># a 64-row long table, which instructs which notes to play on which</span>
+<span class="c1"># time measure. &quot;Patterns&quot; are played one-by-one in a sequence</span>
+<span class="c1"># determined by `orders`, which is essentially an array of pattern IDs</span>
+<span class="c1"># - this way it&#39;s possible to reuse certain patterns more than once</span>
+<span class="c1"># for repetitive musical phrases.</span>
+<span class="c1"># @see http://hackipedia.org/File%20formats/Music/Sample%20based/text/Scream%20Tracker%203.20%20file%20format.cp437.txt.utf-8.txt Source</span>
+<span class="k">class</span> <span class="nc">S3m</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @song_name = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(28), 0, false)
-    @magic1 = @_io.ensure_fixed_contents([26].pack(&#39;C*&#39;))
-    @file_type = @_io.read_u1
-    @reserved1 = @_io.read_bytes(2)
-    @num_orders = @_io.read_u2le
-    @num_instruments = @_io.read_u2le
-    @num_patterns = @_io.read_u2le
-    @flags = @_io.read_u2le
-    @version = @_io.read_u2le
-    @samples_format = @_io.read_u2le
-    @magic2 = @_io.ensure_fixed_contents([83, 67, 82, 77].pack(&#39;C*&#39;))
-    @global_volume = @_io.read_u1
-    @initial_speed = @_io.read_u1
-    @initial_tempo = @_io.read_u1
-    @is_stereo = @_io.read_bits_int(1) != 0
-    @master_volume = @_io.read_bits_int(7)
-    @_io.align_to_byte
-    @ultra_click_removal = @_io.read_u1
-    @has_custom_pan = @_io.read_u1
-    @reserved2 = @_io.read_bytes(8)
-    @ofs_special = @_io.read_u2le
-    @channels = Array.new(32)
-    (32).times { |i|
-      @channels[i] = Channel.new(@_io, self, @_root)
-    }
-    @orders = @_io.read_bytes(num_orders)
-    @instruments = Array.new(num_instruments)
-    (num_instruments).times { |i|
-      @instruments[i] = InstrumentPtr.new(@_io, self, @_root)
-    }
-    @patterns = Array.new(num_patterns)
-    (num_patterns).times { |i|
-      @patterns[i] = PatternPtr.new(@_io, self, @_root)
-    }
-    if has_custom_pan == 252
-      @channel_pans = Array.new(32)
-      (32).times { |i|
-        @channel_pans[i] = ChannelPan.new(@_io, self, @_root)
-      }
-    end
-    self
-  end
-  class ChannelPan &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@song_name</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">28</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">)</span>
+    <span class="vi">@magic1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">26</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+    <span class="vi">@file_type</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+    <span class="vi">@reserved1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="vi">@num_orders</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+    <span class="vi">@num_instruments</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+    <span class="vi">@num_patterns</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+    <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+    <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+    <span class="vi">@samples_format</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+    <span class="vi">@magic2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">83</span><span class="p">,</span> <span class="mi">67</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">77</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+    <span class="vi">@global_volume</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+    <span class="vi">@initial_speed</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+    <span class="vi">@initial_tempo</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+    <span class="vi">@is_stereo</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+    <span class="vi">@master_volume</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+    <span class="vi">@_io</span><span class="o">.</span><span class="n">align_to_byte</span>
+    <span class="vi">@ultra_click_removal</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+    <span class="vi">@has_custom_pan</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+    <span class="vi">@reserved2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+    <span class="vi">@ofs_special</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+    <span class="vi">@channels</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@channels</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Channel</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="vi">@orders</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">num_orders</span><span class="p">)</span>
+    <span class="vi">@instruments</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_instruments</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">num_instruments</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@instruments</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">InstrumentPtr</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="vi">@patterns</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_patterns</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">num_patterns</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@patterns</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">PatternPtr</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">has_custom_pan</span> <span class="o">==</span> <span class="mi">252</span>
+      <span class="vi">@channel_pans</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+      <span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@channel_pans</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ChannelPan</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+    <span class="k">end</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ChannelPan</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @reserved1 = @_io.read_bits_int(2)
-      @has_custom_pan = @_io.read_bits_int(1) != 0
-      @reserved2 = @_io.read_bits_int(1) != 0
-      @pan = @_io.read_bits_int(4)
-      self
-    end
-    attr_reader :reserved1
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@reserved1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+      <span class="vi">@has_custom_pan</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@reserved2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@pan</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved1</span>
 
-    ##
-    # If true, then use a custom pan setting provided in the `pan`
-    # field. If false, the channel would use the default setting
-    # (0x7 for mono, 0x3 or 0xc for stereo).
-    attr_reader :has_custom_pan
-    attr_reader :reserved2
-    attr_reader :pan
-  end
-  class PatternCell &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="c1">##</span>
+    <span class="c1"># If true, then use a custom pan setting provided in the `pan`</span>
+    <span class="c1"># field. If false, the channel would use the default setting</span>
+    <span class="c1"># (0x7 for mono, 0x3 or 0xc for stereo).</span>
+    <span class="kp">attr_reader</span> <span class="ss">:has_custom_pan</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved2</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pan</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">PatternCell</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @has_fx = @_io.read_bits_int(1) != 0
-      @has_volume = @_io.read_bits_int(1) != 0
-      @has_note_and_instrument = @_io.read_bits_int(1) != 0
-      @channel_num = @_io.read_bits_int(5)
-      @_io.align_to_byte
-      if has_note_and_instrument
-        @note = @_io.read_u1
-      end
-      if has_note_and_instrument
-        @instrument = @_io.read_u1
-      end
-      if has_volume
-        @volume = @_io.read_u1
-      end
-      if has_fx
-        @fx_type = @_io.read_u1
-      end
-      if has_fx
-        @fx_value = @_io.read_u1
-      end
-      self
-    end
-    attr_reader :has_fx
-    attr_reader :has_volume
-    attr_reader :has_note_and_instrument
-    attr_reader :channel_num
-    attr_reader :note
-    attr_reader :instrument
-    attr_reader :volume
-    attr_reader :fx_type
-    attr_reader :fx_value
-  end
-  class PatternCells &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@has_fx</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@has_volume</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@has_note_and_instrument</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@channel_num</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">align_to_byte</span>
+      <span class="k">if</span> <span class="n">has_note_and_instrument</span>
+        <span class="vi">@note</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">has_note_and_instrument</span>
+        <span class="vi">@instrument</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">has_volume</span>
+        <span class="vi">@volume</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">has_fx</span>
+        <span class="vi">@fx_type</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">has_fx</span>
+        <span class="vi">@fx_value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:has_fx</span>
+    <span class="kp">attr_reader</span> <span class="ss">:has_volume</span>
+    <span class="kp">attr_reader</span> <span class="ss">:has_note_and_instrument</span>
+    <span class="kp">attr_reader</span> <span class="ss">:channel_num</span>
+    <span class="kp">attr_reader</span> <span class="ss">:note</span>
+    <span class="kp">attr_reader</span> <span class="ss">:instrument</span>
+    <span class="kp">attr_reader</span> <span class="ss">:volume</span>
+    <span class="kp">attr_reader</span> <span class="ss">:fx_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:fx_value</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">PatternCells</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @cells = []
-      i = 0
-      while not @_io.eof?
-        @cells &lt;&lt; PatternCell.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :cells
-  end
-  class Channel &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@cells</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+        <span class="vi">@cells</span> <span class="o">&lt;&lt;</span> <span class="no">PatternCell</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:cells</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Channel</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @is_disabled = @_io.read_bits_int(1) != 0
-      @ch_type = @_io.read_bits_int(7)
-      self
-    end
-    attr_reader :is_disabled
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@is_disabled</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@ch_type</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:is_disabled</span>
 
-    ##
-    # Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
-    attr_reader :ch_type
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ch_type</span>
+  <span class="k">end</span>
 
-  ##
-  # Custom 3-byte integer, stored in mixed endian manner.
-  class SwappedU3 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Custom 3-byte integer, stored in mixed endian manner.</span>
+  <span class="k">class</span> <span class="nc">SwappedU3</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @hi = @_io.read_u1
-      @lo = @_io.read_u2le
-      self
-    end
-    def value
-      return @value unless @value.nil?
-      @value = (lo | (hi &lt;&lt; 16))
-      @value
-    end
-    attr_reader :hi
-    attr_reader :lo
-  end
-  class Pattern &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@hi</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@lo</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">value</span>
+      <span class="k">return</span> <span class="vi">@value</span> <span class="k">unless</span> <span class="vi">@value</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@value</span> <span class="o">=</span> <span class="p">(</span><span class="n">lo</span> <span class="o">|</span> <span class="p">(</span><span class="n">hi</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">))</span>
+      <span class="vi">@value</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:hi</span>
+    <span class="kp">attr_reader</span> <span class="ss">:lo</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Pattern</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @size = @_io.read_u2le
-      @_raw_body = @_io.read_bytes((size - 2))
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = PatternCells.new(io, self, @_root)
-      self
-    end
-    attr_reader :size
-    attr_reader :body
-    attr_reader :_raw_body
-  end
-  class PatternPtr &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">size</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span>
+      <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+      <span class="vi">@body</span> <span class="o">=</span> <span class="no">PatternCells</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_body</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">PatternPtr</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @paraptr = @_io.read_u2le
-      self
-    end
-    def body
-      return @body unless @body.nil?
-      _pos = @_io.pos
-      @_io.seek((paraptr * 16))
-      @body = Pattern.new(@_io, self, @_root)
-      @_io.seek(_pos)
-      @body
-    end
-    attr_reader :paraptr
-  end
-  class InstrumentPtr &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@paraptr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">body</span>
+      <span class="k">return</span> <span class="vi">@body</span> <span class="k">unless</span> <span class="vi">@body</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="n">paraptr</span> <span class="o">*</span> <span class="mi">16</span><span class="p">))</span>
+      <span class="vi">@body</span> <span class="o">=</span> <span class="no">Pattern</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@body</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:paraptr</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">InstrumentPtr</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @paraptr = @_io.read_u2le
-      self
-    end
-    def body
-      return @body unless @body.nil?
-      _pos = @_io.pos
-      @_io.seek((paraptr * 16))
-      @body = Instrument.new(@_io, self, @_root)
-      @_io.seek(_pos)
-      @body
-    end
-    attr_reader :paraptr
-  end
-  class Instrument &lt; Kaitai::Struct::Struct
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@paraptr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">body</span>
+      <span class="k">return</span> <span class="vi">@body</span> <span class="k">unless</span> <span class="vi">@body</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="n">paraptr</span> <span class="o">*</span> <span class="mi">16</span><span class="p">))</span>
+      <span class="vi">@body</span> <span class="o">=</span> <span class="no">Instrument</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@body</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:paraptr</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Instrument</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-    INST_TYPES = {
-      1 =&gt; :inst_types_sample,
-      2 =&gt; :inst_types_melodic,
-      3 =&gt; :inst_types_bass_drum,
-      4 =&gt; :inst_types_snare_drum,
-      5 =&gt; :inst_types_tom,
-      6 =&gt; :inst_types_cymbal,
-      7 =&gt; :inst_types_hihat,
-    }
-    I__INST_TYPES = INST_TYPES.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="no">INST_TYPES</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:inst_types_sample</span><span class="p">,</span>
+      <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:inst_types_melodic</span><span class="p">,</span>
+      <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:inst_types_bass_drum</span><span class="p">,</span>
+      <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:inst_types_snare_drum</span><span class="p">,</span>
+      <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:inst_types_tom</span><span class="p">,</span>
+      <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:inst_types_cymbal</span><span class="p">,</span>
+      <span class="mi">7</span> <span class="o">=&gt;</span> <span class="ss">:inst_types_hihat</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="no">I__INST_TYPES</span> <span class="o">=</span> <span class="no">INST_TYPES</span><span class="o">.</span><span class="n">invert</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @type = Kaitai::Struct::Stream::resolve_enum(INST_TYPES, @_io.read_u1)
-      @filename = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(12), 0, false)
-      case type
-      when :inst_types_sample
-        @body = Sampled.new(@_io, self, @_root)
-      else
-        @body = Adlib.new(@_io, self, @_root)
-      end
-      @tuning_hz = @_io.read_u4le
-      @reserved2 = @_io.read_bytes(12)
-      @sample_name = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(28), 0, false)
-      @magic = @_io.ensure_fixed_contents([83, 67, 82, 83].pack(&#39;C*&#39;))
-      self
-    end
-    class Sampled &lt; Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">INST_TYPES</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@filename</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">12</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">)</span>
+      <span class="k">case</span> <span class="n">type</span>
+      <span class="k">when</span> <span class="ss">:inst_types_sample</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">Sampled</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">Adlib</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@tuning_hz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@reserved2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+      <span class="vi">@sample_name</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">28</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">)</span>
+      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">83</span><span class="p">,</span> <span class="mi">67</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">83</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">Sampled</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
 
-      def _read
-        @paraptr_sample = SwappedU3.new(@_io, self, @_root)
-        @len_sample = @_io.read_u4le
-        @loop_begin = @_io.read_u4le
-        @loop_end = @_io.read_u4le
-        @default_volume = @_io.read_u1
-        @reserved1 = @_io.read_u1
-        @is_packed = @_io.read_u1
-        @flags = @_io.read_u1
-        self
-      end
-      def sample
-        return @sample unless @sample.nil?
-        _pos = @_io.pos
-        @_io.seek((paraptr_sample.value * 16))
-        @sample = @_io.read_bytes(len_sample)
-        @_io.seek(_pos)
-        @sample
-      end
-      attr_reader :paraptr_sample
-      attr_reader :len_sample
-      attr_reader :loop_begin
-      attr_reader :loop_end
+      <span class="k">def</span> <span class="nf">_read</span>
+        <span class="vi">@paraptr_sample</span> <span class="o">=</span> <span class="no">SwappedU3</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@len_sample</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+        <span class="vi">@loop_begin</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+        <span class="vi">@loop_end</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+        <span class="vi">@default_volume</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+        <span class="vi">@reserved1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+        <span class="vi">@is_packed</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+        <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
+      <span class="k">def</span> <span class="nf">sample</span>
+        <span class="k">return</span> <span class="vi">@sample</span> <span class="k">unless</span> <span class="vi">@sample</span><span class="o">.</span><span class="n">nil?</span>
+        <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="n">paraptr_sample</span><span class="o">.</span><span class="n">value</span> <span class="o">*</span> <span class="mi">16</span><span class="p">))</span>
+        <span class="vi">@sample</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_sample</span><span class="p">)</span>
+        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+        <span class="vi">@sample</span>
+      <span class="k">end</span>
+      <span class="kp">attr_reader</span> <span class="ss">:paraptr_sample</span>
+      <span class="kp">attr_reader</span> <span class="ss">:len_sample</span>
+      <span class="kp">attr_reader</span> <span class="ss">:loop_begin</span>
+      <span class="kp">attr_reader</span> <span class="ss">:loop_end</span>
 
-      ##
-      # Default volume
-      attr_reader :default_volume
-      attr_reader :reserved1
+      <span class="c1">##</span>
+      <span class="c1"># Default volume</span>
+      <span class="kp">attr_reader</span> <span class="ss">:default_volume</span>
+      <span class="kp">attr_reader</span> <span class="ss">:reserved1</span>
 
-      ##
-      # 0 = unpacked, 1 = DP30ADPCM packing
-      attr_reader :is_packed
-      attr_reader :flags
-    end
-    class Adlib &lt; Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
+      <span class="c1">##</span>
+      <span class="c1"># 0 = unpacked, 1 = DP30ADPCM packing</span>
+      <span class="kp">attr_reader</span> <span class="ss">:is_packed</span>
+      <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">Adlib</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
 
-      def _read
-        @reserved1 = @_io.ensure_fixed_contents([0, 0, 0].pack(&#39;C*&#39;))
-        @_unnamed1 = @_io.read_bytes(16)
-        self
-      end
-      attr_reader :reserved1
-      attr_reader :_unnamed1
-    end
-    attr_reader :type
-    attr_reader :filename
-    attr_reader :body
-    attr_reader :tuning_hz
-    attr_reader :reserved2
-    attr_reader :sample_name
-    attr_reader :magic
-  end
-  attr_reader :song_name
-  attr_reader :magic1
-  attr_reader :file_type
-  attr_reader :reserved1
+      <span class="k">def</span> <span class="nf">_read</span>
+        <span class="vi">@reserved1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+        <span class="vi">@_unnamed1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
+      <span class="kp">attr_reader</span> <span class="ss">:reserved1</span>
+      <span class="kp">attr_reader</span> <span class="ss">:_unnamed1</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:filename</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body</span>
+    <span class="kp">attr_reader</span> <span class="ss">:tuning_hz</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved2</span>
+    <span class="kp">attr_reader</span> <span class="ss">:sample_name</span>
+    <span class="kp">attr_reader</span> <span class="ss">:magic</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:song_name</span>
+  <span class="kp">attr_reader</span> <span class="ss">:magic1</span>
+  <span class="kp">attr_reader</span> <span class="ss">:file_type</span>
+  <span class="kp">attr_reader</span> <span class="ss">:reserved1</span>
 
-  ##
-  # Number of orders in a song
-  attr_reader :num_orders
+  <span class="c1">##</span>
+  <span class="c1"># Number of orders in a song</span>
+  <span class="kp">attr_reader</span> <span class="ss">:num_orders</span>
 
-  ##
-  # Number of instruments in a song
-  attr_reader :num_instruments
+  <span class="c1">##</span>
+  <span class="c1"># Number of instruments in a song</span>
+  <span class="kp">attr_reader</span> <span class="ss">:num_instruments</span>
 
-  ##
-  # Number of patterns in a song
-  attr_reader :num_patterns
-  attr_reader :flags
+  <span class="c1">##</span>
+  <span class="c1"># Number of patterns in a song</span>
+  <span class="kp">attr_reader</span> <span class="ss">:num_patterns</span>
+  <span class="kp">attr_reader</span> <span class="ss">:flags</span>
 
-  ##
-  # Scream Tracker version that was used to save this file
-  attr_reader :version
+  <span class="c1">##</span>
+  <span class="c1"># Scream Tracker version that was used to save this file</span>
+  <span class="kp">attr_reader</span> <span class="ss">:version</span>
 
-  ##
-  # 1 = signed samples, 2 = unsigned samples
-  attr_reader :samples_format
-  attr_reader :magic2
-  attr_reader :global_volume
-  attr_reader :initial_speed
-  attr_reader :initial_tempo
-  attr_reader :is_stereo
-  attr_reader :master_volume
-  attr_reader :ultra_click_removal
-  attr_reader :has_custom_pan
-  attr_reader :reserved2
+  <span class="c1">##</span>
+  <span class="c1"># 1 = signed samples, 2 = unsigned samples</span>
+  <span class="kp">attr_reader</span> <span class="ss">:samples_format</span>
+  <span class="kp">attr_reader</span> <span class="ss">:magic2</span>
+  <span class="kp">attr_reader</span> <span class="ss">:global_volume</span>
+  <span class="kp">attr_reader</span> <span class="ss">:initial_speed</span>
+  <span class="kp">attr_reader</span> <span class="ss">:initial_tempo</span>
+  <span class="kp">attr_reader</span> <span class="ss">:is_stereo</span>
+  <span class="kp">attr_reader</span> <span class="ss">:master_volume</span>
+  <span class="kp">attr_reader</span> <span class="ss">:ultra_click_removal</span>
+  <span class="kp">attr_reader</span> <span class="ss">:has_custom_pan</span>
+  <span class="kp">attr_reader</span> <span class="ss">:reserved2</span>
 
-  ##
-  # Offset of special data, not used by Scream Tracker directly.
-  attr_reader :ofs_special
-  attr_reader :channels
-  attr_reader :orders
-  attr_reader :instruments
-  attr_reader :patterns
-  attr_reader :channel_pans
-end
-</code></pre>
+  <span class="c1">##</span>
+  <span class="c1"># Offset of special data, not used by Scream Tracker directly.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:ofs_special</span>
+  <span class="kp">attr_reader</span> <span class="ss">:channels</span>
+  <span class="kp">attr_reader</span> <span class="ss">:orders</span>
+  <span class="kp">attr_reader</span> <span class="ss">:instruments</span>
+  <span class="kp">attr_reader</span> <span class="ss">:patterns</span>
+  <span class="kp">attr_reader</span> <span class="ss">:channel_pans</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -697,8 +694,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

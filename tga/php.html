@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -222,274 +219,274 @@ section#format-index .row {
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * TGA (AKA Truevision TGA, AKA TARGA), is a raster image file format created by Truevision. It supports up to 32 bits per pixel (three 8-bit RGB channels + 8-bit alpha channel), color mapping and optional lossless RLE compression.
- */
+<span class="sd">/**</span>
+<span class="sd"> * TGA (AKA Truevision TGA, AKA TARGA), is a raster image file format created by Truevision. It supports up to 32 bits per pixel (three 8-bit RGB channels + 8-bit alpha channel), color mapping and optional lossless RLE compression.</span>
+<span class="sd"> */</span>
 
-class Tga extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Tga $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Tga</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Tga</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_imageIdLen = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_colorMapType = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_imageType = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_colorMapOfs = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_numColorMap = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_colorMapDepth = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_xOffset = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_yOffset = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_width = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_height = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_imageDepth = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_imgDescriptor = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_imageId = $this-&gt;_io-&gt;readBytes($this-&gt;imageIdLen());
-        if ($this-&gt;colorMapType() == \Tga\ColorMapEnum::HAS_COLOR_MAP) {
-            $this-&gt;_m_colorMap = [];
-            $n = $this-&gt;numColorMap();
-            for ($i = 0; $i &lt; $n; $i++) {
-                $this-&gt;_m_colorMap[] = $this-&gt;_io-&gt;readBytes(intval(($this-&gt;colorMapDepth() + 7) / 8));
-            }
-        }
-    }
-    protected $_m_footer;
-    public function footer() {
-        if ($this-&gt;_m_footer !== null)
-            return $this-&gt;_m_footer;
-        $_pos = $this-&gt;_io-&gt;pos();
-        $this-&gt;_io-&gt;seek(($this-&gt;_io()-&gt;size() - 26));
-        $this-&gt;_m_footer = new \Tga\TgaFooter($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_io-&gt;seek($_pos);
-        return $this-&gt;_m_footer;
-    }
-    protected $_m_imageIdLen;
-    protected $_m_colorMapType;
-    protected $_m_imageType;
-    protected $_m_colorMapOfs;
-    protected $_m_numColorMap;
-    protected $_m_colorMapDepth;
-    protected $_m_xOffset;
-    protected $_m_yOffset;
-    protected $_m_width;
-    protected $_m_height;
-    protected $_m_imageDepth;
-    protected $_m_imgDescriptor;
-    protected $_m_imageId;
-    protected $_m_colorMap;
-    public function imageIdLen() { return $this-&gt;_m_imageIdLen; }
-    public function colorMapType() { return $this-&gt;_m_colorMapType; }
-    public function imageType() { return $this-&gt;_m_imageType; }
-    public function colorMapOfs() { return $this-&gt;_m_colorMapOfs; }
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageIdLen</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMapType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMapOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numColorMap</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMapDepth</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_xOffset</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_yOffset</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_width</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_height</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageDepth</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imgDescriptor</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageId</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">imageIdLen</span><span class="p">());</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">colorMapType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Tga\ColorMapEnum</span><span class="o">::</span><span class="na">HAS_COLOR_MAP</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMap</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numColorMap</span><span class="p">();</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMap</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nb">intval</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">colorMapDepth</span><span class="p">()</span> <span class="o">+</span> <span class="mi">7</span><span class="p">)</span> <span class="o">/</span> <span class="mi">8</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_footer</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">footer</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_footer</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_footer</span><span class="p">;</span>
+        <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">26</span><span class="p">));</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_footer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Tga\TgaFooter</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_footer</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_imageIdLen</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_colorMapType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_imageType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_colorMapOfs</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numColorMap</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_colorMapDepth</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_xOffset</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_yOffset</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_width</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_height</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_imageDepth</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_imgDescriptor</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_imageId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_colorMap</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">imageIdLen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageIdLen</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">colorMapType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMapType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">imageType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">colorMapOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMapOfs</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of entries in a color map
-     */
-    public function numColorMap() { return $this-&gt;_m_numColorMap; }
+    <span class="sd">/**</span>
+<span class="sd">     * Number of entries in a color map</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numColorMap</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numColorMap</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of bits in a each color maps entry
-     */
-    public function colorMapDepth() { return $this-&gt;_m_colorMapDepth; }
-    public function xOffset() { return $this-&gt;_m_xOffset; }
-    public function yOffset() { return $this-&gt;_m_yOffset; }
+    <span class="sd">/**</span>
+<span class="sd">     * Number of bits in a each color maps entry</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">colorMapDepth</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMapDepth</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">xOffset</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_xOffset</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">yOffset</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_yOffset</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Width of the image, in pixels
-     */
-    public function width() { return $this-&gt;_m_width; }
+    <span class="sd">/**</span>
+<span class="sd">     * Width of the image, in pixels</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">width</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_width</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Height of the image, in pixels
-     */
-    public function height() { return $this-&gt;_m_height; }
-    public function imageDepth() { return $this-&gt;_m_imageDepth; }
-    public function imgDescriptor() { return $this-&gt;_m_imgDescriptor; }
+    <span class="sd">/**</span>
+<span class="sd">     * Height of the image, in pixels</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">height</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_height</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">imageDepth</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageDepth</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">imgDescriptor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imgDescriptor</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Arbitrary application-specific information that is used to
-     * identify image. May contain text or some binary data.
-     */
-    public function imageId() { return $this-&gt;_m_imageId; }
+    <span class="sd">/**</span>
+<span class="sd">     * Arbitrary application-specific information that is used to</span>
+<span class="sd">     * identify image. May contain text or some binary data.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">imageId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageId</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Color map
-     */
-    public function colorMap() { return $this-&gt;_m_colorMap; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * Color map</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">colorMap</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorMap</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Tga;
+<span class="k">namespace</span> <span class="nx">\Tga</span><span class="p">;</span>
 
-class TgaFooter extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Tga $_parent = null, \Tga $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">TgaFooter</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Tga</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Tga</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_extAreaOfs = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_devDirOfs = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_versionMagic = $this-&gt;_io-&gt;readBytes(18);
-    }
-    protected $_m_isValid;
-    public function isValid() {
-        if ($this-&gt;_m_isValid !== null)
-            return $this-&gt;_m_isValid;
-        $this-&gt;_m_isValid = $this-&gt;versionMagic() == &quot;\x54\x52\x55\x45\x56\x49\x53\x49\x4F\x4E\x2D\x58\x46\x49\x4C\x45\x2E\x00&quot;;
-        return $this-&gt;_m_isValid;
-    }
-    protected $_m_extArea;
-    public function extArea() {
-        if ($this-&gt;_m_extArea !== null)
-            return $this-&gt;_m_extArea;
-        if ($this-&gt;isValid()) {
-            $_pos = $this-&gt;_io-&gt;pos();
-            $this-&gt;_io-&gt;seek($this-&gt;extAreaOfs());
-            $this-&gt;_m_extArea = new \Tga\TgaExtArea($this-&gt;_io, $this, $this-&gt;_root);
-            $this-&gt;_io-&gt;seek($_pos);
-        }
-        return $this-&gt;_m_extArea;
-    }
-    protected $_m_extAreaOfs;
-    protected $_m_devDirOfs;
-    protected $_m_versionMagic;
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extAreaOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_devDirOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionMagic</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">18</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_isValid</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isValid</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isValid</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isValid</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isValid</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">versionMagic</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\x54\x52\x55\x45\x56\x49\x53\x49\x4F\x4E\x2D\x58\x46\x49\x4C\x45\x2E\x00</span><span class="s2">&quot;</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isValid</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_extArea</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">extArea</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extArea</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extArea</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isValid</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">extAreaOfs</span><span class="p">());</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extArea</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Tga\TgaExtArea</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extArea</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_extAreaOfs</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_devDirOfs</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_versionMagic</span><span class="p">;</span>
 
-    /**
-     * Offset to extension area
-     */
-    public function extAreaOfs() { return $this-&gt;_m_extAreaOfs; }
+    <span class="sd">/**</span>
+<span class="sd">     * Offset to extension area</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">extAreaOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extAreaOfs</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Offset to developer directory
-     */
-    public function devDirOfs() { return $this-&gt;_m_devDirOfs; }
-    public function versionMagic() { return $this-&gt;_m_versionMagic; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * Offset to developer directory</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">devDirOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_devDirOfs</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">versionMagic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionMagic</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Tga;
+<span class="k">namespace</span> <span class="nx">\Tga</span><span class="p">;</span>
 
-class TgaExtArea extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Tga\TgaFooter $_parent = null, \Tga $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">TgaExtArea</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Tga\TgaFooter</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Tga</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_extAreaSize = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_authorName = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(41), &quot;ASCII&quot;);
-        $this-&gt;_m_comments = [];
-        $n = 4;
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_comments[] = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(81), &quot;ASCII&quot;);
-        }
-        $this-&gt;_m_timestamp = $this-&gt;_io-&gt;readBytes(12);
-        $this-&gt;_m_jobId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(41), &quot;ASCII&quot;);
-        $this-&gt;_m_jobTime = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(6), &quot;ASCII&quot;);
-        $this-&gt;_m_softwareId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(41), &quot;ASCII&quot;);
-        $this-&gt;_m_softwareVersion = $this-&gt;_io-&gt;readBytes(3);
-        $this-&gt;_m_keyColor = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_pixelAspectRatio = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_gammaValue = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_colorCorrOfs = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_postageStampOfs = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_scanLineOfs = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_attributes = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_extAreaSize;
-    protected $_m_authorName;
-    protected $_m_comments;
-    protected $_m_timestamp;
-    protected $_m_jobId;
-    protected $_m_jobTime;
-    protected $_m_softwareId;
-    protected $_m_softwareVersion;
-    protected $_m_keyColor;
-    protected $_m_pixelAspectRatio;
-    protected $_m_gammaValue;
-    protected $_m_colorCorrOfs;
-    protected $_m_postageStampOfs;
-    protected $_m_scanLineOfs;
-    protected $_m_attributes;
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extAreaSize</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_authorName</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">41</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_comments</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_comments</span><span class="p">[]</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">81</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timestamp</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_jobId</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">41</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_jobTime</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_softwareId</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">41</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_softwareVersion</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_keyColor</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pixelAspectRatio</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_gammaValue</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorCorrOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_postageStampOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_scanLineOfs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_attributes</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_extAreaSize</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_authorName</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_comments</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_timestamp</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_jobId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_jobTime</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_softwareId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_softwareVersion</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_keyColor</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_pixelAspectRatio</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_gammaValue</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_colorCorrOfs</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_postageStampOfs</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_scanLineOfs</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_attributes</span><span class="p">;</span>
 
-    /**
-     * Extension area size in bytes (always 495)
-     */
-    public function extAreaSize() { return $this-&gt;_m_extAreaSize; }
-    public function authorName() { return $this-&gt;_m_authorName; }
+    <span class="sd">/**</span>
+<span class="sd">     * Extension area size in bytes (always 495)</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">extAreaSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extAreaSize</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">authorName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_authorName</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Comments, organized as four lines, each consisting of 80 characters plus a NULL
-     */
-    public function comments() { return $this-&gt;_m_comments; }
+    <span class="sd">/**</span>
+<span class="sd">     * Comments, organized as four lines, each consisting of 80 characters plus a NULL</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">comments</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_comments</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Image creation date / time
-     */
-    public function timestamp() { return $this-&gt;_m_timestamp; }
+    <span class="sd">/**</span>
+<span class="sd">     * Image creation date / time</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">timestamp</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timestamp</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Internal job ID, to be used in image workflow systems
-     */
-    public function jobId() { return $this-&gt;_m_jobId; }
+    <span class="sd">/**</span>
+<span class="sd">     * Internal job ID, to be used in image workflow systems</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">jobId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_jobId</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Hours, minutes and seconds spent creating the file (for billing, etc.)
-     */
-    public function jobTime() { return $this-&gt;_m_jobTime; }
+    <span class="sd">/**</span>
+<span class="sd">     * Hours, minutes and seconds spent creating the file (for billing, etc.)</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">jobTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_jobTime</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * The application that created the file.
-     */
-    public function softwareId() { return $this-&gt;_m_softwareId; }
-    public function softwareVersion() { return $this-&gt;_m_softwareVersion; }
-    public function keyColor() { return $this-&gt;_m_keyColor; }
-    public function pixelAspectRatio() { return $this-&gt;_m_pixelAspectRatio; }
-    public function gammaValue() { return $this-&gt;_m_gammaValue; }
+    <span class="sd">/**</span>
+<span class="sd">     * The application that created the file.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">softwareId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_softwareId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">softwareVersion</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_softwareVersion</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">keyColor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_keyColor</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">pixelAspectRatio</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pixelAspectRatio</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">gammaValue</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_gammaValue</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of bytes from the beginning of the file to the color correction table if present
-     */
-    public function colorCorrOfs() { return $this-&gt;_m_colorCorrOfs; }
+    <span class="sd">/**</span>
+<span class="sd">     * Number of bytes from the beginning of the file to the color correction table if present</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">colorCorrOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorCorrOfs</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of bytes from the beginning of the file to the postage stamp image if present
-     */
-    public function postageStampOfs() { return $this-&gt;_m_postageStampOfs; }
+    <span class="sd">/**</span>
+<span class="sd">     * Number of bytes from the beginning of the file to the postage stamp image if present</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">postageStampOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_postageStampOfs</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of bytes from the beginning of the file to the scan lines table if present
-     */
-    public function scanLineOfs() { return $this-&gt;_m_scanLineOfs; }
+    <span class="sd">/**</span>
+<span class="sd">     * Number of bytes from the beginning of the file to the scan lines table if present</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">scanLineOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_scanLineOfs</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Specifies the alpha channel
-     */
-    public function attributes() { return $this-&gt;_m_attributes; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * Specifies the alpha channel</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">attributes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_attributes</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Tga;
+<span class="k">namespace</span> <span class="nx">\Tga</span><span class="p">;</span>
 
-class ColorMapEnum {
-    const NO_COLOR_MAP = 0;
-    const HAS_COLOR_MAP = 1;
-}
+<span class="k">class</span> <span class="nc">ColorMapEnum</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">NO_COLOR_MAP</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">HAS_COLOR_MAP</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
 
-namespace \Tga;
+<span class="k">namespace</span> <span class="nx">\Tga</span><span class="p">;</span>
 
-class ImageTypeEnum {
-    const NO_IMAGE_DATA = 0;
-    const UNCOMP_COLOR_MAPPED = 1;
-    const UNCOMP_TRUE_COLOR = 2;
-    const UNCOMP_BW = 3;
-    const RLE_COLOR_MAPPED = 9;
-    const RLE_TRUE_COLOR = 10;
-    const RLE_BW = 11;
-}
-</code></pre>
+<span class="k">class</span> <span class="nc">ImageTypeEnum</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">NO_IMAGE_DATA</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNCOMP_COLOR_MAPPED</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNCOMP_TRUE_COLOR</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNCOMP_BW</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RLE_COLOR_MAPPED</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RLE_TRUE_COLOR</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RLE_BW</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -516,8 +513,8 @@ class ImageTypeEnum {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

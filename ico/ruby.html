@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -247,125 +244,125 @@ data = Ico.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# Microsoft Windows uses specific file format to store applications
-# icons - ICO. This is a container that contains one or more image
-# files (effectively, DIB parts of BMP files or full PNG files are
-# contained inside).
-# @see https://msdn.microsoft.com/en-us/library/ms997538.aspx Source
-class Ico &lt; Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+<span class="c1">##</span>
+<span class="c1"># Microsoft Windows uses specific file format to store applications</span>
+<span class="c1"># icons - ICO. This is a container that contains one or more image</span>
+<span class="c1"># files (effectively, DIB parts of BMP files or full PNG files are</span>
+<span class="c1"># contained inside).</span>
+<span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms997538.aspx Source</span>
+<span class="k">class</span> <span class="nc">Ico</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @magic = @_io.ensure_fixed_contents([0, 0, 1, 0].pack(&#39;C*&#39;))
-    @num_images = @_io.read_u2le
-    @images = Array.new(num_images)
-    (num_images).times { |i|
-      @images[i] = IconDirEntry.new(@_io, self, @_root)
-    }
-    self
-  end
-  class IconDirEntry &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+    <span class="vi">@num_images</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+    <span class="vi">@images</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_images</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">num_images</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@images</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">IconDirEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">IconDirEntry</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @width = @_io.read_u1
-      @height = @_io.read_u1
-      @num_colors = @_io.read_u1
-      @reserved = @_io.ensure_fixed_contents([0].pack(&#39;C*&#39;))
-      @num_planes = @_io.read_u2le
-      @bpp = @_io.read_u2le
-      @len_img = @_io.read_u4le
-      @ofs_img = @_io.read_u4le
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@width</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@height</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@num_colors</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@num_planes</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@bpp</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@len_img</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@ofs_img</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Raw image data. Use `is_png` to determine whether this is an
-    # embedded PNG file (true) or a DIB bitmap (false) and call a
-    # relevant parser, if needed to parse image data further.
-    def img
-      return @img unless @img.nil?
-      _pos = @_io.pos
-      @_io.seek(ofs_img)
-      @img = @_io.read_bytes(len_img)
-      @_io.seek(_pos)
-      @img
-    end
+    <span class="c1">##</span>
+    <span class="c1"># Raw image data. Use `is_png` to determine whether this is an</span>
+    <span class="c1"># embedded PNG file (true) or a DIB bitmap (false) and call a</span>
+    <span class="c1"># relevant parser, if needed to parse image data further.</span>
+    <span class="k">def</span> <span class="nf">img</span>
+      <span class="k">return</span> <span class="vi">@img</span> <span class="k">unless</span> <span class="vi">@img</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_img</span><span class="p">)</span>
+      <span class="vi">@img</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_img</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@img</span>
+    <span class="k">end</span>
 
-    ##
-    # Pre-reads first 8 bytes of the image to determine if it&#39;s an
-    # embedded PNG file.
-    def png_header
-      return @png_header unless @png_header.nil?
-      _pos = @_io.pos
-      @_io.seek(ofs_img)
-      @png_header = @_io.read_bytes(8)
-      @_io.seek(_pos)
-      @png_header
-    end
+    <span class="c1">##</span>
+    <span class="c1"># Pre-reads first 8 bytes of the image to determine if it&#39;s an</span>
+    <span class="c1"># embedded PNG file.</span>
+    <span class="k">def</span> <span class="nf">png_header</span>
+      <span class="k">return</span> <span class="vi">@png_header</span> <span class="k">unless</span> <span class="vi">@png_header</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_img</span><span class="p">)</span>
+      <span class="vi">@png_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@png_header</span>
+    <span class="k">end</span>
 
-    ##
-    # True if this image is in PNG format.
-    def is_png
-      return @is_png unless @is_png.nil?
-      @is_png = png_header == [137, 80, 78, 71, 13, 10, 26, 10].pack(&#39;C*&#39;)
-      @is_png
-    end
+    <span class="c1">##</span>
+    <span class="c1"># True if this image is in PNG format.</span>
+    <span class="k">def</span> <span class="nf">is_png</span>
+      <span class="k">return</span> <span class="vi">@is_png</span> <span class="k">unless</span> <span class="vi">@is_png</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@is_png</span> <span class="o">=</span> <span class="n">png_header</span> <span class="o">==</span> <span class="o">[</span><span class="mi">137</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">71</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">10</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+      <span class="vi">@is_png</span>
+    <span class="k">end</span>
 
-    ##
-    # Width of image, px
-    attr_reader :width
+    <span class="c1">##</span>
+    <span class="c1"># Width of image, px</span>
+    <span class="kp">attr_reader</span> <span class="ss">:width</span>
 
-    ##
-    # Height of image, px
-    attr_reader :height
+    <span class="c1">##</span>
+    <span class="c1"># Height of image, px</span>
+    <span class="kp">attr_reader</span> <span class="ss">:height</span>
 
-    ##
-    # Number of colors in palette of the image or 0 if image has
-    # no palette (i.e. RGB, RGBA, etc)
-    attr_reader :num_colors
-    attr_reader :reserved
+    <span class="c1">##</span>
+    <span class="c1"># Number of colors in palette of the image or 0 if image has</span>
+    <span class="c1"># no palette (i.e. RGB, RGBA, etc)</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_colors</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
 
-    ##
-    # Number of color planes
-    attr_reader :num_planes
+    <span class="c1">##</span>
+    <span class="c1"># Number of color planes</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_planes</span>
 
-    ##
-    # Bits per pixel in the image
-    attr_reader :bpp
+    <span class="c1">##</span>
+    <span class="c1"># Bits per pixel in the image</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bpp</span>
 
-    ##
-    # Size of the image data
-    attr_reader :len_img
+    <span class="c1">##</span>
+    <span class="c1"># Size of the image data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_img</span>
 
-    ##
-    # Absolute offset of the image data start in the file
-    attr_reader :ofs_img
-  end
-  attr_reader :magic
+    <span class="c1">##</span>
+    <span class="c1"># Absolute offset of the image data start in the file</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_img</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:magic</span>
 
-  ##
-  # Number of images contained in this file
-  attr_reader :num_images
-  attr_reader :images
-end
-</code></pre>
+  <span class="c1">##</span>
+  <span class="c1"># Number of images contained in this file</span>
+  <span class="kp">attr_reader</span> <span class="ss">:num_images</span>
+  <span class="kp">attr_reader</span> <span class="ss">:images</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -392,8 +389,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

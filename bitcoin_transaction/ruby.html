@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -237,236 +234,236 @@ data = BitcoinTransaction.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# @see https://bitcoin.org/en/developer-guide#transactions
-#   https://en.bitcoin.it/wiki/Transaction
-#    Source
-class BitcoinTransaction &lt; Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+<span class="c1">##</span>
+<span class="c1"># @see https://bitcoin.org/en/developer-guide#transactions</span>
+<span class="c1">#   https://en.bitcoin.it/wiki/Transaction</span>
+<span class="c1">#    Source</span>
+<span class="k">class</span> <span class="nc">BitcoinTransaction</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @version = @_io.read_u4le
-    @num_vins = @_io.read_u1
-    @vins = Array.new(num_vins)
-    (num_vins).times { |i|
-      @vins[i] = Vin.new(@_io, self, @_root)
-    }
-    @num_vouts = @_io.read_u1
-    @vouts = Array.new(num_vouts)
-    (num_vouts).times { |i|
-      @vouts[i] = Vout.new(@_io, self, @_root)
-    }
-    @locktime = @_io.read_u4le
-    self
-  end
-  class Vin &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+    <span class="vi">@num_vins</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+    <span class="vi">@vins</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_vins</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">num_vins</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@vins</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Vin</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="vi">@num_vouts</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+    <span class="vi">@vouts</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_vouts</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">num_vouts</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@vouts</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Vout</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="vi">@locktime</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Vin</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @txid = @_io.read_bytes(32)
-      @output_id = @_io.read_u4le
-      @len_script = @_io.read_u1
-      @_raw_script_sig = @_io.read_bytes(len_script)
-      io = Kaitai::Struct::Stream.new(@_raw_script_sig)
-      @script_sig = ScriptSignature.new(io, self, @_root)
-      @end_of_vin = @_io.ensure_fixed_contents([255, 255, 255, 255].pack(&#39;C*&#39;))
-      self
-    end
-    class ScriptSignature &lt; Kaitai::Struct::Struct
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@txid</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+      <span class="vi">@output_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@len_script</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@_raw_script_sig</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_script</span><span class="p">)</span>
+      <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_script_sig</span><span class="p">)</span>
+      <span class="vi">@script_sig</span> <span class="o">=</span> <span class="no">ScriptSignature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@end_of_vin</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">ScriptSignature</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-      SIGHASH_TYPE = {
-        1 =&gt; :sighash_type_sighash_all,
-        2 =&gt; :sighash_type_sighash_none,
-        3 =&gt; :sighash_type_sighash_single,
-        80 =&gt; :sighash_type_sighash_anyonecanpay,
-      }
-      I__SIGHASH_TYPE = SIGHASH_TYPE.invert
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
+      <span class="no">SIGHASH_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:sighash_type_sighash_all</span><span class="p">,</span>
+        <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:sighash_type_sighash_none</span><span class="p">,</span>
+        <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:sighash_type_sighash_single</span><span class="p">,</span>
+        <span class="mi">80</span> <span class="o">=&gt;</span> <span class="ss">:sighash_type_sighash_anyonecanpay</span><span class="p">,</span>
+      <span class="p">}</span>
+      <span class="no">I__SIGHASH_TYPE</span> <span class="o">=</span> <span class="no">SIGHASH_TYPE</span><span class="o">.</span><span class="n">invert</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
 
-      def _read
-        @len_sig_stack = @_io.read_u1
-        @der_sig = DerSignature.new(@_io, self, @_root)
-        @sig_type = Kaitai::Struct::Stream::resolve_enum(SIGHASH_TYPE, @_io.read_u1)
-        @len_pubkey_stack = @_io.read_u1
-        @pubkey = PublicKey.new(@_io, self, @_root)
-        self
-      end
-      class DerSignature &lt; Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
-          super(_io, _parent, _root)
-          _read
-        end
+      <span class="k">def</span> <span class="nf">_read</span>
+        <span class="vi">@len_sig_stack</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+        <span class="vi">@der_sig</span> <span class="o">=</span> <span class="no">DerSignature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@sig_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">SIGHASH_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+        <span class="vi">@len_pubkey_stack</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+        <span class="vi">@pubkey</span> <span class="o">=</span> <span class="no">PublicKey</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
+      <span class="k">class</span> <span class="nc">DerSignature</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+        <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+          <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+          <span class="n">_read</span>
+        <span class="k">end</span>
 
-        def _read
-          @sequence = @_io.ensure_fixed_contents([48].pack(&#39;C*&#39;))
-          @len_sig = @_io.read_u1
-          @sep_1 = @_io.ensure_fixed_contents([2].pack(&#39;C*&#39;))
-          @len_sig_r = @_io.read_u1
-          @sig_r = @_io.read_bytes(len_sig_r)
-          @sep_2 = @_io.ensure_fixed_contents([2].pack(&#39;C*&#39;))
-          @len_sig_s = @_io.read_u1
-          @sig_s = @_io.read_bytes(len_sig_s)
-          self
-        end
-        attr_reader :sequence
-        attr_reader :len_sig
-        attr_reader :sep_1
+        <span class="k">def</span> <span class="nf">_read</span>
+          <span class="vi">@sequence</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">48</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+          <span class="vi">@len_sig</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+          <span class="vi">@sep_1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+          <span class="vi">@len_sig_r</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+          <span class="vi">@sig_r</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_sig_r</span><span class="p">)</span>
+          <span class="vi">@sep_2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+          <span class="vi">@len_sig_s</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+          <span class="vi">@sig_s</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_sig_s</span><span class="p">)</span>
+          <span class="nb">self</span>
+        <span class="k">end</span>
+        <span class="kp">attr_reader</span> <span class="ss">:sequence</span>
+        <span class="kp">attr_reader</span> <span class="ss">:len_sig</span>
+        <span class="kp">attr_reader</span> <span class="ss">:sep_1</span>
 
-        ##
-        # &#39;r&#39; value&#39;s length.
-        attr_reader :len_sig_r
+        <span class="c1">##</span>
+        <span class="c1"># &#39;r&#39; value&#39;s length.</span>
+        <span class="kp">attr_reader</span> <span class="ss">:len_sig_r</span>
 
-        ##
-        # &#39;r&#39; value of the ECDSA signature.
-        # @see https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm Source
-        attr_reader :sig_r
-        attr_reader :sep_2
+        <span class="c1">##</span>
+        <span class="c1"># &#39;r&#39; value of the ECDSA signature.</span>
+        <span class="c1"># @see https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm Source</span>
+        <span class="kp">attr_reader</span> <span class="ss">:sig_r</span>
+        <span class="kp">attr_reader</span> <span class="ss">:sep_2</span>
 
-        ##
-        # &#39;s&#39; value&#39;s length.
-        attr_reader :len_sig_s
+        <span class="c1">##</span>
+        <span class="c1"># &#39;s&#39; value&#39;s length.</span>
+        <span class="kp">attr_reader</span> <span class="ss">:len_sig_s</span>
 
-        ##
-        # &#39;s&#39; value of the ECDSA signature.
-        # @see https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm Source
-        attr_reader :sig_s
-      end
-      class PublicKey &lt; Kaitai::Struct::Struct
-        def initialize(_io, _parent = nil, _root = self)
-          super(_io, _parent, _root)
-          _read
-        end
+        <span class="c1">##</span>
+        <span class="c1"># &#39;s&#39; value of the ECDSA signature.</span>
+        <span class="c1"># @see https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm Source</span>
+        <span class="kp">attr_reader</span> <span class="ss">:sig_s</span>
+      <span class="k">end</span>
+      <span class="k">class</span> <span class="nc">PublicKey</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+        <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+          <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+          <span class="n">_read</span>
+        <span class="k">end</span>
 
-        def _read
-          @type = @_io.read_u1
-          @x = @_io.read_bytes(32)
-          @y = @_io.read_bytes(32)
-          self
-        end
-        attr_reader :type
+        <span class="k">def</span> <span class="nf">_read</span>
+          <span class="vi">@type</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+          <span class="vi">@x</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+          <span class="vi">@y</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+          <span class="nb">self</span>
+        <span class="k">end</span>
+        <span class="kp">attr_reader</span> <span class="ss">:type</span>
 
-        ##
-        # &#39;x&#39; coordinate of the public key on the elliptic curve.
-        attr_reader :x
+        <span class="c1">##</span>
+        <span class="c1"># &#39;x&#39; coordinate of the public key on the elliptic curve.</span>
+        <span class="kp">attr_reader</span> <span class="ss">:x</span>
 
-        ##
-        # &#39;y&#39; coordinate of the public key on the elliptic curve.
-        attr_reader :y
-      end
-      attr_reader :len_sig_stack
+        <span class="c1">##</span>
+        <span class="c1"># &#39;y&#39; coordinate of the public key on the elliptic curve.</span>
+        <span class="kp">attr_reader</span> <span class="ss">:y</span>
+      <span class="k">end</span>
+      <span class="kp">attr_reader</span> <span class="ss">:len_sig_stack</span>
 
-      ##
-      # DER-encoded ECDSA signature.
-      # @see https://en.wikipedia.org/wiki/X.690#DER_encoding
-      #   https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
-      #    Source
-      attr_reader :der_sig
+      <span class="c1">##</span>
+      <span class="c1"># DER-encoded ECDSA signature.</span>
+      <span class="c1"># @see https://en.wikipedia.org/wiki/X.690#DER_encoding</span>
+      <span class="c1">#   https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm</span>
+      <span class="c1">#    Source</span>
+      <span class="kp">attr_reader</span> <span class="ss">:der_sig</span>
 
-      ##
-      # Type of signature.
-      attr_reader :sig_type
-      attr_reader :len_pubkey_stack
+      <span class="c1">##</span>
+      <span class="c1"># Type of signature.</span>
+      <span class="kp">attr_reader</span> <span class="ss">:sig_type</span>
+      <span class="kp">attr_reader</span> <span class="ss">:len_pubkey_stack</span>
 
-      ##
-      # Public key (bitcoin address of the recipient).
-      attr_reader :pubkey
-    end
+      <span class="c1">##</span>
+      <span class="c1"># Public key (bitcoin address of the recipient).</span>
+      <span class="kp">attr_reader</span> <span class="ss">:pubkey</span>
+    <span class="k">end</span>
 
-    ##
-    # Previous transaction hash.
-    attr_reader :txid
+    <span class="c1">##</span>
+    <span class="c1"># Previous transaction hash.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:txid</span>
 
-    ##
-    # ID indexing an ouput of the transaction refered by txid.
-    # This output will be used as an input in the present transaction.
-    attr_reader :output_id
+    <span class="c1">##</span>
+    <span class="c1"># ID indexing an ouput of the transaction refered by txid.</span>
+    <span class="c1"># This output will be used as an input in the present transaction.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:output_id</span>
 
-    ##
-    # ScriptSig&#39;s length.
-    attr_reader :len_script
+    <span class="c1">##</span>
+    <span class="c1"># ScriptSig&#39;s length.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_script</span>
 
-    ##
-    # ScriptSig.
-    # @see https://en.bitcoin.it/wiki/Transaction#Input
-    #   https://en.bitcoin.it/wiki/Script
-    #    Source
-    attr_reader :script_sig
+    <span class="c1">##</span>
+    <span class="c1"># ScriptSig.</span>
+    <span class="c1"># @see https://en.bitcoin.it/wiki/Transaction#Input</span>
+    <span class="c1">#   https://en.bitcoin.it/wiki/Script</span>
+    <span class="c1">#    Source</span>
+    <span class="kp">attr_reader</span> <span class="ss">:script_sig</span>
 
-    ##
-    # Magic number indicating the end of the current input.
-    attr_reader :end_of_vin
-    attr_reader :_raw_script_sig
-  end
-  class Vout &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="c1">##</span>
+    <span class="c1"># Magic number indicating the end of the current input.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:end_of_vin</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_script_sig</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Vout</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @amount = @_io.read_u8le
-      @len_script = @_io.read_u1
-      @script_pub_key = @_io.read_bytes(len_script)
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@amount</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@len_script</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@script_pub_key</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_script</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Number of Satoshis to be transfered.
-    attr_reader :amount
+    <span class="c1">##</span>
+    <span class="c1"># Number of Satoshis to be transfered.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:amount</span>
 
-    ##
-    # ScriptPubKey&#39;s length.
-    attr_reader :len_script
+    <span class="c1">##</span>
+    <span class="c1"># ScriptPubKey&#39;s length.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_script</span>
 
-    ##
-    # ScriptPubKey.
-    # @see https://en.bitcoin.it/wiki/Transaction#Output
-    #   https://en.bitcoin.it/wiki/Script
-    #    Source
-    attr_reader :script_pub_key
-  end
+    <span class="c1">##</span>
+    <span class="c1"># ScriptPubKey.</span>
+    <span class="c1"># @see https://en.bitcoin.it/wiki/Transaction#Output</span>
+    <span class="c1">#   https://en.bitcoin.it/wiki/Script</span>
+    <span class="c1">#    Source</span>
+    <span class="kp">attr_reader</span> <span class="ss">:script_pub_key</span>
+  <span class="k">end</span>
 
-  ##
-  # Version number.
-  attr_reader :version
+  <span class="c1">##</span>
+  <span class="c1"># Version number.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:version</span>
 
-  ##
-  # Number of input transactions.
-  attr_reader :num_vins
+  <span class="c1">##</span>
+  <span class="c1"># Number of input transactions.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:num_vins</span>
 
-  ##
-  # Input transactions.
-  # An input refers to an output from a previous transaction.
-  attr_reader :vins
+  <span class="c1">##</span>
+  <span class="c1"># Input transactions.</span>
+  <span class="c1"># An input refers to an output from a previous transaction.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:vins</span>
 
-  ##
-  # Number of output transactions.
-  attr_reader :num_vouts
+  <span class="c1">##</span>
+  <span class="c1"># Number of output transactions.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:num_vouts</span>
 
-  ##
-  # Output transactions.
-  attr_reader :vouts
-  attr_reader :locktime
-end
-</code></pre>
+  <span class="c1">##</span>
+  <span class="c1"># Output transactions.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:vouts</span>
+  <span class="kp">attr_reader</span> <span class="ss">:locktime</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -493,8 +490,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

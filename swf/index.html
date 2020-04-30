@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -246,211 +243,211 @@ documented by Adobe.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: swf
-  title: Adobe Flash (AKA Shockwave Flash, Macromedia Flash)
-  file-extension: swf
-  xref:
-    justsolve: SWF
-    loc: fmt/507
-    mime: application/x-shockwave-flash
-    wikidata: Q594447
-  license: CC0-1.0
-  endian: le
-#  imports:
-#    - abc_bytecode
-doc: |
-  SWF files are used by Adobe Flash (AKA Shockwave Flash, Macromedia
-  Flash) to encode rich interactive multimedia content and are,
-  essentially, a container for special bytecode instructions to play
-  back that content. In early 2000s, it was dominant rich multimedia
-  web format (.swf files were integrated into web pages and played
-  back with a browser plugin), but its usage largely declined in
-  2010s, as HTML5 and performant browser-native solutions
-  (i.e. JavaScript engines and graphical approaches, such as WebGL)
-  emerged.
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">swf</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Adobe Flash (AKA Shockwave Flash, Macromedia Flash)</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">swf</span>
+  <span class="nt">xref</span><span class="p">:</span>
+    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SWF</span>
+    <span class="nt">loc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fmt/507</span>
+    <span class="nt">mime</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">application/x-shockwave-flash</span>
+    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q594447</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="c1">#  imports:</span>
+<span class="c1">#    - abc_bytecode</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">SWF files are used by Adobe Flash (AKA Shockwave Flash, Macromedia</span>
+  <span class="no">Flash) to encode rich interactive multimedia content and are,</span>
+  <span class="no">essentially, a container for special bytecode instructions to play</span>
+  <span class="no">back that content. In early 2000s, it was dominant rich multimedia</span>
+  <span class="no">web format (.swf files were integrated into web pages and played</span>
+  <span class="no">back with a browser plugin), but its usage largely declined in</span>
+  <span class="no">2010s, as HTML5 and performant browser-native solutions</span>
+  <span class="no">(i.e. JavaScript engines and graphical approaches, such as WebGL)</span>
+  <span class="no">emerged.</span>
 
-  There are a lot of versions of SWF (~36), format is somewhat
-  documented by Adobe.
-doc-ref: https://www.adobe.com/content/dam/acom/en/devnet/pdf/swf-file-format-spec.pdf
-seq:
-  - id: compression
-    -orig-id: Signature
-    type: u1
-    enum: compressions
-  - id: signature
-    -orig-id: Signature
-    contents: &quot;WS&quot;
-  - id: version
-    -orig-id: Version
-    type: u1
-  - id: len_file
-    -orig-id: FileLength
-    type: u4
-  - id: plain_body
-    size-eos: true
-    type: swf_body
-    if: compression == compressions::none
-  - id: zlib_body
-    size-eos: true
-    process: zlib
-    type: swf_body
-    if: compression == compressions::zlib
-types:
-  swf_body:
-    seq:
-      - id: rect
-        type: rect
-      - id: frame_rate
-        type: u2
-      - id: frame_count
-        type: u2
-      - id: file_attributes_tag
-        type: tag
-        if: _root.version &gt;= 8
-      - id: tags
-        type: tag
-        repeat: eos
-  rect:
-    seq:
-      - id: b1
-        type: u1
-      - id: skip
-        size: num_bytes
-    instances:
-      num_bits:
-        value: b1 &gt;&gt; 3
-      num_bytes:
-        value: ((num_bits * 4 - 3) + 7) / 8
-  rgb:
-    seq:
-      - id: r
-        type: u1
-      - id: g
-        type: u1
-      - id: b
-        type: u1
-  tag:
-    seq:
-      - id: record_header
-        type: record_header
-      - id: tag_body
-        size: record_header.len
-        type:
-          switch-on: record_header.tag_type
-          cases:
-            &#39;tag_type::define_sound&#39;: define_sound_body
-            &#39;tag_type::do_abc&#39;: do_abc_body
-            &#39;tag_type::script_limits&#39;: script_limits_body
-            &#39;tag_type::symbol_class&#39;: symbol_class_body
-            &#39;tag_type::set_background_color&#39;: rgb
-            &#39;tag_type::export_assets&#39;: symbol_class_body
-  define_sound_body:
-    seq:
-      - id: id
-        -orig-id: SoundId
-        type: u2
-      - id: format
-        -orig-id: SoundFormat
-        type: b4
-      - id: sampling_rate
-        -orig-id: SoundRate
-        type: b2
-        enum: sampling_rates
-        doc: Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.
-      - id: bits_per_sample
-        -orig-id: SoundSize
-        type: b1
-        enum: bps
-      - id: num_channels
-        -orig-id: SoundType
-        type: b1
-        enum: channels
-      - id: num_samples
-        type: u4
-    enums:
-      sampling_rates:
-        0: rate_5_5_khz
-        1: rate_11_khz
-        2: rate_22_khz
-        3: rate_44_khz
-      bps:
-        0: sound_8_bit
-        1: sound_16_bit
-      channels:
-        0: mono
-        1: stereo
-  do_abc_body:
-    seq:
-      - id: flags
-        type: u4
-      - id: name
-        type: strz
-        encoding: ASCII
-      - id: abcdata
-        size-eos: true
-        #type: abc_bytecode
-  script_limits_body:
-    seq:
-      - id: max_recursion_depth
-        type: u2
-      - id: script_timeout_seconds
-        type: u2
-  symbol_class_body:
-    seq:
-      - id: num_symbols
-        type: u2
-      - id: symbols
-        type: symbol
-        repeat: expr
-        repeat-expr: num_symbols
-    types:
-      symbol:
-        seq:
-          - id: tag
-            type: u2
-          - id: name
-            type: strz
-            encoding: ASCII
-  record_header:
-    seq:
-      - id: tag_code_and_length
-        type: u2
-      - id: big_len
-        type: s4
-        if: small_len == 0x3f
-    instances:
-      tag_type:
-        value: &#39;tag_code_and_length &gt;&gt; 6&#39;
-        enum: tag_type
-      small_len:
-        value: &#39;tag_code_and_length &amp; 0b111111&#39;
-      len:
-        value: &#39;small_len == 0x3f ? big_len : small_len&#39;
-enums:
-  compressions:
-    0x46: none # F
-    0x43: zlib # C
-    0x5a: lzma # Z
-  tag_type:
-    0: end_of_file
-    4: place_object
-    5: remove_object
-    9: set_background_color
-    14: define_sound
-    26: place_object2
-    28: remove_object2
-    43: frame_label
-    56: export_assets
-    65: script_limits
-    69: file_attributes
-    70: place_object3
-    76: symbol_class
-    77: metadata
-    78: define_scaling_grid
-    82: do_abc
-    86: define_scene_and_frame_label_data
-</code></pre>
+  <span class="no">There are a lot of versions of SWF (~36), format is somewhat</span>
+  <span class="no">documented by Adobe.</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.adobe.com/content/dam/acom/en/devnet/pdf/swf-file-format-spec.pdf</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Signature</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+    <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compressions</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Signature</span>
+    <span class="nt">contents</span><span class="p">:</span> <span class="s">&quot;WS&quot;</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Version</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_file</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">FileLength</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">plain_body</span>
+    <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">swf_body</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression == compressions::none</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zlib_body</span>
+    <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">process</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zlib</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">swf_body</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression == compressions::zlib</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">swf_body</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rect</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rect</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame_rate</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame_count</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_attributes_tag</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.version &gt;= 8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+  <span class="nt">rect</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">skip</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_bytes</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">num_bits</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1 &gt;&gt; 3</span>
+      <span class="nt">num_bytes</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">((num_bits * 4 - 3) + 7) / 8</span>
+  <span class="nt">rgb</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">r</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">g</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+  <span class="nt">tag</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record_header</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record_header</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_body</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record_header.len</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record_header.tag_type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;tag_type::define_sound&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">define_sound_body</span>
+            <span class="s">&#39;tag_type::do_abc&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">do_abc_body</span>
+            <span class="s">&#39;tag_type::script_limits&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">script_limits_body</span>
+            <span class="s">&#39;tag_type::symbol_class&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">symbol_class_body</span>
+            <span class="s">&#39;tag_type::set_background_color&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">rgb</span>
+            <span class="s">&#39;tag_type::export_assets&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">symbol_class_body</span>
+  <span class="nt">define_sound_body</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">id</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SoundId</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">format</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SoundFormat</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sampling_rate</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SoundRate</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sampling_rates</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bits_per_sample</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SoundSize</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bps</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_channels</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SoundType</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channels</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_samples</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">enums</span><span class="p">:</span>
+      <span class="nt">sampling_rates</span><span class="p">:</span>
+        <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rate_5_5_khz</span>
+        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rate_11_khz</span>
+        <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rate_22_khz</span>
+        <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rate_44_khz</span>
+      <span class="nt">bps</span><span class="p">:</span>
+        <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sound_8_bit</span>
+        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sound_16_bit</span>
+      <span class="nt">channels</span><span class="p">:</span>
+        <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mono</span>
+        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stereo</span>
+  <span class="nt">do_abc_body</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">abcdata</span>
+        <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="c1">#type: abc_bytecode</span>
+  <span class="nt">script_limits_body</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">max_recursion_depth</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">script_timeout_seconds</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+  <span class="nt">symbol_class_body</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_symbols</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">symbols</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">symbol</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_symbols</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">symbol</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+  <span class="nt">record_header</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_code_and_length</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">big_len</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">small_len == 0x3f</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">tag_type</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;tag_code_and_length</span><span class="nv"> </span><span class="s">&gt;&gt;</span><span class="nv"> </span><span class="s">6&#39;</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_type</span>
+      <span class="nt">small_len</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;tag_code_and_length</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b111111&#39;</span>
+      <span class="nt">len</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;small_len</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">0x3f</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">big_len</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">small_len&#39;</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">compressions</span><span class="p">:</span>
+    <span class="nt">0x46</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span> <span class="c1"># F</span>
+    <span class="nt">0x43</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zlib</span> <span class="c1"># C</span>
+    <span class="nt">0x5a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lzma</span> <span class="c1"># Z</span>
+  <span class="nt">tag_type</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end_of_file</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">place_object</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">remove_object</span>
+    <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">set_background_color</span>
+    <span class="nt">14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">define_sound</span>
+    <span class="nt">26</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">place_object2</span>
+    <span class="nt">28</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">remove_object2</span>
+    <span class="nt">43</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame_label</span>
+    <span class="nt">56</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">export_assets</span>
+    <span class="nt">65</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">script_limits</span>
+    <span class="nt">69</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_attributes</span>
+    <span class="nt">70</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">place_object3</span>
+    <span class="nt">76</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">symbol_class</span>
+    <span class="nt">77</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">metadata</span>
+    <span class="nt">78</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">define_scaling_grid</span>
+    <span class="nt">82</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">do_abc</span>
+    <span class="nt">86</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">define_scene_and_frame_label_data</span>
+</pre></div>
     </div>
 </section>
 
@@ -474,8 +471,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -218,194 +215,192 @@ section#format-index .row {
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: magicavoxel_vox
-  file-extension: vox
-  application: MagicaVoxel
-  endian: le
-  license: MIT
-  title: MagicaVoxel File
-doc-ref: &#39;https://ephtracy.github.io/ MagicaVoxel Homepage&#39;
-doc-ref: &#39;https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt Format Description&#39;
-seq:
-  - id: magic
-    contents: &#39;VOX &#39;
-  - id: version
-    type: u4
-    doc: 150 expected
-  - id: main
-    type: chunk
-types:
-  chunk:
-    seq:
-      - id: chunk_id
-        type: u4be
-        enum: chunk_type
-      - id: num_bytes_of_chunk_content
-        type: u4
-      - id: num_bytes_of_children_chunks
-        type: u4
-      - id: chunk_content
-        if: num_bytes_of_chunk_content != 0
-        size: num_bytes_of_chunk_content
-        type:
-          switch-on: chunk_id
-          cases:
-            &#39;chunk_type::pack&#39;: pack
-            &#39;chunk_type::size&#39;: size
-            &#39;chunk_type::xyzi&#39;: xyzi
-            &#39;chunk_type::rgba&#39;: rgba
-            &#39;chunk_type::matt&#39;: matt
-      - id: children_chunks
-        if: num_bytes_of_children_chunks != 0
-        type: chunk
-        repeat: eos
-  pack:
-    seq:
-      - id: num_models
-        type: u4
-  size:
-    seq:
-      - id: size_x
-        type: u4
-      - id: size_y
-        type: u4
-      - id: size_z
-        type: u4
-  xyzi:
-    seq:
-      - id: num_voxels
-        type: u4
-      - id: voxels
-        type: voxel
-        repeat: expr
-        repeat-expr: num_voxels
-  rgba:
-    seq:
-      - id: colors
-        type: color
-        repeat: expr
-        repeat-expr: 256
-  voxel:
-    seq: 
-      - id: x
-        type: u1
-      - id: y
-        type: u1
-      - id: z
-        type: u1
-      - id: color_index
-        type: u1
-  color:
-    seq:
-      - id: r
-        type: u1
-      - id: g
-        type: u1
-      - id: b
-        type: u1
-      - id: a
-        type: u1
-  matt:
-    seq:
-    - id: id
-      type: u4
-    - id: material_type
-      type: u4
-      enum: material_type
-    - id: material_weight
-      type: f4
-    - id: property_bits
-      type: u4
-      # .to_i not implemented for C# runtime yet
-      #enum: property_bits_type
-    - id: plastic
-      if: has_plastic
-      type: f4
-    - id: roughness
-      if: has_roughness
-      type: f4
-    - id: specular
-      if: has_specular
-      type: f4
-    - id: ior
-      if: has_ior
-      type: f4
-    - id: attenuation
-      if: has_attenuation
-      type: f4
-    - id: power
-      if: has_power
-      type: f4
-    - id: glow
-      if: has_glow
-      type: f4
-    - id: is_total_power
-      if: has_is_total_power
-      type: f4
-    instances:
-      has_plastic:
-        value: &#39;(property_bits &amp; 1) != 0&#39;
-      has_roughness:
-        value: &#39;(property_bits &amp; 2) != 0&#39;
-      has_specular:
-        value: &#39;(property_bits &amp; 4) != 0&#39;
-      has_ior:
-        value: &#39;(property_bits &amp; 8) != 0&#39;
-      has_attenuation:
-        value: &#39;(property_bits &amp; 16) != 0&#39;
-      has_power:
-        value: &#39;(property_bits &amp; 32) != 0&#39;
-      has_glow:
-        value: &#39;(property_bits &amp; 64) != 0&#39;
-      has_is_total_power:
-        value: &#39;(property_bits &amp; 128) != 0&#39;
-enums: 
-  chunk_type:
-    0x4d41494e: main
-    0x5041434b: pack
-    0x53495a45: size
-    0x58595a49: xyzi
-    0x52474241: rgba
-    0x4d415454: matt
-  material_type:
-    0: diffuse
-    1: metal
-    2: glass
-    3: emissive
-  property_bits_type:
-    1: plastic
-    2: roughness
-    4: specular
-    8: ior
-    16: attenuation
-    32: power
-    64: glow
-    128: is_total_power
-# Support for constant lists would be useful here for the default color palette when the RGBA chunk is missing
-# instances:
-#   default_palette:
-#     value: [ 
-# 0x00000000, 0xffffffff, 0xffccffff, 0xff99ffff, 0xff66ffff, 0xff33ffff, 0xff00ffff, 0xffffccff, 0xffccccff, 0xff99ccff, 0xff66ccff, 0xff33ccff, 0xff00ccff, 0xffff99ff, 0xffcc99ff, 0xff9999ff,&gt;
-# 0xff6699ff, 0xff3399ff, 0xff0099ff, 0xffff66ff, 0xffcc66ff, 0xff9966ff, 0xff6666ff, 0xff3366ff, 0xff0066ff, 0xffff33ff, 0xffcc33ff, 0xff9933ff, 0xff6633ff, 0xff3333ff, 0xff0033ff, 0xffff00ff,&gt;
-#	0xffcc00ff, 0xff9900ff, 0xff6600ff, 0xff3300ff, 0xff0000ff, 0xffffffcc, 0xffccffcc, 0xff99ffcc, 0xff66ffcc, 0xff33ffcc, 0xff00ffcc, 0xffffcccc, 0xffcccccc, 0xff99cccc, 0xff66cccc, 0xff33cccc,&gt;
-#	0xff00cccc, 0xffff99cc, 0xffcc99cc, 0xff9999cc, 0xff6699cc, 0xff3399cc, 0xff0099cc, 0xffff66cc, 0xffcc66cc, 0xff9966cc, 0xff6666cc, 0xff3366cc, 0xff0066cc, 0xffff33cc, 0xffcc33cc, 0xff9933cc,&gt;
-#	0xff6633cc, 0xff3333cc, 0xff0033cc, 0xffff00cc, 0xffcc00cc, 0xff9900cc, 0xff6600cc, 0xff3300cc, 0xff0000cc, 0xffffff99, 0xffccff99, 0xff99ff99, 0xff66ff99, 0xff33ff99, 0xff00ff99, 0xffffcc99,&gt;
-#	0xffcccc99, 0xff99cc99, 0xff66cc99, 0xff33cc99, 0xff00cc99, 0xffff9999, 0xffcc9999, 0xff999999, 0xff669999, 0xff339999, 0xff009999, 0xffff6699, 0xffcc6699, 0xff996699, 0xff666699, 0xff336699,&gt;
-#	0xff006699, 0xffff3399, 0xffcc3399, 0xff993399, 0xff663399, 0xff333399, 0xff003399, 0xffff0099, 0xffcc0099, 0xff990099, 0xff660099, 0xff330099, 0xff000099, 0xffffff66, 0xffccff66, 0xff99ff66,&gt;
-#	0xff66ff66, 0xff33ff66, 0xff00ff66, 0xffffcc66, 0xffcccc66, 0xff99cc66, 0xff66cc66, 0xff33cc66, 0xff00cc66, 0xffff9966, 0xffcc9966, 0xff999966, 0xff669966, 0xff339966, 0xff009966, 0xffff6666,&gt;
-#	0xffcc6666, 0xff996666, 0xff666666, 0xff336666, 0xff006666, 0xffff3366, 0xffcc3366, 0xff993366, 0xff663366, 0xff333366, 0xff003366, 0xffff0066, 0xffcc0066, 0xff990066, 0xff660066, 0xff330066,&gt;
-#	0xff000066, 0xffffff33, 0xffccff33, 0xff99ff33, 0xff66ff33, 0xff33ff33, 0xff00ff33, 0xffffcc33, 0xffcccc33, 0xff99cc33, 0xff66cc33, 0xff33cc33, 0xff00cc33, 0xffff9933, 0xffcc9933, 0xff999933,&gt;
-#	0xff669933, 0xff339933, 0xff009933, 0xffff6633, 0xffcc6633, 0xff996633, 0xff666633, 0xff336633, 0xff006633, 0xffff3333, 0xffcc3333, 0xff993333, 0xff663333, 0xff333333, 0xff003333, 0xffff0033,&gt;
-#	0xffcc0033, 0xff990033, 0xff660033, 0xff330033, 0xff000033, 0xffffff00, 0xffccff00, 0xff99ff00, 0xff66ff00, 0xff33ff00, 0xff00ff00, 0xffffcc00, 0xffcccc00, 0xff99cc00, 0xff66cc00, 0xff33cc00,&gt;
-#	0xff00cc00, 0xffff9900, 0xffcc9900, 0xff999900, 0xff669900, 0xff339900, 0xff009900, 0xffff6600, 0xffcc6600, 0xff996600, 0xff666600, 0xff336600, 0xff006600, 0xffff3300, 0xffcc3300, 0xff993300,&gt;
-#	0xff663300, 0xff333300, 0xff003300, 0xffff0000, 0xffcc0000, 0xff990000, 0xff660000, 0xff330000, 0xff0000ee, 0xff0000dd, 0xff0000bb, 0xff0000aa, 0xff000088, 0xff000077, 0xff000055, 0xff000044,&gt;
-#	0xff000022, 0xff000011, 0xff00ee00, 0xff00dd00, 0xff00bb00, 0xff00aa00, 0xff008800, 0xff007700, 0xff005500, 0xff004400, 0xff002200, 0xff001100, 0xffee0000, 0xffdd0000, 0xffbb0000, 0xffaa0000,&gt;
-#	0xff880000, 0xff770000, 0xff550000, 0xff440000, 0xff220000, 0xff110000, 0xffeeeeee, 0xffdddddd, 0xffbbbbbb, 0xffaaaaaa, 0xff888888, 0xff777777, 0xff555555, 0xff444444, 0xff222222, 0xff111111&gt;
-#]
-
-
-</code></pre>
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magicavoxel_vox</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vox</span>
+  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MagicaVoxel</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MIT</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MagicaVoxel File</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://ephtracy.github.io/</span><span class="nv"> </span><span class="s">MagicaVoxel</span><span class="nv"> </span><span class="s">Homepage&#39;</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt</span><span class="nv"> </span><span class="s">Format</span><span class="nv"> </span><span class="s">Description&#39;</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+    <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;VOX</span><span class="nv"> </span><span class="s">&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">150 expected</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">main</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chunk</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">chunk</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chunk_id</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4be</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chunk_type</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_bytes_of_chunk_content</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_bytes_of_children_chunks</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chunk_content</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_bytes_of_chunk_content != 0</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_bytes_of_chunk_content</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chunk_id</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;chunk_type::pack&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">pack</span>
+            <span class="s">&#39;chunk_type::size&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+            <span class="s">&#39;chunk_type::xyzi&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">xyzi</span>
+            <span class="s">&#39;chunk_type::rgba&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">rgba</span>
+            <span class="s">&#39;chunk_type::matt&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">matt</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">children_chunks</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_bytes_of_children_chunks != 0</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chunk</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+  <span class="nt">pack</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_models</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="nt">size</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size_x</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size_y</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size_z</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="nt">xyzi</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_voxels</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">voxels</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">voxel</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_voxels</span>
+  <span class="nt">rgba</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colors</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">color</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">256</span>
+  <span class="nt">voxel</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span> 
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">z</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">color_index</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+  <span class="nt">color</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">r</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">g</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">a</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+  <span class="nt">matt</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">id</span>
+      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">material_type</span>
+      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">material_type</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">material_weight</span>
+      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">property_bits</span>
+      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="c1"># .to_i not implemented for C# runtime yet</span>
+      <span class="c1">#enum: property_bits_type</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">plastic</span>
+      <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_plastic</span>
+      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">roughness</span>
+      <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_roughness</span>
+      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">specular</span>
+      <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_specular</span>
+      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ior</span>
+      <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_ior</span>
+      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attenuation</span>
+      <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_attenuation</span>
+      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">power</span>
+      <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_power</span>
+      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">glow</span>
+      <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_glow</span>
+      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_total_power</span>
+      <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_is_total_power</span>
+      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">has_plastic</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(property_bits</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">1)</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0&#39;</span>
+      <span class="nt">has_roughness</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(property_bits</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">2)</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0&#39;</span>
+      <span class="nt">has_specular</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(property_bits</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">4)</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0&#39;</span>
+      <span class="nt">has_ior</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(property_bits</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">8)</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0&#39;</span>
+      <span class="nt">has_attenuation</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(property_bits</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">16)</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0&#39;</span>
+      <span class="nt">has_power</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(property_bits</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">32)</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0&#39;</span>
+      <span class="nt">has_glow</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(property_bits</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">64)</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0&#39;</span>
+      <span class="nt">has_is_total_power</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(property_bits</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">128)</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0&#39;</span>
+<span class="nt">enums</span><span class="p">:</span> 
+  <span class="nt">chunk_type</span><span class="p">:</span>
+    <span class="nt">0x4d41494e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">main</span>
+    <span class="nt">0x5041434b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pack</span>
+    <span class="nt">0x53495a45</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+    <span class="nt">0x58595a49</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xyzi</span>
+    <span class="nt">0x52474241</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rgba</span>
+    <span class="nt">0x4d415454</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">matt</span>
+  <span class="nt">material_type</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">diffuse</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">metal</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">glass</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">emissive</span>
+  <span class="nt">property_bits_type</span><span class="p">:</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">plastic</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">roughness</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">specular</span>
+    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ior</span>
+    <span class="nt">16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attenuation</span>
+    <span class="nt">32</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">power</span>
+    <span class="nt">64</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">glow</span>
+    <span class="nt">128</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_total_power</span>
+<span class="c1"># Support for constant lists would be useful here for the default color palette when the RGBA chunk is missing</span>
+<span class="c1"># instances:</span>
+<span class="c1">#   default_palette:</span>
+<span class="c1">#     value: [ </span>
+<span class="c1"># 0x00000000, 0xffffffff, 0xffccffff, 0xff99ffff, 0xff66ffff, 0xff33ffff, 0xff00ffff, 0xffffccff, 0xffccccff, 0xff99ccff, 0xff66ccff, 0xff33ccff, 0xff00ccff, 0xffff99ff, 0xffcc99ff, 0xff9999ff,&gt;</span>
+<span class="c1"># 0xff6699ff, 0xff3399ff, 0xff0099ff, 0xffff66ff, 0xffcc66ff, 0xff9966ff, 0xff6666ff, 0xff3366ff, 0xff0066ff, 0xffff33ff, 0xffcc33ff, 0xff9933ff, 0xff6633ff, 0xff3333ff, 0xff0033ff, 0xffff00ff,&gt;</span>
+<span class="c1">#	0xffcc00ff, 0xff9900ff, 0xff6600ff, 0xff3300ff, 0xff0000ff, 0xffffffcc, 0xffccffcc, 0xff99ffcc, 0xff66ffcc, 0xff33ffcc, 0xff00ffcc, 0xffffcccc, 0xffcccccc, 0xff99cccc, 0xff66cccc, 0xff33cccc,&gt;</span>
+<span class="c1">#	0xff00cccc, 0xffff99cc, 0xffcc99cc, 0xff9999cc, 0xff6699cc, 0xff3399cc, 0xff0099cc, 0xffff66cc, 0xffcc66cc, 0xff9966cc, 0xff6666cc, 0xff3366cc, 0xff0066cc, 0xffff33cc, 0xffcc33cc, 0xff9933cc,&gt;</span>
+<span class="c1">#	0xff6633cc, 0xff3333cc, 0xff0033cc, 0xffff00cc, 0xffcc00cc, 0xff9900cc, 0xff6600cc, 0xff3300cc, 0xff0000cc, 0xffffff99, 0xffccff99, 0xff99ff99, 0xff66ff99, 0xff33ff99, 0xff00ff99, 0xffffcc99,&gt;</span>
+<span class="c1">#	0xffcccc99, 0xff99cc99, 0xff66cc99, 0xff33cc99, 0xff00cc99, 0xffff9999, 0xffcc9999, 0xff999999, 0xff669999, 0xff339999, 0xff009999, 0xffff6699, 0xffcc6699, 0xff996699, 0xff666699, 0xff336699,&gt;</span>
+<span class="c1">#	0xff006699, 0xffff3399, 0xffcc3399, 0xff993399, 0xff663399, 0xff333399, 0xff003399, 0xffff0099, 0xffcc0099, 0xff990099, 0xff660099, 0xff330099, 0xff000099, 0xffffff66, 0xffccff66, 0xff99ff66,&gt;</span>
+<span class="c1">#	0xff66ff66, 0xff33ff66, 0xff00ff66, 0xffffcc66, 0xffcccc66, 0xff99cc66, 0xff66cc66, 0xff33cc66, 0xff00cc66, 0xffff9966, 0xffcc9966, 0xff999966, 0xff669966, 0xff339966, 0xff009966, 0xffff6666,&gt;</span>
+<span class="c1">#	0xffcc6666, 0xff996666, 0xff666666, 0xff336666, 0xff006666, 0xffff3366, 0xffcc3366, 0xff993366, 0xff663366, 0xff333366, 0xff003366, 0xffff0066, 0xffcc0066, 0xff990066, 0xff660066, 0xff330066,&gt;</span>
+<span class="c1">#	0xff000066, 0xffffff33, 0xffccff33, 0xff99ff33, 0xff66ff33, 0xff33ff33, 0xff00ff33, 0xffffcc33, 0xffcccc33, 0xff99cc33, 0xff66cc33, 0xff33cc33, 0xff00cc33, 0xffff9933, 0xffcc9933, 0xff999933,&gt;</span>
+<span class="c1">#	0xff669933, 0xff339933, 0xff009933, 0xffff6633, 0xffcc6633, 0xff996633, 0xff666633, 0xff336633, 0xff006633, 0xffff3333, 0xffcc3333, 0xff993333, 0xff663333, 0xff333333, 0xff003333, 0xffff0033,&gt;</span>
+<span class="c1">#	0xffcc0033, 0xff990033, 0xff660033, 0xff330033, 0xff000033, 0xffffff00, 0xffccff00, 0xff99ff00, 0xff66ff00, 0xff33ff00, 0xff00ff00, 0xffffcc00, 0xffcccc00, 0xff99cc00, 0xff66cc00, 0xff33cc00,&gt;</span>
+<span class="c1">#	0xff00cc00, 0xffff9900, 0xffcc9900, 0xff999900, 0xff669900, 0xff339900, 0xff009900, 0xffff6600, 0xffcc6600, 0xff996600, 0xff666600, 0xff336600, 0xff006600, 0xffff3300, 0xffcc3300, 0xff993300,&gt;</span>
+<span class="c1">#	0xff663300, 0xff333300, 0xff003300, 0xffff0000, 0xffcc0000, 0xff990000, 0xff660000, 0xff330000, 0xff0000ee, 0xff0000dd, 0xff0000bb, 0xff0000aa, 0xff000088, 0xff000077, 0xff000055, 0xff000044,&gt;</span>
+<span class="c1">#	0xff000022, 0xff000011, 0xff00ee00, 0xff00dd00, 0xff00bb00, 0xff00aa00, 0xff008800, 0xff007700, 0xff005500, 0xff004400, 0xff002200, 0xff001100, 0xffee0000, 0xffdd0000, 0xffbb0000, 0xffaa0000,&gt;</span>
+<span class="c1">#	0xff880000, 0xff770000, 0xff550000, 0xff440000, 0xff220000, 0xff110000, 0xffeeeeee, 0xffdddddd, 0xffbbbbbb, 0xffaaaaaa, 0xff888888, 0xff777777, 0xff555555, 0xff444444, 0xff222222, 0xff111111&gt;</span>
+<span class="c1">#]</span>
+</pre></div>
     </div>
 </section>
 
@@ -429,8 +424,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

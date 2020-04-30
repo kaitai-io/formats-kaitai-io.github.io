@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -220,170 +217,170 @@ to 4.4.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: allegro_dat
-  title: Allegro data file
-  application: Allegro library (v2.2-v4.4)
-  license: CC0-1.0
-  endian: be
-  encoding: UTF-8
-doc: |
-  Allegro library for C (mostly used for game and multimedia apps
-  programming) used its own container file format.
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">allegro_dat</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Allegro data file</span>
+  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Allegro library (v2.2-v4.4)</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+  <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">Allegro library for C (mostly used for game and multimedia apps</span>
+  <span class="no">programming) used its own container file format.</span>
 
-  In general, it allows storage of arbitrary binary data blocks
-  bundled together with some simple key-value style metadata
-  (&quot;properties&quot;) for every block. Allegro also pre-defines some simple
-  formats for bitmaps, fonts, MIDI music, sound samples and
-  palettes. Allegro library v4.0+ also support LZSS compression.
+  <span class="no">In general, it allows storage of arbitrary binary data blocks</span>
+  <span class="no">bundled together with some simple key-value style metadata</span>
+  <span class="no">(&quot;properties&quot;) for every block. Allegro also pre-defines some simple</span>
+  <span class="no">formats for bitmaps, fonts, MIDI music, sound samples and</span>
+  <span class="no">palettes. Allegro library v4.0+ also support LZSS compression.</span>
 
-  This spec applies to Allegro data files for library versions 2.2 up
-  to 4.4.
-doc-ref: https://liballeg.org/stabledocs/en/datafile.html
-seq:
-  - id: pack_magic
-    type: u4
-    enum: pack_enum
-  - id: dat_magic
-    contents: ALL.
-  - id: num_objects
-    type: u4
-  - id: objects
-    type: dat_object
-    repeat: expr
-    repeat-expr: num_objects
-types:
-  dat_object:
-    seq:
-      - id: properties
-        type: property
-        repeat: until
-        repeat-until: &#39;not _.is_valid&#39;
-      - id: len_compressed
-        type: s4
-      - id: len_uncompressed
-        type: s4
-      - id: body
-        size: len_compressed
-        type:
-          switch-on: type
-          cases:
-            &#39;&quot;BMP &quot;&#39;: dat_bitmap
-            &#39;&quot;RLE &quot;&#39;: dat_rle_sprite
-            &#39;&quot;FONT&quot;&#39;: dat_font
-    instances:
-      type:
-        value: properties.last.magic
-  property:
-    seq:
-      - id: magic
-        size: 4
-        type: str
-      - id: type
-        size: 4
-        type: str
-        if: is_valid
-      - id: len_body
-        type: u4
-        if: is_valid
-      - id: body
-        size: len_body
-        type: str
-        if: is_valid
-    instances:
-      is_valid:
-        value: &#39;magic == &quot;prop&quot;&#39;
-  dat_bitmap:
-    seq:
-      - id: bits_per_pixel
-        type: s2
-      - id: width
-        type: u2
-      - id: height
-        type: u2
-      - id: image
-        size-eos: true
-  dat_rle_sprite:
-    seq:
-      - id: bits_per_pixel
-        type: s2
-      - id: width
-        type: u2
-      - id: height
-        type: u2
-      - id: len_image
-        type: u4
-      - id: image
-        size-eos: true
-  dat_font:
-    seq:
-      - id: font_size
-        type: s2
-      - id: body
-        type:
-          switch-on: font_size
-          cases:
-            8: dat_font_8
-            16: dat_font_16
-#            -1: dat_font_proportional
-            0: dat_font_3_9
-  dat_font_8:
-    doc: |
-      Simple monochrome monospaced font, 95 characters, 8x8 px
-      characters.
-    seq:
-      - id: chars
-        size: 8
-        repeat: expr
-        repeat-expr: 95
-  dat_font_16:
-    doc: |
-      Simple monochrome monospaced font, 95 characters, 8x16 px
-      characters.
-    seq:
-      - id: chars
-        size: 16
-        repeat: expr
-        repeat-expr: 95
-  dat_font_3_9:
-    doc: |
-      New bitmap font format introduced since Allegro 3.9: allows
-      flexible designation of character ranges, 8-bit colored
-      characters, etc.
-    seq:
-      - id: num_ranges
-        type: s2
-      - id: ranges
-        type: range
-        repeat: expr
-        repeat-expr: num_ranges
-    types:
-      range:
-        seq:
-          - id: mono
-            type: u1
-          - id: start_char
-            type: u4
-            doc: First character in range
-          - id: end_char
-            type: u4
-            doc: Last character in range (inclusive)
-          - id: chars
-            type: font_char
-            repeat: expr
-            repeat-expr: end_char - start_char + 1
-      font_char:
-        seq:
-          - id: width
-            type: u2
-          - id: height
-            type: u2
-          - id: body
-            size: width * height
-enums:
-  pack_enum:
-    0x736c682e: unpacked
-</code></pre>
+  <span class="no">This spec applies to Allegro data files for library versions 2.2 up</span>
+  <span class="no">to 4.4.</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://liballeg.org/stabledocs/en/datafile.html</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pack_magic</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pack_enum</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dat_magic</span>
+    <span class="nt">contents</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ALL.</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_objects</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">objects</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dat_object</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_objects</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">dat_object</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">properties</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">property</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">until</span>
+        <span class="nt">repeat-until</span><span class="p">:</span> <span class="s">&#39;not</span><span class="nv"> </span><span class="s">_.is_valid&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_compressed</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_uncompressed</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_compressed</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;&quot;BMP</span><span class="nv"> </span><span class="s">&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">dat_bitmap</span>
+            <span class="s">&#39;&quot;RLE</span><span class="nv"> </span><span class="s">&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">dat_rle_sprite</span>
+            <span class="s">&#39;&quot;FONT&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">dat_font</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">type</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">properties.last.magic</span>
+  <span class="nt">property</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_valid</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_valid</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_valid</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">is_valid</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;magic</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">&quot;prop&quot;&#39;</span>
+  <span class="nt">dat_bitmap</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bits_per_pixel</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">width</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">height</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image</span>
+        <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">dat_rle_sprite</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bits_per_pixel</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">width</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">height</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_image</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image</span>
+        <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="nt">dat_font</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">font_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">font_size</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dat_font_8</span>
+            <span class="nt">16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dat_font_16</span>
+<span class="c1">#            -1: dat_font_proportional</span>
+            <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dat_font_3_9</span>
+  <span class="nt">dat_font_8</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Simple monochrome monospaced font, 95 characters, 8x8 px</span>
+      <span class="no">characters.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chars</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">95</span>
+  <span class="nt">dat_font_16</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Simple monochrome monospaced font, 95 characters, 8x16 px</span>
+      <span class="no">characters.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chars</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">95</span>
+  <span class="nt">dat_font_3_9</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">New bitmap font format introduced since Allegro 3.9: allows</span>
+      <span class="no">flexible designation of character ranges, 8-bit colored</span>
+      <span class="no">characters, etc.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_ranges</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ranges</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">range</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_ranges</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">range</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mono</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start_char</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">First character in range</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end_char</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Last character in range (inclusive)</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chars</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">font_char</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end_char - start_char + 1</span>
+      <span class="nt">font_char</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">width</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">height</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">width * height</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">pack_enum</span><span class="p">:</span>
+    <span class="nt">0x736c682e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unpacked</span>
+</pre></div>
     </div>
 </section>
 
@@ -407,8 +404,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -204,102 +201,102 @@ section#format-index .row {
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: apm_partition_table
-  title: APM (Apple Partition Map) partition table
-  license: CC0-1.0
-  endian: be
-  encoding: ascii
-doc-ref: Specification taken from https://en.wikipedia.org/wiki/Apple_Partition_Map
-instances:
-  sector_size:
-    value: 0x200
-    doc: |
-      0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM
-      0x800 (2048) bytes for CDROM
-  partition_lookup:
-    io: _root._io
-    pos: _root.sector_size
-    type: partition_entry
-    size: sector_size
-    doc: |
-      Every partition entry contains the number of partition entries.
-      We parse the first entry, to know how many to parse, including the first one.
-      No logic is given what to do if other entries have a different number.
-  partition_entries:
-    io: _root._io
-    pos: _root.sector_size
-    type: partition_entry
-    size: sector_size
-    repeat: expr
-    repeat-expr: _root.partition_lookup.number_of_partitions
-types:
-  partition_entry:
-    seq:
-      - id: magic
-        contents: [ 0x50, 0x4d ]
-      - id: reserved_1
-        size: 0x2
-      - id: number_of_partitions
-        type: u4
-      - id: partition_start
-        type: u4
-        doc: &quot;First sector&quot;
-      - id: partition_size
-        type: u4
-        doc: &quot;Number of sectors&quot;
-      - id: partition_name
-        type: strz
-        size: 0x20
-      - id: partition_type
-        type: strz
-        size: 0x20  
-      - id: data_start
-        type: u4
-        doc: &quot;First sector&quot;
-      - id: data_size
-        type: u4
-        doc: &quot;Number of sectors&quot;
-      - id: partition_status
-        type: u4
-      - id: boot_code_start
-        type: u4
-        doc: &quot;First sector&quot;
-      - id: boot_code_size
-        type: u4
-        doc: &quot;Number of bytes&quot;
-      - id: boot_loader_address
-        type: u4
-        doc: &quot;Address of bootloader code&quot;
-      - id: reserved_2
-        size: 0x4
-      - id: boot_code_entry
-        type: u4
-        doc: &quot;Boot code entry point&quot;
-      - id: reserved_3
-        size: 0x4
-      - id: boot_code_cksum
-        type: u4
-        doc: &quot;Boot code checksum&quot;
-      - id: processor_type
-        type: strz
-        size: 0x10
-      # Skipping the remaining of the sector, it should be all 0x00
-    instances:
-      partition:
-        io: _root._io
-        pos: partition_start * _root.sector_size
-        size: partition_size * _root.sector_size
-        if: &#39;partition_status &amp; 1 != 0&#39;
-      data:
-        io: _root._io
-        pos: data_start * _root.sector_size
-        size: data_size * _root.sector_size
-      boot_code:
-        io: _root._io
-        pos: boot_code_start * _root.sector_size
-        size: boot_code_size
-</code></pre>
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">apm_partition_table</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">APM (Apple Partition Map) partition table</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+  <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ascii</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specification taken from https://en.wikipedia.org/wiki/Apple_Partition_Map</span>
+<span class="nt">instances</span><span class="p">:</span>
+  <span class="nt">sector_size</span><span class="p">:</span>
+    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x200</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">0x200 (512) bytes for disks, 0x1000 (4096) bytes is not supported by APM</span>
+      <span class="no">0x800 (2048) bytes for CDROM</span>
+  <span class="nt">partition_lookup</span><span class="p">:</span>
+    <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.sector_size</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">partition_entry</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sector_size</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Every partition entry contains the number of partition entries.</span>
+      <span class="no">We parse the first entry, to know how many to parse, including the first one.</span>
+      <span class="no">No logic is given what to do if other entries have a different number.</span>
+  <span class="nt">partition_entries</span><span class="p">:</span>
+    <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.sector_size</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">partition_entry</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sector_size</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.partition_lookup.number_of_partitions</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">partition_entry</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span> <span class="nv">0x50</span><span class="p p-Indicator">,</span> <span class="nv">0x4d</span> <span class="p p-Indicator">]</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_1</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">number_of_partitions</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">partition_start</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;First</span><span class="nv"> </span><span class="s">sector&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">partition_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Number</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">sectors&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">partition_name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x20</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">partition_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x20</span>  
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_start</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;First</span><span class="nv"> </span><span class="s">sector&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Number</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">sectors&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">partition_status</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_code_start</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;First</span><span class="nv"> </span><span class="s">sector&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_code_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Number</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">bytes&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_loader_address</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Address</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">bootloader</span><span class="nv"> </span><span class="s">code&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_2</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_code_entry</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Boot</span><span class="nv"> </span><span class="s">code</span><span class="nv"> </span><span class="s">entry</span><span class="nv"> </span><span class="s">point&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_3</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_code_cksum</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Boot</span><span class="nv"> </span><span class="s">code</span><span class="nv"> </span><span class="s">checksum&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">processor_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x10</span>
+      <span class="c1"># Skipping the remaining of the sector, it should be all 0x00</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">partition</span><span class="p">:</span>
+        <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">partition_start * _root.sector_size</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">partition_size * _root.sector_size</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="s">&#39;partition_status</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0&#39;</span>
+      <span class="nt">data</span><span class="p">:</span>
+        <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_start * _root.sector_size</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_size * _root.sector_size</span>
+      <span class="nt">boot_code</span><span class="p">:</span>
+        <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_code_start * _root.sector_size</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_code_size</span>
+</pre></div>
     </div>
 </section>
 
@@ -323,8 +320,8 @@ types:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -243,740 +240,740 @@ WindowsMinidump data = new WindowsMinidump(new ByteBufferKaitaiStream(someArray)
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.nio.charset.Charset;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
 
 
-/**
- * Windows MiniDump (MDMP) file provides a concise way to store process
- * core dumps, which is useful for debugging. Given its small size,
- * modularity, some cross-platform features and native support in some
- * debuggers, it is particularly useful for crash reporting, and is
- * used for that purpose in Windows and Google Chrome projects.
- * 
- * The file itself is a container, which contains a number of typed
- * &quot;streams&quot;, which contain some data according to its type attribute.
- * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680378(VS.85).aspx&quot;&gt;Source&lt;/a&gt;
- */
-public class WindowsMinidump extends KaitaiStruct {
-    public static WindowsMinidump fromFile(String fileName) throws IOException {
-        return new WindowsMinidump(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * Windows MiniDump (MDMP) file provides a concise way to store process</span>
+<span class="cm"> * core dumps, which is useful for debugging. Given its small size,</span>
+<span class="cm"> * modularity, some cross-platform features and native support in some</span>
+<span class="cm"> * debuggers, it is particularly useful for crash reporting, and is</span>
+<span class="cm"> * used for that purpose in Windows and Google Chrome projects.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The file itself is a container, which contains a number of typed</span>
+<span class="cm"> * &quot;streams&quot;, which contain some data according to its type attribute.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680378(VS.85).aspx&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WindowsMinidump</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">WindowsMinidump</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">WindowsMinidump</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public enum StreamTypes {
-        UNUSED(0),
-        RESERVED_0(1),
-        RESERVED_1(2),
-        THREAD_LIST(3),
-        MODULE_LIST(4),
-        MEMORY_LIST(5),
-        EXCEPTION(6),
-        SYSTEM_INFO(7),
-        THREAD_EX_LIST(8),
-        MEMORY_64_LIST(9),
-        COMMENT_A(10),
-        COMMENT_W(11),
-        HANDLE_DATA(12),
-        FUNCTION_TABLE(13),
-        UNLOADED_MODULE_LIST(14),
-        MISC_INFO(15),
-        MEMORY_INFO_LIST(16),
-        THREAD_INFO_LIST(17),
-        HANDLE_OPERATION_LIST(18);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">StreamTypes</span> <span class="p">{</span>
+        <span class="n">UNUSED</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+        <span class="n">RESERVED_0</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">RESERVED_1</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">THREAD_LIST</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+        <span class="n">MODULE_LIST</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+        <span class="n">MEMORY_LIST</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">EXCEPTION</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span>
+        <span class="n">SYSTEM_INFO</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span>
+        <span class="n">THREAD_EX_LIST</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span>
+        <span class="n">MEMORY_64_LIST</span><span class="p">(</span><span class="mi">9</span><span class="p">),</span>
+        <span class="n">COMMENT_A</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+        <span class="n">COMMENT_W</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span>
+        <span class="n">HANDLE_DATA</span><span class="p">(</span><span class="mi">12</span><span class="p">),</span>
+        <span class="n">FUNCTION_TABLE</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span>
+        <span class="n">UNLOADED_MODULE_LIST</span><span class="p">(</span><span class="mi">14</span><span class="p">),</span>
+        <span class="n">MISC_INFO</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span>
+        <span class="n">MEMORY_INFO_LIST</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span>
+        <span class="n">THREAD_INFO_LIST</span><span class="p">(</span><span class="mi">17</span><span class="p">),</span>
+        <span class="n">HANDLE_OPERATION_LIST</span><span class="p">(</span><span class="mi">18</span><span class="p">);</span>
 
-        private final long id;
-        StreamTypes(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, StreamTypes&gt; byId = new HashMap&lt;Long, StreamTypes&gt;(19);
-        static {
-            for (StreamTypes e : StreamTypes.values())
-                byId.put(e.id(), e);
-        }
-        public static StreamTypes byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">StreamTypes</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">StreamTypes</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">StreamTypes</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">19</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">StreamTypes</span> <span class="n">e</span> <span class="p">:</span> <span class="n">StreamTypes</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">StreamTypes</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public WindowsMinidump(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">WindowsMinidump</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public WindowsMinidump(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">WindowsMinidump</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public WindowsMinidump(KaitaiStream _io, KaitaiStruct _parent, WindowsMinidump _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.magic1 = this._io.ensureFixedContents(new byte[] { 77, 68, 77, 80 });
-        this.magic2 = this._io.ensureFixedContents(new byte[] { -109, -89 });
-        this.version = this._io.readU2le();
-        this.numStreams = this._io.readU4le();
-        this.ofsStreams = this._io.readU4le();
-        this.checksum = this._io.readU4le();
-        this.timestamp = this._io.readU4le();
-        this.flags = this._io.readU8le();
-    }
+    <span class="kd">public</span> <span class="nf">WindowsMinidump</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">magic1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">80</span> <span class="p">});</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">magic2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="o">-</span><span class="mi">109</span><span class="p">,</span> <span class="o">-</span><span class="mi">89</span> <span class="p">});</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">numStreams</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">ofsStreams</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">checksum</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">timestamp</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680515(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class ThreadList extends KaitaiStruct {
-        public static ThreadList fromFile(String fileName) throws IOException {
-            return new ThreadList(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680515(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ThreadList</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">ThreadList</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">ThreadList</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public ThreadList(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">ThreadList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ThreadList(KaitaiStream _io, WindowsMinidump.Dir _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">ThreadList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ThreadList(KaitaiStream _io, WindowsMinidump.Dir _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numThreads = this._io.readU4le();
-            threads = new ArrayList&lt;Thread&gt;((int) (numThreads()));
-            for (int i = 0; i &lt; numThreads(); i++) {
-                this.threads.add(new Thread(this._io, this, _root));
-            }
-        }
-        private long numThreads;
-        private ArrayList&lt;Thread&gt; threads;
-        private WindowsMinidump _root;
-        private WindowsMinidump.Dir _parent;
-        public long numThreads() { return numThreads; }
-        public ArrayList&lt;Thread&gt; threads() { return threads; }
-        public WindowsMinidump _root() { return _root; }
-        public WindowsMinidump.Dir _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">ThreadList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numThreads</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="n">threads</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numThreads</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numThreads</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">threads</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Thread</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numThreads</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span> <span class="n">threads</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numThreads</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numThreads</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Thread</span><span class="o">&gt;</span> <span class="nf">threads</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">threads</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class LocationDescriptor extends KaitaiStruct {
-        public static LocationDescriptor fromFile(String fileName) throws IOException {
-            return new LocationDescriptor(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">LocationDescriptor</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">LocationDescriptor</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">LocationDescriptor</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public LocationDescriptor(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">LocationDescriptor</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public LocationDescriptor(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">LocationDescriptor</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public LocationDescriptor(KaitaiStream _io, KaitaiStruct _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenData = this._io.readU4le();
-            this.ofsData = this._io.readU4le();
-        }
-        private byte[] data;
-        public byte[] data() {
-            if (this.data != null)
-                return this.data;
-            KaitaiStream io = _root._io();
-            long _pos = io.pos();
-            io.seek(ofsData());
-            this.data = io.readBytes(lenData());
-            io.seek(_pos);
-            return this.data;
-        }
-        private long lenData;
-        private long ofsData;
-        private WindowsMinidump _root;
-        private KaitaiStruct _parent;
-        public long lenData() { return lenData; }
-        public long ofsData() { return ofsData; }
-        public WindowsMinidump _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">LocationDescriptor</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">data</span><span class="p">;</span>
+            <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+            <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+            <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsData</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenData</span><span class="p">());</span>
+            <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">data</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenData</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsData</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenData</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsData</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * Specific string serialization scheme used in MiniDump format is
-     * actually a simple 32-bit length-prefixed UTF-16 string.
-     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680395(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class MinidumpString extends KaitaiStruct {
-        public static MinidumpString fromFile(String fileName) throws IOException {
-            return new MinidumpString(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * Specific string serialization scheme used in MiniDump format is</span>
+<span class="cm">     * actually a simple 32-bit length-prefixed UTF-16 string.</span>
+<span class="cm">     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680395(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MinidumpString</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">MinidumpString</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">MinidumpString</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public MinidumpString(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">MinidumpString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public MinidumpString(KaitaiStream _io, WindowsMinidump.SystemInfo _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">MinidumpString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">SystemInfo</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public MinidumpString(KaitaiStream _io, WindowsMinidump.SystemInfo _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenStr = this._io.readU4le();
-            this.str = new String(this._io.readBytes(lenStr()), Charset.forName(&quot;UTF-16LE&quot;));
-        }
-        private long lenStr;
-        private String str;
-        private WindowsMinidump _root;
-        private WindowsMinidump.SystemInfo _parent;
-        public long lenStr() { return lenStr; }
-        public String str() { return str; }
-        public WindowsMinidump _root() { return _root; }
-        public WindowsMinidump.SystemInfo _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">MinidumpString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">SystemInfo</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenStr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">str</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenStr</span><span class="p">()),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-16LE&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenStr</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">str</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">SystemInfo</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenStr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenStr</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">str</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">str</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">SystemInfo</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * &quot;System info&quot; stream provides basic information about the
-     * hardware and operating system which produces this dump.
-     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680396(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class SystemInfo extends KaitaiStruct {
-        public static SystemInfo fromFile(String fileName) throws IOException {
-            return new SystemInfo(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * &quot;System info&quot; stream provides basic information about the</span>
+<span class="cm">     * hardware and operating system which produces this dump.</span>
+<span class="cm">     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680396(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SystemInfo</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">SystemInfo</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">SystemInfo</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public enum CpuArchs {
-            INTEL(0),
-            ARM(5),
-            IA64(6),
-            AMD64(9),
-            UNKNOWN(65535);
+        <span class="kd">public</span> <span class="kd">enum</span> <span class="n">CpuArchs</span> <span class="p">{</span>
+            <span class="n">INTEL</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+            <span class="n">ARM</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+            <span class="n">IA64</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span>
+            <span class="n">AMD64</span><span class="p">(</span><span class="mi">9</span><span class="p">),</span>
+            <span class="n">UNKNOWN</span><span class="p">(</span><span class="mi">65535</span><span class="p">);</span>
 
-            private final long id;
-            CpuArchs(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map&lt;Long, CpuArchs&gt; byId = new HashMap&lt;Long, CpuArchs&gt;(5);
-            static {
-                for (CpuArchs e : CpuArchs.values())
-                    byId.put(e.id(), e);
-            }
-            public static CpuArchs byId(long id) { return byId.get(id); }
-        }
+            <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+            <span class="n">CpuArchs</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">CpuArchs</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">CpuArchs</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+            <span class="kd">static</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">CpuArchs</span> <span class="n">e</span> <span class="p">:</span> <span class="n">CpuArchs</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                    <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">CpuArchs</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        public SystemInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">SystemInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public SystemInfo(KaitaiStream _io, WindowsMinidump.Dir _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">SystemInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public SystemInfo(KaitaiStream _io, WindowsMinidump.Dir _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.cpuArch = CpuArchs.byId(this._io.readU2le());
-            this.cpuLevel = this._io.readU2le();
-            this.cpuRevision = this._io.readU2le();
-            this.numCpus = this._io.readU1();
-            this.osType = this._io.readU1();
-            this.osVerMajor = this._io.readU4le();
-            this.osVerMinor = this._io.readU4le();
-            this.osBuild = this._io.readU4le();
-            this.osPlatform = this._io.readU4le();
-            this.ofsServicePack = this._io.readU4le();
-            this.osSuiteMask = this._io.readU2le();
-            this.reserved2 = this._io.readU2le();
-        }
-        private MinidumpString servicePack;
-        public MinidumpString servicePack() {
-            if (this.servicePack != null)
-                return this.servicePack;
-            if (ofsServicePack() &gt; 0) {
-                KaitaiStream io = _root._io();
-                long _pos = io.pos();
-                io.seek(ofsServicePack());
-                this.servicePack = new MinidumpString(io, this, _root);
-                io.seek(_pos);
-            }
-            return this.servicePack;
-        }
-        private CpuArchs cpuArch;
-        private int cpuLevel;
-        private int cpuRevision;
-        private int numCpus;
-        private int osType;
-        private long osVerMajor;
-        private long osVerMinor;
-        private long osBuild;
-        private long osPlatform;
-        private long ofsServicePack;
-        private int osSuiteMask;
-        private int reserved2;
-        private WindowsMinidump _root;
-        private WindowsMinidump.Dir _parent;
-        public CpuArchs cpuArch() { return cpuArch; }
-        public int cpuLevel() { return cpuLevel; }
-        public int cpuRevision() { return cpuRevision; }
-        public int numCpus() { return numCpus; }
-        public int osType() { return osType; }
-        public long osVerMajor() { return osVerMajor; }
-        public long osVerMinor() { return osVerMinor; }
-        public long osBuild() { return osBuild; }
-        public long osPlatform() { return osPlatform; }
-        public long ofsServicePack() { return ofsServicePack; }
-        public int osSuiteMask() { return osSuiteMask; }
-        public int reserved2() { return reserved2; }
-        public WindowsMinidump _root() { return _root; }
-        public WindowsMinidump.Dir _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">SystemInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">cpuArch</span> <span class="o">=</span> <span class="n">CpuArchs</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">cpuLevel</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">cpuRevision</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numCpus</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">osType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">osVerMajor</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">osVerMinor</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">osBuild</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">osPlatform</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsServicePack</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">osSuiteMask</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">MinidumpString</span> <span class="n">servicePack</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">MinidumpString</span> <span class="nf">servicePack</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">servicePack</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">servicePack</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">ofsServicePack</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsServicePack</span><span class="p">());</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">servicePack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MinidumpString</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">servicePack</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">CpuArchs</span> <span class="n">cpuArch</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">cpuLevel</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">cpuRevision</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">numCpus</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">osType</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">osVerMajor</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">osVerMinor</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">osBuild</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">osPlatform</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsServicePack</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">osSuiteMask</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">reserved2</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">CpuArchs</span> <span class="nf">cpuArch</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">cpuArch</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">cpuLevel</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">cpuLevel</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">cpuRevision</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">cpuRevision</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numCpus</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numCpus</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">osType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">osType</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">osVerMajor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">osVerMajor</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">osVerMinor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">osVerMinor</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">osBuild</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">osBuild</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">osPlatform</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">osPlatform</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsServicePack</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsServicePack</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">osSuiteMask</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">osSuiteMask</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">reserved2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680367(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class ExceptionRecord extends KaitaiStruct {
-        public static ExceptionRecord fromFile(String fileName) throws IOException {
-            return new ExceptionRecord(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680367(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ExceptionRecord</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">ExceptionRecord</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">ExceptionRecord</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public ExceptionRecord(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">ExceptionRecord</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ExceptionRecord(KaitaiStream _io, WindowsMinidump.ExceptionStream _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">ExceptionRecord</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">ExceptionStream</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ExceptionRecord(KaitaiStream _io, WindowsMinidump.ExceptionStream _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.code = this._io.readU4le();
-            this.flags = this._io.readU4le();
-            this.innerException = this._io.readU8le();
-            this.addr = this._io.readU8le();
-            this.numParams = this._io.readU4le();
-            this.reserved = this._io.readU4le();
-            params = new ArrayList&lt;Long&gt;((int) (15));
-            for (int i = 0; i &lt; 15; i++) {
-                this.params.add(this._io.readU8le());
-            }
-        }
-        private long code;
-        private long flags;
-        private long innerException;
-        private long addr;
-        private long numParams;
-        private long reserved;
-        private ArrayList&lt;Long&gt; params;
-        private WindowsMinidump _root;
-        private WindowsMinidump.ExceptionStream _parent;
-        public long code() { return code; }
-        public long flags() { return flags; }
-        public long innerException() { return innerException; }
+        <span class="kd">public</span> <span class="nf">ExceptionRecord</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">ExceptionStream</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">code</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">innerException</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">addr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numParams</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mi">15</span><span class="p">));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">15</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">params</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">());</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">code</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">flags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">innerException</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">addr</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numParams</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">reserved</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="n">params</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">ExceptionStream</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">code</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">code</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">innerException</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">innerException</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Memory address where exception has occurred
-         */
-        public long addr() { return addr; }
-        public long numParams() { return numParams; }
-        public long reserved() { return reserved; }
+        <span class="cm">/**</span>
+<span class="cm">         * Memory address where exception has occurred</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">addr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">addr</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numParams</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numParams</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Additional parameters passed along with exception raise
-         * function (for WinAPI, that is `RaiseException`). Meaning is
-         * exception-specific. Given that this type is originally
-         * defined by a C structure, it is described there as array of
-         * fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =
-         * 15), but in reality only first `num_params` would be used.
-         */
-        public ArrayList&lt;Long&gt; params() { return params; }
-        public WindowsMinidump _root() { return _root; }
-        public WindowsMinidump.ExceptionStream _parent() { return _parent; }
-    }
+        <span class="cm">/**</span>
+<span class="cm">         * Additional parameters passed along with exception raise</span>
+<span class="cm">         * function (for WinAPI, that is `RaiseException`). Meaning is</span>
+<span class="cm">         * exception-specific. Given that this type is originally</span>
+<span class="cm">         * defined by a C structure, it is described there as array of</span>
+<span class="cm">         * fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =</span>
+<span class="cm">         * 15), but in reality only first `num_params` would be used.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="nf">params</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">params</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">ExceptionStream</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680389(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class MiscInfo extends KaitaiStruct {
-        public static MiscInfo fromFile(String fileName) throws IOException {
-            return new MiscInfo(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680389(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MiscInfo</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">MiscInfo</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">MiscInfo</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public MiscInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">MiscInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public MiscInfo(KaitaiStream _io, WindowsMinidump.Dir _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">MiscInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public MiscInfo(KaitaiStream _io, WindowsMinidump.Dir _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenInfo = this._io.readU4le();
-            this.flags1 = this._io.readU4le();
-            this.processId = this._io.readU4le();
-            this.processCreateTime = this._io.readU4le();
-            this.processUserTime = this._io.readU4le();
-            this.processKernelTime = this._io.readU4le();
-            this.cpuMaxMhz = this._io.readU4le();
-            this.cpuCurMhz = this._io.readU4le();
-            this.cpuLimitMhz = this._io.readU4le();
-            this.cpuMaxIdleState = this._io.readU4le();
-            this.cpuCurIdleState = this._io.readU4le();
-        }
-        private long lenInfo;
-        private long flags1;
-        private long processId;
-        private long processCreateTime;
-        private long processUserTime;
-        private long processKernelTime;
-        private long cpuMaxMhz;
-        private long cpuCurMhz;
-        private long cpuLimitMhz;
-        private long cpuMaxIdleState;
-        private long cpuCurIdleState;
-        private WindowsMinidump _root;
-        private WindowsMinidump.Dir _parent;
-        public long lenInfo() { return lenInfo; }
-        public long flags1() { return flags1; }
-        public long processId() { return processId; }
-        public long processCreateTime() { return processCreateTime; }
-        public long processUserTime() { return processUserTime; }
-        public long processKernelTime() { return processKernelTime; }
-        public long cpuMaxMhz() { return cpuMaxMhz; }
-        public long cpuCurMhz() { return cpuCurMhz; }
-        public long cpuLimitMhz() { return cpuLimitMhz; }
-        public long cpuMaxIdleState() { return cpuMaxIdleState; }
-        public long cpuCurIdleState() { return cpuCurIdleState; }
-        public WindowsMinidump _root() { return _root; }
-        public WindowsMinidump.Dir _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">MiscInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenInfo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">flags1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">processId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">processCreateTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">processUserTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">processKernelTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">cpuMaxMhz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">cpuCurMhz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">cpuLimitMhz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">cpuMaxIdleState</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">cpuCurIdleState</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenInfo</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">flags1</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">processId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">processCreateTime</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">processUserTime</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">processKernelTime</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">cpuMaxMhz</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">cpuCurMhz</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">cpuLimitMhz</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">cpuMaxIdleState</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">cpuCurIdleState</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenInfo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenInfo</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">flags1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags1</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">processId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">processId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">processCreateTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">processCreateTime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">processUserTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">processUserTime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">processKernelTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">processKernelTime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">cpuMaxMhz</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">cpuMaxMhz</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">cpuCurMhz</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">cpuCurMhz</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">cpuLimitMhz</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">cpuLimitMhz</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">cpuMaxIdleState</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">cpuMaxIdleState</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">cpuCurIdleState</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">cpuCurIdleState</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680365(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class Dir extends KaitaiStruct {
-        public static Dir fromFile(String fileName) throws IOException {
-            return new Dir(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680365(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Dir</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Dir</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Dir</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Dir(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Dir</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Dir(KaitaiStream _io, WindowsMinidump _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Dir</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Dir(KaitaiStream _io, WindowsMinidump _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.streamType = WindowsMinidump.StreamTypes.byId(this._io.readU4le());
-            this.lenData = this._io.readU4le();
-            this.ofsData = this._io.readU4le();
-        }
-        private Object data;
-        public Object data() {
-            if (this.data != null)
-                return this.data;
-            long _pos = this._io.pos();
-            this._io.seek(ofsData());
-            switch (streamType()) {
-            case MISC_INFO: {
-                this._raw_data = this._io.readBytes(lenData());
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new MiscInfo(_io__raw_data, this, _root);
-                break;
-            }
-            case EXCEPTION: {
-                this._raw_data = this._io.readBytes(lenData());
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new ExceptionStream(_io__raw_data, this, _root);
-                break;
-            }
-            case MEMORY_LIST: {
-                this._raw_data = this._io.readBytes(lenData());
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new MemoryList(_io__raw_data, this, _root);
-                break;
-            }
-            case SYSTEM_INFO: {
-                this._raw_data = this._io.readBytes(lenData());
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new SystemInfo(_io__raw_data, this, _root);
-                break;
-            }
-            case THREAD_LIST: {
-                this._raw_data = this._io.readBytes(lenData());
-                KaitaiStream _io__raw_data = new ByteBufferKaitaiStream(_raw_data);
-                this.data = new ThreadList(_io__raw_data, this, _root);
-                break;
-            }
-            default: {
-                this.data = this._io.readBytes(lenData());
-                break;
-            }
-            }
-            this._io.seek(_pos);
-            return this.data;
-        }
-        private StreamTypes streamType;
-        private long lenData;
-        private long ofsData;
-        private WindowsMinidump _root;
-        private WindowsMinidump _parent;
-        private byte[] _raw_data;
-        public StreamTypes streamType() { return streamType; }
+        <span class="kd">public</span> <span class="nf">Dir</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">streamType</span> <span class="o">=</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">StreamTypes</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Object</span> <span class="n">data</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Object</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">data</span><span class="p">;</span>
+            <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsData</span><span class="p">());</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">streamType</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">MISC_INFO</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenData</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_data</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MiscInfo</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">EXCEPTION</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenData</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_data</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ExceptionStream</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">MEMORY_LIST</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenData</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_data</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MemoryList</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">SYSTEM_INFO</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenData</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_data</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SystemInfo</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">THREAD_LIST</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenData</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_data</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadList</span><span class="p">(</span><span class="n">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenData</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">data</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">StreamTypes</span> <span class="n">streamType</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenData</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsData</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_data</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">StreamTypes</span> <span class="nf">streamType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">streamType</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;
-         */
-        public long lenData() { return lenData; }
-        public long ofsData() { return ofsData; }
-        public WindowsMinidump _root() { return _root; }
-        public WindowsMinidump _parent() { return _parent; }
-        public byte[] _raw_data() { return _raw_data; }
-    }
+        <span class="cm">/**</span>
+<span class="cm">         * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenData</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsData</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_data</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680517(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class Thread extends KaitaiStruct {
-        public static Thread fromFile(String fileName) throws IOException {
-            return new Thread(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680517(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Thread</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Thread</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Thread</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Thread(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Thread</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Thread(KaitaiStream _io, WindowsMinidump.ThreadList _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Thread</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">ThreadList</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Thread(KaitaiStream _io, WindowsMinidump.ThreadList _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.threadId = this._io.readU4le();
-            this.suspendCount = this._io.readU4le();
-            this.priorityClass = this._io.readU4le();
-            this.priority = this._io.readU4le();
-            this.teb = this._io.readU8le();
-            this.stack = new MemoryDescriptor(this._io, this, _root);
-            this.threadContext = new LocationDescriptor(this._io, this, _root);
-        }
-        private long threadId;
-        private long suspendCount;
-        private long priorityClass;
-        private long priority;
-        private long teb;
-        private MemoryDescriptor stack;
-        private LocationDescriptor threadContext;
-        private WindowsMinidump _root;
-        private WindowsMinidump.ThreadList _parent;
-        public long threadId() { return threadId; }
-        public long suspendCount() { return suspendCount; }
-        public long priorityClass() { return priorityClass; }
-        public long priority() { return priority; }
+        <span class="kd">public</span> <span class="nf">Thread</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">ThreadList</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">threadId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">suspendCount</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">priorityClass</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">priority</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">teb</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">stack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MemoryDescriptor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">threadContext</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LocationDescriptor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">threadId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">suspendCount</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">priorityClass</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">priority</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">teb</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MemoryDescriptor</span> <span class="n">stack</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">LocationDescriptor</span> <span class="n">threadContext</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">ThreadList</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">threadId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">threadId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">suspendCount</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">suspendCount</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">priorityClass</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">priorityClass</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">priority</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">priority</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Thread Environment Block
-         */
-        public long teb() { return teb; }
-        public MemoryDescriptor stack() { return stack; }
-        public LocationDescriptor threadContext() { return threadContext; }
-        public WindowsMinidump _root() { return _root; }
-        public WindowsMinidump.ThreadList _parent() { return _parent; }
-    }
+        <span class="cm">/**</span>
+<span class="cm">         * Thread Environment Block</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">teb</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">teb</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MemoryDescriptor</span> <span class="nf">stack</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">stack</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">LocationDescriptor</span> <span class="nf">threadContext</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">threadContext</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">ThreadList</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680387(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class MemoryList extends KaitaiStruct {
-        public static MemoryList fromFile(String fileName) throws IOException {
-            return new MemoryList(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680387(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MemoryList</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">MemoryList</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">MemoryList</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public MemoryList(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">MemoryList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public MemoryList(KaitaiStream _io, WindowsMinidump.Dir _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">MemoryList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public MemoryList(KaitaiStream _io, WindowsMinidump.Dir _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numMemRanges = this._io.readU4le();
-            memRanges = new ArrayList&lt;MemoryDescriptor&gt;((int) (numMemRanges()));
-            for (int i = 0; i &lt; numMemRanges(); i++) {
-                this.memRanges.add(new MemoryDescriptor(this._io, this, _root));
-            }
-        }
-        private long numMemRanges;
-        private ArrayList&lt;MemoryDescriptor&gt; memRanges;
-        private WindowsMinidump _root;
-        private WindowsMinidump.Dir _parent;
-        public long numMemRanges() { return numMemRanges; }
-        public ArrayList&lt;MemoryDescriptor&gt; memRanges() { return memRanges; }
-        public WindowsMinidump _root() { return _root; }
-        public WindowsMinidump.Dir _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">MemoryList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numMemRanges</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="n">memRanges</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">MemoryDescriptor</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numMemRanges</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numMemRanges</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">memRanges</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">MemoryDescriptor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numMemRanges</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">MemoryDescriptor</span><span class="o">&gt;</span> <span class="n">memRanges</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numMemRanges</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numMemRanges</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">MemoryDescriptor</span><span class="o">&gt;</span> <span class="nf">memRanges</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">memRanges</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680384(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class MemoryDescriptor extends KaitaiStruct {
-        public static MemoryDescriptor fromFile(String fileName) throws IOException {
-            return new MemoryDescriptor(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680384(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MemoryDescriptor</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">MemoryDescriptor</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">MemoryDescriptor</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public MemoryDescriptor(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">MemoryDescriptor</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public MemoryDescriptor(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">MemoryDescriptor</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public MemoryDescriptor(KaitaiStream _io, KaitaiStruct _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.addrMemoryRange = this._io.readU8le();
-            this.memory = new LocationDescriptor(this._io, this, _root);
-        }
-        private long addrMemoryRange;
-        private LocationDescriptor memory;
-        private WindowsMinidump _root;
-        private KaitaiStruct _parent;
-        public long addrMemoryRange() { return addrMemoryRange; }
-        public LocationDescriptor memory() { return memory; }
-        public WindowsMinidump _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">MemoryDescriptor</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">addrMemoryRange</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">memory</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LocationDescriptor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">addrMemoryRange</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">LocationDescriptor</span> <span class="n">memory</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">addrMemoryRange</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">addrMemoryRange</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">LocationDescriptor</span> <span class="nf">memory</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">memory</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680368(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class ExceptionStream extends KaitaiStruct {
-        public static ExceptionStream fromFile(String fileName) throws IOException {
-            return new ExceptionStream(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://msdn.microsoft.com/en-us/library/ms680368(v=vs.85).aspx&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ExceptionStream</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">ExceptionStream</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">ExceptionStream</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public ExceptionStream(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">ExceptionStream</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ExceptionStream(KaitaiStream _io, WindowsMinidump.Dir _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">ExceptionStream</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ExceptionStream(KaitaiStream _io, WindowsMinidump.Dir _parent, WindowsMinidump _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.threadId = this._io.readU4le();
-            this.reserved = this._io.readU4le();
-            this.exceptionRec = new ExceptionRecord(this._io, this, _root);
-            this.threadContext = new LocationDescriptor(this._io, this, _root);
-        }
-        private long threadId;
-        private long reserved;
-        private ExceptionRecord exceptionRec;
-        private LocationDescriptor threadContext;
-        private WindowsMinidump _root;
-        private WindowsMinidump.Dir _parent;
-        public long threadId() { return threadId; }
-        public long reserved() { return reserved; }
-        public ExceptionRecord exceptionRec() { return exceptionRec; }
-        public LocationDescriptor threadContext() { return threadContext; }
-        public WindowsMinidump _root() { return _root; }
-        public WindowsMinidump.Dir _parent() { return _parent; }
-    }
-    private ArrayList&lt;Dir&gt; streams;
-    public ArrayList&lt;Dir&gt; streams() {
-        if (this.streams != null)
-            return this.streams;
-        long _pos = this._io.pos();
-        this._io.seek(ofsStreams());
-        streams = new ArrayList&lt;Dir&gt;((int) (numStreams()));
-        for (int i = 0; i &lt; numStreams(); i++) {
-            this.streams.add(new Dir(this._io, this, _root));
-        }
-        this._io.seek(_pos);
-        return this.streams;
-    }
-    private byte[] magic1;
-    private byte[] magic2;
-    private int version;
-    private long numStreams;
-    private long ofsStreams;
-    private long checksum;
-    private long timestamp;
-    private long flags;
-    private WindowsMinidump _root;
-    private KaitaiStruct _parent;
-    public byte[] magic1() { return magic1; }
-    public byte[] magic2() { return magic2; }
-    public int version() { return version; }
-    public long numStreams() { return numStreams; }
-    public long ofsStreams() { return ofsStreams; }
-    public long checksum() { return checksum; }
-    public long timestamp() { return timestamp; }
-    public long flags() { return flags; }
-    public WindowsMinidump _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-}
-</code></pre>
+        <span class="kd">public</span> <span class="nf">ExceptionStream</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">threadId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">exceptionRec</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ExceptionRecord</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">threadContext</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LocationDescriptor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">threadId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">reserved</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ExceptionRecord</span> <span class="n">exceptionRec</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">LocationDescriptor</span> <span class="n">threadContext</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">threadId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">threadId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ExceptionRecord</span> <span class="nf">exceptionRec</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">exceptionRec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">LocationDescriptor</span> <span class="nf">threadContext</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">threadContext</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsMinidump</span><span class="p">.</span><span class="na">Dir</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Dir</span><span class="o">&gt;</span> <span class="n">streams</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Dir</span><span class="o">&gt;</span> <span class="nf">streams</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">streams</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">streams</span><span class="p">;</span>
+        <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsStreams</span><span class="p">());</span>
+        <span class="n">streams</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Dir</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numStreams</span><span class="p">()));</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numStreams</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">streams</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Dir</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">streams</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">magic1</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">magic2</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">version</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">numStreams</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsStreams</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">checksum</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">timestamp</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">flags</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">WindowsMinidump</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">magic1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">magic1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">magic2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">magic2</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">version</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numStreams</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numStreams</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsStreams</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsStreams</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">checksum</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">checksum</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">timestamp</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">timestamp</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">WindowsMinidump</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1003,8 +1000,8 @@ public class WindowsMinidump extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

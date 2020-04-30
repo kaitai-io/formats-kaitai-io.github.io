@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -215,713 +212,713 @@ section#format-index .row {
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: elf
-  title: Executable and Linkable Format
-  application: SVR4 ABI and up, many *nix systems
-  license: CC0-1.0
-  ks-version: 0.8
-doc-ref: https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD
-seq:
-  - id: magic
-    -orig-id: e_ident[EI_MAG0]..e[EI_MAG3]
-    size: 4
-    contents: [0x7f, &quot;ELF&quot;]
-    doc: File identification, must be 0x7f + &quot;ELF&quot;.
-  - id: bits
-    -orig-id: e_ident[EI_CLASS]
-    type: u1
-    enum: bits
-    doc: |
-      File class: designates target machine word size (32 or 64
-      bits). The size of many integer fields in this format will
-      depend on this setting.
-  - id: endian
-    -orig-id: e_ident[EI_DATA]
-    type: u1
-    enum: endian
-    doc: Endianness used for all integers.
-  - id: ei_version
-    -orig-id: e_ident[EI_VERSION]
-    type: u1
-    doc: ELF header version.
-  - id: abi
-    -orig-id: e_ident[EI_OSABI]
-    type: u1
-    enum: os_abi
-    doc: |
-      Specifies which OS- and ABI-related extensions will be used
-      in this ELF file.
-  - id: abi_version
-    type: u1
-    doc: |
-      Version of ABI targeted by this ELF file. Interpretation
-      depends on `abi` attribute.
-  - id: pad
-    size: 7
-  - id: header
-    type: endian_elf
-types:
-  phdr_type_flags:
-    params:
-      - id: value
-        type: u4
-    instances:
-      read:
-        value: value &amp; 0x04 != 0
-      write:
-        value: value &amp; 0x02 != 0
-      execute:
-        value: value &amp; 0x01 != 0
-      mask_proc:
-        value: value &amp; 0xf0000000 != 0
-  section_header_flags:
-    params:
-      - id: value
-        type: u4
-    instances:
-      write:
-        value: value &amp; 0x01 != 0
-        doc: &quot;writable&quot;
-      alloc:
-        value: value &amp; 0x02 != 0
-        doc: &quot;occupies memory during execution&quot;
-      exec_instr:
-        value: value &amp; 0x04 != 0
-        doc: &quot;executable&quot;
-      merge:
-        value: value &amp; 0x10 != 0
-        doc: &quot;might be merged&quot;
-      strings:
-        value: value &amp; 0x20 != 0
-        doc: &quot;contains nul-terminated strings&quot;
-      info_link:
-        value: value &amp; 0x40 != 0
-        doc: &quot;&#39;sh_info&#39; contains SHT index&quot;
-      link_order:
-        value: value &amp; 0x80 != 0
-        doc: &quot;preserve order after combining&quot;
-      os_non_conforming:
-        value: value &amp; 0x100 != 0
-        doc: &quot;non-standard OS specific handling required&quot;
-      group:
-        value: value &amp; 0x200 != 0
-        doc: &quot;section is member of a group&quot;
-      tls:
-        value: value &amp; 0x400 != 0
-        doc: &quot;section hold thread-local data&quot;
-      ordered:
-        value: value &amp; 0x04000000 != 0
-        doc: &quot;special ordering requirement (Solaris)&quot;
-      exclude:
-        value: value &amp; 0x08000000 != 0
-        doc: &quot;section is excluded unless referenced or allocated (Solaris)&quot;
-      mask_os:
-        value: value &amp; 0x0ff00000 != 0
-        doc: &quot;OS-specific&quot;
-      mask_proc:
-        value: value &amp; 0xf0000000 != 0
-        doc: &quot;Processor-specific&quot;
-  dt_flag_1_values:
-    params:
-      - id: value
-        type: u4
-    instances:
-      now:
-        value: value &amp; 0x00000001 != 0
-        doc: &quot;Set RTLD_NOW for this object.&quot;
-      rtld_global:
-        value: value &amp; 0x00000002 != 0
-        doc: &quot;Set RTLD_GLOBAL for this object.&quot;
-      group:
-        value: value &amp; 0x00000004 != 0
-        doc: &quot;Set RTLD_GROUP for this object.&quot;
-      nodelete:
-        value: value &amp; 0x00000008 != 0
-        doc: &quot;Set RTLD_NODELETE for this object.&quot;
-      loadfltr:
-        value: value &amp; 0x00000010 != 0
-        doc: &quot;Trigger filtee loading at runtime.&quot;
-      initfirst:
-        value: value &amp; 0x00000020 != 0
-        doc: &quot;Set RTLD_INITFIRST for this object&quot;
-      noopen:
-        value: value &amp; 0x00000040 != 0
-        doc: &quot;Set RTLD_NOOPEN for this object.&quot;
-      origin:
-        value: value &amp; 0x00000080 != 0
-        doc: &quot;$ORIGIN must be handled.&quot;
-      direct:
-        value: value &amp; 0x00000100 != 0
-        doc: &quot;Direct binding enabled.&quot;
-      trans:
-        value: value &amp; 0x00000200 != 0
-      interpose:
-        value: value &amp; 0x00000400 != 0
-        doc: &quot;Object is used to interpose.&quot;
-      nodeflib:
-        value: value &amp; 0x00000800 != 0
-        doc: &quot;Ignore default lib search path.&quot;
-      nodump:
-        value: value &amp; 0x00001000 != 0
-        doc: &quot;Object can&#39;t be dldump&#39;ed.&quot;
-      confalt:
-        value: value &amp; 0x00002000 != 0
-        doc: &quot;Configuration alternative created.&quot;
-      endfiltee:
-        value: value &amp; 0x00004000 != 0
-        doc: &quot;Filtee terminates filters search.&quot;
-      dispreldne:
-        value: value &amp; 0x00008000 != 0
-        doc: &quot;Disp reloc applied at build time.&quot;
-      disprelpnd:
-        value: value &amp; 0x00010000 != 0
-        doc: &quot;Disp reloc applied at run-time.&quot;
-      nodirect:
-        value: value &amp; 0x00020000 != 0
-        doc: &quot;Object has no-direct binding.&quot;
-      ignmuldef:
-        value: value &amp; 0x00040000 != 0
-      noksyms:
-        value: value &amp; 0x00080000 != 0
-      nohdr:
-        value: value &amp; 0x00100000 != 0
-      edited:
-        value: value &amp; 0x00200000 != 0
-        doc: &quot;Object is modified after built.&quot;
-      noreloc:
-        value: value &amp; 0x00400000 != 0
-      symintpose:
-        value: value &amp; 0x00800000 != 0
-        doc: &quot;Object has individual interposers.&quot;
-      globaudit:
-        value: value &amp; 0x01000000 != 0
-        doc: &quot;Global auditing required.&quot;
-      singleton:
-        value: value &amp; 0x02000000 != 0
-        doc: &quot;Singleton symbols are used.&quot;
-      stub:
-        value: value &amp; 0x04000000 != 0
-      pie:
-        value: value &amp; 0x08000000 != 0
-  endian_elf:
-    meta:
-      endian:
-        switch-on: _root.endian
-        cases:
-          &#39;endian::le&#39;: le
-          &#39;endian::be&#39;: be
-    seq:
-      - id: e_type
-        type: u2
-        enum: obj_type
-      - id: machine
-        type: u2
-        enum: machine
-      - id: e_version
-        type: u4
-      # e_entry
-      - id: entry_point
-        type:
-          switch-on: _root.bits
-          cases:
-            &#39;bits::b32&#39;: u4
-            &#39;bits::b64&#39;: u8
-      # e_phoff
-      - id: program_header_offset
-        type:
-          switch-on: _root.bits
-          cases:
-            &#39;bits::b32&#39;: u4
-            &#39;bits::b64&#39;: u8
-      # e_shoff
-      - id: section_header_offset
-        type:
-          switch-on: _root.bits
-          cases:
-            &#39;bits::b32&#39;: u4
-            &#39;bits::b64&#39;: u8
-      # e_flags
-      - id: flags
-        size: 4
-      # e_ehsize
-      - id: e_ehsize
-        type: u2
-      # e_phentsize
-      - id: program_header_entry_size
-        type: u2
-      # e_phnum
-      - id: qty_program_header
-        type: u2
-      # e_shentsize
-      - id: section_header_entry_size
-        type: u2
-      # e_shnum
-      - id: qty_section_header
-        type: u2
-      # e_shstrndx
-      - id: section_names_idx
-        type: u2
-    types:
-      # Elf(32|64)_Phdr
-      program_header:
-        seq:
-          # p_type
-          - id: type
-            type: u4
-            enum: ph_type
-          # p_flags
-          - id: flags64
-            type: u4
-            if: _root.bits == bits::b64
-          # p_offset
-          - id: offset
-            type:
-              switch-on: _root.bits
-              cases:
-                &#39;bits::b32&#39;: u4
-                &#39;bits::b64&#39;: u8
-          # p_vaddr
-          - id: vaddr
-            type:
-              switch-on: _root.bits
-              cases:
-                &#39;bits::b32&#39;: u4
-                &#39;bits::b64&#39;: u8
-          # p_paddr
-          - id: paddr
-            type:
-              switch-on: _root.bits
-              cases:
-                &#39;bits::b32&#39;: u4
-                &#39;bits::b64&#39;: u8
-          # p_filesz
-          - id: filesz
-            type:
-              switch-on: _root.bits
-              cases:
-                &#39;bits::b32&#39;: u4
-                &#39;bits::b64&#39;: u8
-          # p_memsz
-          - id: memsz
-            type:
-              switch-on: _root.bits
-              cases:
-                &#39;bits::b32&#39;: u4
-                &#39;bits::b64&#39;: u8
-          # p_flags
-          - id: flags32
-            type: u4
-            if: _root.bits == bits::b32
-          # p_align
-          - id: align
-            type:
-              switch-on: _root.bits
-              cases:
-                &#39;bits::b32&#39;: u4
-                &#39;bits::b64&#39;: u8
-        instances:
-          dynamic:
-            io: _root._io
-            pos: offset
-            type: dynamic_section
-            size: filesz
-            if: type == ph_type::dynamic
-          flags_obj:
-            type: phdr_type_flags(flags64|flags32)
-            -webide-parse-mode: eager
-        -webide-representation: &quot;{type} - f:{flags_obj:flags} (o:{offset}, s:{filesz:dec})&quot;
-      section_header:
-        -orig-id: Elf(32|64)_Shdr
-        seq:
-          - id: ofs_name
-            -orig-id: sh_name
-            type: u4
-          - id: type
-            -orig-id: sh_type
-            type: u4
-            enum: sh_type
-          - id: flags
-            -orig-id: sh_flags
-            type:
-              switch-on: _root.bits
-              cases:
-                &#39;bits::b32&#39;: u4
-                &#39;bits::b64&#39;: u8
-          - id: addr
-            -orig-id: sh_addr
-            type:
-              switch-on: _root.bits
-              cases:
-                &#39;bits::b32&#39;: u4
-                &#39;bits::b64&#39;: u8
-          - id: ofs_body
-            -orig-id: sh_offset
-            type:
-              switch-on: _root.bits
-              cases:
-                &#39;bits::b32&#39;: u4
-                &#39;bits::b64&#39;: u8
-          - id: len_body
-            -orig-id: sh_size
-            type:
-              switch-on: _root.bits
-              cases:
-                &#39;bits::b32&#39;: u4
-                &#39;bits::b64&#39;: u8
-          - id: linked_section_idx
-            -orig-id: sh_link
-            type: u4
-          - id: info
-            -orig-id: sh_info
-            size: 4
-          - id: align
-            -orig-id: sh_addralign
-            type:
-              switch-on: _root.bits
-              cases:
-                &#39;bits::b32&#39;: u4
-                &#39;bits::b64&#39;: u8
-          - id: entry_size
-            -orig-id: sh_entsize
-            type:
-              switch-on: _root.bits
-              cases:
-                &#39;bits::b32&#39;: u4
-                &#39;bits::b64&#39;: u8
-        instances:
-          body:
-            io: _root._io
-            pos: ofs_body
-            size: len_body
-            type:
-              switch-on: type
-              cases:
-                &#39;sh_type::dynamic&#39;: dynamic_section
-                &#39;sh_type::strtab&#39;: strings_struct
-                &#39;sh_type::dynsym&#39;: dynsym_section
-                &#39;sh_type::dynstr&#39;: strings_struct
-          name:
-            io: _root.header.strings._io
-            pos: ofs_name
-            type: strz
-            encoding: ASCII
-            -webide-parse-mode: eager
-          flags_obj:
-            type: section_header_flags(flags)
-            -webide-parse-mode: eager
-        -webide-representation: &quot;{name} ({type}) - f:{flags_obj:flags} (o:{offset}, s:{size:dec})&quot;
-      strings_struct:
-        seq:
-          - id: entries
-            type: strz
-            repeat: eos
-            encoding: ASCII
-      dynamic_section:
-        seq:
-          - id: entries
-            type: dynamic_section_entry
-            repeat: eos
-      dynamic_section_entry:
-        seq:
-          - id: tag
-            type:
-              switch-on: _root.bits
-              cases:
-                &#39;bits::b32&#39;: u4
-                &#39;bits::b64&#39;: u8
-          - id: value_or_ptr
-            type:
-              switch-on: _root.bits
-              cases:
-                &#39;bits::b32&#39;: u4
-                &#39;bits::b64&#39;: u8
-        instances:
-          tag_enum:
-            value: tag
-            enum: dynamic_array_tags
-          flag_1_values:
-            type: dt_flag_1_values(value_or_ptr)
-            if: &quot;tag_enum == dynamic_array_tags::flags_1&quot;
-            -webide-parse-mode: eager
-        -webide-representation: &quot;{tag_enum}: {value_or_ptr} {flag_1_values:flags}&quot;
-      dynsym_section:
-        seq:
-          - id: entries
-            type:
-              switch-on: _root.bits
-              cases:
-                &#39;bits::b32&#39;: dynsym_section_entry32
-                &#39;bits::b64&#39;: dynsym_section_entry64
-            repeat: eos
-      dynsym_section_entry32:
-        seq:
-          - id: name_offset
-            type: u4
-          - id: value
-            type: u4
-          - id: size
-            type: u4
-          - id: info
-            type: u1
-          - id: other
-            type: u1
-          - id: shndx
-            type: u2
-      dynsym_section_entry64:
-        seq:
-          - id: name_offset
-            type: u4
-          - id: info
-            type: u1
-          - id: other
-            type: u1
-          - id: shndx
-            type: u2
-          - id: value
-            type: u8
-          - id: size
-            type: u8
-    instances:
-      program_headers:
-        pos: program_header_offset
-        repeat: expr
-        repeat-expr: qty_program_header
-        size: program_header_entry_size
-        type: program_header
-      section_headers:
-        pos: section_header_offset
-        repeat: expr
-        repeat-expr: qty_section_header
-        size: section_header_entry_size
-        type: section_header
-      strings:
-        pos: section_headers[section_names_idx].ofs_body
-        size: section_headers[section_names_idx].len_body
-        type: strings_struct
-enums:
-  # EI_CLASS
-  bits:
-    # ELFCLASS32
-    1: b32
-    # ELFCLASS64
-    2: b64
-  # EI_DATA
-  endian:
-    # ELFDATA2LSB
-    1: le
-    # ELFDATA2MSB
-    2: be
-  os_abi:
-    0: system_v
-    1: hp_ux
-    2: netbsd
-    3: gnu
-    6: solaris
-    7: aix
-    8: irix
-    9: freebsd
-    0xa: tru64 # Compaq TRU64 UNIX
-    0xb: modesto # Novell Modesto
-    0xc: openbsd
-    0xd: openvms
-    0xe: nsk # Hewlett-Packard Non-Stop Kernel
-    0xf: aros # Amiga Research OS
-    0x10: fenixos # The FenixOS highly scalable multi-core OS
-    0x11: cloudabi # Nuxi CloudABI
-    0x12: openvos # Stratus Technologies OpenVOS
-  # e_type
-  obj_type:
-    # ET_REL
-    1: relocatable
-    # ET_EXEC
-    2: executable
-    # ET_DYN
-    3: shared
-    # ET_CORE
-    4: core
-  machine:
-    0x00: not_set
-    # EM_SPARC
-    0x02: sparc
-    # EM_386
-    0x03: x86
-    0x08: mips
-    0x14: powerpc
-    # EM_ARM
-    0x28: arm
-    # EM_SH
-    0x2A: superh
-    0x32: ia_64
-    # EM_X86_64
-    0x3E: x86_64
-    0xB7: aarch64
-    0xF3: riscv
-    0xF7: bpf
-  ph_type:
-    0: null_type
-    1: load
-    2: dynamic
-    3: interp
-    4: note
-    5: shlib
-    6: phdr
-    7: tls
-#    0x60000000: loos
-    0x65041580: pax_flags
-    0x6fffffff: hios
-#    0x70000000: loproc
-    0x70000001: arm_exidx
-#    0x7fffffff: hiproc
-    0x6474e550: gnu_eh_frame
-    0x6474e551: gnu_stack
-    0x6474e552: gnu_relro
-  # http://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-94076.html#chapter6-73445
-  sh_type:
-    0: null_type
-    1: progbits
-    2: symtab
-    3: strtab
-    4: rela
-    5: hash
-    6: dynamic
-    7: note
-    8: nobits
-    9: rel
-    10: shlib
-    11: dynsym
-    14: init_array
-    15: fini_array
-    16: preinit_array
-    17: group
-    18: symtab_shndx
-#    0x60000000: loos
-#    0x6fffffef: losunw
-    0x6fffffef: sunw_capchain
-    0x6ffffff0: sunw_capinfo
-    0x6ffffff1: sunw_symsort
-    0x6ffffff2: sunw_tlssort
-    0x6ffffff3: sunw_ldynsym
-    0x6ffffff4: sunw_dof
-    0x6ffffff5: sunw_cap
-    0x6ffffff6: sunw_signature
-    0x6ffffff7: sunw_annotate
-    0x6ffffff8: sunw_debugstr
-    0x6ffffff9: sunw_debug
-    0x6ffffffa: sunw_move
-    0x6ffffffb: sunw_comdat
-    0x6ffffffc: sunw_syminfo
-    0x6ffffffd: sunw_verdef
-    0x6ffffffe: sunw_verneed
-    0x6fffffff: sunw_versym
-#    0x6fffffff: HISUNW
-#    0x6fffffff: hios
-#    0x70000000: loproc
-    0x70000000: sparc_gotdata
-    0x70000001: amd64_unwind
-    0x70000001: arm_exidx
-    0x70000002: arm_preemptmap
-    0x70000003: arm_attributes
-#    0x7fffffff: hiproc
-#    0x80000000: louser
-#    0xffffffff: hiuser
-  dynamic_array_tags:
-    0: &quot;null&quot;            # Marks end of dynamic section
-    1: needed            # Name of needed library
-    2: pltrelsz          # Size in bytes of PLT relocs
-    3: pltgot            # Processor defined value
-    4: hash              # Address of symbol hash table
-    5: strtab            # Address of string table
-    6: symtab            # Address of symbol table
-    7: rela              # Address of Rela relocs
-    8: relasz            # Total size of Rela relocs
-    9: relaent           # Size of one Rela reloc
-    10: strsz            # Size of string table
-    11: syment           # Size of one symbol table entry
-    12: init             # Address of init function
-    13: fini             # Address of termination function
-    14: soname           # Name of shared object
-    15: rpath            # Library search path (deprecated)
-    16: symbolic         # Start symbol search here
-    17: rel              # Address of Rel relocs
-    18: relsz            # Total size of Rel relocs
-    19: relent           # Size of one Rel reloc
-    20: pltrel           # Type of reloc in PLT
-    21: debug            # For debugging; unspecified
-    22: textrel          # Reloc might modify .text
-    23: jmprel           # Address of PLT relocs
-    24: bind_now         # Process relocations of object
-    25: init_array       # Array with addresses of init fct
-    26: fini_array       # Array with addresses of fini fct
-    27: init_arraysz     # Size in bytes of DT_INIT_ARRAY
-    28: fini_arraysz     # Size in bytes of DT_FINI_ARRAY
-    29: runpath          # Library search path
-    30: flags            # Flags for the object being loaded
-    32: encoding         # Start of encoded range
-    32: preinit_array    # Array with addresses of preinit fct
-    33: preinit_arraysz  # Size in bytes of DT_PREINIT_ARRAY
-    34: maxpostags       # Number used
-    0x6000000d: loos
-    0x6000000d: sunw_auxiliary
-    0x6000000e: sunw_rtldinf
-    0x6000000e: sunw_filter
-    0x60000010: sunw_cap
-    0x60000011: sunw_symtab
-    0x60000012: sunw_symsz
-    0x60000013: sunw_encoding
-    0x60000013: sunw_sortent
-    0x60000014: sunw_symsort
-    0x60000015: sunw_symsortsz
-    0x60000016: sunw_tlssort
-    0x60000017: sunw_tlssortsz
-    0x60000018: sunw_capinfo
-    0x60000019: sunw_strpad
-    0x6000001a: sunw_capchain
-    0x6000001b: sunw_ldmach
-    0x6000001d: sunw_capchainent
-    0x6000001f: sunw_capchainsz
-    0x6ffff000: hios
-    0x6ffffd00: valrnglo
-    0x6ffffdf5: gnu_prelinked   # Prelinking timestamp
-    0x6ffffdf6: gnu_conflictsz  # Size of conflict section
-    0x6ffffdf7: gnu_liblistsz   # Size of library list
-    0x6ffffdf8: checksum        
-    0x6ffffdf9: pltpadsz        
-    0x6ffffdfa: moveent         
-    0x6ffffdfb: movesz          
-    0x6ffffdfc: feature_1       # Feature selection (DTF_*).
-    0x6ffffdfd: posflag_1       # Flags for DT_* entries, effecting the following DT_* entry.
-    0x6ffffdfe: syminsz         # Size of syminfo table (in bytes)
-    0x6ffffdff: syminent        # Entry size of syminfo
-    0x6ffffdff: valrnghi
-    0x6ffffe00: addrrnglo
-    0x6ffffef5: gnu_hash
-    0x6ffffef6: tlsdesc_plt
-    0x6ffffef7: tlsdesc_got
-    0x6ffffef8: gnu_conflict
-    0x6ffffef9: gnu_liblist
-    0x6ffffefa: config
-    0x6ffffefb: depaudit
-    0x6ffffefc: audit
-    0x6ffffefd: pltpad
-    0x6ffffefe: movetab
-    0x6ffffeff: syminfo
-    0x6ffffeff: addrrnghi
-    0x6ffffff0: versym
-    0x6ffffff9: relacount
-    0x6ffffffa: relcount
-    0x6ffffffb: flags_1
-    0x6ffffffc: verdef
-    0x6ffffffd: verdefnum
-    0x6ffffffe: verneed
-    0x6fffffff: verneednum
-    0x70000000: loproc
-    0x70000001: sparc_register
-    0x7ffffffd: auxiliary
-    0x7ffffffe: used
-    0x7fffffff: filter
-    0x7fffffff: hiproc
-</code></pre>
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">elf</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Executable and Linkable Format</span>
+  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SVR4 ABI and up, many *nix systems</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.8</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">e_ident[EI_MAG0]..e[EI_MAG3]</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+    <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0x7f</span><span class="p p-Indicator">,</span> <span class="s">&quot;ELF&quot;</span><span class="p p-Indicator">]</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">File identification, must be 0x7f + &quot;ELF&quot;.</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bits</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">e_ident[EI_CLASS]</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+    <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bits</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">File class: designates target machine word size (32 or 64</span>
+      <span class="no">bits). The size of many integer fields in this format will</span>
+      <span class="no">depend on this setting.</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">endian</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">e_ident[EI_DATA]</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+    <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">endian</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Endianness used for all integers.</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ei_version</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">e_ident[EI_VERSION]</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ELF header version.</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">abi</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">e_ident[EI_OSABI]</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+    <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">os_abi</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Specifies which OS- and ABI-related extensions will be used</span>
+      <span class="no">in this ELF file.</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">abi_version</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Version of ABI targeted by this ELF file. Interpretation</span>
+      <span class="no">depends on `abi` attribute.</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pad</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">7</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">endian_elf</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">phdr_type_flags</span><span class="p">:</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">read</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x04 != 0</span>
+      <span class="nt">write</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x02 != 0</span>
+      <span class="nt">execute</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x01 != 0</span>
+      <span class="nt">mask_proc</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0xf0000000 != 0</span>
+  <span class="nt">section_header_flags</span><span class="p">:</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">write</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x01 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;writable&quot;</span>
+      <span class="nt">alloc</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x02 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;occupies</span><span class="nv"> </span><span class="s">memory</span><span class="nv"> </span><span class="s">during</span><span class="nv"> </span><span class="s">execution&quot;</span>
+      <span class="nt">exec_instr</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x04 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;executable&quot;</span>
+      <span class="nt">merge</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x10 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;might</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">merged&quot;</span>
+      <span class="nt">strings</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x20 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;contains</span><span class="nv"> </span><span class="s">nul-terminated</span><span class="nv"> </span><span class="s">strings&quot;</span>
+      <span class="nt">info_link</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x40 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;&#39;sh_info&#39;</span><span class="nv"> </span><span class="s">contains</span><span class="nv"> </span><span class="s">SHT</span><span class="nv"> </span><span class="s">index&quot;</span>
+      <span class="nt">link_order</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x80 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;preserve</span><span class="nv"> </span><span class="s">order</span><span class="nv"> </span><span class="s">after</span><span class="nv"> </span><span class="s">combining&quot;</span>
+      <span class="nt">os_non_conforming</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x100 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;non-standard</span><span class="nv"> </span><span class="s">OS</span><span class="nv"> </span><span class="s">specific</span><span class="nv"> </span><span class="s">handling</span><span class="nv"> </span><span class="s">required&quot;</span>
+      <span class="nt">group</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x200 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;section</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">member</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">group&quot;</span>
+      <span class="nt">tls</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x400 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;section</span><span class="nv"> </span><span class="s">hold</span><span class="nv"> </span><span class="s">thread-local</span><span class="nv"> </span><span class="s">data&quot;</span>
+      <span class="nt">ordered</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x04000000 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;special</span><span class="nv"> </span><span class="s">ordering</span><span class="nv"> </span><span class="s">requirement</span><span class="nv"> </span><span class="s">(Solaris)&quot;</span>
+      <span class="nt">exclude</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x08000000 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;section</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">excluded</span><span class="nv"> </span><span class="s">unless</span><span class="nv"> </span><span class="s">referenced</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">allocated</span><span class="nv"> </span><span class="s">(Solaris)&quot;</span>
+      <span class="nt">mask_os</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x0ff00000 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;OS-specific&quot;</span>
+      <span class="nt">mask_proc</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0xf0000000 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Processor-specific&quot;</span>
+  <span class="nt">dt_flag_1_values</span><span class="p">:</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">now</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000001 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Set</span><span class="nv"> </span><span class="s">RTLD_NOW</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">object.&quot;</span>
+      <span class="nt">rtld_global</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000002 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Set</span><span class="nv"> </span><span class="s">RTLD_GLOBAL</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">object.&quot;</span>
+      <span class="nt">group</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000004 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Set</span><span class="nv"> </span><span class="s">RTLD_GROUP</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">object.&quot;</span>
+      <span class="nt">nodelete</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000008 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Set</span><span class="nv"> </span><span class="s">RTLD_NODELETE</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">object.&quot;</span>
+      <span class="nt">loadfltr</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000010 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Trigger</span><span class="nv"> </span><span class="s">filtee</span><span class="nv"> </span><span class="s">loading</span><span class="nv"> </span><span class="s">at</span><span class="nv"> </span><span class="s">runtime.&quot;</span>
+      <span class="nt">initfirst</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000020 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Set</span><span class="nv"> </span><span class="s">RTLD_INITFIRST</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">object&quot;</span>
+      <span class="nt">noopen</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000040 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Set</span><span class="nv"> </span><span class="s">RTLD_NOOPEN</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">object.&quot;</span>
+      <span class="nt">origin</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000080 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;$ORIGIN</span><span class="nv"> </span><span class="s">must</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">handled.&quot;</span>
+      <span class="nt">direct</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000100 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Direct</span><span class="nv"> </span><span class="s">binding</span><span class="nv"> </span><span class="s">enabled.&quot;</span>
+      <span class="nt">trans</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000200 != 0</span>
+      <span class="nt">interpose</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000400 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Object</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">used</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">interpose.&quot;</span>
+      <span class="nt">nodeflib</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000800 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Ignore</span><span class="nv"> </span><span class="s">default</span><span class="nv"> </span><span class="s">lib</span><span class="nv"> </span><span class="s">search</span><span class="nv"> </span><span class="s">path.&quot;</span>
+      <span class="nt">nodump</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00001000 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Object</span><span class="nv"> </span><span class="s">can&#39;t</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">dldump&#39;ed.&quot;</span>
+      <span class="nt">confalt</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00002000 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Configuration</span><span class="nv"> </span><span class="s">alternative</span><span class="nv"> </span><span class="s">created.&quot;</span>
+      <span class="nt">endfiltee</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00004000 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Filtee</span><span class="nv"> </span><span class="s">terminates</span><span class="nv"> </span><span class="s">filters</span><span class="nv"> </span><span class="s">search.&quot;</span>
+      <span class="nt">dispreldne</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00008000 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Disp</span><span class="nv"> </span><span class="s">reloc</span><span class="nv"> </span><span class="s">applied</span><span class="nv"> </span><span class="s">at</span><span class="nv"> </span><span class="s">build</span><span class="nv"> </span><span class="s">time.&quot;</span>
+      <span class="nt">disprelpnd</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00010000 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Disp</span><span class="nv"> </span><span class="s">reloc</span><span class="nv"> </span><span class="s">applied</span><span class="nv"> </span><span class="s">at</span><span class="nv"> </span><span class="s">run-time.&quot;</span>
+      <span class="nt">nodirect</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00020000 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Object</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">no-direct</span><span class="nv"> </span><span class="s">binding.&quot;</span>
+      <span class="nt">ignmuldef</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00040000 != 0</span>
+      <span class="nt">noksyms</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00080000 != 0</span>
+      <span class="nt">nohdr</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00100000 != 0</span>
+      <span class="nt">edited</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00200000 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Object</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">modified</span><span class="nv"> </span><span class="s">after</span><span class="nv"> </span><span class="s">built.&quot;</span>
+      <span class="nt">noreloc</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00400000 != 0</span>
+      <span class="nt">symintpose</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00800000 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Object</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">individual</span><span class="nv"> </span><span class="s">interposers.&quot;</span>
+      <span class="nt">globaudit</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x01000000 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Global</span><span class="nv"> </span><span class="s">auditing</span><span class="nv"> </span><span class="s">required.&quot;</span>
+      <span class="nt">singleton</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x02000000 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Singleton</span><span class="nv"> </span><span class="s">symbols</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">used.&quot;</span>
+      <span class="nt">stub</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x04000000 != 0</span>
+      <span class="nt">pie</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x08000000 != 0</span>
+  <span class="nt">endian_elf</span><span class="p">:</span>
+    <span class="nt">meta</span><span class="p">:</span>
+      <span class="nt">endian</span><span class="p">:</span>
+        <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.endian</span>
+        <span class="nt">cases</span><span class="p">:</span>
+          <span class="s">&#39;endian::le&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+          <span class="s">&#39;endian::be&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">e_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">obj_type</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">machine</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">machine</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">e_version</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="c1"># e_entry</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entry_point</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="c1"># e_phoff</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">program_header_offset</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="c1"># e_shoff</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section_header_offset</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="c1"># e_flags</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+      <span class="c1"># e_ehsize</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">e_ehsize</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="c1"># e_phentsize</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">program_header_entry_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="c1"># e_phnum</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">qty_program_header</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="c1"># e_shentsize</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section_header_entry_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="c1"># e_shnum</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">qty_section_header</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="c1"># e_shstrndx</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section_names_idx</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="c1"># Elf(32|64)_Phdr</span>
+      <span class="nt">program_header</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="c1"># p_type</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ph_type</span>
+          <span class="c1"># p_flags</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags64</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits == bits::b64</span>
+          <span class="c1"># p_offset</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offset</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="c1"># p_vaddr</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vaddr</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="c1"># p_paddr</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">paddr</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="c1"># p_filesz</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filesz</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="c1"># p_memsz</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">memsz</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="c1"># p_flags</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags32</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits == bits::b32</span>
+          <span class="c1"># p_align</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">align</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">dynamic</span><span class="p">:</span>
+            <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offset</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dynamic_section</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filesz</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type == ph_type::dynamic</span>
+          <span class="nt">flags_obj</span><span class="p">:</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">phdr_type_flags(flags64|flags32)</span>
+            <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{type}</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">f:{flags_obj:flags}</span><span class="nv"> </span><span class="s">(o:{offset},</span><span class="nv"> </span><span class="s">s:{filesz:dec})&quot;</span>
+      <span class="nt">section_header</span><span class="p">:</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Elf(32|64)_Shdr</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_name</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh_name</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh_type</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh_type</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh_flags</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">addr</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh_addr</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_body</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh_offset</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh_size</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">linked_section_idx</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh_link</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">info</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh_info</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">align</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh_addralign</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entry_size</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh_entsize</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">body</span><span class="p">:</span>
+            <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_body</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;sh_type::dynamic&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">dynamic_section</span>
+                <span class="s">&#39;sh_type::strtab&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">strings_struct</span>
+                <span class="s">&#39;sh_type::dynsym&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">dynsym_section</span>
+                <span class="s">&#39;sh_type::dynstr&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">strings_struct</span>
+          <span class="nt">name</span><span class="p">:</span>
+            <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.header.strings._io</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_name</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+            <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
+          <span class="nt">flags_obj</span><span class="p">:</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section_header_flags(flags)</span>
+            <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{name}</span><span class="nv"> </span><span class="s">({type})</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">f:{flags_obj:flags}</span><span class="nv"> </span><span class="s">(o:{offset},</span><span class="nv"> </span><span class="s">s:{size:dec})&quot;</span>
+      <span class="nt">strings_struct</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+      <span class="nt">dynamic_section</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dynamic_section_entry</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+      <span class="nt">dynamic_section_entry</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value_or_ptr</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">tag_enum</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dynamic_array_tags</span>
+          <span class="nt">flag_1_values</span><span class="p">:</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dt_flag_1_values(value_or_ptr)</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="s">&quot;tag_enum</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">dynamic_array_tags::flags_1&quot;</span>
+            <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{tag_enum}:</span><span class="nv"> </span><span class="s">{value_or_ptr}</span><span class="nv"> </span><span class="s">{flag_1_values:flags}&quot;</span>
+      <span class="nt">dynsym_section</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">dynsym_section_entry32</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">dynsym_section_entry64</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+      <span class="nt">dynsym_section_entry32</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name_offset</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">info</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">other</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">shndx</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="nt">dynsym_section_entry64</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name_offset</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">info</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">other</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">shndx</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">program_headers</span><span class="p">:</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">program_header_offset</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">qty_program_header</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">program_header_entry_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">program_header</span>
+      <span class="nt">section_headers</span><span class="p">:</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section_header_offset</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">qty_section_header</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section_header_entry_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section_header</span>
+      <span class="nt">strings</span><span class="p">:</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section_headers[section_names_idx].ofs_body</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section_headers[section_names_idx].len_body</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strings_struct</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="c1"># EI_CLASS</span>
+  <span class="nt">bits</span><span class="p">:</span>
+    <span class="c1"># ELFCLASS32</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b32</span>
+    <span class="c1"># ELFCLASS64</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b64</span>
+  <span class="c1"># EI_DATA</span>
+  <span class="nt">endian</span><span class="p">:</span>
+    <span class="c1"># ELFDATA2LSB</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+    <span class="c1"># ELFDATA2MSB</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+  <span class="nt">os_abi</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">system_v</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hp_ux</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">netbsd</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnu</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">solaris</span>
+    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">aix</span>
+    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">irix</span>
+    <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">freebsd</span>
+    <span class="nt">0xa</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tru64</span> <span class="c1"># Compaq TRU64 UNIX</span>
+    <span class="nt">0xb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">modesto</span> <span class="c1"># Novell Modesto</span>
+    <span class="nt">0xc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">openbsd</span>
+    <span class="nt">0xd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">openvms</span>
+    <span class="nt">0xe</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nsk</span> <span class="c1"># Hewlett-Packard Non-Stop Kernel</span>
+    <span class="nt">0xf</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">aros</span> <span class="c1"># Amiga Research OS</span>
+    <span class="nt">0x10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fenixos</span> <span class="c1"># The FenixOS highly scalable multi-core OS</span>
+    <span class="nt">0x11</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cloudabi</span> <span class="c1"># Nuxi CloudABI</span>
+    <span class="nt">0x12</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">openvos</span> <span class="c1"># Stratus Technologies OpenVOS</span>
+  <span class="c1"># e_type</span>
+  <span class="nt">obj_type</span><span class="p">:</span>
+    <span class="c1"># ET_REL</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">relocatable</span>
+    <span class="c1"># ET_EXEC</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">executable</span>
+    <span class="c1"># ET_DYN</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">shared</span>
+    <span class="c1"># ET_CORE</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">core</span>
+  <span class="nt">machine</span><span class="p">:</span>
+    <span class="nt">0x00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not_set</span>
+    <span class="c1"># EM_SPARC</span>
+    <span class="nt">0x02</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sparc</span>
+    <span class="c1"># EM_386</span>
+    <span class="nt">0x03</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x86</span>
+    <span class="nt">0x08</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mips</span>
+    <span class="nt">0x14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">powerpc</span>
+    <span class="c1"># EM_ARM</span>
+    <span class="nt">0x28</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arm</span>
+    <span class="c1"># EM_SH</span>
+    <span class="nt">0x2A</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">superh</span>
+    <span class="nt">0x32</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ia_64</span>
+    <span class="c1"># EM_X86_64</span>
+    <span class="nt">0x3E</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x86_64</span>
+    <span class="nt">0xB7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">aarch64</span>
+    <span class="nt">0xF3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">riscv</span>
+    <span class="nt">0xF7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bpf</span>
+  <span class="nt">ph_type</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">null_type</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">load</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dynamic</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">interp</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">note</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">shlib</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">phdr</span>
+    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tls</span>
+<span class="c1">#    0x60000000: loos</span>
+    <span class="nt">0x65041580</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pax_flags</span>
+    <span class="nt">0x6fffffff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hios</span>
+<span class="c1">#    0x70000000: loproc</span>
+    <span class="nt">0x70000001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arm_exidx</span>
+<span class="c1">#    0x7fffffff: hiproc</span>
+    <span class="nt">0x6474e550</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnu_eh_frame</span>
+    <span class="nt">0x6474e551</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnu_stack</span>
+    <span class="nt">0x6474e552</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnu_relro</span>
+  <span class="c1"># http://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-94076.html#chapter6-73445</span>
+  <span class="nt">sh_type</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">null_type</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">progbits</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">symtab</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strtab</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rela</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hash</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dynamic</span>
+    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">note</span>
+    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nobits</span>
+    <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rel</span>
+    <span class="nt">10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">shlib</span>
+    <span class="nt">11</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dynsym</span>
+    <span class="nt">14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">init_array</span>
+    <span class="nt">15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fini_array</span>
+    <span class="nt">16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">preinit_array</span>
+    <span class="nt">17</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">group</span>
+    <span class="nt">18</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">symtab_shndx</span>
+<span class="c1">#    0x60000000: loos</span>
+<span class="c1">#    0x6fffffef: losunw</span>
+    <span class="nt">0x6fffffef</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_capchain</span>
+    <span class="nt">0x6ffffff0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_capinfo</span>
+    <span class="nt">0x6ffffff1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_symsort</span>
+    <span class="nt">0x6ffffff2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_tlssort</span>
+    <span class="nt">0x6ffffff3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_ldynsym</span>
+    <span class="nt">0x6ffffff4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_dof</span>
+    <span class="nt">0x6ffffff5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_cap</span>
+    <span class="nt">0x6ffffff6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_signature</span>
+    <span class="nt">0x6ffffff7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_annotate</span>
+    <span class="nt">0x6ffffff8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_debugstr</span>
+    <span class="nt">0x6ffffff9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_debug</span>
+    <span class="nt">0x6ffffffa</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_move</span>
+    <span class="nt">0x6ffffffb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_comdat</span>
+    <span class="nt">0x6ffffffc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_syminfo</span>
+    <span class="nt">0x6ffffffd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_verdef</span>
+    <span class="nt">0x6ffffffe</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_verneed</span>
+    <span class="nt">0x6fffffff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_versym</span>
+<span class="c1">#    0x6fffffff: HISUNW</span>
+<span class="c1">#    0x6fffffff: hios</span>
+<span class="c1">#    0x70000000: loproc</span>
+    <span class="nt">0x70000000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sparc_gotdata</span>
+    <span class="nt">0x70000001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64_unwind</span>
+    <span class="nt">0x70000001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arm_exidx</span>
+    <span class="nt">0x70000002</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arm_preemptmap</span>
+    <span class="nt">0x70000003</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arm_attributes</span>
+<span class="c1">#    0x7fffffff: hiproc</span>
+<span class="c1">#    0x80000000: louser</span>
+<span class="c1">#    0xffffffff: hiuser</span>
+  <span class="nt">dynamic_array_tags</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="s">&quot;null&quot;</span>            <span class="c1"># Marks end of dynamic section</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">needed</span>            <span class="c1"># Name of needed library</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pltrelsz</span>          <span class="c1"># Size in bytes of PLT relocs</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pltgot</span>            <span class="c1"># Processor defined value</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hash</span>              <span class="c1"># Address of symbol hash table</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strtab</span>            <span class="c1"># Address of string table</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">symtab</span>            <span class="c1"># Address of symbol table</span>
+    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rela</span>              <span class="c1"># Address of Rela relocs</span>
+    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">relasz</span>            <span class="c1"># Total size of Rela relocs</span>
+    <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">relaent</span>           <span class="c1"># Size of one Rela reloc</span>
+    <span class="nt">10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strsz</span>            <span class="c1"># Size of string table</span>
+    <span class="nt">11</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">syment</span>           <span class="c1"># Size of one symbol table entry</span>
+    <span class="nt">12</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">init</span>             <span class="c1"># Address of init function</span>
+    <span class="nt">13</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fini</span>             <span class="c1"># Address of termination function</span>
+    <span class="nt">14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">soname</span>           <span class="c1"># Name of shared object</span>
+    <span class="nt">15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rpath</span>            <span class="c1"># Library search path (deprecated)</span>
+    <span class="nt">16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">symbolic</span>         <span class="c1"># Start symbol search here</span>
+    <span class="nt">17</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rel</span>              <span class="c1"># Address of Rel relocs</span>
+    <span class="nt">18</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">relsz</span>            <span class="c1"># Total size of Rel relocs</span>
+    <span class="nt">19</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">relent</span>           <span class="c1"># Size of one Rel reloc</span>
+    <span class="nt">20</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pltrel</span>           <span class="c1"># Type of reloc in PLT</span>
+    <span class="nt">21</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">debug</span>            <span class="c1"># For debugging; unspecified</span>
+    <span class="nt">22</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">textrel</span>          <span class="c1"># Reloc might modify .text</span>
+    <span class="nt">23</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jmprel</span>           <span class="c1"># Address of PLT relocs</span>
+    <span class="nt">24</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bind_now</span>         <span class="c1"># Process relocations of object</span>
+    <span class="nt">25</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">init_array</span>       <span class="c1"># Array with addresses of init fct</span>
+    <span class="nt">26</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fini_array</span>       <span class="c1"># Array with addresses of fini fct</span>
+    <span class="nt">27</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">init_arraysz</span>     <span class="c1"># Size in bytes of DT_INIT_ARRAY</span>
+    <span class="nt">28</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fini_arraysz</span>     <span class="c1"># Size in bytes of DT_FINI_ARRAY</span>
+    <span class="nt">29</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">runpath</span>          <span class="c1"># Library search path</span>
+    <span class="nt">30</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>            <span class="c1"># Flags for the object being loaded</span>
+    <span class="nt">32</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">encoding</span>         <span class="c1"># Start of encoded range</span>
+    <span class="nt">32</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">preinit_array</span>    <span class="c1"># Array with addresses of preinit fct</span>
+    <span class="nt">33</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">preinit_arraysz</span>  <span class="c1"># Size in bytes of DT_PREINIT_ARRAY</span>
+    <span class="nt">34</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">maxpostags</span>       <span class="c1"># Number used</span>
+    <span class="nt">0x6000000d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">loos</span>
+    <span class="nt">0x6000000d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_auxiliary</span>
+    <span class="nt">0x6000000e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_rtldinf</span>
+    <span class="nt">0x6000000e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_filter</span>
+    <span class="nt">0x60000010</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_cap</span>
+    <span class="nt">0x60000011</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_symtab</span>
+    <span class="nt">0x60000012</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_symsz</span>
+    <span class="nt">0x60000013</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_encoding</span>
+    <span class="nt">0x60000013</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_sortent</span>
+    <span class="nt">0x60000014</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_symsort</span>
+    <span class="nt">0x60000015</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_symsortsz</span>
+    <span class="nt">0x60000016</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_tlssort</span>
+    <span class="nt">0x60000017</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_tlssortsz</span>
+    <span class="nt">0x60000018</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_capinfo</span>
+    <span class="nt">0x60000019</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_strpad</span>
+    <span class="nt">0x6000001a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_capchain</span>
+    <span class="nt">0x6000001b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_ldmach</span>
+    <span class="nt">0x6000001d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_capchainent</span>
+    <span class="nt">0x6000001f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunw_capchainsz</span>
+    <span class="nt">0x6ffff000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hios</span>
+    <span class="nt">0x6ffffd00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">valrnglo</span>
+    <span class="nt">0x6ffffdf5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnu_prelinked</span>   <span class="c1"># Prelinking timestamp</span>
+    <span class="nt">0x6ffffdf6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnu_conflictsz</span>  <span class="c1"># Size of conflict section</span>
+    <span class="nt">0x6ffffdf7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnu_liblistsz</span>   <span class="c1"># Size of library list</span>
+    <span class="nt">0x6ffffdf8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">checksum</span>        
+    <span class="nt">0x6ffffdf9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pltpadsz</span>        
+    <span class="nt">0x6ffffdfa</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">moveent</span>         
+    <span class="nt">0x6ffffdfb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">movesz</span>          
+    <span class="nt">0x6ffffdfc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">feature_1</span>       <span class="c1"># Feature selection (DTF_*).</span>
+    <span class="nt">0x6ffffdfd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">posflag_1</span>       <span class="c1"># Flags for DT_* entries, effecting the following DT_* entry.</span>
+    <span class="nt">0x6ffffdfe</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">syminsz</span>         <span class="c1"># Size of syminfo table (in bytes)</span>
+    <span class="nt">0x6ffffdff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">syminent</span>        <span class="c1"># Entry size of syminfo</span>
+    <span class="nt">0x6ffffdff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">valrnghi</span>
+    <span class="nt">0x6ffffe00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">addrrnglo</span>
+    <span class="nt">0x6ffffef5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnu_hash</span>
+    <span class="nt">0x6ffffef6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tlsdesc_plt</span>
+    <span class="nt">0x6ffffef7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tlsdesc_got</span>
+    <span class="nt">0x6ffffef8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnu_conflict</span>
+    <span class="nt">0x6ffffef9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnu_liblist</span>
+    <span class="nt">0x6ffffefa</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">config</span>
+    <span class="nt">0x6ffffefb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">depaudit</span>
+    <span class="nt">0x6ffffefc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">audit</span>
+    <span class="nt">0x6ffffefd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pltpad</span>
+    <span class="nt">0x6ffffefe</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">movetab</span>
+    <span class="nt">0x6ffffeff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">syminfo</span>
+    <span class="nt">0x6ffffeff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">addrrnghi</span>
+    <span class="nt">0x6ffffff0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">versym</span>
+    <span class="nt">0x6ffffff9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">relacount</span>
+    <span class="nt">0x6ffffffa</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">relcount</span>
+    <span class="nt">0x6ffffffb</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags_1</span>
+    <span class="nt">0x6ffffffc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">verdef</span>
+    <span class="nt">0x6ffffffd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">verdefnum</span>
+    <span class="nt">0x6ffffffe</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">verneed</span>
+    <span class="nt">0x6fffffff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">verneednum</span>
+    <span class="nt">0x70000000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">loproc</span>
+    <span class="nt">0x70000001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sparc_register</span>
+    <span class="nt">0x7ffffffd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">auxiliary</span>
+    <span class="nt">0x7ffffffe</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">used</span>
+    <span class="nt">0x7fffffff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filter</span>
+    <span class="nt">0x7fffffff</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hiproc</span>
+</pre></div>
     </div>
 </section>
 
@@ -945,8 +942,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

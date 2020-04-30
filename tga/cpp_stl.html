@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -277,277 +274,277 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef TGA_H_
-#define TGA_H_
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef TGA_H_</span>
+<span class="cp">#define TGA_H_</span>
 
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;kaitai/kaitaistruct.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
 
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
 
-/**
- * TGA (AKA Truevision TGA, AKA TARGA), is a raster image file format created by Truevision. It supports up to 32 bits per pixel (three 8-bit RGB channels + 8-bit alpha channel), color mapping and optional lossless RLE compression.
- * \sa Source
- */
+<span class="cm">/**</span>
+<span class="cm"> * TGA (AKA Truevision TGA, AKA TARGA), is a raster image file format created by Truevision. It supports up to 32 bits per pixel (three 8-bit RGB channels + 8-bit alpha channel), color mapping and optional lossless RLE compression.</span>
+<span class="cm"> * \sa Source</span>
+<span class="cm"> */</span>
 
-class tga_t : public kaitai::kstruct {
+<span class="k">class</span> <span class="nc">tga_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-public:
-    class tga_footer_t;
-    class tga_ext_area_t;
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">tga_footer_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">tga_ext_area_t</span><span class="p">;</span>
 
-    enum color_map_enum_t {
-        COLOR_MAP_ENUM_NO_COLOR_MAP = 0,
-        COLOR_MAP_ENUM_HAS_COLOR_MAP = 1
-    };
+    <span class="k">enum</span> <span class="n">color_map_enum_t</span> <span class="p">{</span>
+        <span class="n">COLOR_MAP_ENUM_NO_COLOR_MAP</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">COLOR_MAP_ENUM_HAS_COLOR_MAP</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="p">};</span>
 
-    enum image_type_enum_t {
-        IMAGE_TYPE_ENUM_NO_IMAGE_DATA = 0,
-        IMAGE_TYPE_ENUM_UNCOMP_COLOR_MAPPED = 1,
-        IMAGE_TYPE_ENUM_UNCOMP_TRUE_COLOR = 2,
-        IMAGE_TYPE_ENUM_UNCOMP_BW = 3,
-        IMAGE_TYPE_ENUM_RLE_COLOR_MAPPED = 9,
-        IMAGE_TYPE_ENUM_RLE_TRUE_COLOR = 10,
-        IMAGE_TYPE_ENUM_RLE_BW = 11
-    };
+    <span class="k">enum</span> <span class="n">image_type_enum_t</span> <span class="p">{</span>
+        <span class="n">IMAGE_TYPE_ENUM_NO_IMAGE_DATA</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">IMAGE_TYPE_ENUM_UNCOMP_COLOR_MAPPED</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">IMAGE_TYPE_ENUM_UNCOMP_TRUE_COLOR</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">IMAGE_TYPE_ENUM_UNCOMP_BW</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">IMAGE_TYPE_ENUM_RLE_COLOR_MAPPED</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="n">IMAGE_TYPE_ENUM_RLE_TRUE_COLOR</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">IMAGE_TYPE_ENUM_RLE_BW</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="p">};</span>
 
-    tga_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, tga_t* p__root = 0);
+    <span class="n">tga_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tga_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-private:
-    void _read();
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-public:
-    ~tga_t();
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">tga_t</span><span class="p">();</span>
 
-    class tga_footer_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">tga_footer_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        tga_footer_t(kaitai::kstream* p__io, tga_t* p__parent = 0, tga_t* p__root = 0);
+        <span class="n">tga_footer_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tga_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tga_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~tga_footer_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">tga_footer_t</span><span class="p">();</span>
 
-    private:
-        bool f_is_valid;
-        bool m_is_valid;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_valid</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_valid</span><span class="p">;</span>
 
-    public:
-        bool is_valid();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">is_valid</span><span class="p">();</span>
 
-    private:
-        bool f_ext_area;
-        tga_ext_area_t* m_ext_area;
-        bool n_ext_area;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_ext_area</span><span class="p">;</span>
+        <span class="n">tga_ext_area_t</span><span class="o">*</span> <span class="n">m_ext_area</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_ext_area</span><span class="p">;</span>
 
-    public:
-        bool _is_null_ext_area() { ext_area(); return n_ext_area; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_ext_area</span><span class="p">()</span> <span class="p">{</span> <span class="n">ext_area</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_ext_area</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
+    <span class="k">private</span><span class="o">:</span>
 
-    public:
-        tga_ext_area_t* ext_area();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">tga_ext_area_t</span><span class="o">*</span> <span class="n">ext_area</span><span class="p">();</span>
 
-    private:
-        uint32_t m_ext_area_ofs;
-        uint32_t m_dev_dir_ofs;
-        std::string m_version_magic;
-        tga_t* m__root;
-        tga_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">m_ext_area_ofs</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_dev_dir_ofs</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_version_magic</span><span class="p">;</span>
+        <span class="n">tga_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">tga_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        /**
-         * Offset to extension area
-         */
-        uint32_t ext_area_ofs() const { return m_ext_area_ofs; }
+        <span class="cm">/**</span>
+<span class="cm">         * Offset to extension area</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">ext_area_ofs</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ext_area_ofs</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Offset to developer directory
-         */
-        uint32_t dev_dir_ofs() const { return m_dev_dir_ofs; }
-        std::string version_magic() const { return m_version_magic; }
-        tga_t* _root() const { return m__root; }
-        tga_t* _parent() const { return m__parent; }
-    };
+        <span class="cm">/**</span>
+<span class="cm">         * Offset to developer directory</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">dev_dir_ofs</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_dev_dir_ofs</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">version_magic</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_version_magic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tga_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tga_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class tga_ext_area_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">tga_ext_area_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        tga_ext_area_t(kaitai::kstream* p__io, tga_t::tga_footer_t* p__parent = 0, tga_t* p__root = 0);
+        <span class="n">tga_ext_area_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tga_t</span><span class="o">::</span><span class="n">tga_footer_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tga_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~tga_ext_area_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">tga_ext_area_t</span><span class="p">();</span>
 
-    private:
-        uint16_t m_ext_area_size;
-        std::string m_author_name;
-        std::vector&lt;std::string&gt;* m_comments;
-        std::string m_timestamp;
-        std::string m_job_id;
-        std::string m_job_time;
-        std::string m_software_id;
-        std::string m_software_version;
-        uint32_t m_key_color;
-        uint32_t m_pixel_aspect_ratio;
-        uint32_t m_gamma_value;
-        uint32_t m_color_corr_ofs;
-        uint32_t m_postage_stamp_ofs;
-        uint32_t m_scan_line_ofs;
-        uint8_t m_attributes;
-        tga_t* m__root;
-        tga_t::tga_footer_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">m_ext_area_size</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_author_name</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;*</span> <span class="n">m_comments</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_timestamp</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_job_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_job_time</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_software_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_software_version</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_key_color</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_pixel_aspect_ratio</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_gamma_value</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_color_corr_ofs</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_postage_stamp_ofs</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_scan_line_ofs</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_attributes</span><span class="p">;</span>
+        <span class="n">tga_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">tga_t</span><span class="o">::</span><span class="n">tga_footer_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        /**
-         * Extension area size in bytes (always 495)
-         */
-        uint16_t ext_area_size() const { return m_ext_area_size; }
-        std::string author_name() const { return m_author_name; }
+        <span class="cm">/**</span>
+<span class="cm">         * Extension area size in bytes (always 495)</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">ext_area_size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ext_area_size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">author_name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_author_name</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Comments, organized as four lines, each consisting of 80 characters plus a NULL
-         */
-        std::vector&lt;std::string&gt;* comments() const { return m_comments; }
+        <span class="cm">/**</span>
+<span class="cm">         * Comments, organized as four lines, each consisting of 80 characters plus a NULL</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;*</span> <span class="n">comments</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_comments</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Image creation date / time
-         */
-        std::string timestamp() const { return m_timestamp; }
+        <span class="cm">/**</span>
+<span class="cm">         * Image creation date / time</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">timestamp</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_timestamp</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Internal job ID, to be used in image workflow systems
-         */
-        std::string job_id() const { return m_job_id; }
+        <span class="cm">/**</span>
+<span class="cm">         * Internal job ID, to be used in image workflow systems</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">job_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_job_id</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Hours, minutes and seconds spent creating the file (for billing, etc.)
-         */
-        std::string job_time() const { return m_job_time; }
+        <span class="cm">/**</span>
+<span class="cm">         * Hours, minutes and seconds spent creating the file (for billing, etc.)</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">job_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_job_time</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * The application that created the file.
-         */
-        std::string software_id() const { return m_software_id; }
-        std::string software_version() const { return m_software_version; }
-        uint32_t key_color() const { return m_key_color; }
-        uint32_t pixel_aspect_ratio() const { return m_pixel_aspect_ratio; }
-        uint32_t gamma_value() const { return m_gamma_value; }
+        <span class="cm">/**</span>
+<span class="cm">         * The application that created the file.</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">software_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_software_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">software_version</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_software_version</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">key_color</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_key_color</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">pixel_aspect_ratio</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_pixel_aspect_ratio</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">gamma_value</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_gamma_value</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Number of bytes from the beginning of the file to the color correction table if present
-         */
-        uint32_t color_corr_ofs() const { return m_color_corr_ofs; }
+        <span class="cm">/**</span>
+<span class="cm">         * Number of bytes from the beginning of the file to the color correction table if present</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">color_corr_ofs</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_color_corr_ofs</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Number of bytes from the beginning of the file to the postage stamp image if present
-         */
-        uint32_t postage_stamp_ofs() const { return m_postage_stamp_ofs; }
+        <span class="cm">/**</span>
+<span class="cm">         * Number of bytes from the beginning of the file to the postage stamp image if present</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">postage_stamp_ofs</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_postage_stamp_ofs</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Number of bytes from the beginning of the file to the scan lines table if present
-         */
-        uint32_t scan_line_ofs() const { return m_scan_line_ofs; }
+        <span class="cm">/**</span>
+<span class="cm">         * Number of bytes from the beginning of the file to the scan lines table if present</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">scan_line_ofs</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_scan_line_ofs</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Specifies the alpha channel
-         */
-        uint8_t attributes() const { return m_attributes; }
-        tga_t* _root() const { return m__root; }
-        tga_t::tga_footer_t* _parent() const { return m__parent; }
-    };
+        <span class="cm">/**</span>
+<span class="cm">         * Specifies the alpha channel</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">attributes</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_attributes</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tga_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tga_t</span><span class="o">::</span><span class="n">tga_footer_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-private:
-    bool f_footer;
-    tga_footer_t* m_footer;
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_footer</span><span class="p">;</span>
+    <span class="n">tga_footer_t</span><span class="o">*</span> <span class="n">m_footer</span><span class="p">;</span>
 
-public:
-    tga_footer_t* footer();
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">tga_footer_t</span><span class="o">*</span> <span class="n">footer</span><span class="p">();</span>
 
-private:
-    uint8_t m_image_id_len;
-    color_map_enum_t m_color_map_type;
-    image_type_enum_t m_image_type;
-    uint16_t m_color_map_ofs;
-    uint16_t m_num_color_map;
-    uint8_t m_color_map_depth;
-    uint16_t m_x_offset;
-    uint16_t m_y_offset;
-    uint16_t m_width;
-    uint16_t m_height;
-    uint8_t m_image_depth;
-    uint8_t m_img_descriptor;
-    std::string m_image_id;
-    std::vector&lt;std::string&gt;* m_color_map;
-    bool n_color_map;
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">uint8_t</span> <span class="n">m_image_id_len</span><span class="p">;</span>
+    <span class="n">color_map_enum_t</span> <span class="n">m_color_map_type</span><span class="p">;</span>
+    <span class="n">image_type_enum_t</span> <span class="n">m_image_type</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">m_color_map_ofs</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">m_num_color_map</span><span class="p">;</span>
+    <span class="kt">uint8_t</span> <span class="n">m_color_map_depth</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">m_x_offset</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">m_y_offset</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">m_width</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">m_height</span><span class="p">;</span>
+    <span class="kt">uint8_t</span> <span class="n">m_image_depth</span><span class="p">;</span>
+    <span class="kt">uint8_t</span> <span class="n">m_img_descriptor</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_image_id</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;*</span> <span class="n">m_color_map</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">n_color_map</span><span class="p">;</span>
 
-public:
-    bool _is_null_color_map() { color_map(); return n_color_map; };
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">_is_null_color_map</span><span class="p">()</span> <span class="p">{</span> <span class="n">color_map</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_color_map</span><span class="p">;</span> <span class="p">};</span>
 
-private:
-    tga_t* m__root;
-    kaitai::kstruct* m__parent;
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">tga_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-public:
-    uint8_t image_id_len() const { return m_image_id_len; }
-    color_map_enum_t color_map_type() const { return m_color_map_type; }
-    image_type_enum_t image_type() const { return m_image_type; }
-    uint16_t color_map_ofs() const { return m_color_map_ofs; }
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">uint8_t</span> <span class="n">image_id_len</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_image_id_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">color_map_enum_t</span> <span class="n">color_map_type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_color_map_type</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">image_type_enum_t</span> <span class="n">image_type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_image_type</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">uint16_t</span> <span class="n">color_map_ofs</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_color_map_ofs</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of entries in a color map
-     */
-    uint16_t num_color_map() const { return m_num_color_map; }
+    <span class="cm">/**</span>
+<span class="cm">     * Number of entries in a color map</span>
+<span class="cm">     */</span>
+    <span class="kt">uint16_t</span> <span class="n">num_color_map</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_color_map</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of bits in a each color maps entry
-     */
-    uint8_t color_map_depth() const { return m_color_map_depth; }
-    uint16_t x_offset() const { return m_x_offset; }
-    uint16_t y_offset() const { return m_y_offset; }
+    <span class="cm">/**</span>
+<span class="cm">     * Number of bits in a each color maps entry</span>
+<span class="cm">     */</span>
+    <span class="kt">uint8_t</span> <span class="n">color_map_depth</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_color_map_depth</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">uint16_t</span> <span class="n">x_offset</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_x_offset</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">uint16_t</span> <span class="n">y_offset</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_y_offset</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Width of the image, in pixels
-     */
-    uint16_t width() const { return m_width; }
+    <span class="cm">/**</span>
+<span class="cm">     * Width of the image, in pixels</span>
+<span class="cm">     */</span>
+    <span class="kt">uint16_t</span> <span class="n">width</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_width</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Height of the image, in pixels
-     */
-    uint16_t height() const { return m_height; }
-    uint8_t image_depth() const { return m_image_depth; }
-    uint8_t img_descriptor() const { return m_img_descriptor; }
+    <span class="cm">/**</span>
+<span class="cm">     * Height of the image, in pixels</span>
+<span class="cm">     */</span>
+    <span class="kt">uint16_t</span> <span class="n">height</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_height</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">uint8_t</span> <span class="n">image_depth</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_image_depth</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">uint8_t</span> <span class="n">img_descriptor</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_img_descriptor</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Arbitrary application-specific information that is used to
-     * identify image. May contain text or some binary data.
-     */
-    std::string image_id() const { return m_image_id; }
+    <span class="cm">/**</span>
+<span class="cm">     * Arbitrary application-specific information that is used to</span>
+<span class="cm">     * identify image. May contain text or some binary data.</span>
+<span class="cm">     */</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">image_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_image_id</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Color map
-     */
-    std::vector&lt;std::string&gt;* color_map() const { return m_color_map; }
-    tga_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-};
+    <span class="cm">/**</span>
+<span class="cm">     * Color map</span>
+<span class="cm">     */</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;*</span> <span class="n">color_map</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_color_map</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">tga_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
 
-#endif  // TGA_H_
-</code></pre>
+<span class="cp">#endif  </span><span class="c1">// TGA_H_</span>
+</pre></div>
 
         </div>
         
@@ -563,141 +560,141 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;tga.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;tga.h&quot;</span><span class="cp"></span>
 
 
 
-tga_t::tga_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, tga_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    f_footer = false;
-    _read();
-}
+<span class="n">tga_t</span><span class="o">::</span><span class="n">tga_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">tga_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">f_footer</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void tga_t::_read() {
-    m_image_id_len = m__io-&gt;read_u1();
-    m_color_map_type = static_cast&lt;tga_t::color_map_enum_t&gt;(m__io-&gt;read_u1());
-    m_image_type = static_cast&lt;tga_t::image_type_enum_t&gt;(m__io-&gt;read_u1());
-    m_color_map_ofs = m__io-&gt;read_u2le();
-    m_num_color_map = m__io-&gt;read_u2le();
-    m_color_map_depth = m__io-&gt;read_u1();
-    m_x_offset = m__io-&gt;read_u2le();
-    m_y_offset = m__io-&gt;read_u2le();
-    m_width = m__io-&gt;read_u2le();
-    m_height = m__io-&gt;read_u2le();
-    m_image_depth = m__io-&gt;read_u1();
-    m_img_descriptor = m__io-&gt;read_u1();
-    m_image_id = m__io-&gt;read_bytes(image_id_len());
-    n_color_map = true;
-    if (color_map_type() == COLOR_MAP_ENUM_HAS_COLOR_MAP) {
-        n_color_map = false;
-        int l_color_map = num_color_map();
-        m_color_map = new std::vector&lt;std::string&gt;();
-        m_color_map-&gt;reserve(l_color_map);
-        for (int i = 0; i &lt; l_color_map; i++) {
-            m_color_map-&gt;push_back(m__io-&gt;read_bytes(((color_map_depth() + 7) / 8)));
-        }
-    }
-}
+<span class="kt">void</span> <span class="n">tga_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_image_id_len</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_color_map_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">tga_t</span><span class="o">::</span><span class="n">color_map_enum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">m_image_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">tga_t</span><span class="o">::</span><span class="n">image_type_enum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">m_color_map_ofs</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_num_color_map</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_color_map_depth</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_x_offset</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_y_offset</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_width</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_height</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_image_depth</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_img_descriptor</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_image_id</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">image_id_len</span><span class="p">());</span>
+    <span class="n">n_color_map</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">color_map_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">COLOR_MAP_ENUM_HAS_COLOR_MAP</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_color_map</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">l_color_map</span> <span class="o">=</span> <span class="n">num_color_map</span><span class="p">();</span>
+        <span class="n">m_color_map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="n">m_color_map</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_color_map</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_color_map</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">m_color_map</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">color_map_depth</span><span class="p">()</span> <span class="o">+</span> <span class="mi">7</span><span class="p">)</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-tga_t::~tga_t() {
-    if (!n_color_map) {
-        delete m_color_map;
-    }
-    if (f_footer) {
-        delete m_footer;
-    }
-}
+<span class="n">tga_t</span><span class="o">::~</span><span class="n">tga_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_color_map</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_color_map</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_footer</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_footer</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-tga_t::tga_footer_t::tga_footer_t(kaitai::kstream* p__io, tga_t* p__parent, tga_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_is_valid = false;
-    f_ext_area = false;
-    _read();
-}
+<span class="n">tga_t</span><span class="o">::</span><span class="n">tga_footer_t</span><span class="o">::</span><span class="n">tga_footer_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tga_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">tga_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_is_valid</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_ext_area</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void tga_t::tga_footer_t::_read() {
-    m_ext_area_ofs = m__io-&gt;read_u4le();
-    m_dev_dir_ofs = m__io-&gt;read_u4le();
-    m_version_magic = m__io-&gt;read_bytes(18);
-}
+<span class="kt">void</span> <span class="n">tga_t</span><span class="o">::</span><span class="n">tga_footer_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_ext_area_ofs</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_dev_dir_ofs</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_version_magic</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">18</span><span class="p">);</span>
+<span class="p">}</span>
 
-tga_t::tga_footer_t::~tga_footer_t() {
-    if (f_ext_area &amp;&amp; !n_ext_area) {
-        delete m_ext_area;
-    }
-}
+<span class="n">tga_t</span><span class="o">::</span><span class="n">tga_footer_t</span><span class="o">::~</span><span class="n">tga_footer_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_ext_area</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">n_ext_area</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_ext_area</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-bool tga_t::tga_footer_t::is_valid() {
-    if (f_is_valid)
-        return m_is_valid;
-    m_is_valid = version_magic() == std::string(&quot;\x54\x52\x55\x45\x56\x49\x53\x49\x4F\x4E\x2D\x58\x46\x49\x4C\x45\x2E\x00&quot;, 18);
-    f_is_valid = true;
-    return m_is_valid;
-}
+<span class="kt">bool</span> <span class="n">tga_t</span><span class="o">::</span><span class="n">tga_footer_t</span><span class="o">::</span><span class="n">is_valid</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_valid</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_valid</span><span class="p">;</span>
+    <span class="n">m_is_valid</span> <span class="o">=</span> <span class="n">version_magic</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x54\x52\x55\x45\x56\x49\x53\x49\x4F\x4E\x2D\x58\x46\x49\x4C\x45\x2E\x00</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">18</span><span class="p">);</span>
+    <span class="n">f_is_valid</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_valid</span><span class="p">;</span>
+<span class="p">}</span>
 
-tga_t::tga_ext_area_t* tga_t::tga_footer_t::ext_area() {
-    if (f_ext_area)
-        return m_ext_area;
-    n_ext_area = true;
-    if (is_valid()) {
-        n_ext_area = false;
-        std::streampos _pos = m__io-&gt;pos();
-        m__io-&gt;seek(ext_area_ofs());
-        m_ext_area = new tga_ext_area_t(m__io, this, m__root);
-        m__io-&gt;seek(_pos);
-    }
-    f_ext_area = true;
-    return m_ext_area;
-}
+<span class="n">tga_t</span><span class="o">::</span><span class="n">tga_ext_area_t</span><span class="o">*</span> <span class="n">tga_t</span><span class="o">::</span><span class="n">tga_footer_t</span><span class="o">::</span><span class="n">ext_area</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_ext_area</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_ext_area</span><span class="p">;</span>
+    <span class="n">n_ext_area</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">is_valid</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">n_ext_area</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+        <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ext_area_ofs</span><span class="p">());</span>
+        <span class="n">m_ext_area</span> <span class="o">=</span> <span class="k">new</span> <span class="n">tga_ext_area_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">f_ext_area</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_ext_area</span><span class="p">;</span>
+<span class="p">}</span>
 
-tga_t::tga_ext_area_t::tga_ext_area_t(kaitai::kstream* p__io, tga_t::tga_footer_t* p__parent, tga_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">tga_t</span><span class="o">::</span><span class="n">tga_ext_area_t</span><span class="o">::</span><span class="n">tga_ext_area_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tga_t</span><span class="o">::</span><span class="n">tga_footer_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">tga_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void tga_t::tga_ext_area_t::_read() {
-    m_ext_area_size = m__io-&gt;read_u2le();
-    m_author_name = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(41), std::string(&quot;ASCII&quot;));
-    int l_comments = 4;
-    m_comments = new std::vector&lt;std::string&gt;();
-    m_comments-&gt;reserve(l_comments);
-    for (int i = 0; i &lt; l_comments; i++) {
-        m_comments-&gt;push_back(kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(81), std::string(&quot;ASCII&quot;)));
-    }
-    m_timestamp = m__io-&gt;read_bytes(12);
-    m_job_id = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(41), std::string(&quot;ASCII&quot;));
-    m_job_time = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(6), std::string(&quot;ASCII&quot;));
-    m_software_id = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(41), std::string(&quot;ASCII&quot;));
-    m_software_version = m__io-&gt;read_bytes(3);
-    m_key_color = m__io-&gt;read_u4le();
-    m_pixel_aspect_ratio = m__io-&gt;read_u4le();
-    m_gamma_value = m__io-&gt;read_u4le();
-    m_color_corr_ofs = m__io-&gt;read_u4le();
-    m_postage_stamp_ofs = m__io-&gt;read_u4le();
-    m_scan_line_ofs = m__io-&gt;read_u4le();
-    m_attributes = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">tga_t</span><span class="o">::</span><span class="n">tga_ext_area_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_ext_area_size</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_author_name</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">41</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="kt">int</span> <span class="n">l_comments</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="n">m_comments</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="n">m_comments</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_comments</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_comments</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_comments</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">81</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">)));</span>
+    <span class="p">}</span>
+    <span class="n">m_timestamp</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+    <span class="n">m_job_id</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">41</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_job_time</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_software_id</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">41</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_software_version</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+    <span class="n">m_key_color</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_pixel_aspect_ratio</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_gamma_value</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_color_corr_ofs</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_postage_stamp_ofs</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_scan_line_ofs</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_attributes</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-tga_t::tga_ext_area_t::~tga_ext_area_t() {
-    delete m_comments;
-}
+<span class="n">tga_t</span><span class="o">::</span><span class="n">tga_ext_area_t</span><span class="o">::~</span><span class="n">tga_ext_area_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_comments</span><span class="p">;</span>
+<span class="p">}</span>
 
-tga_t::tga_footer_t* tga_t::footer() {
-    if (f_footer)
-        return m_footer;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek((_io()-&gt;size() - 26));
-    m_footer = new tga_footer_t(m__io, this, m__root);
-    m__io-&gt;seek(_pos);
-    f_footer = true;
-    return m_footer;
-}
-</code></pre>
+<span class="n">tga_t</span><span class="o">::</span><span class="n">tga_footer_t</span><span class="o">*</span> <span class="n">tga_t</span><span class="o">::</span><span class="n">footer</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_footer</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_footer</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">((</span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">26</span><span class="p">));</span>
+    <span class="n">m_footer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">tga_footer_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_footer</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_footer</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -724,8 +721,8 @@ tga_t::tga_footer_t* tga_t::footer() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

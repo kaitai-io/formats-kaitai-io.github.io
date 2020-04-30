@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -263,212 +260,212 @@ var data = new Websocket(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
 
-    /// &lt;summary&gt;
-    /// The WebSocket protocol establishes a two-way communication channel via TCP.
-    /// Messages are made up of one or more dataframes, and are delineated by
-    /// frames with the `fin` bit set.
-    /// &lt;/summary&gt;
-    public partial class Websocket : KaitaiStruct
-    {
-        public static Websocket FromFile(string fileName)
-        {
-            return new Websocket(new KaitaiStream(fileName));
-        }
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// The WebSocket protocol establishes a two-way communication channel via TCP.</span>
+    <span class="c1">/// Messages are made up of one or more dataframes, and are delineated by</span>
+    <span class="c1">/// frames with the `fin` bit set.</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Websocket</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">Websocket</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Websocket</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
 
-        public enum Opcode
-        {
-            Continuation = 0,
-            Text = 1,
-            Binary = 2,
-            Reserved3 = 3,
-            Reserved4 = 4,
-            Reserved5 = 5,
-            Reserved6 = 6,
-            Reserved7 = 7,
-            Close = 8,
-            Ping = 9,
-            Pong = 10,
-            ReservedControlB = 11,
-            ReservedControlC = 12,
-            ReservedControlD = 13,
-            ReservedControlE = 14,
-            ReservedControlF = 15,
-        }
-        public Websocket(KaitaiStream p__io, KaitaiStruct p__parent = null, Websocket p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            _read();
-        }
-        private void _read()
-        {
-            _initialFrame = new InitialFrame(m_io, this, m_root);
-            if (InitialFrame.Header.Finished != true) {
-                _trailingFrames = new List&lt;Dataframe&gt;();
-                {
-                    var i = 0;
-                    Dataframe M_;
-                    do {
-                        M_ = new Dataframe(m_io, this, m_root);
-                        _trailingFrames.Add(M_);
-                        i++;
-                    } while (!(M_.Header.Finished));
-                }
-            }
-        }
-        public partial class FrameHeader : KaitaiStruct
-        {
-            public static FrameHeader FromFile(string fileName)
-            {
-                return new FrameHeader(new KaitaiStream(fileName));
-            }
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">Opcode</span>
+        <span class="p">{</span>
+            <span class="n">Continuation</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">Text</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="n">Binary</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+            <span class="n">Reserved3</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+            <span class="n">Reserved4</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
+            <span class="n">Reserved5</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+            <span class="n">Reserved6</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
+            <span class="n">Reserved7</span> <span class="p">=</span> <span class="m">7</span><span class="p">,</span>
+            <span class="n">Close</span> <span class="p">=</span> <span class="m">8</span><span class="p">,</span>
+            <span class="n">Ping</span> <span class="p">=</span> <span class="m">9</span><span class="p">,</span>
+            <span class="n">Pong</span> <span class="p">=</span> <span class="m">10</span><span class="p">,</span>
+            <span class="n">ReservedControlB</span> <span class="p">=</span> <span class="m">11</span><span class="p">,</span>
+            <span class="n">ReservedControlC</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
+            <span class="n">ReservedControlD</span> <span class="p">=</span> <span class="m">13</span><span class="p">,</span>
+            <span class="n">ReservedControlE</span> <span class="p">=</span> <span class="m">14</span><span class="p">,</span>
+            <span class="n">ReservedControlF</span> <span class="p">=</span> <span class="m">15</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="nf">Websocket</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Websocket</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_initialFrame</span> <span class="p">=</span> <span class="k">new</span> <span class="n">InitialFrame</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">InitialFrame</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">Finished</span> <span class="p">!=</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">_trailingFrames</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Dataframe</span><span class="p">&gt;();</span>
+                <span class="p">{</span>
+                    <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                    <span class="n">Dataframe</span> <span class="n">M_</span><span class="p">;</span>
+                    <span class="k">do</span> <span class="p">{</span>
+                        <span class="n">M_</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Dataframe</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="n">_trailingFrames</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">M_</span><span class="p">);</span>
+                        <span class="n">i</span><span class="p">++;</span>
+                    <span class="p">}</span> <span class="k">while</span> <span class="p">(!(</span><span class="n">M_</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">Finished</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">FrameHeader</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">FrameHeader</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">FrameHeader</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public FrameHeader(KaitaiStream p__io, KaitaiStruct p__parent = null, Websocket p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_lenPayload = false;
-                _read();
-            }
-            private void _read()
-            {
-                _finished = m_io.ReadBitsInt(1) != 0;
-                _reserved = m_io.ReadBitsInt(3);
-                _opcode = ((Websocket.Opcode) m_io.ReadBitsInt(4));
-                _isMasked = m_io.ReadBitsInt(1) != 0;
-                _lenPayloadPrimary = m_io.ReadBitsInt(7);
-                m_io.AlignToByte();
-                if (LenPayloadPrimary == 126) {
-                    _lenPayloadExtended1 = m_io.ReadU2be();
-                }
-                if (LenPayloadPrimary == 127) {
-                    _lenPayloadExtended2 = m_io.ReadU4be();
-                }
-                if (IsMasked) {
-                    _maskKey = m_io.ReadU4be();
-                }
-            }
-            private bool f_lenPayload;
-            private int _lenPayload;
-            public int LenPayload
-            {
-                get
-                {
-                    if (f_lenPayload)
-                        return _lenPayload;
-                    _lenPayload = (int) ((LenPayloadPrimary &lt;= 125 ? LenPayloadPrimary : (LenPayloadPrimary == 126 ? LenPayloadExtended1 : LenPayloadExtended2)));
-                    f_lenPayload = true;
-                    return _lenPayload;
-                }
-            }
-            private bool _finished;
-            private ulong _reserved;
-            private Opcode _opcode;
-            private bool _isMasked;
-            private ulong _lenPayloadPrimary;
-            private ushort? _lenPayloadExtended1;
-            private uint? _lenPayloadExtended2;
-            private uint? _maskKey;
-            private Websocket m_root;
-            private KaitaiStruct m_parent;
-            public bool Finished { get { return _finished; } }
-            public ulong Reserved { get { return _reserved; } }
-            public Opcode Opcode { get { return _opcode; } }
-            public bool IsMasked { get { return _isMasked; } }
-            public ulong LenPayloadPrimary { get { return _lenPayloadPrimary; } }
-            public ushort? LenPayloadExtended1 { get { return _lenPayloadExtended1; } }
-            public uint? LenPayloadExtended2 { get { return _lenPayloadExtended2; } }
-            public uint? MaskKey { get { return _maskKey; } }
-            public Websocket M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        public partial class InitialFrame : KaitaiStruct
-        {
-            public static InitialFrame FromFile(string fileName)
-            {
-                return new InitialFrame(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">FrameHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Websocket</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_lenPayload</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_finished</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_reserved</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">3</span><span class="p">);</span>
+                <span class="n">_opcode</span> <span class="p">=</span> <span class="p">((</span><span class="n">Websocket</span><span class="p">.</span><span class="n">Opcode</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">4</span><span class="p">));</span>
+                <span class="n">_isMasked</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_lenPayloadPrimary</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">7</span><span class="p">);</span>
+                <span class="n">m_io</span><span class="p">.</span><span class="n">AlignToByte</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">LenPayloadPrimary</span> <span class="p">==</span> <span class="m">126</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_lenPayloadExtended1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">LenPayloadPrimary</span> <span class="p">==</span> <span class="m">127</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_lenPayloadExtended2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">IsMasked</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_maskKey</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_lenPayload</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_lenPayload</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">LenPayload</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_lenPayload</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_lenPayload</span><span class="p">;</span>
+                    <span class="n">_lenPayload</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">LenPayloadPrimary</span> <span class="p">&lt;=</span> <span class="m">125</span> <span class="p">?</span> <span class="n">LenPayloadPrimary</span> <span class="p">:</span> <span class="p">(</span><span class="n">LenPayloadPrimary</span> <span class="p">==</span> <span class="m">126</span> <span class="p">?</span> <span class="n">LenPayloadExtended1</span> <span class="p">:</span> <span class="n">LenPayloadExtended2</span><span class="p">)));</span>
+                    <span class="n">f_lenPayload</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_lenPayload</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_finished</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_reserved</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Opcode</span> <span class="n">_opcode</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isMasked</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_lenPayloadPrimary</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort?</span> <span class="n">_lenPayloadExtended1</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint?</span> <span class="n">_lenPayloadExtended2</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint?</span> <span class="n">_maskKey</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Websocket</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Finished</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_finished</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Reserved</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reserved</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Opcode</span> <span class="n">Opcode</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_opcode</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsMasked</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isMasked</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">LenPayloadPrimary</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenPayloadPrimary</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort?</span> <span class="n">LenPayloadExtended1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenPayloadExtended1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint?</span> <span class="n">LenPayloadExtended2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenPayloadExtended2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint?</span> <span class="n">MaskKey</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_maskKey</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Websocket</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">InitialFrame</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">InitialFrame</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">InitialFrame</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public InitialFrame(KaitaiStream p__io, Websocket p__parent = null, Websocket p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _header = new FrameHeader(m_io, this, m_root);
-                if (Header.Opcode != Websocket.Opcode.Text) {
-                    _payloadBytes = m_io.ReadBytes(Header.LenPayload);
-                }
-                if (Header.Opcode == Websocket.Opcode.Text) {
-                    _payloadText = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(Header.LenPayload));
-                }
-            }
-            private FrameHeader _header;
-            private byte[] _payloadBytes;
-            private string _payloadText;
-            private Websocket m_root;
-            private Websocket m_parent;
-            public FrameHeader Header { get { return _header; } }
-            public byte[] PayloadBytes { get { return _payloadBytes; } }
-            public string PayloadText { get { return _payloadText; } }
-            public Websocket M_Root { get { return m_root; } }
-            public Websocket M_Parent { get { return m_parent; } }
-        }
-        public partial class Dataframe : KaitaiStruct
-        {
-            public static Dataframe FromFile(string fileName)
-            {
-                return new Dataframe(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">InitialFrame</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Websocket</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Websocket</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FrameHeader</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">Opcode</span> <span class="p">!=</span> <span class="n">Websocket</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Text</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_payloadBytes</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">LenPayload</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">Opcode</span> <span class="p">==</span> <span class="n">Websocket</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Text</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_payloadText</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">LenPayload</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">FrameHeader</span> <span class="n">_header</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_payloadBytes</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_payloadText</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Websocket</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Websocket</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">FrameHeader</span> <span class="n">Header</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_header</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">PayloadBytes</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_payloadBytes</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">PayloadText</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_payloadText</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Websocket</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Websocket</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Dataframe</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Dataframe</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Dataframe</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Dataframe(KaitaiStream p__io, Websocket p__parent = null, Websocket p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _header = new FrameHeader(m_io, this, m_root);
-                if (M_Root.InitialFrame.Header.Opcode != Websocket.Opcode.Text) {
-                    _payloadBytes = m_io.ReadBytes(Header.LenPayload);
-                }
-                if (M_Root.InitialFrame.Header.Opcode == Websocket.Opcode.Text) {
-                    _payloadText = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(Header.LenPayload));
-                }
-            }
-            private FrameHeader _header;
-            private byte[] _payloadBytes;
-            private string _payloadText;
-            private Websocket m_root;
-            private Websocket m_parent;
-            public FrameHeader Header { get { return _header; } }
-            public byte[] PayloadBytes { get { return _payloadBytes; } }
-            public string PayloadText { get { return _payloadText; } }
-            public Websocket M_Root { get { return m_root; } }
-            public Websocket M_Parent { get { return m_parent; } }
-        }
-        private InitialFrame _initialFrame;
-        private List&lt;Dataframe&gt; _trailingFrames;
-        private Websocket m_root;
-        private KaitaiStruct m_parent;
-        public InitialFrame InitialFrame { get { return _initialFrame; } }
-        public List&lt;Dataframe&gt; TrailingFrames { get { return _trailingFrames; } }
-        public Websocket M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-    }
-}
-</code></pre>
+            <span class="k">public</span> <span class="nf">Dataframe</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Websocket</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Websocket</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FrameHeader</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">InitialFrame</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">Opcode</span> <span class="p">!=</span> <span class="n">Websocket</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Text</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_payloadBytes</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">LenPayload</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">InitialFrame</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">Opcode</span> <span class="p">==</span> <span class="n">Websocket</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Text</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_payloadText</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Header</span><span class="p">.</span><span class="n">LenPayload</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">FrameHeader</span> <span class="n">_header</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_payloadBytes</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_payloadText</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Websocket</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Websocket</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">FrameHeader</span> <span class="n">Header</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_header</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">PayloadBytes</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_payloadBytes</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">PayloadText</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_payloadText</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Websocket</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Websocket</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="n">InitialFrame</span> <span class="n">_initialFrame</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Dataframe</span><span class="p">&gt;</span> <span class="n">_trailingFrames</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Websocket</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">InitialFrame</span> <span class="n">InitialFrame</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_initialFrame</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Dataframe</span><span class="p">&gt;</span> <span class="n">TrailingFrames</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_trailingFrames</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Websocket</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -495,8 +492,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

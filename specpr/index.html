@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -219,270 +216,270 @@ ftp://ftpext.cr.usgs.gov/pub/cr/co/denver/speclab/pub/spectral.library/splib06.l
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: specpr
-  title: &quot;SPECtrum Processing Routines Data Format 3/4/88&quot;
-  file-extension: spec
-  license: Unlicense
-  #encoding: &quot;utf-8&quot;
-  encoding: &quot;ascii&quot;
-  endian: be
-doc: |
-  Specpr records are fixed format, 1536 bytes/record. Record number
-  counting starts at 0. Binary data are in IEEE format real numbers
-  and non-byte swapped integers (compatiible with all Sun
-  Microsystems, and Hewlett Packard workstations (Intel and some DEC
-  machines are byte swapped relative to Suns and HPs). Each record may
-  contain different information according to the following scheme.
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">specpr</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="s">&quot;SPECtrum</span><span class="nv"> </span><span class="s">Processing</span><span class="nv"> </span><span class="s">Routines</span><span class="nv"> </span><span class="s">Data</span><span class="nv"> </span><span class="s">Format</span><span class="nv"> </span><span class="s">3/4/88&quot;</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">spec</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Unlicense</span>
+  <span class="c1">#encoding: &quot;utf-8&quot;</span>
+  <span class="nt">encoding</span><span class="p">:</span> <span class="s">&quot;ascii&quot;</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">Specpr records are fixed format, 1536 bytes/record. Record number</span>
+  <span class="no">counting starts at 0. Binary data are in IEEE format real numbers</span>
+  <span class="no">and non-byte swapped integers (compatiible with all Sun</span>
+  <span class="no">Microsystems, and Hewlett Packard workstations (Intel and some DEC</span>
+  <span class="no">machines are byte swapped relative to Suns and HPs). Each record may</span>
+  <span class="no">contain different information according to the following scheme.</span>
 
-  You can get some library of spectra from
-  ftp://ftpext.cr.usgs.gov/pub/cr/co/denver/speclab/pub/spectral.library/splib06.library/
-seq:
-  - id: records
-    type: record
-    repeat: eos
-types:
-  icflag:
-    doc: &quot;it is big endian&quot;
-    seq:
-      - id: reserved
-        type: b26
-      - id: isctb_type
-        type: b1
-        doc: |
-          =0 ctb is civil time
-          =1 ctb is universal time
-      - id: iscta_type
-        type: b1
-        doc: |
-          =0 cta is civil time
-          =1 cta is universal time
-      - id: coordinate_mode
-        type: b1
-        doc: |
-          RA, Dec / Long., Lat flag
-          =0 the array &quot;ira&quot; and &quot;idec&quot; corresponds to the right ascension and declination of an astronomical object.
-          =1 the array &quot;ira&quot; and &quot;idec&quot; correspond to the longitude and latitude of a spot on a planetary surface.
-      - id: errors
-        type: b1
-        doc: &gt;
-          flag to indicate whether or not the data for the error bar (1 sigma standard deviation of the mean) is in the next record set.
-          =0: no errors, =1: errors in next record set.
-      # - id: type
-        # type: b2
-        # enum: record_type
-      - id: text
-        type: b1
-        doc: |
-          =0 the data in the array &quot;data&quot; is data
-          =1 the data in the array &quot;data&quot; is ascii text as is most of the header info.
-      - id: continuation
-        type: b1
-        doc: |
-          =0 first record of a spectrum consists of: header then 256 data channels
-          =1 continuation data record consisting of:
-            # bit flags followed by 1532 bytes of
-            # real data (bit 1=0) (383 channels)
-            # or 1532 bytes of text (bit 1=1).
-            # A maximum of 12 continuation records
-            # are allowed for a total of 4852
-            # channels (limited by arrays of 4864)
-            # or 19860 characters of text (bit 1=1).
-    instances:
-      type:
-        value: text.to_i * 1 + continuation.to_i * 2
-        enum: record_type
-  identifiers:
-    seq:
-      - id: ititle
-        type: str
-        size: 40
-        pad-right: 0x20
-        doc: &quot;Title which describes the data&quot;
-      - id: usernm
-        type: str
-        size: 8
-        doc: &quot;The name of the user who created the data record&quot;
-  coarse_timestamp:
-    seq:
-     - id: scaled_seconds
-       type: s4
-    instances:
-      seconds:
-        value: scaled_seconds * 24000.
-  illum_angle:
-    seq:
-     - id: angl
-       type: s4
-       doc: &gt;
-          (Integer*4 number, in arc-seconds*6000).
-          (90 degrees=1944000000; -90 deg &lt;= angle &lt;= 90 deg)
-    instances:
-      seconds_total:
-        value: angl / 6000
-      minutes_total:
-        value: seconds_total / 60
-      degrees_total:
-        value: minutes_total / 60
-  data_initial:
-    seq:
-      - id: ids
-        type: identifiers
-      - id: iscta
-        type: coarse_timestamp
-        doc: &quot;Civil or Universal time when data was last processed&quot;
-      - id: isctb
-        type: coarse_timestamp
-        doc: &quot;Civil or Universal time at the start of the spectral run&quot;
-      - id: jdatea
-        type: s4
-        doc: &quot;Date when data was last processed. Stored as integer*4 Julian Day number *10&quot;
-      - id: jdateb
-        type: s4
-        doc: &quot;Date when the spectral run began. Stored as integer*4 Julian Day number *10&quot;
-      - id: istb
-        type: coarse_timestamp
-        doc: &quot;Siderial time when the spectral run started. See flag #05.&quot;
-      - id: isra
-        type: s4
-        doc: &quot;Right ascension coordinates of an astronomical  object, or longitude on a planetary surface (integer*4 numbers in seconds *1000) (RA in RA seconds, Longitude in arc-seconds) See flag #06.&quot;
-      - id: isdec
-        type: s4
-        doc: &quot;Declination coordinates of an astronomical object, or latitude on a planetary surface (integer*4 number in arc-seconds *1000). See flag #06.&quot;
-      - id: itchan
-        type: s4
-        doc: &quot;Total number of channels in the spectrum (integer*4 value from 1 to 4852)&quot;
-      - id: irmas
-        type: s4
-        doc: &quot;The equivalent atmospheric thickness through which the observation was obtained (=1.0 overhead scaled: airmass*1000; integer*4).&quot;
-      - id: revs
-        type: s4
-        doc: &quot;The number of independent spectral scans which were added to make the spectrum (integer*4 number).&quot;
-      - id: iband
-        type: s4
-        doc: &quot;The channel numbers which define the band normalization (scaling to unity). (integers*4).&quot;
-        repeat: expr
-        repeat-expr: 2
-      - id: irwav
-        type: s4
-        doc: &quot;The record number within the file where the wavelengths are found (integer*4).&quot;
-      - id: irespt
-        type: s4
-        doc: &quot;The record pointer to where the resolution can be found (or horizontal error bar) (integer*4).&quot;
-      - id: irecno
-        type: s4
-        doc: &quot;The record number within the file where the data is located (integer*4 number).&quot;
-      - id: itpntr
-        type: s4
-        doc: &quot;Text data record pointer. This pointer points to a data record where additional text describing the data may be found.  (32 bit integer)&quot;
-      - id: ihist
-        type: str
-        size: 60
-        pad-right: 0x20
-        doc: &quot;The program automatic 60 character history.&quot;
-      - id: mhist
-        type: str
-        size: 74
-        doc: &quot;Manual history. Program automatic for large history requirements.&quot;
-        repeat: expr
-        repeat-expr: 4
-      - id: nruns
-        type: s4
-        doc: &quot;The number of independent spectral runs which were summed or averaged to make this spectrum (integer*4).&quot;
-      - id: siangl
-        type: illum_angle
-        doc: &gt;
-          The angle of incidence of illuminating radiation
-                integrating sphere = 2000000000
-                Geometric albedo   = 2000000001
-      - id: seangl
-        type: illum_angle
-        doc: &gt;
-          The angle of emission of illuminating radiation
-                integrating sphere = 2000000000
-                Geometric albedo   = 2000000001
-      - id: sphase
-        type: s4
-        doc: &gt;
-          The phase angle between iangl and eangl
-          (Integer*4 number, in arc-seconds*1500).
-          (180 degrees=972000000; -180 deg &lt;= phase &lt;= 180 deg)
-                integrating sphere = 2000000000
-      - id: iwtrns
-        type: s4
-        doc: &quot;Weighted number of runs (the number of runs of the spectrum with the minimum runs which was used in processing this spectrum, integer*4).&quot;
-      - id: itimch
-        type: s4
-        doc: &quot;The time observed in the sample beam for each half chop in milliseconds (for chopping spectrometers only). (integer*4)&quot;
-      - id: xnrm
-        type: f4
-        doc: &quot;The band normalization factor. For data scaled to 1.0, multiply by this number to recover photometric level (32 bit real number).&quot;
-      - id: scatim
-        type: f4
-        doc: &quot;The time it takes to make one scan of the entire spectrum in seconds (32 bit real number).&quot;
-      - id: timint
-        type: f4
-        doc: &quot;Total integration time (usually=scatime * nruns) (32 bit real number).&quot;
-      - id: tempd
-        type: f4
-        doc: &quot;Temperature in degrees Kelvin (32 bit real number).&quot;
-      - id: data
-        type: f4
-        doc: &quot;The spectral data (256 channels of 32 bit real data numbers).&quot;
-        repeat: expr
-        repeat-expr: 256
-    instances:
-      phase_angle_arcsec:
-        value: sphase / 1500.
-        doc: &quot;The phase angle between iangl and eangl in seconds&quot;
-  data_continuation:
-    seq:
-      - id: cdata
-        type: f4
-        repeat: expr
-        repeat-expr: 383
-        doc: &quot;The continuation of the data values (383 channels of 32 bit real numbers).&quot;
-  text_initial:
-    seq:
-      - id: ids
-        type: identifiers
-      - id: itxtpt
-        type: u4
-        doc: &quot;Text data record pointer. This pointer points  to a data record where additional text may be may be found.&quot;
-      - id: itxtch
-        type: s4
-        doc: &quot;The number of text characters (maximum= 19860).&quot;
-      - id: itext
-        type: str
-        size: 1476
-        doc: &quot;1476 characters of text.  Text has embedded newlines so the number of lines available is limited only by the number of characters available.&quot;
-  text_continuation:
-    seq:
-      - id: tdata
-        type: str
-        size: 1532
-        doc: &quot;1532 characters of text.&quot;
-  record:
-    seq:
-    - id: icflag
-      type: icflag
-      doc: &quot;Total number of bytes comprising the document.&quot;
-    - id: content
-      size: 1536 - 4
-      type:
-        switch-on: icflag.type
-        cases:
-          &#39;record_type::data_initial&#39;: data_initial
-          &#39;record_type::data_continuation&#39;: data_continuation
-          &#39;record_type::text_initial&#39;: text_initial
-          &#39;record_type::text_continuation&#39;: text_continuation
-enums:
-  record_type: # if I use 0b notation it doesn&#39;t work
-    0: data_initial
-    2: data_continuation
-    1: text_initial
-    3: text_continuation
-</code></pre>
+  <span class="no">You can get some library of spectra from</span>
+  <span class="no">ftp://ftpext.cr.usgs.gov/pub/cr/co/denver/speclab/pub/spectral.library/splib06.library/</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">records</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">icflag</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;it</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">big</span><span class="nv"> </span><span class="s">endian&quot;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b26</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">isctb_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">=0 ctb is civil time</span>
+          <span class="no">=1 ctb is universal time</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iscta_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">=0 cta is civil time</span>
+          <span class="no">=1 cta is universal time</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">coordinate_mode</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">RA, Dec / Long., Lat flag</span>
+          <span class="no">=0 the array &quot;ira&quot; and &quot;idec&quot; corresponds to the right ascension and declination of an astronomical object.</span>
+          <span class="no">=1 the array &quot;ira&quot; and &quot;idec&quot; correspond to the longitude and latitude of a spot on a planetary surface.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">errors</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">&gt;</span>
+          <span class="no">flag to indicate whether or not the data for the error bar (1 sigma standard deviation of the mean) is in the next record set.</span>
+          <span class="no">=0: no errors, =1: errors in next record set.</span>
+      <span class="c1"># - id: type</span>
+        <span class="c1"># type: b2</span>
+        <span class="c1"># enum: record_type</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">text</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">=0 the data in the array &quot;data&quot; is data</span>
+          <span class="no">=1 the data in the array &quot;data&quot; is ascii text as is most of the header info.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">continuation</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">=0 first record of a spectrum consists of: header then 256 data channels</span>
+          <span class="no">=1 continuation data record consisting of:</span>
+            <span class="no"># bit flags followed by 1532 bytes of</span>
+            <span class="no"># real data (bit 1=0) (383 channels)</span>
+            <span class="no"># or 1532 bytes of text (bit 1=1).</span>
+            <span class="no"># A maximum of 12 continuation records</span>
+            <span class="no"># are allowed for a total of 4852</span>
+            <span class="no"># channels (limited by arrays of 4864)</span>
+            <span class="no"># or 19860 characters of text (bit 1=1).</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">type</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">text.to_i * 1 + continuation.to_i * 2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record_type</span>
+  <span class="nt">identifiers</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ititle</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">40</span>
+        <span class="nt">pad-right</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x20</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Title</span><span class="nv"> </span><span class="s">which</span><span class="nv"> </span><span class="s">describes</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">data&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">usernm</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">name</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">user</span><span class="nv"> </span><span class="s">who</span><span class="nv"> </span><span class="s">created</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">record&quot;</span>
+  <span class="nt">coarse_timestamp</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+     <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scaled_seconds</span>
+       <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">seconds</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scaled_seconds * 24000.</span>
+  <span class="nt">illum_angle</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+     <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">angl</span>
+       <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+       <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">&gt;</span>
+          <span class="no">(Integer*4 number, in arc-seconds*6000).</span>
+          <span class="no">(90 degrees=1944000000; -90 deg &lt;= angle &lt;= 90 deg)</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">seconds_total</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">angl / 6000</span>
+      <span class="nt">minutes_total</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">seconds_total / 60</span>
+      <span class="nt">degrees_total</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minutes_total / 60</span>
+  <span class="nt">data_initial</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ids</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">identifiers</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iscta</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">coarse_timestamp</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Civil</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">Universal</span><span class="nv"> </span><span class="s">time</span><span class="nv"> </span><span class="s">when</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">was</span><span class="nv"> </span><span class="s">last</span><span class="nv"> </span><span class="s">processed&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">isctb</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">coarse_timestamp</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Civil</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">Universal</span><span class="nv"> </span><span class="s">time</span><span class="nv"> </span><span class="s">at</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">start</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">spectral</span><span class="nv"> </span><span class="s">run&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jdatea</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Date</span><span class="nv"> </span><span class="s">when</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">was</span><span class="nv"> </span><span class="s">last</span><span class="nv"> </span><span class="s">processed.</span><span class="nv"> </span><span class="s">Stored</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">integer*4</span><span class="nv"> </span><span class="s">Julian</span><span class="nv"> </span><span class="s">Day</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">*10&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jdateb</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Date</span><span class="nv"> </span><span class="s">when</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">spectral</span><span class="nv"> </span><span class="s">run</span><span class="nv"> </span><span class="s">began.</span><span class="nv"> </span><span class="s">Stored</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">integer*4</span><span class="nv"> </span><span class="s">Julian</span><span class="nv"> </span><span class="s">Day</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">*10&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">istb</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">coarse_timestamp</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Siderial</span><span class="nv"> </span><span class="s">time</span><span class="nv"> </span><span class="s">when</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">spectral</span><span class="nv"> </span><span class="s">run</span><span class="nv"> </span><span class="s">started.</span><span class="nv"> </span><span class="s">See</span><span class="nv"> </span><span class="s">flag</span><span class="nv"> </span><span class="s">#05.&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">isra</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Right</span><span class="nv"> </span><span class="s">ascension</span><span class="nv"> </span><span class="s">coordinates</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">astronomical</span><span class="nv">  </span><span class="s">object,</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">longitude</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">planetary</span><span class="nv"> </span><span class="s">surface</span><span class="nv"> </span><span class="s">(integer*4</span><span class="nv"> </span><span class="s">numbers</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">seconds</span><span class="nv"> </span><span class="s">*1000)</span><span class="nv"> </span><span class="s">(RA</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">RA</span><span class="nv"> </span><span class="s">seconds,</span><span class="nv"> </span><span class="s">Longitude</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">arc-seconds)</span><span class="nv"> </span><span class="s">See</span><span class="nv"> </span><span class="s">flag</span><span class="nv"> </span><span class="s">#06.&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">isdec</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Declination</span><span class="nv"> </span><span class="s">coordinates</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">astronomical</span><span class="nv"> </span><span class="s">object,</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">latitude</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">planetary</span><span class="nv"> </span><span class="s">surface</span><span class="nv"> </span><span class="s">(integer*4</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">arc-seconds</span><span class="nv"> </span><span class="s">*1000).</span><span class="nv"> </span><span class="s">See</span><span class="nv"> </span><span class="s">flag</span><span class="nv"> </span><span class="s">#06.&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">itchan</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Total</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">channels</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">spectrum</span><span class="nv"> </span><span class="s">(integer*4</span><span class="nv"> </span><span class="s">value</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">4852)&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">irmas</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">equivalent</span><span class="nv"> </span><span class="s">atmospheric</span><span class="nv"> </span><span class="s">thickness</span><span class="nv"> </span><span class="s">through</span><span class="nv"> </span><span class="s">which</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">observation</span><span class="nv"> </span><span class="s">was</span><span class="nv"> </span><span class="s">obtained</span><span class="nv"> </span><span class="s">(=1.0</span><span class="nv"> </span><span class="s">overhead</span><span class="nv"> </span><span class="s">scaled:</span><span class="nv"> </span><span class="s">airmass*1000;</span><span class="nv"> </span><span class="s">integer*4).&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">revs</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">independent</span><span class="nv"> </span><span class="s">spectral</span><span class="nv"> </span><span class="s">scans</span><span class="nv"> </span><span class="s">which</span><span class="nv"> </span><span class="s">were</span><span class="nv"> </span><span class="s">added</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">make</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">spectrum</span><span class="nv"> </span><span class="s">(integer*4</span><span class="nv"> </span><span class="s">number).&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iband</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">channel</span><span class="nv"> </span><span class="s">numbers</span><span class="nv"> </span><span class="s">which</span><span class="nv"> </span><span class="s">define</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">band</span><span class="nv"> </span><span class="s">normalization</span><span class="nv"> </span><span class="s">(scaling</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">unity).</span><span class="nv"> </span><span class="s">(integers*4).&quot;</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">irwav</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">record</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">within</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">file</span><span class="nv"> </span><span class="s">where</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">wavelengths</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">found</span><span class="nv"> </span><span class="s">(integer*4).&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">irespt</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">record</span><span class="nv"> </span><span class="s">pointer</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">where</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">resolution</span><span class="nv"> </span><span class="s">can</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">found</span><span class="nv"> </span><span class="s">(or</span><span class="nv"> </span><span class="s">horizontal</span><span class="nv"> </span><span class="s">error</span><span class="nv"> </span><span class="s">bar)</span><span class="nv"> </span><span class="s">(integer*4).&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">irecno</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">record</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">within</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">file</span><span class="nv"> </span><span class="s">where</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">located</span><span class="nv"> </span><span class="s">(integer*4</span><span class="nv"> </span><span class="s">number).&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">itpntr</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Text</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">record</span><span class="nv"> </span><span class="s">pointer.</span><span class="nv"> </span><span class="s">This</span><span class="nv"> </span><span class="s">pointer</span><span class="nv"> </span><span class="s">points</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">record</span><span class="nv"> </span><span class="s">where</span><span class="nv"> </span><span class="s">additional</span><span class="nv"> </span><span class="s">text</span><span class="nv"> </span><span class="s">describing</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">may</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">found.</span><span class="nv">  </span><span class="s">(32</span><span class="nv"> </span><span class="s">bit</span><span class="nv"> </span><span class="s">integer)&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ihist</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">60</span>
+        <span class="nt">pad-right</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x20</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">program</span><span class="nv"> </span><span class="s">automatic</span><span class="nv"> </span><span class="s">60</span><span class="nv"> </span><span class="s">character</span><span class="nv"> </span><span class="s">history.&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mhist</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">74</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Manual</span><span class="nv"> </span><span class="s">history.</span><span class="nv"> </span><span class="s">Program</span><span class="nv"> </span><span class="s">automatic</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">large</span><span class="nv"> </span><span class="s">history</span><span class="nv"> </span><span class="s">requirements.&quot;</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nruns</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">independent</span><span class="nv"> </span><span class="s">spectral</span><span class="nv"> </span><span class="s">runs</span><span class="nv"> </span><span class="s">which</span><span class="nv"> </span><span class="s">were</span><span class="nv"> </span><span class="s">summed</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">averaged</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">make</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">spectrum</span><span class="nv"> </span><span class="s">(integer*4).&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">siangl</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">illum_angle</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">&gt;</span>
+          <span class="no">The angle of incidence of illuminating radiation</span>
+                <span class="no">integrating sphere = 2000000000</span>
+                <span class="no">Geometric albedo   = 2000000001</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">seangl</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">illum_angle</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">&gt;</span>
+          <span class="no">The angle of emission of illuminating radiation</span>
+                <span class="no">integrating sphere = 2000000000</span>
+                <span class="no">Geometric albedo   = 2000000001</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sphase</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">&gt;</span>
+          <span class="no">The phase angle between iangl and eangl</span>
+          <span class="no">(Integer*4 number, in arc-seconds*1500).</span>
+          <span class="no">(180 degrees=972000000; -180 deg &lt;= phase &lt;= 180 deg)</span>
+                <span class="no">integrating sphere = 2000000000</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iwtrns</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Weighted</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">runs</span><span class="nv"> </span><span class="s">(the</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">runs</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">spectrum</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">minimum</span><span class="nv"> </span><span class="s">runs</span><span class="nv"> </span><span class="s">which</span><span class="nv"> </span><span class="s">was</span><span class="nv"> </span><span class="s">used</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">processing</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">spectrum,</span><span class="nv"> </span><span class="s">integer*4).&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">itimch</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">time</span><span class="nv"> </span><span class="s">observed</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">sample</span><span class="nv"> </span><span class="s">beam</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">each</span><span class="nv"> </span><span class="s">half</span><span class="nv"> </span><span class="s">chop</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">milliseconds</span><span class="nv"> </span><span class="s">(for</span><span class="nv"> </span><span class="s">chopping</span><span class="nv"> </span><span class="s">spectrometers</span><span class="nv"> </span><span class="s">only).</span><span class="nv"> </span><span class="s">(integer*4)&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xnrm</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">band</span><span class="nv"> </span><span class="s">normalization</span><span class="nv"> </span><span class="s">factor.</span><span class="nv"> </span><span class="s">For</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">scaled</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">1.0,</span><span class="nv"> </span><span class="s">multiply</span><span class="nv"> </span><span class="s">by</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">recover</span><span class="nv"> </span><span class="s">photometric</span><span class="nv"> </span><span class="s">level</span><span class="nv"> </span><span class="s">(32</span><span class="nv"> </span><span class="s">bit</span><span class="nv"> </span><span class="s">real</span><span class="nv"> </span><span class="s">number).&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scatim</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">time</span><span class="nv"> </span><span class="s">it</span><span class="nv"> </span><span class="s">takes</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">make</span><span class="nv"> </span><span class="s">one</span><span class="nv"> </span><span class="s">scan</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">entire</span><span class="nv"> </span><span class="s">spectrum</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">seconds</span><span class="nv"> </span><span class="s">(32</span><span class="nv"> </span><span class="s">bit</span><span class="nv"> </span><span class="s">real</span><span class="nv"> </span><span class="s">number).&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">timint</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Total</span><span class="nv"> </span><span class="s">integration</span><span class="nv"> </span><span class="s">time</span><span class="nv"> </span><span class="s">(usually=scatime</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">nruns)</span><span class="nv"> </span><span class="s">(32</span><span class="nv"> </span><span class="s">bit</span><span class="nv"> </span><span class="s">real</span><span class="nv"> </span><span class="s">number).&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tempd</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Temperature</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">degrees</span><span class="nv"> </span><span class="s">Kelvin</span><span class="nv"> </span><span class="s">(32</span><span class="nv"> </span><span class="s">bit</span><span class="nv"> </span><span class="s">real</span><span class="nv"> </span><span class="s">number).&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">spectral</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">(256</span><span class="nv"> </span><span class="s">channels</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">32</span><span class="nv"> </span><span class="s">bit</span><span class="nv"> </span><span class="s">real</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">numbers).&quot;</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">256</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">phase_angle_arcsec</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sphase / 1500.</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">phase</span><span class="nv"> </span><span class="s">angle</span><span class="nv"> </span><span class="s">between</span><span class="nv"> </span><span class="s">iangl</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">eangl</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">seconds&quot;</span>
+  <span class="nt">data_continuation</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cdata</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">383</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">continuation</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">values</span><span class="nv"> </span><span class="s">(383</span><span class="nv"> </span><span class="s">channels</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">32</span><span class="nv"> </span><span class="s">bit</span><span class="nv"> </span><span class="s">real</span><span class="nv"> </span><span class="s">numbers).&quot;</span>
+  <span class="nt">text_initial</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ids</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">identifiers</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">itxtpt</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Text</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">record</span><span class="nv"> </span><span class="s">pointer.</span><span class="nv"> </span><span class="s">This</span><span class="nv"> </span><span class="s">pointer</span><span class="nv"> </span><span class="s">points</span><span class="nv">  </span><span class="s">to</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">record</span><span class="nv"> </span><span class="s">where</span><span class="nv"> </span><span class="s">additional</span><span class="nv"> </span><span class="s">text</span><span class="nv"> </span><span class="s">may</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">may</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">found.&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">itxtch</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;The</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">text</span><span class="nv"> </span><span class="s">characters</span><span class="nv"> </span><span class="s">(maximum=</span><span class="nv"> </span><span class="s">19860).&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">itext</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1476</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;1476</span><span class="nv"> </span><span class="s">characters</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">text.</span><span class="nv">  </span><span class="s">Text</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">embedded</span><span class="nv"> </span><span class="s">newlines</span><span class="nv"> </span><span class="s">so</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">lines</span><span class="nv"> </span><span class="s">available</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">limited</span><span class="nv"> </span><span class="s">only</span><span class="nv"> </span><span class="s">by</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">characters</span><span class="nv"> </span><span class="s">available.&quot;</span>
+  <span class="nt">text_continuation</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tdata</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1532</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;1532</span><span class="nv"> </span><span class="s">characters</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">text.&quot;</span>
+  <span class="nt">record</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">icflag</span>
+      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">icflag</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Total</span><span class="nv"> </span><span class="s">number</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">bytes</span><span class="nv"> </span><span class="s">comprising</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">document.&quot;</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">content</span>
+      <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1536 - 4</span>
+      <span class="nt">type</span><span class="p">:</span>
+        <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">icflag.type</span>
+        <span class="nt">cases</span><span class="p">:</span>
+          <span class="s">&#39;record_type::data_initial&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">data_initial</span>
+          <span class="s">&#39;record_type::data_continuation&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">data_continuation</span>
+          <span class="s">&#39;record_type::text_initial&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">text_initial</span>
+          <span class="s">&#39;record_type::text_continuation&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">text_continuation</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">record_type</span><span class="p">:</span> <span class="c1"># if I use 0b notation it doesn&#39;t work</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_initial</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_continuation</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">text_initial</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">text_continuation</span>
+</pre></div>
     </div>
 </section>
 
@@ -506,8 +503,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -235,109 +232,109 @@ http://avro.apache.org/docs/current/spec.html#binary_encode_primitive</li>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * A variable-length unsigned integer using base128 encoding. 1-byte groups
- * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
- * &quot;least significant group first&quot;, i.e. in &quot;little-endian&quot; manner.
- * 
- * This particular encoding is specified and used in:
- * 
- * * DWARF debug file format, where it&#39;s dubbed &quot;unsigned LEB128&quot; or &quot;ULEB128&quot;.
- *   http://dwarfstd.org/doc/dwarf-2.0.0.pdf - page 139
- * * Google Protocol Buffers, where it&#39;s called &quot;Base 128 Varints&quot;.
- *   https://developers.google.com/protocol-buffers/docs/encoding?csw=1#varints
- * * Apache Lucene, where it&#39;s called &quot;VInt&quot;
- *   http://lucene.apache.org/core/3_5_0/fileformats.html#VInt
- * * Apache Avro uses this as a basis for integer encoding, adding ZigZag on
- *   top of it for signed ints
- *   http://avro.apache.org/docs/current/spec.html#binary_encode_primitive
- * 
- * More information on this encoding is available at https://en.wikipedia.org/wiki/LEB128
- * 
- * This particular implementation supports serialized values to up 8 bytes long.
- */
+<span class="sd">/**</span>
+<span class="sd"> * A variable-length unsigned integer using base128 encoding. 1-byte groups</span>
+<span class="sd"> * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered</span>
+<span class="sd"> * &quot;least significant group first&quot;, i.e. in &quot;little-endian&quot; manner.</span>
+<span class="sd"> * </span>
+<span class="sd"> * This particular encoding is specified and used in:</span>
+<span class="sd"> * </span>
+<span class="sd"> * * DWARF debug file format, where it&#39;s dubbed &quot;unsigned LEB128&quot; or &quot;ULEB128&quot;.</span>
+<span class="sd"> *   http://dwarfstd.org/doc/dwarf-2.0.0.pdf - page 139</span>
+<span class="sd"> * * Google Protocol Buffers, where it&#39;s called &quot;Base 128 Varints&quot;.</span>
+<span class="sd"> *   https://developers.google.com/protocol-buffers/docs/encoding?csw=1#varints</span>
+<span class="sd"> * * Apache Lucene, where it&#39;s called &quot;VInt&quot;</span>
+<span class="sd"> *   http://lucene.apache.org/core/3_5_0/fileformats.html#VInt</span>
+<span class="sd"> * * Apache Avro uses this as a basis for integer encoding, adding ZigZag on</span>
+<span class="sd"> *   top of it for signed ints</span>
+<span class="sd"> *   http://avro.apache.org/docs/current/spec.html#binary_encode_primitive</span>
+<span class="sd"> * </span>
+<span class="sd"> * More information on this encoding is available at https://en.wikipedia.org/wiki/LEB128</span>
+<span class="sd"> * </span>
+<span class="sd"> * This particular implementation supports serialized values to up 8 bytes long.</span>
+<span class="sd"> */</span>
 
-class VlqBase128Le extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \VlqBase128Le $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">VlqBase128Le</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\VlqBase128Le</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_groups = [];
-        $i = 0;
-        do {
-            $_ = new \VlqBase128Le\Group($this-&gt;_io, $this, $this-&gt;_root);
-            $this-&gt;_m_groups[] = $_;
-            $i++;
-        } while (!(!($_-&gt;hasNext())));
-    }
-    protected $_m_len;
-    public function len() {
-        if ($this-&gt;_m_len !== null)
-            return $this-&gt;_m_len;
-        $this-&gt;_m_len = count($this-&gt;groups());
-        return $this-&gt;_m_len;
-    }
-    protected $_m_value;
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_groups</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="nv">$_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\VlqBase128Le\Group</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_groups</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$_</span><span class="p">;</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$_</span><span class="o">-&gt;</span><span class="na">hasNext</span><span class="p">())));</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">groups</span><span class="p">());</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
 
-    /**
-     * Resulting value as normal integer
-     */
-    public function value() {
-        if ($this-&gt;_m_value !== null)
-            return $this-&gt;_m_value;
-        $this-&gt;_m_value = ((((((($this-&gt;groups()[0]-&gt;value() + ($this-&gt;len() &gt;= 2 ? ($this-&gt;groups()[1]-&gt;value() &lt;&lt; 7) : 0)) + ($this-&gt;len() &gt;= 3 ? ($this-&gt;groups()[2]-&gt;value() &lt;&lt; 14) : 0)) + ($this-&gt;len() &gt;= 4 ? ($this-&gt;groups()[3]-&gt;value() &lt;&lt; 21) : 0)) + ($this-&gt;len() &gt;= 5 ? ($this-&gt;groups()[4]-&gt;value() &lt;&lt; 28) : 0)) + ($this-&gt;len() &gt;= 6 ? ($this-&gt;groups()[5]-&gt;value() &lt;&lt; 35) : 0)) + ($this-&gt;len() &gt;= 7 ? ($this-&gt;groups()[6]-&gt;value() &lt;&lt; 42) : 0)) + ($this-&gt;len() &gt;= 8 ? ($this-&gt;groups()[7]-&gt;value() &lt;&lt; 49) : 0));
-        return $this-&gt;_m_value;
-    }
-    protected $_m_groups;
-    public function groups() { return $this-&gt;_m_groups; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * Resulting value as normal integer</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="p">(((((((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">groups</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="o">?</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">groups</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="o">?</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">groups</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">14</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="o">?</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">groups</span><span class="p">()[</span><span class="mi">3</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">21</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">5</span> <span class="o">?</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">groups</span><span class="p">()[</span><span class="mi">4</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">28</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">6</span> <span class="o">?</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">groups</span><span class="p">()[</span><span class="mi">5</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">35</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">7</span> <span class="o">?</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">groups</span><span class="p">()[</span><span class="mi">6</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">42</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">8</span> <span class="o">?</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">groups</span><span class="p">()[</span><span class="mi">7</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">49</span><span class="p">)</span> <span class="o">:</span> <span class="mi">0</span><span class="p">));</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_groups</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">groups</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_groups</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-/**
- * One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.
- */
+<span class="sd">/**</span>
+<span class="sd"> * One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.</span>
+<span class="sd"> */</span>
 
-namespace \VlqBase128Le;
+<span class="k">namespace</span> <span class="nx">\VlqBase128Le</span><span class="p">;</span>
 
-class Group extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \VlqBase128Le $_parent = null, \VlqBase128Le $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Group</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\VlqBase128Le</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\VlqBase128Le</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_b = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_hasNext;
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasNext</span><span class="p">;</span>
 
-    /**
-     * If true, then we have more bytes to read
-     */
-    public function hasNext() {
-        if ($this-&gt;_m_hasNext !== null)
-            return $this-&gt;_m_hasNext;
-        $this-&gt;_m_hasNext = ($this-&gt;b() &amp; 128) != 0;
-        return $this-&gt;_m_hasNext;
-    }
-    protected $_m_value;
+    <span class="sd">/**</span>
+<span class="sd">     * If true, then we have more bytes to read</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasNext</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasNext</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasNext</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasNext</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasNext</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
 
-    /**
-     * The 7-bit (base128) numeric value chunk of this group
-     */
-    public function value() {
-        if ($this-&gt;_m_value !== null)
-            return $this-&gt;_m_value;
-        $this-&gt;_m_value = ($this-&gt;b() &amp; 127);
-        return $this-&gt;_m_value;
-    }
-    protected $_m_b;
-    public function b() { return $this-&gt;_m_b; }
-}
-</code></pre>
+    <span class="sd">/**</span>
+<span class="sd">     * The 7-bit (base128) numeric value chunk of this group</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">b</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">127</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_b</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">b</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -364,8 +361,8 @@ class Group extends \Kaitai\Struct\Struct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -209,328 +206,328 @@ radio information, but can be used for other purposes as well.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: packet_ppi
-  endian: le
-  imports:
-    - /network/ethernet_frame
-  license: CC0-1.0
-doc: |
-  PPI is a standard for link layer packet encapsulation, proposed as
-  generic extensible container to store both captured in-band data and
-  out-of-band data. Originally it was developed to provide 802.11n
-  radio information, but can be used for other purposes as well.
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">packet_ppi</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+  <span class="nt">imports</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/network/ethernet_frame</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">PPI is a standard for link layer packet encapsulation, proposed as</span>
+  <span class="no">generic extensible container to store both captured in-band data and</span>
+  <span class="no">out-of-band data. Originally it was developed to provide 802.11n</span>
+  <span class="no">radio information, but can be used for other purposes as well.</span>
 
-  Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&amp;do=get&amp;target=Http.cap  
-doc-ref: https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3
-seq:
-  - id: header
-    type: packet_ppi_header
-  - id: fields
-    type: packet_ppi_fields
-    size: header.pph_len - 8 # sizeof(packet_ppi_header)
-  - id: body
-    size-eos: true
-    type:
-      switch-on: header.pph_dlt
-      cases:
-        &#39;linktype::ppi&#39;: packet_ppi
-        &#39;linktype::ethernet&#39;: ethernet_frame
-types:
-  packet_ppi_header:
-    doc-ref: https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
-    seq:
-      - id: pph_version
-        type: u1
-      - id: pph_flags
-        type: u1
-      - id: pph_len
-        type: u2
-      - id: pph_dlt
-        type: u4
-        enum: linktype
-  packet_ppi_fields:
-    seq:
-      - id: entries
-        type: packet_ppi_field
-        repeat: eos
-  packet_ppi_field:
-    doc-ref: https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
-    seq:
-      - id: pfh_type
-        type: u2
-        enum: pfh_type
-      - id: pfh_datalen
-        type: u2
-      - id: body
-        size: pfh_datalen
-        type:
-          switch-on: pfh_type
-          cases:
-            &#39;pfh_type::radio_802_11_common&#39;: radio_802_11_common_body
-            &#39;pfh_type::radio_802_11n_mac_ext&#39;: radio_802_11n_mac_ext_body
-            &#39;pfh_type::radio_802_11n_mac_phy_ext&#39;: radio_802_11n_mac_phy_ext_body
-  radio_802_11_common_body:
-    doc-ref: https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.2
-    seq:
-      - id: tsf_timer
-        type: u8
-      - id: flags
-        type: u2
-      - id: rate
-        type: u2
-      - id: channel_freq
-        type: u2
-      - id: channel_flags
-        type: u2
-      - id: fhss_hopset
-        type: u1
-      - id: fhss_pattern
-        type: u1
-      - id: dbm_antsignal
-        type: s1
-      - id: dbm_antnoise
-        type: s1
-  radio_802_11n_mac_ext_body:
-    doc-ref: https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.3
-    seq:
-      - id: flags
-        type: mac_flags
-      - id: a_mpdu_id
-        type: u4
-      - id: num_delimiters
-        type: u1
-      - id: reserved
-        size: 3
-  radio_802_11n_mac_phy_ext_body:
-    doc-ref: https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.4
-    seq:
-      - id: flags
-        type: mac_flags
-      - id: a_mpdu_id
-        type: u4
-      - id: num_delimiters
-        type: u1
-      - id: mcs
-        type: u1
-        doc: Modulation Coding Scheme (MCS)
-      - id: num_streams
-        type: u1
-        doc: Number of spatial streams (0 = unknown)
-      - id: rssi_combined
-        type: u1
-        doc: RSSI (Received Signal Strength Indication), combined from all active antennas / channels
-      - id: rssi_ant_ctl
-        type: u1
-        doc: RSSI (Received Signal Strength Indication) for antennas 0-3, control channel
-        repeat: expr
-        repeat-expr: 4
-      - id: rssi_ant_ext
-        type: u1
-        doc: RSSI (Received Signal Strength Indication) for antennas 0-3, extension channel
-        repeat: expr
-        repeat-expr: 4
-      - id: ext_channel_freq
-        type: u2
-        doc: Extension channel frequency (MHz)
-      - id: ext_channel_flags
-        type: channel_flags
-        doc: Extension channel flags
-      - id: rf_signal_noise
-        type: signal_noise
-        repeat: expr
-        repeat-expr: 4
-        doc: Signal + noise values for antennas 0-3
-      - id: evm
-        type: u4
-        repeat: expr
-        repeat-expr: 4
-        doc: EVM (Error Vector Magnitude) for chains 0-3
-    types:
-      channel_flags:
-        seq:
-          # First byte
-          - id: spectrum_2ghz
-            type: b1
-            doc: 2 GHz spectrum
-          - id: ofdm
-            type: b1
-            doc: OFDM (Orthogonal Frequency-Division Multiplexing)
-          - id: cck
-            type: b1
-            doc: CCK (Complementary Code Keying)
-          - id: turbo
-            type: b1
-          # Unused LSB of first byte + MSB of second byte
-          - id: unused
-            type: b8
-          # Second byte
-          - id: gfsk
-            type: b1
-            doc: Gaussian Frequency Shift Keying
-          - id: dyn_cck_ofdm
-            type: b1
-            doc: Dynamic CCK-OFDM
-          - id: only_passive_scan
-            type: b1
-            doc: Only passive scan allowed
-          - id: spectrum_5ghz
-            type: b1
-            doc: 5 GHz spectrum
-      signal_noise:
-        doc: RF signal + noise pair at a single antenna
-        seq:
-          - id: signal
-            type: s1
-            doc: RF signal, dBm
-          - id: noise
-            type: s1
-            doc: RF noise, dBm
-  mac_flags:
-    seq:
-      - id: unused1
-        type: b1
-      - id: aggregate_delimiter
-        type: b1
-        doc: Aggregate delimiter CRC error after this frame
-      - id: more_aggregates
-        type: b1
-        doc: More aggregates
-      - id: aggregate
-        type: b1
-        doc: Aggregate
-      - id: dup_rx
-        type: b1
-        doc: Duplicate RX
-      - id: rx_short_guard
-        type: b1
-        doc: RX short guard interval (SGI)
-      - id: is_ht_40
-        type: b1
-        doc: true = HT40, false = HT20
-      - id: greenfield
-        type: b1
-        doc: Greenfield
-      - id: unused2
-        size: 3
-enums:
-  pfh_type:
-    2: radio_802_11_common
-    3: radio_802_11n_mac_ext
-    4: radio_802_11n_mac_phy_ext
-    5: spectrum_map
-    6: process_info
-    7: capture_info
+  <span class="no">Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&amp;do=get&amp;target=Http.cap  </span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">packet_ppi_header</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fields</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">packet_ppi_fields</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.pph_len - 8</span> <span class="c1"># sizeof(packet_ppi_header)</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+    <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">type</span><span class="p">:</span>
+      <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.pph_dlt</span>
+      <span class="nt">cases</span><span class="p">:</span>
+        <span class="s">&#39;linktype::ppi&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">packet_ppi</span>
+        <span class="s">&#39;linktype::ethernet&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">ethernet_frame</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">packet_ppi_header</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pph_version</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pph_flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pph_len</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pph_dlt</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">linktype</span>
+  <span class="nt">packet_ppi_fields</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">packet_ppi_field</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+  <span class="nt">packet_ppi_field</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pfh_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pfh_type</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pfh_datalen</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pfh_datalen</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pfh_type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;pfh_type::radio_802_11_common&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">radio_802_11_common_body</span>
+            <span class="s">&#39;pfh_type::radio_802_11n_mac_ext&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">radio_802_11n_mac_ext_body</span>
+            <span class="s">&#39;pfh_type::radio_802_11n_mac_phy_ext&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">radio_802_11n_mac_phy_ext_body</span>
+  <span class="nt">radio_802_11_common_body</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.2</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tsf_timer</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rate</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_freq</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fhss_hopset</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fhss_pattern</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dbm_antsignal</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dbm_antnoise</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+  <span class="nt">radio_802_11n_mac_ext_body</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.3</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mac_flags</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">a_mpdu_id</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_delimiters</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+  <span class="nt">radio_802_11n_mac_phy_ext_body</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.4</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mac_flags</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">a_mpdu_id</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_delimiters</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mcs</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Modulation Coding Scheme (MCS)</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_streams</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Number of spatial streams (0 = unknown)</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rssi_combined</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RSSI (Received Signal Strength Indication), combined from all active antennas / channels</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rssi_ant_ctl</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RSSI (Received Signal Strength Indication) for antennas 0-3, control channel</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rssi_ant_ext</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RSSI (Received Signal Strength Indication) for antennas 0-3, extension channel</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ext_channel_freq</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Extension channel frequency (MHz)</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ext_channel_flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">channel_flags</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Extension channel flags</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rf_signal_noise</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signal_noise</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Signal + noise values for antennas 0-3</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">evm</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EVM (Error Vector Magnitude) for chains 0-3</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">channel_flags</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="c1"># First byte</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">spectrum_2ghz</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2 GHz spectrum</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofdm</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">OFDM (Orthogonal Frequency-Division Multiplexing)</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cck</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CCK (Complementary Code Keying)</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">turbo</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="c1"># Unused LSB of first byte + MSB of second byte</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b8</span>
+          <span class="c1"># Second byte</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gfsk</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Gaussian Frequency Shift Keying</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dyn_cck_ofdm</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Dynamic CCK-OFDM</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">only_passive_scan</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Only passive scan allowed</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">spectrum_5ghz</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5 GHz spectrum</span>
+      <span class="nt">signal_noise</span><span class="p">:</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RF signal + noise pair at a single antenna</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signal</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RF signal, dBm</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">noise</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RF noise, dBm</span>
+  <span class="nt">mac_flags</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused1</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">aggregate_delimiter</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Aggregate delimiter CRC error after this frame</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">more_aggregates</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">More aggregates</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">aggregate</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Aggregate</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dup_rx</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Duplicate RX</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rx_short_guard</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RX short guard interval (SGI)</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_ht_40</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true = HT40, false = HT20</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">greenfield</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Greenfield</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused2</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">pfh_type</span><span class="p">:</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">radio_802_11_common</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">radio_802_11n_mac_ext</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">radio_802_11n_mac_phy_ext</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">spectrum_map</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">process_info</span>
+    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">capture_info</span>
 
-  # FIXME: this is copy-paste from pcap.ksy, remove after
-  # implementation of enum sharing / parametric types
-  linktype:
-    # http://www.tcpdump.org/linktypes.html
-    0: null_linktype
-    1: ethernet
-    3: ax25
-    6: ieee802_5
-    7: arcnet_bsd
-    8: slip
-    9: ppp
-    10: fddi
-    50: ppp_hdlc
-    51: ppp_ether
-    100: atm_rfc1483
-    101: raw
-    104: c_hdlc
-    105: ieee802_11
-    107: frelay
-    108: loop
-    113: linux_sll
-    114: ltalk
-    117: pflog
-    119: ieee802_11_prism
-    122: ip_over_fc
-    123: sunatm
-    127: ieee802_11_radiotap
-    129: arcnet_linux
-    138: apple_ip_over_ieee1394
-    139: mtp2_with_phdr
-    140: mtp2
-    141: mtp3
-    142: sccp
-    143: docsis
-    144: linux_irda
-    147: user0
-    148: user1
-    149: user2
-    150: user3
-    151: user4
-    152: user5
-    153: user6
-    154: user7
-    155: user8
-    156: user9
-    157: user10
-    158: user11
-    159: user12
-    160: user13
-    161: user14
-    162: user15
-    163: ieee802_11_avs
-    165: bacnet_ms_tp
-    166: ppp_pppd
-    169: gprs_llc
-    170: gpf_t
-    171: gpf_f
-    177: linux_lapd
-    187: bluetooth_hci_h4
-    189: usb_linux
-    192: ppi
-    195: ieee802_15_4
-    196: sita
-    197: erf
-    201: bluetooth_hci_h4_with_phdr
-    202: ax25_kiss
-    203: lapd
-    204: ppp_with_dir
-    205: c_hdlc_with_dir
-    206: frelay_with_dir
-    209: ipmb_linux
-    215: ieee802_15_4_nonask_phy
-    220: usb_linux_mmapped
-    224: fc_2
-    225: fc_2_with_frame_delims
-    226: ipnet
-    227: can_socketcan
-    228: ipv4
-    229: ipv6
-    230: ieee802_15_4_nofcs
-    231: dbus
-    235: dvb_ci
-    236: mux27010
-    237: stanag_5066_d_pdu
-    239: nflog
-    240: netanalyzer
-    241: netanalyzer_transparent
-    242: ipoib
-    243: mpeg_2_ts
-    244: ng40
-    245: nfc_llcp
-    247: infiniband
-    248: sctp
-    249: usbpcap
-    250: rtac_serial
-    251: bluetooth_le_ll
-    253: netlink
-    254: bluetooth_linux_monitor
-    255: bluetooth_bredr_bb
-    256: bluetooth_le_ll_with_phdr
-    257: profibus_dl
-    258: pktap
-    259: epon
-    260: ipmi_hpm_2
-    261: zwave_r1_r2
-    262: zwave_r3
-    263: wattstopper_dlm
-    264: iso_14443
-</code></pre>
+  <span class="c1"># FIXME: this is copy-paste from pcap.ksy, remove after</span>
+  <span class="c1"># implementation of enum sharing / parametric types</span>
+  <span class="nt">linktype</span><span class="p">:</span>
+    <span class="c1"># http://www.tcpdump.org/linktypes.html</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">null_linktype</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ethernet</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ax25</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ieee802_5</span>
+    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arcnet_bsd</span>
+    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">slip</span>
+    <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ppp</span>
+    <span class="nt">10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fddi</span>
+    <span class="nt">50</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ppp_hdlc</span>
+    <span class="nt">51</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ppp_ether</span>
+    <span class="nt">100</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">atm_rfc1483</span>
+    <span class="nt">101</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">raw</span>
+    <span class="nt">104</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">c_hdlc</span>
+    <span class="nt">105</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ieee802_11</span>
+    <span class="nt">107</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frelay</span>
+    <span class="nt">108</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">loop</span>
+    <span class="nt">113</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">linux_sll</span>
+    <span class="nt">114</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ltalk</span>
+    <span class="nt">117</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pflog</span>
+    <span class="nt">119</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ieee802_11_prism</span>
+    <span class="nt">122</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ip_over_fc</span>
+    <span class="nt">123</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sunatm</span>
+    <span class="nt">127</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ieee802_11_radiotap</span>
+    <span class="nt">129</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arcnet_linux</span>
+    <span class="nt">138</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">apple_ip_over_ieee1394</span>
+    <span class="nt">139</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mtp2_with_phdr</span>
+    <span class="nt">140</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mtp2</span>
+    <span class="nt">141</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mtp3</span>
+    <span class="nt">142</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sccp</span>
+    <span class="nt">143</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docsis</span>
+    <span class="nt">144</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">linux_irda</span>
+    <span class="nt">147</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user0</span>
+    <span class="nt">148</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user1</span>
+    <span class="nt">149</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user2</span>
+    <span class="nt">150</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user3</span>
+    <span class="nt">151</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user4</span>
+    <span class="nt">152</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user5</span>
+    <span class="nt">153</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user6</span>
+    <span class="nt">154</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user7</span>
+    <span class="nt">155</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user8</span>
+    <span class="nt">156</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user9</span>
+    <span class="nt">157</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user10</span>
+    <span class="nt">158</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user11</span>
+    <span class="nt">159</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user12</span>
+    <span class="nt">160</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user13</span>
+    <span class="nt">161</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user14</span>
+    <span class="nt">162</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user15</span>
+    <span class="nt">163</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ieee802_11_avs</span>
+    <span class="nt">165</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bacnet_ms_tp</span>
+    <span class="nt">166</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ppp_pppd</span>
+    <span class="nt">169</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gprs_llc</span>
+    <span class="nt">170</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gpf_t</span>
+    <span class="nt">171</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gpf_f</span>
+    <span class="nt">177</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">linux_lapd</span>
+    <span class="nt">187</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bluetooth_hci_h4</span>
+    <span class="nt">189</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">usb_linux</span>
+    <span class="nt">192</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ppi</span>
+    <span class="nt">195</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ieee802_15_4</span>
+    <span class="nt">196</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sita</span>
+    <span class="nt">197</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">erf</span>
+    <span class="nt">201</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bluetooth_hci_h4_with_phdr</span>
+    <span class="nt">202</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ax25_kiss</span>
+    <span class="nt">203</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lapd</span>
+    <span class="nt">204</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ppp_with_dir</span>
+    <span class="nt">205</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">c_hdlc_with_dir</span>
+    <span class="nt">206</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frelay_with_dir</span>
+    <span class="nt">209</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ipmb_linux</span>
+    <span class="nt">215</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ieee802_15_4_nonask_phy</span>
+    <span class="nt">220</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">usb_linux_mmapped</span>
+    <span class="nt">224</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fc_2</span>
+    <span class="nt">225</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fc_2_with_frame_delims</span>
+    <span class="nt">226</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ipnet</span>
+    <span class="nt">227</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">can_socketcan</span>
+    <span class="nt">228</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ipv4</span>
+    <span class="nt">229</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ipv6</span>
+    <span class="nt">230</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ieee802_15_4_nofcs</span>
+    <span class="nt">231</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dbus</span>
+    <span class="nt">235</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dvb_ci</span>
+    <span class="nt">236</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mux27010</span>
+    <span class="nt">237</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stanag_5066_d_pdu</span>
+    <span class="nt">239</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nflog</span>
+    <span class="nt">240</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">netanalyzer</span>
+    <span class="nt">241</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">netanalyzer_transparent</span>
+    <span class="nt">242</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ipoib</span>
+    <span class="nt">243</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mpeg_2_ts</span>
+    <span class="nt">244</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ng40</span>
+    <span class="nt">245</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nfc_llcp</span>
+    <span class="nt">247</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">infiniband</span>
+    <span class="nt">248</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sctp</span>
+    <span class="nt">249</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">usbpcap</span>
+    <span class="nt">250</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rtac_serial</span>
+    <span class="nt">251</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bluetooth_le_ll</span>
+    <span class="nt">253</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">netlink</span>
+    <span class="nt">254</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bluetooth_linux_monitor</span>
+    <span class="nt">255</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bluetooth_bredr_bb</span>
+    <span class="nt">256</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bluetooth_le_ll_with_phdr</span>
+    <span class="nt">257</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">profibus_dl</span>
+    <span class="nt">258</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pktap</span>
+    <span class="nt">259</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">epon</span>
+    <span class="nt">260</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ipmi_hpm_2</span>
+    <span class="nt">261</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zwave_r1_r2</span>
+    <span class="nt">262</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zwave_r3</span>
+    <span class="nt">263</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wattstopper_dlm</span>
+    <span class="nt">264</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iso_14443</span>
+</pre></div>
     </div>
 </section>
 
@@ -554,8 +551,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

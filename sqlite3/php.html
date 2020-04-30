@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -220,504 +217,504 @@ reached via the links starting from the first page. First page type
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * SQLite3 is a popular serverless SQL engine, implemented as a library
- * to be used within other applications. It keeps its databases as
- * regular disk files.
- * 
- * Every database file is segmented into pages. First page (starting at
- * the very beginning) is special: it contains a file-global header
- * which specifies some data relevant to proper parsing (i.e. format
- * versions, size of page, etc). After the header, normal contents of
- * the first page follow.
- * 
- * Each page would be of some type, and generally, they would be
- * reached via the links starting from the first page. First page type
- * (`root_page`) is always &quot;btree_page&quot;.
- */
+<span class="sd">/**</span>
+<span class="sd"> * SQLite3 is a popular serverless SQL engine, implemented as a library</span>
+<span class="sd"> * to be used within other applications. It keeps its databases as</span>
+<span class="sd"> * regular disk files.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Every database file is segmented into pages. First page (starting at</span>
+<span class="sd"> * the very beginning) is special: it contains a file-global header</span>
+<span class="sd"> * which specifies some data relevant to proper parsing (i.e. format</span>
+<span class="sd"> * versions, size of page, etc). After the header, normal contents of</span>
+<span class="sd"> * the first page follow.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Each page would be of some type, and generally, they would be</span>
+<span class="sd"> * reached via the links starting from the first page. First page type</span>
+<span class="sd"> * (`root_page`) is always &quot;btree_page&quot;.</span>
+<span class="sd"> */</span>
 
-class Sqlite3 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Sqlite3 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Sqlite3</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Sqlite3</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_magic = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00&quot;);
-        $this-&gt;_m_lenPageMod = $this-&gt;_io-&gt;readU2be();
-        $this-&gt;_m_writeVersion = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_readVersion = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_reservedSpace = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_maxPayloadFrac = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_minPayloadFrac = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_leafPayloadFrac = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_fileChangeCounter = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_numPages = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_firstFreelistTrunkPage = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_numFreelistPages = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_schemaCookie = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_schemaFormat = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_defPageCacheSize = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_largestRootPage = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_textEncoding = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_userVersion = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_isIncrementalVacuum = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_applicationId = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_reserved = $this-&gt;_io-&gt;readBytes(20);
-        $this-&gt;_m_versionValidFor = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_sqliteVersionNumber = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_rootPage = new \Sqlite3\BtreePage($this-&gt;_io, $this, $this-&gt;_root);
-    }
-    protected $_m_lenPage;
-    public function lenPage() {
-        if ($this-&gt;_m_lenPage !== null)
-            return $this-&gt;_m_lenPage;
-        $this-&gt;_m_lenPage = ($this-&gt;lenPageMod() == 1 ? 65536 : $this-&gt;lenPageMod());
-        return $this-&gt;_m_lenPage;
-    }
-    protected $_m_magic;
-    protected $_m_lenPageMod;
-    protected $_m_writeVersion;
-    protected $_m_readVersion;
-    protected $_m_reservedSpace;
-    protected $_m_maxPayloadFrac;
-    protected $_m_minPayloadFrac;
-    protected $_m_leafPayloadFrac;
-    protected $_m_fileChangeCounter;
-    protected $_m_numPages;
-    protected $_m_firstFreelistTrunkPage;
-    protected $_m_numFreelistPages;
-    protected $_m_schemaCookie;
-    protected $_m_schemaFormat;
-    protected $_m_defPageCacheSize;
-    protected $_m_largestRootPage;
-    protected $_m_textEncoding;
-    protected $_m_userVersion;
-    protected $_m_isIncrementalVacuum;
-    protected $_m_applicationId;
-    protected $_m_reserved;
-    protected $_m_versionValidFor;
-    protected $_m_sqliteVersionNumber;
-    protected $_m_rootPage;
-    public function magic() { return $this-&gt;_m_magic; }
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x53\x51\x4C\x69\x74\x65\x20\x66\x6F\x72\x6D\x61\x74\x20\x33\x00</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPageMod</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeVersion</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readVersion</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reservedSpace</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxPayloadFrac</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minPayloadFrac</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_leafPayloadFrac</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileChangeCounter</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numPages</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstFreelistTrunkPage</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numFreelistPages</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_schemaCookie</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_schemaFormat</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_defPageCacheSize</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_largestRootPage</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_textEncoding</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_userVersion</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isIncrementalVacuum</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_applicationId</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionValidFor</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sqliteVersionNumber</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rootPage</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Sqlite3\BtreePage</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenPage</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenPage</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPage</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPage</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPage</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenPageMod</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="mi">65536</span> <span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenPageMod</span><span class="p">());</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPage</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_magic</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenPageMod</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_writeVersion</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_readVersion</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_reservedSpace</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_maxPayloadFrac</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_minPayloadFrac</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_leafPayloadFrac</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_fileChangeCounter</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numPages</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_firstFreelistTrunkPage</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numFreelistPages</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_schemaCookie</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_schemaFormat</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_defPageCacheSize</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_largestRootPage</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_textEncoding</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_userVersion</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_isIncrementalVacuum</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_applicationId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_reserved</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_versionValidFor</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_sqliteVersionNumber</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_rootPage</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * The database page size in bytes. Must be a power of two between
-     * 512 and 32768 inclusive, or the value 1 representing a page size
-     * of 65536.
-     */
-    public function lenPageMod() { return $this-&gt;_m_lenPageMod; }
-    public function writeVersion() { return $this-&gt;_m_writeVersion; }
-    public function readVersion() { return $this-&gt;_m_readVersion; }
+    <span class="sd">/**</span>
+<span class="sd">     * The database page size in bytes. Must be a power of two between</span>
+<span class="sd">     * 512 and 32768 inclusive, or the value 1 representing a page size</span>
+<span class="sd">     * of 65536.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenPageMod</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPageMod</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">writeVersion</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_writeVersion</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">readVersion</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_readVersion</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Bytes of unused &quot;reserved&quot; space at the end of each page. Usually 0.
-     */
-    public function reservedSpace() { return $this-&gt;_m_reservedSpace; }
+    <span class="sd">/**</span>
+<span class="sd">     * Bytes of unused &quot;reserved&quot; space at the end of each page. Usually 0.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">reservedSpace</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reservedSpace</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Maximum embedded payload fraction. Must be 64.
-     */
-    public function maxPayloadFrac() { return $this-&gt;_m_maxPayloadFrac; }
+    <span class="sd">/**</span>
+<span class="sd">     * Maximum embedded payload fraction. Must be 64.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">maxPayloadFrac</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxPayloadFrac</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Minimum embedded payload fraction. Must be 32.
-     */
-    public function minPayloadFrac() { return $this-&gt;_m_minPayloadFrac; }
+    <span class="sd">/**</span>
+<span class="sd">     * Minimum embedded payload fraction. Must be 32.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">minPayloadFrac</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minPayloadFrac</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Leaf payload fraction. Must be 32.
-     */
-    public function leafPayloadFrac() { return $this-&gt;_m_leafPayloadFrac; }
-    public function fileChangeCounter() { return $this-&gt;_m_fileChangeCounter; }
+    <span class="sd">/**</span>
+<span class="sd">     * Leaf payload fraction. Must be 32.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">leafPayloadFrac</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_leafPayloadFrac</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fileChangeCounter</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileChangeCounter</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Size of the database file in pages. The &quot;in-header database size&quot;.
-     */
-    public function numPages() { return $this-&gt;_m_numPages; }
+    <span class="sd">/**</span>
+<span class="sd">     * Size of the database file in pages. The &quot;in-header database size&quot;.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numPages</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numPages</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Page number of the first freelist trunk page.
-     */
-    public function firstFreelistTrunkPage() { return $this-&gt;_m_firstFreelistTrunkPage; }
+    <span class="sd">/**</span>
+<span class="sd">     * Page number of the first freelist trunk page.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">firstFreelistTrunkPage</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstFreelistTrunkPage</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Total number of freelist pages.
-     */
-    public function numFreelistPages() { return $this-&gt;_m_numFreelistPages; }
-    public function schemaCookie() { return $this-&gt;_m_schemaCookie; }
+    <span class="sd">/**</span>
+<span class="sd">     * Total number of freelist pages.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numFreelistPages</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numFreelistPages</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">schemaCookie</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_schemaCookie</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * The schema format number. Supported schema formats are 1, 2, 3, and 4.
-     */
-    public function schemaFormat() { return $this-&gt;_m_schemaFormat; }
+    <span class="sd">/**</span>
+<span class="sd">     * The schema format number. Supported schema formats are 1, 2, 3, and 4.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">schemaFormat</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_schemaFormat</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Default page cache size.
-     */
-    public function defPageCacheSize() { return $this-&gt;_m_defPageCacheSize; }
+    <span class="sd">/**</span>
+<span class="sd">     * Default page cache size.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">defPageCacheSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_defPageCacheSize</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * The page number of the largest root b-tree page when in auto-vacuum or incremental-vacuum modes, or zero otherwise.
-     */
-    public function largestRootPage() { return $this-&gt;_m_largestRootPage; }
+    <span class="sd">/**</span>
+<span class="sd">     * The page number of the largest root b-tree page when in auto-vacuum or incremental-vacuum modes, or zero otherwise.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">largestRootPage</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_largestRootPage</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * The database text encoding. A value of 1 means UTF-8. A value of 2 means UTF-16le. A value of 3 means UTF-16be.
-     */
-    public function textEncoding() { return $this-&gt;_m_textEncoding; }
+    <span class="sd">/**</span>
+<span class="sd">     * The database text encoding. A value of 1 means UTF-8. A value of 2 means UTF-16le. A value of 3 means UTF-16be.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">textEncoding</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_textEncoding</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * The &quot;user version&quot; as read and set by the user_version pragma.
-     */
-    public function userVersion() { return $this-&gt;_m_userVersion; }
+    <span class="sd">/**</span>
+<span class="sd">     * The &quot;user version&quot; as read and set by the user_version pragma.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">userVersion</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_userVersion</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * True (non-zero) for incremental-vacuum mode. False (zero) otherwise.
-     */
-    public function isIncrementalVacuum() { return $this-&gt;_m_isIncrementalVacuum; }
+    <span class="sd">/**</span>
+<span class="sd">     * True (non-zero) for incremental-vacuum mode. False (zero) otherwise.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isIncrementalVacuum</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isIncrementalVacuum</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * The &quot;Application ID&quot; set by PRAGMA application_id.
-     */
-    public function applicationId() { return $this-&gt;_m_applicationId; }
-    public function reserved() { return $this-&gt;_m_reserved; }
-    public function versionValidFor() { return $this-&gt;_m_versionValidFor; }
-    public function sqliteVersionNumber() { return $this-&gt;_m_sqliteVersionNumber; }
-    public function rootPage() { return $this-&gt;_m_rootPage; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * The &quot;Application ID&quot; set by PRAGMA application_id.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">applicationId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_applicationId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">versionValidFor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionValidFor</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sqliteVersionNumber</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sqliteVersionNumber</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">rootPage</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rootPage</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Sqlite3;
+<span class="k">namespace</span> <span class="nx">\Sqlite3</span><span class="p">;</span>
 
-class Serial extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Sqlite3 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Serial</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Sqlite3</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_code = new \VlqBase128Be($this-&gt;_io);
-    }
-    protected $_m_isBlob;
-    public function isBlob() {
-        if ($this-&gt;_m_isBlob !== null)
-            return $this-&gt;_m_isBlob;
-        $this-&gt;_m_isBlob =  (($this-&gt;code()-&gt;value() &gt;= 12) &amp;&amp; (\Kaitai\Struct\Stream::mod($this-&gt;code()-&gt;value(), 2) == 0)) ;
-        return $this-&gt;_m_isBlob;
-    }
-    protected $_m_isString;
-    public function isString() {
-        if ($this-&gt;_m_isString !== null)
-            return $this-&gt;_m_isString;
-        $this-&gt;_m_isString =  (($this-&gt;code()-&gt;value() &gt;= 13) &amp;&amp; (\Kaitai\Struct\Stream::mod($this-&gt;code()-&gt;value(), 2) == 1)) ;
-        return $this-&gt;_m_isString;
-    }
-    protected $_m_lenContent;
-    public function lenContent() {
-        if ($this-&gt;_m_lenContent !== null)
-            return $this-&gt;_m_lenContent;
-        if ($this-&gt;code()-&gt;value() &gt;= 12) {
-            $this-&gt;_m_lenContent = intval(($this-&gt;code()-&gt;value() - 12) / 2);
-        }
-        return $this-&gt;_m_lenContent;
-    }
-    protected $_m_code;
-    public function code() { return $this-&gt;_m_code; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_code</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\VlqBase128Be</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_isBlob</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isBlob</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isBlob</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isBlob</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isBlob</span> <span class="o">=</span>  <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">code</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">12</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">code</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> <span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isBlob</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_isString</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isString</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isString</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isString</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isString</span> <span class="o">=</span>  <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">code</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">13</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">code</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span> <span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isString</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenContent</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenContent</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenContent</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenContent</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">code</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">12</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenContent</span> <span class="o">=</span> <span class="nb">intval</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">code</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenContent</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_code</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">code</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_code</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Sqlite3;
+<span class="k">namespace</span> <span class="nx">\Sqlite3</span><span class="p">;</span>
 
-class BtreePage extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3 $_parent = null, \Sqlite3 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">BtreePage</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Sqlite3</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Sqlite3</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_pageType = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_firstFreeblock = $this-&gt;_io-&gt;readU2be();
-        $this-&gt;_m_numCells = $this-&gt;_io-&gt;readU2be();
-        $this-&gt;_m_ofsCells = $this-&gt;_io-&gt;readU2be();
-        $this-&gt;_m_numFragFreeBytes = $this-&gt;_io-&gt;readU1();
-        if ( (($this-&gt;pageType() == 2) || ($this-&gt;pageType() == 5)) ) {
-            $this-&gt;_m_rightPtr = $this-&gt;_io-&gt;readU4be();
-        }
-        $this-&gt;_m_cells = [];
-        $n = $this-&gt;numCells();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_cells[] = new \Sqlite3\RefCell($this-&gt;_io, $this, $this-&gt;_root);
-        }
-    }
-    protected $_m_pageType;
-    protected $_m_firstFreeblock;
-    protected $_m_numCells;
-    protected $_m_ofsCells;
-    protected $_m_numFragFreeBytes;
-    protected $_m_rightPtr;
-    protected $_m_cells;
-    public function pageType() { return $this-&gt;_m_pageType; }
-    public function firstFreeblock() { return $this-&gt;_m_firstFreeblock; }
-    public function numCells() { return $this-&gt;_m_numCells; }
-    public function ofsCells() { return $this-&gt;_m_ofsCells; }
-    public function numFragFreeBytes() { return $this-&gt;_m_numFragFreeBytes; }
-    public function rightPtr() { return $this-&gt;_m_rightPtr; }
-    public function cells() { return $this-&gt;_m_cells; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pageType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstFreeblock</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numCells</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsCells</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numFragFreeBytes</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">pageType</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">pageType</span><span class="p">()</span> <span class="o">==</span> <span class="mi">5</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rightPtr</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cells</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numCells</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cells</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Sqlite3\RefCell</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_pageType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_firstFreeblock</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numCells</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_ofsCells</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numFragFreeBytes</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_rightPtr</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_cells</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">pageType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pageType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">firstFreeblock</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_firstFreeblock</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numCells</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numCells</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsCells</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsCells</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numFragFreeBytes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numFragFreeBytes</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">rightPtr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rightPtr</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">cells</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cells</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Sqlite3;
+<span class="k">namespace</span> <span class="nx">\Sqlite3</span><span class="p">;</span>
 
-class CellIndexLeaf extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3\RefCell $_parent = null, \Sqlite3 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">CellIndexLeaf</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Sqlite3\RefCell</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Sqlite3</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_lenPayload = new \VlqBase128Be($this-&gt;_io);
-        $this-&gt;_m__raw_payload = $this-&gt;_io-&gt;readBytes($this-&gt;lenPayload()-&gt;value());
-        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_payload);
-        $this-&gt;_m_payload = new \Sqlite3\CellPayload($io, $this, $this-&gt;_root);
-    }
-    protected $_m_lenPayload;
-    protected $_m_payload;
-    protected $_m__raw_payload;
-    public function lenPayload() { return $this-&gt;_m_lenPayload; }
-    public function payload() { return $this-&gt;_m_payload; }
-    public function _raw_payload() { return $this-&gt;_m__raw_payload; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\VlqBase128Be</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenPayload</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">());</span>
+        <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_payload</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Sqlite3\CellPayload</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenPayload</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_payload</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_payload</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenPayload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayload</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">payload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_payload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_payload</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Sqlite3;
+<span class="k">namespace</span> <span class="nx">\Sqlite3</span><span class="p">;</span>
 
-class Serials extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3\CellPayload $_parent = null, \Sqlite3 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Serials</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Sqlite3\CellPayload</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Sqlite3</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_entries = [];
-        $i = 0;
-        while (!$this-&gt;_io-&gt;isEof()) {
-            $this-&gt;_m_entries[] = new \VlqBase128Be($this-&gt;_io);
-            $i++;
-        }
-    }
-    protected $_m_entries;
-    public function entries() { return $this-&gt;_m_entries; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\VlqBase128Be</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_entries</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Sqlite3;
+<span class="k">namespace</span> <span class="nx">\Sqlite3</span><span class="p">;</span>
 
-class CellTableLeaf extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3\RefCell $_parent = null, \Sqlite3 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">CellTableLeaf</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Sqlite3\RefCell</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Sqlite3</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_lenPayload = new \VlqBase128Be($this-&gt;_io);
-        $this-&gt;_m_rowId = new \VlqBase128Be($this-&gt;_io);
-        $this-&gt;_m__raw_payload = $this-&gt;_io-&gt;readBytes($this-&gt;lenPayload()-&gt;value());
-        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_payload);
-        $this-&gt;_m_payload = new \Sqlite3\CellPayload($io, $this, $this-&gt;_root);
-    }
-    protected $_m_lenPayload;
-    protected $_m_rowId;
-    protected $_m_payload;
-    protected $_m__raw_payload;
-    public function lenPayload() { return $this-&gt;_m_lenPayload; }
-    public function rowId() { return $this-&gt;_m_rowId; }
-    public function payload() { return $this-&gt;_m_payload; }
-    public function _raw_payload() { return $this-&gt;_m__raw_payload; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\VlqBase128Be</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rowId</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\VlqBase128Be</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenPayload</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">());</span>
+        <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_payload</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Sqlite3\CellPayload</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenPayload</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_rowId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_payload</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_payload</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenPayload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayload</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">rowId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rowId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">payload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_payload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_payload</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Sqlite3;
+<span class="k">namespace</span> <span class="nx">\Sqlite3</span><span class="p">;</span>
 
-class CellPayload extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Sqlite3 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">CellPayload</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Sqlite3</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_lenHeaderAndLen = new \VlqBase128Be($this-&gt;_io);
-        $this-&gt;_m__raw_columnSerials = $this-&gt;_io-&gt;readBytes(($this-&gt;lenHeaderAndLen()-&gt;value() - 1));
-        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_columnSerials);
-        $this-&gt;_m_columnSerials = new \Sqlite3\Serials($io, $this, $this-&gt;_root);
-        $this-&gt;_m_columnContents = [];
-        $n = count($this-&gt;columnSerials()-&gt;entries());
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_columnContents[] = new \Sqlite3\ColumnContent($this-&gt;columnSerials()-&gt;entries()[$i], $this-&gt;_io, $this, $this-&gt;_root);
-        }
-    }
-    protected $_m_lenHeaderAndLen;
-    protected $_m_columnSerials;
-    protected $_m_columnContents;
-    protected $_m__raw_columnSerials;
-    public function lenHeaderAndLen() { return $this-&gt;_m_lenHeaderAndLen; }
-    public function columnSerials() { return $this-&gt;_m_columnSerials; }
-    public function columnContents() { return $this-&gt;_m_columnContents; }
-    public function _raw_columnSerials() { return $this-&gt;_m__raw_columnSerials; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeaderAndLen</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\VlqBase128Be</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_columnSerials</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenHeaderAndLen</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+        <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_columnSerials</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_columnSerials</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Sqlite3\Serials</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_columnContents</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">columnSerials</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">entries</span><span class="p">());</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_columnContents</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Sqlite3\ColumnContent</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">columnSerials</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">entries</span><span class="p">()[</span><span class="nv">$i</span><span class="p">],</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenHeaderAndLen</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_columnSerials</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_columnContents</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_columnSerials</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenHeaderAndLen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeaderAndLen</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">columnSerials</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_columnSerials</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">columnContents</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_columnContents</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_columnSerials</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_columnSerials</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Sqlite3;
+<span class="k">namespace</span> <span class="nx">\Sqlite3</span><span class="p">;</span>
 
-class CellTableInterior extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3\RefCell $_parent = null, \Sqlite3 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">CellTableInterior</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Sqlite3\RefCell</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Sqlite3</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_leftChildPage = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_rowId = new \VlqBase128Be($this-&gt;_io);
-    }
-    protected $_m_leftChildPage;
-    protected $_m_rowId;
-    public function leftChildPage() { return $this-&gt;_m_leftChildPage; }
-    public function rowId() { return $this-&gt;_m_rowId; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_leftChildPage</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rowId</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\VlqBase128Be</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_leftChildPage</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_rowId</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">leftChildPage</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_leftChildPage</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">rowId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rowId</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Sqlite3;
+<span class="k">namespace</span> <span class="nx">\Sqlite3</span><span class="p">;</span>
 
-class CellIndexInterior extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3\RefCell $_parent = null, \Sqlite3 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">CellIndexInterior</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Sqlite3\RefCell</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Sqlite3</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_leftChildPage = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_lenPayload = new \VlqBase128Be($this-&gt;_io);
-        $this-&gt;_m__raw_payload = $this-&gt;_io-&gt;readBytes($this-&gt;lenPayload()-&gt;value());
-        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_payload);
-        $this-&gt;_m_payload = new \Sqlite3\CellPayload($io, $this, $this-&gt;_root);
-    }
-    protected $_m_leftChildPage;
-    protected $_m_lenPayload;
-    protected $_m_payload;
-    protected $_m__raw_payload;
-    public function leftChildPage() { return $this-&gt;_m_leftChildPage; }
-    public function lenPayload() { return $this-&gt;_m_lenPayload; }
-    public function payload() { return $this-&gt;_m_payload; }
-    public function _raw_payload() { return $this-&gt;_m__raw_payload; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_leftChildPage</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\VlqBase128Be</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_payload</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenPayload</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">());</span>
+        <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_payload</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Sqlite3\CellPayload</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_leftChildPage</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenPayload</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_payload</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_payload</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">leftChildPage</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_leftChildPage</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenPayload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayload</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">payload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payload</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_payload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_payload</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Sqlite3;
+<span class="k">namespace</span> <span class="nx">\Sqlite3</span><span class="p">;</span>
 
-class ColumnContent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Struct $ser, \Kaitai\Struct\Stream $_io, \Sqlite3\CellPayload $_parent = null, \Sqlite3 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_m_ser = $ser;
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ColumnContent</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$ser</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Sqlite3\CellPayload</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Sqlite3</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ser</span> <span class="o">=</span> <span class="nv">$ser</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        if ( (($this-&gt;serialType()-&gt;code()-&gt;value() &gt;= 1) &amp;&amp; ($this-&gt;serialType()-&gt;code()-&gt;value() &lt;= 6)) ) {
-            switch ($this-&gt;serialType()-&gt;code()-&gt;value()) {
-                case 4:
-                    $this-&gt;_m_asInt = $this-&gt;_io-&gt;readU4be();
-                    break;
-                case 6:
-                    $this-&gt;_m_asInt = $this-&gt;_io-&gt;readU8be();
-                    break;
-                case 1:
-                    $this-&gt;_m_asInt = $this-&gt;_io-&gt;readU1();
-                    break;
-                case 3:
-                    $this-&gt;_m_asInt = $this-&gt;_io-&gt;readBitsInt(24);
-                    break;
-                case 5:
-                    $this-&gt;_m_asInt = $this-&gt;_io-&gt;readBitsInt(48);
-                    break;
-                case 2:
-                    $this-&gt;_m_asInt = $this-&gt;_io-&gt;readU2be();
-                    break;
-            }
-        }
-        if ($this-&gt;serialType()-&gt;code()-&gt;value() == 7) {
-            $this-&gt;_m_asFloat = $this-&gt;_io-&gt;readF8be();
-        }
-        if ($this-&gt;serialType()-&gt;isBlob()) {
-            $this-&gt;_m_asBlob = $this-&gt;_io-&gt;readBytes($this-&gt;serialType()-&gt;lenContent());
-        }
-        $this-&gt;_m_asStr = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;serialType()-&gt;lenContent()), &quot;UTF-8&quot;);
-    }
-    protected $_m_serialType;
-    public function serialType() {
-        if ($this-&gt;_m_serialType !== null)
-            return $this-&gt;_m_serialType;
-        $this-&gt;_m_serialType = $this-&gt;ser();
-        return $this-&gt;_m_serialType;
-    }
-    protected $_m_asInt;
-    protected $_m_asFloat;
-    protected $_m_asBlob;
-    protected $_m_asStr;
-    protected $_m_ser;
-    public function asInt() { return $this-&gt;_m_asInt; }
-    public function asFloat() { return $this-&gt;_m_asFloat; }
-    public function asBlob() { return $this-&gt;_m_asBlob; }
-    public function asStr() { return $this-&gt;_m_asStr; }
-    public function ser() { return $this-&gt;_m_ser; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">serialType</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">code</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">serialType</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">code</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">serialType</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">code</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_asInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="mi">6</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_asInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8be</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_asInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_asInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">24</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="mi">5</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_asInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">48</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_asInt</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">serialType</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">code</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">==</span> <span class="mi">7</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_asFloat</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">serialType</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">isBlob</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_asBlob</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">serialType</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">lenContent</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_asStr</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">serialType</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">lenContent</span><span class="p">()),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_serialType</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">serialType</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_serialType</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_serialType</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_serialType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ser</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_serialType</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_asInt</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_asFloat</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_asBlob</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_asStr</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_ser</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">asInt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_asInt</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">asFloat</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_asFloat</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">asBlob</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_asBlob</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">asStr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_asStr</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">ser</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ser</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Sqlite3;
+<span class="k">namespace</span> <span class="nx">\Sqlite3</span><span class="p">;</span>
 
-class RefCell extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Sqlite3\BtreePage $_parent = null, \Sqlite3 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">RefCell</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Sqlite3\BtreePage</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Sqlite3</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_ofsBody = $this-&gt;_io-&gt;readU2be();
-    }
-    protected $_m_body;
-    public function body() {
-        if ($this-&gt;_m_body !== null)
-            return $this-&gt;_m_body;
-        $_pos = $this-&gt;_io-&gt;pos();
-        $this-&gt;_io-&gt;seek($this-&gt;ofsBody());
-        switch ($this-&gt;_parent()-&gt;pageType()) {
-            case 13:
-                $this-&gt;_m_body = new \Sqlite3\CellTableLeaf($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case 5:
-                $this-&gt;_m_body = new \Sqlite3\CellTableInterior($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case 10:
-                $this-&gt;_m_body = new \Sqlite3\CellIndexLeaf($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case 2:
-                $this-&gt;_m_body = new \Sqlite3\CellIndexInterior($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-        }
-        $this-&gt;_io-&gt;seek($_pos);
-        return $this-&gt;_m_body;
-    }
-    protected $_m_ofsBody;
-    public function ofsBody() { return $this-&gt;_m_ofsBody; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsBody</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span>
+        <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsBody</span><span class="p">());</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">pageType</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="mi">13</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Sqlite3\CellTableLeaf</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">5</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Sqlite3\CellTableInterior</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">10</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Sqlite3\CellIndexLeaf</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Sqlite3\CellIndexInterior</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_ofsBody</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsBody</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Sqlite3;
+<span class="k">namespace</span> <span class="nx">\Sqlite3</span><span class="p">;</span>
 
-class Versions {
-    const LEGACY = 1;
-    const WAL = 2;
-}
+<span class="k">class</span> <span class="nc">Versions</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">LEGACY</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">WAL</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
 
-namespace \Sqlite3;
+<span class="k">namespace</span> <span class="nx">\Sqlite3</span><span class="p">;</span>
 
-class Encodings {
-    const UTF_8 = 1;
-    const UTF_16LE = 2;
-    const UTF_16BE = 3;
-}
-</code></pre>
+<span class="k">class</span> <span class="nc">Encodings</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">UTF_8</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UTF_16LE</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UTF_16BE</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -744,8 +741,8 @@ class Encodings {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

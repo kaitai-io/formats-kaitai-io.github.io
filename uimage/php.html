@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -217,384 +214,384 @@ with sha1 and md5 checksums.</p>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-/**
- * The new uImage format allows more flexibility in handling images of various
- * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
- * with sha1 and md5 checksums.
- */
-
-class Uimage extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Uimage $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_header = new \Uimage\Uheader($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_data = $this-&gt;_io-&gt;readBytes($this-&gt;header()-&gt;lenImage());
-    }
-    protected $_m_header;
-    protected $_m_data;
-    public function header() { return $this-&gt;_m_header; }
-    public function data() { return $this-&gt;_m_data; }
-}
-
-namespace \Uimage;
-
-class Uheader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Uimage $_parent = null, \Uimage $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_magic = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x27\x05\x19\x56&quot;);
-        $this-&gt;_m_headerCrc = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_timestamp = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_lenImage = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_loadAddress = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_entryAddress = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_dataCrc = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_osType = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_architecture = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_imageType = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_compressionType = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_name = \Kaitai\Struct\Stream::bytesToStr(\Kaitai\Struct\Stream::bytesTerminate($this-&gt;_io-&gt;readBytes(32), 0, false), &quot;UTF-8&quot;);
-    }
-    protected $_m_magic;
-    protected $_m_headerCrc;
-    protected $_m_timestamp;
-    protected $_m_lenImage;
-    protected $_m_loadAddress;
-    protected $_m_entryAddress;
-    protected $_m_dataCrc;
-    protected $_m_osType;
-    protected $_m_architecture;
-    protected $_m_imageType;
-    protected $_m_compressionType;
-    protected $_m_name;
-    public function magic() { return $this-&gt;_m_magic; }
-    public function headerCrc() { return $this-&gt;_m_headerCrc; }
-    public function timestamp() { return $this-&gt;_m_timestamp; }
-    public function lenImage() { return $this-&gt;_m_lenImage; }
-    public function loadAddress() { return $this-&gt;_m_loadAddress; }
-    public function entryAddress() { return $this-&gt;_m_entryAddress; }
-    public function dataCrc() { return $this-&gt;_m_dataCrc; }
-    public function osType() { return $this-&gt;_m_osType; }
-    public function architecture() { return $this-&gt;_m_architecture; }
-    public function imageType() { return $this-&gt;_m_imageType; }
-    public function compressionType() { return $this-&gt;_m_compressionType; }
-    public function name() { return $this-&gt;_m_name; }
-}
-
-namespace \Uimage;
-
-class UimageOs {
-
-    /**
-     * Invalid OS
-     */
-    const INVALID = 0;
-
-    /**
-     * OpenBSD
-     */
-    const OPENBSD = 1;
-
-    /**
-     * NetBSD
-     */
-    const NETBSD = 2;
-
-    /**
-     * FreeBSD
-     */
-    const FREEBSD = 3;
-
-    /**
-     * 4.4BSD
-     */
-    const BSD4_4 = 4;
-
-    /**
-     * Linux
-     */
-    const LINUX = 5;
-
-    /**
-     * SVR4
-     */
-    const SVR4 = 6;
-
-    /**
-     * Esix
-     */
-    const ESIX = 7;
-
-    /**
-     * Solaris
-     */
-    const SOLARIS = 8;
-
-    /**
-     * Irix
-     */
-    const IRIX = 9;
-
-    /**
-     * SCO
-     */
-    const SCO = 10;
-
-    /**
-     * Dell
-     */
-    const DELL = 11;
-
-    /**
-     * NCR
-     */
-    const NCR = 12;
-
-    /**
-     * LynxOS
-     */
-    const LYNXOS = 13;
-
-    /**
-     * VxWorks
-     */
-    const VXWORKS = 14;
-
-    /**
-     * pSOS
-     */
-    const PSOS = 15;
-
-    /**
-     * QNX
-     */
-    const QNX = 16;
-
-    /**
-     * Firmware
-     */
-    const U_BOOT = 17;
-
-    /**
-     * RTEMS
-     */
-    const RTEMS = 18;
-
-    /**
-     * ARTOS
-     */
-    const ARTOS = 19;
-
-    /**
-     * Unity OS
-     */
-    const UNITY = 20;
-
-    /**
-     * INTEGRITY
-     */
-    const INTEGRITY = 21;
-}
-
-namespace \Uimage;
-
-class UimageArch {
-
-    /**
-     * Invalid CPU
-     */
-    const INVALID = 0;
-
-    /**
-     * Alpha
-     */
-    const ALPHA = 1;
-
-    /**
-     * ARM
-     */
-    const ARM = 2;
-
-    /**
-     * Intel x86
-     */
-    const I386 = 3;
-
-    /**
-     * IA64
-     */
-    const IA64 = 4;
-
-    /**
-     * MIPS
-     */
-    const MIPS = 5;
-
-    /**
-     * MIPS 64 Bit
-     */
-    const MIPS64 = 6;
-
-    /**
-     * PowerPC
-     */
-    const PPC = 7;
-
-    /**
-     * IBM S390
-     */
-    const S390 = 8;
-
-    /**
-     * SuperH
-     */
-    const SH = 9;
-
-    /**
-     * Sparc
-     */
-    const SPARC = 10;
-
-    /**
-     * Sparc 64 Bit
-     */
-    const SPARC64 = 11;
-
-    /**
-     * M68K
-     */
-    const M68K = 12;
-
-    /**
-     * Nios-32
-     */
-    const NIOS = 13;
-
-    /**
-     * MicroBlaze
-     */
-    const MICROBLAZE = 14;
-
-    /**
-     * Nios-II
-     */
-    const NIOS2 = 15;
-
-    /**
-     * Blackfin
-     */
-    const BLACKFIN = 16;
-
-    /**
-     * AVR32
-     */
-    const AVR32 = 17;
-
-    /**
-     * STMicroelectronics ST200
-     */
-    const ST200 = 18;
-}
-
-namespace \Uimage;
-
-class UimageComp {
-
-    /**
-     * No Compression Used
-     */
-    const NONE = 0;
-
-    /**
-     * gzip Compression Used
-     */
-    const GZIP = 1;
-
-    /**
-     * bzip2 Compression Used
-     */
-    const BZIP2 = 2;
-
-    /**
-     * lzma Compression Used
-     */
-    const LZMA = 3;
-
-    /**
-     * lzo Compression Used
-     */
-    const LZO = 4;
-}
-
-namespace \Uimage;
-
-class UimageType {
-
-    /**
-     * Invalid Image
-     */
-    const INVALID = 0;
-
-    /**
-     * Standalone Program
-     */
-    const STANDALONE = 1;
-
-    /**
-     * OS Kernel Image
-     */
-    const KERNEL = 2;
-
-    /**
-     * RAMDisk Image
-     */
-    const RAMDISK = 3;
-
-    /**
-     * Multi-File Image
-     */
-    const MULTI = 4;
-
-    /**
-     * Firmware Image
-     */
-    const FIRMWARE = 5;
-
-    /**
-     * Script file
-     */
-    const SCRIPT = 6;
-
-    /**
-     * Filesystem Image (any type)
-     */
-    const FILESYSTEM = 7;
-
-    /**
-     * Binary Flat Device Tree Blob
-     */
-    const FLATDT = 8;
-
-    /**
-     * Kirkwood Boot Image
-     */
-    const KWBIMAGE = 9;
-
-    /**
-     * Freescale IMXBoot Image
-     */
-    const IMXIMAGE = 10;
-}
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * The new uImage format allows more flexibility in handling images of various</span>
+<span class="sd"> * types (kernel, ramdisk, etc.), it also enhances integrity protection of images</span>
+<span class="sd"> * with sha1 and md5 checksums.</span>
+<span class="sd"> */</span>
+
+<span class="k">class</span> <span class="nc">Uimage</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Uimage</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Uimage\Uheader</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">lenImage</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_header</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\Uimage</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Uheader</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Uimage</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Uimage</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x27\x05\x19\x56</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headerCrc</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timestamp</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenImage</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loadAddress</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entryAddress</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataCrc</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_osType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_architecture</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesTerminate</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_magic</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_headerCrc</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_timestamp</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenImage</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_loadAddress</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_entryAddress</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_dataCrc</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_osType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_architecture</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_imageType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_compressionType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_name</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">headerCrc</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headerCrc</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">timestamp</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timestamp</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenImage</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenImage</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">loadAddress</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loadAddress</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">entryAddress</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entryAddress</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">dataCrc</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataCrc</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">osType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_osType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">architecture</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_architecture</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">imageType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">compressionType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\Uimage</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">UimageOs</span> <span class="p">{</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Invalid OS</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">INVALID</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * OpenBSD</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">OPENBSD</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * NetBSD</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">NETBSD</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * FreeBSD</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">FREEBSD</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * 4.4BSD</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BSD4_4</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Linux</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">LINUX</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * SVR4</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">SVR4</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Esix</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">ESIX</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Solaris</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">SOLARIS</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Irix</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">IRIX</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * SCO</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">SCO</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Dell</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">DELL</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * NCR</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">NCR</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * LynxOS</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">LYNXOS</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * VxWorks</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">VXWORKS</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * pSOS</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">PSOS</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * QNX</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">QNX</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Firmware</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">U_BOOT</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * RTEMS</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">RTEMS</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * ARTOS</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">ARTOS</span> <span class="o">=</span> <span class="mi">19</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Unity OS</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">UNITY</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * INTEGRITY</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">INTEGRITY</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\Uimage</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">UimageArch</span> <span class="p">{</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Invalid CPU</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">INVALID</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Alpha</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">ALPHA</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * ARM</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">ARM</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Intel x86</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">I386</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * IA64</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">IA64</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * MIPS</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">MIPS</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * MIPS 64 Bit</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">MIPS64</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * PowerPC</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">PPC</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * IBM S390</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">S390</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * SuperH</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">SH</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Sparc</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">SPARC</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Sparc 64 Bit</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">SPARC64</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * M68K</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">M68K</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Nios-32</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">NIOS</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * MicroBlaze</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">MICROBLAZE</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Nios-II</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">NIOS2</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Blackfin</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BLACKFIN</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * AVR32</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">AVR32</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * STMicroelectronics ST200</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">ST200</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\Uimage</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">UimageComp</span> <span class="p">{</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * No Compression Used</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">NONE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * gzip Compression Used</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">GZIP</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * bzip2 Compression Used</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BZIP2</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * lzma Compression Used</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">LZMA</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * lzo Compression Used</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">LZO</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\Uimage</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">UimageType</span> <span class="p">{</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Invalid Image</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">INVALID</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Standalone Program</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">STANDALONE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * OS Kernel Image</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">KERNEL</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * RAMDisk Image</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">RAMDISK</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Multi-File Image</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">MULTI</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Firmware Image</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">FIRMWARE</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Script file</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">SCRIPT</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Filesystem Image (any type)</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">FILESYSTEM</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Binary Flat Device Tree Blob</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">FLATDT</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Kirkwood Boot Image</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">KWBIMAGE</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Freescale IMXBoot Image</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">IMXIMAGE</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -621,8 +618,8 @@ class UimageType {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

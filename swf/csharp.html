@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -278,564 +275,564 @@ var data = new Swf(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
 
-    /// &lt;summary&gt;
-    /// SWF files are used by Adobe Flash (AKA Shockwave Flash, Macromedia
-    /// Flash) to encode rich interactive multimedia content and are,
-    /// essentially, a container for special bytecode instructions to play
-    /// back that content. In early 2000s, it was dominant rich multimedia
-    /// web format (.swf files were integrated into web pages and played
-    /// back with a browser plugin), but its usage largely declined in
-    /// 2010s, as HTML5 and performant browser-native solutions
-    /// (i.e. JavaScript engines and graphical approaches, such as WebGL)
-    /// emerged.
-    /// 
-    /// There are a lot of versions of SWF (~36), format is somewhat
-    /// documented by Adobe.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;
-    /// Reference: &lt;a href=&quot;https://www.adobe.com/content/dam/acom/en/devnet/pdf/swf-file-format-spec.pdf&quot;&gt;Source&lt;/a&gt;
-    /// &lt;/remarks&gt;
-    public partial class Swf : KaitaiStruct
-    {
-        public static Swf FromFile(string fileName)
-        {
-            return new Swf(new KaitaiStream(fileName));
-        }
-
-
-        public enum Compressions
-        {
-            Zlib = 67,
-            None = 70,
-            Lzma = 90,
-        }
-
-        public enum TagType
-        {
-            EndOfFile = 0,
-            PlaceObject = 4,
-            RemoveObject = 5,
-            SetBackgroundColor = 9,
-            DefineSound = 14,
-            PlaceObject2 = 26,
-            RemoveObject2 = 28,
-            FrameLabel = 43,
-            ExportAssets = 56,
-            ScriptLimits = 65,
-            FileAttributes = 69,
-            PlaceObject3 = 70,
-            SymbolClass = 76,
-            Metadata = 77,
-            DefineScalingGrid = 78,
-            DoAbc = 82,
-            DefineSceneAndFrameLabelData = 86,
-        }
-        public Swf(KaitaiStream p__io, KaitaiStruct p__parent = null, Swf p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            _read();
-        }
-        private void _read()
-        {
-            _compression = ((Compressions) m_io.ReadU1());
-            _signature = m_io.EnsureFixedContents(new byte[] { 87, 83 });
-            _version = m_io.ReadU1();
-            _lenFile = m_io.ReadU4le();
-            if (Compression == Compressions.None) {
-                __raw_plainBody = m_io.ReadBytesFull();
-                var io___raw_plainBody = new KaitaiStream(__raw_plainBody);
-                _plainBody = new SwfBody(io___raw_plainBody, this, m_root);
-            }
-            if (Compression == Compressions.Zlib) {
-                __raw__raw_zlibBody = m_io.ReadBytesFull();
-                __raw_zlibBody = m_io.ProcessZlib(__raw__raw_zlibBody);
-                var io___raw_zlibBody = new KaitaiStream(__raw_zlibBody);
-                _zlibBody = new SwfBody(io___raw_zlibBody, this, m_root);
-            }
-        }
-        public partial class Rgb : KaitaiStruct
-        {
-            public static Rgb FromFile(string fileName)
-            {
-                return new Rgb(new KaitaiStream(fileName));
-            }
-
-            public Rgb(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _r = m_io.ReadU1();
-                _g = m_io.ReadU1();
-                _b = m_io.ReadU1();
-            }
-            private byte _r;
-            private byte _g;
-            private byte _b;
-            private Swf m_root;
-            private Swf.Tag m_parent;
-            public byte R { get { return _r; } }
-            public byte G { get { return _g; } }
-            public byte B { get { return _b; } }
-            public Swf M_Root { get { return m_root; } }
-            public Swf.Tag M_Parent { get { return m_parent; } }
-        }
-        public partial class DoAbcBody : KaitaiStruct
-        {
-            public static DoAbcBody FromFile(string fileName)
-            {
-                return new DoAbcBody(new KaitaiStream(fileName));
-            }
-
-            public DoAbcBody(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _flags = m_io.ReadU4le();
-                _name = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true));
-                _abcdata = m_io.ReadBytesFull();
-            }
-            private uint _flags;
-            private string _name;
-            private byte[] _abcdata;
-            private Swf m_root;
-            private Swf.Tag m_parent;
-            public uint Flags { get { return _flags; } }
-            public string Name { get { return _name; } }
-            public byte[] Abcdata { get { return _abcdata; } }
-            public Swf M_Root { get { return m_root; } }
-            public Swf.Tag M_Parent { get { return m_parent; } }
-        }
-        public partial class SwfBody : KaitaiStruct
-        {
-            public static SwfBody FromFile(string fileName)
-            {
-                return new SwfBody(new KaitaiStream(fileName));
-            }
-
-            public SwfBody(KaitaiStream p__io, Swf p__parent = null, Swf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _rect = new Rect(m_io, this, m_root);
-                _frameRate = m_io.ReadU2le();
-                _frameCount = m_io.ReadU2le();
-                if (M_Root.Version &gt;= 8) {
-                    _fileAttributesTag = new Tag(m_io, this, m_root);
-                }
-                _tags = new List&lt;Tag&gt;();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _tags.Add(new Tag(m_io, this, m_root));
-                        i++;
-                    }
-                }
-            }
-            private Rect _rect;
-            private ushort _frameRate;
-            private ushort _frameCount;
-            private Tag _fileAttributesTag;
-            private List&lt;Tag&gt; _tags;
-            private Swf m_root;
-            private Swf m_parent;
-            public Rect Rect { get { return _rect; } }
-            public ushort FrameRate { get { return _frameRate; } }
-            public ushort FrameCount { get { return _frameCount; } }
-            public Tag FileAttributesTag { get { return _fileAttributesTag; } }
-            public List&lt;Tag&gt; Tags { get { return _tags; } }
-            public Swf M_Root { get { return m_root; } }
-            public Swf M_Parent { get { return m_parent; } }
-        }
-        public partial class Rect : KaitaiStruct
-        {
-            public static Rect FromFile(string fileName)
-            {
-                return new Rect(new KaitaiStream(fileName));
-            }
-
-            public Rect(KaitaiStream p__io, Swf.SwfBody p__parent = null, Swf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_numBits = false;
-                f_numBytes = false;
-                _read();
-            }
-            private void _read()
-            {
-                _b1 = m_io.ReadU1();
-                _skip = m_io.ReadBytes(NumBytes);
-            }
-            private bool f_numBits;
-            private int _numBits;
-            public int NumBits
-            {
-                get
-                {
-                    if (f_numBits)
-                        return _numBits;
-                    _numBits = (int) ((B1 &gt;&gt; 3));
-                    f_numBits = true;
-                    return _numBits;
-                }
-            }
-            private bool f_numBytes;
-            private int _numBytes;
-            public int NumBytes
-            {
-                get
-                {
-                    if (f_numBytes)
-                        return _numBytes;
-                    _numBytes = (int) (((((NumBits * 4) - 3) + 7) / 8));
-                    f_numBytes = true;
-                    return _numBytes;
-                }
-            }
-            private byte _b1;
-            private byte[] _skip;
-            private Swf m_root;
-            private Swf.SwfBody m_parent;
-            public byte B1 { get { return _b1; } }
-            public byte[] Skip { get { return _skip; } }
-            public Swf M_Root { get { return m_root; } }
-            public Swf.SwfBody M_Parent { get { return m_parent; } }
-        }
-        public partial class Tag : KaitaiStruct
-        {
-            public static Tag FromFile(string fileName)
-            {
-                return new Tag(new KaitaiStream(fileName));
-            }
-
-            public Tag(KaitaiStream p__io, Swf.SwfBody p__parent = null, Swf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _recordHeader = new RecordHeader(m_io, this, m_root);
-                switch (RecordHeader.TagType) {
-                case Swf.TagType.SetBackgroundColor: {
-                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new Rgb(io___raw_tagBody, this, m_root);
-                    break;
-                }
-                case Swf.TagType.ScriptLimits: {
-                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new ScriptLimitsBody(io___raw_tagBody, this, m_root);
-                    break;
-                }
-                case Swf.TagType.DefineSound: {
-                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new DefineSoundBody(io___raw_tagBody, this, m_root);
-                    break;
-                }
-                case Swf.TagType.ExportAssets: {
-                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new SymbolClassBody(io___raw_tagBody, this, m_root);
-                    break;
-                }
-                case Swf.TagType.SymbolClass: {
-                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new SymbolClassBody(io___raw_tagBody, this, m_root);
-                    break;
-                }
-                case Swf.TagType.DoAbc: {
-                    __raw_tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    var io___raw_tagBody = new KaitaiStream(__raw_tagBody);
-                    _tagBody = new DoAbcBody(io___raw_tagBody, this, m_root);
-                    break;
-                }
-                default: {
-                    _tagBody = m_io.ReadBytes(RecordHeader.Len);
-                    break;
-                }
-                }
-            }
-            private RecordHeader _recordHeader;
-            private object _tagBody;
-            private Swf m_root;
-            private Swf.SwfBody m_parent;
-            private byte[] __raw_tagBody;
-            public RecordHeader RecordHeader { get { return _recordHeader; } }
-            public object TagBody { get { return _tagBody; } }
-            public Swf M_Root { get { return m_root; } }
-            public Swf.SwfBody M_Parent { get { return m_parent; } }
-            public byte[] M_RawTagBody { get { return __raw_tagBody; } }
-        }
-        public partial class SymbolClassBody : KaitaiStruct
-        {
-            public static SymbolClassBody FromFile(string fileName)
-            {
-                return new SymbolClassBody(new KaitaiStream(fileName));
-            }
-
-            public SymbolClassBody(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _numSymbols = m_io.ReadU2le();
-                _symbols = new List&lt;Symbol&gt;((int) (NumSymbols));
-                for (var i = 0; i &lt; NumSymbols; i++)
-                {
-                    _symbols.Add(new Symbol(m_io, this, m_root));
-                }
-            }
-            public partial class Symbol : KaitaiStruct
-            {
-                public static Symbol FromFile(string fileName)
-                {
-                    return new Symbol(new KaitaiStream(fileName));
-                }
-
-                public Symbol(KaitaiStream p__io, Swf.SymbolClassBody p__parent = null, Swf p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _tag = m_io.ReadU2le();
-                    _name = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true));
-                }
-                private ushort _tag;
-                private string _name;
-                private Swf m_root;
-                private Swf.SymbolClassBody m_parent;
-                public ushort Tag { get { return _tag; } }
-                public string Name { get { return _name; } }
-                public Swf M_Root { get { return m_root; } }
-                public Swf.SymbolClassBody M_Parent { get { return m_parent; } }
-            }
-            private ushort _numSymbols;
-            private List&lt;Symbol&gt; _symbols;
-            private Swf m_root;
-            private Swf.Tag m_parent;
-            public ushort NumSymbols { get { return _numSymbols; } }
-            public List&lt;Symbol&gt; Symbols { get { return _symbols; } }
-            public Swf M_Root { get { return m_root; } }
-            public Swf.Tag M_Parent { get { return m_parent; } }
-        }
-        public partial class DefineSoundBody : KaitaiStruct
-        {
-            public static DefineSoundBody FromFile(string fileName)
-            {
-                return new DefineSoundBody(new KaitaiStream(fileName));
-            }
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// SWF files are used by Adobe Flash (AKA Shockwave Flash, Macromedia</span>
+    <span class="c1">/// Flash) to encode rich interactive multimedia content and are,</span>
+    <span class="c1">/// essentially, a container for special bytecode instructions to play</span>
+    <span class="c1">/// back that content. In early 2000s, it was dominant rich multimedia</span>
+    <span class="c1">/// web format (.swf files were integrated into web pages and played</span>
+    <span class="c1">/// back with a browser plugin), but its usage largely declined in</span>
+    <span class="c1">/// 2010s, as HTML5 and performant browser-native solutions</span>
+    <span class="c1">/// (i.e. JavaScript engines and graphical approaches, such as WebGL)</span>
+    <span class="c1">/// emerged.</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// There are a lot of versions of SWF (~36), format is somewhat</span>
+    <span class="c1">/// documented by Adobe.</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="c1">/// &lt;remarks&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;https://www.adobe.com/content/dam/acom/en/devnet/pdf/swf-file-format-spec.pdf&quot;&gt;Source&lt;/a&gt;</span>
+    <span class="c1">/// &lt;/remarks&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Swf</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">Swf</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Swf</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
 
-            public enum SamplingRates
-            {
-                Rate55Khz = 0,
-                Rate11Khz = 1,
-                Rate22Khz = 2,
-                Rate44Khz = 3,
-            }
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">Compressions</span>
+        <span class="p">{</span>
+            <span class="n">Zlib</span> <span class="p">=</span> <span class="m">67</span><span class="p">,</span>
+            <span class="n">None</span> <span class="p">=</span> <span class="m">70</span><span class="p">,</span>
+            <span class="n">Lzma</span> <span class="p">=</span> <span class="m">90</span><span class="p">,</span>
+        <span class="p">}</span>
 
-            public enum Bps
-            {
-                Sound8Bit = 0,
-                Sound16Bit = 1,
-            }
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">TagType</span>
+        <span class="p">{</span>
+            <span class="n">EndOfFile</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">PlaceObject</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
+            <span class="n">RemoveObject</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+            <span class="n">SetBackgroundColor</span> <span class="p">=</span> <span class="m">9</span><span class="p">,</span>
+            <span class="n">DefineSound</span> <span class="p">=</span> <span class="m">14</span><span class="p">,</span>
+            <span class="n">PlaceObject2</span> <span class="p">=</span> <span class="m">26</span><span class="p">,</span>
+            <span class="n">RemoveObject2</span> <span class="p">=</span> <span class="m">28</span><span class="p">,</span>
+            <span class="n">FrameLabel</span> <span class="p">=</span> <span class="m">43</span><span class="p">,</span>
+            <span class="n">ExportAssets</span> <span class="p">=</span> <span class="m">56</span><span class="p">,</span>
+            <span class="n">ScriptLimits</span> <span class="p">=</span> <span class="m">65</span><span class="p">,</span>
+            <span class="n">FileAttributes</span> <span class="p">=</span> <span class="m">69</span><span class="p">,</span>
+            <span class="n">PlaceObject3</span> <span class="p">=</span> <span class="m">70</span><span class="p">,</span>
+            <span class="n">SymbolClass</span> <span class="p">=</span> <span class="m">76</span><span class="p">,</span>
+            <span class="n">Metadata</span> <span class="p">=</span> <span class="m">77</span><span class="p">,</span>
+            <span class="n">DefineScalingGrid</span> <span class="p">=</span> <span class="m">78</span><span class="p">,</span>
+            <span class="n">DoAbc</span> <span class="p">=</span> <span class="m">82</span><span class="p">,</span>
+            <span class="n">DefineSceneAndFrameLabelData</span> <span class="p">=</span> <span class="m">86</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="nf">Swf</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Swf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_compression</span> <span class="p">=</span> <span class="p">((</span><span class="n">Compressions</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+            <span class="n">_signature</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">87</span><span class="p">,</span> <span class="m">83</span> <span class="p">});</span>
+            <span class="n">_version</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_lenFile</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">Compression</span> <span class="p">==</span> <span class="n">Compressions</span><span class="p">.</span><span class="n">None</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">__raw_plainBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
+                <span class="kt">var</span> <span class="n">io___raw_plainBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_plainBody</span><span class="p">);</span>
+                <span class="n">_plainBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SwfBody</span><span class="p">(</span><span class="n">io___raw_plainBody</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">Compression</span> <span class="p">==</span> <span class="n">Compressions</span><span class="p">.</span><span class="n">Zlib</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">__raw__raw_zlibBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
+                <span class="n">__raw_zlibBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ProcessZlib</span><span class="p">(</span><span class="n">__raw__raw_zlibBody</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_zlibBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_zlibBody</span><span class="p">);</span>
+                <span class="n">_zlibBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SwfBody</span><span class="p">(</span><span class="n">io___raw_zlibBody</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Rgb</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Rgb</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Rgb</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public enum Channels
-            {
-                Mono = 0,
-                Stereo = 1,
-            }
-            public DefineSoundBody(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _id = m_io.ReadU2le();
-                _format = m_io.ReadBitsInt(4);
-                _samplingRate = ((SamplingRates) m_io.ReadBitsInt(2));
-                _bitsPerSample = ((Bps) m_io.ReadBitsInt(1));
-                _numChannels = ((Channels) m_io.ReadBitsInt(1));
-                m_io.AlignToByte();
-                _numSamples = m_io.ReadU4le();
-            }
-            private ushort _id;
-            private ulong _format;
-            private SamplingRates _samplingRate;
-            private Bps _bitsPerSample;
-            private Channels _numChannels;
-            private uint _numSamples;
-            private Swf m_root;
-            private Swf.Tag m_parent;
-            public ushort Id { get { return _id; } }
-            public ulong Format { get { return _format; } }
+            <span class="k">public</span> <span class="nf">Rgb</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Swf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_r</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_g</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_b</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_r</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_g</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_b</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">R</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_r</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">G</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_g</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">B</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_b</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DoAbcBody</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">DoAbcBody</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">DoAbcBody</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.
-            /// &lt;/summary&gt;
-            public SamplingRates SamplingRate { get { return _samplingRate; } }
-            public Bps BitsPerSample { get { return _bitsPerSample; } }
-            public Channels NumChannels { get { return _numChannels; } }
-            public uint NumSamples { get { return _numSamples; } }
-            public Swf M_Root { get { return m_root; } }
-            public Swf.Tag M_Parent { get { return m_parent; } }
-        }
-        public partial class RecordHeader : KaitaiStruct
-        {
-            public static RecordHeader FromFile(string fileName)
-            {
-                return new RecordHeader(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">DoAbcBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Swf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_flags</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_name</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
+                <span class="n">_abcdata</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_flags</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_name</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_abcdata</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Flags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_flags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_name</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Abcdata</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_abcdata</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SwfBody</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">SwfBody</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">SwfBody</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public RecordHeader(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_tagType = false;
-                f_smallLen = false;
-                f_len = false;
-                _read();
-            }
-            private void _read()
-            {
-                _tagCodeAndLength = m_io.ReadU2le();
-                if (SmallLen == 63) {
-                    _bigLen = m_io.ReadS4le();
-                }
-            }
-            private bool f_tagType;
-            private TagType _tagType;
-            public TagType TagType
-            {
-                get
-                {
-                    if (f_tagType)
-                        return _tagType;
-                    _tagType = (TagType) (((Swf.TagType) (TagCodeAndLength &gt;&gt; 6)));
-                    f_tagType = true;
-                    return _tagType;
-                }
-            }
-            private bool f_smallLen;
-            private int _smallLen;
-            public int SmallLen
-            {
-                get
-                {
-                    if (f_smallLen)
-                        return _smallLen;
-                    _smallLen = (int) ((TagCodeAndLength &amp; 63));
-                    f_smallLen = true;
-                    return _smallLen;
-                }
-            }
-            private bool f_len;
-            private int _len;
-            public int Len
-            {
-                get
-                {
-                    if (f_len)
-                        return _len;
-                    _len = (int) ((SmallLen == 63 ? BigLen : SmallLen));
-                    f_len = true;
-                    return _len;
-                }
-            }
-            private ushort _tagCodeAndLength;
-            private int? _bigLen;
-            private Swf m_root;
-            private Swf.Tag m_parent;
-            public ushort TagCodeAndLength { get { return _tagCodeAndLength; } }
-            public int? BigLen { get { return _bigLen; } }
-            public Swf M_Root { get { return m_root; } }
-            public Swf.Tag M_Parent { get { return m_parent; } }
-        }
-        public partial class ScriptLimitsBody : KaitaiStruct
-        {
-            public static ScriptLimitsBody FromFile(string fileName)
-            {
-                return new ScriptLimitsBody(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">SwfBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Swf</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Swf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_rect</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Rect</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_frameRate</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_frameCount</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Version</span> <span class="p">&gt;=</span> <span class="m">8</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_fileAttributesTag</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Tag</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="n">_tags</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Tag</span><span class="p">&gt;();</span>
+                <span class="p">{</span>
+                    <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                    <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_tags</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Tag</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                        <span class="n">i</span><span class="p">++;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Rect</span> <span class="n">_rect</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_frameRate</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_frameCount</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Tag</span> <span class="n">_fileAttributesTag</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Tag</span><span class="p">&gt;</span> <span class="n">_tags</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">Rect</span> <span class="n">Rect</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_rect</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">FrameRate</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_frameRate</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">FrameCount</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_frameCount</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Tag</span> <span class="n">FileAttributesTag</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fileAttributesTag</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Tag</span><span class="p">&gt;</span> <span class="n">Tags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Rect</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Rect</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Rect</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public ScriptLimitsBody(KaitaiStream p__io, Swf.Tag p__parent = null, Swf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _maxRecursionDepth = m_io.ReadU2le();
-                _scriptTimeoutSeconds = m_io.ReadU2le();
-            }
-            private ushort _maxRecursionDepth;
-            private ushort _scriptTimeoutSeconds;
-            private Swf m_root;
-            private Swf.Tag m_parent;
-            public ushort MaxRecursionDepth { get { return _maxRecursionDepth; } }
-            public ushort ScriptTimeoutSeconds { get { return _scriptTimeoutSeconds; } }
-            public Swf M_Root { get { return m_root; } }
-            public Swf.Tag M_Parent { get { return m_parent; } }
-        }
-        private Compressions _compression;
-        private byte[] _signature;
-        private byte _version;
-        private uint _lenFile;
-        private SwfBody _plainBody;
-        private SwfBody _zlibBody;
-        private Swf m_root;
-        private KaitaiStruct m_parent;
-        private byte[] __raw_plainBody;
-        private byte[] __raw__raw_zlibBody;
-        private byte[] __raw_zlibBody;
-        public Compressions Compression { get { return _compression; } }
-        public byte[] Signature { get { return _signature; } }
-        public byte Version { get { return _version; } }
-        public uint LenFile { get { return _lenFile; } }
-        public SwfBody PlainBody { get { return _plainBody; } }
-        public SwfBody ZlibBody { get { return _zlibBody; } }
-        public Swf M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-        public byte[] M_RawPlainBody { get { return __raw_plainBody; } }
-        public byte[] M_RawM_RawZlibBody { get { return __raw__raw_zlibBody; } }
-        public byte[] M_RawZlibBody { get { return __raw_zlibBody; } }
-    }
-}
-</code></pre>
+            <span class="k">public</span> <span class="nf">Rect</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Swf</span><span class="p">.</span><span class="n">SwfBody</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Swf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_numBits</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_numBytes</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_b1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_skip</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">NumBytes</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_numBits</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_numBits</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">NumBits</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_numBits</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_numBits</span><span class="p">;</span>
+                    <span class="n">_numBits</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">B1</span> <span class="p">&gt;&gt;</span> <span class="m">3</span><span class="p">));</span>
+                    <span class="n">f_numBits</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_numBits</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_numBytes</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_numBytes</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">NumBytes</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_numBytes</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_numBytes</span><span class="p">;</span>
+                    <span class="n">_numBytes</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((((</span><span class="n">NumBits</span> <span class="p">*</span> <span class="m">4</span><span class="p">)</span> <span class="p">-</span> <span class="m">3</span><span class="p">)</span> <span class="p">+</span> <span class="m">7</span><span class="p">)</span> <span class="p">/</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="n">f_numBytes</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_numBytes</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_b1</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_skip</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span><span class="p">.</span><span class="n">SwfBody</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">B1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_b1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Skip</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_skip</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span><span class="p">.</span><span class="n">SwfBody</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Tag</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Tag</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Tag</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">Tag</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Swf</span><span class="p">.</span><span class="n">SwfBody</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Swf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_recordHeader</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RecordHeader</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">RecordHeader</span><span class="p">.</span><span class="n">TagType</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">Swf</span><span class="p">.</span><span class="n">TagType</span><span class="p">.</span><span class="n">SetBackgroundColor</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_tagBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">RecordHeader</span><span class="p">.</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_tagBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_tagBody</span><span class="p">);</span>
+                    <span class="n">_tagBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Rgb</span><span class="p">(</span><span class="n">io___raw_tagBody</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">Swf</span><span class="p">.</span><span class="n">TagType</span><span class="p">.</span><span class="n">ScriptLimits</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_tagBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">RecordHeader</span><span class="p">.</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_tagBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_tagBody</span><span class="p">);</span>
+                    <span class="n">_tagBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ScriptLimitsBody</span><span class="p">(</span><span class="n">io___raw_tagBody</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">Swf</span><span class="p">.</span><span class="n">TagType</span><span class="p">.</span><span class="n">DefineSound</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_tagBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">RecordHeader</span><span class="p">.</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_tagBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_tagBody</span><span class="p">);</span>
+                    <span class="n">_tagBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DefineSoundBody</span><span class="p">(</span><span class="n">io___raw_tagBody</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">Swf</span><span class="p">.</span><span class="n">TagType</span><span class="p">.</span><span class="n">ExportAssets</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_tagBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">RecordHeader</span><span class="p">.</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_tagBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_tagBody</span><span class="p">);</span>
+                    <span class="n">_tagBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SymbolClassBody</span><span class="p">(</span><span class="n">io___raw_tagBody</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">Swf</span><span class="p">.</span><span class="n">TagType</span><span class="p">.</span><span class="n">SymbolClass</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_tagBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">RecordHeader</span><span class="p">.</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_tagBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_tagBody</span><span class="p">);</span>
+                    <span class="n">_tagBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SymbolClassBody</span><span class="p">(</span><span class="n">io___raw_tagBody</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">Swf</span><span class="p">.</span><span class="n">TagType</span><span class="p">.</span><span class="n">DoAbc</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_tagBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">RecordHeader</span><span class="p">.</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_tagBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_tagBody</span><span class="p">);</span>
+                    <span class="n">_tagBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DoAbcBody</span><span class="p">(</span><span class="n">io___raw_tagBody</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_tagBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">RecordHeader</span><span class="p">.</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">RecordHeader</span> <span class="n">_recordHeader</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">object</span> <span class="n">_tagBody</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span><span class="p">.</span><span class="n">SwfBody</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_tagBody</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">RecordHeader</span> <span class="n">RecordHeader</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_recordHeader</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">object</span> <span class="n">TagBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tagBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span><span class="p">.</span><span class="n">SwfBody</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawTagBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_tagBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SymbolClassBody</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">SymbolClassBody</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">SymbolClassBody</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">SymbolClassBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Swf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_numSymbols</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_symbols</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Symbol</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumSymbols</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumSymbols</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_symbols</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Symbol</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Symbol</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">Symbol</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">Symbol</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">public</span> <span class="nf">Symbol</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Swf</span><span class="p">.</span><span class="n">SymbolClassBody</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Swf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_tag</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                    <span class="n">_name</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_tag</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">string</span> <span class="n">_name</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">Swf</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">Swf</span><span class="p">.</span><span class="n">SymbolClassBody</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Tag</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tag</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_name</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">Swf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">Swf</span><span class="p">.</span><span class="n">SymbolClassBody</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_numSymbols</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Symbol</span><span class="p">&gt;</span> <span class="n">_symbols</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">NumSymbols</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numSymbols</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Symbol</span><span class="p">&gt;</span> <span class="n">Symbols</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_symbols</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DefineSoundBody</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">DefineSoundBody</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">DefineSoundBody</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+
+            <span class="k">public</span> <span class="k">enum</span> <span class="n">SamplingRates</span>
+            <span class="p">{</span>
+                <span class="n">Rate55Khz</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+                <span class="n">Rate11Khz</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+                <span class="n">Rate22Khz</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+                <span class="n">Rate44Khz</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="k">enum</span> <span class="n">Bps</span>
+            <span class="p">{</span>
+                <span class="n">Sound8Bit</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+                <span class="n">Sound16Bit</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="k">enum</span> <span class="n">Channels</span>
+            <span class="p">{</span>
+                <span class="n">Mono</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+                <span class="n">Stereo</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="nf">DefineSoundBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Swf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_id</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_format</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+                <span class="n">_samplingRate</span> <span class="p">=</span> <span class="p">((</span><span class="n">SamplingRates</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">2</span><span class="p">));</span>
+                <span class="n">_bitsPerSample</span> <span class="p">=</span> <span class="p">((</span><span class="n">Bps</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">));</span>
+                <span class="n">_numChannels</span> <span class="p">=</span> <span class="p">((</span><span class="n">Channels</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">));</span>
+                <span class="n">m_io</span><span class="p">.</span><span class="n">AlignToByte</span><span class="p">();</span>
+                <span class="n">_numSamples</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_id</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_format</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">SamplingRates</span> <span class="n">_samplingRate</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Bps</span> <span class="n">_bitsPerSample</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Channels</span> <span class="n">_numChannels</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numSamples</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_id</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Format</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_format</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">SamplingRates</span> <span class="n">SamplingRate</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_samplingRate</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Bps</span> <span class="n">BitsPerSample</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_bitsPerSample</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Channels</span> <span class="n">NumChannels</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numChannels</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumSamples</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numSamples</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">RecordHeader</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">RecordHeader</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">RecordHeader</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">RecordHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Swf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_tagType</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_smallLen</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_len</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_tagCodeAndLength</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">SmallLen</span> <span class="p">==</span> <span class="m">63</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_bigLen</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4le</span><span class="p">();</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_tagType</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">TagType</span> <span class="n">_tagType</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">TagType</span> <span class="n">TagType</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_tagType</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_tagType</span><span class="p">;</span>
+                    <span class="n">_tagType</span> <span class="p">=</span> <span class="p">(</span><span class="n">TagType</span><span class="p">)</span> <span class="p">(((</span><span class="n">Swf</span><span class="p">.</span><span class="n">TagType</span><span class="p">)</span> <span class="p">(</span><span class="n">TagCodeAndLength</span> <span class="p">&gt;&gt;</span> <span class="m">6</span><span class="p">)));</span>
+                    <span class="n">f_tagType</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_tagType</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_smallLen</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_smallLen</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">SmallLen</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_smallLen</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_smallLen</span><span class="p">;</span>
+                    <span class="n">_smallLen</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">TagCodeAndLength</span> <span class="p">&amp;</span> <span class="m">63</span><span class="p">));</span>
+                    <span class="n">f_smallLen</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_smallLen</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_len</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_len</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Len</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_len</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_len</span><span class="p">;</span>
+                    <span class="n">_len</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">SmallLen</span> <span class="p">==</span> <span class="m">63</span> <span class="p">?</span> <span class="n">BigLen</span> <span class="p">:</span> <span class="n">SmallLen</span><span class="p">));</span>
+                    <span class="n">f_len</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_len</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_tagCodeAndLength</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int?</span> <span class="n">_bigLen</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">TagCodeAndLength</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tagCodeAndLength</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">int?</span> <span class="n">BigLen</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_bigLen</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ScriptLimitsBody</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">ScriptLimitsBody</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">ScriptLimitsBody</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">ScriptLimitsBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Swf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_maxRecursionDepth</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_scriptTimeoutSeconds</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_maxRecursionDepth</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_scriptTimeoutSeconds</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">MaxRecursionDepth</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_maxRecursionDepth</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">ScriptTimeoutSeconds</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_scriptTimeoutSeconds</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Swf</span><span class="p">.</span><span class="n">Tag</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="n">Compressions</span> <span class="n">_compression</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_signature</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_version</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lenFile</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">SwfBody</span> <span class="n">_plainBody</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">SwfBody</span> <span class="n">_zlibBody</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Swf</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_plainBody</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw__raw_zlibBody</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_zlibBody</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">Compressions</span> <span class="n">Compression</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_compression</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Signature</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_signature</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">Version</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_version</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenFile</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenFile</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">SwfBody</span> <span class="n">PlainBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_plainBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">SwfBody</span> <span class="n">ZlibBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_zlibBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Swf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawPlainBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_plainBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawM_RawZlibBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw__raw_zlibBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawZlibBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_zlibBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -862,8 +859,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

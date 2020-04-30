@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -218,617 +215,617 @@ and, optionally, an argument. Register arguments are part of the
         </div>
 
         <div class="row">
-            <pre><code class="perl"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-use strict;
-use warnings;
-use IO::KaitaiStruct 0.007_000;
+<span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.007_000</span><span class="p">;</span>
 
-########################################################################
-package Code6502;
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Code6502</span><span class="p">;</span>
 
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
 
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
 
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
 
-our $OPCODE_BRK_IMPL = 0;
-our $OPCODE_ORA_X_IND = 1;
-our $OPCODE_ORA_ZPG = 5;
-our $OPCODE_ASL_ZPG = 6;
-our $OPCODE_PHP_IMPL = 8;
-our $OPCODE_ORA_IMM = 9;
-our $OPCODE_ASL_A = 10;
-our $OPCODE_ORA_ABS = 13;
-our $OPCODE_ASL_ABS = 14;
-our $OPCODE_BPL_REL = 16;
-our $OPCODE_ORA_IND_Y = 17;
-our $OPCODE_ORA_ZPG_X = 21;
-our $OPCODE_ASL_ZPG_X = 22;
-our $OPCODE_CLC_IMPL = 24;
-our $OPCODE_ORA_ABS_Y = 25;
-our $OPCODE_ORA_ABS_X = 29;
-our $OPCODE_ASL_ABS_X = 30;
-our $OPCODE_JSR_ABS = 32;
-our $OPCODE_AND_X_IND = 33;
-our $OPCODE_BIT_ZPG = 36;
-our $OPCODE_AND_ZPG = 37;
-our $OPCODE_ROL_ZPG = 38;
-our $OPCODE_PLP_IMPL = 40;
-our $OPCODE_AND_IMM = 41;
-our $OPCODE_ROL_A = 42;
-our $OPCODE_BIT_ABS = 44;
-our $OPCODE_AND_ABS = 45;
-our $OPCODE_ROL_ABS = 46;
-our $OPCODE_BMI_REL = 48;
-our $OPCODE_AND_IND_Y = 49;
-our $OPCODE_AND_ZPG_X = 53;
-our $OPCODE_ROL_ZPG_X = 54;
-our $OPCODE_SEC_IMPL = 56;
-our $OPCODE_AND_ABS_Y = 57;
-our $OPCODE_AND_ABS_X = 61;
-our $OPCODE_ROL_ABS_X = 62;
-our $OPCODE_RTI_IMPL = 64;
-our $OPCODE_EOR_X_IND = 65;
-our $OPCODE_EOR_ZPG = 69;
-our $OPCODE_LSR_ZPG = 70;
-our $OPCODE_PHA_IMPL = 72;
-our $OPCODE_EOR_IMM = 73;
-our $OPCODE_LSR_A = 74;
-our $OPCODE_JMP_ABS = 76;
-our $OPCODE_EOR_ABS = 77;
-our $OPCODE_LSR_ABS = 78;
-our $OPCODE_BVC_REL = 80;
-our $OPCODE_EOR_IND_Y = 81;
-our $OPCODE_EOR_ZPG_X = 85;
-our $OPCODE_LSR_ZPG_X = 86;
-our $OPCODE_CLI_IMPL = 88;
-our $OPCODE_EOR_ABS_Y = 89;
-our $OPCODE_EOR_ABS_X = 93;
-our $OPCODE_LSR_ABS_X = 94;
-our $OPCODE_RTS_IMPL = 96;
-our $OPCODE_ADC_X_IND = 97;
-our $OPCODE_ADC_ZPG = 101;
-our $OPCODE_ROR_ZPG = 102;
-our $OPCODE_PLA_IMPL = 104;
-our $OPCODE_ADC_IMM = 105;
-our $OPCODE_ROR_A = 106;
-our $OPCODE_JMP_IND = 108;
-our $OPCODE_ADC_ABS = 109;
-our $OPCODE_ROR_ABS = 110;
-our $OPCODE_BVS_REL = 112;
-our $OPCODE_ADC_IND_Y = 113;
-our $OPCODE_ADC_ZPG_X = 117;
-our $OPCODE_ROR_ZPG_X = 118;
-our $OPCODE_SEI_IMPL = 120;
-our $OPCODE_ADC_ABS_Y = 121;
-our $OPCODE_ADC_ABS_X = 125;
-our $OPCODE_ROR_ABS_X = 126;
-our $OPCODE_STA_X_IND = 129;
-our $OPCODE_STY_ZPG = 132;
-our $OPCODE_STA_ZPG = 133;
-our $OPCODE_STX_ZPG = 134;
-our $OPCODE_DEY_IMPL = 136;
-our $OPCODE_TXA_IMPL = 138;
-our $OPCODE_STY_ABS = 140;
-our $OPCODE_STA_ABS = 141;
-our $OPCODE_STX_ABS = 142;
-our $OPCODE_BCC_REL = 144;
-our $OPCODE_STA_IND_Y = 145;
-our $OPCODE_STY_ZPG_X = 148;
-our $OPCODE_STA_ZPG_X = 149;
-our $OPCODE_STX_ZPG_Y = 150;
-our $OPCODE_TYA_IMPL = 152;
-our $OPCODE_STA_ABS_Y = 153;
-our $OPCODE_TXS_IMPL = 154;
-our $OPCODE_STA_ABS_X = 157;
-our $OPCODE_LDY_IMM = 160;
-our $OPCODE_LDA_X_IND = 161;
-our $OPCODE_LDX_IMM = 162;
-our $OPCODE_LDY_ZPG = 164;
-our $OPCODE_LDA_ZPG = 165;
-our $OPCODE_LDX_ZPG = 166;
-our $OPCODE_TAY_IMPL = 168;
-our $OPCODE_LDA_IMM = 169;
-our $OPCODE_TAX_IMPL = 170;
-our $OPCODE_LDY_ABS = 172;
-our $OPCODE_LDA_ABS = 173;
-our $OPCODE_LDX_ABS = 174;
-our $OPCODE_BCS_REL = 176;
-our $OPCODE_LDA_IND_Y = 177;
-our $OPCODE_LDY_ZPG_X = 180;
-our $OPCODE_LDA_ZPG_X = 181;
-our $OPCODE_LDX_ZPG_Y = 182;
-our $OPCODE_CLV_IMPL = 184;
-our $OPCODE_LDA_ABS_Y = 185;
-our $OPCODE_TSX_IMPL = 186;
-our $OPCODE_LDY_ABS_X = 188;
-our $OPCODE_LDA_ABS_X = 189;
-our $OPCODE_LDX_ABS_Y = 190;
-our $OPCODE_CPY_IMM = 192;
-our $OPCODE_CMP_X_IND = 193;
-our $OPCODE_CPY_ZPG = 196;
-our $OPCODE_CMP_ZPG = 197;
-our $OPCODE_DEC_ZPG = 198;
-our $OPCODE_INY_IMPL = 200;
-our $OPCODE_CMP_IMM = 201;
-our $OPCODE_DEX_IMPL = 202;
-our $OPCODE_CPY_ABS = 204;
-our $OPCODE_CMP_ABS = 205;
-our $OPCODE_DEC_ABS = 206;
-our $OPCODE_BNE_REL = 208;
-our $OPCODE_CMP_IND_Y = 209;
-our $OPCODE_CMP_ZPG_X = 213;
-our $OPCODE_DEC_ZPG_X = 214;
-our $OPCODE_CLD_IMPL = 216;
-our $OPCODE_CMP_ABS_Y = 217;
-our $OPCODE_CMP_ABS_X = 221;
-our $OPCODE_DEC_ABS_X = 222;
-our $OPCODE_CPX_IMM = 224;
-our $OPCODE_SBC_X_IND = 225;
-our $OPCODE_CPX_ZPG = 228;
-our $OPCODE_SBC_ZPG = 229;
-our $OPCODE_INC_ZPG = 230;
-our $OPCODE_INX_IMPL = 232;
-our $OPCODE_SBC_IMM = 233;
-our $OPCODE_NOP_IMPL = 234;
-our $OPCODE_CPX_ABS = 236;
-our $OPCODE_SBC_ABS = 237;
-our $OPCODE_INC_ABS = 238;
-our $OPCODE_BEQ_REL = 240;
-our $OPCODE_SBC_IND_Y = 241;
-our $OPCODE_SBC_ZPG_X = 245;
-our $OPCODE_INC_ZPG_X = 246;
-our $OPCODE_SED_IMPL = 248;
-our $OPCODE_SBC_ABS_Y = 249;
-our $OPCODE_SBC_ABS_X = 253;
-our $OPCODE_INC_ABS_X = 254;
+<span class="k">our</span> <span class="nv">$OPCODE_BRK_IMPL</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ORA_X_IND</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ORA_ZPG</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ASL_ZPG</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_PHP_IMPL</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ORA_IMM</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ASL_A</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ORA_ABS</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ASL_ABS</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_BPL_REL</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ORA_IND_Y</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ORA_ZPG_X</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ASL_ZPG_X</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CLC_IMPL</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ORA_ABS_Y</span> <span class="o">=</span> <span class="mi">25</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ORA_ABS_X</span> <span class="o">=</span> <span class="mi">29</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ASL_ABS_X</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_JSR_ABS</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_AND_X_IND</span> <span class="o">=</span> <span class="mi">33</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_BIT_ZPG</span> <span class="o">=</span> <span class="mi">36</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_AND_ZPG</span> <span class="o">=</span> <span class="mi">37</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ROL_ZPG</span> <span class="o">=</span> <span class="mi">38</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_PLP_IMPL</span> <span class="o">=</span> <span class="mi">40</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_AND_IMM</span> <span class="o">=</span> <span class="mi">41</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ROL_A</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_BIT_ABS</span> <span class="o">=</span> <span class="mi">44</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_AND_ABS</span> <span class="o">=</span> <span class="mi">45</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ROL_ABS</span> <span class="o">=</span> <span class="mi">46</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_BMI_REL</span> <span class="o">=</span> <span class="mi">48</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_AND_IND_Y</span> <span class="o">=</span> <span class="mi">49</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_AND_ZPG_X</span> <span class="o">=</span> <span class="mi">53</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ROL_ZPG_X</span> <span class="o">=</span> <span class="mi">54</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_SEC_IMPL</span> <span class="o">=</span> <span class="mi">56</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_AND_ABS_Y</span> <span class="o">=</span> <span class="mi">57</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_AND_ABS_X</span> <span class="o">=</span> <span class="mi">61</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ROL_ABS_X</span> <span class="o">=</span> <span class="mi">62</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_RTI_IMPL</span> <span class="o">=</span> <span class="mi">64</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_EOR_X_IND</span> <span class="o">=</span> <span class="mi">65</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_EOR_ZPG</span> <span class="o">=</span> <span class="mi">69</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LSR_ZPG</span> <span class="o">=</span> <span class="mi">70</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_PHA_IMPL</span> <span class="o">=</span> <span class="mi">72</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_EOR_IMM</span> <span class="o">=</span> <span class="mi">73</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LSR_A</span> <span class="o">=</span> <span class="mi">74</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_JMP_ABS</span> <span class="o">=</span> <span class="mi">76</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_EOR_ABS</span> <span class="o">=</span> <span class="mi">77</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LSR_ABS</span> <span class="o">=</span> <span class="mi">78</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_BVC_REL</span> <span class="o">=</span> <span class="mi">80</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_EOR_IND_Y</span> <span class="o">=</span> <span class="mi">81</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_EOR_ZPG_X</span> <span class="o">=</span> <span class="mi">85</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LSR_ZPG_X</span> <span class="o">=</span> <span class="mi">86</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CLI_IMPL</span> <span class="o">=</span> <span class="mi">88</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_EOR_ABS_Y</span> <span class="o">=</span> <span class="mi">89</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_EOR_ABS_X</span> <span class="o">=</span> <span class="mi">93</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LSR_ABS_X</span> <span class="o">=</span> <span class="mi">94</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_RTS_IMPL</span> <span class="o">=</span> <span class="mi">96</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ADC_X_IND</span> <span class="o">=</span> <span class="mi">97</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ADC_ZPG</span> <span class="o">=</span> <span class="mi">101</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ROR_ZPG</span> <span class="o">=</span> <span class="mi">102</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_PLA_IMPL</span> <span class="o">=</span> <span class="mi">104</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ADC_IMM</span> <span class="o">=</span> <span class="mi">105</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ROR_A</span> <span class="o">=</span> <span class="mi">106</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_JMP_IND</span> <span class="o">=</span> <span class="mi">108</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ADC_ABS</span> <span class="o">=</span> <span class="mi">109</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ROR_ABS</span> <span class="o">=</span> <span class="mi">110</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_BVS_REL</span> <span class="o">=</span> <span class="mi">112</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ADC_IND_Y</span> <span class="o">=</span> <span class="mi">113</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ADC_ZPG_X</span> <span class="o">=</span> <span class="mi">117</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ROR_ZPG_X</span> <span class="o">=</span> <span class="mi">118</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_SEI_IMPL</span> <span class="o">=</span> <span class="mi">120</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ADC_ABS_Y</span> <span class="o">=</span> <span class="mi">121</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ADC_ABS_X</span> <span class="o">=</span> <span class="mi">125</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_ROR_ABS_X</span> <span class="o">=</span> <span class="mi">126</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_STA_X_IND</span> <span class="o">=</span> <span class="mi">129</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_STY_ZPG</span> <span class="o">=</span> <span class="mi">132</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_STA_ZPG</span> <span class="o">=</span> <span class="mi">133</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_STX_ZPG</span> <span class="o">=</span> <span class="mi">134</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_DEY_IMPL</span> <span class="o">=</span> <span class="mi">136</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_TXA_IMPL</span> <span class="o">=</span> <span class="mi">138</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_STY_ABS</span> <span class="o">=</span> <span class="mi">140</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_STA_ABS</span> <span class="o">=</span> <span class="mi">141</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_STX_ABS</span> <span class="o">=</span> <span class="mi">142</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_BCC_REL</span> <span class="o">=</span> <span class="mi">144</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_STA_IND_Y</span> <span class="o">=</span> <span class="mi">145</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_STY_ZPG_X</span> <span class="o">=</span> <span class="mi">148</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_STA_ZPG_X</span> <span class="o">=</span> <span class="mi">149</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_STX_ZPG_Y</span> <span class="o">=</span> <span class="mi">150</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_TYA_IMPL</span> <span class="o">=</span> <span class="mi">152</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_STA_ABS_Y</span> <span class="o">=</span> <span class="mi">153</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_TXS_IMPL</span> <span class="o">=</span> <span class="mi">154</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_STA_ABS_X</span> <span class="o">=</span> <span class="mi">157</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDY_IMM</span> <span class="o">=</span> <span class="mi">160</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDA_X_IND</span> <span class="o">=</span> <span class="mi">161</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDX_IMM</span> <span class="o">=</span> <span class="mi">162</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDY_ZPG</span> <span class="o">=</span> <span class="mi">164</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDA_ZPG</span> <span class="o">=</span> <span class="mi">165</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDX_ZPG</span> <span class="o">=</span> <span class="mi">166</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_TAY_IMPL</span> <span class="o">=</span> <span class="mi">168</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDA_IMM</span> <span class="o">=</span> <span class="mi">169</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_TAX_IMPL</span> <span class="o">=</span> <span class="mi">170</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDY_ABS</span> <span class="o">=</span> <span class="mi">172</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDA_ABS</span> <span class="o">=</span> <span class="mi">173</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDX_ABS</span> <span class="o">=</span> <span class="mi">174</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_BCS_REL</span> <span class="o">=</span> <span class="mi">176</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDA_IND_Y</span> <span class="o">=</span> <span class="mi">177</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDY_ZPG_X</span> <span class="o">=</span> <span class="mi">180</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDA_ZPG_X</span> <span class="o">=</span> <span class="mi">181</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDX_ZPG_Y</span> <span class="o">=</span> <span class="mi">182</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CLV_IMPL</span> <span class="o">=</span> <span class="mi">184</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDA_ABS_Y</span> <span class="o">=</span> <span class="mi">185</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_TSX_IMPL</span> <span class="o">=</span> <span class="mi">186</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDY_ABS_X</span> <span class="o">=</span> <span class="mi">188</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDA_ABS_X</span> <span class="o">=</span> <span class="mi">189</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_LDX_ABS_Y</span> <span class="o">=</span> <span class="mi">190</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CPY_IMM</span> <span class="o">=</span> <span class="mi">192</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CMP_X_IND</span> <span class="o">=</span> <span class="mi">193</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CPY_ZPG</span> <span class="o">=</span> <span class="mi">196</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CMP_ZPG</span> <span class="o">=</span> <span class="mi">197</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_DEC_ZPG</span> <span class="o">=</span> <span class="mi">198</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_INY_IMPL</span> <span class="o">=</span> <span class="mi">200</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CMP_IMM</span> <span class="o">=</span> <span class="mi">201</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_DEX_IMPL</span> <span class="o">=</span> <span class="mi">202</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CPY_ABS</span> <span class="o">=</span> <span class="mi">204</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CMP_ABS</span> <span class="o">=</span> <span class="mi">205</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_DEC_ABS</span> <span class="o">=</span> <span class="mi">206</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_BNE_REL</span> <span class="o">=</span> <span class="mi">208</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CMP_IND_Y</span> <span class="o">=</span> <span class="mi">209</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CMP_ZPG_X</span> <span class="o">=</span> <span class="mi">213</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_DEC_ZPG_X</span> <span class="o">=</span> <span class="mi">214</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CLD_IMPL</span> <span class="o">=</span> <span class="mi">216</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CMP_ABS_Y</span> <span class="o">=</span> <span class="mi">217</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CMP_ABS_X</span> <span class="o">=</span> <span class="mi">221</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_DEC_ABS_X</span> <span class="o">=</span> <span class="mi">222</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CPX_IMM</span> <span class="o">=</span> <span class="mi">224</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_SBC_X_IND</span> <span class="o">=</span> <span class="mi">225</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CPX_ZPG</span> <span class="o">=</span> <span class="mi">228</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_SBC_ZPG</span> <span class="o">=</span> <span class="mi">229</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_INC_ZPG</span> <span class="o">=</span> <span class="mi">230</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_INX_IMPL</span> <span class="o">=</span> <span class="mi">232</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_SBC_IMM</span> <span class="o">=</span> <span class="mi">233</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_NOP_IMPL</span> <span class="o">=</span> <span class="mi">234</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_CPX_ABS</span> <span class="o">=</span> <span class="mi">236</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_SBC_ABS</span> <span class="o">=</span> <span class="mi">237</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_INC_ABS</span> <span class="o">=</span> <span class="mi">238</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_BEQ_REL</span> <span class="o">=</span> <span class="mi">240</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_SBC_IND_Y</span> <span class="o">=</span> <span class="mi">241</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_SBC_ZPG_X</span> <span class="o">=</span> <span class="mi">245</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_INC_ZPG_X</span> <span class="o">=</span> <span class="mi">246</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_SED_IMPL</span> <span class="o">=</span> <span class="mi">248</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_SBC_ABS_Y</span> <span class="o">=</span> <span class="mi">249</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_SBC_ABS_X</span> <span class="o">=</span> <span class="mi">253</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$OPCODE_INC_ABS_X</span> <span class="o">=</span> <span class="mi">254</span><span class="p">;</span>
 
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
 
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
 
-    $self-&gt;_read();
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
-    return $self;
-}
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
 
-sub _read {
-    my ($self) = @_;
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
 
-    $self-&gt;{operations} = ();
-    while (!$self-&gt;{_io}-&gt;is_eof()) {
-        push @{$self-&gt;{operations}}, Code6502::Operation-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-}
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">operations</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">operations</span><span class="p">}},</span> <span class="nn">Code6502::Operation</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-sub operations {
-    my ($self) = @_;
-    return $self-&gt;{operations};
-}
+<span class="k">sub</span> <span class="nf">operations</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">operations</span><span class="p">};</span>
+<span class="p">}</span>
 
-########################################################################
-package Code6502::Operation;
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Code6502::Operation</span><span class="p">;</span>
 
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
 
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
 
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
 
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
 
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
 
-    $self-&gt;_read();
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
 
-    return $self;
-}
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
 
-sub _read {
-    my ($self) = @_;
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
 
-    $self-&gt;{code} = $self-&gt;{_io}-&gt;read_u1();
-    my $_on = $self-&gt;code();
-    if ($_on == $OPCODE_LSR_ABS_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_AND_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_BIT_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_ASL_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_ROR_ABS_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_STY_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_ORA_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_EOR_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_EOR_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_EOR_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_ORA_ABS_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_ADC_ABS_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_STY_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_EOR_IND_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_ROL_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_EOR_IMM) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_BMI_REL) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_s1();
-    }
-    elsif ($_on == $OPCODE_INC_ABS_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_CPY_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_JSR_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_AND_ABS_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_CMP_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_SBC_IND_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_AND_X_IND) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_BVC_REL) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_s1();
-    }
-    elsif ($_on == $OPCODE_ORA_X_IND) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_ORA_ABS_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_LSR_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_LDX_ZPG_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_ROL_ABS_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_ADC_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_STY_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_ORA_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_LDY_ABS_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_ADC_IMM) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_SBC_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_LDX_IMM) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_BEQ_REL) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_s1();
-    }
-    elsif ($_on == $OPCODE_SBC_ABS_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_LDX_ABS_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_ORA_IMM) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_BCS_REL) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_s1();
-    }
-    elsif ($_on == $OPCODE_SBC_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_STA_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_BCC_REL) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_s1();
-    }
-    elsif ($_on == $OPCODE_AND_IMM) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_LDY_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_ADC_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_BNE_REL) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_s1();
-    }
-    elsif ($_on == $OPCODE_EOR_ABS_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_CPY_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_STX_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_LDY_IMM) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_LDA_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_CMP_ABS_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_LSR_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_EOR_ABS_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_CMP_ABS_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_INC_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_STA_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_STA_X_IND) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_CMP_IMM) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_EOR_X_IND) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_CMP_IND_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_CMP_X_IND) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_ASL_ABS_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_DEC_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_SBC_ABS_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_STX_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_LDA_ABS_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_AND_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_SBC_X_IND) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_LDA_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_JMP_IND) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_STA_ABS_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_ASL_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_CMP_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_LDX_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_ADC_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_ROR_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_AND_ABS_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_STA_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_ADC_ABS_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_BIT_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_DEC_ABS_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_STX_ZPG_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_LDA_ABS_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_LDA_X_IND) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_CPY_IMM) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_ORA_IND_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_ASL_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_AND_IND_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_STA_IND_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_ROR_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_LDX_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_AND_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_CPX_IMM) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_BVS_REL) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_s1();
-    }
-    elsif ($_on == $OPCODE_LDY_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_INC_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_SBC_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_ROL_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_SBC_IMM) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_ADC_X_IND) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_STA_ABS_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_CPX_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_CMP_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_LDA_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_ROL_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_INC_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_LDA_IMM) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_DEC_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_ADC_IND_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_LDA_IND_Y) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_BPL_REL) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_s1();
-    }
-    elsif ($_on == $OPCODE_LSR_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_JMP_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_DEC_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_ORA_ABS) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u2le();
-    }
-    elsif ($_on == $OPCODE_ROR_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_LDY_ZPG_X) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-    elsif ($_on == $OPCODE_CPX_ZPG) {
-        $self-&gt;{args} = $self-&gt;{_io}-&gt;read_u1();
-    }
-}
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">code</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="k">my</span> <span class="nv">$_on</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">code</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LSR_ABS_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_AND_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_BIT_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ASL_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ROR_ABS_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_STY_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ORA_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_EOR_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_EOR_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_EOR_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ORA_ABS_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ADC_ABS_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_STY_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_EOR_IND_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ROL_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_EOR_IMM</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_BMI_REL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_INC_ABS_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_CPY_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_JSR_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_AND_ABS_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_CMP_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_SBC_IND_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_AND_X_IND</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_BVC_REL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ORA_X_IND</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ORA_ABS_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LSR_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDX_ZPG_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ROL_ABS_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ADC_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_STY_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ORA_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDY_ABS_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ADC_IMM</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_SBC_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDX_IMM</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_BEQ_REL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_SBC_ABS_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDX_ABS_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ORA_IMM</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_BCS_REL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_SBC_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_STA_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_BCC_REL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_AND_IMM</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDY_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ADC_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_BNE_REL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_EOR_ABS_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_CPY_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_STX_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDY_IMM</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDA_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_CMP_ABS_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LSR_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_EOR_ABS_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_CMP_ABS_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_INC_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_STA_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_STA_X_IND</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_CMP_IMM</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_EOR_X_IND</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_CMP_IND_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_CMP_X_IND</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ASL_ABS_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_DEC_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_SBC_ABS_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_STX_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDA_ABS_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_AND_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_SBC_X_IND</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDA_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_JMP_IND</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_STA_ABS_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ASL_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_CMP_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDX_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ADC_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ROR_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_AND_ABS_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_STA_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ADC_ABS_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_BIT_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_DEC_ABS_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_STX_ZPG_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDA_ABS_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDA_X_IND</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_CPY_IMM</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ORA_IND_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ASL_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_AND_IND_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_STA_IND_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ROR_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDX_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_AND_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_CPX_IMM</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_BVS_REL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDY_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_INC_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_SBC_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ROL_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_SBC_IMM</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ADC_X_IND</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_STA_ABS_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_CPX_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_CMP_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDA_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ROL_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_INC_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDA_IMM</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_DEC_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ADC_IND_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDA_IND_Y</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_BPL_REL</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LSR_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_JMP_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_DEC_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ORA_ABS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_ROR_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_LDY_ZPG_X</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="o">==</span> <span class="nv">$OPCODE_CPX_ZPG</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-sub code {
-    my ($self) = @_;
-    return $self-&gt;{code};
-}
+<span class="k">sub</span> <span class="nf">code</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">code</span><span class="p">};</span>
+<span class="p">}</span>
 
-sub args {
-    my ($self) = @_;
-    return $self-&gt;{args};
-}
+<span class="k">sub</span> <span class="nf">args</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">args</span><span class="p">};</span>
+<span class="p">}</span>
 
-1;
-</code></pre>
+<span class="mi">1</span><span class="p">;</span>
+</pre></div>
 
         </div>
         
@@ -855,8 +852,8 @@ sub args {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

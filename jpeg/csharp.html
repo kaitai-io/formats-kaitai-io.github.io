@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -233,495 +230,495 @@ var data = new Jpeg(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
-    public partial class Jpeg : KaitaiStruct
-    {
-        public static Jpeg FromFile(string fileName)
-        {
-            return new Jpeg(new KaitaiStream(fileName));
-        }
-
-
-        public enum ComponentId
-        {
-            Y = 1,
-            Cb = 2,
-            Cr = 3,
-            I = 4,
-            Q = 5,
-        }
-        public Jpeg(KaitaiStream p__io, KaitaiStruct p__parent = null, Jpeg p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            _read();
-        }
-        private void _read()
-        {
-            _segments = new List&lt;Segment&gt;();
-            {
-                var i = 0;
-                while (!m_io.IsEof) {
-                    _segments.Add(new Segment(m_io, this, m_root));
-                    i++;
-                }
-            }
-        }
-        public partial class Segment : KaitaiStruct
-        {
-            public static Segment FromFile(string fileName)
-            {
-                return new Segment(new KaitaiStream(fileName));
-            }
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Jpeg</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">Jpeg</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Jpeg</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
 
-            public enum MarkerEnum
-            {
-                Tem = 1,
-                Sof0 = 192,
-                Sof1 = 193,
-                Sof2 = 194,
-                Sof3 = 195,
-                Dht = 196,
-                Sof5 = 197,
-                Sof6 = 198,
-                Sof7 = 199,
-                Soi = 216,
-                Eoi = 217,
-                Sos = 218,
-                Dqt = 219,
-                Dnl = 220,
-                Dri = 221,
-                Dhp = 222,
-                App0 = 224,
-                App1 = 225,
-                App2 = 226,
-                App3 = 227,
-                App4 = 228,
-                App5 = 229,
-                App6 = 230,
-                App7 = 231,
-                App8 = 232,
-                App9 = 233,
-                App10 = 234,
-                App11 = 235,
-                App12 = 236,
-                App13 = 237,
-                App14 = 238,
-                App15 = 239,
-                Com = 254,
-            }
-            public Segment(KaitaiStream p__io, Jpeg p__parent = null, Jpeg p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _magic = m_io.EnsureFixedContents(new byte[] { 255 });
-                _marker = ((MarkerEnum) m_io.ReadU1());
-                if ( ((Marker != MarkerEnum.Soi) &amp;&amp; (Marker != MarkerEnum.Eoi)) ) {
-                    _length = m_io.ReadU2be();
-                }
-                if ( ((Marker != MarkerEnum.Soi) &amp;&amp; (Marker != MarkerEnum.Eoi)) ) {
-                    switch (Marker) {
-                    case MarkerEnum.Sos: {
-                        __raw_data = m_io.ReadBytes((Length - 2));
-                        var io___raw_data = new KaitaiStream(__raw_data);
-                        _data = new SegmentSos(io___raw_data, this, m_root);
-                        break;
-                    }
-                    case MarkerEnum.App1: {
-                        __raw_data = m_io.ReadBytes((Length - 2));
-                        var io___raw_data = new KaitaiStream(__raw_data);
-                        _data = new SegmentApp1(io___raw_data, this, m_root);
-                        break;
-                    }
-                    case MarkerEnum.Sof0: {
-                        __raw_data = m_io.ReadBytes((Length - 2));
-                        var io___raw_data = new KaitaiStream(__raw_data);
-                        _data = new SegmentSof0(io___raw_data, this, m_root);
-                        break;
-                    }
-                    case MarkerEnum.App0: {
-                        __raw_data = m_io.ReadBytes((Length - 2));
-                        var io___raw_data = new KaitaiStream(__raw_data);
-                        _data = new SegmentApp0(io___raw_data, this, m_root);
-                        break;
-                    }
-                    default: {
-                        _data = m_io.ReadBytes((Length - 2));
-                        break;
-                    }
-                    }
-                }
-                if (Marker == MarkerEnum.Sos) {
-                    _imageData = m_io.ReadBytesFull();
-                }
-            }
-            private byte[] _magic;
-            private MarkerEnum _marker;
-            private ushort? _length;
-            private object _data;
-            private byte[] _imageData;
-            private Jpeg m_root;
-            private Jpeg m_parent;
-            private byte[] __raw_data;
-            public byte[] Magic { get { return _magic; } }
-            public MarkerEnum Marker { get { return _marker; } }
-            public ushort? Length { get { return _length; } }
-            public object Data { get { return _data; } }
-            public byte[] ImageData { get { return _imageData; } }
-            public Jpeg M_Root { get { return m_root; } }
-            public Jpeg M_Parent { get { return m_parent; } }
-            public byte[] M_RawData { get { return __raw_data; } }
-        }
-        public partial class SegmentSos : KaitaiStruct
-        {
-            public static SegmentSos FromFile(string fileName)
-            {
-                return new SegmentSos(new KaitaiStream(fileName));
-            }
-
-            public SegmentSos(KaitaiStream p__io, Jpeg.Segment p__parent = null, Jpeg p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _numComponents = m_io.ReadU1();
-                _components = new List&lt;Component&gt;((int) (NumComponents));
-                for (var i = 0; i &lt; NumComponents; i++)
-                {
-                    _components.Add(new Component(m_io, this, m_root));
-                }
-                _startSpectralSelection = m_io.ReadU1();
-                _endSpectral = m_io.ReadU1();
-                _apprBitPos = m_io.ReadU1();
-            }
-            public partial class Component : KaitaiStruct
-            {
-                public static Component FromFile(string fileName)
-                {
-                    return new Component(new KaitaiStream(fileName));
-                }
-
-                public Component(KaitaiStream p__io, Jpeg.SegmentSos p__parent = null, Jpeg p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _id = ((Jpeg.ComponentId) m_io.ReadU1());
-                    _huffmanTable = m_io.ReadU1();
-                }
-                private ComponentId _id;
-                private byte _huffmanTable;
-                private Jpeg m_root;
-                private Jpeg.SegmentSos m_parent;
-
-                /// &lt;summary&gt;
-                /// Scan component selector
-                /// &lt;/summary&gt;
-                public ComponentId Id { get { return _id; } }
-                public byte HuffmanTable { get { return _huffmanTable; } }
-                public Jpeg M_Root { get { return m_root; } }
-                public Jpeg.SegmentSos M_Parent { get { return m_parent; } }
-            }
-            private byte _numComponents;
-            private List&lt;Component&gt; _components;
-            private byte _startSpectralSelection;
-            private byte _endSpectral;
-            private byte _apprBitPos;
-            private Jpeg m_root;
-            private Jpeg.Segment m_parent;
-
-            /// &lt;summary&gt;
-            /// Number of components in scan
-            /// &lt;/summary&gt;
-            public byte NumComponents { get { return _numComponents; } }
-
-            /// &lt;summary&gt;
-            /// Scan components specification
-            /// &lt;/summary&gt;
-            public List&lt;Component&gt; Components { get { return _components; } }
-
-            /// &lt;summary&gt;
-            /// Start of spectral selection or predictor selection
-            /// &lt;/summary&gt;
-            public byte StartSpectralSelection { get { return _startSpectralSelection; } }
-
-            /// &lt;summary&gt;
-            /// End of spectral selection
-            /// &lt;/summary&gt;
-            public byte EndSpectral { get { return _endSpectral; } }
-
-            /// &lt;summary&gt;
-            /// Successive approximation bit position high + Successive approximation bit position low or point transform
-            /// &lt;/summary&gt;
-            public byte ApprBitPos { get { return _apprBitPos; } }
-            public Jpeg M_Root { get { return m_root; } }
-            public Jpeg.Segment M_Parent { get { return m_parent; } }
-        }
-        public partial class SegmentApp1 : KaitaiStruct
-        {
-            public static SegmentApp1 FromFile(string fileName)
-            {
-                return new SegmentApp1(new KaitaiStream(fileName));
-            }
-
-            public SegmentApp1(KaitaiStream p__io, Jpeg.Segment p__parent = null, Jpeg p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _magic = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true));
-                switch (Magic) {
-                case &quot;Exif&quot;: {
-                    _body = new ExifInJpeg(m_io, this, m_root);
-                    break;
-                }
-                }
-            }
-            private string _magic;
-            private ExifInJpeg _body;
-            private Jpeg m_root;
-            private Jpeg.Segment m_parent;
-            public string Magic { get { return _magic; } }
-            public ExifInJpeg Body { get { return _body; } }
-            public Jpeg M_Root { get { return m_root; } }
-            public Jpeg.Segment M_Parent { get { return m_parent; } }
-        }
-        public partial class SegmentSof0 : KaitaiStruct
-        {
-            public static SegmentSof0 FromFile(string fileName)
-            {
-                return new SegmentSof0(new KaitaiStream(fileName));
-            }
-
-            public SegmentSof0(KaitaiStream p__io, Jpeg.Segment p__parent = null, Jpeg p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _bitsPerSample = m_io.ReadU1();
-                _imageHeight = m_io.ReadU2be();
-                _imageWidth = m_io.ReadU2be();
-                _numComponents = m_io.ReadU1();
-                _components = new List&lt;Component&gt;((int) (NumComponents));
-                for (var i = 0; i &lt; NumComponents; i++)
-                {
-                    _components.Add(new Component(m_io, this, m_root));
-                }
-            }
-            public partial class Component : KaitaiStruct
-            {
-                public static Component FromFile(string fileName)
-                {
-                    return new Component(new KaitaiStream(fileName));
-                }
-
-                public Component(KaitaiStream p__io, Jpeg.SegmentSof0 p__parent = null, Jpeg p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    f_samplingX = false;
-                    f_samplingY = false;
-                    _read();
-                }
-                private void _read()
-                {
-                    _id = ((Jpeg.ComponentId) m_io.ReadU1());
-                    _samplingFactors = m_io.ReadU1();
-                    _quantizationTableId = m_io.ReadU1();
-                }
-                private bool f_samplingX;
-                private int _samplingX;
-                public int SamplingX
-                {
-                    get
-                    {
-                        if (f_samplingX)
-                            return _samplingX;
-                        _samplingX = (int) (((SamplingFactors &amp; 240) &gt;&gt; 4));
-                        f_samplingX = true;
-                        return _samplingX;
-                    }
-                }
-                private bool f_samplingY;
-                private int _samplingY;
-                public int SamplingY
-                {
-                    get
-                    {
-                        if (f_samplingY)
-                            return _samplingY;
-                        _samplingY = (int) ((SamplingFactors &amp; 15));
-                        f_samplingY = true;
-                        return _samplingY;
-                    }
-                }
-                private ComponentId _id;
-                private byte _samplingFactors;
-                private byte _quantizationTableId;
-                private Jpeg m_root;
-                private Jpeg.SegmentSof0 m_parent;
-
-                /// &lt;summary&gt;
-                /// Component selector
-                /// &lt;/summary&gt;
-                public ComponentId Id { get { return _id; } }
-                public byte SamplingFactors { get { return _samplingFactors; } }
-                public byte QuantizationTableId { get { return _quantizationTableId; } }
-                public Jpeg M_Root { get { return m_root; } }
-                public Jpeg.SegmentSof0 M_Parent { get { return m_parent; } }
-            }
-            private byte _bitsPerSample;
-            private ushort _imageHeight;
-            private ushort _imageWidth;
-            private byte _numComponents;
-            private List&lt;Component&gt; _components;
-            private Jpeg m_root;
-            private Jpeg.Segment m_parent;
-            public byte BitsPerSample { get { return _bitsPerSample; } }
-            public ushort ImageHeight { get { return _imageHeight; } }
-            public ushort ImageWidth { get { return _imageWidth; } }
-            public byte NumComponents { get { return _numComponents; } }
-            public List&lt;Component&gt; Components { get { return _components; } }
-            public Jpeg M_Root { get { return m_root; } }
-            public Jpeg.Segment M_Parent { get { return m_parent; } }
-        }
-        public partial class ExifInJpeg : KaitaiStruct
-        {
-            public static ExifInJpeg FromFile(string fileName)
-            {
-                return new ExifInJpeg(new KaitaiStream(fileName));
-            }
-
-            public ExifInJpeg(KaitaiStream p__io, Jpeg.SegmentApp1 p__parent = null, Jpeg p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _extraZero = m_io.EnsureFixedContents(new byte[] { 0 });
-                __raw_data = m_io.ReadBytesFull();
-                var io___raw_data = new KaitaiStream(__raw_data);
-                _data = new Exif(io___raw_data);
-            }
-            private byte[] _extraZero;
-            private Exif _data;
-            private Jpeg m_root;
-            private Jpeg.SegmentApp1 m_parent;
-            private byte[] __raw_data;
-            public byte[] ExtraZero { get { return _extraZero; } }
-            public Exif Data { get { return _data; } }
-            public Jpeg M_Root { get { return m_root; } }
-            public Jpeg.SegmentApp1 M_Parent { get { return m_parent; } }
-            public byte[] M_RawData { get { return __raw_data; } }
-        }
-        public partial class SegmentApp0 : KaitaiStruct
-        {
-            public static SegmentApp0 FromFile(string fileName)
-            {
-                return new SegmentApp0(new KaitaiStream(fileName));
-            }
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">ComponentId</span>
+        <span class="p">{</span>
+            <span class="n">Y</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="n">Cb</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+            <span class="n">Cr</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+            <span class="n">I</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
+            <span class="n">Q</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="nf">Jpeg</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Jpeg</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_segments</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Segment</span><span class="p">&gt;();</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_segments</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Segment</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                    <span class="n">i</span><span class="p">++;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Segment</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Segment</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Segment</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
 
-            public enum DensityUnit
-            {
-                NoUnits = 0,
-                PixelsPerInch = 1,
-                PixelsPerCm = 2,
-            }
-            public SegmentApp0(KaitaiStream p__io, Jpeg.Segment p__parent = null, Jpeg p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _magic = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytes(5));
-                _versionMajor = m_io.ReadU1();
-                _versionMinor = m_io.ReadU1();
-                _densityUnits = ((DensityUnit) m_io.ReadU1());
-                _densityX = m_io.ReadU2be();
-                _densityY = m_io.ReadU2be();
-                _thumbnailX = m_io.ReadU1();
-                _thumbnailY = m_io.ReadU1();
-                _thumbnail = m_io.ReadBytes(((ThumbnailX * ThumbnailY) * 3));
-            }
-            private string _magic;
-            private byte _versionMajor;
-            private byte _versionMinor;
-            private DensityUnit _densityUnits;
-            private ushort _densityX;
-            private ushort _densityY;
-            private byte _thumbnailX;
-            private byte _thumbnailY;
-            private byte[] _thumbnail;
-            private Jpeg m_root;
-            private Jpeg.Segment m_parent;
-            public string Magic { get { return _magic; } }
-            public byte VersionMajor { get { return _versionMajor; } }
-            public byte VersionMinor { get { return _versionMinor; } }
-            public DensityUnit DensityUnits { get { return _densityUnits; } }
+            <span class="k">public</span> <span class="k">enum</span> <span class="n">MarkerEnum</span>
+            <span class="p">{</span>
+                <span class="n">Tem</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+                <span class="n">Sof0</span> <span class="p">=</span> <span class="m">192</span><span class="p">,</span>
+                <span class="n">Sof1</span> <span class="p">=</span> <span class="m">193</span><span class="p">,</span>
+                <span class="n">Sof2</span> <span class="p">=</span> <span class="m">194</span><span class="p">,</span>
+                <span class="n">Sof3</span> <span class="p">=</span> <span class="m">195</span><span class="p">,</span>
+                <span class="n">Dht</span> <span class="p">=</span> <span class="m">196</span><span class="p">,</span>
+                <span class="n">Sof5</span> <span class="p">=</span> <span class="m">197</span><span class="p">,</span>
+                <span class="n">Sof6</span> <span class="p">=</span> <span class="m">198</span><span class="p">,</span>
+                <span class="n">Sof7</span> <span class="p">=</span> <span class="m">199</span><span class="p">,</span>
+                <span class="n">Soi</span> <span class="p">=</span> <span class="m">216</span><span class="p">,</span>
+                <span class="n">Eoi</span> <span class="p">=</span> <span class="m">217</span><span class="p">,</span>
+                <span class="n">Sos</span> <span class="p">=</span> <span class="m">218</span><span class="p">,</span>
+                <span class="n">Dqt</span> <span class="p">=</span> <span class="m">219</span><span class="p">,</span>
+                <span class="n">Dnl</span> <span class="p">=</span> <span class="m">220</span><span class="p">,</span>
+                <span class="n">Dri</span> <span class="p">=</span> <span class="m">221</span><span class="p">,</span>
+                <span class="n">Dhp</span> <span class="p">=</span> <span class="m">222</span><span class="p">,</span>
+                <span class="n">App0</span> <span class="p">=</span> <span class="m">224</span><span class="p">,</span>
+                <span class="n">App1</span> <span class="p">=</span> <span class="m">225</span><span class="p">,</span>
+                <span class="n">App2</span> <span class="p">=</span> <span class="m">226</span><span class="p">,</span>
+                <span class="n">App3</span> <span class="p">=</span> <span class="m">227</span><span class="p">,</span>
+                <span class="n">App4</span> <span class="p">=</span> <span class="m">228</span><span class="p">,</span>
+                <span class="n">App5</span> <span class="p">=</span> <span class="m">229</span><span class="p">,</span>
+                <span class="n">App6</span> <span class="p">=</span> <span class="m">230</span><span class="p">,</span>
+                <span class="n">App7</span> <span class="p">=</span> <span class="m">231</span><span class="p">,</span>
+                <span class="n">App8</span> <span class="p">=</span> <span class="m">232</span><span class="p">,</span>
+                <span class="n">App9</span> <span class="p">=</span> <span class="m">233</span><span class="p">,</span>
+                <span class="n">App10</span> <span class="p">=</span> <span class="m">234</span><span class="p">,</span>
+                <span class="n">App11</span> <span class="p">=</span> <span class="m">235</span><span class="p">,</span>
+                <span class="n">App12</span> <span class="p">=</span> <span class="m">236</span><span class="p">,</span>
+                <span class="n">App13</span> <span class="p">=</span> <span class="m">237</span><span class="p">,</span>
+                <span class="n">App14</span> <span class="p">=</span> <span class="m">238</span><span class="p">,</span>
+                <span class="n">App15</span> <span class="p">=</span> <span class="m">239</span><span class="p">,</span>
+                <span class="n">Com</span> <span class="p">=</span> <span class="m">254</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="nf">Segment</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Jpeg</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Jpeg</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">255</span> <span class="p">});</span>
+                <span class="n">_marker</span> <span class="p">=</span> <span class="p">((</span><span class="n">MarkerEnum</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">Marker</span> <span class="p">!=</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">Soi</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">Marker</span> <span class="p">!=</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">Eoi</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_length</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">Marker</span> <span class="p">!=</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">Soi</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">Marker</span> <span class="p">!=</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">Eoi</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">Marker</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">Sos</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">2</span><span class="p">));</span>
+                        <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SegmentSos</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">App1</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">2</span><span class="p">));</span>
+                        <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SegmentApp1</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">Sof0</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">2</span><span class="p">));</span>
+                        <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SegmentSof0</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">App0</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">2</span><span class="p">));</span>
+                        <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SegmentApp0</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">2</span><span class="p">));</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">Marker</span> <span class="p">==</span> <span class="n">MarkerEnum</span><span class="p">.</span><span class="n">Sos</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_imageData</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">MarkerEnum</span> <span class="n">_marker</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort?</span> <span class="n">_length</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">object</span> <span class="n">_data</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_imageData</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Jpeg</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Jpeg</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_data</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">MarkerEnum</span> <span class="n">Marker</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_marker</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort?</span> <span class="n">Length</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_length</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">object</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">ImageData</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_imageData</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Jpeg</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Jpeg</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawData</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SegmentSos</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">SegmentSos</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">SegmentSos</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Horizontal pixel density. Must not be zero.
-            /// &lt;/summary&gt;
-            public ushort DensityX { get { return _densityX; } }
+            <span class="k">public</span> <span class="nf">SegmentSos</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Jpeg</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_numComponents</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_components</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Component</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumComponents</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumComponents</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_components</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Component</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+                <span class="n">_startSpectralSelection</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_endSpectral</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_apprBitPos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Component</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">Component</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">Component</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Vertical pixel density. Must not be zero.
-            /// &lt;/summary&gt;
-            public ushort DensityY { get { return _densityY; } }
+                <span class="k">public</span> <span class="nf">Component</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSos</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Jpeg</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_id</span> <span class="p">=</span> <span class="p">((</span><span class="n">Jpeg</span><span class="p">.</span><span class="n">ComponentId</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+                    <span class="n">_huffmanTable</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="n">ComponentId</span> <span class="n">_id</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">byte</span> <span class="n">_huffmanTable</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">Jpeg</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSos</span> <span class="n">m_parent</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Horizontal pixel count of the following embedded RGB thumbnail. May be zero.
-            /// &lt;/summary&gt;
-            public byte ThumbnailX { get { return _thumbnailX; } }
+                <span class="c1">/// &lt;summary&gt;</span>
+                <span class="c1">/// Scan component selector</span>
+                <span class="c1">/// &lt;/summary&gt;</span>
+                <span class="k">public</span> <span class="n">ComponentId</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_id</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">byte</span> <span class="n">HuffmanTable</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_huffmanTable</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">Jpeg</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSos</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_numComponents</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Component</span><span class="p">&gt;</span> <span class="n">_components</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_startSpectralSelection</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_endSpectral</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_apprBitPos</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Jpeg</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span> <span class="n">m_parent</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Vertical pixel count of the following embedded RGB thumbnail. May be zero.
-            /// &lt;/summary&gt;
-            public byte ThumbnailY { get { return _thumbnailY; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Number of components in scan</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">NumComponents</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numComponents</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn
-            /// &lt;/summary&gt;
-            public byte[] Thumbnail { get { return _thumbnail; } }
-            public Jpeg M_Root { get { return m_root; } }
-            public Jpeg.Segment M_Parent { get { return m_parent; } }
-        }
-        private List&lt;Segment&gt; _segments;
-        private Jpeg m_root;
-        private KaitaiStruct m_parent;
-        public List&lt;Segment&gt; Segments { get { return _segments; } }
-        public Jpeg M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-    }
-}
-</code></pre>
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Scan components specification</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Component</span><span class="p">&gt;</span> <span class="n">Components</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_components</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Start of spectral selection or predictor selection</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">StartSpectralSelection</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_startSpectralSelection</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// End of spectral selection</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">EndSpectral</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_endSpectral</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Successive approximation bit position high + Successive approximation bit position low or point transform</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">ApprBitPos</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_apprBitPos</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Jpeg</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SegmentApp1</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">SegmentApp1</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">SegmentApp1</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">SegmentApp1</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Jpeg</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_magic</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">Magic</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="s">&quot;Exif&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ExifInJpeg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_magic</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">ExifInJpeg</span> <span class="n">_body</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Jpeg</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">ExifInJpeg</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Jpeg</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SegmentSof0</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">SegmentSof0</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">SegmentSof0</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">SegmentSof0</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Jpeg</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_bitsPerSample</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_imageHeight</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_imageWidth</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_numComponents</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_components</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Component</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumComponents</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumComponents</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_components</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Component</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Component</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">Component</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">Component</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">public</span> <span class="nf">Component</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSof0</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Jpeg</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">f_samplingX</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                    <span class="n">f_samplingY</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_id</span> <span class="p">=</span> <span class="p">((</span><span class="n">Jpeg</span><span class="p">.</span><span class="n">ComponentId</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+                    <span class="n">_samplingFactors</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                    <span class="n">_quantizationTableId</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_samplingX</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">int</span> <span class="n">_samplingX</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">int</span> <span class="n">SamplingX</span>
+                <span class="p">{</span>
+                    <span class="k">get</span>
+                    <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">f_samplingX</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">_samplingX</span><span class="p">;</span>
+                        <span class="n">_samplingX</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">SamplingFactors</span> <span class="p">&amp;</span> <span class="m">240</span><span class="p">)</span> <span class="p">&gt;&gt;</span> <span class="m">4</span><span class="p">));</span>
+                        <span class="n">f_samplingX</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                        <span class="k">return</span> <span class="n">_samplingX</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_samplingY</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">int</span> <span class="n">_samplingY</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">int</span> <span class="n">SamplingY</span>
+                <span class="p">{</span>
+                    <span class="k">get</span>
+                    <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">f_samplingY</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">_samplingY</span><span class="p">;</span>
+                        <span class="n">_samplingY</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">SamplingFactors</span> <span class="p">&amp;</span> <span class="m">15</span><span class="p">));</span>
+                        <span class="n">f_samplingY</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                        <span class="k">return</span> <span class="n">_samplingY</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="n">ComponentId</span> <span class="n">_id</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">byte</span> <span class="n">_samplingFactors</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">byte</span> <span class="n">_quantizationTableId</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">Jpeg</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSof0</span> <span class="n">m_parent</span><span class="p">;</span>
+
+                <span class="c1">/// &lt;summary&gt;</span>
+                <span class="c1">/// Component selector</span>
+                <span class="c1">/// &lt;/summary&gt;</span>
+                <span class="k">public</span> <span class="n">ComponentId</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_id</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">byte</span> <span class="n">SamplingFactors</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_samplingFactors</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">byte</span> <span class="n">QuantizationTableId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_quantizationTableId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">Jpeg</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentSof0</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_bitsPerSample</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_imageHeight</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_imageWidth</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_numComponents</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Component</span><span class="p">&gt;</span> <span class="n">_components</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Jpeg</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">BitsPerSample</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_bitsPerSample</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">ImageHeight</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_imageHeight</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">ImageWidth</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_imageWidth</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">NumComponents</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numComponents</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Component</span><span class="p">&gt;</span> <span class="n">Components</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_components</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Jpeg</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ExifInJpeg</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">ExifInJpeg</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">ExifInJpeg</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">ExifInJpeg</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentApp1</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Jpeg</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_extraZero</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span> <span class="p">});</span>
+                <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
+                <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
+                <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Exif</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_extraZero</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Exif</span> <span class="n">_data</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Jpeg</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentApp1</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_data</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">ExtraZero</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_extraZero</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Exif</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Jpeg</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">SegmentApp1</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawData</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SegmentApp0</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">SegmentApp0</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">SegmentApp0</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+
+            <span class="k">public</span> <span class="k">enum</span> <span class="n">DensityUnit</span>
+            <span class="p">{</span>
+                <span class="n">NoUnits</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+                <span class="n">PixelsPerInch</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+                <span class="n">PixelsPerCm</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="nf">SegmentApp0</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Jpeg</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_magic</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">5</span><span class="p">));</span>
+                <span class="n">_versionMajor</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_versionMinor</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_densityUnits</span> <span class="p">=</span> <span class="p">((</span><span class="n">DensityUnit</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+                <span class="n">_densityX</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_densityY</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_thumbnailX</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_thumbnailY</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_thumbnail</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(((</span><span class="n">ThumbnailX</span> <span class="p">*</span> <span class="n">ThumbnailY</span><span class="p">)</span> <span class="p">*</span> <span class="m">3</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_magic</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_versionMajor</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_versionMinor</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">DensityUnit</span> <span class="n">_densityUnits</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_densityX</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_densityY</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_thumbnailX</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_thumbnailY</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_thumbnail</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Jpeg</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">VersionMajor</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_versionMajor</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">VersionMinor</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_versionMinor</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">DensityUnit</span> <span class="n">DensityUnits</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_densityUnits</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Horizontal pixel density. Must not be zero.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">DensityX</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_densityX</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Vertical pixel density. Must not be zero.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">DensityY</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_densityY</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Horizontal pixel count of the following embedded RGB thumbnail. May be zero.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">ThumbnailX</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_thumbnailX</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Vertical pixel count of the following embedded RGB thumbnail. May be zero.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">ThumbnailY</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_thumbnailY</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Thumbnail</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_thumbnail</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Jpeg</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Jpeg</span><span class="p">.</span><span class="n">Segment</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Segment</span><span class="p">&gt;</span> <span class="n">_segments</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Jpeg</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Segment</span><span class="p">&gt;</span> <span class="n">Segments</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_segments</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Jpeg</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -748,8 +745,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

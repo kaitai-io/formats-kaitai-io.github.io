@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -256,416 +253,416 @@ documented by Adobe.</p>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * SWF files are used by Adobe Flash (AKA Shockwave Flash, Macromedia
- * Flash) to encode rich interactive multimedia content and are,
- * essentially, a container for special bytecode instructions to play
- * back that content. In early 2000s, it was dominant rich multimedia
- * web format (.swf files were integrated into web pages and played
- * back with a browser plugin), but its usage largely declined in
- * 2010s, as HTML5 and performant browser-native solutions
- * (i.e. JavaScript engines and graphical approaches, such as WebGL)
- * emerged.
- * 
- * There are a lot of versions of SWF (~36), format is somewhat
- * documented by Adobe.
- */
+<span class="sd">/**</span>
+<span class="sd"> * SWF files are used by Adobe Flash (AKA Shockwave Flash, Macromedia</span>
+<span class="sd"> * Flash) to encode rich interactive multimedia content and are,</span>
+<span class="sd"> * essentially, a container for special bytecode instructions to play</span>
+<span class="sd"> * back that content. In early 2000s, it was dominant rich multimedia</span>
+<span class="sd"> * web format (.swf files were integrated into web pages and played</span>
+<span class="sd"> * back with a browser plugin), but its usage largely declined in</span>
+<span class="sd"> * 2010s, as HTML5 and performant browser-native solutions</span>
+<span class="sd"> * (i.e. JavaScript engines and graphical approaches, such as WebGL)</span>
+<span class="sd"> * emerged.</span>
+<span class="sd"> * </span>
+<span class="sd"> * There are a lot of versions of SWF (~36), format is somewhat</span>
+<span class="sd"> * documented by Adobe.</span>
+<span class="sd"> */</span>
 
-class Swf extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Swf $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Swf</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Swf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_compression = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_signature = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x57\x53&quot;);
-        $this-&gt;_m_version = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_lenFile = $this-&gt;_io-&gt;readU4le();
-        if ($this-&gt;compression() == \Swf\Compressions::NONE) {
-            $this-&gt;_m__raw_plainBody = $this-&gt;_io-&gt;readBytesFull();
-            $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_plainBody);
-            $this-&gt;_m_plainBody = new \Swf\SwfBody($io, $this, $this-&gt;_root);
-        }
-        if ($this-&gt;compression() == \Swf\Compressions::ZLIB) {
-            $this-&gt;_m__raw__raw_zlibBody = $this-&gt;_io-&gt;readBytesFull();
-            $this-&gt;_m__raw_zlibBody = \Kaitai\Struct\Stream::processZlib($this-&gt;_m__raw__raw_zlibBody);
-            $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_zlibBody);
-            $this-&gt;_m_zlibBody = new \Swf\SwfBody($io, $this, $this-&gt;_root);
-        }
-    }
-    protected $_m_compression;
-    protected $_m_signature;
-    protected $_m_version;
-    protected $_m_lenFile;
-    protected $_m_plainBody;
-    protected $_m_zlibBody;
-    protected $_m__raw_plainBody;
-    protected $_m__raw__raw_zlibBody;
-    protected $_m__raw_zlibBody;
-    public function compression() { return $this-&gt;_m_compression; }
-    public function signature() { return $this-&gt;_m_signature; }
-    public function version() { return $this-&gt;_m_version; }
-    public function lenFile() { return $this-&gt;_m_lenFile; }
-    public function plainBody() { return $this-&gt;_m_plainBody; }
-    public function zlibBody() { return $this-&gt;_m_zlibBody; }
-    public function _raw_plainBody() { return $this-&gt;_m__raw_plainBody; }
-    public function _raw__raw_zlibBody() { return $this-&gt;_m__raw__raw_zlibBody; }
-    public function _raw_zlibBody() { return $this-&gt;_m__raw_zlibBody; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compression</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_signature</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x57\x53</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenFile</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">compression</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Swf\Compressions</span><span class="o">::</span><span class="na">NONE</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_plainBody</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_plainBody</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_plainBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Swf\SwfBody</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">compression</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Swf\Compressions</span><span class="o">::</span><span class="na">ZLIB</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw__raw_zlibBody</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_zlibBody</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">processZlib</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw__raw_zlibBody</span><span class="p">);</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_zlibBody</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zlibBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Swf\SwfBody</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_compression</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_signature</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_version</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenFile</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_plainBody</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_zlibBody</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_plainBody</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw__raw_zlibBody</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_zlibBody</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">compression</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compression</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">signature</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_signature</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenFile</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenFile</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">plainBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_plainBody</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">zlibBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zlibBody</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_plainBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_plainBody</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw__raw_zlibBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw__raw_zlibBody</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_zlibBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_zlibBody</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Swf;
+<span class="k">namespace</span> <span class="nx">\Swf</span><span class="p">;</span>
 
-class Rgb extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\Tag $_parent = null, \Swf $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Rgb</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Swf\Tag</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Swf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_r = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_g = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_b = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_r;
-    protected $_m_g;
-    protected $_m_b;
-    public function r() { return $this-&gt;_m_r; }
-    public function g() { return $this-&gt;_m_g; }
-    public function b() { return $this-&gt;_m_b; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_r</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_g</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_r</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_g</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_b</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">r</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_r</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">g</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_g</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">b</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Swf;
+<span class="k">namespace</span> <span class="nx">\Swf</span><span class="p">;</span>
 
-class DoAbcBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\Tag $_parent = null, \Swf $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">DoAbcBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Swf\Tag</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Swf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_flags = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_name = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytesTerm(0, false, true, true), &quot;ASCII&quot;);
-        $this-&gt;_m_abcdata = $this-&gt;_io-&gt;readBytesFull();
-    }
-    protected $_m_flags;
-    protected $_m_name;
-    protected $_m_abcdata;
-    public function flags() { return $this-&gt;_m_flags; }
-    public function name() { return $this-&gt;_m_name; }
-    public function abcdata() { return $this-&gt;_m_abcdata; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_abcdata</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_flags</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_name</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_abcdata</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">abcdata</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_abcdata</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Swf;
+<span class="k">namespace</span> <span class="nx">\Swf</span><span class="p">;</span>
 
-class SwfBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Swf $_parent = null, \Swf $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">SwfBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Swf</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Swf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_rect = new \Swf\Rect($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_frameRate = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_frameCount = $this-&gt;_io-&gt;readU2le();
-        if ($this-&gt;_root()-&gt;version() &gt;= 8) {
-            $this-&gt;_m_fileAttributesTag = new \Swf\Tag($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        $this-&gt;_m_tags = [];
-        $i = 0;
-        while (!$this-&gt;_io-&gt;isEof()) {
-            $this-&gt;_m_tags[] = new \Swf\Tag($this-&gt;_io, $this, $this-&gt;_root);
-            $i++;
-        }
-    }
-    protected $_m_rect;
-    protected $_m_frameRate;
-    protected $_m_frameCount;
-    protected $_m_fileAttributesTag;
-    protected $_m_tags;
-    public function rect() { return $this-&gt;_m_rect; }
-    public function frameRate() { return $this-&gt;_m_frameRate; }
-    public function frameCount() { return $this-&gt;_m_frameCount; }
-    public function fileAttributesTag() { return $this-&gt;_m_fileAttributesTag; }
-    public function tags() { return $this-&gt;_m_tags; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rect</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Swf\Rect</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_frameRate</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_frameCount</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">version</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">8</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileAttributesTag</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Swf\Tag</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Swf\Tag</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_rect</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_frameRate</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_frameCount</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_fileAttributesTag</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_tags</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">rect</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rect</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">frameRate</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_frameRate</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">frameCount</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_frameCount</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fileAttributesTag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileAttributesTag</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">tags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tags</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Swf;
+<span class="k">namespace</span> <span class="nx">\Swf</span><span class="p">;</span>
 
-class Rect extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\SwfBody $_parent = null, \Swf $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Rect</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Swf\SwfBody</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Swf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_b1 = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_skip = $this-&gt;_io-&gt;readBytes($this-&gt;numBytes());
-    }
-    protected $_m_numBits;
-    public function numBits() {
-        if ($this-&gt;_m_numBits !== null)
-            return $this-&gt;_m_numBits;
-        $this-&gt;_m_numBits = ($this-&gt;b1() &gt;&gt; 3);
-        return $this-&gt;_m_numBits;
-    }
-    protected $_m_numBytes;
-    public function numBytes() {
-        if ($this-&gt;_m_numBytes !== null)
-            return $this-&gt;_m_numBytes;
-        $this-&gt;_m_numBytes = intval(((($this-&gt;numBits() * 4) - 3) + 7) / 8);
-        return $this-&gt;_m_numBytes;
-    }
-    protected $_m_b1;
-    protected $_m_skip;
-    public function b1() { return $this-&gt;_m_b1; }
-    public function skip() { return $this-&gt;_m_skip; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_skip</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numBytes</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_numBits</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numBits</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numBits</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numBits</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numBits</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">b1</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numBits</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_numBytes</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numBytes</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numBytes</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numBytes</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numBytes</span> <span class="o">=</span> <span class="nb">intval</span><span class="p">((((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numBits</span><span class="p">()</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="mi">7</span><span class="p">)</span> <span class="o">/</span> <span class="mi">8</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numBytes</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_b1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_skip</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">b1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">skip</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_skip</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Swf;
+<span class="k">namespace</span> <span class="nx">\Swf</span><span class="p">;</span>
 
-class Tag extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\SwfBody $_parent = null, \Swf $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Tag</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Swf\SwfBody</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Swf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_recordHeader = new \Swf\RecordHeader($this-&gt;_io, $this, $this-&gt;_root);
-        switch ($this-&gt;recordHeader()-&gt;tagType()) {
-            case \Swf\TagType::SET_BACKGROUND_COLOR:
-                $this-&gt;_m__raw_tagBody = $this-&gt;_io-&gt;readBytes($this-&gt;recordHeader()-&gt;len());
-                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
-                $this-&gt;_m_tagBody = new \Swf\Rgb($io, $this, $this-&gt;_root);
-                break;
-            case \Swf\TagType::SCRIPT_LIMITS:
-                $this-&gt;_m__raw_tagBody = $this-&gt;_io-&gt;readBytes($this-&gt;recordHeader()-&gt;len());
-                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
-                $this-&gt;_m_tagBody = new \Swf\ScriptLimitsBody($io, $this, $this-&gt;_root);
-                break;
-            case \Swf\TagType::DEFINE_SOUND:
-                $this-&gt;_m__raw_tagBody = $this-&gt;_io-&gt;readBytes($this-&gt;recordHeader()-&gt;len());
-                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
-                $this-&gt;_m_tagBody = new \Swf\DefineSoundBody($io, $this, $this-&gt;_root);
-                break;
-            case \Swf\TagType::EXPORT_ASSETS:
-                $this-&gt;_m__raw_tagBody = $this-&gt;_io-&gt;readBytes($this-&gt;recordHeader()-&gt;len());
-                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
-                $this-&gt;_m_tagBody = new \Swf\SymbolClassBody($io, $this, $this-&gt;_root);
-                break;
-            case \Swf\TagType::SYMBOL_CLASS:
-                $this-&gt;_m__raw_tagBody = $this-&gt;_io-&gt;readBytes($this-&gt;recordHeader()-&gt;len());
-                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
-                $this-&gt;_m_tagBody = new \Swf\SymbolClassBody($io, $this, $this-&gt;_root);
-                break;
-            case \Swf\TagType::DO_ABC:
-                $this-&gt;_m__raw_tagBody = $this-&gt;_io-&gt;readBytes($this-&gt;recordHeader()-&gt;len());
-                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_tagBody);
-                $this-&gt;_m_tagBody = new \Swf\DoAbcBody($io, $this, $this-&gt;_root);
-                break;
-            default:
-                $this-&gt;_m_tagBody = $this-&gt;_io-&gt;readBytes($this-&gt;recordHeader()-&gt;len());
-                break;
-        }
-    }
-    protected $_m_recordHeader;
-    protected $_m_tagBody;
-    protected $_m__raw_tagBody;
-    public function recordHeader() { return $this-&gt;_m_recordHeader; }
-    public function tagBody() { return $this-&gt;_m_tagBody; }
-    public function _raw_tagBody() { return $this-&gt;_m__raw_tagBody; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_recordHeader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Swf\RecordHeader</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">recordHeader</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">tagType</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="nx">\Swf\TagType</span><span class="o">::</span><span class="na">SET_BACKGROUND_COLOR</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_tagBody</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">recordHeader</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_tagBody</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Swf\Rgb</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\Swf\TagType</span><span class="o">::</span><span class="na">SCRIPT_LIMITS</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_tagBody</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">recordHeader</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_tagBody</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Swf\ScriptLimitsBody</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\Swf\TagType</span><span class="o">::</span><span class="na">DEFINE_SOUND</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_tagBody</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">recordHeader</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_tagBody</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Swf\DefineSoundBody</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\Swf\TagType</span><span class="o">::</span><span class="na">EXPORT_ASSETS</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_tagBody</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">recordHeader</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_tagBody</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Swf\SymbolClassBody</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\Swf\TagType</span><span class="o">::</span><span class="na">SYMBOL_CLASS</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_tagBody</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">recordHeader</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_tagBody</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Swf\SymbolClassBody</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\Swf\TagType</span><span class="o">::</span><span class="na">DO_ABC</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_tagBody</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">recordHeader</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_tagBody</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Swf\DoAbcBody</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">default</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagBody</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">recordHeader</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_recordHeader</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_tagBody</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_tagBody</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">recordHeader</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_recordHeader</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">tagBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagBody</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_tagBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_tagBody</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Swf;
+<span class="k">namespace</span> <span class="nx">\Swf</span><span class="p">;</span>
 
-class SymbolClassBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\Tag $_parent = null, \Swf $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">SymbolClassBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Swf\Tag</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Swf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_numSymbols = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_symbols = [];
-        $n = $this-&gt;numSymbols();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_symbols[] = new \Swf\SymbolClassBody\Symbol($this-&gt;_io, $this, $this-&gt;_root);
-        }
-    }
-    protected $_m_numSymbols;
-    protected $_m_symbols;
-    public function numSymbols() { return $this-&gt;_m_numSymbols; }
-    public function symbols() { return $this-&gt;_m_symbols; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numSymbols</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_symbols</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numSymbols</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_symbols</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Swf\SymbolClassBody\Symbol</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_numSymbols</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_symbols</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numSymbols</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numSymbols</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">symbols</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_symbols</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Swf\SymbolClassBody;
+<span class="k">namespace</span> <span class="nx">\Swf\SymbolClassBody</span><span class="p">;</span>
 
-class Symbol extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\SymbolClassBody $_parent = null, \Swf $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Symbol</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Swf\SymbolClassBody</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Swf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_tag = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_name = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytesTerm(0, false, true, true), &quot;ASCII&quot;);
-    }
-    protected $_m_tag;
-    protected $_m_name;
-    public function tag() { return $this-&gt;_m_tag; }
-    public function name() { return $this-&gt;_m_name; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tag</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_tag</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_name</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">tag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tag</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Swf;
+<span class="k">namespace</span> <span class="nx">\Swf</span><span class="p">;</span>
 
-class DefineSoundBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\Tag $_parent = null, \Swf $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">DefineSoundBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Swf\Tag</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Swf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_id = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_format = $this-&gt;_io-&gt;readBitsInt(4);
-        $this-&gt;_m_samplingRate = $this-&gt;_io-&gt;readBitsInt(2);
-        $this-&gt;_m_bitsPerSample = $this-&gt;_io-&gt;readBitsInt(1);
-        $this-&gt;_m_numChannels = $this-&gt;_io-&gt;readBitsInt(1);
-        $this-&gt;_io-&gt;alignToByte();
-        $this-&gt;_m_numSamples = $this-&gt;_io-&gt;readU4le();
-    }
-    protected $_m_id;
-    protected $_m_format;
-    protected $_m_samplingRate;
-    protected $_m_bitsPerSample;
-    protected $_m_numChannels;
-    protected $_m_numSamples;
-    public function id() { return $this-&gt;_m_id; }
-    public function format() { return $this-&gt;_m_format; }
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_id</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_format</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_samplingRate</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitsPerSample</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numChannels</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">alignToByte</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numSamples</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_id</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_format</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_samplingRate</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_bitsPerSample</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numChannels</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numSamples</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_id</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">format</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_format</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.
-     */
-    public function samplingRate() { return $this-&gt;_m_samplingRate; }
-    public function bitsPerSample() { return $this-&gt;_m_bitsPerSample; }
-    public function numChannels() { return $this-&gt;_m_numChannels; }
-    public function numSamples() { return $this-&gt;_m_numSamples; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * Sound sampling rate, as per enum. Ignored for Nellymoser and Speex codecs.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">samplingRate</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_samplingRate</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">bitsPerSample</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitsPerSample</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numChannels</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numChannels</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numSamples</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numSamples</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Swf\DefineSoundBody;
+<span class="k">namespace</span> <span class="nx">\Swf\DefineSoundBody</span><span class="p">;</span>
 
-class SamplingRates {
-    const RATE_5_5_KHZ = 0;
-    const RATE_11_KHZ = 1;
-    const RATE_22_KHZ = 2;
-    const RATE_44_KHZ = 3;
-}
+<span class="k">class</span> <span class="nc">SamplingRates</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">RATE_5_5_KHZ</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RATE_11_KHZ</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RATE_22_KHZ</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RATE_44_KHZ</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="p">}</span>
 
-namespace \Swf\DefineSoundBody;
+<span class="k">namespace</span> <span class="nx">\Swf\DefineSoundBody</span><span class="p">;</span>
 
-class Bps {
-    const SOUND_8_BIT = 0;
-    const SOUND_16_BIT = 1;
-}
+<span class="k">class</span> <span class="nc">Bps</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">SOUND_8_BIT</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SOUND_16_BIT</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
 
-namespace \Swf\DefineSoundBody;
+<span class="k">namespace</span> <span class="nx">\Swf\DefineSoundBody</span><span class="p">;</span>
 
-class Channels {
-    const MONO = 0;
-    const STEREO = 1;
-}
+<span class="k">class</span> <span class="nc">Channels</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">MONO</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">STEREO</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
 
-namespace \Swf;
+<span class="k">namespace</span> <span class="nx">\Swf</span><span class="p">;</span>
 
-class RecordHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\Tag $_parent = null, \Swf $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">RecordHeader</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Swf\Tag</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Swf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_tagCodeAndLength = $this-&gt;_io-&gt;readU2le();
-        if ($this-&gt;smallLen() == 63) {
-            $this-&gt;_m_bigLen = $this-&gt;_io-&gt;readS4le();
-        }
-    }
-    protected $_m_tagType;
-    public function tagType() {
-        if ($this-&gt;_m_tagType !== null)
-            return $this-&gt;_m_tagType;
-        $this-&gt;_m_tagType = ($this-&gt;tagCodeAndLength() &gt;&gt; 6);
-        return $this-&gt;_m_tagType;
-    }
-    protected $_m_smallLen;
-    public function smallLen() {
-        if ($this-&gt;_m_smallLen !== null)
-            return $this-&gt;_m_smallLen;
-        $this-&gt;_m_smallLen = ($this-&gt;tagCodeAndLength() &amp; 63);
-        return $this-&gt;_m_smallLen;
-    }
-    protected $_m_len;
-    public function len() {
-        if ($this-&gt;_m_len !== null)
-            return $this-&gt;_m_len;
-        $this-&gt;_m_len = ($this-&gt;smallLen() == 63 ? $this-&gt;bigLen() : $this-&gt;smallLen());
-        return $this-&gt;_m_len;
-    }
-    protected $_m_tagCodeAndLength;
-    protected $_m_bigLen;
-    public function tagCodeAndLength() { return $this-&gt;_m_tagCodeAndLength; }
-    public function bigLen() { return $this-&gt;_m_bigLen; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagCodeAndLength</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smallLen</span><span class="p">()</span> <span class="o">==</span> <span class="mi">63</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bigLen</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_tagType</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">tagType</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagType</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagType</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagType</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tagCodeAndLength</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagType</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_smallLen</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">smallLen</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_smallLen</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_smallLen</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_smallLen</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tagCodeAndLength</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_smallLen</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smallLen</span><span class="p">()</span> <span class="o">==</span> <span class="mi">63</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bigLen</span><span class="p">()</span> <span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">smallLen</span><span class="p">());</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_tagCodeAndLength</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_bigLen</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">tagCodeAndLength</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagCodeAndLength</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">bigLen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bigLen</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Swf;
+<span class="k">namespace</span> <span class="nx">\Swf</span><span class="p">;</span>
 
-class ScriptLimitsBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Swf\Tag $_parent = null, \Swf $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ScriptLimitsBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Swf\Tag</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Swf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_maxRecursionDepth = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_scriptTimeoutSeconds = $this-&gt;_io-&gt;readU2le();
-    }
-    protected $_m_maxRecursionDepth;
-    protected $_m_scriptTimeoutSeconds;
-    public function maxRecursionDepth() { return $this-&gt;_m_maxRecursionDepth; }
-    public function scriptTimeoutSeconds() { return $this-&gt;_m_scriptTimeoutSeconds; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxRecursionDepth</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_scriptTimeoutSeconds</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_maxRecursionDepth</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_scriptTimeoutSeconds</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">maxRecursionDepth</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxRecursionDepth</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">scriptTimeoutSeconds</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_scriptTimeoutSeconds</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Swf;
+<span class="k">namespace</span> <span class="nx">\Swf</span><span class="p">;</span>
 
-class Compressions {
-    const ZLIB = 67;
-    const NONE = 70;
-    const LZMA = 90;
-}
+<span class="k">class</span> <span class="nc">Compressions</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">ZLIB</span> <span class="o">=</span> <span class="mi">67</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">NONE</span> <span class="o">=</span> <span class="mi">70</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LZMA</span> <span class="o">=</span> <span class="mi">90</span><span class="p">;</span>
+<span class="p">}</span>
 
-namespace \Swf;
+<span class="k">namespace</span> <span class="nx">\Swf</span><span class="p">;</span>
 
-class TagType {
-    const END_OF_FILE = 0;
-    const PLACE_OBJECT = 4;
-    const REMOVE_OBJECT = 5;
-    const SET_BACKGROUND_COLOR = 9;
-    const DEFINE_SOUND = 14;
-    const PLACE_OBJECT2 = 26;
-    const REMOVE_OBJECT2 = 28;
-    const FRAME_LABEL = 43;
-    const EXPORT_ASSETS = 56;
-    const SCRIPT_LIMITS = 65;
-    const FILE_ATTRIBUTES = 69;
-    const PLACE_OBJECT3 = 70;
-    const SYMBOL_CLASS = 76;
-    const METADATA = 77;
-    const DEFINE_SCALING_GRID = 78;
-    const DO_ABC = 82;
-    const DEFINE_SCENE_AND_FRAME_LABEL_DATA = 86;
-}
-</code></pre>
+<span class="k">class</span> <span class="nc">TagType</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">END_OF_FILE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">PLACE_OBJECT</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">REMOVE_OBJECT</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SET_BACKGROUND_COLOR</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DEFINE_SOUND</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">PLACE_OBJECT2</span> <span class="o">=</span> <span class="mi">26</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">REMOVE_OBJECT2</span> <span class="o">=</span> <span class="mi">28</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">FRAME_LABEL</span> <span class="o">=</span> <span class="mi">43</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">EXPORT_ASSETS</span> <span class="o">=</span> <span class="mi">56</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SCRIPT_LIMITS</span> <span class="o">=</span> <span class="mi">65</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">FILE_ATTRIBUTES</span> <span class="o">=</span> <span class="mi">69</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">PLACE_OBJECT3</span> <span class="o">=</span> <span class="mi">70</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SYMBOL_CLASS</span> <span class="o">=</span> <span class="mi">76</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">METADATA</span> <span class="o">=</span> <span class="mi">77</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DEFINE_SCALING_GRID</span> <span class="o">=</span> <span class="mi">78</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DO_ABC</span> <span class="o">=</span> <span class="mi">82</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DEFINE_SCENE_AND_FRAME_LABEL_DATA</span> <span class="o">=</span> <span class="mi">86</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -692,8 +689,8 @@ class TagType {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

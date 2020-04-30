@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -236,198 +233,198 @@ var data = new Uimage(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.Uimage = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-/**
- * The new uImage format allows more flexibility in handling images of various
- * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
- * with sha1 and md5 checksums.
- * @see {@link https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h|Source}
- */
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">Uimage</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * The new uImage format allows more flexibility in handling images of various</span>
+<span class="cm"> * types (kernel, ramdisk, etc.), it also enhances integrity protection of images</span>
+<span class="cm"> * with sha1 and md5 checksums.</span>
+<span class="cm"> * @see {@link https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h|Source}</span>
+<span class="cm"> */</span>
 
-var Uimage = (function() {
-  Uimage.UimageOs = Object.freeze({
-    INVALID: 0,
-    OPENBSD: 1,
-    NETBSD: 2,
-    FREEBSD: 3,
-    BSD4_4: 4,
-    LINUX: 5,
-    SVR4: 6,
-    ESIX: 7,
-    SOLARIS: 8,
-    IRIX: 9,
-    SCO: 10,
-    DELL: 11,
-    NCR: 12,
-    LYNXOS: 13,
-    VXWORKS: 14,
-    PSOS: 15,
-    QNX: 16,
-    U_BOOT: 17,
-    RTEMS: 18,
-    ARTOS: 19,
-    UNITY: 20,
-    INTEGRITY: 21,
+<span class="kd">var</span> <span class="nx">Uimage</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">Uimage</span><span class="p">.</span><span class="nx">UimageOs</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">INVALID</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">OPENBSD</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">NETBSD</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">FREEBSD</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nx">BSD4_4</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nx">LINUX</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nx">SVR4</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="nx">ESIX</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="nx">SOLARIS</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="nx">IRIX</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="nx">SCO</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="nx">DELL</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
+    <span class="nx">NCR</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
+    <span class="nx">LYNXOS</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
+    <span class="nx">VXWORKS</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="nx">PSOS</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="nx">QNX</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="nx">U_BOOT</span><span class="o">:</span> <span class="mi">17</span><span class="p">,</span>
+    <span class="nx">RTEMS</span><span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
+    <span class="nx">ARTOS</span><span class="o">:</span> <span class="mi">19</span><span class="p">,</span>
+    <span class="nx">UNITY</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="nx">INTEGRITY</span><span class="o">:</span> <span class="mi">21</span><span class="p">,</span>
 
-    0: &quot;INVALID&quot;,
-    1: &quot;OPENBSD&quot;,
-    2: &quot;NETBSD&quot;,
-    3: &quot;FREEBSD&quot;,
-    4: &quot;BSD4_4&quot;,
-    5: &quot;LINUX&quot;,
-    6: &quot;SVR4&quot;,
-    7: &quot;ESIX&quot;,
-    8: &quot;SOLARIS&quot;,
-    9: &quot;IRIX&quot;,
-    10: &quot;SCO&quot;,
-    11: &quot;DELL&quot;,
-    12: &quot;NCR&quot;,
-    13: &quot;LYNXOS&quot;,
-    14: &quot;VXWORKS&quot;,
-    15: &quot;PSOS&quot;,
-    16: &quot;QNX&quot;,
-    17: &quot;U_BOOT&quot;,
-    18: &quot;RTEMS&quot;,
-    19: &quot;ARTOS&quot;,
-    20: &quot;UNITY&quot;,
-    21: &quot;INTEGRITY&quot;,
-  });
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;INVALID&quot;</span><span class="p">,</span>
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;OPENBSD&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;NETBSD&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;FREEBSD&quot;</span><span class="p">,</span>
+    <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;BSD4_4&quot;</span><span class="p">,</span>
+    <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;LINUX&quot;</span><span class="p">,</span>
+    <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;SVR4&quot;</span><span class="p">,</span>
+    <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;ESIX&quot;</span><span class="p">,</span>
+    <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;SOLARIS&quot;</span><span class="p">,</span>
+    <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;IRIX&quot;</span><span class="p">,</span>
+    <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;SCO&quot;</span><span class="p">,</span>
+    <span class="mi">11</span><span class="o">:</span> <span class="s2">&quot;DELL&quot;</span><span class="p">,</span>
+    <span class="mi">12</span><span class="o">:</span> <span class="s2">&quot;NCR&quot;</span><span class="p">,</span>
+    <span class="mi">13</span><span class="o">:</span> <span class="s2">&quot;LYNXOS&quot;</span><span class="p">,</span>
+    <span class="mi">14</span><span class="o">:</span> <span class="s2">&quot;VXWORKS&quot;</span><span class="p">,</span>
+    <span class="mi">15</span><span class="o">:</span> <span class="s2">&quot;PSOS&quot;</span><span class="p">,</span>
+    <span class="mi">16</span><span class="o">:</span> <span class="s2">&quot;QNX&quot;</span><span class="p">,</span>
+    <span class="mi">17</span><span class="o">:</span> <span class="s2">&quot;U_BOOT&quot;</span><span class="p">,</span>
+    <span class="mi">18</span><span class="o">:</span> <span class="s2">&quot;RTEMS&quot;</span><span class="p">,</span>
+    <span class="mi">19</span><span class="o">:</span> <span class="s2">&quot;ARTOS&quot;</span><span class="p">,</span>
+    <span class="mi">20</span><span class="o">:</span> <span class="s2">&quot;UNITY&quot;</span><span class="p">,</span>
+    <span class="mi">21</span><span class="o">:</span> <span class="s2">&quot;INTEGRITY&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
 
-  Uimage.UimageArch = Object.freeze({
-    INVALID: 0,
-    ALPHA: 1,
-    ARM: 2,
-    I386: 3,
-    IA64: 4,
-    MIPS: 5,
-    MIPS64: 6,
-    PPC: 7,
-    S390: 8,
-    SH: 9,
-    SPARC: 10,
-    SPARC64: 11,
-    M68K: 12,
-    NIOS: 13,
-    MICROBLAZE: 14,
-    NIOS2: 15,
-    BLACKFIN: 16,
-    AVR32: 17,
-    ST200: 18,
+  <span class="nx">Uimage</span><span class="p">.</span><span class="nx">UimageArch</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">INVALID</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">ALPHA</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">ARM</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">I386</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nx">IA64</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nx">MIPS</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nx">MIPS64</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="nx">PPC</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="nx">S390</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="nx">SH</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="nx">SPARC</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="nx">SPARC64</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
+    <span class="nx">M68K</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
+    <span class="nx">NIOS</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
+    <span class="nx">MICROBLAZE</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="nx">NIOS2</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="nx">BLACKFIN</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="nx">AVR32</span><span class="o">:</span> <span class="mi">17</span><span class="p">,</span>
+    <span class="nx">ST200</span><span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
 
-    0: &quot;INVALID&quot;,
-    1: &quot;ALPHA&quot;,
-    2: &quot;ARM&quot;,
-    3: &quot;I386&quot;,
-    4: &quot;IA64&quot;,
-    5: &quot;MIPS&quot;,
-    6: &quot;MIPS64&quot;,
-    7: &quot;PPC&quot;,
-    8: &quot;S390&quot;,
-    9: &quot;SH&quot;,
-    10: &quot;SPARC&quot;,
-    11: &quot;SPARC64&quot;,
-    12: &quot;M68K&quot;,
-    13: &quot;NIOS&quot;,
-    14: &quot;MICROBLAZE&quot;,
-    15: &quot;NIOS2&quot;,
-    16: &quot;BLACKFIN&quot;,
-    17: &quot;AVR32&quot;,
-    18: &quot;ST200&quot;,
-  });
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;INVALID&quot;</span><span class="p">,</span>
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;ALPHA&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;ARM&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;I386&quot;</span><span class="p">,</span>
+    <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;IA64&quot;</span><span class="p">,</span>
+    <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;MIPS&quot;</span><span class="p">,</span>
+    <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;MIPS64&quot;</span><span class="p">,</span>
+    <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;PPC&quot;</span><span class="p">,</span>
+    <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;S390&quot;</span><span class="p">,</span>
+    <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;SH&quot;</span><span class="p">,</span>
+    <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;SPARC&quot;</span><span class="p">,</span>
+    <span class="mi">11</span><span class="o">:</span> <span class="s2">&quot;SPARC64&quot;</span><span class="p">,</span>
+    <span class="mi">12</span><span class="o">:</span> <span class="s2">&quot;M68K&quot;</span><span class="p">,</span>
+    <span class="mi">13</span><span class="o">:</span> <span class="s2">&quot;NIOS&quot;</span><span class="p">,</span>
+    <span class="mi">14</span><span class="o">:</span> <span class="s2">&quot;MICROBLAZE&quot;</span><span class="p">,</span>
+    <span class="mi">15</span><span class="o">:</span> <span class="s2">&quot;NIOS2&quot;</span><span class="p">,</span>
+    <span class="mi">16</span><span class="o">:</span> <span class="s2">&quot;BLACKFIN&quot;</span><span class="p">,</span>
+    <span class="mi">17</span><span class="o">:</span> <span class="s2">&quot;AVR32&quot;</span><span class="p">,</span>
+    <span class="mi">18</span><span class="o">:</span> <span class="s2">&quot;ST200&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
 
-  Uimage.UimageComp = Object.freeze({
-    NONE: 0,
-    GZIP: 1,
-    BZIP2: 2,
-    LZMA: 3,
-    LZO: 4,
+  <span class="nx">Uimage</span><span class="p">.</span><span class="nx">UimageComp</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">NONE</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">GZIP</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">BZIP2</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">LZMA</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nx">LZO</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
 
-    0: &quot;NONE&quot;,
-    1: &quot;GZIP&quot;,
-    2: &quot;BZIP2&quot;,
-    3: &quot;LZMA&quot;,
-    4: &quot;LZO&quot;,
-  });
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;NONE&quot;</span><span class="p">,</span>
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;GZIP&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;BZIP2&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;LZMA&quot;</span><span class="p">,</span>
+    <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;LZO&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
 
-  Uimage.UimageType = Object.freeze({
-    INVALID: 0,
-    STANDALONE: 1,
-    KERNEL: 2,
-    RAMDISK: 3,
-    MULTI: 4,
-    FIRMWARE: 5,
-    SCRIPT: 6,
-    FILESYSTEM: 7,
-    FLATDT: 8,
-    KWBIMAGE: 9,
-    IMXIMAGE: 10,
+  <span class="nx">Uimage</span><span class="p">.</span><span class="nx">UimageType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">INVALID</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">STANDALONE</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">KERNEL</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">RAMDISK</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nx">MULTI</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nx">FIRMWARE</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nx">SCRIPT</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="nx">FILESYSTEM</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="nx">FLATDT</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="nx">KWBIMAGE</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="nx">IMXIMAGE</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
 
-    0: &quot;INVALID&quot;,
-    1: &quot;STANDALONE&quot;,
-    2: &quot;KERNEL&quot;,
-    3: &quot;RAMDISK&quot;,
-    4: &quot;MULTI&quot;,
-    5: &quot;FIRMWARE&quot;,
-    6: &quot;SCRIPT&quot;,
-    7: &quot;FILESYSTEM&quot;,
-    8: &quot;FLATDT&quot;,
-    9: &quot;KWBIMAGE&quot;,
-    10: &quot;IMXIMAGE&quot;,
-  });
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;INVALID&quot;</span><span class="p">,</span>
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;STANDALONE&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;KERNEL&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;RAMDISK&quot;</span><span class="p">,</span>
+    <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;MULTI&quot;</span><span class="p">,</span>
+    <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;FIRMWARE&quot;</span><span class="p">,</span>
+    <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;SCRIPT&quot;</span><span class="p">,</span>
+    <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;FILESYSTEM&quot;</span><span class="p">,</span>
+    <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;FLATDT&quot;</span><span class="p">,</span>
+    <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;KWBIMAGE&quot;</span><span class="p">,</span>
+    <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;IMXIMAGE&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
 
-  function Uimage(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
+  <span class="kd">function</span> <span class="nx">Uimage</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-    this._read();
-  }
-  Uimage.prototype._read = function() {
-    this.header = new Uheader(this._io, this, this._root);
-    this.data = this._io.readBytes(this.header.lenImage);
-  }
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">Uimage</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uheader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">lenImage</span><span class="p">);</span>
+  <span class="p">}</span>
 
-  var Uheader = Uimage.Uheader = (function() {
-    function Uheader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Uheader</span> <span class="o">=</span> <span class="nx">Uimage</span><span class="p">.</span><span class="nx">Uheader</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Uheader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Uheader.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([39, 5, 25, 86]);
-      this.headerCrc = this._io.readU4be();
-      this.timestamp = this._io.readU4be();
-      this.lenImage = this._io.readU4be();
-      this.loadAddress = this._io.readU4be();
-      this.entryAddress = this._io.readU4be();
-      this.dataCrc = this._io.readU4be();
-      this.osType = this._io.readU1();
-      this.architecture = this._io.readU1();
-      this.imageType = this._io.readU1();
-      this.compressionType = this._io.readU1();
-      this.name = KaitaiStream.bytesToStr(KaitaiStream.bytesTerminate(this._io.readBytes(32), 0, false), &quot;UTF-8&quot;);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Uheader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">39</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">86</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">headerCrc</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">timestamp</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lenImage</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">loadAddress</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">entryAddress</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">dataCrc</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">osType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">architecture</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">imageType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">compressionType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesTerminate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return Uheader;
-  })();
+    <span class="k">return</span> <span class="nx">Uheader</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  return Uimage;
-})();
-return Uimage;
-}));
-</code></pre>
+  <span class="k">return</span> <span class="nx">Uimage</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">Uimage</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -454,8 +451,8 @@ return Uimage;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

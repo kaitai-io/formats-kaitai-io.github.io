@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -251,146 +248,146 @@ VlqBase128Be data = new VlqBase128Be(new ByteBufferKaitaiStream(someArray));</co
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.ArrayList;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
 
 
-/**
- * A variable-length unsigned integer using base128 encoding. 1-byte groups
- * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
- * &quot;most significant group first&quot;, i.e. in &quot;big-endian&quot; manner.
- * 
- * This particular encoding is specified and used in:
- * 
- * * Standard MIDI file format
- * * ASN.1 BER encoding
- * 
- * More information on this encoding is available at
- * https://en.wikipedia.org/wiki/Variable-length_quantity
- * 
- * This particular implementation supports serialized values to up 8 bytes long.
- */
-public class VlqBase128Be extends KaitaiStruct {
-    public static VlqBase128Be fromFile(String fileName) throws IOException {
-        return new VlqBase128Be(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * A variable-length unsigned integer using base128 encoding. 1-byte groups</span>
+<span class="cm"> * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered</span>
+<span class="cm"> * &quot;most significant group first&quot;, i.e. in &quot;big-endian&quot; manner.</span>
+<span class="cm"> * </span>
+<span class="cm"> * This particular encoding is specified and used in:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * Standard MIDI file format</span>
+<span class="cm"> * * ASN.1 BER encoding</span>
+<span class="cm"> * </span>
+<span class="cm"> * More information on this encoding is available at</span>
+<span class="cm"> * https://en.wikipedia.org/wiki/Variable-length_quantity</span>
+<span class="cm"> * </span>
+<span class="cm"> * This particular implementation supports serialized values to up 8 bytes long.</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">VlqBase128Be</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">VlqBase128Be</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">VlqBase128Be</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public VlqBase128Be(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">VlqBase128Be</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public VlqBase128Be(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">VlqBase128Be</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public VlqBase128Be(KaitaiStream _io, KaitaiStruct _parent, VlqBase128Be _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.groups = new ArrayList&lt;Group&gt;();
-        {
-            Group _it;
-            int i = 0;
-            do {
-                _it = new Group(this._io, this, _root);
-                this.groups.add(_it);
-                i++;
-            } while (!(!(_it.hasNext())));
-        }
-    }
+    <span class="kd">public</span> <span class="nf">VlqBase128Be</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">VlqBase128Be</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">groups</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Group</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="p">{</span>
+            <span class="n">Group</span> <span class="n">_it</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">do</span> <span class="p">{</span>
+                <span class="n">_it</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Group</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">groups</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">_it</span><span class="p">);</span>
+                <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_it</span><span class="p">.</span><span class="na">hasNext</span><span class="p">())));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.
-     */
-    public static class Group extends KaitaiStruct {
-        public static Group fromFile(String fileName) throws IOException {
-            return new Group(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * One byte group, clearly divided into 7-bit &quot;value&quot; chunk and 1-bit &quot;continuation&quot; flag.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Group</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Group</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Group</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Group(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Group</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Group(KaitaiStream _io, VlqBase128Be _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Group</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">VlqBase128Be</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Group(KaitaiStream _io, VlqBase128Be _parent, VlqBase128Be _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.b = this._io.readU1();
-        }
-        private Boolean hasNext;
+        <span class="kd">public</span> <span class="nf">Group</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">VlqBase128Be</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">VlqBase128Be</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">b</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">hasNext</span><span class="p">;</span>
 
-        /**
-         * If true, then we have more bytes to read
-         */
-        public Boolean hasNext() {
-            if (this.hasNext != null)
-                return this.hasNext;
-            boolean _tmp = (boolean) ((b() &amp; 128) != 0);
-            this.hasNext = _tmp;
-            return this.hasNext;
-        }
-        private Integer value;
+        <span class="cm">/**</span>
+<span class="cm">         * If true, then we have more bytes to read</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">hasNext</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">hasNext</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasNext</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">b</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasNext</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasNext</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">value</span><span class="p">;</span>
 
-        /**
-         * The 7-bit (base128) numeric value chunk of this group
-         */
-        public Integer value() {
-            if (this.value != null)
-                return this.value;
-            int _tmp = (int) ((b() &amp; 127));
-            this.value = _tmp;
-            return this.value;
-        }
-        private int b;
-        private VlqBase128Be _root;
-        private VlqBase128Be _parent;
-        public int b() { return b; }
-        public VlqBase128Be _root() { return _root; }
-        public VlqBase128Be _parent() { return _parent; }
-    }
-    private Integer last;
-    public Integer last() {
-        if (this.last != null)
-            return this.last;
-        int _tmp = (int) ((groups().size() - 1));
-        this.last = _tmp;
-        return this.last;
-    }
-    private Integer value;
+        <span class="cm">/**</span>
+<span class="cm">         * The 7-bit (base128) numeric value chunk of this group</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">value</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">b</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">127</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">value</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">VlqBase128Be</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">VlqBase128Be</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">b</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">b</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">VlqBase128Be</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">VlqBase128Be</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">Integer</span> <span class="n">last</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">last</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">last</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">last</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">groups</span><span class="p">().</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">last</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">last</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">Integer</span> <span class="n">value</span><span class="p">;</span>
 
-    /**
-     * Resulting value as normal integer
-     */
-    public Integer value() {
-        if (this.value != null)
-            return this.value;
-        int _tmp = (int) ((((((((groups().get((int) last()).value() + (last() &gt;= 1 ? (groups().get((int) (last() - 1)).value() &lt;&lt; 7) : 0)) + (last() &gt;= 2 ? (groups().get((int) (last() - 2)).value() &lt;&lt; 14) : 0)) + (last() &gt;= 3 ? (groups().get((int) (last() - 3)).value() &lt;&lt; 21) : 0)) + (last() &gt;= 4 ? (groups().get((int) (last() - 4)).value() &lt;&lt; 28) : 0)) + (last() &gt;= 5 ? (groups().get((int) (last() - 5)).value() &lt;&lt; 35) : 0)) + (last() &gt;= 6 ? (groups().get((int) (last() - 6)).value() &lt;&lt; 42) : 0)) + (last() &gt;= 7 ? (groups().get((int) (last() - 7)).value() &lt;&lt; 49) : 0)));
-        this.value = _tmp;
-        return this.value;
-    }
-    private ArrayList&lt;Group&gt; groups;
-    private VlqBase128Be _root;
-    private KaitaiStruct _parent;
-    public ArrayList&lt;Group&gt; groups() { return groups; }
-    public VlqBase128Be _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-}
-</code></pre>
+    <span class="cm">/**</span>
+<span class="cm">     * Resulting value as normal integer</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">value</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((((((((</span><span class="n">groups</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">last</span><span class="p">()).</span><span class="na">value</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="n">last</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="o">?</span> <span class="p">(</span><span class="n">groups</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">last</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)).</span><span class="na">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span><span class="p">)</span> <span class="p">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">last</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="o">?</span> <span class="p">(</span><span class="n">groups</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">last</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)).</span><span class="na">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">14</span><span class="p">)</span> <span class="p">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">last</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="o">?</span> <span class="p">(</span><span class="n">groups</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">last</span><span class="p">()</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)).</span><span class="na">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">21</span><span class="p">)</span> <span class="p">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">last</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="o">?</span> <span class="p">(</span><span class="n">groups</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">last</span><span class="p">()</span> <span class="o">-</span> <span class="mi">4</span><span class="p">)).</span><span class="na">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">28</span><span class="p">)</span> <span class="p">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">last</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">5</span> <span class="o">?</span> <span class="p">(</span><span class="n">groups</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">last</span><span class="p">()</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)).</span><span class="na">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">35</span><span class="p">)</span> <span class="p">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">last</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">6</span> <span class="o">?</span> <span class="p">(</span><span class="n">groups</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">last</span><span class="p">()</span> <span class="o">-</span> <span class="mi">6</span><span class="p">)).</span><span class="na">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">42</span><span class="p">)</span> <span class="p">:</span> <span class="mi">0</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">last</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">7</span> <span class="o">?</span> <span class="p">(</span><span class="n">groups</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">last</span><span class="p">()</span> <span class="o">-</span> <span class="mi">7</span><span class="p">)).</span><span class="na">value</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">49</span><span class="p">)</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)));</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">value</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Group</span><span class="o">&gt;</span> <span class="n">groups</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">VlqBase128Be</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Group</span><span class="o">&gt;</span> <span class="nf">groups</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">groups</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">VlqBase128Be</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -417,8 +414,8 @@ public class VlqBase128Be extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

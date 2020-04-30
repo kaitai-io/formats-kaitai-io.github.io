@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -242,454 +239,454 @@ of 65536.
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;, &#39;./VlqBase128Be&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;), require(&#39;./VlqBase128Be&#39;));
-  } else {
-    root.Sqlite3 = factory(root.KaitaiStream, root.VlqBase128Be);
-  }
-}(this, function (KaitaiStream, VlqBase128Be) {
-/**
- * SQLite3 is a popular serverless SQL engine, implemented as a library
- * to be used within other applications. It keeps its databases as
- * regular disk files.
- * 
- * Every database file is segmented into pages. First page (starting at
- * the very beginning) is special: it contains a file-global header
- * which specifies some data relevant to proper parsing (i.e. format
- * versions, size of page, etc). After the header, normal contents of
- * the first page follow.
- * 
- * Each page would be of some type, and generally, they would be
- * reached via the links starting from the first page. First page type
- * (`root_page`) is always &quot;btree_page&quot;.
- * @see {@link https://www.sqlite.org/fileformat.html|Source}
- */
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">,</span> <span class="s1">&#39;./VlqBase128Be&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">),</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./VlqBase128Be&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">Sqlite3</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">,</span> <span class="nx">root</span><span class="p">.</span><span class="nx">VlqBase128Be</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">,</span> <span class="nx">VlqBase128Be</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * SQLite3 is a popular serverless SQL engine, implemented as a library</span>
+<span class="cm"> * to be used within other applications. It keeps its databases as</span>
+<span class="cm"> * regular disk files.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Every database file is segmented into pages. First page (starting at</span>
+<span class="cm"> * the very beginning) is special: it contains a file-global header</span>
+<span class="cm"> * which specifies some data relevant to proper parsing (i.e. format</span>
+<span class="cm"> * versions, size of page, etc). After the header, normal contents of</span>
+<span class="cm"> * the first page follow.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Each page would be of some type, and generally, they would be</span>
+<span class="cm"> * reached via the links starting from the first page. First page type</span>
+<span class="cm"> * (`root_page`) is always &quot;btree_page&quot;.</span>
+<span class="cm"> * @see {@link https://www.sqlite.org/fileformat.html|Source}</span>
+<span class="cm"> */</span>
 
-var Sqlite3 = (function() {
-  Sqlite3.Versions = Object.freeze({
-    LEGACY: 1,
-    WAL: 2,
+<span class="kd">var</span> <span class="nx">Sqlite3</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">Sqlite3</span><span class="p">.</span><span class="nx">Versions</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">LEGACY</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">WAL</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
 
-    1: &quot;LEGACY&quot;,
-    2: &quot;WAL&quot;,
-  });
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;LEGACY&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;WAL&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
 
-  Sqlite3.Encodings = Object.freeze({
-    UTF_8: 1,
-    UTF_16LE: 2,
-    UTF_16BE: 3,
+  <span class="nx">Sqlite3</span><span class="p">.</span><span class="nx">Encodings</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">UTF_8</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">UTF_16LE</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">UTF_16BE</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
 
-    1: &quot;UTF_8&quot;,
-    2: &quot;UTF_16LE&quot;,
-    3: &quot;UTF_16BE&quot;,
-  });
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;UTF_8&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;UTF_16LE&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;UTF_16BE&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
 
-  function Sqlite3(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
+  <span class="kd">function</span> <span class="nx">Sqlite3</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-    this._read();
-  }
-  Sqlite3.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0]);
-    this.lenPageMod = this._io.readU2be();
-    this.writeVersion = this._io.readU1();
-    this.readVersion = this._io.readU1();
-    this.reservedSpace = this._io.readU1();
-    this.maxPayloadFrac = this._io.readU1();
-    this.minPayloadFrac = this._io.readU1();
-    this.leafPayloadFrac = this._io.readU1();
-    this.fileChangeCounter = this._io.readU4be();
-    this.numPages = this._io.readU4be();
-    this.firstFreelistTrunkPage = this._io.readU4be();
-    this.numFreelistPages = this._io.readU4be();
-    this.schemaCookie = this._io.readU4be();
-    this.schemaFormat = this._io.readU4be();
-    this.defPageCacheSize = this._io.readU4be();
-    this.largestRootPage = this._io.readU4be();
-    this.textEncoding = this._io.readU4be();
-    this.userVersion = this._io.readU4be();
-    this.isIncrementalVacuum = this._io.readU4be();
-    this.applicationId = this._io.readU4be();
-    this.reserved = this._io.readBytes(20);
-    this.versionValidFor = this._io.readU4be();
-    this.sqliteVersionNumber = this._io.readU4be();
-    this.rootPage = new BtreePage(this._io, this, this._root);
-  }
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">Sqlite3</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">83</span><span class="p">,</span> <span class="mi">81</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span> <span class="mi">116</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">111</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">109</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">116</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">0</span><span class="p">]);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">lenPageMod</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">writeVersion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">readVersion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">reservedSpace</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">maxPayloadFrac</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">minPayloadFrac</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">leafPayloadFrac</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">fileChangeCounter</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">numPages</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">firstFreelistTrunkPage</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">numFreelistPages</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">schemaCookie</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">schemaFormat</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">defPageCacheSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">largestRootPage</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">textEncoding</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">userVersion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">isIncrementalVacuum</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">applicationId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">versionValidFor</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">sqliteVersionNumber</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">rootPage</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BtreePage</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+  <span class="p">}</span>
 
-  var Serial = Sqlite3.Serial = (function() {
-    function Serial(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Serial</span> <span class="o">=</span> <span class="nx">Sqlite3</span><span class="p">.</span><span class="nx">Serial</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Serial</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Serial.prototype._read = function() {
-      this.code = new VlqBase128Be(this._io, this, null);
-    }
-    Object.defineProperty(Serial.prototype, &#39;isBlob&#39;, {
-      get: function() {
-        if (this._m_isBlob !== undefined)
-          return this._m_isBlob;
-        this._m_isBlob =  ((this.code.value &gt;= 12) &amp;&amp; (KaitaiStream.mod(this.code.value, 2) == 0)) ;
-        return this._m_isBlob;
-      }
-    });
-    Object.defineProperty(Serial.prototype, &#39;isString&#39;, {
-      get: function() {
-        if (this._m_isString !== undefined)
-          return this._m_isString;
-        this._m_isString =  ((this.code.value &gt;= 13) &amp;&amp; (KaitaiStream.mod(this.code.value, 2) == 1)) ;
-        return this._m_isString;
-      }
-    });
-    Object.defineProperty(Serial.prototype, &#39;lenContent&#39;, {
-      get: function() {
-        if (this._m_lenContent !== undefined)
-          return this._m_lenContent;
-        if (this.code.value &gt;= 12) {
-          this._m_lenContent = Math.floor((this.code.value - 12) / 2);
-        }
-        return this._m_lenContent;
-      }
-    });
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Serial</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">code</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">VlqBase128Be</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Serial</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isBlob&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isBlob</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isBlob</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isBlob</span> <span class="o">=</span>  <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="p">.</span><span class="nx">value</span> <span class="o">&gt;=</span> <span class="mi">12</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">mod</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> <span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isBlob</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Serial</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isString&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isString</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isString</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isString</span> <span class="o">=</span>  <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="p">.</span><span class="nx">value</span> <span class="o">&gt;=</span> <span class="mi">13</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">mod</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span> <span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isString</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Serial</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;lenContent&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lenContent</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lenContent</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="p">.</span><span class="nx">value</span> <span class="o">&gt;=</span> <span class="mi">12</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_lenContent</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="p">.</span><span class="nx">value</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lenContent</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    return Serial;
-  })();
+    <span class="k">return</span> <span class="nx">Serial</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var BtreePage = Sqlite3.BtreePage = (function() {
-    function BtreePage(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">BtreePage</span> <span class="o">=</span> <span class="nx">Sqlite3</span><span class="p">.</span><span class="nx">BtreePage</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">BtreePage</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    BtreePage.prototype._read = function() {
-      this.pageType = this._io.readU1();
-      this.firstFreeblock = this._io.readU2be();
-      this.numCells = this._io.readU2be();
-      this.ofsCells = this._io.readU2be();
-      this.numFragFreeBytes = this._io.readU1();
-      if ( ((this.pageType == 2) || (this.pageType == 5)) ) {
-        this.rightPtr = this._io.readU4be();
-      }
-      this.cells = new Array(this.numCells);
-      for (var i = 0; i &lt; this.numCells; i++) {
-        this.cells[i] = new RefCell(this._io, this, this._root);
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">BtreePage</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">pageType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">firstFreeblock</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numCells</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">ofsCells</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numFragFreeBytes</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">pageType</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">pageType</span> <span class="o">==</span> <span class="mi">5</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">rightPtr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">cells</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numCells</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numCells</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">cells</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RefCell</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return BtreePage;
-  })();
+    <span class="k">return</span> <span class="nx">BtreePage</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}</span>
+<span class="cm">   */</span>
 
-  var CellIndexLeaf = Sqlite3.CellIndexLeaf = (function() {
-    function CellIndexLeaf(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">CellIndexLeaf</span> <span class="o">=</span> <span class="nx">Sqlite3</span><span class="p">.</span><span class="nx">CellIndexLeaf</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">CellIndexLeaf</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    CellIndexLeaf.prototype._read = function() {
-      this.lenPayload = new VlqBase128Be(this._io, this, null);
-      this._raw_payload = this._io.readBytes(this.lenPayload.value);
-      var _io__raw_payload = new KaitaiStream(this._raw_payload);
-      this.payload = new CellPayload(_io__raw_payload, this, this._root);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">CellIndexLeaf</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lenPayload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">VlqBase128Be</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenPayload</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CellPayload</span><span class="p">(</span><span class="nx">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return CellIndexLeaf;
-  })();
+    <span class="k">return</span> <span class="nx">CellIndexLeaf</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var Serials = Sqlite3.Serials = (function() {
-    function Serials(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Serials</span> <span class="o">=</span> <span class="nx">Sqlite3</span><span class="p">.</span><span class="nx">Serials</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Serials</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Serials.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new VlqBase128Be(this._io, this, null));
-        i++;
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Serials</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">VlqBase128Be</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">));</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return Serials;
-  })();
+    <span class="k">return</span> <span class="nx">Serials</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}</span>
+<span class="cm">   */</span>
 
-  var CellTableLeaf = Sqlite3.CellTableLeaf = (function() {
-    function CellTableLeaf(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">CellTableLeaf</span> <span class="o">=</span> <span class="nx">Sqlite3</span><span class="p">.</span><span class="nx">CellTableLeaf</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">CellTableLeaf</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    CellTableLeaf.prototype._read = function() {
-      this.lenPayload = new VlqBase128Be(this._io, this, null);
-      this.rowId = new VlqBase128Be(this._io, this, null);
-      this._raw_payload = this._io.readBytes(this.lenPayload.value);
-      var _io__raw_payload = new KaitaiStream(this._raw_payload);
-      this.payload = new CellPayload(_io__raw_payload, this, this._root);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">CellTableLeaf</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lenPayload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">VlqBase128Be</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">rowId</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">VlqBase128Be</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenPayload</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CellPayload</span><span class="p">(</span><span class="nx">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return CellTableLeaf;
-  })();
+    <span class="k">return</span> <span class="nx">CellTableLeaf</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * @see {@link https://sqlite.org/fileformat2.html#record_format|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://sqlite.org/fileformat2.html#record_format|Source}</span>
+<span class="cm">   */</span>
 
-  var CellPayload = Sqlite3.CellPayload = (function() {
-    function CellPayload(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">CellPayload</span> <span class="o">=</span> <span class="nx">Sqlite3</span><span class="p">.</span><span class="nx">CellPayload</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">CellPayload</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    CellPayload.prototype._read = function() {
-      this.lenHeaderAndLen = new VlqBase128Be(this._io, this, null);
-      this._raw_columnSerials = this._io.readBytes((this.lenHeaderAndLen.value - 1));
-      var _io__raw_columnSerials = new KaitaiStream(this._raw_columnSerials);
-      this.columnSerials = new Serials(_io__raw_columnSerials, this, this._root);
-      this.columnContents = new Array(this.columnSerials.entries.length);
-      for (var i = 0; i &lt; this.columnSerials.entries.length; i++) {
-        this.columnContents[i] = new ColumnContent(this._io, this, this._root, this.columnSerials.entries[i]);
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">CellPayload</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lenHeaderAndLen</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">VlqBase128Be</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_columnSerials</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">lenHeaderAndLen</span><span class="p">.</span><span class="nx">value</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_columnSerials</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_columnSerials</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">columnSerials</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Serials</span><span class="p">(</span><span class="nx">_io__raw_columnSerials</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">columnContents</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">columnSerials</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">columnSerials</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">columnContents</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ColumnContent</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">columnSerials</span><span class="p">.</span><span class="nx">entries</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return CellPayload;
-  })();
+    <span class="k">return</span> <span class="nx">CellPayload</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}</span>
+<span class="cm">   */</span>
 
-  var CellTableInterior = Sqlite3.CellTableInterior = (function() {
-    function CellTableInterior(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">CellTableInterior</span> <span class="o">=</span> <span class="nx">Sqlite3</span><span class="p">.</span><span class="nx">CellTableInterior</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">CellTableInterior</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    CellTableInterior.prototype._read = function() {
-      this.leftChildPage = this._io.readU4be();
-      this.rowId = new VlqBase128Be(this._io, this, null);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">CellTableInterior</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">leftChildPage</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">rowId</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">VlqBase128Be</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return CellTableInterior;
-  })();
+    <span class="k">return</span> <span class="nx">CellTableInterior</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.sqlite.org/fileformat.html#b_tree_pages|Source}</span>
+<span class="cm">   */</span>
 
-  var CellIndexInterior = Sqlite3.CellIndexInterior = (function() {
-    function CellIndexInterior(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">CellIndexInterior</span> <span class="o">=</span> <span class="nx">Sqlite3</span><span class="p">.</span><span class="nx">CellIndexInterior</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">CellIndexInterior</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    CellIndexInterior.prototype._read = function() {
-      this.leftChildPage = this._io.readU4be();
-      this.lenPayload = new VlqBase128Be(this._io, this, null);
-      this._raw_payload = this._io.readBytes(this.lenPayload.value);
-      var _io__raw_payload = new KaitaiStream(this._raw_payload);
-      this.payload = new CellPayload(_io__raw_payload, this, this._root);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">CellIndexInterior</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">leftChildPage</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lenPayload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">VlqBase128Be</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenPayload</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_payload</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CellPayload</span><span class="p">(</span><span class="nx">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return CellIndexInterior;
-  })();
+    <span class="k">return</span> <span class="nx">CellIndexInterior</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var ColumnContent = Sqlite3.ColumnContent = (function() {
-    function ColumnContent(_io, _parent, _root, ser) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-      this.ser = ser;
+  <span class="kd">var</span> <span class="nx">ColumnContent</span> <span class="o">=</span> <span class="nx">Sqlite3</span><span class="p">.</span><span class="nx">ColumnContent</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ColumnContent</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">ser</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">ser</span> <span class="o">=</span> <span class="nx">ser</span><span class="p">;</span>
 
-      this._read();
-    }
-    ColumnContent.prototype._read = function() {
-      if ( ((this.serialType.code.value &gt;= 1) &amp;&amp; (this.serialType.code.value &lt;= 6)) ) {
-        switch (this.serialType.code.value) {
-        case 4:
-          this.asInt = this._io.readU4be();
-          break;
-        case 6:
-          this.asInt = this._io.readU8be();
-          break;
-        case 1:
-          this.asInt = this._io.readU1();
-          break;
-        case 3:
-          this.asInt = this._io.readBitsInt(24);
-          break;
-        case 5:
-          this.asInt = this._io.readBitsInt(48);
-          break;
-        case 2:
-          this.asInt = this._io.readU2be();
-          break;
-        }
-      }
-      if (this.serialType.code.value == 7) {
-        this.asFloat = this._io.readF8be();
-      }
-      if (this.serialType.isBlob) {
-        this.asBlob = this._io.readBytes(this.serialType.lenContent);
-      }
-      this.asStr = KaitaiStream.bytesToStr(this._io.readBytes(this.serialType.lenContent), &quot;UTF-8&quot;);
-    }
-    Object.defineProperty(ColumnContent.prototype, &#39;serialType&#39;, {
-      get: function() {
-        if (this._m_serialType !== undefined)
-          return this._m_serialType;
-        this._m_serialType = this.ser;
-        return this._m_serialType;
-      }
-    });
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ColumnContent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">serialType</span><span class="p">.</span><span class="nx">code</span><span class="p">.</span><span class="nx">value</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">serialType</span><span class="p">.</span><span class="nx">code</span><span class="p">.</span><span class="nx">value</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">serialType</span><span class="p">.</span><span class="nx">code</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="mi">4</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">asInt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">6</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">asInt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8be</span><span class="p">();</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">asInt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">3</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">asInt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">24</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">5</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">asInt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">48</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">asInt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">serialType</span><span class="p">.</span><span class="nx">code</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="mi">7</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">asFloat</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readF8be</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">serialType</span><span class="p">.</span><span class="nx">isBlob</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">asBlob</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">serialType</span><span class="p">.</span><span class="nx">lenContent</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">asStr</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">serialType</span><span class="p">.</span><span class="nx">lenContent</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ColumnContent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;serialType&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_serialType</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_serialType</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_serialType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">ser</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_serialType</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    return ColumnContent;
-  })();
+    <span class="k">return</span> <span class="nx">ColumnContent</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var RefCell = Sqlite3.RefCell = (function() {
-    function RefCell(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">RefCell</span> <span class="o">=</span> <span class="nx">Sqlite3</span><span class="p">.</span><span class="nx">RefCell</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">RefCell</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    RefCell.prototype._read = function() {
-      this.ofsBody = this._io.readU2be();
-    }
-    Object.defineProperty(RefCell.prototype, &#39;body&#39;, {
-      get: function() {
-        if (this._m_body !== undefined)
-          return this._m_body;
-        var _pos = this._io.pos;
-        this._io.seek(this.ofsBody);
-        switch (this._parent.pageType) {
-        case 13:
-          this._m_body = new CellTableLeaf(this._io, this, this._root);
-          break;
-        case 5:
-          this._m_body = new CellTableInterior(this._io, this, this._root);
-          break;
-        case 10:
-          this._m_body = new CellIndexLeaf(this._io, this, this._root);
-          break;
-        case 2:
-          this._m_body = new CellIndexInterior(this._io, this, this._root);
-          break;
-        }
-        this._io.seek(_pos);
-        return this._m_body;
-      }
-    });
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">RefCell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">ofsBody</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">RefCell</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;body&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">ofsBody</span><span class="p">);</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">pageType</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="mi">13</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CellTableLeaf</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">5</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CellTableInterior</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">10</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CellIndexLeaf</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CellIndexInterior</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    return RefCell;
-  })();
-  Object.defineProperty(Sqlite3.prototype, &#39;lenPage&#39;, {
-    get: function() {
-      if (this._m_lenPage !== undefined)
-        return this._m_lenPage;
-      this._m_lenPage = (this.lenPageMod == 1 ? 65536 : this.lenPageMod);
-      return this._m_lenPage;
-    }
-  });
+    <span class="k">return</span> <span class="nx">RefCell</span><span class="p">;</span>
+  <span class="p">})();</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Sqlite3</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;lenPage&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lenPage</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lenPage</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_lenPage</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenPageMod</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="mi">65536</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">lenPageMod</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lenPage</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
 
-  /**
-   * The database page size in bytes. Must be a power of two between
-   * 512 and 32768 inclusive, or the value 1 representing a page size
-   * of 65536.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * The database page size in bytes. Must be a power of two between</span>
+<span class="cm">   * 512 and 32768 inclusive, or the value 1 representing a page size</span>
+<span class="cm">   * of 65536.</span>
+<span class="cm">   */</span>
 
-  /**
-   * Bytes of unused &quot;reserved&quot; space at the end of each page. Usually 0.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Bytes of unused &quot;reserved&quot; space at the end of each page. Usually 0.</span>
+<span class="cm">   */</span>
 
-  /**
-   * Maximum embedded payload fraction. Must be 64.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Maximum embedded payload fraction. Must be 64.</span>
+<span class="cm">   */</span>
 
-  /**
-   * Minimum embedded payload fraction. Must be 32.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Minimum embedded payload fraction. Must be 32.</span>
+<span class="cm">   */</span>
 
-  /**
-   * Leaf payload fraction. Must be 32.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Leaf payload fraction. Must be 32.</span>
+<span class="cm">   */</span>
 
-  /**
-   * Size of the database file in pages. The &quot;in-header database size&quot;.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Size of the database file in pages. The &quot;in-header database size&quot;.</span>
+<span class="cm">   */</span>
 
-  /**
-   * Page number of the first freelist trunk page.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Page number of the first freelist trunk page.</span>
+<span class="cm">   */</span>
 
-  /**
-   * Total number of freelist pages.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Total number of freelist pages.</span>
+<span class="cm">   */</span>
 
-  /**
-   * The schema format number. Supported schema formats are 1, 2, 3, and 4.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * The schema format number. Supported schema formats are 1, 2, 3, and 4.</span>
+<span class="cm">   */</span>
 
-  /**
-   * Default page cache size.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Default page cache size.</span>
+<span class="cm">   */</span>
 
-  /**
-   * The page number of the largest root b-tree page when in auto-vacuum or incremental-vacuum modes, or zero otherwise.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * The page number of the largest root b-tree page when in auto-vacuum or incremental-vacuum modes, or zero otherwise.</span>
+<span class="cm">   */</span>
 
-  /**
-   * The database text encoding. A value of 1 means UTF-8. A value of 2 means UTF-16le. A value of 3 means UTF-16be.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * The database text encoding. A value of 1 means UTF-8. A value of 2 means UTF-16le. A value of 3 means UTF-16be.</span>
+<span class="cm">   */</span>
 
-  /**
-   * The &quot;user version&quot; as read and set by the user_version pragma.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * The &quot;user version&quot; as read and set by the user_version pragma.</span>
+<span class="cm">   */</span>
 
-  /**
-   * True (non-zero) for incremental-vacuum mode. False (zero) otherwise.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * True (non-zero) for incremental-vacuum mode. False (zero) otherwise.</span>
+<span class="cm">   */</span>
 
-  /**
-   * The &quot;Application ID&quot; set by PRAGMA application_id.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * The &quot;Application ID&quot; set by PRAGMA application_id.</span>
+<span class="cm">   */</span>
 
-  return Sqlite3;
-})();
-return Sqlite3;
-}));
-</code></pre>
+  <span class="k">return</span> <span class="nx">Sqlite3</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">Sqlite3</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -716,8 +713,8 @@ return Sqlite3;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

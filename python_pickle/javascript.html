@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -290,851 +287,851 @@ var data = new PythonPickle(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.PythonPickle = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-/**
- * Python Pickle format serializes Python objects to a byte stream, as a sequence
- * of operations to run on the Pickle Virtual Machine.
- * 
- * The format is mostly implementation defined, there is no formal specification.
- * Pickle data types are closely coupled to the Python object model.
- * Python singletons, and most builtin types (e.g. `None`, `int`,`dict`, `list`)
- * are serialised using dedicated Pickle opcodes.
- * Other builtin types, and all classes  (e.g. `set`, `datetime.datetime`) are
- * serialised by encoding the name of a constructor callable.
- * They are deserialised by importing that constructor, and calling it.
- * So, unpickling an arbitrary pickle, using the Python&#39;s stdlib pickle module
- * can cause arbitrary code execution.
- * 
- * Pickle format has evolved with Python, later protocols add opcodes &amp; types.
- * Later Python releases can pickle to or unpickle from any earlier protocol.
- * 
- * * Protocol 0: ASCII clean, no explicit version, fields are &#39;\n&#39; terminated.
- * * Protocol 1: Binary, no explicit version, first length prefixed types.
- * * Protocol 2: Python 2.3+. Explicit versioning, more length prefixed types.
- *   https://www.python.org/dev/peps/pep-0307/
- * * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.
- * * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.
- *   https://www.python.org/dev/peps/pep-3154/
- * * Protocol 5: Python 3.8+: Opcodes for `bytearray` and out of band data
- *   https://www.python.org/dev/peps/pep-0574/
- * @see {@link https://github.com/python/cpython/blob/v3.8.1/Lib/pickletools.py|Source}
- */
-
-var PythonPickle = (function() {
-  PythonPickle.Opcode = Object.freeze({
-    MARK: 40,
-    EMPTY_TUPLE: 41,
-    STOP: 46,
-    POP: 48,
-    POP_MARK: 49,
-    DUP: 50,
-    BINBYTES: 66,
-    SHORT_BINBYTES: 67,
-    FLOAT: 70,
-    BINFLOAT: 71,
-    INT: 73,
-    BININT: 74,
-    BININT1: 75,
-    LONG: 76,
-    BININT2: 77,
-    NONE: 78,
-    PERSID: 80,
-    BINPERSID: 81,
-    REDUCE: 82,
-    STRING: 83,
-    BINSTRING: 84,
-    SHORT_BINSTRING: 85,
-    UNICODE: 86,
-    BINUNICODE: 88,
-    EMPTY_LIST: 93,
-    APPEND: 97,
-    BUILD: 98,
-    GLOBAL: 99,
-    DICT: 100,
-    APPENDS: 101,
-    GET: 103,
-    BINGET: 104,
-    INST: 105,
-    LONG_BINGET: 106,
-    LIST: 108,
-    OBJ: 111,
-    PUT: 112,
-    BINPUT: 113,
-    LONG_BINPUT: 114,
-    SETITEM: 115,
-    TUPLE: 116,
-    SETITEMS: 117,
-    EMPTY_DICT: 125,
-    PROTO: 128,
-    NEWOBJ: 129,
-    EXT1: 130,
-    EXT2: 131,
-    EXT4: 132,
-    TUPLE1: 133,
-    TUPLE2: 134,
-    TUPLE3: 135,
-    NEWTRUE: 136,
-    NEWFALSE: 137,
-    LONG1: 138,
-    LONG4: 139,
-    SHORT_BINUNICODE: 140,
-    BINUNICODE8: 141,
-    BINBYTES8: 142,
-    EMPTY_SET: 143,
-    ADDITEMS: 144,
-    FROZENSET: 145,
-    NEWOBJ_EX: 146,
-    STACK_GLOBAL: 147,
-    MEMOIZE: 148,
-    FRAME: 149,
-    BYTEARRAY8: 150,
-    NEXT_BUFFER: 151,
-    READ_BUFFER: 152,
-
-    40: &quot;MARK&quot;,
-    41: &quot;EMPTY_TUPLE&quot;,
-    46: &quot;STOP&quot;,
-    48: &quot;POP&quot;,
-    49: &quot;POP_MARK&quot;,
-    50: &quot;DUP&quot;,
-    66: &quot;BINBYTES&quot;,
-    67: &quot;SHORT_BINBYTES&quot;,
-    70: &quot;FLOAT&quot;,
-    71: &quot;BINFLOAT&quot;,
-    73: &quot;INT&quot;,
-    74: &quot;BININT&quot;,
-    75: &quot;BININT1&quot;,
-    76: &quot;LONG&quot;,
-    77: &quot;BININT2&quot;,
-    78: &quot;NONE&quot;,
-    80: &quot;PERSID&quot;,
-    81: &quot;BINPERSID&quot;,
-    82: &quot;REDUCE&quot;,
-    83: &quot;STRING&quot;,
-    84: &quot;BINSTRING&quot;,
-    85: &quot;SHORT_BINSTRING&quot;,
-    86: &quot;UNICODE&quot;,
-    88: &quot;BINUNICODE&quot;,
-    93: &quot;EMPTY_LIST&quot;,
-    97: &quot;APPEND&quot;,
-    98: &quot;BUILD&quot;,
-    99: &quot;GLOBAL&quot;,
-    100: &quot;DICT&quot;,
-    101: &quot;APPENDS&quot;,
-    103: &quot;GET&quot;,
-    104: &quot;BINGET&quot;,
-    105: &quot;INST&quot;,
-    106: &quot;LONG_BINGET&quot;,
-    108: &quot;LIST&quot;,
-    111: &quot;OBJ&quot;,
-    112: &quot;PUT&quot;,
-    113: &quot;BINPUT&quot;,
-    114: &quot;LONG_BINPUT&quot;,
-    115: &quot;SETITEM&quot;,
-    116: &quot;TUPLE&quot;,
-    117: &quot;SETITEMS&quot;,
-    125: &quot;EMPTY_DICT&quot;,
-    128: &quot;PROTO&quot;,
-    129: &quot;NEWOBJ&quot;,
-    130: &quot;EXT1&quot;,
-    131: &quot;EXT2&quot;,
-    132: &quot;EXT4&quot;,
-    133: &quot;TUPLE1&quot;,
-    134: &quot;TUPLE2&quot;,
-    135: &quot;TUPLE3&quot;,
-    136: &quot;NEWTRUE&quot;,
-    137: &quot;NEWFALSE&quot;,
-    138: &quot;LONG1&quot;,
-    139: &quot;LONG4&quot;,
-    140: &quot;SHORT_BINUNICODE&quot;,
-    141: &quot;BINUNICODE8&quot;,
-    142: &quot;BINBYTES8&quot;,
-    143: &quot;EMPTY_SET&quot;,
-    144: &quot;ADDITEMS&quot;,
-    145: &quot;FROZENSET&quot;,
-    146: &quot;NEWOBJ_EX&quot;,
-    147: &quot;STACK_GLOBAL&quot;,
-    148: &quot;MEMOIZE&quot;,
-    149: &quot;FRAME&quot;,
-    150: &quot;BYTEARRAY8&quot;,
-    151: &quot;NEXT_BUFFER&quot;,
-    152: &quot;READ_BUFFER&quot;,
-  });
-
-  function PythonPickle(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
-
-    this._read();
-  }
-  PythonPickle.prototype._read = function() {
-    this.ops = []
-    var i = 0;
-    do {
-      var _ = new Op(this._io, this, this._root);
-      this.ops.push(_);
-      i++;
-    } while (!(_.code == PythonPickle.Opcode.STOP));
-  }
-
-  /**
-   * Length prefixed string, between 0 and 2**64-1 bytes long.
-   * 
-   * Only a 64-bit build of Python would produce a pickle containing strings
-   * large enough to need this type. Such a pickle could not be unpickled on
-   * a 32-bit build of Python, because the string would be larger than
-   * `sys.maxsize`.
-   */
-
-  var Unicodestring8 = PythonPickle.Unicodestring8 = (function() {
-    function Unicodestring8(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Unicodestring8.prototype._read = function() {
-      this.len = this._io.readU8le();
-      this.val = KaitaiStream.bytesToStr(this._io.readBytes(this.len), &quot;utf8&quot;);
-    }
-
-    return Unicodestring8;
-  })();
-
-  /**
-   * Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,
-   * encoded as two&#39;s complement.
-   */
-
-  var Long1 = PythonPickle.Long1 = (function() {
-    function Long1(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Long1.prototype._read = function() {
-      this.len = this._io.readU1();
-      this.val = this._io.readBytes(this.len);
-    }
-
-    return Long1;
-  })();
-
-  /**
-   * Length prefixed string, between 0 and 2**64-1 bytes long.
-   * 
-   * Only a 64-bit build of Python would produce a pickle containing strings
-   * large enough to need this type. Such a pickle could not be unpickled on
-   * a 32-bit build of Python, because the string would be larger than
-   * `sys.maxsize`.
-   */
-
-  var Bytes8 = PythonPickle.Bytes8 = (function() {
-    function Bytes8(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Bytes8.prototype._read = function() {
-      this.len = this._io.readU8le();
-      this.val = this._io.readBytes(this.len);
-    }
-
-    return Bytes8;
-  })();
-
-  /**
-   * Length prefixed byte string, between 0 and 255 bytes long.
-   */
-
-  var Bytes1 = PythonPickle.Bytes1 = (function() {
-    function Bytes1(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Bytes1.prototype._read = function() {
-      this.len = this._io.readU1();
-      this.val = this._io.readBytes(this.len);
-    }
-
-    return Bytes1;
-  })();
-
-  /**
-   * Length prefixed string, between 0 and 2**32-1 bytes long
-   */
-
-  var Bytes4 = PythonPickle.Bytes4 = (function() {
-    function Bytes4(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Bytes4.prototype._read = function() {
-      this.len = this._io.readU4le();
-      this.val = this._io.readBytes(this.len);
-    }
-
-    return Bytes4;
-  })();
-
-  /**
-   * Some opcodes take no argument, this empty type is used for them.
-   */
-
-  var NoArg = PythonPickle.NoArg = (function() {
-    function NoArg(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    NoArg.prototype._read = function() {
-    }
-
-    return NoArg;
-  })();
-
-  /**
-   * Unquoted string, does not contain string escapes.
-   */
-
-  var StringnlNoescape = PythonPickle.StringnlNoescape = (function() {
-    function StringnlNoescape(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    StringnlNoescape.prototype._read = function() {
-      this.val = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), &quot;ascii&quot;);
-    }
-
-    return StringnlNoescape;
-  })();
-
-  /**
-   * Integer, encoded with the ASCII chracters [0-9-], followed by &#39;L&#39;.
-   */
-
-  var DecimalnlLong = PythonPickle.DecimalnlLong = (function() {
-    function DecimalnlLong(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DecimalnlLong.prototype._read = function() {
-      this.val = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), &quot;ascii&quot;);
-    }
-
-    return DecimalnlLong;
-  })();
-
-  /**
-   * Length prefixed string, between 0 and 2**32-1 bytes long
-   */
-
-  var Unicodestring4 = PythonPickle.Unicodestring4 = (function() {
-    function Unicodestring4(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Unicodestring4.prototype._read = function() {
-      this.len = this._io.readU4le();
-      this.val = KaitaiStream.bytesToStr(this._io.readBytes(this.len), &quot;utf8&quot;);
-    }
-
-    return Unicodestring4;
-  })();
-
-  /**
-   * Unquoted string, containing Python Unicode escapes.
-   */
-
-  var Unicodestringnl = PythonPickle.Unicodestringnl = (function() {
-    function Unicodestringnl(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Unicodestringnl.prototype._read = function() {
-      this.val = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), &quot;ascii&quot;);
-    }
-
-    return Unicodestringnl;
-  })();
-
-  /**
-   * Large signed integer, in the range -2**(8*2**32-1) to 2**(8*2**32-1)-1,
-   * encoded as two&#39;s complement.
-   */
-
-  var Long4 = PythonPickle.Long4 = (function() {
-    function Long4(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Long4.prototype._read = function() {
-      this.len = this._io.readU4le();
-      this.val = this._io.readBytes(this.len);
-    }
-
-    return Long4;
-  })();
-
-  /**
-   * Length prefixed string, between 0 and 255 bytes long. Encoding is
-   * unspecified.
-   * 
-   * The default Python 2.x string type (`str`) is a sequence of bytes.
-   * These are pickled as `string1` or `string4`, when protocol == 2.
-   * The bytes are written directly, no explicit encoding is performed.
-   * 
-   * Python 3.x will not pickle an object as `string1` or `string4`.
-   * Instead, opcodes and types with a known encoding are used.
-   * When unpickling
-   * 
-   * - `pickle.Unpickler` objects default to ASCII, which can be overriden
-   * - `pickletools.dis` uses latin1, and cannot be overriden
-   * @see {@link https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495|Source}
-   */
-
-  var String1 = PythonPickle.String1 = (function() {
-    function String1(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    String1.prototype._read = function() {
-      this.len = this._io.readU1();
-      this.val = this._io.readBytes(this.len);
-    }
-
-    return String1;
-  })();
-
-  /**
-   * Length prefixed string, between 0 and 2**64-1 bytes long.
-   * 
-   * The contents are deserilised into a `bytearray` object.
-   */
-
-  var Bytearray8 = PythonPickle.Bytearray8 = (function() {
-    function Bytearray8(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Bytearray8.prototype._read = function() {
-      this.len = this._io.readU8le();
-      this.val = this._io.readBytes(this.len);
-    }
-
-    return Bytearray8;
-  })();
-
-  /**
-   * Integer or boolean, encoded with the ASCII characters [0-9-].
-   * 
-   * The values &#39;00&#39; and &#39;01&#39; encode the Python values `False` and `True`.
-   * Normally a value would not contain leading &#39;0&#39; characters.
-   */
-
-  var DecimalnlShort = PythonPickle.DecimalnlShort = (function() {
-    function DecimalnlShort(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    DecimalnlShort.prototype._read = function() {
-      this.val = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), &quot;ascii&quot;);
-    }
-
-    return DecimalnlShort;
-  })();
-
-  /**
-   * Length prefixed string, between 0 and 255 bytes long
-   */
-
-  var Unicodestring1 = PythonPickle.Unicodestring1 = (function() {
-    function Unicodestring1(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Unicodestring1.prototype._read = function() {
-      this.len = this._io.readU4le();
-      this.val = KaitaiStream.bytesToStr(this._io.readBytes(this.len), &quot;utf8&quot;);
-    }
-
-    return Unicodestring1;
-  })();
-
-  /**
-   * Quoted string, possibly containing Python string escapes.
-   */
-
-  var Stringnl = PythonPickle.Stringnl = (function() {
-    function Stringnl(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Stringnl.prototype._read = function() {
-      this.val = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), &quot;ascii&quot;);
-    }
-
-    return Stringnl;
-  })();
-
-  /**
-   * Pair of unquoted, unescaped strings.
-   */
-
-  var StringnlNoescapePair = PythonPickle.StringnlNoescapePair = (function() {
-    function StringnlNoescapePair(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    StringnlNoescapePair.prototype._read = function() {
-      this.val1 = new StringnlNoescape(this._io, this, this._root);
-      this.val2 = new StringnlNoescape(this._io, this, this._root);
-    }
-
-    return StringnlNoescapePair;
-  })();
-
-  /**
-   * Length prefixed string, between 0 and 2**31-1 bytes long. Encoding is
-   * unspecified.
-   * 
-   * Although the len field is signed, any length &lt; 0 will raise an exception
-   * during unpickling.
-   * 
-   * See the documentation for `string1` for further detail about encodings.
-   * @see {@link https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495|Source}
-   */
-
-  var String4 = PythonPickle.String4 = (function() {
-    function String4(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    String4.prototype._read = function() {
-      this.len = this._io.readS4le();
-      this.val = this._io.readBytes(this.len);
-    }
-
-    return String4;
-  })();
-
-  var Op = PythonPickle.Op = (function() {
-    function Op(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Op.prototype._read = function() {
-      this.code = this._io.readU1();
-      switch (this.code) {
-      case PythonPickle.Opcode.LIST:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.EXT2:
-        this.arg = this._io.readU2le();
-        break;
-      case PythonPickle.Opcode.READONLY_BUFFER:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.STOP:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BINUNICODE:
-        this.arg = new Unicodestring4(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.PUT:
-        this.arg = new DecimalnlShort(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.NEWFALSE:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.LONG1:
-        this.arg = new Long1(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.UNICODE:
-        this.arg = new Unicodestringnl(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.EMPTY_LIST:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.MARK:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.PERSID:
-        this.arg = new StringnlNoescape(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.STACK_GLOBAL:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BININT:
-        this.arg = this._io.readS4le();
-        break;
-      case PythonPickle.Opcode.BINPUT:
-        this.arg = this._io.readU1();
-        break;
-      case PythonPickle.Opcode.BININT1:
-        this.arg = this._io.readU1();
-        break;
-      case PythonPickle.Opcode.BININT2:
-        this.arg = this._io.readU2le();
-        break;
-      case PythonPickle.Opcode.TUPLE:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.SHORT_BINSTRING:
-        this.arg = new String1(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.EMPTY_SET:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.STRING:
-        this.arg = new Stringnl(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.EMPTY_DICT:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BINGET:
-        this.arg = this._io.readU1();
-        break;
-      case PythonPickle.Opcode.APPEND:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.POP_MARK:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.GET:
-        this.arg = new DecimalnlShort(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.NEWOBJ:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.REDUCE:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BINBYTES:
-        this.arg = new Bytes4(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.NEXT_BUFFER:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BINBYTES8:
-        this.arg = new Bytes8(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.SETITEM:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.FRAME:
-        this.arg = this._io.readU8le();
-        break;
-      case PythonPickle.Opcode.FLOAT:
-        this.arg = new Floatnl(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BINUNICODE8:
-        this.arg = new Unicodestring8(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.INT:
-        this.arg = new DecimalnlShort(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.LONG_BINPUT:
-        this.arg = this._io.readU4le();
-        break;
-      case PythonPickle.Opcode.EMPTY_TUPLE:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.LONG:
-        this.arg = new DecimalnlLong(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.FROZENSET:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.GLOBAL:
-        this.arg = new StringnlNoescapePair(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.OBJ:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.ADDITEMS:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.TUPLE1:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.SETITEMS:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.NONE:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BUILD:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.EXT4:
-        this.arg = this._io.readU4le();
-        break;
-      case PythonPickle.Opcode.NEWOBJ_EX:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BINFLOAT:
-        this.arg = this._io.readF8be();
-        break;
-      case PythonPickle.Opcode.DUP:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BYTEARRAY8:
-        this.arg = new Bytearray8(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.LONG4:
-        this.arg = new Long4(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.SHORT_BINUNICODE:
-        this.arg = new Unicodestring1(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.TUPLE3:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.SHORT_BINBYTES:
-        this.arg = new Bytes1(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.EXT1:
-        this.arg = this._io.readU1();
-        break;
-      case PythonPickle.Opcode.DICT:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.APPENDS:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.INST:
-        this.arg = new StringnlNoescapePair(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BINPERSID:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.MEMOIZE:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.PROTO:
-        this.arg = this._io.readU1();
-        break;
-      case PythonPickle.Opcode.NEWTRUE:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.BINSTRING:
-        this.arg = new String4(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.TUPLE2:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.POP:
-        this.arg = new NoArg(this._io, this, this._root);
-        break;
-      case PythonPickle.Opcode.LONG_BINGET:
-        this.arg = this._io.readU4le();
-        break;
-      }
-    }
-
-    /**
-     * Operation code that determines which action should be
-     * performed next by the Pickle Virtual Machine. Some opcodes
-     * are only available in later versions of the Pickle protocol.
-     */
-
-    /**
-     * Optional argument for the operation. Data type and length
-     * are determined by the value of the opcode.
-     */
-
-    return Op;
-  })();
-
-  /**
-   * Double float, encoded with the ASCII characters [0-9.e+-], &#39;-inf&#39;, &#39;inf&#39;,
-   * or &#39;nan&#39;.
-   */
-
-  var Floatnl = PythonPickle.Floatnl = (function() {
-    function Floatnl(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Floatnl.prototype._read = function() {
-      this.val = KaitaiStream.bytesToStr(this._io.readBytesTerm(10, false, true, true), &quot;ascii&quot;);
-    }
-
-    return Floatnl;
-  })();
-
-  return PythonPickle;
-})();
-return PythonPickle;
-}));
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">PythonPickle</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * Python Pickle format serializes Python objects to a byte stream, as a sequence</span>
+<span class="cm"> * of operations to run on the Pickle Virtual Machine.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The format is mostly implementation defined, there is no formal specification.</span>
+<span class="cm"> * Pickle data types are closely coupled to the Python object model.</span>
+<span class="cm"> * Python singletons, and most builtin types (e.g. `None`, `int`,`dict`, `list`)</span>
+<span class="cm"> * are serialised using dedicated Pickle opcodes.</span>
+<span class="cm"> * Other builtin types, and all classes  (e.g. `set`, `datetime.datetime`) are</span>
+<span class="cm"> * serialised by encoding the name of a constructor callable.</span>
+<span class="cm"> * They are deserialised by importing that constructor, and calling it.</span>
+<span class="cm"> * So, unpickling an arbitrary pickle, using the Python&#39;s stdlib pickle module</span>
+<span class="cm"> * can cause arbitrary code execution.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Pickle format has evolved with Python, later protocols add opcodes &amp; types.</span>
+<span class="cm"> * Later Python releases can pickle to or unpickle from any earlier protocol.</span>
+<span class="cm"> * </span>
+<span class="cm"> * * Protocol 0: ASCII clean, no explicit version, fields are &#39;\n&#39; terminated.</span>
+<span class="cm"> * * Protocol 1: Binary, no explicit version, first length prefixed types.</span>
+<span class="cm"> * * Protocol 2: Python 2.3+. Explicit versioning, more length prefixed types.</span>
+<span class="cm"> *   https://www.python.org/dev/peps/pep-0307/</span>
+<span class="cm"> * * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.</span>
+<span class="cm"> * * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.</span>
+<span class="cm"> *   https://www.python.org/dev/peps/pep-3154/</span>
+<span class="cm"> * * Protocol 5: Python 3.8+: Opcodes for `bytearray` and out of band data</span>
+<span class="cm"> *   https://www.python.org/dev/peps/pep-0574/</span>
+<span class="cm"> * @see {@link https://github.com/python/cpython/blob/v3.8.1/Lib/pickletools.py|Source}</span>
+<span class="cm"> */</span>
+
+<span class="kd">var</span> <span class="nx">PythonPickle</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">MARK</span><span class="o">:</span> <span class="mi">40</span><span class="p">,</span>
+    <span class="nx">EMPTY_TUPLE</span><span class="o">:</span> <span class="mi">41</span><span class="p">,</span>
+    <span class="nx">STOP</span><span class="o">:</span> <span class="mi">46</span><span class="p">,</span>
+    <span class="nx">POP</span><span class="o">:</span> <span class="mi">48</span><span class="p">,</span>
+    <span class="nx">POP_MARK</span><span class="o">:</span> <span class="mi">49</span><span class="p">,</span>
+    <span class="nx">DUP</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="nx">BINBYTES</span><span class="o">:</span> <span class="mi">66</span><span class="p">,</span>
+    <span class="nx">SHORT_BINBYTES</span><span class="o">:</span> <span class="mi">67</span><span class="p">,</span>
+    <span class="nx">FLOAT</span><span class="o">:</span> <span class="mi">70</span><span class="p">,</span>
+    <span class="nx">BINFLOAT</span><span class="o">:</span> <span class="mi">71</span><span class="p">,</span>
+    <span class="nx">INT</span><span class="o">:</span> <span class="mi">73</span><span class="p">,</span>
+    <span class="nx">BININT</span><span class="o">:</span> <span class="mi">74</span><span class="p">,</span>
+    <span class="nx">BININT1</span><span class="o">:</span> <span class="mi">75</span><span class="p">,</span>
+    <span class="nx">LONG</span><span class="o">:</span> <span class="mi">76</span><span class="p">,</span>
+    <span class="nx">BININT2</span><span class="o">:</span> <span class="mi">77</span><span class="p">,</span>
+    <span class="nx">NONE</span><span class="o">:</span> <span class="mi">78</span><span class="p">,</span>
+    <span class="nx">PERSID</span><span class="o">:</span> <span class="mi">80</span><span class="p">,</span>
+    <span class="nx">BINPERSID</span><span class="o">:</span> <span class="mi">81</span><span class="p">,</span>
+    <span class="nx">REDUCE</span><span class="o">:</span> <span class="mi">82</span><span class="p">,</span>
+    <span class="nx">STRING</span><span class="o">:</span> <span class="mi">83</span><span class="p">,</span>
+    <span class="nx">BINSTRING</span><span class="o">:</span> <span class="mi">84</span><span class="p">,</span>
+    <span class="nx">SHORT_BINSTRING</span><span class="o">:</span> <span class="mi">85</span><span class="p">,</span>
+    <span class="nx">UNICODE</span><span class="o">:</span> <span class="mi">86</span><span class="p">,</span>
+    <span class="nx">BINUNICODE</span><span class="o">:</span> <span class="mi">88</span><span class="p">,</span>
+    <span class="nx">EMPTY_LIST</span><span class="o">:</span> <span class="mi">93</span><span class="p">,</span>
+    <span class="nx">APPEND</span><span class="o">:</span> <span class="mi">97</span><span class="p">,</span>
+    <span class="nx">BUILD</span><span class="o">:</span> <span class="mi">98</span><span class="p">,</span>
+    <span class="nx">GLOBAL</span><span class="o">:</span> <span class="mi">99</span><span class="p">,</span>
+    <span class="nx">DICT</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="nx">APPENDS</span><span class="o">:</span> <span class="mi">101</span><span class="p">,</span>
+    <span class="nx">GET</span><span class="o">:</span> <span class="mi">103</span><span class="p">,</span>
+    <span class="nx">BINGET</span><span class="o">:</span> <span class="mi">104</span><span class="p">,</span>
+    <span class="nx">INST</span><span class="o">:</span> <span class="mi">105</span><span class="p">,</span>
+    <span class="nx">LONG_BINGET</span><span class="o">:</span> <span class="mi">106</span><span class="p">,</span>
+    <span class="nx">LIST</span><span class="o">:</span> <span class="mi">108</span><span class="p">,</span>
+    <span class="nx">OBJ</span><span class="o">:</span> <span class="mi">111</span><span class="p">,</span>
+    <span class="nx">PUT</span><span class="o">:</span> <span class="mi">112</span><span class="p">,</span>
+    <span class="nx">BINPUT</span><span class="o">:</span> <span class="mi">113</span><span class="p">,</span>
+    <span class="nx">LONG_BINPUT</span><span class="o">:</span> <span class="mi">114</span><span class="p">,</span>
+    <span class="nx">SETITEM</span><span class="o">:</span> <span class="mi">115</span><span class="p">,</span>
+    <span class="nx">TUPLE</span><span class="o">:</span> <span class="mi">116</span><span class="p">,</span>
+    <span class="nx">SETITEMS</span><span class="o">:</span> <span class="mi">117</span><span class="p">,</span>
+    <span class="nx">EMPTY_DICT</span><span class="o">:</span> <span class="mi">125</span><span class="p">,</span>
+    <span class="nx">PROTO</span><span class="o">:</span> <span class="mi">128</span><span class="p">,</span>
+    <span class="nx">NEWOBJ</span><span class="o">:</span> <span class="mi">129</span><span class="p">,</span>
+    <span class="nx">EXT1</span><span class="o">:</span> <span class="mi">130</span><span class="p">,</span>
+    <span class="nx">EXT2</span><span class="o">:</span> <span class="mi">131</span><span class="p">,</span>
+    <span class="nx">EXT4</span><span class="o">:</span> <span class="mi">132</span><span class="p">,</span>
+    <span class="nx">TUPLE1</span><span class="o">:</span> <span class="mi">133</span><span class="p">,</span>
+    <span class="nx">TUPLE2</span><span class="o">:</span> <span class="mi">134</span><span class="p">,</span>
+    <span class="nx">TUPLE3</span><span class="o">:</span> <span class="mi">135</span><span class="p">,</span>
+    <span class="nx">NEWTRUE</span><span class="o">:</span> <span class="mi">136</span><span class="p">,</span>
+    <span class="nx">NEWFALSE</span><span class="o">:</span> <span class="mi">137</span><span class="p">,</span>
+    <span class="nx">LONG1</span><span class="o">:</span> <span class="mi">138</span><span class="p">,</span>
+    <span class="nx">LONG4</span><span class="o">:</span> <span class="mi">139</span><span class="p">,</span>
+    <span class="nx">SHORT_BINUNICODE</span><span class="o">:</span> <span class="mi">140</span><span class="p">,</span>
+    <span class="nx">BINUNICODE8</span><span class="o">:</span> <span class="mi">141</span><span class="p">,</span>
+    <span class="nx">BINBYTES8</span><span class="o">:</span> <span class="mi">142</span><span class="p">,</span>
+    <span class="nx">EMPTY_SET</span><span class="o">:</span> <span class="mi">143</span><span class="p">,</span>
+    <span class="nx">ADDITEMS</span><span class="o">:</span> <span class="mi">144</span><span class="p">,</span>
+    <span class="nx">FROZENSET</span><span class="o">:</span> <span class="mi">145</span><span class="p">,</span>
+    <span class="nx">NEWOBJ_EX</span><span class="o">:</span> <span class="mi">146</span><span class="p">,</span>
+    <span class="nx">STACK_GLOBAL</span><span class="o">:</span> <span class="mi">147</span><span class="p">,</span>
+    <span class="nx">MEMOIZE</span><span class="o">:</span> <span class="mi">148</span><span class="p">,</span>
+    <span class="nx">FRAME</span><span class="o">:</span> <span class="mi">149</span><span class="p">,</span>
+    <span class="nx">BYTEARRAY8</span><span class="o">:</span> <span class="mi">150</span><span class="p">,</span>
+    <span class="nx">NEXT_BUFFER</span><span class="o">:</span> <span class="mi">151</span><span class="p">,</span>
+    <span class="nx">READ_BUFFER</span><span class="o">:</span> <span class="mi">152</span><span class="p">,</span>
+
+    <span class="mi">40</span><span class="o">:</span> <span class="s2">&quot;MARK&quot;</span><span class="p">,</span>
+    <span class="mi">41</span><span class="o">:</span> <span class="s2">&quot;EMPTY_TUPLE&quot;</span><span class="p">,</span>
+    <span class="mi">46</span><span class="o">:</span> <span class="s2">&quot;STOP&quot;</span><span class="p">,</span>
+    <span class="mi">48</span><span class="o">:</span> <span class="s2">&quot;POP&quot;</span><span class="p">,</span>
+    <span class="mi">49</span><span class="o">:</span> <span class="s2">&quot;POP_MARK&quot;</span><span class="p">,</span>
+    <span class="mi">50</span><span class="o">:</span> <span class="s2">&quot;DUP&quot;</span><span class="p">,</span>
+    <span class="mi">66</span><span class="o">:</span> <span class="s2">&quot;BINBYTES&quot;</span><span class="p">,</span>
+    <span class="mi">67</span><span class="o">:</span> <span class="s2">&quot;SHORT_BINBYTES&quot;</span><span class="p">,</span>
+    <span class="mi">70</span><span class="o">:</span> <span class="s2">&quot;FLOAT&quot;</span><span class="p">,</span>
+    <span class="mi">71</span><span class="o">:</span> <span class="s2">&quot;BINFLOAT&quot;</span><span class="p">,</span>
+    <span class="mi">73</span><span class="o">:</span> <span class="s2">&quot;INT&quot;</span><span class="p">,</span>
+    <span class="mi">74</span><span class="o">:</span> <span class="s2">&quot;BININT&quot;</span><span class="p">,</span>
+    <span class="mi">75</span><span class="o">:</span> <span class="s2">&quot;BININT1&quot;</span><span class="p">,</span>
+    <span class="mi">76</span><span class="o">:</span> <span class="s2">&quot;LONG&quot;</span><span class="p">,</span>
+    <span class="mi">77</span><span class="o">:</span> <span class="s2">&quot;BININT2&quot;</span><span class="p">,</span>
+    <span class="mi">78</span><span class="o">:</span> <span class="s2">&quot;NONE&quot;</span><span class="p">,</span>
+    <span class="mi">80</span><span class="o">:</span> <span class="s2">&quot;PERSID&quot;</span><span class="p">,</span>
+    <span class="mi">81</span><span class="o">:</span> <span class="s2">&quot;BINPERSID&quot;</span><span class="p">,</span>
+    <span class="mi">82</span><span class="o">:</span> <span class="s2">&quot;REDUCE&quot;</span><span class="p">,</span>
+    <span class="mi">83</span><span class="o">:</span> <span class="s2">&quot;STRING&quot;</span><span class="p">,</span>
+    <span class="mi">84</span><span class="o">:</span> <span class="s2">&quot;BINSTRING&quot;</span><span class="p">,</span>
+    <span class="mi">85</span><span class="o">:</span> <span class="s2">&quot;SHORT_BINSTRING&quot;</span><span class="p">,</span>
+    <span class="mi">86</span><span class="o">:</span> <span class="s2">&quot;UNICODE&quot;</span><span class="p">,</span>
+    <span class="mi">88</span><span class="o">:</span> <span class="s2">&quot;BINUNICODE&quot;</span><span class="p">,</span>
+    <span class="mi">93</span><span class="o">:</span> <span class="s2">&quot;EMPTY_LIST&quot;</span><span class="p">,</span>
+    <span class="mi">97</span><span class="o">:</span> <span class="s2">&quot;APPEND&quot;</span><span class="p">,</span>
+    <span class="mi">98</span><span class="o">:</span> <span class="s2">&quot;BUILD&quot;</span><span class="p">,</span>
+    <span class="mi">99</span><span class="o">:</span> <span class="s2">&quot;GLOBAL&quot;</span><span class="p">,</span>
+    <span class="mi">100</span><span class="o">:</span> <span class="s2">&quot;DICT&quot;</span><span class="p">,</span>
+    <span class="mi">101</span><span class="o">:</span> <span class="s2">&quot;APPENDS&quot;</span><span class="p">,</span>
+    <span class="mi">103</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+    <span class="mi">104</span><span class="o">:</span> <span class="s2">&quot;BINGET&quot;</span><span class="p">,</span>
+    <span class="mi">105</span><span class="o">:</span> <span class="s2">&quot;INST&quot;</span><span class="p">,</span>
+    <span class="mi">106</span><span class="o">:</span> <span class="s2">&quot;LONG_BINGET&quot;</span><span class="p">,</span>
+    <span class="mi">108</span><span class="o">:</span> <span class="s2">&quot;LIST&quot;</span><span class="p">,</span>
+    <span class="mi">111</span><span class="o">:</span> <span class="s2">&quot;OBJ&quot;</span><span class="p">,</span>
+    <span class="mi">112</span><span class="o">:</span> <span class="s2">&quot;PUT&quot;</span><span class="p">,</span>
+    <span class="mi">113</span><span class="o">:</span> <span class="s2">&quot;BINPUT&quot;</span><span class="p">,</span>
+    <span class="mi">114</span><span class="o">:</span> <span class="s2">&quot;LONG_BINPUT&quot;</span><span class="p">,</span>
+    <span class="mi">115</span><span class="o">:</span> <span class="s2">&quot;SETITEM&quot;</span><span class="p">,</span>
+    <span class="mi">116</span><span class="o">:</span> <span class="s2">&quot;TUPLE&quot;</span><span class="p">,</span>
+    <span class="mi">117</span><span class="o">:</span> <span class="s2">&quot;SETITEMS&quot;</span><span class="p">,</span>
+    <span class="mi">125</span><span class="o">:</span> <span class="s2">&quot;EMPTY_DICT&quot;</span><span class="p">,</span>
+    <span class="mi">128</span><span class="o">:</span> <span class="s2">&quot;PROTO&quot;</span><span class="p">,</span>
+    <span class="mi">129</span><span class="o">:</span> <span class="s2">&quot;NEWOBJ&quot;</span><span class="p">,</span>
+    <span class="mi">130</span><span class="o">:</span> <span class="s2">&quot;EXT1&quot;</span><span class="p">,</span>
+    <span class="mi">131</span><span class="o">:</span> <span class="s2">&quot;EXT2&quot;</span><span class="p">,</span>
+    <span class="mi">132</span><span class="o">:</span> <span class="s2">&quot;EXT4&quot;</span><span class="p">,</span>
+    <span class="mi">133</span><span class="o">:</span> <span class="s2">&quot;TUPLE1&quot;</span><span class="p">,</span>
+    <span class="mi">134</span><span class="o">:</span> <span class="s2">&quot;TUPLE2&quot;</span><span class="p">,</span>
+    <span class="mi">135</span><span class="o">:</span> <span class="s2">&quot;TUPLE3&quot;</span><span class="p">,</span>
+    <span class="mi">136</span><span class="o">:</span> <span class="s2">&quot;NEWTRUE&quot;</span><span class="p">,</span>
+    <span class="mi">137</span><span class="o">:</span> <span class="s2">&quot;NEWFALSE&quot;</span><span class="p">,</span>
+    <span class="mi">138</span><span class="o">:</span> <span class="s2">&quot;LONG1&quot;</span><span class="p">,</span>
+    <span class="mi">139</span><span class="o">:</span> <span class="s2">&quot;LONG4&quot;</span><span class="p">,</span>
+    <span class="mi">140</span><span class="o">:</span> <span class="s2">&quot;SHORT_BINUNICODE&quot;</span><span class="p">,</span>
+    <span class="mi">141</span><span class="o">:</span> <span class="s2">&quot;BINUNICODE8&quot;</span><span class="p">,</span>
+    <span class="mi">142</span><span class="o">:</span> <span class="s2">&quot;BINBYTES8&quot;</span><span class="p">,</span>
+    <span class="mi">143</span><span class="o">:</span> <span class="s2">&quot;EMPTY_SET&quot;</span><span class="p">,</span>
+    <span class="mi">144</span><span class="o">:</span> <span class="s2">&quot;ADDITEMS&quot;</span><span class="p">,</span>
+    <span class="mi">145</span><span class="o">:</span> <span class="s2">&quot;FROZENSET&quot;</span><span class="p">,</span>
+    <span class="mi">146</span><span class="o">:</span> <span class="s2">&quot;NEWOBJ_EX&quot;</span><span class="p">,</span>
+    <span class="mi">147</span><span class="o">:</span> <span class="s2">&quot;STACK_GLOBAL&quot;</span><span class="p">,</span>
+    <span class="mi">148</span><span class="o">:</span> <span class="s2">&quot;MEMOIZE&quot;</span><span class="p">,</span>
+    <span class="mi">149</span><span class="o">:</span> <span class="s2">&quot;FRAME&quot;</span><span class="p">,</span>
+    <span class="mi">150</span><span class="o">:</span> <span class="s2">&quot;BYTEARRAY8&quot;</span><span class="p">,</span>
+    <span class="mi">151</span><span class="o">:</span> <span class="s2">&quot;NEXT_BUFFER&quot;</span><span class="p">,</span>
+    <span class="mi">152</span><span class="o">:</span> <span class="s2">&quot;READ_BUFFER&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="kd">function</span> <span class="nx">PythonPickle</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">ops</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">do</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Op</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">ops</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_</span><span class="p">);</span>
+      <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">code</span> <span class="o">==</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STOP</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Length prefixed string, between 0 and 2**64-1 bytes long.</span>
+<span class="cm">   * </span>
+<span class="cm">   * Only a 64-bit build of Python would produce a pickle containing strings</span>
+<span class="cm">   * large enough to need this type. Such a pickle could not be unpickled on</span>
+<span class="cm">   * a 32-bit build of Python, because the string would be larger than</span>
+<span class="cm">   * `sys.maxsize`.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Unicodestring8</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Unicodestring8</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Unicodestring8</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Unicodestring8</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">),</span> <span class="s2">&quot;utf8&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Unicodestring8</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,</span>
+<span class="cm">   * encoded as two&#39;s complement.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Long1</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Long1</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Long1</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Long1</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Long1</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Length prefixed string, between 0 and 2**64-1 bytes long.</span>
+<span class="cm">   * </span>
+<span class="cm">   * Only a 64-bit build of Python would produce a pickle containing strings</span>
+<span class="cm">   * large enough to need this type. Such a pickle could not be unpickled on</span>
+<span class="cm">   * a 32-bit build of Python, because the string would be larger than</span>
+<span class="cm">   * `sys.maxsize`.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Bytes8</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Bytes8</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Bytes8</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Bytes8</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Bytes8</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Length prefixed byte string, between 0 and 255 bytes long.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Bytes1</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Bytes1</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Bytes1</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Bytes1</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Bytes1</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Length prefixed string, between 0 and 2**32-1 bytes long</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Bytes4</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Bytes4</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Bytes4</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Bytes4</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Bytes4</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Some opcodes take no argument, this empty type is used for them.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">NoArg</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">NoArg</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">NoArg</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">NoArg</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">NoArg</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Unquoted string, does not contain string escapes.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">StringnlNoescape</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">StringnlNoescape</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">StringnlNoescape</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">StringnlNoescape</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">StringnlNoescape</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Integer, encoded with the ASCII chracters [0-9-], followed by &#39;L&#39;.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">DecimalnlLong</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">DecimalnlLong</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">DecimalnlLong</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">DecimalnlLong</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">DecimalnlLong</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Length prefixed string, between 0 and 2**32-1 bytes long</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Unicodestring4</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Unicodestring4</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Unicodestring4</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Unicodestring4</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">),</span> <span class="s2">&quot;utf8&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Unicodestring4</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Unquoted string, containing Python Unicode escapes.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Unicodestringnl</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Unicodestringnl</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Unicodestringnl</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Unicodestringnl</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Unicodestringnl</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Large signed integer, in the range -2**(8*2**32-1) to 2**(8*2**32-1)-1,</span>
+<span class="cm">   * encoded as two&#39;s complement.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Long4</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Long4</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Long4</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Long4</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Long4</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Length prefixed string, between 0 and 255 bytes long. Encoding is</span>
+<span class="cm">   * unspecified.</span>
+<span class="cm">   * </span>
+<span class="cm">   * The default Python 2.x string type (`str`) is a sequence of bytes.</span>
+<span class="cm">   * These are pickled as `string1` or `string4`, when protocol == 2.</span>
+<span class="cm">   * The bytes are written directly, no explicit encoding is performed.</span>
+<span class="cm">   * </span>
+<span class="cm">   * Python 3.x will not pickle an object as `string1` or `string4`.</span>
+<span class="cm">   * Instead, opcodes and types with a known encoding are used.</span>
+<span class="cm">   * When unpickling</span>
+<span class="cm">   * </span>
+<span class="cm">   * - `pickle.Unpickler` objects default to ASCII, which can be overriden</span>
+<span class="cm">   * - `pickletools.dis` uses latin1, and cannot be overriden</span>
+<span class="cm">   * @see {@link https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">String1</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">String1</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">String1</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">String1</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">String1</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Length prefixed string, between 0 and 2**64-1 bytes long.</span>
+<span class="cm">   * </span>
+<span class="cm">   * The contents are deserilised into a `bytearray` object.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Bytearray8</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Bytearray8</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Bytearray8</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Bytearray8</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Bytearray8</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Integer or boolean, encoded with the ASCII characters [0-9-].</span>
+<span class="cm">   * </span>
+<span class="cm">   * The values &#39;00&#39; and &#39;01&#39; encode the Python values `False` and `True`.</span>
+<span class="cm">   * Normally a value would not contain leading &#39;0&#39; characters.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">DecimalnlShort</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">DecimalnlShort</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">DecimalnlShort</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">DecimalnlShort</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">DecimalnlShort</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Length prefixed string, between 0 and 255 bytes long</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Unicodestring1</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Unicodestring1</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Unicodestring1</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Unicodestring1</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">),</span> <span class="s2">&quot;utf8&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Unicodestring1</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Quoted string, possibly containing Python string escapes.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Stringnl</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Stringnl</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Stringnl</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Stringnl</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Stringnl</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Pair of unquoted, unescaped strings.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">StringnlNoescapePair</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">StringnlNoescapePair</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">StringnlNoescapePair</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">StringnlNoescapePair</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StringnlNoescape</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StringnlNoescape</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">StringnlNoescapePair</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Length prefixed string, between 0 and 2**31-1 bytes long. Encoding is</span>
+<span class="cm">   * unspecified.</span>
+<span class="cm">   * </span>
+<span class="cm">   * Although the len field is signed, any length &lt; 0 will raise an exception</span>
+<span class="cm">   * during unpickling.</span>
+<span class="cm">   * </span>
+<span class="cm">   * See the documentation for `string1` for further detail about encodings.</span>
+<span class="cm">   * @see {@link https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">String4</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">String4</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">String4</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">String4</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">String4</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Op</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Op</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Op</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Op</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">code</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LIST</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">EXT2</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">READONLY_BUFFER</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STOP</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BINUNICODE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Unicodestring4</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">PUT</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DecimalnlShort</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">NEWFALSE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LONG1</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Long1</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">UNICODE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Unicodestringnl</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">EMPTY_LIST</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">MARK</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">PERSID</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StringnlNoescape</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STACK_GLOBAL</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BININT</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BINPUT</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BININT1</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BININT2</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">TUPLE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">SHORT_BINSTRING</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">String1</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">EMPTY_SET</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">STRING</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Stringnl</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">EMPTY_DICT</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BINGET</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">APPEND</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">POP_MARK</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">GET</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DecimalnlShort</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">NEWOBJ</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">REDUCE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BINBYTES</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bytes4</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">NEXT_BUFFER</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BINBYTES8</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bytes8</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">SETITEM</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">FRAME</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">FLOAT</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Floatnl</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BINUNICODE8</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Unicodestring8</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">INT</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DecimalnlShort</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LONG_BINPUT</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">EMPTY_TUPLE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LONG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DecimalnlLong</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">FROZENSET</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">GLOBAL</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StringnlNoescapePair</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">OBJ</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">ADDITEMS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">TUPLE1</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">SETITEMS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">NONE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BUILD</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">EXT4</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">NEWOBJ_EX</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BINFLOAT</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readF8be</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">DUP</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BYTEARRAY8</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bytearray8</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LONG4</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Long4</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">SHORT_BINUNICODE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Unicodestring1</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">TUPLE3</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">SHORT_BINBYTES</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bytes1</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">EXT1</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">DICT</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">APPENDS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">INST</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StringnlNoescapePair</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BINPERSID</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">MEMOIZE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">PROTO</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">NEWTRUE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BINSTRING</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">String4</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">TUPLE2</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">POP</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">LONG_BINGET</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Operation code that determines which action should be</span>
+<span class="cm">     * performed next by the Pickle Virtual Machine. Some opcodes</span>
+<span class="cm">     * are only available in later versions of the Pickle protocol.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Optional argument for the operation. Data type and length</span>
+<span class="cm">     * are determined by the value of the opcode.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">Op</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Double float, encoded with the ASCII characters [0-9.e+-], &#39;-inf&#39;, &#39;inf&#39;,</span>
+<span class="cm">   * or &#39;nan&#39;.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">Floatnl</span> <span class="o">=</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Floatnl</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Floatnl</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Floatnl</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">val</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Floatnl</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="k">return</span> <span class="nx">PythonPickle</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">PythonPickle</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -1161,8 +1158,8 @@ return PythonPickle;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -219,323 +216,323 @@ a simple header prepended.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml"># http://demoseen.com/blog/2010-02-20_Python_Marshal_Format.html
-# https://github.com/python/cpython/blob/master/Lib/dis.py
-# https://github.com/python/cpython/blob/master/Lib/opcode.py
-# https://github.com/python/cpython/blob/2.7/Lib/dis.py
-# https://github.com/python/cpython/blob/2.7/Lib/opcode.py
-meta:
-  id: python_pyc_27
-  application: Python
-  file-extension: pyc
-  license: CC0-1.0
-  endian: le
-doc: |
-  Python interpreter runs .py files in 2 step process: first, it
-  produces bytecode, which it then executes. Translation of .py source
-  into bytecode is time-consuming, so Python dumps compiled bytecode
-  into .pyc files, to be reused from cache at later time if possible.
+        <div class="highlight"><pre><span></span><span class="c1"># http://demoseen.com/blog/2010-02-20_Python_Marshal_Format.html</span>
+<span class="c1"># https://github.com/python/cpython/blob/master/Lib/dis.py</span>
+<span class="c1"># https://github.com/python/cpython/blob/master/Lib/opcode.py</span>
+<span class="c1"># https://github.com/python/cpython/blob/2.7/Lib/dis.py</span>
+<span class="c1"># https://github.com/python/cpython/blob/2.7/Lib/opcode.py</span>
+<span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">python_pyc_27</span>
+  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Python</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pyc</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">Python interpreter runs .py files in 2 step process: first, it</span>
+  <span class="no">produces bytecode, which it then executes. Translation of .py source</span>
+  <span class="no">into bytecode is time-consuming, so Python dumps compiled bytecode</span>
+  <span class="no">into .pyc files, to be reused from cache at later time if possible.</span>
 
-  .pyc file is essentially a raw dump of `py_object` (see `body`) with
-  a simple header prepended.
-seq:
-  - id: version_magic
-    type: u2
-    enum: version
-  - id: crlf
-    type: u2
-  - id: modification_timestamp
-    type: u4
-  - id: body
-    type: py_object
-types:
-  assembly:
-    seq:
-      - id: string_magic
-        contents: &quot;s&quot;
-      - id: length
-        type: u4
-      - id: items
-        size: length
-        type: op_args
-  op_args:
-    seq:
-      - id: items
-        type: op_arg
-        repeat: eos
-  op_arg:
-    seq:
-      - id: op_code
-        type: u1
-        enum: op_code_enum
-      - id: arg
-        type: u2
-        if: &quot;op_code.to_i &gt;= op_code_enum::store_name.to_i&quot; # store_name == have_arguments
-    -webide-representation: &quot;{op_code} {arg}&quot;
-    enums:
-      op_code_enum:
-        0  : stop_code
-        1  : pop_top
-        2  : rot_two
-        3  : rot_three
-        4  : dup_top
-        5  : rot_four
-        9  : nop
-        10 : unary_positive
-        11 : unary_negative
-        12 : unary_not
-        13 : unary_convert
-        15 : unary_invert
-        19 : binary_power
-        20 : binary_multiply
-        21 : binary_divide
-        22 : binary_modulo
-        23 : binary_add
-        24 : binary_subtract
-        25 : binary_subscr
-        26 : binary_floor_divide
-        27 : binary_true_divide
-        28 : inplace_floor_divide
-        29 : inplace_true_divide
-        30 : slice_0
-        31 : slice_1
-        32 : slice_2
-        33 : slice_3
-        40 : store_slice_0
-        41 : store_slice_1
-        42 : store_slice_2
-        43 : store_slice_3
-        50 : delete_slice_0
-        51 : delete_slice_1
-        52 : delete_slice_2
-        53 : delete_slice_3
-        54 : store_map
-        55 : inplace_add
-        56 : inplace_subtract
-        57 : inplace_multiply
-        58 : inplace_divide
-        59 : inplace_modulo
-        60 : store_subscr
-        61 : delete_subscr
-        62 : binary_lshift
-        63 : binary_rshift
-        64 : binary_and
-        65 : binary_xor
-        66 : binary_or
-        67 : inplace_power
-        68 : get_iter
-        70 : print_expr
-        71 : print_item
-        72 : print_newline
-        73 : print_item_to
-        74 : print_newline_to
-        75 : inplace_lshift
-        76 : inplace_rshift
-        77 : inplace_and
-        78 : inplace_xor
-        79 : inplace_or
-        80 : break_loop
-        81 : with_cleanup
-        82 : load_locals
-        83 : return_value
-        84 : import_star
-        85 : exec_stmt
-        86 : yield_value
-        87 : pop_block
-        88 : end_finally
-        89 : build_class
-        90 : store_name           # Index in name list
-        91 : delete_name          # &quot;&quot;
-        92 : unpack_sequence      # Number of tuple items
-        93 : for_iter
-        94 : list_append
-        95 : store_attr           # Index in name list
-        96 : delete_attr          # &quot;&quot;
-        97 : store_global         # &quot;&quot;
-        98 : delete_global        # &quot;&quot;
-        99 : dup_topx             # number of items to duplicate
-        100: load_const           # Index in const list
-        101: load_name            # Index in name list
-        102: build_tuple          # Number of tuple items
-        103: build_list           # Number of list items
-        104: build_set            # Number of set items
-        105: build_map            # Number of dict entries (upto 255)
-        106: load_attr            # Index in name list
-        107: compare_op           # Comparison operator
-        108: import_name          # Index in name list
-        109: import_from          # Index in name list
-        110: jump_forward         # Number of bytes to skip
-        111: jump_if_false_or_pop # Target byte offset from beginning of code
-        112: jump_if_true_or_pop  # &quot;&quot;
-        113: jump_absolute        # &quot;&quot;
-        114: pop_jump_if_false    # &quot;&quot;
-        115: pop_jump_if_true     # &quot;&quot;
-        116: load_global          # Index in name list
-        119: continue_loop        # Target address
-        120: setup_loop           # Distance to target address
-        121: setup_except         # &quot;&quot;
-        122: setup_finally        # &quot;&quot;
-        124: load_fast            # Local variable number
-        125: store_fast           # Local variable number
-        126: delete_fast          # Local variable number
-        130: raise_varargs        # Number of raise arguments (1, 2, or 3)
-        131: call_function        # #args + (#kwargs &lt;&lt; 8)
-        132: make_function        # Number of args with default values
-        133: build_slice          # Number of items
-        134: make_closure
-        135: load_closure
-        136: load_deref
-        137: store_deref
-        140: call_function_var    # #args + (#kwargs &lt;&lt; 8)
-        141: call_function_kw     # #args + (#kwargs &lt;&lt; 8)
-        142: call_function_var_kw # #args + (#kwargs &lt;&lt; 8)
-        143: setup_with
-        145: extended_arg
-        146: set_add
-        147: map_add
-  code_object:
-    seq:
-      - id: arg_count   # argcount
-        type: u4
-      - id: local_count # nlocals
-        type: u4
-      - id: stack_size
-        type: u4
-      - id: flags
-        type: u4
-        enum: flags_enum
-      - id: code
-        type: assembly
-      - id: consts
-        type: py_object
-      - id: names
-        type: py_object
-      - id: var_names
-        type: py_object
-      - id: free_vars
-        type: py_object
-      - id: cell_vars
-        type: py_object
-      - id: filename
-        type: py_object
-      - id: name
-        type: py_object
-      - id: first_line_no
-        type: u4
-      - id: lnotab
-        type: py_object
-    -webide-representation: &quot;{name.value}&quot;
-    enums:
-      flags_enum:
-        0x04: has_args
-        0x08: has_kwargs
-        0x20: generator
-  py_object:
-    seq:
-      - id: type
-        type: u1
-        enum: object_type
-      - id: value
-        type:
-          switch-on: type
-          cases:
-            &quot;object_type::code_object&quot;: code_object
-            &quot;object_type::string&quot;:      py_string
-            &quot;object_type::string_ref&quot;:  string_ref
-            &quot;object_type::interned&quot;:    interned_string
-            &quot;object_type::tuple&quot;:       tuple
-            &quot;object_type::int&quot;:         u4
-            &quot;object_type::py_false&quot;:    py_false
-            &quot;object_type::py_true&quot;:     py_true
-            &quot;object_type::none&quot;:        py_none
-    -webide-representation: &quot;{type}: {value}&quot;
-    types:
-      py_string:
-        seq:
-          - id: length
-            type: u4
-          - id: data
-            size: length
-        -webide-representation: &quot;{data}&quot;
-      interned_string:
-        seq:
-          - id: length
-            type: u4
-          - id: data
-            type: str
-            size: length
-            encoding: utf-8
-        -webide-representation: &quot;{data}&quot;
-      string_ref:
-        seq:
-          - id: interned_list_index
-            type: u4
-        -webide-representation: &quot;#{interned_list_index:dec}&quot;
-      unicode_string:
-        seq:
-          - id: length
-            type: u4
-          - id: data
-            size: length
-            type: str
-            encoding: utf-8
-        -webide-representation: &quot;{data}&quot;
-      tuple:
-        seq:
-          - id: count
-            type: u4
-          - id: items
-            type: py_object
-            repeat: expr
-            repeat-expr: count
-        -webide-representation: &quot;{count:dec} items&quot;
-      py_none:
-        -webide-representation: &quot;None&quot;
-      py_true:
-        -webide-representation: &quot;true&quot;
-      py_false:
-        -webide-representation: &quot;false&quot;
-    enums:
-      object_type:
-        40: tuple             # (
-        70: py_false          # F
-        78: none              # N
-        82: string_ref        # R
-        84: py_true           # T
-        99: code_object       # c
-        105: int              # i
-        115: string           # s
-        116: interned         # t
-        117: unicode_string   # u
-enums:
-  # http://svn.python.org/view/python/trunk/Python/import.c?view=markup
-  version:
-    20121: v15
-    50428: v16
-    50823: v20
-    60202: v21
-    60717: v22
-    62011: v23_a0
-    62021: v23_a0b
-    62041: v24_a0
-    62051: v24_a3
-    62061: v24_b1
-    62071: v25_a0
-    62081: v25_a0b
-    62091: v25_a0c
-    62092: v25_a0d
-    62101: v25_b3
-    62111: v25_b3b
-    62121: v25_c1
-    62131: v25_c2
-    62151: v26_a0
-    62161: v26_a1
-    62171: v27_a0
-    62181: v27_a0b
-    62191: v27_a0c
-    62201: v27_a0d
-    62211: v27_a0e
-</code></pre>
+  <span class="no">.pyc file is essentially a raw dump of `py_object` (see `body`) with</span>
+  <span class="no">a simple header prepended.</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version_magic</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+    <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">crlf</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">modification_timestamp</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">py_object</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">assembly</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string_magic</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&quot;s&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">items</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">op_args</span>
+  <span class="nt">op_args</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">items</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">op_arg</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+  <span class="nt">op_arg</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">op_code</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">op_code_enum</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arg</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="s">&quot;op_code.to_i</span><span class="nv"> </span><span class="s">&gt;=</span><span class="nv"> </span><span class="s">op_code_enum::store_name.to_i&quot;</span> <span class="c1"># store_name == have_arguments</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{op_code}</span><span class="nv"> </span><span class="s">{arg}&quot;</span>
+    <span class="nt">enums</span><span class="p">:</span>
+      <span class="nt">op_code_enum</span><span class="p">:</span>
+        <span class="nt">0  </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stop_code</span>
+        <span class="nt">1  </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pop_top</span>
+        <span class="nt">2  </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rot_two</span>
+        <span class="nt">3  </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rot_three</span>
+        <span class="nt">4  </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dup_top</span>
+        <span class="nt">5  </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rot_four</span>
+        <span class="nt">9  </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nop</span>
+        <span class="nt">10 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unary_positive</span>
+        <span class="nt">11 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unary_negative</span>
+        <span class="nt">12 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unary_not</span>
+        <span class="nt">13 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unary_convert</span>
+        <span class="nt">15 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unary_invert</span>
+        <span class="nt">19 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary_power</span>
+        <span class="nt">20 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary_multiply</span>
+        <span class="nt">21 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary_divide</span>
+        <span class="nt">22 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary_modulo</span>
+        <span class="nt">23 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary_add</span>
+        <span class="nt">24 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary_subtract</span>
+        <span class="nt">25 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary_subscr</span>
+        <span class="nt">26 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary_floor_divide</span>
+        <span class="nt">27 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary_true_divide</span>
+        <span class="nt">28 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inplace_floor_divide</span>
+        <span class="nt">29 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inplace_true_divide</span>
+        <span class="nt">30 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">slice_0</span>
+        <span class="nt">31 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">slice_1</span>
+        <span class="nt">32 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">slice_2</span>
+        <span class="nt">33 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">slice_3</span>
+        <span class="nt">40 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">store_slice_0</span>
+        <span class="nt">41 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">store_slice_1</span>
+        <span class="nt">42 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">store_slice_2</span>
+        <span class="nt">43 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">store_slice_3</span>
+        <span class="nt">50 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">delete_slice_0</span>
+        <span class="nt">51 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">delete_slice_1</span>
+        <span class="nt">52 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">delete_slice_2</span>
+        <span class="nt">53 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">delete_slice_3</span>
+        <span class="nt">54 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">store_map</span>
+        <span class="nt">55 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inplace_add</span>
+        <span class="nt">56 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inplace_subtract</span>
+        <span class="nt">57 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inplace_multiply</span>
+        <span class="nt">58 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inplace_divide</span>
+        <span class="nt">59 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inplace_modulo</span>
+        <span class="nt">60 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">store_subscr</span>
+        <span class="nt">61 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">delete_subscr</span>
+        <span class="nt">62 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary_lshift</span>
+        <span class="nt">63 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary_rshift</span>
+        <span class="nt">64 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary_and</span>
+        <span class="nt">65 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary_xor</span>
+        <span class="nt">66 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary_or</span>
+        <span class="nt">67 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inplace_power</span>
+        <span class="nt">68 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">get_iter</span>
+        <span class="nt">70 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">print_expr</span>
+        <span class="nt">71 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">print_item</span>
+        <span class="nt">72 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">print_newline</span>
+        <span class="nt">73 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">print_item_to</span>
+        <span class="nt">74 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">print_newline_to</span>
+        <span class="nt">75 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inplace_lshift</span>
+        <span class="nt">76 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inplace_rshift</span>
+        <span class="nt">77 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inplace_and</span>
+        <span class="nt">78 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inplace_xor</span>
+        <span class="nt">79 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inplace_or</span>
+        <span class="nt">80 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">break_loop</span>
+        <span class="nt">81 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">with_cleanup</span>
+        <span class="nt">82 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">load_locals</span>
+        <span class="nt">83 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">return_value</span>
+        <span class="nt">84 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">import_star</span>
+        <span class="nt">85 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exec_stmt</span>
+        <span class="nt">86 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">yield_value</span>
+        <span class="nt">87 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pop_block</span>
+        <span class="nt">88 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end_finally</span>
+        <span class="nt">89 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_class</span>
+        <span class="nt">90 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">store_name</span>           <span class="c1"># Index in name list</span>
+        <span class="nt">91 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">delete_name</span>          <span class="c1"># &quot;&quot;</span>
+        <span class="nt">92 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unpack_sequence</span>      <span class="c1"># Number of tuple items</span>
+        <span class="nt">93 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">for_iter</span>
+        <span class="nt">94 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">list_append</span>
+        <span class="nt">95 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">store_attr</span>           <span class="c1"># Index in name list</span>
+        <span class="nt">96 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">delete_attr</span>          <span class="c1"># &quot;&quot;</span>
+        <span class="nt">97 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">store_global</span>         <span class="c1"># &quot;&quot;</span>
+        <span class="nt">98 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">delete_global</span>        <span class="c1"># &quot;&quot;</span>
+        <span class="nt">99 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dup_topx</span>             <span class="c1"># number of items to duplicate</span>
+        <span class="nt">100</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">load_const</span>           <span class="c1"># Index in const list</span>
+        <span class="nt">101</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">load_name</span>            <span class="c1"># Index in name list</span>
+        <span class="nt">102</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_tuple</span>          <span class="c1"># Number of tuple items</span>
+        <span class="nt">103</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_list</span>           <span class="c1"># Number of list items</span>
+        <span class="nt">104</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_set</span>            <span class="c1"># Number of set items</span>
+        <span class="nt">105</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_map</span>            <span class="c1"># Number of dict entries (upto 255)</span>
+        <span class="nt">106</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">load_attr</span>            <span class="c1"># Index in name list</span>
+        <span class="nt">107</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compare_op</span>           <span class="c1"># Comparison operator</span>
+        <span class="nt">108</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">import_name</span>          <span class="c1"># Index in name list</span>
+        <span class="nt">109</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">import_from</span>          <span class="c1"># Index in name list</span>
+        <span class="nt">110</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jump_forward</span>         <span class="c1"># Number of bytes to skip</span>
+        <span class="nt">111</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jump_if_false_or_pop</span> <span class="c1"># Target byte offset from beginning of code</span>
+        <span class="nt">112</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jump_if_true_or_pop</span>  <span class="c1"># &quot;&quot;</span>
+        <span class="nt">113</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jump_absolute</span>        <span class="c1"># &quot;&quot;</span>
+        <span class="nt">114</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pop_jump_if_false</span>    <span class="c1"># &quot;&quot;</span>
+        <span class="nt">115</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pop_jump_if_true</span>     <span class="c1"># &quot;&quot;</span>
+        <span class="nt">116</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">load_global</span>          <span class="c1"># Index in name list</span>
+        <span class="nt">119</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">continue_loop</span>        <span class="c1"># Target address</span>
+        <span class="nt">120</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setup_loop</span>           <span class="c1"># Distance to target address</span>
+        <span class="nt">121</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setup_except</span>         <span class="c1"># &quot;&quot;</span>
+        <span class="nt">122</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setup_finally</span>        <span class="c1"># &quot;&quot;</span>
+        <span class="nt">124</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">load_fast</span>            <span class="c1"># Local variable number</span>
+        <span class="nt">125</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">store_fast</span>           <span class="c1"># Local variable number</span>
+        <span class="nt">126</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">delete_fast</span>          <span class="c1"># Local variable number</span>
+        <span class="nt">130</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">raise_varargs</span>        <span class="c1"># Number of raise arguments (1, 2, or 3)</span>
+        <span class="nt">131</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">call_function</span>        <span class="c1"># #args + (#kwargs &lt;&lt; 8)</span>
+        <span class="nt">132</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">make_function</span>        <span class="c1"># Number of args with default values</span>
+        <span class="nt">133</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_slice</span>          <span class="c1"># Number of items</span>
+        <span class="nt">134</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">make_closure</span>
+        <span class="nt">135</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">load_closure</span>
+        <span class="nt">136</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">load_deref</span>
+        <span class="nt">137</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">store_deref</span>
+        <span class="nt">140</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">call_function_var</span>    <span class="c1"># #args + (#kwargs &lt;&lt; 8)</span>
+        <span class="nt">141</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">call_function_kw</span>     <span class="c1"># #args + (#kwargs &lt;&lt; 8)</span>
+        <span class="nt">142</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">call_function_var_kw</span> <span class="c1"># #args + (#kwargs &lt;&lt; 8)</span>
+        <span class="nt">143</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">setup_with</span>
+        <span class="nt">145</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extended_arg</span>
+        <span class="nt">146</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">set_add</span>
+        <span class="nt">147</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">map_add</span>
+  <span class="nt">code_object</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arg_count</span>   <span class="c1"># argcount</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">local_count</span> <span class="c1"># nlocals</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stack_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags_enum</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">code</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">assembly</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">consts</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">py_object</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">names</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">py_object</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">var_names</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">py_object</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">free_vars</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">py_object</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cell_vars</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">py_object</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filename</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">py_object</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">py_object</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">first_line_no</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lnotab</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">py_object</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{name.value}&quot;</span>
+    <span class="nt">enums</span><span class="p">:</span>
+      <span class="nt">flags_enum</span><span class="p">:</span>
+        <span class="nt">0x04</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_args</span>
+        <span class="nt">0x08</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_kwargs</span>
+        <span class="nt">0x20</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">generator</span>
+  <span class="nt">py_object</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">object_type</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&quot;object_type::code_object&quot;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">code_object</span>
+            <span class="s">&quot;object_type::string&quot;</span><span class="p p-Indicator">:</span>      <span class="l l-Scalar l-Scalar-Plain">py_string</span>
+            <span class="s">&quot;object_type::string_ref&quot;</span><span class="p p-Indicator">:</span>  <span class="l l-Scalar l-Scalar-Plain">string_ref</span>
+            <span class="s">&quot;object_type::interned&quot;</span><span class="p p-Indicator">:</span>    <span class="l l-Scalar l-Scalar-Plain">interned_string</span>
+            <span class="s">&quot;object_type::tuple&quot;</span><span class="p p-Indicator">:</span>       <span class="l l-Scalar l-Scalar-Plain">tuple</span>
+            <span class="s">&quot;object_type::int&quot;</span><span class="p p-Indicator">:</span>         <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="s">&quot;object_type::py_false&quot;</span><span class="p p-Indicator">:</span>    <span class="l l-Scalar l-Scalar-Plain">py_false</span>
+            <span class="s">&quot;object_type::py_true&quot;</span><span class="p p-Indicator">:</span>     <span class="l l-Scalar l-Scalar-Plain">py_true</span>
+            <span class="s">&quot;object_type::none&quot;</span><span class="p p-Indicator">:</span>        <span class="l l-Scalar l-Scalar-Plain">py_none</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{type}:</span><span class="nv"> </span><span class="s">{value}&quot;</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">py_string</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{data}&quot;</span>
+      <span class="nt">interned_string</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf-8</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{data}&quot;</span>
+      <span class="nt">string_ref</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">interned_list_index</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;#{interned_list_index:dec}&quot;</span>
+      <span class="nt">unicode_string</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf-8</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{data}&quot;</span>
+      <span class="nt">tuple</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">count</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">items</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">py_object</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">count</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{count:dec}</span><span class="nv"> </span><span class="s">items&quot;</span>
+      <span class="nt">py_none</span><span class="p">:</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;None&quot;</span>
+      <span class="nt">py_true</span><span class="p">:</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;true&quot;</span>
+      <span class="nt">py_false</span><span class="p">:</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;false&quot;</span>
+    <span class="nt">enums</span><span class="p">:</span>
+      <span class="nt">object_type</span><span class="p">:</span>
+        <span class="nt">40</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tuple</span>             <span class="c1"># (</span>
+        <span class="nt">70</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">py_false</span>          <span class="c1"># F</span>
+        <span class="nt">78</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>              <span class="c1"># N</span>
+        <span class="nt">82</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string_ref</span>        <span class="c1"># R</span>
+        <span class="nt">84</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">py_true</span>           <span class="c1"># T</span>
+        <span class="nt">99</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">code_object</span>       <span class="c1"># c</span>
+        <span class="nt">105</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">int</span>              <span class="c1"># i</span>
+        <span class="nt">115</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string</span>           <span class="c1"># s</span>
+        <span class="nt">116</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">interned</span>         <span class="c1"># t</span>
+        <span class="nt">117</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unicode_string</span>   <span class="c1"># u</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="c1"># http://svn.python.org/view/python/trunk/Python/import.c?view=markup</span>
+  <span class="nt">version</span><span class="p">:</span>
+    <span class="nt">20121</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v15</span>
+    <span class="nt">50428</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v16</span>
+    <span class="nt">50823</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v20</span>
+    <span class="nt">60202</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v21</span>
+    <span class="nt">60717</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v22</span>
+    <span class="nt">62011</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v23_a0</span>
+    <span class="nt">62021</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v23_a0b</span>
+    <span class="nt">62041</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v24_a0</span>
+    <span class="nt">62051</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v24_a3</span>
+    <span class="nt">62061</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v24_b1</span>
+    <span class="nt">62071</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v25_a0</span>
+    <span class="nt">62081</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v25_a0b</span>
+    <span class="nt">62091</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v25_a0c</span>
+    <span class="nt">62092</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v25_a0d</span>
+    <span class="nt">62101</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v25_b3</span>
+    <span class="nt">62111</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v25_b3b</span>
+    <span class="nt">62121</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v25_c1</span>
+    <span class="nt">62131</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v25_c2</span>
+    <span class="nt">62151</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v26_a0</span>
+    <span class="nt">62161</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v26_a1</span>
+    <span class="nt">62171</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v27_a0</span>
+    <span class="nt">62181</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v27_a0b</span>
+    <span class="nt">62191</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v27_a0c</span>
+    <span class="nt">62201</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v27_a0d</span>
+    <span class="nt">62211</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">v27_a0e</span>
+</pre></div>
     </div>
 </section>
 
@@ -559,8 +556,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

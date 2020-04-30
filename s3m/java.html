@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -282,690 +279,690 @@ S3m data = new S3m(new ByteBufferKaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
 
 
-/**
- * Scream Tracker 3 module is a tracker music file format that, as all
- * tracker music, bundles both sound samples and instructions on which
- * notes to play. It originates from a Scream Tracker 3 music editor
- * (1994) by Future Crew, derived from original Scream Tracker 2 (.stm)
- * module format.
- * 
- * Instrument descriptions in S3M format allow to use either digital
- * samples or setup and control AdLib (OPL2) synth.
- * 
- * Music is organized in so called `patterns`. &quot;Pattern&quot; is a generally
- * a 64-row long table, which instructs which notes to play on which
- * time measure. &quot;Patterns&quot; are played one-by-one in a sequence
- * determined by `orders`, which is essentially an array of pattern IDs
- * - this way it&#39;s possible to reuse certain patterns more than once
- * for repetitive musical phrases.
- * @see &lt;a href=&quot;http://hackipedia.org/File%20formats/Music/Sample%20based/text/Scream%20Tracker%203.20%20file%20format.cp437.txt.utf-8.txt&quot;&gt;Source&lt;/a&gt;
- */
-public class S3m extends KaitaiStruct {
-    public static S3m fromFile(String fileName) throws IOException {
-        return new S3m(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * Scream Tracker 3 module is a tracker music file format that, as all</span>
+<span class="cm"> * tracker music, bundles both sound samples and instructions on which</span>
+<span class="cm"> * notes to play. It originates from a Scream Tracker 3 music editor</span>
+<span class="cm"> * (1994) by Future Crew, derived from original Scream Tracker 2 (.stm)</span>
+<span class="cm"> * module format.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Instrument descriptions in S3M format allow to use either digital</span>
+<span class="cm"> * samples or setup and control AdLib (OPL2) synth.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Music is organized in so called `patterns`. &quot;Pattern&quot; is a generally</span>
+<span class="cm"> * a 64-row long table, which instructs which notes to play on which</span>
+<span class="cm"> * time measure. &quot;Patterns&quot; are played one-by-one in a sequence</span>
+<span class="cm"> * determined by `orders`, which is essentially an array of pattern IDs</span>
+<span class="cm"> * - this way it&#39;s possible to reuse certain patterns more than once</span>
+<span class="cm"> * for repetitive musical phrases.</span>
+<span class="cm"> * @see &lt;a href=&quot;http://hackipedia.org/File%20formats/Music/Sample%20based/text/Scream%20Tracker%203.20%20file%20format.cp437.txt.utf-8.txt&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">S3m</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">S3m</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">S3m</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public S3m(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">S3m</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public S3m(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">S3m</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public S3m(KaitaiStream _io, KaitaiStruct _parent, S3m _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.songName = KaitaiStream.bytesTerminate(this._io.readBytes(28), (byte) 0, false);
-        this.magic1 = this._io.ensureFixedContents(new byte[] { 26 });
-        this.fileType = this._io.readU1();
-        this.reserved1 = this._io.readBytes(2);
-        this.numOrders = this._io.readU2le();
-        this.numInstruments = this._io.readU2le();
-        this.numPatterns = this._io.readU2le();
-        this.flags = this._io.readU2le();
-        this.version = this._io.readU2le();
-        this.samplesFormat = this._io.readU2le();
-        this.magic2 = this._io.ensureFixedContents(new byte[] { 83, 67, 82, 77 });
-        this.globalVolume = this._io.readU1();
-        this.initialSpeed = this._io.readU1();
-        this.initialTempo = this._io.readU1();
-        this.isStereo = this._io.readBitsInt(1) != 0;
-        this.masterVolume = this._io.readBitsInt(7);
-        this._io.alignToByte();
-        this.ultraClickRemoval = this._io.readU1();
-        this.hasCustomPan = this._io.readU1();
-        this.reserved2 = this._io.readBytes(8);
-        this.ofsSpecial = this._io.readU2le();
-        channels = new ArrayList&lt;Channel&gt;((int) (32));
-        for (int i = 0; i &lt; 32; i++) {
-            this.channels.add(new Channel(this._io, this, _root));
-        }
-        this.orders = this._io.readBytes(numOrders());
-        instruments = new ArrayList&lt;InstrumentPtr&gt;((int) (numInstruments()));
-        for (int i = 0; i &lt; numInstruments(); i++) {
-            this.instruments.add(new InstrumentPtr(this._io, this, _root));
-        }
-        patterns = new ArrayList&lt;PatternPtr&gt;((int) (numPatterns()));
-        for (int i = 0; i &lt; numPatterns(); i++) {
-            this.patterns.add(new PatternPtr(this._io, this, _root));
-        }
-        if (hasCustomPan() == 252) {
-            channelPans = new ArrayList&lt;ChannelPan&gt;((int) (32));
-            for (int i = 0; i &lt; 32; i++) {
-                this.channelPans.add(new ChannelPan(this._io, this, _root));
-            }
-        }
-    }
-    public static class ChannelPan extends KaitaiStruct {
-        public static ChannelPan fromFile(String fileName) throws IOException {
-            return new ChannelPan(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="kd">public</span> <span class="nf">S3m</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">songName</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">bytesTerminate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">28</span><span class="p">),</span> <span class="p">(</span><span class="kt">byte</span><span class="p">)</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">magic1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">26</span> <span class="p">});</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">fileType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">reserved1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">numOrders</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">numInstruments</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">numPatterns</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">samplesFormat</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">magic2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">67</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">77</span> <span class="p">});</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">globalVolume</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">initialSpeed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">initialTempo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">isStereo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">masterVolume</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">alignToByte</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">ultraClickRemoval</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">hasCustomPan</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">reserved2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">ofsSpecial</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="n">channels</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Channel</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mi">32</span><span class="p">));</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">32</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">channels</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Channel</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">orders</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">numOrders</span><span class="p">());</span>
+        <span class="n">instruments</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">InstrumentPtr</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numInstruments</span><span class="p">()));</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numInstruments</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">instruments</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">InstrumentPtr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PatternPtr</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numPatterns</span><span class="p">()));</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numPatterns</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">patterns</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">PatternPtr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">hasCustomPan</span><span class="p">()</span> <span class="o">==</span> <span class="mi">252</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">channelPans</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">ChannelPan</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mi">32</span><span class="p">));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">32</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">channelPans</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">ChannelPan</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ChannelPan</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">ChannelPan</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">ChannelPan</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public ChannelPan(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">ChannelPan</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ChannelPan(KaitaiStream _io, S3m _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">ChannelPan</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ChannelPan(KaitaiStream _io, S3m _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.reserved1 = this._io.readBitsInt(2);
-            this.hasCustomPan = this._io.readBitsInt(1) != 0;
-            this.reserved2 = this._io.readBitsInt(1) != 0;
-            this.pan = this._io.readBitsInt(4);
-        }
-        private long reserved1;
-        private boolean hasCustomPan;
-        private boolean reserved2;
-        private long pan;
-        private S3m _root;
-        private S3m _parent;
-        public long reserved1() { return reserved1; }
+        <span class="kd">public</span> <span class="nf">ChannelPan</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasCustomPan</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">pan</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">reserved1</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasCustomPan</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">reserved2</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">pan</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved1</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * If true, then use a custom pan setting provided in the `pan`
-         * field. If false, the channel would use the default setting
-         * (0x7 for mono, 0x3 or 0xc for stereo).
-         */
-        public boolean hasCustomPan() { return hasCustomPan; }
-        public boolean reserved2() { return reserved2; }
-        public long pan() { return pan; }
-        public S3m _root() { return _root; }
-        public S3m _parent() { return _parent; }
-    }
-    public static class PatternCell extends KaitaiStruct {
-        public static PatternCell fromFile(String fileName) throws IOException {
-            return new PatternCell(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="cm">/**</span>
+<span class="cm">         * If true, then use a custom pan setting provided in the `pan`</span>
+<span class="cm">         * field. If false, the channel would use the default setting</span>
+<span class="cm">         * (0x7 for mono, 0x3 or 0xc for stereo).</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasCustomPan</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasCustomPan</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">reserved2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">pan</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pan</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PatternCell</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PatternCell</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">PatternCell</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public PatternCell(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">PatternCell</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PatternCell(KaitaiStream _io, S3m.PatternCells _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">PatternCell</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span><span class="p">.</span><span class="na">PatternCells</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PatternCell(KaitaiStream _io, S3m.PatternCells _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.hasFx = this._io.readBitsInt(1) != 0;
-            this.hasVolume = this._io.readBitsInt(1) != 0;
-            this.hasNoteAndInstrument = this._io.readBitsInt(1) != 0;
-            this.channelNum = this._io.readBitsInt(5);
-            this._io.alignToByte();
-            if (hasNoteAndInstrument()) {
-                this.note = this._io.readU1();
-            }
-            if (hasNoteAndInstrument()) {
-                this.instrument = this._io.readU1();
-            }
-            if (hasVolume()) {
-                this.volume = this._io.readU1();
-            }
-            if (hasFx()) {
-                this.fxType = this._io.readU1();
-            }
-            if (hasFx()) {
-                this.fxValue = this._io.readU1();
-            }
-        }
-        private boolean hasFx;
-        private boolean hasVolume;
-        private boolean hasNoteAndInstrument;
-        private long channelNum;
-        private Integer note;
-        private Integer instrument;
-        private Integer volume;
-        private Integer fxType;
-        private Integer fxValue;
-        private S3m _root;
-        private S3m.PatternCells _parent;
-        public boolean hasFx() { return hasFx; }
-        public boolean hasVolume() { return hasVolume; }
-        public boolean hasNoteAndInstrument() { return hasNoteAndInstrument; }
-        public long channelNum() { return channelNum; }
-        public Integer note() { return note; }
-        public Integer instrument() { return instrument; }
-        public Integer volume() { return volume; }
-        public Integer fxType() { return fxType; }
-        public Integer fxValue() { return fxValue; }
-        public S3m _root() { return _root; }
-        public S3m.PatternCells _parent() { return _parent; }
-    }
-    public static class PatternCells extends KaitaiStruct {
-        public static PatternCells fromFile(String fileName) throws IOException {
-            return new PatternCells(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">PatternCell</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span><span class="p">.</span><span class="na">PatternCells</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasFx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasVolume</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasNoteAndInstrument</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">channelNum</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">alignToByte</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hasNoteAndInstrument</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">note</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hasNoteAndInstrument</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">instrument</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hasVolume</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">volume</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hasFx</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">fxType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hasFx</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">fxValue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasFx</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasVolume</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasNoteAndInstrument</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">channelNum</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">note</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">instrument</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">volume</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">fxType</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">fxValue</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span><span class="p">.</span><span class="na">PatternCells</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasFx</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasFx</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasVolume</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasVolume</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasNoteAndInstrument</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasNoteAndInstrument</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">channelNum</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">channelNum</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">note</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">note</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">instrument</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">instrument</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">volume</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">volume</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">fxType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fxType</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">fxValue</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fxValue</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span><span class="p">.</span><span class="na">PatternCells</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PatternCells</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PatternCells</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">PatternCells</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public PatternCells(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">PatternCells</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PatternCells(KaitaiStream _io, S3m.Pattern _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">PatternCells</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Pattern</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PatternCells(KaitaiStream _io, S3m.Pattern _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.cells = new ArrayList&lt;PatternCell&gt;();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.cells.add(new PatternCell(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList&lt;PatternCell&gt; cells;
-        private S3m _root;
-        private S3m.Pattern _parent;
-        public ArrayList&lt;PatternCell&gt; cells() { return cells; }
-        public S3m _root() { return _root; }
-        public S3m.Pattern _parent() { return _parent; }
-    }
-    public static class Channel extends KaitaiStruct {
-        public static Channel fromFile(String fileName) throws IOException {
-            return new Channel(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">PatternCells</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Pattern</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">cells</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PatternCell</span><span class="o">&gt;</span><span class="p">();</span>
+            <span class="p">{</span>
+                <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">cells</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">PatternCell</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+                    <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PatternCell</span><span class="o">&gt;</span> <span class="n">cells</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Pattern</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PatternCell</span><span class="o">&gt;</span> <span class="nf">cells</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">cells</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Pattern</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Channel</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Channel</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Channel</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Channel(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Channel</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Channel(KaitaiStream _io, S3m _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Channel</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Channel(KaitaiStream _io, S3m _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.isDisabled = this._io.readBitsInt(1) != 0;
-            this.chType = this._io.readBitsInt(7);
-        }
-        private boolean isDisabled;
-        private long chType;
-        private S3m _root;
-        private S3m _parent;
-        public boolean isDisabled() { return isDisabled; }
+        <span class="kd">public</span> <span class="nf">Channel</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">isDisabled</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">chType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">isDisabled</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">chType</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isDisabled</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">isDisabled</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)
-         */
-        public long chType() { return chType; }
-        public S3m _root() { return _root; }
-        public S3m _parent() { return _parent; }
-    }
+        <span class="cm">/**</span>
+<span class="cm">         * Channel type (0..7 = left sample channels, 8..15 = right sample channels, 16..31 = AdLib synth channels)</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">chType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">chType</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * Custom 3-byte integer, stored in mixed endian manner.
-     */
-    public static class SwappedU3 extends KaitaiStruct {
-        public static SwappedU3 fromFile(String fileName) throws IOException {
-            return new SwappedU3(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * Custom 3-byte integer, stored in mixed endian manner.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SwappedU3</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">SwappedU3</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">SwappedU3</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public SwappedU3(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">SwappedU3</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public SwappedU3(KaitaiStream _io, S3m.Instrument.Sampled _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">SwappedU3</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Instrument</span><span class="p">.</span><span class="na">Sampled</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public SwappedU3(KaitaiStream _io, S3m.Instrument.Sampled _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.hi = this._io.readU1();
-            this.lo = this._io.readU2le();
-        }
-        private Integer value;
-        public Integer value() {
-            if (this.value != null)
-                return this.value;
-            int _tmp = (int) ((lo() | (hi() &lt;&lt; 16)));
-            this.value = _tmp;
-            return this.value;
-        }
-        private int hi;
-        private int lo;
-        private S3m _root;
-        private S3m.Instrument.Sampled _parent;
-        public int hi() { return hi; }
-        public int lo() { return lo; }
-        public S3m _root() { return _root; }
-        public S3m.Instrument.Sampled _parent() { return _parent; }
-    }
-    public static class Pattern extends KaitaiStruct {
-        public static Pattern fromFile(String fileName) throws IOException {
-            return new Pattern(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">SwappedU3</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Instrument</span><span class="p">.</span><span class="na">Sampled</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hi</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">value</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">value</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">lo</span><span class="p">()</span> <span class="o">|</span> <span class="p">(</span><span class="n">hi</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">value</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">hi</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">lo</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Instrument</span><span class="p">.</span><span class="na">Sampled</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hi</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hi</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lo</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Instrument</span><span class="p">.</span><span class="na">Sampled</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Pattern</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Pattern</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Pattern</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Pattern(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Pattern</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Pattern(KaitaiStream _io, S3m.PatternPtr _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Pattern</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span><span class="p">.</span><span class="na">PatternPtr</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Pattern(KaitaiStream _io, S3m.PatternPtr _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.size = this._io.readU2le();
-            this._raw_body = this._io.readBytes((size() - 2));
-            KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-            this.body = new PatternCells(_io__raw_body, this, _root);
-        }
-        private int size;
-        private PatternCells body;
-        private S3m _root;
-        private S3m.PatternPtr _parent;
-        private byte[] _raw_body;
-        public int size() { return size; }
-        public PatternCells body() { return body; }
-        public S3m _root() { return _root; }
-        public S3m.PatternPtr _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
-    }
-    public static class PatternPtr extends KaitaiStruct {
-        public static PatternPtr fromFile(String fileName) throws IOException {
-            return new PatternPtr(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">Pattern</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span><span class="p">.</span><span class="na">PatternPtr</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">));</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PatternCells</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">size</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PatternCells</span> <span class="n">body</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span><span class="p">.</span><span class="na">PatternPtr</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_body</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PatternCells</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span><span class="p">.</span><span class="na">PatternPtr</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PatternPtr</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PatternPtr</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">PatternPtr</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public PatternPtr(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">PatternPtr</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PatternPtr(KaitaiStream _io, S3m _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">PatternPtr</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PatternPtr(KaitaiStream _io, S3m _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.paraptr = this._io.readU2le();
-        }
-        private Pattern body;
-        public Pattern body() {
-            if (this.body != null)
-                return this.body;
-            long _pos = this._io.pos();
-            this._io.seek((paraptr() * 16));
-            this.body = new Pattern(this._io, this, _root);
-            this._io.seek(_pos);
-            return this.body;
-        }
-        private int paraptr;
-        private S3m _root;
-        private S3m _parent;
-        public int paraptr() { return paraptr; }
-        public S3m _root() { return _root; }
-        public S3m _parent() { return _parent; }
-    }
-    public static class InstrumentPtr extends KaitaiStruct {
-        public static InstrumentPtr fromFile(String fileName) throws IOException {
-            return new InstrumentPtr(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">PatternPtr</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">paraptr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Pattern</span> <span class="n">body</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Pattern</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">body</span><span class="p">;</span>
+            <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">paraptr</span><span class="p">()</span> <span class="o">*</span> <span class="mi">16</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Pattern</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">body</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">paraptr</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">paraptr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">paraptr</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">InstrumentPtr</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">InstrumentPtr</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">InstrumentPtr</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public InstrumentPtr(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">InstrumentPtr</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public InstrumentPtr(KaitaiStream _io, S3m _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">InstrumentPtr</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public InstrumentPtr(KaitaiStream _io, S3m _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.paraptr = this._io.readU2le();
-        }
-        private Instrument body;
-        public Instrument body() {
-            if (this.body != null)
-                return this.body;
-            long _pos = this._io.pos();
-            this._io.seek((paraptr() * 16));
-            this.body = new Instrument(this._io, this, _root);
-            this._io.seek(_pos);
-            return this.body;
-        }
-        private int paraptr;
-        private S3m _root;
-        private S3m _parent;
-        public int paraptr() { return paraptr; }
-        public S3m _root() { return _root; }
-        public S3m _parent() { return _parent; }
-    }
-    public static class Instrument extends KaitaiStruct {
-        public static Instrument fromFile(String fileName) throws IOException {
-            return new Instrument(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">InstrumentPtr</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">paraptr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Instrument</span> <span class="n">body</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Instrument</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">body</span><span class="p">;</span>
+            <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">paraptr</span><span class="p">()</span> <span class="o">*</span> <span class="mi">16</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Instrument</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">body</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">paraptr</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">paraptr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">paraptr</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Instrument</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Instrument</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Instrument</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public enum InstTypes {
-            SAMPLE(1),
-            MELODIC(2),
-            BASS_DRUM(3),
-            SNARE_DRUM(4),
-            TOM(5),
-            CYMBAL(6),
-            HIHAT(7);
+        <span class="kd">public</span> <span class="kd">enum</span> <span class="n">InstTypes</span> <span class="p">{</span>
+            <span class="n">SAMPLE</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">MELODIC</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+            <span class="n">BASS_DRUM</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+            <span class="n">SNARE_DRUM</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+            <span class="n">TOM</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+            <span class="n">CYMBAL</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span>
+            <span class="n">HIHAT</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
 
-            private final long id;
-            InstTypes(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map&lt;Long, InstTypes&gt; byId = new HashMap&lt;Long, InstTypes&gt;(7);
-            static {
-                for (InstTypes e : InstTypes.values())
-                    byId.put(e.id(), e);
-            }
-            public static InstTypes byId(long id) { return byId.get(id); }
-        }
+            <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+            <span class="n">InstTypes</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">InstTypes</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">InstTypes</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+            <span class="kd">static</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">InstTypes</span> <span class="n">e</span> <span class="p">:</span> <span class="n">InstTypes</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                    <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">InstTypes</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        public Instrument(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Instrument</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Instrument(KaitaiStream _io, S3m.InstrumentPtr _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Instrument</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span><span class="p">.</span><span class="na">InstrumentPtr</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Instrument(KaitaiStream _io, S3m.InstrumentPtr _parent, S3m _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.type = InstTypes.byId(this._io.readU1());
-            this.filename = KaitaiStream.bytesTerminate(this._io.readBytes(12), (byte) 0, false);
-            switch (type()) {
-            case SAMPLE: {
-                this.body = new Sampled(this._io, this, _root);
-                break;
-            }
-            default: {
-                this.body = new Adlib(this._io, this, _root);
-                break;
-            }
-            }
-            this.tuningHz = this._io.readU4le();
-            this.reserved2 = this._io.readBytes(12);
-            this.sampleName = KaitaiStream.bytesTerminate(this._io.readBytes(28), (byte) 0, false);
-            this.magic = this._io.ensureFixedContents(new byte[] { 83, 67, 82, 83 });
-        }
-        public static class Sampled extends KaitaiStruct {
-            public static Sampled fromFile(String fileName) throws IOException {
-                return new Sampled(new ByteBufferKaitaiStream(fileName));
-            }
+        <span class="kd">public</span> <span class="nf">Instrument</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span><span class="p">.</span><span class="na">InstrumentPtr</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">InstTypes</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">filename</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">bytesTerminate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">12</span><span class="p">),</span> <span class="p">(</span><span class="kt">byte</span><span class="p">)</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">type</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">SAMPLE</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Sampled</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Adlib</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">tuningHz</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">sampleName</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">bytesTerminate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">28</span><span class="p">),</span> <span class="p">(</span><span class="kt">byte</span><span class="p">)</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">67</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">83</span> <span class="p">});</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Sampled</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">Sampled</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">Sampled</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Sampled(KaitaiStream _io) {
-                this(_io, null, null);
-            }
+            <span class="kd">public</span> <span class="nf">Sampled</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public Sampled(KaitaiStream _io, S3m.Instrument _parent) {
-                this(_io, _parent, null);
-            }
+            <span class="kd">public</span> <span class="nf">Sampled</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Instrument</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public Sampled(KaitaiStream _io, S3m.Instrument _parent, S3m _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.paraptrSample = new SwappedU3(this._io, this, _root);
-                this.lenSample = this._io.readU4le();
-                this.loopBegin = this._io.readU4le();
-                this.loopEnd = this._io.readU4le();
-                this.defaultVolume = this._io.readU1();
-                this.reserved1 = this._io.readU1();
-                this.isPacked = this._io.readU1();
-                this.flags = this._io.readU1();
-            }
-            private byte[] sample;
-            public byte[] sample() {
-                if (this.sample != null)
-                    return this.sample;
-                long _pos = this._io.pos();
-                this._io.seek((paraptrSample().value() * 16));
-                this.sample = this._io.readBytes(lenSample());
-                this._io.seek(_pos);
-                return this.sample;
-            }
-            private SwappedU3 paraptrSample;
-            private long lenSample;
-            private long loopBegin;
-            private long loopEnd;
-            private int defaultVolume;
-            private int reserved1;
-            private int isPacked;
-            private int flags;
-            private S3m _root;
-            private S3m.Instrument _parent;
-            public SwappedU3 paraptrSample() { return paraptrSample; }
-            public long lenSample() { return lenSample; }
-            public long loopBegin() { return loopBegin; }
-            public long loopEnd() { return loopEnd; }
+            <span class="kd">public</span> <span class="nf">Sampled</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Instrument</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">paraptrSample</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SwappedU3</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">lenSample</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">loopBegin</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">loopEnd</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">defaultVolume</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">reserved1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">isPacked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">sample</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">sample</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">sample</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">sample</span><span class="p">;</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">paraptrSample</span><span class="p">().</span><span class="na">value</span><span class="p">()</span> <span class="o">*</span> <span class="mi">16</span><span class="p">));</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">sample</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenSample</span><span class="p">());</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">sample</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">SwappedU3</span> <span class="n">paraptrSample</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenSample</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">loopBegin</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">loopEnd</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">int</span> <span class="n">defaultVolume</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">int</span> <span class="n">reserved1</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">int</span> <span class="n">isPacked</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Instrument</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">SwappedU3</span> <span class="nf">paraptrSample</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">paraptrSample</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenSample</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenSample</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">loopBegin</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">loopBegin</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">loopEnd</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">loopEnd</span><span class="p">;</span> <span class="p">}</span>
 
-            /**
-             * Default volume
-             */
-            public int defaultVolume() { return defaultVolume; }
-            public int reserved1() { return reserved1; }
+            <span class="cm">/**</span>
+<span class="cm">             * Default volume</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">int</span> <span class="nf">defaultVolume</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">defaultVolume</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">int</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved1</span><span class="p">;</span> <span class="p">}</span>
 
-            /**
-             * 0 = unpacked, 1 = DP30ADPCM packing
-             */
-            public int isPacked() { return isPacked; }
-            public int flags() { return flags; }
-            public S3m _root() { return _root; }
-            public S3m.Instrument _parent() { return _parent; }
-        }
-        public static class Adlib extends KaitaiStruct {
-            public static Adlib fromFile(String fileName) throws IOException {
-                return new Adlib(new ByteBufferKaitaiStream(fileName));
-            }
+            <span class="cm">/**</span>
+<span class="cm">             * 0 = unpacked, 1 = DP30ADPCM packing</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">int</span> <span class="nf">isPacked</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">isPacked</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">int</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Instrument</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Adlib</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">Adlib</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">Adlib</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Adlib(KaitaiStream _io) {
-                this(_io, null, null);
-            }
+            <span class="kd">public</span> <span class="nf">Adlib</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public Adlib(KaitaiStream _io, S3m.Instrument _parent) {
-                this(_io, _parent, null);
-            }
+            <span class="kd">public</span> <span class="nf">Adlib</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Instrument</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public Adlib(KaitaiStream _io, S3m.Instrument _parent, S3m _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.reserved1 = this._io.ensureFixedContents(new byte[] { 0, 0, 0 });
-                this._unnamed1 = this._io.readBytes(16);
-            }
-            private byte[] reserved1;
-            private byte[] _unnamed1;
-            private S3m _root;
-            private S3m.Instrument _parent;
-            public byte[] reserved1() { return reserved1; }
-            public byte[] _unnamed1() { return _unnamed1; }
-            public S3m _root() { return _root; }
-            public S3m.Instrument _parent() { return _parent; }
-        }
-        private InstTypes type;
-        private byte[] filename;
-        private KaitaiStruct body;
-        private long tuningHz;
-        private byte[] reserved2;
-        private byte[] sampleName;
-        private byte[] magic;
-        private S3m _root;
-        private S3m.InstrumentPtr _parent;
-        public InstTypes type() { return type; }
-        public byte[] filename() { return filename; }
-        public KaitaiStruct body() { return body; }
-        public long tuningHz() { return tuningHz; }
-        public byte[] reserved2() { return reserved2; }
-        public byte[] sampleName() { return sampleName; }
-        public byte[] magic() { return magic; }
-        public S3m _root() { return _root; }
-        public S3m.InstrumentPtr _parent() { return _parent; }
-    }
-    private byte[] songName;
-    private byte[] magic1;
-    private int fileType;
-    private byte[] reserved1;
-    private int numOrders;
-    private int numInstruments;
-    private int numPatterns;
-    private int flags;
-    private int version;
-    private int samplesFormat;
-    private byte[] magic2;
-    private int globalVolume;
-    private int initialSpeed;
-    private int initialTempo;
-    private boolean isStereo;
-    private long masterVolume;
-    private int ultraClickRemoval;
-    private int hasCustomPan;
-    private byte[] reserved2;
-    private int ofsSpecial;
-    private ArrayList&lt;Channel&gt; channels;
-    private byte[] orders;
-    private ArrayList&lt;InstrumentPtr&gt; instruments;
-    private ArrayList&lt;PatternPtr&gt; patterns;
-    private ArrayList&lt;ChannelPan&gt; channelPans;
-    private S3m _root;
-    private KaitaiStruct _parent;
-    public byte[] songName() { return songName; }
-    public byte[] magic1() { return magic1; }
-    public int fileType() { return fileType; }
-    public byte[] reserved1() { return reserved1; }
+            <span class="kd">public</span> <span class="nf">Adlib</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Instrument</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">reserved1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_unnamed1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">reserved1</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_unnamed1</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Instrument</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved1</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_unnamed1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unnamed1</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">S3m</span><span class="p">.</span><span class="na">Instrument</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">InstTypes</span> <span class="n">type</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">filename</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">body</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">tuningHz</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">reserved2</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">sampleName</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">magic</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">S3m</span><span class="p">.</span><span class="na">InstrumentPtr</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">InstTypes</span> <span class="nf">type</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">type</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">filename</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">filename</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">tuningHz</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">tuningHz</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">reserved2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">sampleName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">sampleName</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">magic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">S3m</span><span class="p">.</span><span class="na">InstrumentPtr</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">songName</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">magic1</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">fileType</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">reserved1</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">numOrders</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">numInstruments</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">numPatterns</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">version</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">samplesFormat</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">magic2</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">globalVolume</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">initialSpeed</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">initialTempo</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">isStereo</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">masterVolume</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">ultraClickRemoval</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">hasCustomPan</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">reserved2</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">ofsSpecial</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Channel</span><span class="o">&gt;</span> <span class="n">channels</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">orders</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">InstrumentPtr</span><span class="o">&gt;</span> <span class="n">instruments</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PatternPtr</span><span class="o">&gt;</span> <span class="n">patterns</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">ChannelPan</span><span class="o">&gt;</span> <span class="n">channelPans</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">S3m</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">songName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">songName</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">magic1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">magic1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">fileType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved1</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of orders in a song
-     */
-    public int numOrders() { return numOrders; }
+    <span class="cm">/**</span>
+<span class="cm">     * Number of orders in a song</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numOrders</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numOrders</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of instruments in a song
-     */
-    public int numInstruments() { return numInstruments; }
+    <span class="cm">/**</span>
+<span class="cm">     * Number of instruments in a song</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numInstruments</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numInstruments</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of patterns in a song
-     */
-    public int numPatterns() { return numPatterns; }
-    public int flags() { return flags; }
+    <span class="cm">/**</span>
+<span class="cm">     * Number of patterns in a song</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numPatterns</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numPatterns</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Scream Tracker version that was used to save this file
-     */
-    public int version() { return version; }
+    <span class="cm">/**</span>
+<span class="cm">     * Scream Tracker version that was used to save this file</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">version</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * 1 = signed samples, 2 = unsigned samples
-     */
-    public int samplesFormat() { return samplesFormat; }
-    public byte[] magic2() { return magic2; }
-    public int globalVolume() { return globalVolume; }
-    public int initialSpeed() { return initialSpeed; }
-    public int initialTempo() { return initialTempo; }
-    public boolean isStereo() { return isStereo; }
-    public long masterVolume() { return masterVolume; }
-    public int ultraClickRemoval() { return ultraClickRemoval; }
-    public int hasCustomPan() { return hasCustomPan; }
-    public byte[] reserved2() { return reserved2; }
+    <span class="cm">/**</span>
+<span class="cm">     * 1 = signed samples, 2 = unsigned samples</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">samplesFormat</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">samplesFormat</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">magic2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">magic2</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">globalVolume</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">globalVolume</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">initialSpeed</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">initialSpeed</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">initialTempo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">initialTempo</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isStereo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">isStereo</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">masterVolume</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">masterVolume</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">ultraClickRemoval</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ultraClickRemoval</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hasCustomPan</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasCustomPan</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">reserved2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved2</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Offset of special data, not used by Scream Tracker directly.
-     */
-    public int ofsSpecial() { return ofsSpecial; }
-    public ArrayList&lt;Channel&gt; channels() { return channels; }
-    public byte[] orders() { return orders; }
-    public ArrayList&lt;InstrumentPtr&gt; instruments() { return instruments; }
-    public ArrayList&lt;PatternPtr&gt; patterns() { return patterns; }
-    public ArrayList&lt;ChannelPan&gt; channelPans() { return channelPans; }
-    public S3m _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-}
-</code></pre>
+    <span class="cm">/**</span>
+<span class="cm">     * Offset of special data, not used by Scream Tracker directly.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">ofsSpecial</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsSpecial</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Channel</span><span class="o">&gt;</span> <span class="nf">channels</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">channels</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">orders</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">orders</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">InstrumentPtr</span><span class="o">&gt;</span> <span class="nf">instruments</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">instruments</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PatternPtr</span><span class="o">&gt;</span> <span class="nf">patterns</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">patterns</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">ChannelPan</span><span class="o">&gt;</span> <span class="nf">channelPans</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">channelPans</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">S3m</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -992,8 +989,8 @@ public class S3m extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

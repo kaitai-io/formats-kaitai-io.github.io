@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -265,642 +262,642 @@ features got limited support in v1.3).</p>
         </div>
 
         <div class="row">
-            <pre><code class="perl"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-use strict;
-use warnings;
-use IO::KaitaiStruct 0.007_000;
-use Encode;
-
-########################################################################
-package Warcraft2Pud;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-our $CONTROLLER_COMPUTER = 1;
-our $CONTROLLER_PASSIVE_COMPUTER = 2;
-our $CONTROLLER_NOBODY = 3;
-our $CONTROLLER_COMPUTER = 4;
-our $CONTROLLER_HUMAN = 5;
-our $CONTROLLER_RESCUE_PASSIVE = 6;
-our $CONTROLLER_RESCUE_ACTIVE = 7;
-
-our $TERRAIN_TYPE_FOREST = 0;
-our $TERRAIN_TYPE_WINTER = 1;
-our $TERRAIN_TYPE_WASTELAND = 2;
-our $TERRAIN_TYPE_SWAMP = 3;
-
-our $UNIT_TYPE_INFANTRY = 0;
-our $UNIT_TYPE_GRUNT = 1;
-our $UNIT_TYPE_PEASANT = 2;
-our $UNIT_TYPE_PEON = 3;
-our $UNIT_TYPE_BALLISTA = 4;
-our $UNIT_TYPE_CATAPULT = 5;
-our $UNIT_TYPE_KNIGHT = 6;
-our $UNIT_TYPE_OGRE = 7;
-our $UNIT_TYPE_ARCHER = 8;
-our $UNIT_TYPE_AXETHROWER = 9;
-our $UNIT_TYPE_MAGE = 10;
-our $UNIT_TYPE_DEATH_KNIGHT = 11;
-our $UNIT_TYPE_PALADIN = 12;
-our $UNIT_TYPE_OGRE_MAGE = 13;
-our $UNIT_TYPE_DWARVES = 14;
-our $UNIT_TYPE_GOBLIN_SAPPER = 15;
-our $UNIT_TYPE_ATTACK_PEASANT = 16;
-our $UNIT_TYPE_ATTACK_PEON = 17;
-our $UNIT_TYPE_RANGER = 18;
-our $UNIT_TYPE_BERSERKER = 19;
-our $UNIT_TYPE_ALLERIA = 20;
-our $UNIT_TYPE_TERON_GOREFIEND = 21;
-our $UNIT_TYPE_KURDAN_AND_SKY_REE = 22;
-our $UNIT_TYPE_DENTARG = 23;
-our $UNIT_TYPE_KHADGAR = 24;
-our $UNIT_TYPE_GROM_HELLSCREAM = 25;
-our $UNIT_TYPE_HUMAN_TANKER = 26;
-our $UNIT_TYPE_ORC_TANKER = 27;
-our $UNIT_TYPE_HUMAN_TRANSPORT = 28;
-our $UNIT_TYPE_ORC_TRANSPORT = 29;
-our $UNIT_TYPE_ELVEN_DESTROYER = 30;
-our $UNIT_TYPE_TROLL_DESTROYER = 31;
-our $UNIT_TYPE_BATTLESHIP = 32;
-our $UNIT_TYPE_JUGGERNAUGHT = 33;
-our $UNIT_TYPE_DEATHWING = 35;
-our $UNIT_TYPE_GNOMISH_SUBMARINE = 38;
-our $UNIT_TYPE_GIANT_TURTLE = 39;
-our $UNIT_TYPE_GNOMISH_FLYING_MACHINE = 40;
-our $UNIT_TYPE_GOBLIN_ZEPPLIN = 41;
-our $UNIT_TYPE_GRYPHON_RIDER = 42;
-our $UNIT_TYPE_DRAGON = 43;
-our $UNIT_TYPE_TURALYON = 44;
-our $UNIT_TYPE_EYE_OF_KILROGG = 45;
-our $UNIT_TYPE_DANATH = 46;
-our $UNIT_TYPE_KHORGATH_BLADEFIST = 47;
-our $UNIT_TYPE_CHO_GALL = 49;
-our $UNIT_TYPE_LOTHAR = 50;
-our $UNIT_TYPE_GUL_DAN = 51;
-our $UNIT_TYPE_UTHER_LIGHTBRINGER = 52;
-our $UNIT_TYPE_ZULJIN = 53;
-our $UNIT_TYPE_SKELETON = 55;
-our $UNIT_TYPE_DAEMON = 56;
-our $UNIT_TYPE_CRITTER = 57;
-our $UNIT_TYPE_FARM = 58;
-our $UNIT_TYPE_PIG_FARM = 59;
-our $UNIT_TYPE_HUMAN_BARRACKS = 60;
-our $UNIT_TYPE_ORC_BARRACKS = 61;
-our $UNIT_TYPE_CHURCH = 62;
-our $UNIT_TYPE_ALTAR_OF_STORMS = 63;
-our $UNIT_TYPE_HUMAN_SCOUT_TOWER = 64;
-our $UNIT_TYPE_ORC_SCOUT_TOWER = 65;
-our $UNIT_TYPE_STABLES = 66;
-our $UNIT_TYPE_OGRE_MOUND = 67;
-our $UNIT_TYPE_GNOMISH_INVENTOR = 68;
-our $UNIT_TYPE_GOBLIN_ALCHEMIST = 69;
-our $UNIT_TYPE_GRYPHON_AVIARY = 70;
-our $UNIT_TYPE_DRAGON_ROOST = 71;
-our $UNIT_TYPE_HUMAN_SHIPYARD = 72;
-our $UNIT_TYPE_ORC_SHIPYARD = 73;
-our $UNIT_TYPE_TOWN_HALL = 74;
-our $UNIT_TYPE_GREAT_HALL = 75;
-our $UNIT_TYPE_ELVEN_LUMBER_MILL = 76;
-our $UNIT_TYPE_TROLL_LUMBER_MILL = 77;
-our $UNIT_TYPE_HUMAN_FOUNDRY = 78;
-our $UNIT_TYPE_ORC_FOUNDRY = 79;
-our $UNIT_TYPE_MAGE_TOWER = 80;
-our $UNIT_TYPE_TEMPLE_OF_THE_DAMNED = 81;
-our $UNIT_TYPE_HUMAN_BLACKSMITH = 82;
-our $UNIT_TYPE_ORC_BLACKSMITH = 83;
-our $UNIT_TYPE_HUMAN_REFINERY = 84;
-our $UNIT_TYPE_ORC_REFINERY = 85;
-our $UNIT_TYPE_HUMAN_OIL_WELL = 86;
-our $UNIT_TYPE_ORC_OIL_WELL = 87;
-our $UNIT_TYPE_KEEP = 88;
-our $UNIT_TYPE_STRONGHOLD = 89;
-our $UNIT_TYPE_CASTLE = 90;
-our $UNIT_TYPE_FORTRESS = 91;
-our $UNIT_TYPE_GOLD_MINE = 92;
-our $UNIT_TYPE_OIL_PATCH = 93;
-our $UNIT_TYPE_HUMAN_START = 94;
-our $UNIT_TYPE_ORC_START = 95;
-our $UNIT_TYPE_HUMAN_GUARD_TOWER = 96;
-our $UNIT_TYPE_ORC_GUARD_TOWER = 97;
-our $UNIT_TYPE_HUMAN_CANNON_TOWER = 98;
-our $UNIT_TYPE_ORC_CANNON_TOWER = 99;
-our $UNIT_TYPE_CIRCLE_OF_POWER = 100;
-our $UNIT_TYPE_DARK_PORTAL = 101;
-our $UNIT_TYPE_RUNESTONE = 102;
-our $UNIT_TYPE_HUMAN_WALL = 103;
-our $UNIT_TYPE_ORC_WALL = 104;
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{sections} = ();
-    while (!$self-&gt;{_io}-&gt;is_eof()) {
-        push @{$self-&gt;{sections}}, Warcraft2Pud::Section-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-}
-
-sub sections {
-    my ($self) = @_;
-    return $self-&gt;{sections};
-}
-
-########################################################################
-package Warcraft2Pud::SectionStartingResource;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{resources_by_player} = ();
-    while (!$self-&gt;{_io}-&gt;is_eof()) {
-        push @{$self-&gt;{resources_by_player}}, $self-&gt;{_io}-&gt;read_u2le();
-    }
-}
-
-sub resources_by_player {
-    my ($self) = @_;
-    return $self-&gt;{resources_by_player};
-}
-
-########################################################################
-package Warcraft2Pud::SectionEra;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{terrain} = $self-&gt;{_io}-&gt;read_u2le();
-}
-
-sub terrain {
-    my ($self) = @_;
-    return $self-&gt;{terrain};
-}
-
-########################################################################
-package Warcraft2Pud::SectionVer;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{version} = $self-&gt;{_io}-&gt;read_u2le();
-}
-
-sub version {
-    my ($self) = @_;
-    return $self-&gt;{version};
-}
-
-########################################################################
-package Warcraft2Pud::SectionDim;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{x} = $self-&gt;{_io}-&gt;read_u2le();
-    $self-&gt;{y} = $self-&gt;{_io}-&gt;read_u2le();
-}
-
-sub x {
-    my ($self) = @_;
-    return $self-&gt;{x};
-}
-
-sub y {
-    my ($self) = @_;
-    return $self-&gt;{y};
-}
-
-########################################################################
-package Warcraft2Pud::SectionType;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="k">use</span> <span class="nn">strict</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">warnings</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">IO::KaitaiStruct</span> <span class="mf">0.007_000</span><span class="p">;</span>
+<span class="k">use</span> <span class="nn">Encode</span><span class="p">;</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Warcraft2Pud</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">our</span> <span class="nv">$CONTROLLER_COMPUTER</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$CONTROLLER_PASSIVE_COMPUTER</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$CONTROLLER_NOBODY</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$CONTROLLER_COMPUTER</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$CONTROLLER_HUMAN</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$CONTROLLER_RESCUE_PASSIVE</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$CONTROLLER_RESCUE_ACTIVE</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">$TERRAIN_TYPE_FOREST</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$TERRAIN_TYPE_WINTER</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$TERRAIN_TYPE_WASTELAND</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$TERRAIN_TYPE_SWAMP</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_INFANTRY</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_GRUNT</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_PEASANT</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_PEON</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_BALLISTA</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_CATAPULT</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_KNIGHT</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_OGRE</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ARCHER</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_AXETHROWER</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_MAGE</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_DEATH_KNIGHT</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_PALADIN</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_OGRE_MAGE</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_DWARVES</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_GOBLIN_SAPPER</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ATTACK_PEASANT</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ATTACK_PEON</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_RANGER</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_BERSERKER</span> <span class="o">=</span> <span class="mi">19</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ALLERIA</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_TERON_GOREFIEND</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_KURDAN_AND_SKY_REE</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_DENTARG</span> <span class="o">=</span> <span class="mi">23</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_KHADGAR</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_GROM_HELLSCREAM</span> <span class="o">=</span> <span class="mi">25</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_HUMAN_TANKER</span> <span class="o">=</span> <span class="mi">26</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ORC_TANKER</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_HUMAN_TRANSPORT</span> <span class="o">=</span> <span class="mi">28</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ORC_TRANSPORT</span> <span class="o">=</span> <span class="mi">29</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ELVEN_DESTROYER</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_TROLL_DESTROYER</span> <span class="o">=</span> <span class="mi">31</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_BATTLESHIP</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_JUGGERNAUGHT</span> <span class="o">=</span> <span class="mi">33</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_DEATHWING</span> <span class="o">=</span> <span class="mi">35</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_GNOMISH_SUBMARINE</span> <span class="o">=</span> <span class="mi">38</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_GIANT_TURTLE</span> <span class="o">=</span> <span class="mi">39</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_GNOMISH_FLYING_MACHINE</span> <span class="o">=</span> <span class="mi">40</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_GOBLIN_ZEPPLIN</span> <span class="o">=</span> <span class="mi">41</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_GRYPHON_RIDER</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_DRAGON</span> <span class="o">=</span> <span class="mi">43</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_TURALYON</span> <span class="o">=</span> <span class="mi">44</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_EYE_OF_KILROGG</span> <span class="o">=</span> <span class="mi">45</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_DANATH</span> <span class="o">=</span> <span class="mi">46</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_KHORGATH_BLADEFIST</span> <span class="o">=</span> <span class="mi">47</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_CHO_GALL</span> <span class="o">=</span> <span class="mi">49</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_LOTHAR</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_GUL_DAN</span> <span class="o">=</span> <span class="mi">51</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_UTHER_LIGHTBRINGER</span> <span class="o">=</span> <span class="mi">52</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ZULJIN</span> <span class="o">=</span> <span class="mi">53</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_SKELETON</span> <span class="o">=</span> <span class="mi">55</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_DAEMON</span> <span class="o">=</span> <span class="mi">56</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_CRITTER</span> <span class="o">=</span> <span class="mi">57</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_FARM</span> <span class="o">=</span> <span class="mi">58</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_PIG_FARM</span> <span class="o">=</span> <span class="mi">59</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_HUMAN_BARRACKS</span> <span class="o">=</span> <span class="mi">60</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ORC_BARRACKS</span> <span class="o">=</span> <span class="mi">61</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_CHURCH</span> <span class="o">=</span> <span class="mi">62</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ALTAR_OF_STORMS</span> <span class="o">=</span> <span class="mi">63</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_HUMAN_SCOUT_TOWER</span> <span class="o">=</span> <span class="mi">64</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ORC_SCOUT_TOWER</span> <span class="o">=</span> <span class="mi">65</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_STABLES</span> <span class="o">=</span> <span class="mi">66</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_OGRE_MOUND</span> <span class="o">=</span> <span class="mi">67</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_GNOMISH_INVENTOR</span> <span class="o">=</span> <span class="mi">68</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_GOBLIN_ALCHEMIST</span> <span class="o">=</span> <span class="mi">69</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_GRYPHON_AVIARY</span> <span class="o">=</span> <span class="mi">70</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_DRAGON_ROOST</span> <span class="o">=</span> <span class="mi">71</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_HUMAN_SHIPYARD</span> <span class="o">=</span> <span class="mi">72</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ORC_SHIPYARD</span> <span class="o">=</span> <span class="mi">73</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_TOWN_HALL</span> <span class="o">=</span> <span class="mi">74</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_GREAT_HALL</span> <span class="o">=</span> <span class="mi">75</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ELVEN_LUMBER_MILL</span> <span class="o">=</span> <span class="mi">76</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_TROLL_LUMBER_MILL</span> <span class="o">=</span> <span class="mi">77</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_HUMAN_FOUNDRY</span> <span class="o">=</span> <span class="mi">78</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ORC_FOUNDRY</span> <span class="o">=</span> <span class="mi">79</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_MAGE_TOWER</span> <span class="o">=</span> <span class="mi">80</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_TEMPLE_OF_THE_DAMNED</span> <span class="o">=</span> <span class="mi">81</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_HUMAN_BLACKSMITH</span> <span class="o">=</span> <span class="mi">82</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ORC_BLACKSMITH</span> <span class="o">=</span> <span class="mi">83</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_HUMAN_REFINERY</span> <span class="o">=</span> <span class="mi">84</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ORC_REFINERY</span> <span class="o">=</span> <span class="mi">85</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_HUMAN_OIL_WELL</span> <span class="o">=</span> <span class="mi">86</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ORC_OIL_WELL</span> <span class="o">=</span> <span class="mi">87</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_KEEP</span> <span class="o">=</span> <span class="mi">88</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_STRONGHOLD</span> <span class="o">=</span> <span class="mi">89</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_CASTLE</span> <span class="o">=</span> <span class="mi">90</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_FORTRESS</span> <span class="o">=</span> <span class="mi">91</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_GOLD_MINE</span> <span class="o">=</span> <span class="mi">92</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_OIL_PATCH</span> <span class="o">=</span> <span class="mi">93</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_HUMAN_START</span> <span class="o">=</span> <span class="mi">94</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ORC_START</span> <span class="o">=</span> <span class="mi">95</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_HUMAN_GUARD_TOWER</span> <span class="o">=</span> <span class="mi">96</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ORC_GUARD_TOWER</span> <span class="o">=</span> <span class="mi">97</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_HUMAN_CANNON_TOWER</span> <span class="o">=</span> <span class="mi">98</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ORC_CANNON_TOWER</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_CIRCLE_OF_POWER</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_DARK_PORTAL</span> <span class="o">=</span> <span class="mi">101</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_RUNESTONE</span> <span class="o">=</span> <span class="mi">102</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_HUMAN_WALL</span> <span class="o">=</span> <span class="mi">103</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">$UNIT_TYPE_ORC_WALL</span> <span class="o">=</span> <span class="mi">104</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sections</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sections</span><span class="p">}},</span> <span class="nn">Warcraft2Pud::Section</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">sections</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">sections</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Warcraft2Pud::SectionStartingResource</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">resources_by_player</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">resources_by_player</span><span class="p">}},</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">resources_by_player</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">resources_by_player</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Warcraft2Pud::SectionEra</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">terrain</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">terrain</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">terrain</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Warcraft2Pud::SectionVer</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">version</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">version</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Warcraft2Pud::SectionDim</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">x</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">y</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Warcraft2Pud::SectionType</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
 
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{magic} = $self-&gt;{_io}-&gt;ensure_fixed_contents(pack(&#39;C*&#39;, (87, 65, 82, 50, 32, 77, 65, 80, 0, 0)));
-    $self-&gt;{unused} = $self-&gt;{_io}-&gt;read_bytes(2);
-    $self-&gt;{id_tag} = $self-&gt;{_io}-&gt;read_u4le();
-}
-
-sub magic {
-    my ($self) = @_;
-    return $self-&gt;{magic};
-}
-
-sub unused {
-    my ($self) = @_;
-    return $self-&gt;{unused};
-}
-
-sub id_tag {
-    my ($self) = @_;
-    return $self-&gt;{id_tag};
-}
-
-########################################################################
-package Warcraft2Pud::SectionUnit;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{units} = ();
-    while (!$self-&gt;{_io}-&gt;is_eof()) {
-        push @{$self-&gt;{units}}, Warcraft2Pud::Unit-&gt;new($self-&gt;{_io}, $self, $self-&gt;{_root});
-    }
-}
-
-sub units {
-    my ($self) = @_;
-    return $self-&gt;{units};
-}
-
-########################################################################
-package Warcraft2Pud::Section;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{name} = Encode::decode(&quot;ASCII&quot;, $self-&gt;{_io}-&gt;read_bytes(4));
-    $self-&gt;{size} = $self-&gt;{_io}-&gt;read_u4le();
-    my $_on = $self-&gt;name();
-    if ($_on eq &quot;SLBR&quot;) {
-        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
-        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
-        $self-&gt;{body} = Warcraft2Pud::SectionStartingResource-&gt;new($io__raw_body, $self, $self-&gt;{_root});
-    }
-    elsif ($_on eq &quot;ERAX&quot;) {
-        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
-        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
-        $self-&gt;{body} = Warcraft2Pud::SectionEra-&gt;new($io__raw_body, $self, $self-&gt;{_root});
-    }
-    elsif ($_on eq &quot;OWNR&quot;) {
-        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
-        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
-        $self-&gt;{body} = Warcraft2Pud::SectionOwnr-&gt;new($io__raw_body, $self, $self-&gt;{_root});
-    }
-    elsif ($_on eq &quot;ERA &quot;) {
-        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
-        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
-        $self-&gt;{body} = Warcraft2Pud::SectionEra-&gt;new($io__raw_body, $self, $self-&gt;{_root});
-    }
-    elsif ($_on eq &quot;SGLD&quot;) {
-        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
-        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
-        $self-&gt;{body} = Warcraft2Pud::SectionStartingResource-&gt;new($io__raw_body, $self, $self-&gt;{_root});
-    }
-    elsif ($_on eq &quot;VER &quot;) {
-        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
-        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
-        $self-&gt;{body} = Warcraft2Pud::SectionVer-&gt;new($io__raw_body, $self, $self-&gt;{_root});
-    }
-    elsif ($_on eq &quot;SOIL&quot;) {
-        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
-        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
-        $self-&gt;{body} = Warcraft2Pud::SectionStartingResource-&gt;new($io__raw_body, $self, $self-&gt;{_root});
-    }
-    elsif ($_on eq &quot;UNIT&quot;) {
-        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
-        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
-        $self-&gt;{body} = Warcraft2Pud::SectionUnit-&gt;new($io__raw_body, $self, $self-&gt;{_root});
-    }
-    elsif ($_on eq &quot;DIM &quot;) {
-        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
-        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
-        $self-&gt;{body} = Warcraft2Pud::SectionDim-&gt;new($io__raw_body, $self, $self-&gt;{_root});
-    }
-    elsif ($_on eq &quot;TYPE&quot;) {
-        $self-&gt;{_raw_body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
-        my $io__raw_body = IO::KaitaiStruct::Stream-&gt;new($self-&gt;{_raw_body});
-        $self-&gt;{body} = Warcraft2Pud::SectionType-&gt;new($io__raw_body, $self, $self-&gt;{_root});
-    }
-    else {
-        $self-&gt;{body} = $self-&gt;{_io}-&gt;read_bytes($self-&gt;size());
-    }
-}
-
-sub name {
-    my ($self) = @_;
-    return $self-&gt;{name};
-}
-
-sub size {
-    my ($self) = @_;
-    return $self-&gt;{size};
-}
-
-sub body {
-    my ($self) = @_;
-    return $self-&gt;{body};
-}
-
-sub _raw_body {
-    my ($self) = @_;
-    return $self-&gt;{_raw_body};
-}
-
-########################################################################
-package Warcraft2Pud::SectionOwnr;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{controller_by_player} = ();
-    while (!$self-&gt;{_io}-&gt;is_eof()) {
-        push @{$self-&gt;{controller_by_player}}, $self-&gt;{_io}-&gt;read_u1();
-    }
-}
-
-sub controller_by_player {
-    my ($self) = @_;
-    return $self-&gt;{controller_by_player};
-}
-
-########################################################################
-package Warcraft2Pud::Unit;
-
-our @ISA = &#39;IO::KaitaiStruct::Struct&#39;;
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, &#39;&lt;&#39;, $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream-&gt;new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct-&gt;new($_io);
-
-    bless $self, $class;
-    $self-&gt;{_parent} = $_parent;
-    $self-&gt;{_root} = $_root || $self;;
-
-    $self-&gt;_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self-&gt;{x} = $self-&gt;{_io}-&gt;read_u2le();
-    $self-&gt;{y} = $self-&gt;{_io}-&gt;read_u2le();
-    $self-&gt;{u_type} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{owner} = $self-&gt;{_io}-&gt;read_u1();
-    $self-&gt;{options} = $self-&gt;{_io}-&gt;read_u2le();
-}
-
-sub resource {
-    my ($self) = @_;
-    return $self-&gt;{resource} if ($self-&gt;{resource});
-    if ( (($self-&gt;u_type() == $UNIT_TYPE_GOLD_MINE) || ($self-&gt;u_type() == $UNIT_TYPE_HUMAN_OIL_WELL) || ($self-&gt;u_type() == $UNIT_TYPE_ORC_OIL_WELL) || ($self-&gt;u_type() == $UNIT_TYPE_OIL_PATCH)) ) {
-        $self-&gt;{resource} = ($self-&gt;options() * 2500);
-    }
-    return $self-&gt;{resource};
-}
-
-sub x {
-    my ($self) = @_;
-    return $self-&gt;{x};
-}
-
-sub y {
-    my ($self) = @_;
-    return $self-&gt;{y};
-}
-
-sub u_type {
-    my ($self) = @_;
-    return $self-&gt;{u_type};
-}
-
-sub owner {
-    my ($self) = @_;
-    return $self-&gt;{owner};
-}
-
-sub options {
-    my ($self) = @_;
-    return $self-&gt;{options};
-}
-
-1;
-</code></pre>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="nb">pack</span><span class="p">(</span><span class="s">&#39;C*&#39;</span><span class="p">,</span> <span class="p">(</span><span class="mi">87</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)));</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">unused</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">id_tag</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">magic</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">magic</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">unused</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">unused</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">id_tag</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">id_tag</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Warcraft2Pud::SectionUnit</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">units</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">units</span><span class="p">}},</span> <span class="nn">Warcraft2Pud::Unit</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">units</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">units</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Warcraft2Pud::Section</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">name</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Encode::</span><span class="n">decode</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">size</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="k">my</span> <span class="nv">$_on</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$_on</span> <span class="ow">eq</span> <span class="s">&quot;SLBR&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">());</span>
+        <span class="k">my</span> <span class="nv">$io__raw_body</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Warcraft2Pud::SectionStartingResource</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="ow">eq</span> <span class="s">&quot;ERAX&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">());</span>
+        <span class="k">my</span> <span class="nv">$io__raw_body</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Warcraft2Pud::SectionEra</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="ow">eq</span> <span class="s">&quot;OWNR&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">());</span>
+        <span class="k">my</span> <span class="nv">$io__raw_body</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Warcraft2Pud::SectionOwnr</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="ow">eq</span> <span class="s">&quot;ERA &quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">());</span>
+        <span class="k">my</span> <span class="nv">$io__raw_body</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Warcraft2Pud::SectionEra</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="ow">eq</span> <span class="s">&quot;SGLD&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">());</span>
+        <span class="k">my</span> <span class="nv">$io__raw_body</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Warcraft2Pud::SectionStartingResource</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="ow">eq</span> <span class="s">&quot;VER &quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">());</span>
+        <span class="k">my</span> <span class="nv">$io__raw_body</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Warcraft2Pud::SectionVer</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="ow">eq</span> <span class="s">&quot;SOIL&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">());</span>
+        <span class="k">my</span> <span class="nv">$io__raw_body</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Warcraft2Pud::SectionStartingResource</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="ow">eq</span> <span class="s">&quot;UNIT&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">());</span>
+        <span class="k">my</span> <span class="nv">$io__raw_body</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Warcraft2Pud::SectionUnit</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="ow">eq</span> <span class="s">&quot;DIM &quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">());</span>
+        <span class="k">my</span> <span class="nv">$io__raw_body</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Warcraft2Pud::SectionDim</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+    <span class="p">}</span>
+    <span class="k">elsif</span> <span class="p">(</span><span class="nv">$_on</span> <span class="ow">eq</span> <span class="s">&quot;TYPE&quot;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">());</span>
+        <span class="k">my</span> <span class="nv">$io__raw_body</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">});</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Warcraft2Pud::SectionType</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$io__raw_body</span><span class="p">,</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">name</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">name</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">size</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">size</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">body</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">body</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_raw_body</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_raw_body</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Warcraft2Pud::SectionOwnr</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">controller_by_player</span><span class="p">}</span> <span class="o">=</span> <span class="p">();</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="nb">push</span> <span class="nv">@</span><span class="p">{</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">controller_by_player</span><span class="p">}},</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">controller_by_player</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">controller_by_player</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Warcraft2Pud::Unit</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">u_type</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">owner</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">options</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">}</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">resource</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">resource</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">resource</span><span class="p">});</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">u_type</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$UNIT_TYPE_GOLD_MINE</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">u_type</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$UNIT_TYPE_HUMAN_OIL_WELL</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">u_type</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$UNIT_TYPE_ORC_OIL_WELL</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">u_type</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$UNIT_TYPE_OIL_PATCH</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">resource</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">options</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2500</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">resource</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">x</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">x</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">y</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">y</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">u_type</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">u_type</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">owner</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">owner</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">options</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">options</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="mi">1</span><span class="p">;</span>
+</pre></div>
 
         </div>
         
@@ -927,8 +924,8 @@ sub options {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

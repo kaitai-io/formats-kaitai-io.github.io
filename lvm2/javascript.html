@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -248,364 +245,364 @@ var data = new Lvm2(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.Lvm2 = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-/**
- * ### Building a test file
- * 
- * ```
- * dd if=/dev/zero of=image.img bs=512 count=$(( 4 * 1024 * 2 ))
- * sudo losetup /dev/loop1 image.img
- * sudo pvcreate /dev/loop1
- * sudo vgcreate vg_test /dev/loop1
- * sudo lvcreate --name lv_test1 vg_test
- * sudo losetup -d /dev/loop1
- * ```
- * @see {@link https://github.com/libyal/libvslvm/blob/master/documentation/Logical%20Volume%20Manager%20(LVM)%20format.asciidoc|Source}
- */
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">Lvm2</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * ### Building a test file</span>
+<span class="cm"> * </span>
+<span class="cm"> * ```</span>
+<span class="cm"> * dd if=/dev/zero of=image.img bs=512 count=$(( 4 * 1024 * 2 ))</span>
+<span class="cm"> * sudo losetup /dev/loop1 image.img</span>
+<span class="cm"> * sudo pvcreate /dev/loop1</span>
+<span class="cm"> * sudo vgcreate vg_test /dev/loop1</span>
+<span class="cm"> * sudo lvcreate --name lv_test1 vg_test</span>
+<span class="cm"> * sudo losetup -d /dev/loop1</span>
+<span class="cm"> * ```</span>
+<span class="cm"> * @see {@link https://github.com/libyal/libvslvm/blob/master/documentation/Logical%20Volume%20Manager%20(LVM)%20format.asciidoc|Source}</span>
+<span class="cm"> */</span>
 
-var Lvm2 = (function() {
-  function Lvm2(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
+<span class="kd">var</span> <span class="nx">Lvm2</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">Lvm2</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-    this._read();
-  }
-  Lvm2.prototype._read = function() {
-    this.pv = new PhysicalVolume(this._io, this, this._root);
-  }
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">Lvm2</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">pv</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PhysicalVolume</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+  <span class="p">}</span>
 
-  var PhysicalVolume = Lvm2.PhysicalVolume = (function() {
-    function PhysicalVolume(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">PhysicalVolume</span> <span class="o">=</span> <span class="nx">Lvm2</span><span class="p">.</span><span class="nx">PhysicalVolume</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">PhysicalVolume</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    PhysicalVolume.prototype._read = function() {
-      this.emptySector = this._io.readBytes(this._root.sectorSize);
-      this.label = new Label(this._io, this, this._root);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">PhysicalVolume</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">emptySector</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">sectorSize</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">label</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Label</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    var Label = PhysicalVolume.Label = (function() {
-      function Label(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">Label</span> <span class="o">=</span> <span class="nx">PhysicalVolume</span><span class="p">.</span><span class="nx">Label</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">Label</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      Label.prototype._read = function() {
-        this.labelHeader = new LabelHeader(this._io, this, this._root);
-        this.volumeHeader = new VolumeHeader(this._io, this, this._root);
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">Label</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">labelHeader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LabelHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">volumeHeader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">VolumeHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
 
-      var LabelHeader = Label.LabelHeader = (function() {
-        function LabelHeader(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
+      <span class="kd">var</span> <span class="nx">LabelHeader</span> <span class="o">=</span> <span class="nx">Label</span><span class="p">.</span><span class="nx">LabelHeader</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">function</span> <span class="nx">LabelHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-          this._read();
-        }
-        LabelHeader.prototype._read = function() {
-          this.signature = this._io.ensureFixedContents([76, 65, 66, 69, 76, 79, 78, 69]);
-          this.sectorNumber = this._io.readU8le();
-          this.checksum = this._io.readU4le();
-          this.labelHeader = new LabelHeader(this._io, this, this._root);
-        }
+          <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nx">LabelHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">signature</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">76</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">66</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">69</span><span class="p">]);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">sectorNumber</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">checksum</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">labelHeader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LabelHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        var LabelHeader = LabelHeader.LabelHeader = (function() {
-          function LabelHeader(_io, _parent, _root) {
-            this._io = _io;
-            this._parent = _parent;
-            this._root = _root || this;
+        <span class="kd">var</span> <span class="nx">LabelHeader</span> <span class="o">=</span> <span class="nx">LabelHeader</span><span class="p">.</span><span class="nx">LabelHeader</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="kd">function</span> <span class="nx">LabelHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-            this._read();
-          }
-          LabelHeader.prototype._read = function() {
-            this.dataOffset = this._io.readU4le();
-            this.typeIndicator = this._io.ensureFixedContents([76, 86, 77, 50, 32, 48, 48, 49]);
-          }
+            <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+          <span class="p">}</span>
+          <span class="nx">LabelHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">dataOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">typeIndicator</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">76</span><span class="p">,</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">49</span><span class="p">]);</span>
+          <span class="p">}</span>
 
-          /**
-           * The offset, in bytes, relative from the start of the physical volume label header where data is stored
-           */
+          <span class="cm">/**</span>
+<span class="cm">           * The offset, in bytes, relative from the start of the physical volume label header where data is stored</span>
+<span class="cm">           */</span>
 
-          return LabelHeader;
-        })();
+          <span class="k">return</span> <span class="nx">LabelHeader</span><span class="p">;</span>
+        <span class="p">})();</span>
 
-        /**
-         * The sector number of the physical volume label header
-         */
+        <span class="cm">/**</span>
+<span class="cm">         * The sector number of the physical volume label header</span>
+<span class="cm">         */</span>
 
-        /**
-         * CRC-32 for offset 20 to end of the physical volume label sector
-         */
+        <span class="cm">/**</span>
+<span class="cm">         * CRC-32 for offset 20 to end of the physical volume label sector</span>
+<span class="cm">         */</span>
 
-        return LabelHeader;
-      })();
+        <span class="k">return</span> <span class="nx">LabelHeader</span><span class="p">;</span>
+      <span class="p">})();</span>
 
-      var VolumeHeader = Label.VolumeHeader = (function() {
-        function VolumeHeader(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
+      <span class="kd">var</span> <span class="nx">VolumeHeader</span> <span class="o">=</span> <span class="nx">Label</span><span class="p">.</span><span class="nx">VolumeHeader</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">function</span> <span class="nx">VolumeHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-          this._read();
-        }
-        VolumeHeader.prototype._read = function() {
-          this.id = KaitaiStream.bytesToStr(this._io.readBytes(32), &quot;ascii&quot;);
-          this.size = this._io.readU8le();
-          this.dataAreaDescriptors = []
-          var i = 0;
-          do {
-            var _ = new DataAreaDescriptor(this._io, this, this._root);
-            this.dataAreaDescriptors.push(_);
-            i++;
-          } while (!( ((_.size != 0) &amp;&amp; (_.offset != 0)) ));
-          this.metadataAreaDescriptors = []
-          var i = 0;
-          do {
-            var _ = new MetadataAreaDescriptor(this._io, this, this._root);
-            this.metadataAreaDescriptors.push(_);
-            i++;
-          } while (!( ((_.size != 0) &amp;&amp; (_.offset != 0)) ));
-        }
+          <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nx">VolumeHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">dataAreaDescriptors</span> <span class="o">=</span> <span class="p">[]</span>
+          <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="k">do</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DataAreaDescriptor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">dataAreaDescriptors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_</span><span class="p">);</span>
+            <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+          <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="nx">_</span><span class="p">.</span><span class="nx">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">offset</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">))</span> <span class="p">));</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">metadataAreaDescriptors</span> <span class="o">=</span> <span class="p">[]</span>
+          <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+          <span class="k">do</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MetadataAreaDescriptor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">metadataAreaDescriptors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_</span><span class="p">);</span>
+            <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+          <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="nx">_</span><span class="p">.</span><span class="nx">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">offset</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">))</span> <span class="p">));</span>
+        <span class="p">}</span>
 
-        var DataAreaDescriptor = VolumeHeader.DataAreaDescriptor = (function() {
-          function DataAreaDescriptor(_io, _parent, _root) {
-            this._io = _io;
-            this._parent = _parent;
-            this._root = _root || this;
+        <span class="kd">var</span> <span class="nx">DataAreaDescriptor</span> <span class="o">=</span> <span class="nx">VolumeHeader</span><span class="p">.</span><span class="nx">DataAreaDescriptor</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="kd">function</span> <span class="nx">DataAreaDescriptor</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-            this._read();
-          }
-          DataAreaDescriptor.prototype._read = function() {
-            this.offset = this._io.readU8le();
-            this.size = this._io.readU8le();
-          }
-          Object.defineProperty(DataAreaDescriptor.prototype, &#39;data&#39;, {
-            get: function() {
-              if (this._m_data !== undefined)
-                return this._m_data;
-              if (this.size != 0) {
-                var _pos = this._io.pos;
-                this._io.seek(this.offset);
-                this._m_data = KaitaiStream.bytesToStr(this._io.readBytes(this.size), &quot;ascii&quot;);
-                this._io.seek(_pos);
-              }
-              return this._m_data;
-            }
-          });
+            <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+          <span class="p">}</span>
+          <span class="nx">DataAreaDescriptor</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+          <span class="p">}</span>
+          <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DataAreaDescriptor</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="p">{</span>
+            <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+              <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_data</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_data</span><span class="p">;</span>
+              <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">offset</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_m_data</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+              <span class="p">}</span>
+              <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_data</span><span class="p">;</span>
+            <span class="p">}</span>
+          <span class="p">});</span>
 
-          /**
-           * The offset, in bytes, relative from the start of the physical volume
-           */
+          <span class="cm">/**</span>
+<span class="cm">           * The offset, in bytes, relative from the start of the physical volume</span>
+<span class="cm">           */</span>
 
-          /**
-           * Value in bytes. Can be 0. [yellow-background]*Does this represent all remaining available space?*
-           */
+          <span class="cm">/**</span>
+<span class="cm">           * Value in bytes. Can be 0. [yellow-background]*Does this represent all remaining available space?*</span>
+<span class="cm">           */</span>
 
-          return DataAreaDescriptor;
-        })();
+          <span class="k">return</span> <span class="nx">DataAreaDescriptor</span><span class="p">;</span>
+        <span class="p">})();</span>
 
-        var MetadataAreaDescriptor = VolumeHeader.MetadataAreaDescriptor = (function() {
-          function MetadataAreaDescriptor(_io, _parent, _root) {
-            this._io = _io;
-            this._parent = _parent;
-            this._root = _root || this;
+        <span class="kd">var</span> <span class="nx">MetadataAreaDescriptor</span> <span class="o">=</span> <span class="nx">VolumeHeader</span><span class="p">.</span><span class="nx">MetadataAreaDescriptor</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="kd">function</span> <span class="nx">MetadataAreaDescriptor</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-            this._read();
-          }
-          MetadataAreaDescriptor.prototype._read = function() {
-            this.offset = this._io.readU8le();
-            this.size = this._io.readU8le();
-          }
-          Object.defineProperty(MetadataAreaDescriptor.prototype, &#39;data&#39;, {
-            get: function() {
-              if (this._m_data !== undefined)
-                return this._m_data;
-              if (this.size != 0) {
-                var _pos = this._io.pos;
-                this._io.seek(this.offset);
-                this._raw__m_data = this._io.readBytes(this.size);
-                var _io__raw__m_data = new KaitaiStream(this._raw__m_data);
-                this._m_data = new MetadataArea(_io__raw__m_data, this, this._root);
-                this._io.seek(_pos);
-              }
-              return this._m_data;
-            }
-          });
+            <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+          <span class="p">}</span>
+          <span class="nx">MetadataAreaDescriptor</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+          <span class="p">}</span>
+          <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">MetadataAreaDescriptor</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="p">{</span>
+            <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+              <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_data</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_data</span><span class="p">;</span>
+              <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">offset</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+                <span class="kd">var</span> <span class="nx">_io__raw__m_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_data</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_m_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MetadataArea</span><span class="p">(</span><span class="nx">_io__raw__m_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+              <span class="p">}</span>
+              <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_data</span><span class="p">;</span>
+            <span class="p">}</span>
+          <span class="p">});</span>
 
-          /**
-           * The offset, in bytes, relative from the start of the physical volume
-           */
+          <span class="cm">/**</span>
+<span class="cm">           * The offset, in bytes, relative from the start of the physical volume</span>
+<span class="cm">           */</span>
 
-          /**
-           * Value in bytes
-           */
+          <span class="cm">/**</span>
+<span class="cm">           * Value in bytes</span>
+<span class="cm">           */</span>
 
-          return MetadataAreaDescriptor;
-        })();
+          <span class="k">return</span> <span class="nx">MetadataAreaDescriptor</span><span class="p">;</span>
+        <span class="p">})();</span>
 
-        /**
-         * According to `[REDHAT]` the metadata area is a circular buffer. New metadata is appended to the old metadata and then the pointer to the start of it is updated. The metadata area, therefore, can contain copies of older versions of the metadata.
-         */
+        <span class="cm">/**</span>
+<span class="cm">         * According to `[REDHAT]` the metadata area is a circular buffer. New metadata is appended to the old metadata and then the pointer to the start of it is updated. The metadata area, therefore, can contain copies of older versions of the metadata.</span>
+<span class="cm">         */</span>
 
-        var MetadataArea = VolumeHeader.MetadataArea = (function() {
-          function MetadataArea(_io, _parent, _root) {
-            this._io = _io;
-            this._parent = _parent;
-            this._root = _root || this;
+        <span class="kd">var</span> <span class="nx">MetadataArea</span> <span class="o">=</span> <span class="nx">VolumeHeader</span><span class="p">.</span><span class="nx">MetadataArea</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="kd">function</span> <span class="nx">MetadataArea</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-            this._read();
-          }
-          MetadataArea.prototype._read = function() {
-            this.header = new MetadataAreaHeader(this._io, this, this._root);
-          }
+            <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+          <span class="p">}</span>
+          <span class="nx">MetadataArea</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MetadataAreaHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="p">}</span>
 
-          var MetadataAreaHeader = MetadataArea.MetadataAreaHeader = (function() {
-            function MetadataAreaHeader(_io, _parent, _root) {
-              this._io = _io;
-              this._parent = _parent;
-              this._root = _root || this;
+          <span class="kd">var</span> <span class="nx">MetadataAreaHeader</span> <span class="o">=</span> <span class="nx">MetadataArea</span><span class="p">.</span><span class="nx">MetadataAreaHeader</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="kd">function</span> <span class="nx">MetadataAreaHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-              this._read();
-            }
-            MetadataAreaHeader.prototype._read = function() {
-              this.checksum = new MetadataAreaHeader(this._io, this, this._root);
-              this.signature = this._io.ensureFixedContents([32, 76, 86, 77, 50, 32, 120, 91, 53, 65, 37, 114, 48, 78, 42, 62]);
-              this.version = this._io.readU4le();
-              this.metadataAreaOffset = this._io.readU8le();
-              this.metadataAreaSize = this._io.readU8le();
-              this.rawLocationDescriptors = []
-              var i = 0;
-              do {
-                var _ = new RawLocationDescriptor(this._io, this, this._root);
-                this.rawLocationDescriptors.push(_);
-                i++;
-              } while (!( ((_.offset != 0) &amp;&amp; (_.size != 0) &amp;&amp; (_.checksum != 0)) ));
-            }
+              <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="nx">MetadataAreaHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">checksum</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MetadataAreaHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">signature</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">32</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">91</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">42</span><span class="p">,</span> <span class="mi">62</span><span class="p">]);</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">metadataAreaOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">metadataAreaSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">rawLocationDescriptors</span> <span class="o">=</span> <span class="p">[]</span>
+              <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+              <span class="k">do</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RawLocationDescriptor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">rawLocationDescriptors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_</span><span class="p">);</span>
+                <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+              <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="nx">_</span><span class="p">.</span><span class="nx">offset</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">checksum</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">))</span> <span class="p">));</span>
+            <span class="p">}</span>
 
-            /**
-             * The data area size can be 0. It is assumed it represents the remaining  available data.
-             */
+            <span class="cm">/**</span>
+<span class="cm">             * The data area size can be 0. It is assumed it represents the remaining  available data.</span>
+<span class="cm">             */</span>
 
-            var RawLocationDescriptor = MetadataAreaHeader.RawLocationDescriptor = (function() {
-              RawLocationDescriptor.RawLocationDescriptorFlags = Object.freeze({
-                RAW_LOCATION_IGNORED: 1,
+            <span class="kd">var</span> <span class="nx">RawLocationDescriptor</span> <span class="o">=</span> <span class="nx">MetadataAreaHeader</span><span class="p">.</span><span class="nx">RawLocationDescriptor</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+              <span class="nx">RawLocationDescriptor</span><span class="p">.</span><span class="nx">RawLocationDescriptorFlags</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+                <span class="nx">RAW_LOCATION_IGNORED</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
 
-                1: &quot;RAW_LOCATION_IGNORED&quot;,
-              });
+                <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;RAW_LOCATION_IGNORED&quot;</span><span class="p">,</span>
+              <span class="p">});</span>
 
-              function RawLocationDescriptor(_io, _parent, _root) {
-                this._io = _io;
-                this._parent = _parent;
-                this._root = _root || this;
+              <span class="kd">function</span> <span class="nx">RawLocationDescriptor</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-                this._read();
-              }
-              RawLocationDescriptor.prototype._read = function() {
-                this.offset = this._io.readU8le();
-                this.size = this._io.readU8le();
-                this.checksum = this._io.readU4le();
-                this.flags = this._io.readU4le();
-              }
+                <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+              <span class="p">}</span>
+              <span class="nx">RawLocationDescriptor</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">checksum</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+              <span class="p">}</span>
 
-              /**
-               * The data area offset, in bytes, relative from the start of the metadata area
-               */
+              <span class="cm">/**</span>
+<span class="cm">               * The data area offset, in bytes, relative from the start of the metadata area</span>
+<span class="cm">               */</span>
 
-              /**
-               * data area size in bytes
-               */
+              <span class="cm">/**</span>
+<span class="cm">               * data area size in bytes</span>
+<span class="cm">               */</span>
 
-              /**
-               * CRC-32 of *TODO (metadata?)*
-               */
+              <span class="cm">/**</span>
+<span class="cm">               * CRC-32 of *TODO (metadata?)*</span>
+<span class="cm">               */</span>
 
-              return RawLocationDescriptor;
-            })();
-            Object.defineProperty(MetadataAreaHeader.prototype, &#39;metadata&#39;, {
-              get: function() {
-                if (this._m_metadata !== undefined)
-                  return this._m_metadata;
-                var _pos = this._io.pos;
-                this._io.seek(this.metadataAreaOffset);
-                this._m_metadata = this._io.readBytes(this.metadataAreaSize);
-                this._io.seek(_pos);
-                return this._m_metadata;
-              }
-            });
+              <span class="k">return</span> <span class="nx">RawLocationDescriptor</span><span class="p">;</span>
+            <span class="p">})();</span>
+            <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">MetadataAreaHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">,</span> <span class="p">{</span>
+              <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_metadata</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+                  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_metadata</span><span class="p">;</span>
+                <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">metadataAreaOffset</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_m_metadata</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">metadataAreaSize</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_metadata</span><span class="p">;</span>
+              <span class="p">}</span>
+            <span class="p">});</span>
 
-            /**
-             * CRC-32 for offset 4 to end of the metadata area header
-             */
+            <span class="cm">/**</span>
+<span class="cm">             * CRC-32 for offset 4 to end of the metadata area header</span>
+<span class="cm">             */</span>
 
-            /**
-             * The offset, in bytes, of the metadata area relative from the start of the physical volume
-             */
+            <span class="cm">/**</span>
+<span class="cm">             * The offset, in bytes, of the metadata area relative from the start of the physical volume</span>
+<span class="cm">             */</span>
 
-            /**
-             * The last descriptor in the list is terminator and consists of 0-byte values.
-             */
+            <span class="cm">/**</span>
+<span class="cm">             * The last descriptor in the list is terminator and consists of 0-byte values.</span>
+<span class="cm">             */</span>
 
-            return MetadataAreaHeader;
-          })();
+            <span class="k">return</span> <span class="nx">MetadataAreaHeader</span><span class="p">;</span>
+          <span class="p">})();</span>
 
-          return MetadataArea;
-        })();
+          <span class="k">return</span> <span class="nx">MetadataArea</span><span class="p">;</span>
+        <span class="p">})();</span>
 
-        /**
-         * Contains a UUID stored as an ASCII string. The physical volume identifier can be used to uniquely identify a physical volume. The physical volume identifier is stored as: 9LBcEB7PQTGIlLI0KxrtzrynjuSL983W but is equivalent to its formatted variant: 9LBcEB-7PQT-GIlL-I0Kx-rtzr-ynju-SL983W, which is used in the metadata.
-         */
+        <span class="cm">/**</span>
+<span class="cm">         * Contains a UUID stored as an ASCII string. The physical volume identifier can be used to uniquely identify a physical volume. The physical volume identifier is stored as: 9LBcEB7PQTGIlLI0KxrtzrynjuSL983W but is equivalent to its formatted variant: 9LBcEB-7PQT-GIlL-I0Kx-rtzr-ynju-SL983W, which is used in the metadata.</span>
+<span class="cm">         */</span>
 
-        /**
-         * Physical Volume size. Value in bytes
-         */
+        <span class="cm">/**</span>
+<span class="cm">         * Physical Volume size. Value in bytes</span>
+<span class="cm">         */</span>
 
-        /**
-         * The last descriptor in the list is terminator and consists of 0-byte values.
-         */
+        <span class="cm">/**</span>
+<span class="cm">         * The last descriptor in the list is terminator and consists of 0-byte values.</span>
+<span class="cm">         */</span>
 
-        return VolumeHeader;
-      })();
+        <span class="k">return</span> <span class="nx">VolumeHeader</span><span class="p">;</span>
+      <span class="p">})();</span>
 
-      return Label;
-    })();
+      <span class="k">return</span> <span class="nx">Label</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    return PhysicalVolume;
-  })();
-  Object.defineProperty(Lvm2.prototype, &#39;sectorSize&#39;, {
-    get: function() {
-      if (this._m_sectorSize !== undefined)
-        return this._m_sectorSize;
-      this._m_sectorSize = 512;
-      return this._m_sectorSize;
-    }
-  });
+    <span class="k">return</span> <span class="nx">PhysicalVolume</span><span class="p">;</span>
+  <span class="p">})();</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Lvm2</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;sectorSize&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_sectorSize</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_sectorSize</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_sectorSize</span> <span class="o">=</span> <span class="mi">512</span><span class="p">;</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_sectorSize</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
 
-  /**
-   * Physical volume
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Physical volume</span>
+<span class="cm">   */</span>
 
-  return Lvm2;
-})();
-return Lvm2;
-}));
-</code></pre>
+  <span class="k">return</span> <span class="nx">Lvm2</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">Lvm2</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -632,8 +629,8 @@ return Lvm2;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

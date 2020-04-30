@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -273,307 +270,307 @@ ZxSpectrumTap data = new ZxSpectrumTap(new ByteBufferKaitaiStream(someArray));</
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
 
 
-/**
- * TAP files are used by emulators of ZX Spectrum computer (released in
- * 1982 by Sinclair Research). TAP file stores blocks of data as if
- * they are written to magnetic tape, which was used as primary media
- * for ZX Spectrum. Contents of this file can be viewed as a very
- * simple linear filesystem, storing named files with some basic
- * metainformation prepended as a header.
- * @see &lt;a href=&quot;https://faqwiki.zxnet.co.uk/wiki/TAP_format&quot;&gt;Source&lt;/a&gt;
- */
-public class ZxSpectrumTap extends KaitaiStruct {
-    public static ZxSpectrumTap fromFile(String fileName) throws IOException {
-        return new ZxSpectrumTap(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * TAP files are used by emulators of ZX Spectrum computer (released in</span>
+<span class="cm"> * 1982 by Sinclair Research). TAP file stores blocks of data as if</span>
+<span class="cm"> * they are written to magnetic tape, which was used as primary media</span>
+<span class="cm"> * for ZX Spectrum. Contents of this file can be viewed as a very</span>
+<span class="cm"> * simple linear filesystem, storing named files with some basic</span>
+<span class="cm"> * metainformation prepended as a header.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://faqwiki.zxnet.co.uk/wiki/TAP_format&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ZxSpectrumTap</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">ZxSpectrumTap</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">ZxSpectrumTap</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public enum FlagEnum {
-        HEADER(0),
-        DATA(255);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">FlagEnum</span> <span class="p">{</span>
+        <span class="n">HEADER</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+        <span class="n">DATA</span><span class="p">(</span><span class="mi">255</span><span class="p">);</span>
 
-        private final long id;
-        FlagEnum(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, FlagEnum&gt; byId = new HashMap&lt;Long, FlagEnum&gt;(2);
-        static {
-            for (FlagEnum e : FlagEnum.values())
-                byId.put(e.id(), e);
-        }
-        public static FlagEnum byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">FlagEnum</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">FlagEnum</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">FlagEnum</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">FlagEnum</span> <span class="n">e</span> <span class="p">:</span> <span class="n">FlagEnum</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">FlagEnum</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public enum HeaderTypeEnum {
-        PROGRAM(0),
-        NUM_ARRAY(1),
-        CHAR_ARRAY(2),
-        BYTES(3);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">HeaderTypeEnum</span> <span class="p">{</span>
+        <span class="n">PROGRAM</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+        <span class="n">NUM_ARRAY</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">CHAR_ARRAY</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">BYTES</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
 
-        private final long id;
-        HeaderTypeEnum(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, HeaderTypeEnum&gt; byId = new HashMap&lt;Long, HeaderTypeEnum&gt;(4);
-        static {
-            for (HeaderTypeEnum e : HeaderTypeEnum.values())
-                byId.put(e.id(), e);
-        }
-        public static HeaderTypeEnum byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">HeaderTypeEnum</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">HeaderTypeEnum</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">HeaderTypeEnum</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">HeaderTypeEnum</span> <span class="n">e</span> <span class="p">:</span> <span class="n">HeaderTypeEnum</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">HeaderTypeEnum</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public ZxSpectrumTap(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">ZxSpectrumTap</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public ZxSpectrumTap(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">ZxSpectrumTap</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public ZxSpectrumTap(KaitaiStream _io, KaitaiStruct _parent, ZxSpectrumTap _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.block = new ArrayList&lt;Block&gt;();
-        {
-            int i = 0;
-            while (!this._io.isEof()) {
-                this.block.add(new Block(this._io, this, _root));
-                i++;
-            }
-        }
-    }
-    public static class Block extends KaitaiStruct {
-        public static Block fromFile(String fileName) throws IOException {
-            return new Block(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="kd">public</span> <span class="nf">ZxSpectrumTap</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">block</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Block</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">block</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Block</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+                <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Block</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Block</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Block</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Block(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Block</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Block(KaitaiStream _io, ZxSpectrumTap _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Block</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Block(KaitaiStream _io, ZxSpectrumTap _parent, ZxSpectrumTap _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenBlock = this._io.readU2le();
-            this.flag = ZxSpectrumTap.FlagEnum.byId(this._io.readU1());
-            if ( ((lenBlock() == 19) &amp;&amp; (flag() == ZxSpectrumTap.FlagEnum.HEADER)) ) {
-                this.header = new Header(this._io, this, _root);
-            }
-            if (lenBlock() == 19) {
-                this.data = this._io.readBytes((header().lenData() + 4));
-            }
-            if (flag() == ZxSpectrumTap.FlagEnum.DATA) {
-                this.headerlessData = this._io.readBytes((lenBlock() - 1));
-            }
-        }
-        private int lenBlock;
-        private FlagEnum flag;
-        private Header header;
-        private byte[] data;
-        private byte[] headerlessData;
-        private ZxSpectrumTap _root;
-        private ZxSpectrumTap _parent;
-        public int lenBlock() { return lenBlock; }
-        public FlagEnum flag() { return flag; }
-        public Header header() { return header; }
-        public byte[] data() { return data; }
-        public byte[] headerlessData() { return headerlessData; }
-        public ZxSpectrumTap _root() { return _root; }
-        public ZxSpectrumTap _parent() { return _parent; }
-    }
-    public static class ProgramParams extends KaitaiStruct {
-        public static ProgramParams fromFile(String fileName) throws IOException {
-            return new ProgramParams(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">Block</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenBlock</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">flag</span> <span class="o">=</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">FlagEnum</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">lenBlock</span><span class="p">()</span> <span class="o">==</span> <span class="mi">19</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">flag</span><span class="p">()</span> <span class="o">==</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">FlagEnum</span><span class="p">.</span><span class="na">HEADER</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Header</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">lenBlock</span><span class="p">()</span> <span class="o">==</span> <span class="mi">19</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">header</span><span class="p">().</span><span class="na">lenData</span><span class="p">()</span> <span class="o">+</span> <span class="mi">4</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">flag</span><span class="p">()</span> <span class="o">==</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">FlagEnum</span><span class="p">.</span><span class="na">DATA</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">headerlessData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">lenBlock</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">lenBlock</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">FlagEnum</span> <span class="n">flag</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Header</span> <span class="n">header</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">headerlessData</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ZxSpectrumTap</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ZxSpectrumTap</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lenBlock</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenBlock</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">FlagEnum</span> <span class="nf">flag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flag</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Header</span> <span class="nf">header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">header</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">headerlessData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">headerlessData</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ZxSpectrumTap</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ZxSpectrumTap</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ProgramParams</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">ProgramParams</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">ProgramParams</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public ProgramParams(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">ProgramParams</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ProgramParams(KaitaiStream _io, ZxSpectrumTap.Header _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">ProgramParams</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Header</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ProgramParams(KaitaiStream _io, ZxSpectrumTap.Header _parent, ZxSpectrumTap _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.autostartLine = this._io.readU2le();
-            this.lenProgram = this._io.readU2le();
-        }
-        private int autostartLine;
-        private int lenProgram;
-        private ZxSpectrumTap _root;
-        private ZxSpectrumTap.Header _parent;
-        public int autostartLine() { return autostartLine; }
-        public int lenProgram() { return lenProgram; }
-        public ZxSpectrumTap _root() { return _root; }
-        public ZxSpectrumTap.Header _parent() { return _parent; }
-    }
-    public static class BytesParams extends KaitaiStruct {
-        public static BytesParams fromFile(String fileName) throws IOException {
-            return new BytesParams(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">ProgramParams</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Header</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">autostartLine</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenProgram</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">autostartLine</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">lenProgram</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ZxSpectrumTap</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Header</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">autostartLine</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">autostartLine</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lenProgram</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenProgram</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ZxSpectrumTap</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Header</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">BytesParams</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">BytesParams</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">BytesParams</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public BytesParams(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">BytesParams</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public BytesParams(KaitaiStream _io, ZxSpectrumTap.Header _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">BytesParams</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Header</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public BytesParams(KaitaiStream _io, ZxSpectrumTap.Header _parent, ZxSpectrumTap _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.startAddress = this._io.readU2le();
-            this.reserved = this._io.readBytes(2);
-        }
-        private int startAddress;
-        private byte[] reserved;
-        private ZxSpectrumTap _root;
-        private ZxSpectrumTap.Header _parent;
-        public int startAddress() { return startAddress; }
-        public byte[] reserved() { return reserved; }
-        public ZxSpectrumTap _root() { return _root; }
-        public ZxSpectrumTap.Header _parent() { return _parent; }
-    }
-    public static class Header extends KaitaiStruct {
-        public static Header fromFile(String fileName) throws IOException {
-            return new Header(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">BytesParams</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Header</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">startAddress</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">startAddress</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">reserved</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ZxSpectrumTap</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Header</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">startAddress</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">startAddress</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ZxSpectrumTap</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Header</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Header</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Header</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Header</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Header(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Header(KaitaiStream _io, ZxSpectrumTap.Block _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Block</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Header(KaitaiStream _io, ZxSpectrumTap.Block _parent, ZxSpectrumTap _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.headerType = ZxSpectrumTap.HeaderTypeEnum.byId(this._io.readU1());
-            this.filename = KaitaiStream.bytesStripRight(this._io.readBytes(10), (byte) 32);
-            this.lenData = this._io.readU2le();
-            switch (headerType()) {
-            case PROGRAM: {
-                this.params = new ProgramParams(this._io, this, _root);
-                break;
-            }
-            case NUM_ARRY: {
-                this.params = new ArrayParams(this._io, this, _root);
-                break;
-            }
-            case CHAR_ARRY: {
-                this.params = new ArrayParams(this._io, this, _root);
-                break;
-            }
-            case BYTES: {
-                this.params = new BytesParams(this._io, this, _root);
-                break;
-            }
-            }
-            this.checksum = this._io.readU1();
-        }
-        private HeaderTypeEnum headerType;
-        private byte[] filename;
-        private int lenData;
-        private KaitaiStruct params;
-        private int checksum;
-        private ZxSpectrumTap _root;
-        private ZxSpectrumTap.Block _parent;
-        public HeaderTypeEnum headerType() { return headerType; }
-        public byte[] filename() { return filename; }
-        public int lenData() { return lenData; }
-        public KaitaiStruct params() { return params; }
+        <span class="kd">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Block</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">headerType</span> <span class="o">=</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">HeaderTypeEnum</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">filename</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">bytesStripRight</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="kt">byte</span><span class="p">)</span> <span class="mi">32</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">headerType</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">PROGRAM</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">params</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ProgramParams</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">NUM_ARRY</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">params</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayParams</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">CHAR_ARRY</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">params</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayParams</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">BYTES</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">params</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BytesParams</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">checksum</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">HeaderTypeEnum</span> <span class="n">headerType</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">filename</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">lenData</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">params</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">checksum</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ZxSpectrumTap</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Block</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">HeaderTypeEnum</span> <span class="nf">headerType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">headerType</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">filename</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">filename</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lenData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenData</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">params</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">params</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Bitwise XOR of all bytes including the flag byte
-         */
-        public int checksum() { return checksum; }
-        public ZxSpectrumTap _root() { return _root; }
-        public ZxSpectrumTap.Block _parent() { return _parent; }
-    }
-    public static class ArrayParams extends KaitaiStruct {
-        public static ArrayParams fromFile(String fileName) throws IOException {
-            return new ArrayParams(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="cm">/**</span>
+<span class="cm">         * Bitwise XOR of all bytes including the flag byte</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">checksum</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">checksum</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ZxSpectrumTap</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Block</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ArrayParams</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">ArrayParams</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">ArrayParams</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public ArrayParams(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">ArrayParams</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ArrayParams(KaitaiStream _io, ZxSpectrumTap.Header _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">ArrayParams</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Header</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ArrayParams(KaitaiStream _io, ZxSpectrumTap.Header _parent, ZxSpectrumTap _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.reserved = this._io.readU1();
-            this.varName = this._io.readU1();
-            this.reserved1 = this._io.ensureFixedContents(new byte[] { 0, -128 });
-        }
-        private int reserved;
-        private int varName;
-        private byte[] reserved1;
-        private ZxSpectrumTap _root;
-        private ZxSpectrumTap.Header _parent;
-        public int reserved() { return reserved; }
+        <span class="kd">public</span> <span class="nf">ArrayParams</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Header</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">ZxSpectrumTap</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">varName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">128</span> <span class="p">});</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">reserved</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">varName</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">reserved1</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ZxSpectrumTap</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Header</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Variable name (1..26 meaning A$..Z$ +192)
-         */
-        public int varName() { return varName; }
-        public byte[] reserved1() { return reserved1; }
-        public ZxSpectrumTap _root() { return _root; }
-        public ZxSpectrumTap.Header _parent() { return _parent; }
-    }
-    private ArrayList&lt;Block&gt; block;
-    private ZxSpectrumTap _root;
-    private KaitaiStruct _parent;
-    public ArrayList&lt;Block&gt; block() { return block; }
-    public ZxSpectrumTap _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-}
-</code></pre>
+        <span class="cm">/**</span>
+<span class="cm">         * Variable name (1..26 meaning A$..Z$ +192)</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">varName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">varName</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved1</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ZxSpectrumTap</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ZxSpectrumTap</span><span class="p">.</span><span class="na">Header</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Block</span><span class="o">&gt;</span> <span class="n">block</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">ZxSpectrumTap</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Block</span><span class="o">&gt;</span> <span class="nf">block</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">block</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">ZxSpectrumTap</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -600,8 +597,8 @@ public class ZxSpectrumTap extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

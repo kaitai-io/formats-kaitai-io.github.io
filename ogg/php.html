@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -224,171 +221,171 @@ decoding the stream contents from that one.</p>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * Ogg is a popular media container format, which provides basic
- * streaming / buffering mechanisms and is content-agnostic. Most
- * popular codecs that are used within Ogg streams are Vorbis (thus
- * making Ogg/Vorbis streams) and Theora (Ogg/Theora).
- * 
- * Ogg stream is a sequence Ogg pages. They can be read sequentially,
- * or one can jump into arbitrary stream location and scan for &quot;OggS&quot;
- * sync code to find the beginning of a new Ogg page and continue
- * decoding the stream contents from that one.
- */
+<span class="sd">/**</span>
+<span class="sd"> * Ogg is a popular media container format, which provides basic</span>
+<span class="sd"> * streaming / buffering mechanisms and is content-agnostic. Most</span>
+<span class="sd"> * popular codecs that are used within Ogg streams are Vorbis (thus</span>
+<span class="sd"> * making Ogg/Vorbis streams) and Theora (Ogg/Theora).</span>
+<span class="sd"> * </span>
+<span class="sd"> * Ogg stream is a sequence Ogg pages. They can be read sequentially,</span>
+<span class="sd"> * or one can jump into arbitrary stream location and scan for &quot;OggS&quot;</span>
+<span class="sd"> * sync code to find the beginning of a new Ogg page and continue</span>
+<span class="sd"> * decoding the stream contents from that one.</span>
+<span class="sd"> */</span>
 
-class Ogg extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Ogg $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Ogg</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Ogg</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_pages = [];
-        $i = 0;
-        while (!$this-&gt;_io-&gt;isEof()) {
-            $this-&gt;_m_pages[] = new \Ogg\Page($this-&gt;_io, $this, $this-&gt;_root);
-            $i++;
-        }
-    }
-    protected $_m_pages;
-    public function pages() { return $this-&gt;_m_pages; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pages</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pages</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Ogg\Page</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_pages</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">pages</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pages</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-/**
- * Ogg page is a basic unit of data in an Ogg bitstream, usually
- * it&#39;s around 4-8 KB, with a maximum size of 65307 bytes.
- */
+<span class="sd">/**</span>
+<span class="sd"> * Ogg page is a basic unit of data in an Ogg bitstream, usually</span>
+<span class="sd"> * it&#39;s around 4-8 KB, with a maximum size of 65307 bytes.</span>
+<span class="sd"> */</span>
 
-namespace \Ogg;
+<span class="k">namespace</span> <span class="nx">\Ogg</span><span class="p">;</span>
 
-class Page extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Ogg $_parent = null, \Ogg $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Page</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Ogg</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Ogg</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_syncCode = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x4F\x67\x67\x53&quot;);
-        $this-&gt;_m_version = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00&quot;);
-        $this-&gt;_m_reserved1 = $this-&gt;_io-&gt;readBitsInt(5);
-        $this-&gt;_m_isEndOfStream = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_isBeginningOfStream = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_isContinuation = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_io-&gt;alignToByte();
-        $this-&gt;_m_granulePos = $this-&gt;_io-&gt;readU8le();
-        $this-&gt;_m_bitstreamSerial = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_pageSeqNum = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_crc32 = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_numSegments = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_lenSegments = [];
-        $n = $this-&gt;numSegments();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_lenSegments[] = $this-&gt;_io-&gt;readU1();
-        }
-        $this-&gt;_m_segments = [];
-        $n = $this-&gt;numSegments();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_segments[] = $this-&gt;_io-&gt;readBytes($this-&gt;lenSegments()[$i]);
-        }
-    }
-    protected $_m_syncCode;
-    protected $_m_version;
-    protected $_m_reserved1;
-    protected $_m_isEndOfStream;
-    protected $_m_isBeginningOfStream;
-    protected $_m_isContinuation;
-    protected $_m_granulePos;
-    protected $_m_bitstreamSerial;
-    protected $_m_pageSeqNum;
-    protected $_m_crc32;
-    protected $_m_numSegments;
-    protected $_m_lenSegments;
-    protected $_m_segments;
-    public function syncCode() { return $this-&gt;_m_syncCode; }
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_syncCode</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x4F\x67\x67\x53</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isEndOfStream</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isBeginningOfStream</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isContinuation</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">alignToByte</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_granulePos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitstreamSerial</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pageSeqNum</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_crc32</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numSegments</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenSegments</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numSegments</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenSegments</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_segments</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numSegments</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_segments</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenSegments</span><span class="p">()[</span><span class="nv">$i</span><span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_syncCode</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_version</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_reserved1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_isEndOfStream</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_isBeginningOfStream</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_isContinuation</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_granulePos</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_bitstreamSerial</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_pageSeqNum</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_crc32</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numSegments</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenSegments</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_segments</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">syncCode</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_syncCode</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Version of the Ogg bitstream format. Currently must be 0.
-     */
-    public function version() { return $this-&gt;_m_version; }
-    public function reserved1() { return $this-&gt;_m_reserved1; }
+    <span class="sd">/**</span>
+<span class="sd">     * Version of the Ogg bitstream format. Currently must be 0.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * EOS (End Of Stream) mark. This page is the last page in the
-     * logical bitstream. The EOS flag must be set on the final page of
-     * every logical bitstream, and must not be set on any other page.
-     */
-    public function isEndOfStream() { return $this-&gt;_m_isEndOfStream; }
+    <span class="sd">/**</span>
+<span class="sd">     * EOS (End Of Stream) mark. This page is the last page in the</span>
+<span class="sd">     * logical bitstream. The EOS flag must be set on the final page of</span>
+<span class="sd">     * every logical bitstream, and must not be set on any other page.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isEndOfStream</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isEndOfStream</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * BOS (Beginning Of Stream) mark. This page is the first page in
-     * the logical bitstream. The BOS flag must be set on the first
-     * page of every logical bitstream, and must not be set on any
-     * other page.    
-     */
-    public function isBeginningOfStream() { return $this-&gt;_m_isBeginningOfStream; }
+    <span class="sd">/**</span>
+<span class="sd">     * BOS (Beginning Of Stream) mark. This page is the first page in</span>
+<span class="sd">     * the logical bitstream. The BOS flag must be set on the first</span>
+<span class="sd">     * page of every logical bitstream, and must not be set on any</span>
+<span class="sd">     * other page.    </span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isBeginningOfStream</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isBeginningOfStream</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * The first packet on this page is a continuation of the previous
-     * packet in the logical bitstream.
-     */
-    public function isContinuation() { return $this-&gt;_m_isContinuation; }
+    <span class="sd">/**</span>
+<span class="sd">     * The first packet on this page is a continuation of the previous</span>
+<span class="sd">     * packet in the logical bitstream.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isContinuation</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isContinuation</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * &quot;Granule position&quot; is the time marker in Ogg files. It is an
-     * abstract value, whose meaning is determined by the codec. It
-     * may, for example, be a count of the number of samples, the
-     * number of frames or a more complex scheme.
-     */
-    public function granulePos() { return $this-&gt;_m_granulePos; }
+    <span class="sd">/**</span>
+<span class="sd">     * &quot;Granule position&quot; is the time marker in Ogg files. It is an</span>
+<span class="sd">     * abstract value, whose meaning is determined by the codec. It</span>
+<span class="sd">     * may, for example, be a count of the number of samples, the</span>
+<span class="sd">     * number of frames or a more complex scheme.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">granulePos</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_granulePos</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Serial number that identifies a page as belonging to a
-     * particular logical bitstream. Each logical bitstream in a file
-     * has a unique value, and this field allows implementations to
-     * deliver the pages to the appropriate decoder. In a typical
-     * Vorbis and Theora file, one stream is the audio (Vorbis), and
-     * the other is the video (Theora).
-     */
-    public function bitstreamSerial() { return $this-&gt;_m_bitstreamSerial; }
+    <span class="sd">/**</span>
+<span class="sd">     * Serial number that identifies a page as belonging to a</span>
+<span class="sd">     * particular logical bitstream. Each logical bitstream in a file</span>
+<span class="sd">     * has a unique value, and this field allows implementations to</span>
+<span class="sd">     * deliver the pages to the appropriate decoder. In a typical</span>
+<span class="sd">     * Vorbis and Theora file, one stream is the audio (Vorbis), and</span>
+<span class="sd">     * the other is the video (Theora).</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">bitstreamSerial</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bitstreamSerial</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Sequential number of page, guaranteed to be monotonically
-     * increasing for each logical bitstream. The first page is 0, the
-     * second 1, etc. This allows implementations to detect when data
-     * has been lost.
-     */
-    public function pageSeqNum() { return $this-&gt;_m_pageSeqNum; }
+    <span class="sd">/**</span>
+<span class="sd">     * Sequential number of page, guaranteed to be monotonically</span>
+<span class="sd">     * increasing for each logical bitstream. The first page is 0, the</span>
+<span class="sd">     * second 1, etc. This allows implementations to detect when data</span>
+<span class="sd">     * has been lost.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">pageSeqNum</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pageSeqNum</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * This field provides a CRC32 checksum of the data in the entire
-     * page (including the page header, calculated with the checksum
-     * field set to 0). This allows verification that the data has not
-     * been corrupted since it was created. Pages that fail the
-     * checksum should be discarded. The checksum is generated using a
-     * polynomial value of 0x04C11DB7.
-     */
-    public function crc32() { return $this-&gt;_m_crc32; }
+    <span class="sd">/**</span>
+<span class="sd">     * This field provides a CRC32 checksum of the data in the entire</span>
+<span class="sd">     * page (including the page header, calculated with the checksum</span>
+<span class="sd">     * field set to 0). This allows verification that the data has not</span>
+<span class="sd">     * been corrupted since it was created. Pages that fail the</span>
+<span class="sd">     * checksum should be discarded. The checksum is generated using a</span>
+<span class="sd">     * polynomial value of 0x04C11DB7.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">crc32</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_crc32</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * The number of segments that exist in this page. There can be a
-     * maximum of 255 segments in any one page.
-     */
-    public function numSegments() { return $this-&gt;_m_numSegments; }
+    <span class="sd">/**</span>
+<span class="sd">     * The number of segments that exist in this page. There can be a</span>
+<span class="sd">     * maximum of 255 segments in any one page.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numSegments</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numSegments</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Table of lengths of segments.
-     */
-    public function lenSegments() { return $this-&gt;_m_lenSegments; }
+    <span class="sd">/**</span>
+<span class="sd">     * Table of lengths of segments.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenSegments</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenSegments</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Segment content bytes make up the rest of the Ogg page.
-     */
-    public function segments() { return $this-&gt;_m_segments; }
-}
-</code></pre>
+    <span class="sd">/**</span>
+<span class="sd">     * Segment content bytes make up the rest of the Ogg page.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">segments</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_segments</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -415,8 +412,8 @@ class Page extends \Kaitai\Struct\Struct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

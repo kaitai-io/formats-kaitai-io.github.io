@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -251,759 +248,759 @@ PythonPyc27 data = new PythonPyc27(new ByteBufferKaitaiStream(someArray));</code
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.nio.charset.Charset;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
 
 
-/**
- * Python interpreter runs .py files in 2 step process: first, it
- * produces bytecode, which it then executes. Translation of .py source
- * into bytecode is time-consuming, so Python dumps compiled bytecode
- * into .pyc files, to be reused from cache at later time if possible.
- * 
- * .pyc file is essentially a raw dump of `py_object` (see `body`) with
- * a simple header prepended.
- */
-public class PythonPyc27 extends KaitaiStruct {
-    public static PythonPyc27 fromFile(String fileName) throws IOException {
-        return new PythonPyc27(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * Python interpreter runs .py files in 2 step process: first, it</span>
+<span class="cm"> * produces bytecode, which it then executes. Translation of .py source</span>
+<span class="cm"> * into bytecode is time-consuming, so Python dumps compiled bytecode</span>
+<span class="cm"> * into .pyc files, to be reused from cache at later time if possible.</span>
+<span class="cm"> * </span>
+<span class="cm"> * .pyc file is essentially a raw dump of `py_object` (see `body`) with</span>
+<span class="cm"> * a simple header prepended.</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PythonPyc27</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">PythonPyc27</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">PythonPyc27</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public enum Version {
-        V15(20121),
-        V16(50428),
-        V20(50823),
-        V21(60202),
-        V22(60717),
-        V23_A0(62011),
-        V23_A0B(62021),
-        V24_A0(62041),
-        V24_A3(62051),
-        V24_B1(62061),
-        V25_A0(62071),
-        V25_A0B(62081),
-        V25_A0C(62091),
-        V25_A0D(62092),
-        V25_B3(62101),
-        V25_B3B(62111),
-        V25_C1(62121),
-        V25_C2(62131),
-        V26_A0(62151),
-        V26_A1(62161),
-        V27_A0(62171),
-        V27_A0B(62181),
-        V27_A0C(62191),
-        V27_A0D(62201),
-        V27_A0E(62211);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">Version</span> <span class="p">{</span>
+        <span class="n">V15</span><span class="p">(</span><span class="mi">20121</span><span class="p">),</span>
+        <span class="n">V16</span><span class="p">(</span><span class="mi">50428</span><span class="p">),</span>
+        <span class="n">V20</span><span class="p">(</span><span class="mi">50823</span><span class="p">),</span>
+        <span class="n">V21</span><span class="p">(</span><span class="mi">60202</span><span class="p">),</span>
+        <span class="n">V22</span><span class="p">(</span><span class="mi">60717</span><span class="p">),</span>
+        <span class="n">V23_A0</span><span class="p">(</span><span class="mi">62011</span><span class="p">),</span>
+        <span class="n">V23_A0B</span><span class="p">(</span><span class="mi">62021</span><span class="p">),</span>
+        <span class="n">V24_A0</span><span class="p">(</span><span class="mi">62041</span><span class="p">),</span>
+        <span class="n">V24_A3</span><span class="p">(</span><span class="mi">62051</span><span class="p">),</span>
+        <span class="n">V24_B1</span><span class="p">(</span><span class="mi">62061</span><span class="p">),</span>
+        <span class="n">V25_A0</span><span class="p">(</span><span class="mi">62071</span><span class="p">),</span>
+        <span class="n">V25_A0B</span><span class="p">(</span><span class="mi">62081</span><span class="p">),</span>
+        <span class="n">V25_A0C</span><span class="p">(</span><span class="mi">62091</span><span class="p">),</span>
+        <span class="n">V25_A0D</span><span class="p">(</span><span class="mi">62092</span><span class="p">),</span>
+        <span class="n">V25_B3</span><span class="p">(</span><span class="mi">62101</span><span class="p">),</span>
+        <span class="n">V25_B3B</span><span class="p">(</span><span class="mi">62111</span><span class="p">),</span>
+        <span class="n">V25_C1</span><span class="p">(</span><span class="mi">62121</span><span class="p">),</span>
+        <span class="n">V25_C2</span><span class="p">(</span><span class="mi">62131</span><span class="p">),</span>
+        <span class="n">V26_A0</span><span class="p">(</span><span class="mi">62151</span><span class="p">),</span>
+        <span class="n">V26_A1</span><span class="p">(</span><span class="mi">62161</span><span class="p">),</span>
+        <span class="n">V27_A0</span><span class="p">(</span><span class="mi">62171</span><span class="p">),</span>
+        <span class="n">V27_A0B</span><span class="p">(</span><span class="mi">62181</span><span class="p">),</span>
+        <span class="n">V27_A0C</span><span class="p">(</span><span class="mi">62191</span><span class="p">),</span>
+        <span class="n">V27_A0D</span><span class="p">(</span><span class="mi">62201</span><span class="p">),</span>
+        <span class="n">V27_A0E</span><span class="p">(</span><span class="mi">62211</span><span class="p">);</span>
 
-        private final long id;
-        Version(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, Version&gt; byId = new HashMap&lt;Long, Version&gt;(25);
-        static {
-            for (Version e : Version.values())
-                byId.put(e.id(), e);
-        }
-        public static Version byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">Version</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Version</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Version</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">25</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">Version</span> <span class="n">e</span> <span class="p">:</span> <span class="n">Version</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Version</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public PythonPyc27(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">PythonPyc27</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public PythonPyc27(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">PythonPyc27</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public PythonPyc27(KaitaiStream _io, KaitaiStruct _parent, PythonPyc27 _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.versionMagic = Version.byId(this._io.readU2le());
-        this.crlf = this._io.readU2le();
-        this.modificationTimestamp = this._io.readU4le();
-        this.body = new PyObject(this._io, this, _root);
-    }
-    public static class CodeObject extends KaitaiStruct {
-        public static CodeObject fromFile(String fileName) throws IOException {
-            return new CodeObject(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="kd">public</span> <span class="nf">PythonPyc27</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">versionMagic</span> <span class="o">=</span> <span class="n">Version</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">());</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">crlf</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">modificationTimestamp</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">CodeObject</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">CodeObject</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">CodeObject</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public enum FlagsEnum {
-            HAS_ARGS(4),
-            HAS_KWARGS(8),
-            GENERATOR(32);
+        <span class="kd">public</span> <span class="kd">enum</span> <span class="n">FlagsEnum</span> <span class="p">{</span>
+            <span class="n">HAS_ARGS</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+            <span class="n">HAS_KWARGS</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span>
+            <span class="n">GENERATOR</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span>
 
-            private final long id;
-            FlagsEnum(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map&lt;Long, FlagsEnum&gt; byId = new HashMap&lt;Long, FlagsEnum&gt;(3);
-            static {
-                for (FlagsEnum e : FlagsEnum.values())
-                    byId.put(e.id(), e);
-            }
-            public static FlagsEnum byId(long id) { return byId.get(id); }
-        }
+            <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+            <span class="n">FlagsEnum</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">FlagsEnum</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">FlagsEnum</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+            <span class="kd">static</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">FlagsEnum</span> <span class="n">e</span> <span class="p">:</span> <span class="n">FlagsEnum</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                    <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">FlagsEnum</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        public CodeObject(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">CodeObject</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public CodeObject(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">CodeObject</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public CodeObject(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.argCount = this._io.readU4le();
-            this.localCount = this._io.readU4le();
-            this.stackSize = this._io.readU4le();
-            this.flags = FlagsEnum.byId(this._io.readU4le());
-            this.code = new Assembly(this._io, this, _root);
-            this.consts = new PyObject(this._io, this, _root);
-            this.names = new PyObject(this._io, this, _root);
-            this.varNames = new PyObject(this._io, this, _root);
-            this.freeVars = new PyObject(this._io, this, _root);
-            this.cellVars = new PyObject(this._io, this, _root);
-            this.filename = new PyObject(this._io, this, _root);
-            this.name = new PyObject(this._io, this, _root);
-            this.firstLineNo = this._io.readU4le();
-            this.lnotab = new PyObject(this._io, this, _root);
-        }
-        private long argCount;
-        private long localCount;
-        private long stackSize;
-        private FlagsEnum flags;
-        private Assembly code;
-        private PyObject consts;
-        private PyObject names;
-        private PyObject varNames;
-        private PyObject freeVars;
-        private PyObject cellVars;
-        private PyObject filename;
-        private PyObject name;
-        private long firstLineNo;
-        private PyObject lnotab;
-        private PythonPyc27 _root;
-        private PythonPyc27.PyObject _parent;
-        public long argCount() { return argCount; }
-        public long localCount() { return localCount; }
-        public long stackSize() { return stackSize; }
-        public FlagsEnum flags() { return flags; }
-        public Assembly code() { return code; }
-        public PyObject consts() { return consts; }
-        public PyObject names() { return names; }
-        public PyObject varNames() { return varNames; }
-        public PyObject freeVars() { return freeVars; }
-        public PyObject cellVars() { return cellVars; }
-        public PyObject filename() { return filename; }
-        public PyObject name() { return name; }
-        public long firstLineNo() { return firstLineNo; }
-        public PyObject lnotab() { return lnotab; }
-        public PythonPyc27 _root() { return _root; }
-        public PythonPyc27.PyObject _parent() { return _parent; }
-    }
-    public static class Assembly extends KaitaiStruct {
-        public static Assembly fromFile(String fileName) throws IOException {
-            return new Assembly(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">CodeObject</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">argCount</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">localCount</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">stackSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="n">FlagsEnum</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">code</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Assembly</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">consts</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">names</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">varNames</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">freeVars</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">cellVars</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">filename</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">firstLineNo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lnotab</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">argCount</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">localCount</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">stackSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">FlagsEnum</span> <span class="n">flags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Assembly</span> <span class="n">code</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PyObject</span> <span class="n">consts</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PyObject</span> <span class="n">names</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PyObject</span> <span class="n">varNames</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PyObject</span> <span class="n">freeVars</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PyObject</span> <span class="n">cellVars</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PyObject</span> <span class="n">filename</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PyObject</span> <span class="n">name</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">firstLineNo</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PyObject</span> <span class="n">lnotab</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">argCount</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">argCount</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">localCount</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">localCount</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">stackSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">stackSize</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">FlagsEnum</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Assembly</span> <span class="nf">code</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">code</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PyObject</span> <span class="nf">consts</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">consts</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PyObject</span> <span class="nf">names</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">names</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PyObject</span> <span class="nf">varNames</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">varNames</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PyObject</span> <span class="nf">freeVars</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">freeVars</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PyObject</span> <span class="nf">cellVars</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">cellVars</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PyObject</span> <span class="nf">filename</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">filename</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PyObject</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">firstLineNo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">firstLineNo</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PyObject</span> <span class="nf">lnotab</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lnotab</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PythonPyc27</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Assembly</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Assembly</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Assembly</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Assembly(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Assembly</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Assembly(KaitaiStream _io, PythonPyc27.CodeObject _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Assembly</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">CodeObject</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Assembly(KaitaiStream _io, PythonPyc27.CodeObject _parent, PythonPyc27 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.stringMagic = this._io.ensureFixedContents(new byte[] { 115 });
-            this.length = this._io.readU4le();
-            this._raw_items = this._io.readBytes(length());
-            KaitaiStream _io__raw_items = new ByteBufferKaitaiStream(_raw_items);
-            this.items = new OpArgs(_io__raw_items, this, _root);
-        }
-        private byte[] stringMagic;
-        private long length;
-        private OpArgs items;
-        private PythonPyc27 _root;
-        private PythonPyc27.CodeObject _parent;
-        private byte[] _raw_items;
-        public byte[] stringMagic() { return stringMagic; }
-        public long length() { return length; }
-        public OpArgs items() { return items; }
-        public PythonPyc27 _root() { return _root; }
-        public PythonPyc27.CodeObject _parent() { return _parent; }
-        public byte[] _raw_items() { return _raw_items; }
-    }
-    public static class OpArg extends KaitaiStruct {
-        public static OpArg fromFile(String fileName) throws IOException {
-            return new OpArg(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">Assembly</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">CodeObject</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">stringMagic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">115</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_items</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">length</span><span class="p">());</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_items</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_items</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">items</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OpArgs</span><span class="p">(</span><span class="n">_io__raw_items</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">stringMagic</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">length</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">OpArgs</span> <span class="n">items</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">CodeObject</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_items</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">stringMagic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">stringMagic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">length</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">length</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">OpArgs</span> <span class="nf">items</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">items</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PythonPyc27</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">CodeObject</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_items</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_items</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">OpArg</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">OpArg</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">OpArg</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public enum OpCodeEnum {
-            STOP_CODE(0),
-            POP_TOP(1),
-            ROT_TWO(2),
-            ROT_THREE(3),
-            DUP_TOP(4),
-            ROT_FOUR(5),
-            NOP(9),
-            UNARY_POSITIVE(10),
-            UNARY_NEGATIVE(11),
-            UNARY_NOT(12),
-            UNARY_CONVERT(13),
-            UNARY_INVERT(15),
-            BINARY_POWER(19),
-            BINARY_MULTIPLY(20),
-            BINARY_DIVIDE(21),
-            BINARY_MODULO(22),
-            BINARY_ADD(23),
-            BINARY_SUBTRACT(24),
-            BINARY_SUBSCR(25),
-            BINARY_FLOOR_DIVIDE(26),
-            BINARY_TRUE_DIVIDE(27),
-            INPLACE_FLOOR_DIVIDE(28),
-            INPLACE_TRUE_DIVIDE(29),
-            SLICE_0(30),
-            SLICE_1(31),
-            SLICE_2(32),
-            SLICE_3(33),
-            STORE_SLICE_0(40),
-            STORE_SLICE_1(41),
-            STORE_SLICE_2(42),
-            STORE_SLICE_3(43),
-            DELETE_SLICE_0(50),
-            DELETE_SLICE_1(51),
-            DELETE_SLICE_2(52),
-            DELETE_SLICE_3(53),
-            STORE_MAP(54),
-            INPLACE_ADD(55),
-            INPLACE_SUBTRACT(56),
-            INPLACE_MULTIPLY(57),
-            INPLACE_DIVIDE(58),
-            INPLACE_MODULO(59),
-            STORE_SUBSCR(60),
-            DELETE_SUBSCR(61),
-            BINARY_LSHIFT(62),
-            BINARY_RSHIFT(63),
-            BINARY_AND(64),
-            BINARY_XOR(65),
-            BINARY_OR(66),
-            INPLACE_POWER(67),
-            GET_ITER(68),
-            PRINT_EXPR(70),
-            PRINT_ITEM(71),
-            PRINT_NEWLINE(72),
-            PRINT_ITEM_TO(73),
-            PRINT_NEWLINE_TO(74),
-            INPLACE_LSHIFT(75),
-            INPLACE_RSHIFT(76),
-            INPLACE_AND(77),
-            INPLACE_XOR(78),
-            INPLACE_OR(79),
-            BREAK_LOOP(80),
-            WITH_CLEANUP(81),
-            LOAD_LOCALS(82),
-            RETURN_VALUE(83),
-            IMPORT_STAR(84),
-            EXEC_STMT(85),
-            YIELD_VALUE(86),
-            POP_BLOCK(87),
-            END_FINALLY(88),
-            BUILD_CLASS(89),
-            STORE_NAME(90),
-            DELETE_NAME(91),
-            UNPACK_SEQUENCE(92),
-            FOR_ITER(93),
-            LIST_APPEND(94),
-            STORE_ATTR(95),
-            DELETE_ATTR(96),
-            STORE_GLOBAL(97),
-            DELETE_GLOBAL(98),
-            DUP_TOPX(99),
-            LOAD_CONST(100),
-            LOAD_NAME(101),
-            BUILD_TUPLE(102),
-            BUILD_LIST(103),
-            BUILD_SET(104),
-            BUILD_MAP(105),
-            LOAD_ATTR(106),
-            COMPARE_OP(107),
-            IMPORT_NAME(108),
-            IMPORT_FROM(109),
-            JUMP_FORWARD(110),
-            JUMP_IF_FALSE_OR_POP(111),
-            JUMP_IF_TRUE_OR_POP(112),
-            JUMP_ABSOLUTE(113),
-            POP_JUMP_IF_FALSE(114),
-            POP_JUMP_IF_TRUE(115),
-            LOAD_GLOBAL(116),
-            CONTINUE_LOOP(119),
-            SETUP_LOOP(120),
-            SETUP_EXCEPT(121),
-            SETUP_FINALLY(122),
-            LOAD_FAST(124),
-            STORE_FAST(125),
-            DELETE_FAST(126),
-            RAISE_VARARGS(130),
-            CALL_FUNCTION(131),
-            MAKE_FUNCTION(132),
-            BUILD_SLICE(133),
-            MAKE_CLOSURE(134),
-            LOAD_CLOSURE(135),
-            LOAD_DEREF(136),
-            STORE_DEREF(137),
-            CALL_FUNCTION_VAR(140),
-            CALL_FUNCTION_KW(141),
-            CALL_FUNCTION_VAR_KW(142),
-            SETUP_WITH(143),
-            EXTENDED_ARG(145),
-            SET_ADD(146),
-            MAP_ADD(147);
+        <span class="kd">public</span> <span class="kd">enum</span> <span class="n">OpCodeEnum</span> <span class="p">{</span>
+            <span class="n">STOP_CODE</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+            <span class="n">POP_TOP</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">ROT_TWO</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+            <span class="n">ROT_THREE</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+            <span class="n">DUP_TOP</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+            <span class="n">ROT_FOUR</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+            <span class="n">NOP</span><span class="p">(</span><span class="mi">9</span><span class="p">),</span>
+            <span class="n">UNARY_POSITIVE</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+            <span class="n">UNARY_NEGATIVE</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span>
+            <span class="n">UNARY_NOT</span><span class="p">(</span><span class="mi">12</span><span class="p">),</span>
+            <span class="n">UNARY_CONVERT</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span>
+            <span class="n">UNARY_INVERT</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span>
+            <span class="n">BINARY_POWER</span><span class="p">(</span><span class="mi">19</span><span class="p">),</span>
+            <span class="n">BINARY_MULTIPLY</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span>
+            <span class="n">BINARY_DIVIDE</span><span class="p">(</span><span class="mi">21</span><span class="p">),</span>
+            <span class="n">BINARY_MODULO</span><span class="p">(</span><span class="mi">22</span><span class="p">),</span>
+            <span class="n">BINARY_ADD</span><span class="p">(</span><span class="mi">23</span><span class="p">),</span>
+            <span class="n">BINARY_SUBTRACT</span><span class="p">(</span><span class="mi">24</span><span class="p">),</span>
+            <span class="n">BINARY_SUBSCR</span><span class="p">(</span><span class="mi">25</span><span class="p">),</span>
+            <span class="n">BINARY_FLOOR_DIVIDE</span><span class="p">(</span><span class="mi">26</span><span class="p">),</span>
+            <span class="n">BINARY_TRUE_DIVIDE</span><span class="p">(</span><span class="mi">27</span><span class="p">),</span>
+            <span class="n">INPLACE_FLOOR_DIVIDE</span><span class="p">(</span><span class="mi">28</span><span class="p">),</span>
+            <span class="n">INPLACE_TRUE_DIVIDE</span><span class="p">(</span><span class="mi">29</span><span class="p">),</span>
+            <span class="n">SLICE_0</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span>
+            <span class="n">SLICE_1</span><span class="p">(</span><span class="mi">31</span><span class="p">),</span>
+            <span class="n">SLICE_2</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span>
+            <span class="n">SLICE_3</span><span class="p">(</span><span class="mi">33</span><span class="p">),</span>
+            <span class="n">STORE_SLICE_0</span><span class="p">(</span><span class="mi">40</span><span class="p">),</span>
+            <span class="n">STORE_SLICE_1</span><span class="p">(</span><span class="mi">41</span><span class="p">),</span>
+            <span class="n">STORE_SLICE_2</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
+            <span class="n">STORE_SLICE_3</span><span class="p">(</span><span class="mi">43</span><span class="p">),</span>
+            <span class="n">DELETE_SLICE_0</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+            <span class="n">DELETE_SLICE_1</span><span class="p">(</span><span class="mi">51</span><span class="p">),</span>
+            <span class="n">DELETE_SLICE_2</span><span class="p">(</span><span class="mi">52</span><span class="p">),</span>
+            <span class="n">DELETE_SLICE_3</span><span class="p">(</span><span class="mi">53</span><span class="p">),</span>
+            <span class="n">STORE_MAP</span><span class="p">(</span><span class="mi">54</span><span class="p">),</span>
+            <span class="n">INPLACE_ADD</span><span class="p">(</span><span class="mi">55</span><span class="p">),</span>
+            <span class="n">INPLACE_SUBTRACT</span><span class="p">(</span><span class="mi">56</span><span class="p">),</span>
+            <span class="n">INPLACE_MULTIPLY</span><span class="p">(</span><span class="mi">57</span><span class="p">),</span>
+            <span class="n">INPLACE_DIVIDE</span><span class="p">(</span><span class="mi">58</span><span class="p">),</span>
+            <span class="n">INPLACE_MODULO</span><span class="p">(</span><span class="mi">59</span><span class="p">),</span>
+            <span class="n">STORE_SUBSCR</span><span class="p">(</span><span class="mi">60</span><span class="p">),</span>
+            <span class="n">DELETE_SUBSCR</span><span class="p">(</span><span class="mi">61</span><span class="p">),</span>
+            <span class="n">BINARY_LSHIFT</span><span class="p">(</span><span class="mi">62</span><span class="p">),</span>
+            <span class="n">BINARY_RSHIFT</span><span class="p">(</span><span class="mi">63</span><span class="p">),</span>
+            <span class="n">BINARY_AND</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span>
+            <span class="n">BINARY_XOR</span><span class="p">(</span><span class="mi">65</span><span class="p">),</span>
+            <span class="n">BINARY_OR</span><span class="p">(</span><span class="mi">66</span><span class="p">),</span>
+            <span class="n">INPLACE_POWER</span><span class="p">(</span><span class="mi">67</span><span class="p">),</span>
+            <span class="n">GET_ITER</span><span class="p">(</span><span class="mi">68</span><span class="p">),</span>
+            <span class="n">PRINT_EXPR</span><span class="p">(</span><span class="mi">70</span><span class="p">),</span>
+            <span class="n">PRINT_ITEM</span><span class="p">(</span><span class="mi">71</span><span class="p">),</span>
+            <span class="n">PRINT_NEWLINE</span><span class="p">(</span><span class="mi">72</span><span class="p">),</span>
+            <span class="n">PRINT_ITEM_TO</span><span class="p">(</span><span class="mi">73</span><span class="p">),</span>
+            <span class="n">PRINT_NEWLINE_TO</span><span class="p">(</span><span class="mi">74</span><span class="p">),</span>
+            <span class="n">INPLACE_LSHIFT</span><span class="p">(</span><span class="mi">75</span><span class="p">),</span>
+            <span class="n">INPLACE_RSHIFT</span><span class="p">(</span><span class="mi">76</span><span class="p">),</span>
+            <span class="n">INPLACE_AND</span><span class="p">(</span><span class="mi">77</span><span class="p">),</span>
+            <span class="n">INPLACE_XOR</span><span class="p">(</span><span class="mi">78</span><span class="p">),</span>
+            <span class="n">INPLACE_OR</span><span class="p">(</span><span class="mi">79</span><span class="p">),</span>
+            <span class="n">BREAK_LOOP</span><span class="p">(</span><span class="mi">80</span><span class="p">),</span>
+            <span class="n">WITH_CLEANUP</span><span class="p">(</span><span class="mi">81</span><span class="p">),</span>
+            <span class="n">LOAD_LOCALS</span><span class="p">(</span><span class="mi">82</span><span class="p">),</span>
+            <span class="n">RETURN_VALUE</span><span class="p">(</span><span class="mi">83</span><span class="p">),</span>
+            <span class="n">IMPORT_STAR</span><span class="p">(</span><span class="mi">84</span><span class="p">),</span>
+            <span class="n">EXEC_STMT</span><span class="p">(</span><span class="mi">85</span><span class="p">),</span>
+            <span class="n">YIELD_VALUE</span><span class="p">(</span><span class="mi">86</span><span class="p">),</span>
+            <span class="n">POP_BLOCK</span><span class="p">(</span><span class="mi">87</span><span class="p">),</span>
+            <span class="n">END_FINALLY</span><span class="p">(</span><span class="mi">88</span><span class="p">),</span>
+            <span class="n">BUILD_CLASS</span><span class="p">(</span><span class="mi">89</span><span class="p">),</span>
+            <span class="n">STORE_NAME</span><span class="p">(</span><span class="mi">90</span><span class="p">),</span>
+            <span class="n">DELETE_NAME</span><span class="p">(</span><span class="mi">91</span><span class="p">),</span>
+            <span class="n">UNPACK_SEQUENCE</span><span class="p">(</span><span class="mi">92</span><span class="p">),</span>
+            <span class="n">FOR_ITER</span><span class="p">(</span><span class="mi">93</span><span class="p">),</span>
+            <span class="n">LIST_APPEND</span><span class="p">(</span><span class="mi">94</span><span class="p">),</span>
+            <span class="n">STORE_ATTR</span><span class="p">(</span><span class="mi">95</span><span class="p">),</span>
+            <span class="n">DELETE_ATTR</span><span class="p">(</span><span class="mi">96</span><span class="p">),</span>
+            <span class="n">STORE_GLOBAL</span><span class="p">(</span><span class="mi">97</span><span class="p">),</span>
+            <span class="n">DELETE_GLOBAL</span><span class="p">(</span><span class="mi">98</span><span class="p">),</span>
+            <span class="n">DUP_TOPX</span><span class="p">(</span><span class="mi">99</span><span class="p">),</span>
+            <span class="n">LOAD_CONST</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+            <span class="n">LOAD_NAME</span><span class="p">(</span><span class="mi">101</span><span class="p">),</span>
+            <span class="n">BUILD_TUPLE</span><span class="p">(</span><span class="mi">102</span><span class="p">),</span>
+            <span class="n">BUILD_LIST</span><span class="p">(</span><span class="mi">103</span><span class="p">),</span>
+            <span class="n">BUILD_SET</span><span class="p">(</span><span class="mi">104</span><span class="p">),</span>
+            <span class="n">BUILD_MAP</span><span class="p">(</span><span class="mi">105</span><span class="p">),</span>
+            <span class="n">LOAD_ATTR</span><span class="p">(</span><span class="mi">106</span><span class="p">),</span>
+            <span class="n">COMPARE_OP</span><span class="p">(</span><span class="mi">107</span><span class="p">),</span>
+            <span class="n">IMPORT_NAME</span><span class="p">(</span><span class="mi">108</span><span class="p">),</span>
+            <span class="n">IMPORT_FROM</span><span class="p">(</span><span class="mi">109</span><span class="p">),</span>
+            <span class="n">JUMP_FORWARD</span><span class="p">(</span><span class="mi">110</span><span class="p">),</span>
+            <span class="n">JUMP_IF_FALSE_OR_POP</span><span class="p">(</span><span class="mi">111</span><span class="p">),</span>
+            <span class="n">JUMP_IF_TRUE_OR_POP</span><span class="p">(</span><span class="mi">112</span><span class="p">),</span>
+            <span class="n">JUMP_ABSOLUTE</span><span class="p">(</span><span class="mi">113</span><span class="p">),</span>
+            <span class="n">POP_JUMP_IF_FALSE</span><span class="p">(</span><span class="mi">114</span><span class="p">),</span>
+            <span class="n">POP_JUMP_IF_TRUE</span><span class="p">(</span><span class="mi">115</span><span class="p">),</span>
+            <span class="n">LOAD_GLOBAL</span><span class="p">(</span><span class="mi">116</span><span class="p">),</span>
+            <span class="n">CONTINUE_LOOP</span><span class="p">(</span><span class="mi">119</span><span class="p">),</span>
+            <span class="n">SETUP_LOOP</span><span class="p">(</span><span class="mi">120</span><span class="p">),</span>
+            <span class="n">SETUP_EXCEPT</span><span class="p">(</span><span class="mi">121</span><span class="p">),</span>
+            <span class="n">SETUP_FINALLY</span><span class="p">(</span><span class="mi">122</span><span class="p">),</span>
+            <span class="n">LOAD_FAST</span><span class="p">(</span><span class="mi">124</span><span class="p">),</span>
+            <span class="n">STORE_FAST</span><span class="p">(</span><span class="mi">125</span><span class="p">),</span>
+            <span class="n">DELETE_FAST</span><span class="p">(</span><span class="mi">126</span><span class="p">),</span>
+            <span class="n">RAISE_VARARGS</span><span class="p">(</span><span class="mi">130</span><span class="p">),</span>
+            <span class="n">CALL_FUNCTION</span><span class="p">(</span><span class="mi">131</span><span class="p">),</span>
+            <span class="n">MAKE_FUNCTION</span><span class="p">(</span><span class="mi">132</span><span class="p">),</span>
+            <span class="n">BUILD_SLICE</span><span class="p">(</span><span class="mi">133</span><span class="p">),</span>
+            <span class="n">MAKE_CLOSURE</span><span class="p">(</span><span class="mi">134</span><span class="p">),</span>
+            <span class="n">LOAD_CLOSURE</span><span class="p">(</span><span class="mi">135</span><span class="p">),</span>
+            <span class="n">LOAD_DEREF</span><span class="p">(</span><span class="mi">136</span><span class="p">),</span>
+            <span class="n">STORE_DEREF</span><span class="p">(</span><span class="mi">137</span><span class="p">),</span>
+            <span class="n">CALL_FUNCTION_VAR</span><span class="p">(</span><span class="mi">140</span><span class="p">),</span>
+            <span class="n">CALL_FUNCTION_KW</span><span class="p">(</span><span class="mi">141</span><span class="p">),</span>
+            <span class="n">CALL_FUNCTION_VAR_KW</span><span class="p">(</span><span class="mi">142</span><span class="p">),</span>
+            <span class="n">SETUP_WITH</span><span class="p">(</span><span class="mi">143</span><span class="p">),</span>
+            <span class="n">EXTENDED_ARG</span><span class="p">(</span><span class="mi">145</span><span class="p">),</span>
+            <span class="n">SET_ADD</span><span class="p">(</span><span class="mi">146</span><span class="p">),</span>
+            <span class="n">MAP_ADD</span><span class="p">(</span><span class="mi">147</span><span class="p">);</span>
 
-            private final long id;
-            OpCodeEnum(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map&lt;Long, OpCodeEnum&gt; byId = new HashMap&lt;Long, OpCodeEnum&gt;(119);
-            static {
-                for (OpCodeEnum e : OpCodeEnum.values())
-                    byId.put(e.id(), e);
-            }
-            public static OpCodeEnum byId(long id) { return byId.get(id); }
-        }
+            <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+            <span class="n">OpCodeEnum</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">OpCodeEnum</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">OpCodeEnum</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">119</span><span class="p">);</span>
+            <span class="kd">static</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">OpCodeEnum</span> <span class="n">e</span> <span class="p">:</span> <span class="n">OpCodeEnum</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                    <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">OpCodeEnum</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        public OpArg(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">OpArg</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public OpArg(KaitaiStream _io, PythonPyc27.OpArgs _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">OpArg</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">OpArgs</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public OpArg(KaitaiStream _io, PythonPyc27.OpArgs _parent, PythonPyc27 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.opCode = OpCodeEnum.byId(this._io.readU1());
-            if (opCode().id() &gt;= OpCodeEnum.STORE_NAME.id()) {
-                this.arg = this._io.readU2le();
-            }
-        }
-        private OpCodeEnum opCode;
-        private Integer arg;
-        private PythonPyc27 _root;
-        private PythonPyc27.OpArgs _parent;
-        public OpCodeEnum opCode() { return opCode; }
-        public Integer arg() { return arg; }
-        public PythonPyc27 _root() { return _root; }
-        public PythonPyc27.OpArgs _parent() { return _parent; }
-    }
-    public static class PyObject extends KaitaiStruct {
-        public static PyObject fromFile(String fileName) throws IOException {
-            return new PyObject(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">OpArg</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">OpArgs</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">opCode</span> <span class="o">=</span> <span class="n">OpCodeEnum</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">opCode</span><span class="p">().</span><span class="na">id</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">OpCodeEnum</span><span class="p">.</span><span class="na">STORE_NAME</span><span class="p">.</span><span class="na">id</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">OpCodeEnum</span> <span class="n">opCode</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">arg</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">OpArgs</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">OpCodeEnum</span> <span class="nf">opCode</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">opCode</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">arg</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">arg</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PythonPyc27</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">OpArgs</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PyObject</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PyObject</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">PyObject</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public enum ObjectType {
-            TUPLE(40),
-            PY_FALSE(70),
-            NONE(78),
-            STRING_REF(82),
-            PY_TRUE(84),
-            CODE_OBJECT(99),
-            INT(105),
-            STRING(115),
-            INTERNED(116),
-            UNICODE_STRING(117);
+        <span class="kd">public</span> <span class="kd">enum</span> <span class="n">ObjectType</span> <span class="p">{</span>
+            <span class="n">TUPLE</span><span class="p">(</span><span class="mi">40</span><span class="p">),</span>
+            <span class="n">PY_FALSE</span><span class="p">(</span><span class="mi">70</span><span class="p">),</span>
+            <span class="n">NONE</span><span class="p">(</span><span class="mi">78</span><span class="p">),</span>
+            <span class="n">STRING_REF</span><span class="p">(</span><span class="mi">82</span><span class="p">),</span>
+            <span class="n">PY_TRUE</span><span class="p">(</span><span class="mi">84</span><span class="p">),</span>
+            <span class="n">CODE_OBJECT</span><span class="p">(</span><span class="mi">99</span><span class="p">),</span>
+            <span class="n">INT</span><span class="p">(</span><span class="mi">105</span><span class="p">),</span>
+            <span class="n">STRING</span><span class="p">(</span><span class="mi">115</span><span class="p">),</span>
+            <span class="n">INTERNED</span><span class="p">(</span><span class="mi">116</span><span class="p">),</span>
+            <span class="n">UNICODE_STRING</span><span class="p">(</span><span class="mi">117</span><span class="p">);</span>
 
-            private final long id;
-            ObjectType(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map&lt;Long, ObjectType&gt; byId = new HashMap&lt;Long, ObjectType&gt;(10);
-            static {
-                for (ObjectType e : ObjectType.values())
-                    byId.put(e.id(), e);
-            }
-            public static ObjectType byId(long id) { return byId.get(id); }
-        }
+            <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+            <span class="n">ObjectType</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">ObjectType</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">ObjectType</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+            <span class="kd">static</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">ObjectType</span> <span class="n">e</span> <span class="p">:</span> <span class="n">ObjectType</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                    <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">ObjectType</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        public PyObject(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">PyObject</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PyObject(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">PyObject</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PyObject(KaitaiStream _io, KaitaiStruct _parent, PythonPyc27 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.type = ObjectType.byId(this._io.readU1());
-            switch (type()) {
-            case NONE: {
-                this.value = new PyNone(this._io, this, _root);
-                break;
-            }
-            case CODE_OBJECT: {
-                this.value = new CodeObject(this._io, this, _root);
-                break;
-            }
-            case INT: {
-                this.value = (Object) (this._io.readU4le());
-                break;
-            }
-            case STRING_REF: {
-                this.value = new StringRef(this._io, this, _root);
-                break;
-            }
-            case STRING: {
-                this.value = new PyString(this._io, this, _root);
-                break;
-            }
-            case PY_FALSE: {
-                this.value = new PyFalse(this._io, this, _root);
-                break;
-            }
-            case INTERNED: {
-                this.value = new InternedString(this._io, this, _root);
-                break;
-            }
-            case TUPLE: {
-                this.value = new Tuple(this._io, this, _root);
-                break;
-            }
-            case PY_TRUE: {
-                this.value = new PyTrue(this._io, this, _root);
-                break;
-            }
-            }
-        }
-        public static class PyNone extends KaitaiStruct {
-            public static PyNone fromFile(String fileName) throws IOException {
-                return new PyNone(new ByteBufferKaitaiStream(fileName));
-            }
+        <span class="kd">public</span> <span class="nf">PyObject</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">ObjectType</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">type</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">NONE</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PyNone</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">CODE_OBJECT</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CodeObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">INT</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">STRING_REF</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringRef</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">STRING</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PyString</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">PY_FALSE</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PyFalse</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">INTERNED</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InternedString</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">TUPLE</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Tuple</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">PY_TRUE</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PyTrue</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PyNone</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">PyNone</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">PyNone</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public PyNone(KaitaiStream _io) {
-                this(_io, null, null);
-            }
+            <span class="kd">public</span> <span class="nf">PyNone</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public PyNone(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                this(_io, _parent, null);
-            }
+            <span class="kd">public</span> <span class="nf">PyNone</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public PyNone(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-            }
-            private PythonPyc27 _root;
-            private PythonPyc27.PyObject _parent;
-            public PythonPyc27 _root() { return _root; }
-            public PythonPyc27.PyObject _parent() { return _parent; }
-        }
-        public static class PyFalse extends KaitaiStruct {
-            public static PyFalse fromFile(String fileName) throws IOException {
-                return new PyFalse(new ByteBufferKaitaiStream(fileName));
-            }
+            <span class="kd">public</span> <span class="nf">PyNone</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">PythonPyc27</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PyFalse</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">PyFalse</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">PyFalse</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public PyFalse(KaitaiStream _io) {
-                this(_io, null, null);
-            }
+            <span class="kd">public</span> <span class="nf">PyFalse</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public PyFalse(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                this(_io, _parent, null);
-            }
+            <span class="kd">public</span> <span class="nf">PyFalse</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public PyFalse(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-            }
-            private PythonPyc27 _root;
-            private PythonPyc27.PyObject _parent;
-            public PythonPyc27 _root() { return _root; }
-            public PythonPyc27.PyObject _parent() { return _parent; }
-        }
-        public static class StringRef extends KaitaiStruct {
-            public static StringRef fromFile(String fileName) throws IOException {
-                return new StringRef(new ByteBufferKaitaiStream(fileName));
-            }
+            <span class="kd">public</span> <span class="nf">PyFalse</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">PythonPyc27</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">StringRef</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">StringRef</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">StringRef</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public StringRef(KaitaiStream _io) {
-                this(_io, null, null);
-            }
+            <span class="kd">public</span> <span class="nf">StringRef</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public StringRef(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                this(_io, _parent, null);
-            }
+            <span class="kd">public</span> <span class="nf">StringRef</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public StringRef(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.internedListIndex = this._io.readU4le();
-            }
-            private long internedListIndex;
-            private PythonPyc27 _root;
-            private PythonPyc27.PyObject _parent;
-            public long internedListIndex() { return internedListIndex; }
-            public PythonPyc27 _root() { return _root; }
-            public PythonPyc27.PyObject _parent() { return _parent; }
-        }
-        public static class PyTrue extends KaitaiStruct {
-            public static PyTrue fromFile(String fileName) throws IOException {
-                return new PyTrue(new ByteBufferKaitaiStream(fileName));
-            }
+            <span class="kd">public</span> <span class="nf">StringRef</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">internedListIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">internedListIndex</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">internedListIndex</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">internedListIndex</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PythonPyc27</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PyTrue</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">PyTrue</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">PyTrue</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public PyTrue(KaitaiStream _io) {
-                this(_io, null, null);
-            }
+            <span class="kd">public</span> <span class="nf">PyTrue</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public PyTrue(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                this(_io, _parent, null);
-            }
+            <span class="kd">public</span> <span class="nf">PyTrue</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public PyTrue(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-            }
-            private PythonPyc27 _root;
-            private PythonPyc27.PyObject _parent;
-            public PythonPyc27 _root() { return _root; }
-            public PythonPyc27.PyObject _parent() { return _parent; }
-        }
-        public static class Tuple extends KaitaiStruct {
-            public static Tuple fromFile(String fileName) throws IOException {
-                return new Tuple(new ByteBufferKaitaiStream(fileName));
-            }
+            <span class="kd">public</span> <span class="nf">PyTrue</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">PythonPyc27</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Tuple</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">Tuple</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">Tuple</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Tuple(KaitaiStream _io) {
-                this(_io, null, null);
-            }
+            <span class="kd">public</span> <span class="nf">Tuple</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public Tuple(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                this(_io, _parent, null);
-            }
+            <span class="kd">public</span> <span class="nf">Tuple</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public Tuple(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.count = this._io.readU4le();
-                items = new ArrayList&lt;PyObject&gt;((int) (count()));
-                for (int i = 0; i &lt; count(); i++) {
-                    this.items.add(new PyObject(this._io, this, _root));
-                }
-            }
-            private long count;
-            private ArrayList&lt;PyObject&gt; items;
-            private PythonPyc27 _root;
-            private PythonPyc27.PyObject _parent;
-            public long count() { return count; }
-            public ArrayList&lt;PyObject&gt; items() { return items; }
-            public PythonPyc27 _root() { return _root; }
-            public PythonPyc27.PyObject _parent() { return _parent; }
-        }
-        public static class UnicodeString extends KaitaiStruct {
-            public static UnicodeString fromFile(String fileName) throws IOException {
-                return new UnicodeString(new ByteBufferKaitaiStream(fileName));
-            }
+            <span class="kd">public</span> <span class="nf">Tuple</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">count</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="n">items</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PyObject</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">count</span><span class="p">()));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">count</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">items</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">count</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PyObject</span><span class="o">&gt;</span> <span class="n">items</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">count</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">count</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PyObject</span><span class="o">&gt;</span> <span class="nf">items</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">items</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PythonPyc27</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">UnicodeString</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">UnicodeString</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">UnicodeString</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public UnicodeString(KaitaiStream _io) {
-                this(_io, null, null);
-            }
+            <span class="kd">public</span> <span class="nf">UnicodeString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public UnicodeString(KaitaiStream _io, KaitaiStruct _parent) {
-                this(_io, _parent, null);
-            }
+            <span class="kd">public</span> <span class="nf">UnicodeString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public UnicodeString(KaitaiStream _io, KaitaiStruct _parent, PythonPyc27 _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.length = this._io.readU4le();
-                this.data = new String(this._io.readBytes(length()), Charset.forName(&quot;utf-8&quot;));
-            }
-            private long length;
-            private String data;
-            private PythonPyc27 _root;
-            private KaitaiStruct _parent;
-            public long length() { return length; }
-            public String data() { return data; }
-            public PythonPyc27 _root() { return _root; }
-            public KaitaiStruct _parent() { return _parent; }
-        }
-        public static class InternedString extends KaitaiStruct {
-            public static InternedString fromFile(String fileName) throws IOException {
-                return new InternedString(new ByteBufferKaitaiStream(fileName));
-            }
+            <span class="kd">public</span> <span class="nf">UnicodeString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">length</span><span class="p">()),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">length</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">String</span> <span class="n">data</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">length</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">length</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">String</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">data</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PythonPyc27</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">InternedString</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">InternedString</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">InternedString</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public InternedString(KaitaiStream _io) {
-                this(_io, null, null);
-            }
+            <span class="kd">public</span> <span class="nf">InternedString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public InternedString(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                this(_io, _parent, null);
-            }
+            <span class="kd">public</span> <span class="nf">InternedString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public InternedString(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.length = this._io.readU4le();
-                this.data = new String(this._io.readBytes(length()), Charset.forName(&quot;utf-8&quot;));
-            }
-            private long length;
-            private String data;
-            private PythonPyc27 _root;
-            private PythonPyc27.PyObject _parent;
-            public long length() { return length; }
-            public String data() { return data; }
-            public PythonPyc27 _root() { return _root; }
-            public PythonPyc27.PyObject _parent() { return _parent; }
-        }
-        public static class PyString extends KaitaiStruct {
-            public static PyString fromFile(String fileName) throws IOException {
-                return new PyString(new ByteBufferKaitaiStream(fileName));
-            }
+            <span class="kd">public</span> <span class="nf">InternedString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">length</span><span class="p">()),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">length</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">String</span> <span class="n">data</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">length</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">length</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">String</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">data</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PythonPyc27</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PyString</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">PyString</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">PyString</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public PyString(KaitaiStream _io) {
-                this(_io, null, null);
-            }
+            <span class="kd">public</span> <span class="nf">PyString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public PyString(KaitaiStream _io, PythonPyc27.PyObject _parent) {
-                this(_io, _parent, null);
-            }
+            <span class="kd">public</span> <span class="nf">PyString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public PyString(KaitaiStream _io, PythonPyc27.PyObject _parent, PythonPyc27 _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.length = this._io.readU4le();
-                this.data = this._io.readBytes(length());
-            }
-            private long length;
-            private byte[] data;
-            private PythonPyc27 _root;
-            private PythonPyc27.PyObject _parent;
-            public long length() { return length; }
-            public byte[] data() { return data; }
-            public PythonPyc27 _root() { return _root; }
-            public PythonPyc27.PyObject _parent() { return _parent; }
-        }
-        private ObjectType type;
-        private Object value;
-        private PythonPyc27 _root;
-        private KaitaiStruct _parent;
-        public ObjectType type() { return type; }
-        public Object value() { return value; }
-        public PythonPyc27 _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-    public static class OpArgs extends KaitaiStruct {
-        public static OpArgs fromFile(String fileName) throws IOException {
-            return new OpArgs(new ByteBufferKaitaiStream(fileName));
-        }
+            <span class="kd">public</span> <span class="nf">PyString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">length</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">length</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">length</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">length</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">data</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PythonPyc27</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">PyObject</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">ObjectType</span> <span class="n">type</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Object</span> <span class="n">value</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">ObjectType</span> <span class="nf">type</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">type</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Object</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PythonPyc27</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">OpArgs</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">OpArgs</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">OpArgs</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public OpArgs(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">OpArgs</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public OpArgs(KaitaiStream _io, PythonPyc27.Assembly _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">OpArgs</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">Assembly</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public OpArgs(KaitaiStream _io, PythonPyc27.Assembly _parent, PythonPyc27 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.items = new ArrayList&lt;OpArg&gt;();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.items.add(new OpArg(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList&lt;OpArg&gt; items;
-        private PythonPyc27 _root;
-        private PythonPyc27.Assembly _parent;
-        public ArrayList&lt;OpArg&gt; items() { return items; }
-        public PythonPyc27 _root() { return _root; }
-        public PythonPyc27.Assembly _parent() { return _parent; }
-    }
-    private Version versionMagic;
-    private int crlf;
-    private long modificationTimestamp;
-    private PyObject body;
-    private PythonPyc27 _root;
-    private KaitaiStruct _parent;
-    public Version versionMagic() { return versionMagic; }
-    public int crlf() { return crlf; }
-    public long modificationTimestamp() { return modificationTimestamp; }
-    public PyObject body() { return body; }
-    public PythonPyc27 _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-}
-</code></pre>
+        <span class="kd">public</span> <span class="nf">OpArgs</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">Assembly</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">items</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">OpArg</span><span class="o">&gt;</span><span class="p">();</span>
+            <span class="p">{</span>
+                <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">items</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">OpArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+                    <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">OpArg</span><span class="o">&gt;</span> <span class="n">items</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">Assembly</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">OpArg</span><span class="o">&gt;</span> <span class="nf">items</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">items</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PythonPyc27</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PythonPyc27</span><span class="p">.</span><span class="na">Assembly</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">Version</span> <span class="n">versionMagic</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">crlf</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">modificationTimestamp</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">PyObject</span> <span class="n">body</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">PythonPyc27</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">Version</span> <span class="nf">versionMagic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">versionMagic</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">crlf</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">crlf</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">modificationTimestamp</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">modificationTimestamp</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">PyObject</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">PythonPyc27</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1030,8 +1027,8 @@ public class PythonPyc27 extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

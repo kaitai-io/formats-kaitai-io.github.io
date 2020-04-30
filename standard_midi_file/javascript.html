@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -277,369 +274,369 @@ var data = new StandardMidiFile(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;, &#39;./VlqBase128Be&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;), require(&#39;./VlqBase128Be&#39;));
-  } else {
-    root.StandardMidiFile = factory(root.KaitaiStream, root.VlqBase128Be);
-  }
-}(this, function (KaitaiStream, VlqBase128Be) {
-/**
- * Standard MIDI file, typically knows just as &quot;MID&quot;, is a standard way
- * to serialize series of MIDI events, which is a protocol used in many
- * music synthesizers to transfer music data: notes being played,
- * effects being applied, etc.
- * 
- * Internally, file consists of a header and series of tracks, every
- * track listing MIDI events with certain header designating time these
- * events are happening.
- * 
- * NOTE: Rarely, MIDI files employ certain stateful compression scheme
- * to avoid storing certain elements of further elements, instead
- * reusing them from events which happened earlier in the
- * stream. Kaitai Struct (as of v0.9) is currently unable to parse
- * these, but files employing this mechanism are relatively rare.
- */
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">,</span> <span class="s1">&#39;./VlqBase128Be&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">),</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./VlqBase128Be&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">StandardMidiFile</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">,</span> <span class="nx">root</span><span class="p">.</span><span class="nx">VlqBase128Be</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">,</span> <span class="nx">VlqBase128Be</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * Standard MIDI file, typically knows just as &quot;MID&quot;, is a standard way</span>
+<span class="cm"> * to serialize series of MIDI events, which is a protocol used in many</span>
+<span class="cm"> * music synthesizers to transfer music data: notes being played,</span>
+<span class="cm"> * effects being applied, etc.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Internally, file consists of a header and series of tracks, every</span>
+<span class="cm"> * track listing MIDI events with certain header designating time these</span>
+<span class="cm"> * events are happening.</span>
+<span class="cm"> * </span>
+<span class="cm"> * NOTE: Rarely, MIDI files employ certain stateful compression scheme</span>
+<span class="cm"> * to avoid storing certain elements of further elements, instead</span>
+<span class="cm"> * reusing them from events which happened earlier in the</span>
+<span class="cm"> * stream. Kaitai Struct (as of v0.9) is currently unable to parse</span>
+<span class="cm"> * these, but files employing this mechanism are relatively rare.</span>
+<span class="cm"> */</span>
 
-var StandardMidiFile = (function() {
-  function StandardMidiFile(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
+<span class="kd">var</span> <span class="nx">StandardMidiFile</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">StandardMidiFile</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-    this._read();
-  }
-  StandardMidiFile.prototype._read = function() {
-    this.hdr = new Header(this._io, this, this._root);
-    this.tracks = new Array(this.hdr.numTracks);
-    for (var i = 0; i &lt; this.hdr.numTracks; i++) {
-      this.tracks[i] = new Track(this._io, this, this._root);
-    }
-  }
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">StandardMidiFile</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">hdr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Header</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">tracks</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">hdr</span><span class="p">.</span><span class="nx">numTracks</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">hdr</span><span class="p">.</span><span class="nx">numTracks</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">tracks</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Track</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
 
-  var TrackEvents = StandardMidiFile.TrackEvents = (function() {
-    function TrackEvents(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">TrackEvents</span> <span class="o">=</span> <span class="nx">StandardMidiFile</span><span class="p">.</span><span class="nx">TrackEvents</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">TrackEvents</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    TrackEvents.prototype._read = function() {
-      this.event = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.event.push(new TrackEvent(this._io, this, this._root));
-        i++;
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">TrackEvents</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">event</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">event</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">TrackEvent</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return TrackEvents;
-  })();
+    <span class="k">return</span> <span class="nx">TrackEvents</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var TrackEvent = StandardMidiFile.TrackEvent = (function() {
-    function TrackEvent(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">TrackEvent</span> <span class="o">=</span> <span class="nx">StandardMidiFile</span><span class="p">.</span><span class="nx">TrackEvent</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">TrackEvent</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    TrackEvent.prototype._read = function() {
-      this.vTime = new VlqBase128Be(this._io, this, null);
-      this.eventHeader = this._io.readU1();
-      if (this.eventHeader == 255) {
-        this.metaEventBody = new MetaEventBody(this._io, this, this._root);
-      }
-      if (this.eventHeader == 240) {
-        this.sysexBody = new SysexEventBody(this._io, this, this._root);
-      }
-      switch (this.eventType) {
-      case 224:
-        this.eventBody = new PitchBendEvent(this._io, this, this._root);
-        break;
-      case 144:
-        this.eventBody = new NoteOnEvent(this._io, this, this._root);
-        break;
-      case 208:
-        this.eventBody = new ChannelPressureEvent(this._io, this, this._root);
-        break;
-      case 192:
-        this.eventBody = new ProgramChangeEvent(this._io, this, this._root);
-        break;
-      case 160:
-        this.eventBody = new PolyphonicPressureEvent(this._io, this, this._root);
-        break;
-      case 176:
-        this.eventBody = new ControllerEvent(this._io, this, this._root);
-        break;
-      case 128:
-        this.eventBody = new NoteOffEvent(this._io, this, this._root);
-        break;
-      }
-    }
-    Object.defineProperty(TrackEvent.prototype, &#39;eventType&#39;, {
-      get: function() {
-        if (this._m_eventType !== undefined)
-          return this._m_eventType;
-        this._m_eventType = (this.eventHeader &amp; 240);
-        return this._m_eventType;
-      }
-    });
-    Object.defineProperty(TrackEvent.prototype, &#39;channel&#39;, {
-      get: function() {
-        if (this._m_channel !== undefined)
-          return this._m_channel;
-        if (this.eventType != 240) {
-          this._m_channel = (this.eventHeader &amp; 15);
-        }
-        return this._m_channel;
-      }
-    });
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">TrackEvent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">vTime</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">VlqBase128Be</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">eventHeader</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">eventHeader</span> <span class="o">==</span> <span class="mi">255</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">metaEventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MetaEventBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">eventHeader</span> <span class="o">==</span> <span class="mi">240</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">sysexBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SysexEventBody</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">eventType</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="mi">224</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">eventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PitchBendEvent</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">144</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">eventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoteOnEvent</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">208</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">eventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ChannelPressureEvent</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">192</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">eventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ProgramChangeEvent</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">160</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">eventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PolyphonicPressureEvent</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">176</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">eventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ControllerEvent</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">128</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">eventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoteOffEvent</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">TrackEvent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;eventType&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_eventType</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_eventType</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_eventType</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">eventHeader</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_eventType</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">TrackEvent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;channel&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_channel</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_channel</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">eventType</span> <span class="o">!=</span> <span class="mi">240</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_channel</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">eventHeader</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_channel</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    return TrackEvent;
-  })();
+    <span class="k">return</span> <span class="nx">TrackEvent</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var PitchBendEvent = StandardMidiFile.PitchBendEvent = (function() {
-    function PitchBendEvent(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">PitchBendEvent</span> <span class="o">=</span> <span class="nx">StandardMidiFile</span><span class="p">.</span><span class="nx">PitchBendEvent</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">PitchBendEvent</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    PitchBendEvent.prototype._read = function() {
-      this.b1 = this._io.readU1();
-      this.b2 = this._io.readU1();
-    }
-    Object.defineProperty(PitchBendEvent.prototype, &#39;bendValue&#39;, {
-      get: function() {
-        if (this._m_bendValue !== undefined)
-          return this._m_bendValue;
-        this._m_bendValue = (((this.b2 &lt;&lt; 7) + this.b1) - 16384);
-        return this._m_bendValue;
-      }
-    });
-    Object.defineProperty(PitchBendEvent.prototype, &#39;adjBendValue&#39;, {
-      get: function() {
-        if (this._m_adjBendValue !== undefined)
-          return this._m_adjBendValue;
-        this._m_adjBendValue = (this.bendValue - 16384);
-        return this._m_adjBendValue;
-      }
-    });
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">PitchBendEvent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">b1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">b2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">PitchBendEvent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;bendValue&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_bendValue</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_bendValue</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_bendValue</span> <span class="o">=</span> <span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">b2</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span><span class="p">)</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">b1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">16384</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_bendValue</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">PitchBendEvent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;adjBendValue&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_adjBendValue</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_adjBendValue</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_adjBendValue</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">bendValue</span> <span class="o">-</span> <span class="mi">16384</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_adjBendValue</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    return PitchBendEvent;
-  })();
+    <span class="k">return</span> <span class="nx">PitchBendEvent</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var ProgramChangeEvent = StandardMidiFile.ProgramChangeEvent = (function() {
-    function ProgramChangeEvent(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">ProgramChangeEvent</span> <span class="o">=</span> <span class="nx">StandardMidiFile</span><span class="p">.</span><span class="nx">ProgramChangeEvent</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ProgramChangeEvent</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    ProgramChangeEvent.prototype._read = function() {
-      this.program = this._io.readU1();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ProgramChangeEvent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">program</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return ProgramChangeEvent;
-  })();
+    <span class="k">return</span> <span class="nx">ProgramChangeEvent</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var NoteOnEvent = StandardMidiFile.NoteOnEvent = (function() {
-    function NoteOnEvent(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">NoteOnEvent</span> <span class="o">=</span> <span class="nx">StandardMidiFile</span><span class="p">.</span><span class="nx">NoteOnEvent</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">NoteOnEvent</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    NoteOnEvent.prototype._read = function() {
-      this.note = this._io.readU1();
-      this.velocity = this._io.readU1();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">NoteOnEvent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">note</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">velocity</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return NoteOnEvent;
-  })();
+    <span class="k">return</span> <span class="nx">NoteOnEvent</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var PolyphonicPressureEvent = StandardMidiFile.PolyphonicPressureEvent = (function() {
-    function PolyphonicPressureEvent(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">PolyphonicPressureEvent</span> <span class="o">=</span> <span class="nx">StandardMidiFile</span><span class="p">.</span><span class="nx">PolyphonicPressureEvent</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">PolyphonicPressureEvent</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    PolyphonicPressureEvent.prototype._read = function() {
-      this.note = this._io.readU1();
-      this.pressure = this._io.readU1();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">PolyphonicPressureEvent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">note</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">pressure</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return PolyphonicPressureEvent;
-  })();
+    <span class="k">return</span> <span class="nx">PolyphonicPressureEvent</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var Track = StandardMidiFile.Track = (function() {
-    function Track(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Track</span> <span class="o">=</span> <span class="nx">StandardMidiFile</span><span class="p">.</span><span class="nx">Track</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Track</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Track.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([77, 84, 114, 107]);
-      this.lenEvents = this._io.readU4be();
-      this._raw_events = this._io.readBytes(this.lenEvents);
-      var _io__raw_events = new KaitaiStream(this._raw_events);
-      this.events = new TrackEvents(_io__raw_events, this, this._root);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Track</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">77</span><span class="p">,</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">107</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lenEvents</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_events</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenEvents</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_events</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_events</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">events</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TrackEvents</span><span class="p">(</span><span class="nx">_io__raw_events</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return Track;
-  })();
+    <span class="k">return</span> <span class="nx">Track</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var MetaEventBody = StandardMidiFile.MetaEventBody = (function() {
-    MetaEventBody.MetaTypeEnum = Object.freeze({
-      SEQUENCE_NUMBER: 0,
-      TEXT_EVENT: 1,
-      COPYRIGHT: 2,
-      SEQUENCE_TRACK_NAME: 3,
-      INSTRUMENT_NAME: 4,
-      LYRIC_TEXT: 5,
-      MARKER_TEXT: 6,
-      CUE_POINT: 7,
-      MIDI_CHANNEL_PREFIX_ASSIGNMENT: 32,
-      END_OF_TRACK: 47,
-      TEMPO: 81,
-      SMPTE_OFFSET: 84,
-      TIME_SIGNATURE: 88,
-      KEY_SIGNATURE: 89,
-      SEQUENCER_SPECIFIC_EVENT: 127,
+  <span class="kd">var</span> <span class="nx">MetaEventBody</span> <span class="o">=</span> <span class="nx">StandardMidiFile</span><span class="p">.</span><span class="nx">MetaEventBody</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">MetaEventBody</span><span class="p">.</span><span class="nx">MetaTypeEnum</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+      <span class="nx">SEQUENCE_NUMBER</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">TEXT_EVENT</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">COPYRIGHT</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="nx">SEQUENCE_TRACK_NAME</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+      <span class="nx">INSTRUMENT_NAME</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+      <span class="nx">LYRIC_TEXT</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+      <span class="nx">MARKER_TEXT</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+      <span class="nx">CUE_POINT</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+      <span class="nx">MIDI_CHANNEL_PREFIX_ASSIGNMENT</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span>
+      <span class="nx">END_OF_TRACK</span><span class="o">:</span> <span class="mi">47</span><span class="p">,</span>
+      <span class="nx">TEMPO</span><span class="o">:</span> <span class="mi">81</span><span class="p">,</span>
+      <span class="nx">SMPTE_OFFSET</span><span class="o">:</span> <span class="mi">84</span><span class="p">,</span>
+      <span class="nx">TIME_SIGNATURE</span><span class="o">:</span> <span class="mi">88</span><span class="p">,</span>
+      <span class="nx">KEY_SIGNATURE</span><span class="o">:</span> <span class="mi">89</span><span class="p">,</span>
+      <span class="nx">SEQUENCER_SPECIFIC_EVENT</span><span class="o">:</span> <span class="mi">127</span><span class="p">,</span>
 
-      0: &quot;SEQUENCE_NUMBER&quot;,
-      1: &quot;TEXT_EVENT&quot;,
-      2: &quot;COPYRIGHT&quot;,
-      3: &quot;SEQUENCE_TRACK_NAME&quot;,
-      4: &quot;INSTRUMENT_NAME&quot;,
-      5: &quot;LYRIC_TEXT&quot;,
-      6: &quot;MARKER_TEXT&quot;,
-      7: &quot;CUE_POINT&quot;,
-      32: &quot;MIDI_CHANNEL_PREFIX_ASSIGNMENT&quot;,
-      47: &quot;END_OF_TRACK&quot;,
-      81: &quot;TEMPO&quot;,
-      84: &quot;SMPTE_OFFSET&quot;,
-      88: &quot;TIME_SIGNATURE&quot;,
-      89: &quot;KEY_SIGNATURE&quot;,
-      127: &quot;SEQUENCER_SPECIFIC_EVENT&quot;,
-    });
+      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;SEQUENCE_NUMBER&quot;</span><span class="p">,</span>
+      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;TEXT_EVENT&quot;</span><span class="p">,</span>
+      <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;COPYRIGHT&quot;</span><span class="p">,</span>
+      <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;SEQUENCE_TRACK_NAME&quot;</span><span class="p">,</span>
+      <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;INSTRUMENT_NAME&quot;</span><span class="p">,</span>
+      <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;LYRIC_TEXT&quot;</span><span class="p">,</span>
+      <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;MARKER_TEXT&quot;</span><span class="p">,</span>
+      <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;CUE_POINT&quot;</span><span class="p">,</span>
+      <span class="mi">32</span><span class="o">:</span> <span class="s2">&quot;MIDI_CHANNEL_PREFIX_ASSIGNMENT&quot;</span><span class="p">,</span>
+      <span class="mi">47</span><span class="o">:</span> <span class="s2">&quot;END_OF_TRACK&quot;</span><span class="p">,</span>
+      <span class="mi">81</span><span class="o">:</span> <span class="s2">&quot;TEMPO&quot;</span><span class="p">,</span>
+      <span class="mi">84</span><span class="o">:</span> <span class="s2">&quot;SMPTE_OFFSET&quot;</span><span class="p">,</span>
+      <span class="mi">88</span><span class="o">:</span> <span class="s2">&quot;TIME_SIGNATURE&quot;</span><span class="p">,</span>
+      <span class="mi">89</span><span class="o">:</span> <span class="s2">&quot;KEY_SIGNATURE&quot;</span><span class="p">,</span>
+      <span class="mi">127</span><span class="o">:</span> <span class="s2">&quot;SEQUENCER_SPECIFIC_EVENT&quot;</span><span class="p">,</span>
+    <span class="p">});</span>
 
-    function MetaEventBody(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+    <span class="kd">function</span> <span class="nx">MetaEventBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    MetaEventBody.prototype._read = function() {
-      this.metaType = this._io.readU1();
-      this.len = new VlqBase128Be(this._io, this, null);
-      this.body = this._io.readBytes(this.len.value);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">MetaEventBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">metaType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">VlqBase128Be</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return MetaEventBody;
-  })();
+    <span class="k">return</span> <span class="nx">MetaEventBody</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var ControllerEvent = StandardMidiFile.ControllerEvent = (function() {
-    function ControllerEvent(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">ControllerEvent</span> <span class="o">=</span> <span class="nx">StandardMidiFile</span><span class="p">.</span><span class="nx">ControllerEvent</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ControllerEvent</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    ControllerEvent.prototype._read = function() {
-      this.controller = this._io.readU1();
-      this.value = this._io.readU1();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ControllerEvent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">controller</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return ControllerEvent;
-  })();
+    <span class="k">return</span> <span class="nx">ControllerEvent</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var Header = StandardMidiFile.Header = (function() {
-    function Header(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Header</span> <span class="o">=</span> <span class="nx">StandardMidiFile</span><span class="p">.</span><span class="nx">Header</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Header</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Header.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([77, 84, 104, 100]);
-      this.lenHeader = this._io.readU4be();
-      this.format = this._io.readU2be();
-      this.numTracks = this._io.readU2be();
-      this.division = this._io.readS2be();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Header</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">77</span><span class="p">,</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">100</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lenHeader</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">format</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numTracks</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">division</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2be</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return Header;
-  })();
+    <span class="k">return</span> <span class="nx">Header</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var SysexEventBody = StandardMidiFile.SysexEventBody = (function() {
-    function SysexEventBody(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">SysexEventBody</span> <span class="o">=</span> <span class="nx">StandardMidiFile</span><span class="p">.</span><span class="nx">SysexEventBody</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">SysexEventBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    SysexEventBody.prototype._read = function() {
-      this.len = new VlqBase128Be(this._io, this, null);
-      this.data = this._io.readBytes(this.len.value);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">SysexEventBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">VlqBase128Be</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return SysexEventBody;
-  })();
+    <span class="k">return</span> <span class="nx">SysexEventBody</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var NoteOffEvent = StandardMidiFile.NoteOffEvent = (function() {
-    function NoteOffEvent(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">NoteOffEvent</span> <span class="o">=</span> <span class="nx">StandardMidiFile</span><span class="p">.</span><span class="nx">NoteOffEvent</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">NoteOffEvent</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    NoteOffEvent.prototype._read = function() {
-      this.note = this._io.readU1();
-      this.velocity = this._io.readU1();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">NoteOffEvent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">note</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">velocity</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return NoteOffEvent;
-  })();
+    <span class="k">return</span> <span class="nx">NoteOffEvent</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var ChannelPressureEvent = StandardMidiFile.ChannelPressureEvent = (function() {
-    function ChannelPressureEvent(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">ChannelPressureEvent</span> <span class="o">=</span> <span class="nx">StandardMidiFile</span><span class="p">.</span><span class="nx">ChannelPressureEvent</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ChannelPressureEvent</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    ChannelPressureEvent.prototype._read = function() {
-      this.pressure = this._io.readU1();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ChannelPressureEvent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">pressure</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return ChannelPressureEvent;
-  })();
+    <span class="k">return</span> <span class="nx">ChannelPressureEvent</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  return StandardMidiFile;
-})();
-return StandardMidiFile;
-}));
-</code></pre>
+  <span class="k">return</span> <span class="nx">StandardMidiFile</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">StandardMidiFile</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -666,8 +663,8 @@ return StandardMidiFile;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

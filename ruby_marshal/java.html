@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -255,622 +252,622 @@ RubyMarshal data = new RubyMarshal(new ByteBufferKaitaiStream(someArray));</code
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.nio.charset.Charset;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
 
 
-/**
- * Ruby&#39;s Marshal module allows serialization and deserialization of
- * many standard and arbitrary Ruby objects in a compact binary
- * format. It is relatively fast, available in stdlibs standard and
- * allows conservation of language-specific properties (such as symbols
- * or encoding-aware strings).
- * 
- * Feature-wise, it is comparable to other language-specific
- * implementations, such as:
- * 
- * * Java&#39;s
- *   [Serializable](https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html)
- * * .NET
- *   [BinaryFormatter](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.serialization.formatters.binary.binaryformatter)
- * * Python&#39;s
- *   [marshal](https://docs.python.org/3/library/marshal.html),
- *   [pickle](https://docs.python.org/3/library/pickle.html) and
- *   [shelve](https://docs.python.org/3/library/shelve.html)
- * 
- * From internal perspective, serialized stream consists of a simple
- * magic header and a record.
- * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Stream+Format&quot;&gt;Source&lt;/a&gt;
- */
-public class RubyMarshal extends KaitaiStruct {
-    public static RubyMarshal fromFile(String fileName) throws IOException {
-        return new RubyMarshal(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * Ruby&#39;s Marshal module allows serialization and deserialization of</span>
+<span class="cm"> * many standard and arbitrary Ruby objects in a compact binary</span>
+<span class="cm"> * format. It is relatively fast, available in stdlibs standard and</span>
+<span class="cm"> * allows conservation of language-specific properties (such as symbols</span>
+<span class="cm"> * or encoding-aware strings).</span>
+<span class="cm"> * </span>
+<span class="cm"> * Feature-wise, it is comparable to other language-specific</span>
+<span class="cm"> * implementations, such as:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * Java&#39;s</span>
+<span class="cm"> *   [Serializable](https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html)</span>
+<span class="cm"> * * .NET</span>
+<span class="cm"> *   [BinaryFormatter](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.serialization.formatters.binary.binaryformatter)</span>
+<span class="cm"> * * Python&#39;s</span>
+<span class="cm"> *   [marshal](https://docs.python.org/3/library/marshal.html),</span>
+<span class="cm"> *   [pickle](https://docs.python.org/3/library/pickle.html) and</span>
+<span class="cm"> *   [shelve](https://docs.python.org/3/library/shelve.html)</span>
+<span class="cm"> * </span>
+<span class="cm"> * From internal perspective, serialized stream consists of a simple</span>
+<span class="cm"> * magic header and a record.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Stream+Format&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RubyMarshal</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">RubyMarshal</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">RubyMarshal</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public enum Codes {
-        RUBY_STRING(34),
-        CONST_NIL(48),
-        RUBY_SYMBOL(58),
-        RUBY_SYMBOL_LINK(59),
-        CONST_FALSE(70),
-        INSTANCE_VAR(73),
-        RUBY_STRUCT(83),
-        CONST_TRUE(84),
-        RUBY_ARRAY(91),
-        PACKED_INT(105),
-        BIGNUM(108),
-        RUBY_HASH(123);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">Codes</span> <span class="p">{</span>
+        <span class="n">RUBY_STRING</span><span class="p">(</span><span class="mi">34</span><span class="p">),</span>
+        <span class="n">CONST_NIL</span><span class="p">(</span><span class="mi">48</span><span class="p">),</span>
+        <span class="n">RUBY_SYMBOL</span><span class="p">(</span><span class="mi">58</span><span class="p">),</span>
+        <span class="n">RUBY_SYMBOL_LINK</span><span class="p">(</span><span class="mi">59</span><span class="p">),</span>
+        <span class="n">CONST_FALSE</span><span class="p">(</span><span class="mi">70</span><span class="p">),</span>
+        <span class="n">INSTANCE_VAR</span><span class="p">(</span><span class="mi">73</span><span class="p">),</span>
+        <span class="n">RUBY_STRUCT</span><span class="p">(</span><span class="mi">83</span><span class="p">),</span>
+        <span class="n">CONST_TRUE</span><span class="p">(</span><span class="mi">84</span><span class="p">),</span>
+        <span class="n">RUBY_ARRAY</span><span class="p">(</span><span class="mi">91</span><span class="p">),</span>
+        <span class="n">PACKED_INT</span><span class="p">(</span><span class="mi">105</span><span class="p">),</span>
+        <span class="n">BIGNUM</span><span class="p">(</span><span class="mi">108</span><span class="p">),</span>
+        <span class="n">RUBY_HASH</span><span class="p">(</span><span class="mi">123</span><span class="p">);</span>
 
-        private final long id;
-        Codes(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, Codes&gt; byId = new HashMap&lt;Long, Codes&gt;(12);
-        static {
-            for (Codes e : Codes.values())
-                byId.put(e.id(), e);
-        }
-        public static Codes byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">Codes</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Codes</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Codes</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">Codes</span> <span class="n">e</span> <span class="p">:</span> <span class="n">Codes</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Codes</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public RubyMarshal(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">RubyMarshal</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public RubyMarshal(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">RubyMarshal</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public RubyMarshal(KaitaiStream _io, KaitaiStruct _parent, RubyMarshal _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.version = this._io.ensureFixedContents(new byte[] { 4, 8 });
-        this.records = new Record(this._io, this, _root);
-    }
-    public static class RubyArray extends KaitaiStruct {
-        public static RubyArray fromFile(String fileName) throws IOException {
-            return new RubyArray(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="kd">public</span> <span class="nf">RubyMarshal</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span> <span class="p">});</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">records</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">RubyArray</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">RubyArray</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">RubyArray</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public RubyArray(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">RubyArray</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public RubyArray(KaitaiStream _io, RubyMarshal.Record _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">RubyArray</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public RubyArray(KaitaiStream _io, RubyMarshal.Record _parent, RubyMarshal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numElements = new PackedInt(this._io, this, _root);
-            elements = new ArrayList&lt;Record&gt;((int) (numElements().value()));
-            for (int i = 0; i &lt; numElements().value(); i++) {
-                this.elements.add(new Record(this._io, this, _root));
-            }
-        }
-        private PackedInt numElements;
-        private ArrayList&lt;Record&gt; elements;
-        private RubyMarshal _root;
-        private RubyMarshal.Record _parent;
-        public PackedInt numElements() { return numElements; }
-        public ArrayList&lt;Record&gt; elements() { return elements; }
-        public RubyMarshal _root() { return _root; }
-        public RubyMarshal.Record _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">RubyArray</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numElements</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="n">elements</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Record</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numElements</span><span class="p">().</span><span class="na">value</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numElements</span><span class="p">().</span><span class="na">value</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">elements</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">PackedInt</span> <span class="n">numElements</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Record</span><span class="o">&gt;</span> <span class="n">elements</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">PackedInt</span> <span class="nf">numElements</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numElements</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Record</span><span class="o">&gt;</span> <span class="nf">elements</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">elements</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Bignum&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class Bignum extends KaitaiStruct {
-        public static Bignum fromFile(String fileName) throws IOException {
-            return new Bignum(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Bignum&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Bignum</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Bignum</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Bignum</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Bignum(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Bignum</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Bignum(KaitaiStream _io, RubyMarshal.Record _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Bignum</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Bignum(KaitaiStream _io, RubyMarshal.Record _parent, RubyMarshal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.sign = this._io.readU1();
-            this.lenDiv2 = new PackedInt(this._io, this, _root);
-            this.body = this._io.readBytes((lenDiv2().value() * 2));
-        }
-        private int sign;
-        private PackedInt lenDiv2;
-        private byte[] body;
-        private RubyMarshal _root;
-        private RubyMarshal.Record _parent;
+        <span class="kd">public</span> <span class="nf">Bignum</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">sign</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenDiv2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">lenDiv2</span><span class="p">().</span><span class="na">value</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">sign</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PackedInt</span> <span class="n">lenDiv2</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">body</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">;</span>
 
-        /**
-         * A single byte containing `+` for a positive value or `-` for a negative value.
-         */
-        public int sign() { return sign; }
+        <span class="cm">/**</span>
+<span class="cm">         * A single byte containing `+` for a positive value or `-` for a negative value.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">sign</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">sign</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Length of bignum body, divided by 2.
-         */
-        public PackedInt lenDiv2() { return lenDiv2; }
+        <span class="cm">/**</span>
+<span class="cm">         * Length of bignum body, divided by 2.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">PackedInt</span> <span class="nf">lenDiv2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenDiv2</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Bytes that represent the number, see ruby-lang.org docs for reconstruction algorithm.
-         */
-        public byte[] body() { return body; }
-        public RubyMarshal _root() { return _root; }
-        public RubyMarshal.Record _parent() { return _parent; }
-    }
+        <span class="cm">/**</span>
+<span class="cm">         * Bytes that represent the number, see ruby-lang.org docs for reconstruction algorithm.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class RubyStruct extends KaitaiStruct {
-        public static RubyStruct fromFile(String fileName) throws IOException {
-            return new RubyStruct(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">RubyStruct</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">RubyStruct</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">RubyStruct</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public RubyStruct(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">RubyStruct</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public RubyStruct(KaitaiStream _io, RubyMarshal.Record _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">RubyStruct</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public RubyStruct(KaitaiStream _io, RubyMarshal.Record _parent, RubyMarshal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.name = new Record(this._io, this, _root);
-            this.numMembers = new PackedInt(this._io, this, _root);
-            members = new ArrayList&lt;Pair&gt;((int) (numMembers().value()));
-            for (int i = 0; i &lt; numMembers().value(); i++) {
-                this.members.add(new Pair(this._io, this, _root));
-            }
-        }
-        private Record name;
-        private PackedInt numMembers;
-        private ArrayList&lt;Pair&gt; members;
-        private RubyMarshal _root;
-        private RubyMarshal.Record _parent;
+        <span class="kd">public</span> <span class="nf">RubyStruct</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numMembers</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="n">members</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numMembers</span><span class="p">().</span><span class="na">value</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numMembers</span><span class="p">().</span><span class="na">value</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">members</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Pair</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Record</span> <span class="n">name</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PackedInt</span> <span class="n">numMembers</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span> <span class="n">members</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">;</span>
 
-        /**
-         * Symbol containing the name of the struct.
-         */
-        public Record name() { return name; }
+        <span class="cm">/**</span>
+<span class="cm">         * Symbol containing the name of the struct.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Record</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">name</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Number of members in a struct
-         */
-        public PackedInt numMembers() { return numMembers; }
-        public ArrayList&lt;Pair&gt; members() { return members; }
-        public RubyMarshal _root() { return _root; }
-        public RubyMarshal.Record _parent() { return _parent; }
-    }
+        <span class="cm">/**</span>
+<span class="cm">         * Number of members in a struct</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">PackedInt</span> <span class="nf">numMembers</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numMembers</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span> <span class="nf">members</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">members</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class RubySymbol extends KaitaiStruct {
-        public static RubySymbol fromFile(String fileName) throws IOException {
-            return new RubySymbol(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">RubySymbol</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">RubySymbol</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">RubySymbol</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public RubySymbol(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">RubySymbol</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public RubySymbol(KaitaiStream _io, RubyMarshal.Record _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">RubySymbol</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public RubySymbol(KaitaiStream _io, RubyMarshal.Record _parent, RubyMarshal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.len = new PackedInt(this._io, this, _root);
-            this.name = new String(this._io.readBytes(len().value()), Charset.forName(&quot;UTF-8&quot;));
-        }
-        private PackedInt len;
-        private String name;
-        private RubyMarshal _root;
-        private RubyMarshal.Record _parent;
-        public PackedInt len() { return len; }
-        public String name() { return name; }
-        public RubyMarshal _root() { return _root; }
-        public RubyMarshal.Record _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">RubySymbol</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">len</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">().</span><span class="na">value</span><span class="p">()),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">PackedInt</span> <span class="n">len</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">PackedInt</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">len</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * Ruby uses sophisticated system to pack integers: first `code`
-     * byte either determines packing scheme or carries encoded
-     * immediate value (thus allowing smaller values from -123 to 122
-     * (inclusive) to take only one byte. There are 11 encoding schemes
-     * in total:
-     * 
-     * * 0 is encoded specially (as 0)
-     * * 1..122 are encoded as immediate value with a shift
-     * * 123..255 are encoded with code of 0x01 and 1 extra byte
-     * * 0x100..0xffff are encoded with code of 0x02 and 2 extra bytes
-     * * 0x10000..0xffffff are encoded with code of 0x03 and 3 extra
-     *   bytes
-     * * 0x1000000..0xffffffff are encoded with code of 0x04 and 4
-     *   extra bytes
-     * * -123..-1 are encoded as immediate value with another shift
-     * * -256..-124 are encoded with code of 0xff and 1 extra byte
-     * * -0x10000..-257 are encoded with code of 0xfe and 2 extra bytes
-     * * -0x1000000..0x10001 are encoded with code of 0xfd and 3 extra
-     *    bytes
-     * * -0x40000000..-0x1000001 are encoded with code of 0xfc and 4
-     *    extra bytes
-     * 
-     * Values beyond that are serialized as bignum (even if they
-     * technically might be not Bignum class in Ruby implementation,
-     * i.e. if they fit into 64 bits on a 64-bit platform).
-     * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Fixnum+and+long&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class PackedInt extends KaitaiStruct {
-        public static PackedInt fromFile(String fileName) throws IOException {
-            return new PackedInt(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * Ruby uses sophisticated system to pack integers: first `code`</span>
+<span class="cm">     * byte either determines packing scheme or carries encoded</span>
+<span class="cm">     * immediate value (thus allowing smaller values from -123 to 122</span>
+<span class="cm">     * (inclusive) to take only one byte. There are 11 encoding schemes</span>
+<span class="cm">     * in total:</span>
+<span class="cm">     * </span>
+<span class="cm">     * * 0 is encoded specially (as 0)</span>
+<span class="cm">     * * 1..122 are encoded as immediate value with a shift</span>
+<span class="cm">     * * 123..255 are encoded with code of 0x01 and 1 extra byte</span>
+<span class="cm">     * * 0x100..0xffff are encoded with code of 0x02 and 2 extra bytes</span>
+<span class="cm">     * * 0x10000..0xffffff are encoded with code of 0x03 and 3 extra</span>
+<span class="cm">     *   bytes</span>
+<span class="cm">     * * 0x1000000..0xffffffff are encoded with code of 0x04 and 4</span>
+<span class="cm">     *   extra bytes</span>
+<span class="cm">     * * -123..-1 are encoded as immediate value with another shift</span>
+<span class="cm">     * * -256..-124 are encoded with code of 0xff and 1 extra byte</span>
+<span class="cm">     * * -0x10000..-257 are encoded with code of 0xfe and 2 extra bytes</span>
+<span class="cm">     * * -0x1000000..0x10001 are encoded with code of 0xfd and 3 extra</span>
+<span class="cm">     *    bytes</span>
+<span class="cm">     * * -0x40000000..-0x1000001 are encoded with code of 0xfc and 4</span>
+<span class="cm">     *    extra bytes</span>
+<span class="cm">     * </span>
+<span class="cm">     * Values beyond that are serialized as bignum (even if they</span>
+<span class="cm">     * technically might be not Bignum class in Ruby implementation,</span>
+<span class="cm">     * i.e. if they fit into 64 bits on a 64-bit platform).</span>
+<span class="cm">     * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Fixnum+and+long&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PackedInt</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PackedInt</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public PackedInt(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">PackedInt</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PackedInt(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">PackedInt</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PackedInt(KaitaiStream _io, KaitaiStruct _parent, RubyMarshal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.code = this._io.readU1();
-            switch (code()) {
-            case 4: {
-                this.encoded = this._io.readU4le();
-                break;
-            }
-            case 1: {
-                this.encoded = (long) (this._io.readU1());
-                break;
-            }
-            case 252: {
-                this.encoded = this._io.readU4le();
-                break;
-            }
-            case 253: {
-                this.encoded = (long) (this._io.readU2le());
-                break;
-            }
-            case 3: {
-                this.encoded = (long) (this._io.readU2le());
-                break;
-            }
-            case 2: {
-                this.encoded = (long) (this._io.readU2le());
-                break;
-            }
-            case 255: {
-                this.encoded = (long) (this._io.readU1());
-                break;
-            }
-            case 254: {
-                this.encoded = (long) (this._io.readU2le());
-                break;
-            }
-            }
-            switch (code()) {
-            case 3: {
-                this.encoded2 = this._io.readU1();
-                break;
-            }
-            case 253: {
-                this.encoded2 = this._io.readU1();
-                break;
-            }
-            }
-        }
-        private Boolean isImmediate;
-        public Boolean isImmediate() {
-            if (this.isImmediate != null)
-                return this.isImmediate;
-            boolean _tmp = (boolean) ( ((code() &gt; 4) &amp;&amp; (code() &lt; 252)) );
-            this.isImmediate = _tmp;
-            return this.isImmediate;
-        }
-        private Integer value;
-        public Integer value() {
-            if (this.value != null)
-                return this.value;
-            int _tmp = (int) ((isImmediate() ? (code() &lt; 128 ? (code() - 5) : (4 - (~(code()) &amp; 127))) : (code() == 0 ? 0 : (code() == 255 ? (encoded() - 256) : (code() == 254 ? (encoded() - 65536) : (code() == 253 ? (((encoded2() &lt;&lt; 16) | encoded()) - 16777216) : (code() == 3 ? ((encoded2() &lt;&lt; 16) | encoded()) : encoded())))))));
-            this.value = _tmp;
-            return this.value;
-        }
-        private int code;
-        private Long encoded;
-        private Integer encoded2;
-        private RubyMarshal _root;
-        private KaitaiStruct _parent;
-        public int code() { return code; }
-        public Long encoded() { return encoded; }
+        <span class="kd">public</span> <span class="nf">PackedInt</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">code</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">code</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="mi">4</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">encoded</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="mi">1</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">encoded</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="mi">252</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">encoded</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="mi">253</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">encoded</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="mi">3</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">encoded</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="mi">2</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">encoded</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="mi">255</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">encoded</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="mi">254</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">encoded</span> <span class="o">=</span> <span class="p">(</span><span class="kt">long</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">code</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="mi">3</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">encoded2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="mi">253</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">encoded2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">isImmediate</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">isImmediate</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">isImmediate</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">isImmediate</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">code</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">code</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">252</span><span class="p">))</span> <span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">isImmediate</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">isImmediate</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">value</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">value</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">isImmediate</span><span class="p">()</span> <span class="o">?</span> <span class="p">(</span><span class="n">code</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">128</span> <span class="o">?</span> <span class="p">(</span><span class="n">code</span><span class="p">()</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="mi">4</span> <span class="o">-</span> <span class="p">(</span><span class="o">~</span><span class="p">(</span><span class="n">code</span><span class="p">())</span> <span class="o">&amp;</span> <span class="mi">127</span><span class="p">)))</span> <span class="p">:</span> <span class="p">(</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">0</span> <span class="p">:</span> <span class="p">(</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="mi">255</span> <span class="o">?</span> <span class="p">(</span><span class="n">encoded</span><span class="p">()</span> <span class="o">-</span> <span class="mi">256</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="mi">254</span> <span class="o">?</span> <span class="p">(</span><span class="n">encoded</span><span class="p">()</span> <span class="o">-</span> <span class="mi">65536</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="mi">253</span> <span class="o">?</span> <span class="p">(((</span><span class="n">encoded2</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="n">encoded</span><span class="p">())</span> <span class="o">-</span> <span class="mi">16777216</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">code</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">?</span> <span class="p">((</span><span class="n">encoded2</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">|</span> <span class="n">encoded</span><span class="p">())</span> <span class="p">:</span> <span class="n">encoded</span><span class="p">())))))));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">value</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">code</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Long</span> <span class="n">encoded</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">encoded2</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">code</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">code</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Long</span> <span class="nf">encoded</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">encoded</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * One extra byte for 3-byte integers (0x03 and 0xfd), as
-         * there is no standard `u3` type in KS.
-         */
-        public Integer encoded2() { return encoded2; }
-        public RubyMarshal _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-    public static class Pair extends KaitaiStruct {
-        public static Pair fromFile(String fileName) throws IOException {
-            return new Pair(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="cm">/**</span>
+<span class="cm">         * One extra byte for 3-byte integers (0x03 and 0xfd), as</span>
+<span class="cm">         * there is no standard `u3` type in KS.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">encoded2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">encoded2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Pair</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Pair</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Pair</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Pair(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Pair</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Pair(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Pair</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Pair(KaitaiStream _io, KaitaiStruct _parent, RubyMarshal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.key = new Record(this._io, this, _root);
-            this.value = new Record(this._io, this, _root);
-        }
-        private Record key;
-        private Record value;
-        private RubyMarshal _root;
-        private KaitaiStruct _parent;
-        public Record key() { return key; }
-        public Record value() { return value; }
-        public RubyMarshal _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">Pair</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">key</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Record</span> <span class="n">key</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Record</span> <span class="n">value</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Record</span> <span class="nf">key</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">key</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Record</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class InstanceVar extends KaitaiStruct {
-        public static InstanceVar fromFile(String fileName) throws IOException {
-            return new InstanceVar(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">InstanceVar</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">InstanceVar</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">InstanceVar</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public InstanceVar(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">InstanceVar</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public InstanceVar(KaitaiStream _io, RubyMarshal.Record _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">InstanceVar</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public InstanceVar(KaitaiStream _io, RubyMarshal.Record _parent, RubyMarshal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.obj = new Record(this._io, this, _root);
-            this.numVars = new PackedInt(this._io, this, _root);
-            vars = new ArrayList&lt;Pair&gt;((int) (numVars().value()));
-            for (int i = 0; i &lt; numVars().value(); i++) {
-                this.vars.add(new Pair(this._io, this, _root));
-            }
-        }
-        private Record obj;
-        private PackedInt numVars;
-        private ArrayList&lt;Pair&gt; vars;
-        private RubyMarshal _root;
-        private RubyMarshal.Record _parent;
-        public Record obj() { return obj; }
-        public PackedInt numVars() { return numVars; }
-        public ArrayList&lt;Pair&gt; vars() { return vars; }
-        public RubyMarshal _root() { return _root; }
-        public RubyMarshal.Record _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">InstanceVar</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">obj</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numVars</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="n">vars</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numVars</span><span class="p">().</span><span class="na">value</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numVars</span><span class="p">().</span><span class="na">value</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">vars</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Pair</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Record</span> <span class="n">obj</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PackedInt</span> <span class="n">numVars</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span> <span class="n">vars</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Record</span> <span class="nf">obj</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">obj</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">PackedInt</span> <span class="nf">numVars</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numVars</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span> <span class="nf">vars</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">vars</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * Each record starts with a single byte that determines its type
-     * (`code`) and contents. If necessary, additional info as parsed
-     * as `body`, to be determined by `code`.
-     */
-    public static class Record extends KaitaiStruct {
-        public static Record fromFile(String fileName) throws IOException {
-            return new Record(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * Each record starts with a single byte that determines its type</span>
+<span class="cm">     * (`code`) and contents. If necessary, additional info as parsed</span>
+<span class="cm">     * as `body`, to be determined by `code`.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Record</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Record</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Record(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Record</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Record(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Record</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Record(KaitaiStream _io, KaitaiStruct _parent, RubyMarshal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.code = RubyMarshal.Codes.byId(this._io.readU1());
-            switch (code()) {
-            case BIGNUM: {
-                this.body = new Bignum(this._io, this, _root);
-                break;
-            }
-            case RUBY_HASH: {
-                this.body = new RubyHash(this._io, this, _root);
-                break;
-            }
-            case RUBY_ARRAY: {
-                this.body = new RubyArray(this._io, this, _root);
-                break;
-            }
-            case RUBY_SYMBOL: {
-                this.body = new RubySymbol(this._io, this, _root);
-                break;
-            }
-            case INSTANCE_VAR: {
-                this.body = new InstanceVar(this._io, this, _root);
-                break;
-            }
-            case RUBY_STRING: {
-                this.body = new RubyString(this._io, this, _root);
-                break;
-            }
-            case PACKED_INT: {
-                this.body = new PackedInt(this._io, this, _root);
-                break;
-            }
-            case RUBY_STRUCT: {
-                this.body = new RubyStruct(this._io, this, _root);
-                break;
-            }
-            case RUBY_SYMBOL_LINK: {
-                this.body = new PackedInt(this._io, this, _root);
-                break;
-            }
-            }
-        }
-        private Codes code;
-        private KaitaiStruct body;
-        private RubyMarshal _root;
-        private KaitaiStruct _parent;
-        public Codes code() { return code; }
-        public KaitaiStruct body() { return body; }
-        public RubyMarshal _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">Record</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">code</span> <span class="o">=</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Codes</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">code</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">BIGNUM</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Bignum</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">RUBY_HASH</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RubyHash</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">RUBY_ARRAY</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RubyArray</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">RUBY_SYMBOL</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RubySymbol</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">INSTANCE_VAR</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InstanceVar</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">RUBY_STRING</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RubyString</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">PACKED_INT</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">RUBY_STRUCT</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RubyStruct</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">RUBY_SYMBOL_LINK</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Codes</span> <span class="n">code</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">body</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Codes</span> <span class="nf">code</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">code</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Hash+and+Hash+with+Default+Value&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class RubyHash extends KaitaiStruct {
-        public static RubyHash fromFile(String fileName) throws IOException {
-            return new RubyHash(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Hash+and+Hash+with+Default+Value&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">RubyHash</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">RubyHash</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">RubyHash</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public RubyHash(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">RubyHash</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public RubyHash(KaitaiStream _io, RubyMarshal.Record _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">RubyHash</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public RubyHash(KaitaiStream _io, RubyMarshal.Record _parent, RubyMarshal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numPairs = new PackedInt(this._io, this, _root);
-            pairs = new ArrayList&lt;Pair&gt;((int) (numPairs().value()));
-            for (int i = 0; i &lt; numPairs().value(); i++) {
-                this.pairs.add(new Pair(this._io, this, _root));
-            }
-        }
-        private PackedInt numPairs;
-        private ArrayList&lt;Pair&gt; pairs;
-        private RubyMarshal _root;
-        private RubyMarshal.Record _parent;
-        public PackedInt numPairs() { return numPairs; }
-        public ArrayList&lt;Pair&gt; pairs() { return pairs; }
-        public RubyMarshal _root() { return _root; }
-        public RubyMarshal.Record _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">RubyHash</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numPairs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="n">pairs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numPairs</span><span class="p">().</span><span class="na">value</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numPairs</span><span class="p">().</span><span class="na">value</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">pairs</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Pair</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">PackedInt</span> <span class="n">numPairs</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span> <span class="n">pairs</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">PackedInt</span> <span class="nf">numPairs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numPairs</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span> <span class="nf">pairs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pairs</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-String&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class RubyString extends KaitaiStruct {
-        public static RubyString fromFile(String fileName) throws IOException {
-            return new RubyString(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-String&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">RubyString</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">RubyString</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">RubyString</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public RubyString(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">RubyString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public RubyString(KaitaiStream _io, RubyMarshal.Record _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">RubyString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public RubyString(KaitaiStream _io, RubyMarshal.Record _parent, RubyMarshal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.len = new PackedInt(this._io, this, _root);
-            this.body = this._io.readBytes(len().value());
-        }
-        private PackedInt len;
-        private byte[] body;
-        private RubyMarshal _root;
-        private RubyMarshal.Record _parent;
-        public PackedInt len() { return len; }
-        public byte[] body() { return body; }
-        public RubyMarshal _root() { return _root; }
-        public RubyMarshal.Record _parent() { return _parent; }
-    }
-    private byte[] version;
-    private Record records;
-    private RubyMarshal _root;
-    private KaitaiStruct _parent;
-    public byte[] version() { return version; }
-    public Record records() { return records; }
-    public RubyMarshal _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-}
-</code></pre>
+        <span class="kd">public</span> <span class="nf">RubyString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">len</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">().</span><span class="na">value</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">PackedInt</span> <span class="n">len</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">body</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">PackedInt</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">len</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="na">Record</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">version</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">Record</span> <span class="n">records</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">RubyMarshal</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">version</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">Record</span> <span class="nf">records</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">records</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">RubyMarshal</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -897,8 +894,8 @@ public class RubyMarshal extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -269,479 +266,479 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef EXT2_H_
-#define EXT2_H_
-
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-#include &quot;kaitai/kaitaistruct.h&quot;
-
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
-
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
-
-class ext2_t : public kaitai::kstruct {
-
-public:
-    class super_block_struct_t;
-    class dir_entry_t;
-    class inode_t;
-    class block_ptr_t;
-    class dir_t;
-    class block_group_t;
-    class bgd_t;
-    class raw_block_t;
-
-    ext2_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, ext2_t* p__root = 0);
-
-private:
-    void _read();
-
-public:
-    ~ext2_t();
-
-    class super_block_struct_t : public kaitai::kstruct {
-
-    public:
-
-        enum state_enum_t {
-            STATE_ENUM_VALID_FS = 1,
-            STATE_ENUM_ERROR_FS = 2
-        };
-
-        enum errors_enum_t {
-            ERRORS_ENUM_ACT_CONTINUE = 1,
-            ERRORS_ENUM_ACT_RO = 2,
-            ERRORS_ENUM_ACT_PANIC = 3
-        };
-
-        super_block_struct_t(kaitai::kstream* p__io, ext2_t::block_group_t* p__parent = 0, ext2_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~super_block_struct_t();
-
-    private:
-        bool f_block_size;
-        int32_t m_block_size;
-
-    public:
-        int32_t block_size();
-
-    private:
-        bool f_block_group_count;
-        int32_t m_block_group_count;
-
-    public:
-        int32_t block_group_count();
-
-    private:
-        uint32_t m_inodes_count;
-        uint32_t m_blocks_count;
-        uint32_t m_r_blocks_count;
-        uint32_t m_free_blocks_count;
-        uint32_t m_free_inodes_count;
-        uint32_t m_first_data_block;
-        uint32_t m_log_block_size;
-        uint32_t m_log_frag_size;
-        uint32_t m_blocks_per_group;
-        uint32_t m_frags_per_group;
-        uint32_t m_inodes_per_group;
-        uint32_t m_mtime;
-        uint32_t m_wtime;
-        uint16_t m_mnt_count;
-        uint16_t m_max_mnt_count;
-        std::string m_magic;
-        state_enum_t m_state;
-        errors_enum_t m_errors;
-        uint16_t m_minor_rev_level;
-        uint32_t m_lastcheck;
-        uint32_t m_checkinterval;
-        uint32_t m_creator_os;
-        uint32_t m_rev_level;
-        uint16_t m_def_resuid;
-        uint16_t m_def_resgid;
-        uint32_t m_first_ino;
-        uint16_t m_inode_size;
-        uint16_t m_block_group_nr;
-        uint32_t m_feature_compat;
-        uint32_t m_feature_incompat;
-        uint32_t m_feature_ro_compat;
-        std::string m_uuid;
-        std::string m_volume_name;
-        std::string m_last_mounted;
-        uint32_t m_algo_bitmap;
-        uint8_t m_prealloc_blocks;
-        uint8_t m_prealloc_dir_blocks;
-        std::string m_padding1;
-        std::string m_journal_uuid;
-        uint32_t m_journal_inum;
-        uint32_t m_journal_dev;
-        uint32_t m_last_orphan;
-        std::vector&lt;uint32_t&gt;* m_hash_seed;
-        uint8_t m_def_hash_version;
-        ext2_t* m__root;
-        ext2_t::block_group_t* m__parent;
-
-    public:
-        uint32_t inodes_count() const { return m_inodes_count; }
-        uint32_t blocks_count() const { return m_blocks_count; }
-        uint32_t r_blocks_count() const { return m_r_blocks_count; }
-        uint32_t free_blocks_count() const { return m_free_blocks_count; }
-        uint32_t free_inodes_count() const { return m_free_inodes_count; }
-        uint32_t first_data_block() const { return m_first_data_block; }
-        uint32_t log_block_size() const { return m_log_block_size; }
-        uint32_t log_frag_size() const { return m_log_frag_size; }
-        uint32_t blocks_per_group() const { return m_blocks_per_group; }
-        uint32_t frags_per_group() const { return m_frags_per_group; }
-        uint32_t inodes_per_group() const { return m_inodes_per_group; }
-        uint32_t mtime() const { return m_mtime; }
-        uint32_t wtime() const { return m_wtime; }
-        uint16_t mnt_count() const { return m_mnt_count; }
-        uint16_t max_mnt_count() const { return m_max_mnt_count; }
-        std::string magic() const { return m_magic; }
-        state_enum_t state() const { return m_state; }
-        errors_enum_t errors() const { return m_errors; }
-        uint16_t minor_rev_level() const { return m_minor_rev_level; }
-        uint32_t lastcheck() const { return m_lastcheck; }
-        uint32_t checkinterval() const { return m_checkinterval; }
-        uint32_t creator_os() const { return m_creator_os; }
-        uint32_t rev_level() const { return m_rev_level; }
-        uint16_t def_resuid() const { return m_def_resuid; }
-        uint16_t def_resgid() const { return m_def_resgid; }
-        uint32_t first_ino() const { return m_first_ino; }
-        uint16_t inode_size() const { return m_inode_size; }
-        uint16_t block_group_nr() const { return m_block_group_nr; }
-        uint32_t feature_compat() const { return m_feature_compat; }
-        uint32_t feature_incompat() const { return m_feature_incompat; }
-        uint32_t feature_ro_compat() const { return m_feature_ro_compat; }
-        std::string uuid() const { return m_uuid; }
-        std::string volume_name() const { return m_volume_name; }
-        std::string last_mounted() const { return m_last_mounted; }
-        uint32_t algo_bitmap() const { return m_algo_bitmap; }
-        uint8_t prealloc_blocks() const { return m_prealloc_blocks; }
-        uint8_t prealloc_dir_blocks() const { return m_prealloc_dir_blocks; }
-        std::string padding1() const { return m_padding1; }
-        std::string journal_uuid() const { return m_journal_uuid; }
-        uint32_t journal_inum() const { return m_journal_inum; }
-        uint32_t journal_dev() const { return m_journal_dev; }
-        uint32_t last_orphan() const { return m_last_orphan; }
-        std::vector&lt;uint32_t&gt;* hash_seed() const { return m_hash_seed; }
-        uint8_t def_hash_version() const { return m_def_hash_version; }
-        ext2_t* _root() const { return m__root; }
-        ext2_t::block_group_t* _parent() const { return m__parent; }
-    };
-
-    class dir_entry_t : public kaitai::kstruct {
-
-    public:
-
-        enum file_type_enum_t {
-            FILE_TYPE_ENUM_UNKNOWN = 0,
-            FILE_TYPE_ENUM_REG_FILE = 1,
-            FILE_TYPE_ENUM_DIR = 2,
-            FILE_TYPE_ENUM_CHRDEV = 3,
-            FILE_TYPE_ENUM_BLKDEV = 4,
-            FILE_TYPE_ENUM_FIFO = 5,
-            FILE_TYPE_ENUM_SOCK = 6,
-            FILE_TYPE_ENUM_SYMLINK = 7
-        };
-
-        dir_entry_t(kaitai::kstream* p__io, ext2_t::dir_t* p__parent = 0, ext2_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~dir_entry_t();
-
-    private:
-        bool f_inode;
-        inode_t* m_inode;
-
-    public:
-        inode_t* inode();
-
-    private:
-        uint32_t m_inode_ptr;
-        uint16_t m_rec_len;
-        uint8_t m_name_len;
-        file_type_enum_t m_file_type;
-        std::string m_name;
-        std::string m_padding;
-        ext2_t* m__root;
-        ext2_t::dir_t* m__parent;
-
-    public:
-        uint32_t inode_ptr() const { return m_inode_ptr; }
-        uint16_t rec_len() const { return m_rec_len; }
-        uint8_t name_len() const { return m_name_len; }
-        file_type_enum_t file_type() const { return m_file_type; }
-        std::string name() const { return m_name; }
-        std::string padding() const { return m_padding; }
-        ext2_t* _root() const { return m__root; }
-        ext2_t::dir_t* _parent() const { return m__parent; }
-    };
-
-    class inode_t : public kaitai::kstruct {
-
-    public:
-
-        inode_t(kaitai::kstream* p__io, ext2_t::bgd_t* p__parent = 0, ext2_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~inode_t();
-
-    private:
-        bool f_as_dir;
-        dir_t* m_as_dir;
-
-    public:
-        dir_t* as_dir();
-
-    private:
-        uint16_t m_mode;
-        uint16_t m_uid;
-        uint32_t m_size;
-        uint32_t m_atime;
-        uint32_t m_ctime;
-        uint32_t m_mtime;
-        uint32_t m_dtime;
-        uint16_t m_gid;
-        uint16_t m_links_count;
-        uint32_t m_blocks;
-        uint32_t m_flags;
-        uint32_t m_osd1;
-        std::vector&lt;block_ptr_t*&gt;* m_block;
-        uint32_t m_generation;
-        uint32_t m_file_acl;
-        uint32_t m_dir_acl;
-        uint32_t m_faddr;
-        std::string m_osd2;
-        ext2_t* m__root;
-        ext2_t::bgd_t* m__parent;
-
-    public:
-        uint16_t mode() const { return m_mode; }
-        uint16_t uid() const { return m_uid; }
-        uint32_t size() const { return m_size; }
-        uint32_t atime() const { return m_atime; }
-        uint32_t ctime() const { return m_ctime; }
-        uint32_t mtime() const { return m_mtime; }
-        uint32_t dtime() const { return m_dtime; }
-        uint16_t gid() const { return m_gid; }
-        uint16_t links_count() const { return m_links_count; }
-        uint32_t blocks() const { return m_blocks; }
-        uint32_t flags() const { return m_flags; }
-        uint32_t osd1() const { return m_osd1; }
-        std::vector&lt;block_ptr_t*&gt;* block() const { return m_block; }
-        uint32_t generation() const { return m_generation; }
-        uint32_t file_acl() const { return m_file_acl; }
-        uint32_t dir_acl() const { return m_dir_acl; }
-        uint32_t faddr() const { return m_faddr; }
-        std::string osd2() const { return m_osd2; }
-        ext2_t* _root() const { return m__root; }
-        ext2_t::bgd_t* _parent() const { return m__parent; }
-    };
-
-    class block_ptr_t : public kaitai::kstruct {
-
-    public:
-
-        block_ptr_t(kaitai::kstream* p__io, ext2_t::inode_t* p__parent = 0, ext2_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~block_ptr_t();
-
-    private:
-        bool f_body;
-        raw_block_t* m_body;
-
-    public:
-        raw_block_t* body();
-
-    private:
-        uint32_t m_ptr;
-        ext2_t* m__root;
-        ext2_t::inode_t* m__parent;
-        std::string m__raw_body;
-        kaitai::kstream* m__io__raw_body;
-
-    public:
-        uint32_t ptr() const { return m_ptr; }
-        ext2_t* _root() const { return m__root; }
-        ext2_t::inode_t* _parent() const { return m__parent; }
-        std::string _raw_body() const { return m__raw_body; }
-        kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
-    };
-
-    class dir_t : public kaitai::kstruct {
-
-    public:
-
-        dir_t(kaitai::kstream* p__io, ext2_t::inode_t* p__parent = 0, ext2_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~dir_t();
-
-    private:
-        std::vector&lt;dir_entry_t*&gt;* m_entries;
-        ext2_t* m__root;
-        ext2_t::inode_t* m__parent;
-
-    public:
-        std::vector&lt;dir_entry_t*&gt;* entries() const { return m_entries; }
-        ext2_t* _root() const { return m__root; }
-        ext2_t::inode_t* _parent() const { return m__parent; }
-    };
-
-    class block_group_t : public kaitai::kstruct {
-
-    public:
-
-        block_group_t(kaitai::kstream* p__io, ext2_t* p__parent = 0, ext2_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~block_group_t();
-
-    private:
-        super_block_struct_t* m_super_block;
-        std::vector&lt;bgd_t*&gt;* m_block_groups;
-        ext2_t* m__root;
-        ext2_t* m__parent;
-        std::string m__raw_super_block;
-        kaitai::kstream* m__io__raw_super_block;
-
-    public:
-        super_block_struct_t* super_block() const { return m_super_block; }
-        std::vector&lt;bgd_t*&gt;* block_groups() const { return m_block_groups; }
-        ext2_t* _root() const { return m__root; }
-        ext2_t* _parent() const { return m__parent; }
-        std::string _raw_super_block() const { return m__raw_super_block; }
-        kaitai::kstream* _io__raw_super_block() const { return m__io__raw_super_block; }
-    };
-
-    class bgd_t : public kaitai::kstruct {
-
-    public:
-
-        bgd_t(kaitai::kstream* p__io, ext2_t::block_group_t* p__parent = 0, ext2_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~bgd_t();
-
-    private:
-        bool f_block_bitmap;
-        std::string m_block_bitmap;
-
-    public:
-        std::string block_bitmap();
-
-    private:
-        bool f_inode_bitmap;
-        std::string m_inode_bitmap;
-
-    public:
-        std::string inode_bitmap();
-
-    private:
-        bool f_inodes;
-        std::vector&lt;inode_t*&gt;* m_inodes;
-
-    public:
-        std::vector&lt;inode_t*&gt;* inodes();
-
-    private:
-        uint32_t m_block_bitmap_block;
-        uint32_t m_inode_bitmap_block;
-        uint32_t m_inode_table_block;
-        uint16_t m_free_blocks_count;
-        uint16_t m_free_inodes_count;
-        uint16_t m_used_dirs_count;
-        std::string m_pad_reserved;
-        ext2_t* m__root;
-        ext2_t::block_group_t* m__parent;
-
-    public:
-        uint32_t block_bitmap_block() const { return m_block_bitmap_block; }
-        uint32_t inode_bitmap_block() const { return m_inode_bitmap_block; }
-        uint32_t inode_table_block() const { return m_inode_table_block; }
-        uint16_t free_blocks_count() const { return m_free_blocks_count; }
-        uint16_t free_inodes_count() const { return m_free_inodes_count; }
-        uint16_t used_dirs_count() const { return m_used_dirs_count; }
-        std::string pad_reserved() const { return m_pad_reserved; }
-        ext2_t* _root() const { return m__root; }
-        ext2_t::block_group_t* _parent() const { return m__parent; }
-    };
-
-    class raw_block_t : public kaitai::kstruct {
-
-    public:
-
-        raw_block_t(kaitai::kstream* p__io, ext2_t::block_ptr_t* p__parent = 0, ext2_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~raw_block_t();
-
-    private:
-        std::string m_body;
-        ext2_t* m__root;
-        ext2_t::block_ptr_t* m__parent;
-
-    public:
-        std::string body() const { return m_body; }
-        ext2_t* _root() const { return m__root; }
-        ext2_t::block_ptr_t* _parent() const { return m__parent; }
-    };
-
-private:
-    bool f_bg1;
-    block_group_t* m_bg1;
-
-public:
-    block_group_t* bg1();
-
-private:
-    bool f_root_dir;
-    dir_t* m_root_dir;
-
-public:
-    dir_t* root_dir();
-
-private:
-    ext2_t* m__root;
-    kaitai::kstruct* m__parent;
-
-public:
-    ext2_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-};
-
-#endif  // EXT2_H_
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef EXT2_H_</span>
+<span class="cp">#define EXT2_H_</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
+
+<span class="k">class</span> <span class="nc">ext2_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">super_block_struct_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">dir_entry_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">inode_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">block_ptr_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">dir_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">block_group_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">bgd_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">raw_block_t</span><span class="p">;</span>
+
+    <span class="n">ext2_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">ext2_t</span><span class="p">();</span>
+
+    <span class="k">class</span> <span class="nc">super_block_struct_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="k">enum</span> <span class="n">state_enum_t</span> <span class="p">{</span>
+            <span class="n">STATE_ENUM_VALID_FS</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">STATE_ENUM_ERROR_FS</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="p">};</span>
+
+        <span class="k">enum</span> <span class="n">errors_enum_t</span> <span class="p">{</span>
+            <span class="n">ERRORS_ENUM_ACT_CONTINUE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">ERRORS_ENUM_ACT_RO</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">ERRORS_ENUM_ACT_PANIC</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="p">};</span>
+
+        <span class="n">super_block_struct_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">block_group_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">super_block_struct_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_block_size</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_block_size</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">block_size</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_block_group_count</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_block_group_count</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">block_group_count</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">m_inodes_count</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_blocks_count</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_r_blocks_count</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_free_blocks_count</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_free_inodes_count</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_first_data_block</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_log_block_size</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_log_frag_size</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_blocks_per_group</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_frags_per_group</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_inodes_per_group</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_mtime</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_wtime</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_mnt_count</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_max_mnt_count</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_magic</span><span class="p">;</span>
+        <span class="n">state_enum_t</span> <span class="n">m_state</span><span class="p">;</span>
+        <span class="n">errors_enum_t</span> <span class="n">m_errors</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_minor_rev_level</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_lastcheck</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_checkinterval</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_creator_os</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_rev_level</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_def_resuid</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_def_resgid</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_first_ino</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_inode_size</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_block_group_nr</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_feature_compat</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_feature_incompat</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_feature_ro_compat</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_uuid</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_volume_name</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_last_mounted</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_algo_bitmap</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_prealloc_blocks</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_prealloc_dir_blocks</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_padding1</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_journal_uuid</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_journal_inum</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_journal_dev</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_last_orphan</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;*</span> <span class="n">m_hash_seed</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_def_hash_version</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">::</span><span class="n">block_group_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">inodes_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_inodes_count</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">blocks_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_blocks_count</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">r_blocks_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_r_blocks_count</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">free_blocks_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_free_blocks_count</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">free_inodes_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_free_inodes_count</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">first_data_block</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_first_data_block</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">log_block_size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_log_block_size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">log_frag_size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_log_frag_size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">blocks_per_group</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_blocks_per_group</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">frags_per_group</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_frags_per_group</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">inodes_per_group</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_inodes_per_group</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">mtime</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_mtime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">wtime</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_wtime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">mnt_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_mnt_count</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">max_mnt_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_max_mnt_count</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">magic</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_magic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">state_enum_t</span> <span class="n">state</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_state</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">errors_enum_t</span> <span class="n">errors</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_errors</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">minor_rev_level</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_minor_rev_level</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">lastcheck</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_lastcheck</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">checkinterval</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_checkinterval</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">creator_os</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_creator_os</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">rev_level</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_rev_level</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">def_resuid</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_def_resuid</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">def_resgid</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_def_resgid</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">first_ino</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_first_ino</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">inode_size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_inode_size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">block_group_nr</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_block_group_nr</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">feature_compat</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_feature_compat</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">feature_incompat</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_feature_incompat</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">feature_ro_compat</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_feature_ro_compat</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">uuid</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_uuid</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">volume_name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_volume_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">last_mounted</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_last_mounted</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">algo_bitmap</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_algo_bitmap</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">prealloc_blocks</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_prealloc_blocks</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">prealloc_dir_blocks</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_prealloc_dir_blocks</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">padding1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_padding1</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">journal_uuid</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_journal_uuid</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">journal_inum</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_journal_inum</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">journal_dev</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_journal_dev</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">last_orphan</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_last_orphan</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;*</span> <span class="n">hash_seed</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_hash_seed</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">def_hash_version</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_def_hash_version</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">::</span><span class="n">block_group_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">dir_entry_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="k">enum</span> <span class="n">file_type_enum_t</span> <span class="p">{</span>
+            <span class="n">FILE_TYPE_ENUM_UNKNOWN</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">FILE_TYPE_ENUM_REG_FILE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">FILE_TYPE_ENUM_DIR</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">FILE_TYPE_ENUM_CHRDEV</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="n">FILE_TYPE_ENUM_BLKDEV</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="n">FILE_TYPE_ENUM_FIFO</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="n">FILE_TYPE_ENUM_SOCK</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+            <span class="n">FILE_TYPE_ENUM_SYMLINK</span> <span class="o">=</span> <span class="mi">7</span>
+        <span class="p">};</span>
+
+        <span class="n">dir_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">dir_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">dir_entry_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_inode</span><span class="p">;</span>
+        <span class="n">inode_t</span><span class="o">*</span> <span class="n">m_inode</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">inode_t</span><span class="o">*</span> <span class="n">inode</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">m_inode_ptr</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_rec_len</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_name_len</span><span class="p">;</span>
+        <span class="n">file_type_enum_t</span> <span class="n">m_file_type</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_name</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_padding</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">::</span><span class="n">dir_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">inode_ptr</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_inode_ptr</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">rec_len</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_rec_len</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">name_len</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_name_len</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">file_type_enum_t</span> <span class="n">file_type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_file_type</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">padding</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_padding</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">::</span><span class="n">dir_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">inode_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">inode_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">bgd_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">inode_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_as_dir</span><span class="p">;</span>
+        <span class="n">dir_t</span><span class="o">*</span> <span class="n">m_as_dir</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">dir_t</span><span class="o">*</span> <span class="n">as_dir</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">m_mode</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_uid</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_size</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_atime</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_ctime</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_mtime</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_dtime</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_gid</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_links_count</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_blocks</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_flags</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_osd1</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">block_ptr_t</span><span class="o">*&gt;*</span> <span class="n">m_block</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_generation</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_file_acl</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_dir_acl</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_faddr</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_osd2</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">::</span><span class="n">bgd_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">mode</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_mode</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">uid</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_uid</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">atime</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_atime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">ctime</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ctime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">mtime</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_mtime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">dtime</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_dtime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">gid</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_gid</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">links_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_links_count</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">blocks</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_blocks</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">osd1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_osd1</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">block_ptr_t</span><span class="o">*&gt;*</span> <span class="n">block</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_block</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">generation</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_generation</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">file_acl</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_file_acl</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">dir_acl</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_dir_acl</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">faddr</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_faddr</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">osd2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_osd2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">::</span><span class="n">bgd_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">block_ptr_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">block_ptr_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">inode_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">block_ptr_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_body</span><span class="p">;</span>
+        <span class="n">raw_block_t</span><span class="o">*</span> <span class="n">m_body</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">raw_block_t</span><span class="o">*</span> <span class="n">body</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">m_ptr</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">::</span><span class="n">inode_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_body</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_body</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">ptr</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ptr</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">::</span><span class="n">inode_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">dir_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">dir_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">inode_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">dir_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">dir_entry_t</span><span class="o">*&gt;*</span> <span class="n">m_entries</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">::</span><span class="n">inode_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">dir_entry_t</span><span class="o">*&gt;*</span> <span class="n">entries</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_entries</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">::</span><span class="n">inode_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">block_group_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">block_group_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">block_group_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">super_block_struct_t</span><span class="o">*</span> <span class="n">m_super_block</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">bgd_t</span><span class="o">*&gt;*</span> <span class="n">m_block_groups</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_super_block</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_super_block</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">super_block_struct_t</span><span class="o">*</span> <span class="n">super_block</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_super_block</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">bgd_t</span><span class="o">*&gt;*</span> <span class="n">block_groups</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_block_groups</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_super_block</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_super_block</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_super_block</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_super_block</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">bgd_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">bgd_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">block_group_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">bgd_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_block_bitmap</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_block_bitmap</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">block_bitmap</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_inode_bitmap</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_inode_bitmap</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">inode_bitmap</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_inodes</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">inode_t</span><span class="o">*&gt;*</span> <span class="n">m_inodes</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">inode_t</span><span class="o">*&gt;*</span> <span class="n">inodes</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">m_block_bitmap_block</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_inode_bitmap_block</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_inode_table_block</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_free_blocks_count</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_free_inodes_count</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_used_dirs_count</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_pad_reserved</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">::</span><span class="n">block_group_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">block_bitmap_block</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_block_bitmap_block</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">inode_bitmap_block</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_inode_bitmap_block</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">inode_table_block</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_inode_table_block</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">free_blocks_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_free_blocks_count</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">free_inodes_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_free_inodes_count</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">used_dirs_count</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_used_dirs_count</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">pad_reserved</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_pad_reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">::</span><span class="n">block_group_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">raw_block_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">raw_block_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">block_ptr_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">raw_block_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_body</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">ext2_t</span><span class="o">::</span><span class="n">block_ptr_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">ext2_t</span><span class="o">::</span><span class="n">block_ptr_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_bg1</span><span class="p">;</span>
+    <span class="n">block_group_t</span><span class="o">*</span> <span class="n">m_bg1</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">block_group_t</span><span class="o">*</span> <span class="n">bg1</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_root_dir</span><span class="p">;</span>
+    <span class="n">dir_t</span><span class="o">*</span> <span class="n">m_root_dir</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">dir_t</span><span class="o">*</span> <span class="n">root_dir</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">ext2_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">ext2_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cp">#endif  </span><span class="c1">// EXT2_H_</span>
+</pre></div>
 
         </div>
         
@@ -757,375 +754,375 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;ext2.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;ext2.h&quot;</span><span class="cp"></span>
 
 
 
-ext2_t::ext2_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    f_bg1 = false;
-    f_root_dir = false;
-    _read();
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">ext2_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">f_bg1</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_root_dir</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void ext2_t::_read() {
-}
+<span class="kt">void</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-ext2_t::~ext2_t() {
-    if (f_bg1) {
-        delete m_bg1;
-    }
-}
+<span class="n">ext2_t</span><span class="o">::~</span><span class="n">ext2_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_bg1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_bg1</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-ext2_t::super_block_struct_t::super_block_struct_t(kaitai::kstream* p__io, ext2_t::block_group_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_block_size = false;
-    f_block_group_count = false;
-    _read();
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">super_block_struct_t</span><span class="o">::</span><span class="n">super_block_struct_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">block_group_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_block_size</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_block_group_count</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void ext2_t::super_block_struct_t::_read() {
-    m_inodes_count = m__io-&gt;read_u4le();
-    m_blocks_count = m__io-&gt;read_u4le();
-    m_r_blocks_count = m__io-&gt;read_u4le();
-    m_free_blocks_count = m__io-&gt;read_u4le();
-    m_free_inodes_count = m__io-&gt;read_u4le();
-    m_first_data_block = m__io-&gt;read_u4le();
-    m_log_block_size = m__io-&gt;read_u4le();
-    m_log_frag_size = m__io-&gt;read_u4le();
-    m_blocks_per_group = m__io-&gt;read_u4le();
-    m_frags_per_group = m__io-&gt;read_u4le();
-    m_inodes_per_group = m__io-&gt;read_u4le();
-    m_mtime = m__io-&gt;read_u4le();
-    m_wtime = m__io-&gt;read_u4le();
-    m_mnt_count = m__io-&gt;read_u2le();
-    m_max_mnt_count = m__io-&gt;read_u2le();
-    m_magic = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x53\xEF&quot;, 2));
-    m_state = static_cast&lt;ext2_t::super_block_struct_t::state_enum_t&gt;(m__io-&gt;read_u2le());
-    m_errors = static_cast&lt;ext2_t::super_block_struct_t::errors_enum_t&gt;(m__io-&gt;read_u2le());
-    m_minor_rev_level = m__io-&gt;read_u2le();
-    m_lastcheck = m__io-&gt;read_u4le();
-    m_checkinterval = m__io-&gt;read_u4le();
-    m_creator_os = m__io-&gt;read_u4le();
-    m_rev_level = m__io-&gt;read_u4le();
-    m_def_resuid = m__io-&gt;read_u2le();
-    m_def_resgid = m__io-&gt;read_u2le();
-    m_first_ino = m__io-&gt;read_u4le();
-    m_inode_size = m__io-&gt;read_u2le();
-    m_block_group_nr = m__io-&gt;read_u2le();
-    m_feature_compat = m__io-&gt;read_u4le();
-    m_feature_incompat = m__io-&gt;read_u4le();
-    m_feature_ro_compat = m__io-&gt;read_u4le();
-    m_uuid = m__io-&gt;read_bytes(16);
-    m_volume_name = m__io-&gt;read_bytes(16);
-    m_last_mounted = m__io-&gt;read_bytes(64);
-    m_algo_bitmap = m__io-&gt;read_u4le();
-    m_prealloc_blocks = m__io-&gt;read_u1();
-    m_prealloc_dir_blocks = m__io-&gt;read_u1();
-    m_padding1 = m__io-&gt;read_bytes(2);
-    m_journal_uuid = m__io-&gt;read_bytes(16);
-    m_journal_inum = m__io-&gt;read_u4le();
-    m_journal_dev = m__io-&gt;read_u4le();
-    m_last_orphan = m__io-&gt;read_u4le();
-    int l_hash_seed = 4;
-    m_hash_seed = new std::vector&lt;uint32_t&gt;();
-    m_hash_seed-&gt;reserve(l_hash_seed);
-    for (int i = 0; i &lt; l_hash_seed; i++) {
-        m_hash_seed-&gt;push_back(m__io-&gt;read_u4le());
-    }
-    m_def_hash_version = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">super_block_struct_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_inodes_count</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_blocks_count</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_r_blocks_count</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_free_blocks_count</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_free_inodes_count</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_first_data_block</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_log_block_size</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_log_frag_size</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_blocks_per_group</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_frags_per_group</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_inodes_per_group</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_mtime</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_wtime</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_mnt_count</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_max_mnt_count</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_magic</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x53\xEF</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">));</span>
+    <span class="n">m_state</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ext2_t</span><span class="o">::</span><span class="n">super_block_struct_t</span><span class="o">::</span><span class="n">state_enum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">());</span>
+    <span class="n">m_errors</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ext2_t</span><span class="o">::</span><span class="n">super_block_struct_t</span><span class="o">::</span><span class="n">errors_enum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">());</span>
+    <span class="n">m_minor_rev_level</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_lastcheck</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_checkinterval</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_creator_os</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_rev_level</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_def_resuid</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_def_resgid</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_first_ino</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_inode_size</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_block_group_nr</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_feature_compat</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_feature_incompat</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_feature_ro_compat</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_uuid</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+    <span class="n">m_volume_name</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+    <span class="n">m_last_mounted</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">64</span><span class="p">);</span>
+    <span class="n">m_algo_bitmap</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_prealloc_blocks</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_prealloc_dir_blocks</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_padding1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+    <span class="n">m_journal_uuid</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+    <span class="n">m_journal_inum</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_journal_dev</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_last_orphan</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="kt">int</span> <span class="n">l_hash_seed</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="n">m_hash_seed</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="n">m_hash_seed</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_hash_seed</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_hash_seed</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_hash_seed</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="n">m_def_hash_version</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-ext2_t::super_block_struct_t::~super_block_struct_t() {
-    delete m_hash_seed;
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">super_block_struct_t</span><span class="o">::~</span><span class="n">super_block_struct_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_hash_seed</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t ext2_t::super_block_struct_t::block_size() {
-    if (f_block_size)
-        return m_block_size;
-    m_block_size = (1024 &lt;&lt; log_block_size());
-    f_block_size = true;
-    return m_block_size;
-}
+<span class="kt">int32_t</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">super_block_struct_t</span><span class="o">::</span><span class="n">block_size</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_block_size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_block_size</span><span class="p">;</span>
+    <span class="n">m_block_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">&lt;&lt;</span> <span class="n">log_block_size</span><span class="p">());</span>
+    <span class="n">f_block_size</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_block_size</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t ext2_t::super_block_struct_t::block_group_count() {
-    if (f_block_group_count)
-        return m_block_group_count;
-    m_block_group_count = (blocks_count() / blocks_per_group());
-    f_block_group_count = true;
-    return m_block_group_count;
-}
+<span class="kt">int32_t</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">super_block_struct_t</span><span class="o">::</span><span class="n">block_group_count</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_block_group_count</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_block_group_count</span><span class="p">;</span>
+    <span class="n">m_block_group_count</span> <span class="o">=</span> <span class="p">(</span><span class="n">blocks_count</span><span class="p">()</span> <span class="o">/</span> <span class="n">blocks_per_group</span><span class="p">());</span>
+    <span class="n">f_block_group_count</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_block_group_count</span><span class="p">;</span>
+<span class="p">}</span>
 
-ext2_t::dir_entry_t::dir_entry_t(kaitai::kstream* p__io, ext2_t::dir_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_inode = false;
-    _read();
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">dir_entry_t</span><span class="o">::</span><span class="n">dir_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">dir_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_inode</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void ext2_t::dir_entry_t::_read() {
-    m_inode_ptr = m__io-&gt;read_u4le();
-    m_rec_len = m__io-&gt;read_u2le();
-    m_name_len = m__io-&gt;read_u1();
-    m_file_type = static_cast&lt;ext2_t::dir_entry_t::file_type_enum_t&gt;(m__io-&gt;read_u1());
-    m_name = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(name_len()), std::string(&quot;UTF-8&quot;));
-    m_padding = m__io-&gt;read_bytes(((rec_len() - name_len()) - 8));
-}
+<span class="kt">void</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">dir_entry_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_inode_ptr</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_rec_len</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_name_len</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_file_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">ext2_t</span><span class="o">::</span><span class="n">dir_entry_t</span><span class="o">::</span><span class="n">file_type_enum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">m_name</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">name_len</span><span class="p">()),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+    <span class="n">m_padding</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">rec_len</span><span class="p">()</span> <span class="o">-</span> <span class="n">name_len</span><span class="p">())</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
+<span class="p">}</span>
 
-ext2_t::dir_entry_t::~dir_entry_t() {
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">dir_entry_t</span><span class="o">::~</span><span class="n">dir_entry_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-ext2_t::inode_t* ext2_t::dir_entry_t::inode() {
-    if (f_inode)
-        return m_inode;
-    m_inode = _root()-&gt;bg1()-&gt;block_groups()-&gt;at(((inode_ptr() - 1) / _root()-&gt;bg1()-&gt;super_block()-&gt;inodes_per_group()))-&gt;inodes()-&gt;at(kaitai::kstream::mod((inode_ptr() - 1), _root()-&gt;bg1()-&gt;super_block()-&gt;inodes_per_group()));
-    f_inode = true;
-    return m_inode;
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">inode_t</span><span class="o">*</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">dir_entry_t</span><span class="o">::</span><span class="n">inode</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_inode</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_inode</span><span class="p">;</span>
+    <span class="n">m_inode</span> <span class="o">=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bg1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">block_groups</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(((</span><span class="n">inode_ptr</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bg1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">super_block</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">inodes_per_group</span><span class="p">()))</span><span class="o">-&gt;</span><span class="n">inodes</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">mod</span><span class="p">((</span><span class="n">inode_ptr</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bg1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">super_block</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">inodes_per_group</span><span class="p">()));</span>
+    <span class="n">f_inode</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_inode</span><span class="p">;</span>
+<span class="p">}</span>
 
-ext2_t::inode_t::inode_t(kaitai::kstream* p__io, ext2_t::bgd_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_as_dir = false;
-    _read();
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">inode_t</span><span class="o">::</span><span class="n">inode_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">bgd_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_as_dir</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void ext2_t::inode_t::_read() {
-    m_mode = m__io-&gt;read_u2le();
-    m_uid = m__io-&gt;read_u2le();
-    m_size = m__io-&gt;read_u4le();
-    m_atime = m__io-&gt;read_u4le();
-    m_ctime = m__io-&gt;read_u4le();
-    m_mtime = m__io-&gt;read_u4le();
-    m_dtime = m__io-&gt;read_u4le();
-    m_gid = m__io-&gt;read_u2le();
-    m_links_count = m__io-&gt;read_u2le();
-    m_blocks = m__io-&gt;read_u4le();
-    m_flags = m__io-&gt;read_u4le();
-    m_osd1 = m__io-&gt;read_u4le();
-    int l_block = 15;
-    m_block = new std::vector&lt;block_ptr_t*&gt;();
-    m_block-&gt;reserve(l_block);
-    for (int i = 0; i &lt; l_block; i++) {
-        m_block-&gt;push_back(new block_ptr_t(m__io, this, m__root));
-    }
-    m_generation = m__io-&gt;read_u4le();
-    m_file_acl = m__io-&gt;read_u4le();
-    m_dir_acl = m__io-&gt;read_u4le();
-    m_faddr = m__io-&gt;read_u4le();
-    m_osd2 = m__io-&gt;read_bytes(12);
-}
+<span class="kt">void</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">inode_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_mode</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_uid</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_size</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_atime</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_ctime</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_mtime</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_dtime</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_gid</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_links_count</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_blocks</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_osd1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="kt">int</span> <span class="n">l_block</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
+    <span class="n">m_block</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">block_ptr_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="n">m_block</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_block</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_block</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_block</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">block_ptr_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_generation</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_file_acl</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_dir_acl</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_faddr</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_osd2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+<span class="p">}</span>
 
-ext2_t::inode_t::~inode_t() {
-    for (std::vector&lt;block_ptr_t*&gt;::iterator it = m_block-&gt;begin(); it != m_block-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_block;
-    if (f_as_dir) {
-        delete m_as_dir;
-    }
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">inode_t</span><span class="o">::~</span><span class="n">inode_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">block_ptr_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_block</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_block</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_block</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_as_dir</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_as_dir</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-ext2_t::dir_t* ext2_t::inode_t::as_dir() {
-    if (f_as_dir)
-        return m_as_dir;
-    kaitai::kstream *io = block()-&gt;at(0)-&gt;body()-&gt;_io();
-    std::streampos _pos = io-&gt;pos();
-    io-&gt;seek(0);
-    m_as_dir = new dir_t(io, this, m__root);
-    io-&gt;seek(_pos);
-    f_as_dir = true;
-    return m_as_dir;
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">dir_t</span><span class="o">*</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">inode_t</span><span class="o">::</span><span class="n">as_dir</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_as_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_as_dir</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="o">*</span><span class="n">io</span> <span class="o">=</span> <span class="n">block</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">body</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">m_as_dir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">dir_t</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_as_dir</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_as_dir</span><span class="p">;</span>
+<span class="p">}</span>
 
-ext2_t::block_ptr_t::block_ptr_t(kaitai::kstream* p__io, ext2_t::inode_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_body = false;
-    _read();
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">block_ptr_t</span><span class="o">::</span><span class="n">block_ptr_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">inode_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void ext2_t::block_ptr_t::_read() {
-    m_ptr = m__io-&gt;read_u4le();
-}
+<span class="kt">void</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">block_ptr_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_ptr</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="p">}</span>
 
-ext2_t::block_ptr_t::~block_ptr_t() {
-    if (f_body) {
-        delete m__io__raw_body;
-        delete m_body;
-    }
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">block_ptr_t</span><span class="o">::~</span><span class="n">block_ptr_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_body</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="n">m_body</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-ext2_t::raw_block_t* ext2_t::block_ptr_t::body() {
-    if (f_body)
-        return m_body;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek((ptr() * _root()-&gt;bg1()-&gt;super_block()-&gt;block_size()));
-    m__raw_body = m__io-&gt;read_bytes(_root()-&gt;bg1()-&gt;super_block()-&gt;block_size());
-    m__io__raw_body = new kaitai::kstream(m__raw_body);
-    m_body = new raw_block_t(m__io__raw_body, this, m__root);
-    m__io-&gt;seek(_pos);
-    f_body = true;
-    return m_body;
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">raw_block_t</span><span class="o">*</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">block_ptr_t</span><span class="o">::</span><span class="n">body</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_body</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">((</span><span class="n">ptr</span><span class="p">()</span> <span class="o">*</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bg1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">super_block</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">block_size</span><span class="p">()));</span>
+    <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bg1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">super_block</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">block_size</span><span class="p">());</span>
+    <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+    <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">raw_block_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_body</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span>
+<span class="p">}</span>
 
-ext2_t::dir_t::dir_t(kaitai::kstream* p__io, ext2_t::inode_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">dir_t</span><span class="o">::</span><span class="n">dir_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">inode_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void ext2_t::dir_t::_read() {
-    m_entries = new std::vector&lt;dir_entry_t*&gt;();
-    {
-        int i = 0;
-        while (!m__io-&gt;is_eof()) {
-            m_entries-&gt;push_back(new dir_entry_t(m__io, this, m__root));
-            i++;
-        }
-    }
-}
+<span class="kt">void</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">dir_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">dir_entry_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">dir_entry_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-ext2_t::dir_t::~dir_t() {
-    for (std::vector&lt;dir_entry_t*&gt;::iterator it = m_entries-&gt;begin(); it != m_entries-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_entries;
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">dir_t</span><span class="o">::~</span><span class="n">dir_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">dir_entry_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_entries</span><span class="p">;</span>
+<span class="p">}</span>
 
-ext2_t::block_group_t::block_group_t(kaitai::kstream* p__io, ext2_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">block_group_t</span><span class="o">::</span><span class="n">block_group_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void ext2_t::block_group_t::_read() {
-    m__raw_super_block = m__io-&gt;read_bytes(1024);
-    m__io__raw_super_block = new kaitai::kstream(m__raw_super_block);
-    m_super_block = new super_block_struct_t(m__io__raw_super_block, this, m__root);
-    int l_block_groups = super_block()-&gt;block_group_count();
-    m_block_groups = new std::vector&lt;bgd_t*&gt;();
-    m_block_groups-&gt;reserve(l_block_groups);
-    for (int i = 0; i &lt; l_block_groups; i++) {
-        m_block_groups-&gt;push_back(new bgd_t(m__io, this, m__root));
-    }
-}
+<span class="kt">void</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">block_group_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m__raw_super_block</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1024</span><span class="p">);</span>
+    <span class="n">m__io__raw_super_block</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_super_block</span><span class="p">);</span>
+    <span class="n">m_super_block</span> <span class="o">=</span> <span class="k">new</span> <span class="n">super_block_struct_t</span><span class="p">(</span><span class="n">m__io__raw_super_block</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">l_block_groups</span> <span class="o">=</span> <span class="n">super_block</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">block_group_count</span><span class="p">();</span>
+    <span class="n">m_block_groups</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">bgd_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="n">m_block_groups</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_block_groups</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_block_groups</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_block_groups</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">bgd_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-ext2_t::block_group_t::~block_group_t() {
-    delete m__io__raw_super_block;
-    delete m_super_block;
-    for (std::vector&lt;bgd_t*&gt;::iterator it = m_block_groups-&gt;begin(); it != m_block_groups-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_block_groups;
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">block_group_t</span><span class="o">::~</span><span class="n">block_group_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m__io__raw_super_block</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_super_block</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">bgd_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_block_groups</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_block_groups</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_block_groups</span><span class="p">;</span>
+<span class="p">}</span>
 
-ext2_t::bgd_t::bgd_t(kaitai::kstream* p__io, ext2_t::block_group_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_block_bitmap = false;
-    f_inode_bitmap = false;
-    f_inodes = false;
-    _read();
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">bgd_t</span><span class="o">::</span><span class="n">bgd_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">block_group_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_block_bitmap</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_inode_bitmap</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_inodes</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void ext2_t::bgd_t::_read() {
-    m_block_bitmap_block = m__io-&gt;read_u4le();
-    m_inode_bitmap_block = m__io-&gt;read_u4le();
-    m_inode_table_block = m__io-&gt;read_u4le();
-    m_free_blocks_count = m__io-&gt;read_u2le();
-    m_free_inodes_count = m__io-&gt;read_u2le();
-    m_used_dirs_count = m__io-&gt;read_u2le();
-    m_pad_reserved = m__io-&gt;read_bytes((2 + 12));
-}
+<span class="kt">void</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">bgd_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_block_bitmap_block</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_inode_bitmap_block</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_inode_table_block</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_free_blocks_count</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_free_inodes_count</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_used_dirs_count</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_pad_reserved</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">12</span><span class="p">));</span>
+<span class="p">}</span>
 
-ext2_t::bgd_t::~bgd_t() {
-    if (f_block_bitmap) {
-    }
-    if (f_inode_bitmap) {
-    }
-    if (f_inodes) {
-        for (std::vector&lt;inode_t*&gt;::iterator it = m_inodes-&gt;begin(); it != m_inodes-&gt;end(); ++it) {
-            delete *it;
-        }
-        delete m_inodes;
-    }
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">bgd_t</span><span class="o">::~</span><span class="n">bgd_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_block_bitmap</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_inode_bitmap</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_inodes</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">inode_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_inodes</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_inodes</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">delete</span> <span class="n">m_inodes</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-std::string ext2_t::bgd_t::block_bitmap() {
-    if (f_block_bitmap)
-        return m_block_bitmap;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek((block_bitmap_block() * _root()-&gt;bg1()-&gt;super_block()-&gt;block_size()));
-    m_block_bitmap = m__io-&gt;read_bytes(1024);
-    m__io-&gt;seek(_pos);
-    f_block_bitmap = true;
-    return m_block_bitmap;
-}
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">bgd_t</span><span class="o">::</span><span class="n">block_bitmap</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_block_bitmap</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_block_bitmap</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">((</span><span class="n">block_bitmap_block</span><span class="p">()</span> <span class="o">*</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bg1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">super_block</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">block_size</span><span class="p">()));</span>
+    <span class="n">m_block_bitmap</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1024</span><span class="p">);</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_block_bitmap</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_block_bitmap</span><span class="p">;</span>
+<span class="p">}</span>
 
-std::string ext2_t::bgd_t::inode_bitmap() {
-    if (f_inode_bitmap)
-        return m_inode_bitmap;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek((inode_bitmap_block() * _root()-&gt;bg1()-&gt;super_block()-&gt;block_size()));
-    m_inode_bitmap = m__io-&gt;read_bytes(1024);
-    m__io-&gt;seek(_pos);
-    f_inode_bitmap = true;
-    return m_inode_bitmap;
-}
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">bgd_t</span><span class="o">::</span><span class="n">inode_bitmap</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_inode_bitmap</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_inode_bitmap</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">((</span><span class="n">inode_bitmap_block</span><span class="p">()</span> <span class="o">*</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bg1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">super_block</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">block_size</span><span class="p">()));</span>
+    <span class="n">m_inode_bitmap</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1024</span><span class="p">);</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_inode_bitmap</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_inode_bitmap</span><span class="p">;</span>
+<span class="p">}</span>
 
-std::vector&lt;ext2_t::inode_t*&gt;* ext2_t::bgd_t::inodes() {
-    if (f_inodes)
-        return m_inodes;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek((inode_table_block() * _root()-&gt;bg1()-&gt;super_block()-&gt;block_size()));
-    int l_inodes = _root()-&gt;bg1()-&gt;super_block()-&gt;inodes_per_group();
-    m_inodes = new std::vector&lt;inode_t*&gt;();
-    m_inodes-&gt;reserve(l_inodes);
-    for (int i = 0; i &lt; l_inodes; i++) {
-        m_inodes-&gt;push_back(new inode_t(m__io, this, m__root));
-    }
-    m__io-&gt;seek(_pos);
-    f_inodes = true;
-    return m_inodes;
-}
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">ext2_t</span><span class="o">::</span><span class="n">inode_t</span><span class="o">*&gt;*</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">bgd_t</span><span class="o">::</span><span class="n">inodes</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_inodes</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_inodes</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">((</span><span class="n">inode_table_block</span><span class="p">()</span> <span class="o">*</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bg1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">super_block</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">block_size</span><span class="p">()));</span>
+    <span class="kt">int</span> <span class="n">l_inodes</span> <span class="o">=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bg1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">super_block</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">inodes_per_group</span><span class="p">();</span>
+    <span class="n">m_inodes</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">inode_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="n">m_inodes</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_inodes</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_inodes</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_inodes</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">inode_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_inodes</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_inodes</span><span class="p">;</span>
+<span class="p">}</span>
 
-ext2_t::raw_block_t::raw_block_t(kaitai::kstream* p__io, ext2_t::block_ptr_t* p__parent, ext2_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">raw_block_t</span><span class="o">::</span><span class="n">raw_block_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">block_ptr_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">ext2_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void ext2_t::raw_block_t::_read() {
-    m_body = m__io-&gt;read_bytes(_root()-&gt;bg1()-&gt;super_block()-&gt;block_size());
-}
+<span class="kt">void</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">raw_block_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bg1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">super_block</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">block_size</span><span class="p">());</span>
+<span class="p">}</span>
 
-ext2_t::raw_block_t::~raw_block_t() {
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">raw_block_t</span><span class="o">::~</span><span class="n">raw_block_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-ext2_t::block_group_t* ext2_t::bg1() {
-    if (f_bg1)
-        return m_bg1;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek(1024);
-    m_bg1 = new block_group_t(m__io, this, m__root);
-    m__io-&gt;seek(_pos);
-    f_bg1 = true;
-    return m_bg1;
-}
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">block_group_t</span><span class="o">*</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">bg1</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_bg1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_bg1</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="mi">1024</span><span class="p">);</span>
+    <span class="n">m_bg1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">block_group_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_bg1</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_bg1</span><span class="p">;</span>
+<span class="p">}</span>
 
-ext2_t::dir_t* ext2_t::root_dir() {
-    if (f_root_dir)
-        return m_root_dir;
-    m_root_dir = bg1()-&gt;block_groups()-&gt;at(0)-&gt;inodes()-&gt;at(1)-&gt;as_dir();
-    f_root_dir = true;
-    return m_root_dir;
-}
-</code></pre>
+<span class="n">ext2_t</span><span class="o">::</span><span class="n">dir_t</span><span class="o">*</span> <span class="n">ext2_t</span><span class="o">::</span><span class="n">root_dir</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_root_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_root_dir</span><span class="p">;</span>
+    <span class="n">m_root_dir</span> <span class="o">=</span> <span class="n">bg1</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">block_groups</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">inodes</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">as_dir</span><span class="p">();</span>
+    <span class="n">f_root_dir</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_root_dir</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1152,8 +1149,8 @@ ext2_t::dir_t* ext2_t::root_dir() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

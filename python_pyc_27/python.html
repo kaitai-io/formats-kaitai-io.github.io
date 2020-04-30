@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -253,398 +250,394 @@ data = PythonPyc27(KaitaiStream(BytesIO(raw)))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
-
-
-if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
-    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
-
-class PythonPyc27(KaitaiStruct):
-    &quot;&quot;&quot;Python interpreter runs .py files in 2 step process: first, it
-    produces bytecode, which it then executes. Translation of .py source
-    into bytecode is time-consuming, so Python dumps compiled bytecode
-    into .pyc files, to be reused from cache at later time if possible.
-    
-    .pyc file is essentially a raw dump of `py_object` (see `body`) with
-    a simple header prepended.
-    &quot;&quot;&quot;
-
-    class Version(Enum):
-        v15 = 20121
-        v16 = 50428
-        v20 = 50823
-        v21 = 60202
-        v22 = 60717
-        v23_a0 = 62011
-        v23_a0b = 62021
-        v24_a0 = 62041
-        v24_a3 = 62051
-        v24_b1 = 62061
-        v25_a0 = 62071
-        v25_a0b = 62081
-        v25_a0c = 62091
-        v25_a0d = 62092
-        v25_b3 = 62101
-        v25_b3b = 62111
-        v25_c1 = 62121
-        v25_c2 = 62131
-        v26_a0 = 62151
-        v26_a1 = 62161
-        v27_a0 = 62171
-        v27_a0b = 62181
-        v27_a0c = 62191
-        v27_a0d = 62201
-        v27_a0e = 62211
-    def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
-        self._parent = _parent
-        self._root = _root if _root else self
-        self._read()
-
-    def _read(self):
-        self.version_magic = self._root.Version(self._io.read_u2le())
-        self.crlf = self._io.read_u2le()
-        self.modification_timestamp = self._io.read_u4le()
-        self.body = self._root.PyObject(self._io, self, self._root)
-
-    class CodeObject(KaitaiStruct):
-
-        class FlagsEnum(Enum):
-            has_args = 4
-            has_kwargs = 8
-            generator = 32
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.arg_count = self._io.read_u4le()
-            self.local_count = self._io.read_u4le()
-            self.stack_size = self._io.read_u4le()
-            self.flags = self._root.CodeObject.FlagsEnum(self._io.read_u4le())
-            self.code = self._root.Assembly(self._io, self, self._root)
-            self.consts = self._root.PyObject(self._io, self, self._root)
-            self.names = self._root.PyObject(self._io, self, self._root)
-            self.var_names = self._root.PyObject(self._io, self, self._root)
-            self.free_vars = self._root.PyObject(self._io, self, self._root)
-            self.cell_vars = self._root.PyObject(self._io, self, self._root)
-            self.filename = self._root.PyObject(self._io, self, self._root)
-            self.name = self._root.PyObject(self._io, self, self._root)
-            self.first_line_no = self._io.read_u4le()
-            self.lnotab = self._root.PyObject(self._io, self, self._root)
+<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">parse_version</span>
+<span class="kn">from</span> <span class="nn">kaitaistruct</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">ks_version</span><span class="p">,</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
 
-    class Assembly(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+<span class="k">if</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">ks_version</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">parse_version</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ks_version</span><span class="p">))</span>
 
-        def _read(self):
-            self.string_magic = self._io.ensure_fixed_contents(b&quot;\x73&quot;)
-            self.length = self._io.read_u4le()
-            self._raw_items = self._io.read_bytes(self.length)
-            io = KaitaiStream(BytesIO(self._raw_items))
-            self.items = self._root.OpArgs(io, self, self._root)
+<span class="k">class</span> <span class="nc">PythonPyc27</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Python interpreter runs .py files in 2 step process: first, it</span>
+<span class="sd">    produces bytecode, which it then executes. Translation of .py source</span>
+<span class="sd">    into bytecode is time-consuming, so Python dumps compiled bytecode</span>
+<span class="sd">    into .pyc files, to be reused from cache at later time if possible.</span>
+<span class="sd">    </span>
+<span class="sd">    .pyc file is essentially a raw dump of `py_object` (see `body`) with</span>
+<span class="sd">    a simple header prepended.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="k">class</span> <span class="nc">Version</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="n">v15</span> <span class="o">=</span> <span class="mi">20121</span>
+        <span class="n">v16</span> <span class="o">=</span> <span class="mi">50428</span>
+        <span class="n">v20</span> <span class="o">=</span> <span class="mi">50823</span>
+        <span class="n">v21</span> <span class="o">=</span> <span class="mi">60202</span>
+        <span class="n">v22</span> <span class="o">=</span> <span class="mi">60717</span>
+        <span class="n">v23_a0</span> <span class="o">=</span> <span class="mi">62011</span>
+        <span class="n">v23_a0b</span> <span class="o">=</span> <span class="mi">62021</span>
+        <span class="n">v24_a0</span> <span class="o">=</span> <span class="mi">62041</span>
+        <span class="n">v24_a3</span> <span class="o">=</span> <span class="mi">62051</span>
+        <span class="n">v24_b1</span> <span class="o">=</span> <span class="mi">62061</span>
+        <span class="n">v25_a0</span> <span class="o">=</span> <span class="mi">62071</span>
+        <span class="n">v25_a0b</span> <span class="o">=</span> <span class="mi">62081</span>
+        <span class="n">v25_a0c</span> <span class="o">=</span> <span class="mi">62091</span>
+        <span class="n">v25_a0d</span> <span class="o">=</span> <span class="mi">62092</span>
+        <span class="n">v25_b3</span> <span class="o">=</span> <span class="mi">62101</span>
+        <span class="n">v25_b3b</span> <span class="o">=</span> <span class="mi">62111</span>
+        <span class="n">v25_c1</span> <span class="o">=</span> <span class="mi">62121</span>
+        <span class="n">v25_c2</span> <span class="o">=</span> <span class="mi">62131</span>
+        <span class="n">v26_a0</span> <span class="o">=</span> <span class="mi">62151</span>
+        <span class="n">v26_a1</span> <span class="o">=</span> <span class="mi">62161</span>
+        <span class="n">v27_a0</span> <span class="o">=</span> <span class="mi">62171</span>
+        <span class="n">v27_a0b</span> <span class="o">=</span> <span class="mi">62181</span>
+        <span class="n">v27_a0c</span> <span class="o">=</span> <span class="mi">62191</span>
+        <span class="n">v27_a0d</span> <span class="o">=</span> <span class="mi">62201</span>
+        <span class="n">v27_a0e</span> <span class="o">=</span> <span class="mi">62211</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-    class OpArg(KaitaiStruct):
+    <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version_magic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Version</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crlf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modification_timestamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
-        class OpCodeEnum(Enum):
-            stop_code = 0
-            pop_top = 1
-            rot_two = 2
-            rot_three = 3
-            dup_top = 4
-            rot_four = 5
-            nop = 9
-            unary_positive = 10
-            unary_negative = 11
-            unary_not = 12
-            unary_convert = 13
-            unary_invert = 15
-            binary_power = 19
-            binary_multiply = 20
-            binary_divide = 21
-            binary_modulo = 22
-            binary_add = 23
-            binary_subtract = 24
-            binary_subscr = 25
-            binary_floor_divide = 26
-            binary_true_divide = 27
-            inplace_floor_divide = 28
-            inplace_true_divide = 29
-            slice_0 = 30
-            slice_1 = 31
-            slice_2 = 32
-            slice_3 = 33
-            store_slice_0 = 40
-            store_slice_1 = 41
-            store_slice_2 = 42
-            store_slice_3 = 43
-            delete_slice_0 = 50
-            delete_slice_1 = 51
-            delete_slice_2 = 52
-            delete_slice_3 = 53
-            store_map = 54
-            inplace_add = 55
-            inplace_subtract = 56
-            inplace_multiply = 57
-            inplace_divide = 58
-            inplace_modulo = 59
-            store_subscr = 60
-            delete_subscr = 61
-            binary_lshift = 62
-            binary_rshift = 63
-            binary_and = 64
-            binary_xor = 65
-            binary_or = 66
-            inplace_power = 67
-            get_iter = 68
-            print_expr = 70
-            print_item = 71
-            print_newline = 72
-            print_item_to = 73
-            print_newline_to = 74
-            inplace_lshift = 75
-            inplace_rshift = 76
-            inplace_and = 77
-            inplace_xor = 78
-            inplace_or = 79
-            break_loop = 80
-            with_cleanup = 81
-            load_locals = 82
-            return_value = 83
-            import_star = 84
-            exec_stmt = 85
-            yield_value = 86
-            pop_block = 87
-            end_finally = 88
-            build_class = 89
-            store_name = 90
-            delete_name = 91
-            unpack_sequence = 92
-            for_iter = 93
-            list_append = 94
-            store_attr = 95
-            delete_attr = 96
-            store_global = 97
-            delete_global = 98
-            dup_topx = 99
-            load_const = 100
-            load_name = 101
-            build_tuple = 102
-            build_list = 103
-            build_set = 104
-            build_map = 105
-            load_attr = 106
-            compare_op = 107
-            import_name = 108
-            import_from = 109
-            jump_forward = 110
-            jump_if_false_or_pop = 111
-            jump_if_true_or_pop = 112
-            jump_absolute = 113
-            pop_jump_if_false = 114
-            pop_jump_if_true = 115
-            load_global = 116
-            continue_loop = 119
-            setup_loop = 120
-            setup_except = 121
-            setup_finally = 122
-            load_fast = 124
-            store_fast = 125
-            delete_fast = 126
-            raise_varargs = 130
-            call_function = 131
-            make_function = 132
-            build_slice = 133
-            make_closure = 134
-            load_closure = 135
-            load_deref = 136
-            store_deref = 137
-            call_function_var = 140
-            call_function_kw = 141
-            call_function_var_kw = 142
-            setup_with = 143
-            extended_arg = 145
-            set_add = 146
-            map_add = 147
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+    <span class="k">class</span> <span class="nc">CodeObject</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 
-        def _read(self):
-            self.op_code = self._root.OpArg.OpCodeEnum(self._io.read_u1())
-            if self.op_code.value &gt;= self._root.OpArg.OpCodeEnum.store_name.value:
-                self.arg = self._io.read_u2le()
+        <span class="k">class</span> <span class="nc">FlagsEnum</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+            <span class="n">has_args</span> <span class="o">=</span> <span class="mi">4</span>
+            <span class="n">has_kwargs</span> <span class="o">=</span> <span class="mi">8</span>
+            <span class="n">generator</span> <span class="o">=</span> <span class="mi">32</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">arg_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">local_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stack_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">CodeObject</span><span class="o">.</span><span class="n">FlagsEnum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Assembly</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">consts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">var_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">free_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cell_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">first_line_no</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lnotab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
 
+    <span class="k">class</span> <span class="nc">Assembly</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-    class PyObject(KaitaiStruct):
-
-        class ObjectType(Enum):
-            tuple = 40
-            py_false = 70
-            none = 78
-            string_ref = 82
-            py_true = 84
-            code_object = 99
-            int = 105
-            string = 115
-            interned = 116
-            unicode_string = 117
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.type = self._root.PyObject.ObjectType(self._io.read_u1())
-            _on = self.type
-            if _on == self._root.PyObject.ObjectType.none:
-                self.value = self._root.PyObject.PyNone(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.code_object:
-                self.value = self._root.CodeObject(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.int:
-                self.value = self._io.read_u4le()
-            elif _on == self._root.PyObject.ObjectType.string_ref:
-                self.value = self._root.PyObject.StringRef(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.string:
-                self.value = self._root.PyObject.PyString(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.py_false:
-                self.value = self._root.PyObject.PyFalse(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.interned:
-                self.value = self._root.PyObject.InternedString(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.tuple:
-                self.value = self._root.PyObject.Tuple(self._io, self, self._root)
-            elif _on == self._root.PyObject.ObjectType.py_true:
-                self.value = self._root.PyObject.PyTrue(self._io, self, self._root)
-
-        class PyNone(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                pass
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">string_magic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x73</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raw_items</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+            <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_items</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">OpArgs</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
 
-        class PyFalse(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
+    <span class="k">class</span> <span class="nc">OpArg</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 
-            def _read(self):
-                pass
+        <span class="k">class</span> <span class="nc">OpCodeEnum</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+            <span class="n">stop_code</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">pop_top</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">rot_two</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="n">rot_three</span> <span class="o">=</span> <span class="mi">3</span>
+            <span class="n">dup_top</span> <span class="o">=</span> <span class="mi">4</span>
+            <span class="n">rot_four</span> <span class="o">=</span> <span class="mi">5</span>
+            <span class="n">nop</span> <span class="o">=</span> <span class="mi">9</span>
+            <span class="n">unary_positive</span> <span class="o">=</span> <span class="mi">10</span>
+            <span class="n">unary_negative</span> <span class="o">=</span> <span class="mi">11</span>
+            <span class="n">unary_not</span> <span class="o">=</span> <span class="mi">12</span>
+            <span class="n">unary_convert</span> <span class="o">=</span> <span class="mi">13</span>
+            <span class="n">unary_invert</span> <span class="o">=</span> <span class="mi">15</span>
+            <span class="n">binary_power</span> <span class="o">=</span> <span class="mi">19</span>
+            <span class="n">binary_multiply</span> <span class="o">=</span> <span class="mi">20</span>
+            <span class="n">binary_divide</span> <span class="o">=</span> <span class="mi">21</span>
+            <span class="n">binary_modulo</span> <span class="o">=</span> <span class="mi">22</span>
+            <span class="n">binary_add</span> <span class="o">=</span> <span class="mi">23</span>
+            <span class="n">binary_subtract</span> <span class="o">=</span> <span class="mi">24</span>
+            <span class="n">binary_subscr</span> <span class="o">=</span> <span class="mi">25</span>
+            <span class="n">binary_floor_divide</span> <span class="o">=</span> <span class="mi">26</span>
+            <span class="n">binary_true_divide</span> <span class="o">=</span> <span class="mi">27</span>
+            <span class="n">inplace_floor_divide</span> <span class="o">=</span> <span class="mi">28</span>
+            <span class="n">inplace_true_divide</span> <span class="o">=</span> <span class="mi">29</span>
+            <span class="n">slice_0</span> <span class="o">=</span> <span class="mi">30</span>
+            <span class="n">slice_1</span> <span class="o">=</span> <span class="mi">31</span>
+            <span class="n">slice_2</span> <span class="o">=</span> <span class="mi">32</span>
+            <span class="n">slice_3</span> <span class="o">=</span> <span class="mi">33</span>
+            <span class="n">store_slice_0</span> <span class="o">=</span> <span class="mi">40</span>
+            <span class="n">store_slice_1</span> <span class="o">=</span> <span class="mi">41</span>
+            <span class="n">store_slice_2</span> <span class="o">=</span> <span class="mi">42</span>
+            <span class="n">store_slice_3</span> <span class="o">=</span> <span class="mi">43</span>
+            <span class="n">delete_slice_0</span> <span class="o">=</span> <span class="mi">50</span>
+            <span class="n">delete_slice_1</span> <span class="o">=</span> <span class="mi">51</span>
+            <span class="n">delete_slice_2</span> <span class="o">=</span> <span class="mi">52</span>
+            <span class="n">delete_slice_3</span> <span class="o">=</span> <span class="mi">53</span>
+            <span class="n">store_map</span> <span class="o">=</span> <span class="mi">54</span>
+            <span class="n">inplace_add</span> <span class="o">=</span> <span class="mi">55</span>
+            <span class="n">inplace_subtract</span> <span class="o">=</span> <span class="mi">56</span>
+            <span class="n">inplace_multiply</span> <span class="o">=</span> <span class="mi">57</span>
+            <span class="n">inplace_divide</span> <span class="o">=</span> <span class="mi">58</span>
+            <span class="n">inplace_modulo</span> <span class="o">=</span> <span class="mi">59</span>
+            <span class="n">store_subscr</span> <span class="o">=</span> <span class="mi">60</span>
+            <span class="n">delete_subscr</span> <span class="o">=</span> <span class="mi">61</span>
+            <span class="n">binary_lshift</span> <span class="o">=</span> <span class="mi">62</span>
+            <span class="n">binary_rshift</span> <span class="o">=</span> <span class="mi">63</span>
+            <span class="n">binary_and</span> <span class="o">=</span> <span class="mi">64</span>
+            <span class="n">binary_xor</span> <span class="o">=</span> <span class="mi">65</span>
+            <span class="n">binary_or</span> <span class="o">=</span> <span class="mi">66</span>
+            <span class="n">inplace_power</span> <span class="o">=</span> <span class="mi">67</span>
+            <span class="n">get_iter</span> <span class="o">=</span> <span class="mi">68</span>
+            <span class="n">print_expr</span> <span class="o">=</span> <span class="mi">70</span>
+            <span class="n">print_item</span> <span class="o">=</span> <span class="mi">71</span>
+            <span class="n">print_newline</span> <span class="o">=</span> <span class="mi">72</span>
+            <span class="n">print_item_to</span> <span class="o">=</span> <span class="mi">73</span>
+            <span class="n">print_newline_to</span> <span class="o">=</span> <span class="mi">74</span>
+            <span class="n">inplace_lshift</span> <span class="o">=</span> <span class="mi">75</span>
+            <span class="n">inplace_rshift</span> <span class="o">=</span> <span class="mi">76</span>
+            <span class="n">inplace_and</span> <span class="o">=</span> <span class="mi">77</span>
+            <span class="n">inplace_xor</span> <span class="o">=</span> <span class="mi">78</span>
+            <span class="n">inplace_or</span> <span class="o">=</span> <span class="mi">79</span>
+            <span class="n">break_loop</span> <span class="o">=</span> <span class="mi">80</span>
+            <span class="n">with_cleanup</span> <span class="o">=</span> <span class="mi">81</span>
+            <span class="n">load_locals</span> <span class="o">=</span> <span class="mi">82</span>
+            <span class="n">return_value</span> <span class="o">=</span> <span class="mi">83</span>
+            <span class="n">import_star</span> <span class="o">=</span> <span class="mi">84</span>
+            <span class="n">exec_stmt</span> <span class="o">=</span> <span class="mi">85</span>
+            <span class="n">yield_value</span> <span class="o">=</span> <span class="mi">86</span>
+            <span class="n">pop_block</span> <span class="o">=</span> <span class="mi">87</span>
+            <span class="n">end_finally</span> <span class="o">=</span> <span class="mi">88</span>
+            <span class="n">build_class</span> <span class="o">=</span> <span class="mi">89</span>
+            <span class="n">store_name</span> <span class="o">=</span> <span class="mi">90</span>
+            <span class="n">delete_name</span> <span class="o">=</span> <span class="mi">91</span>
+            <span class="n">unpack_sequence</span> <span class="o">=</span> <span class="mi">92</span>
+            <span class="n">for_iter</span> <span class="o">=</span> <span class="mi">93</span>
+            <span class="n">list_append</span> <span class="o">=</span> <span class="mi">94</span>
+            <span class="n">store_attr</span> <span class="o">=</span> <span class="mi">95</span>
+            <span class="n">delete_attr</span> <span class="o">=</span> <span class="mi">96</span>
+            <span class="n">store_global</span> <span class="o">=</span> <span class="mi">97</span>
+            <span class="n">delete_global</span> <span class="o">=</span> <span class="mi">98</span>
+            <span class="n">dup_topx</span> <span class="o">=</span> <span class="mi">99</span>
+            <span class="n">load_const</span> <span class="o">=</span> <span class="mi">100</span>
+            <span class="n">load_name</span> <span class="o">=</span> <span class="mi">101</span>
+            <span class="n">build_tuple</span> <span class="o">=</span> <span class="mi">102</span>
+            <span class="n">build_list</span> <span class="o">=</span> <span class="mi">103</span>
+            <span class="n">build_set</span> <span class="o">=</span> <span class="mi">104</span>
+            <span class="n">build_map</span> <span class="o">=</span> <span class="mi">105</span>
+            <span class="n">load_attr</span> <span class="o">=</span> <span class="mi">106</span>
+            <span class="n">compare_op</span> <span class="o">=</span> <span class="mi">107</span>
+            <span class="n">import_name</span> <span class="o">=</span> <span class="mi">108</span>
+            <span class="n">import_from</span> <span class="o">=</span> <span class="mi">109</span>
+            <span class="n">jump_forward</span> <span class="o">=</span> <span class="mi">110</span>
+            <span class="n">jump_if_false_or_pop</span> <span class="o">=</span> <span class="mi">111</span>
+            <span class="n">jump_if_true_or_pop</span> <span class="o">=</span> <span class="mi">112</span>
+            <span class="n">jump_absolute</span> <span class="o">=</span> <span class="mi">113</span>
+            <span class="n">pop_jump_if_false</span> <span class="o">=</span> <span class="mi">114</span>
+            <span class="n">pop_jump_if_true</span> <span class="o">=</span> <span class="mi">115</span>
+            <span class="n">load_global</span> <span class="o">=</span> <span class="mi">116</span>
+            <span class="n">continue_loop</span> <span class="o">=</span> <span class="mi">119</span>
+            <span class="n">setup_loop</span> <span class="o">=</span> <span class="mi">120</span>
+            <span class="n">setup_except</span> <span class="o">=</span> <span class="mi">121</span>
+            <span class="n">setup_finally</span> <span class="o">=</span> <span class="mi">122</span>
+            <span class="n">load_fast</span> <span class="o">=</span> <span class="mi">124</span>
+            <span class="n">store_fast</span> <span class="o">=</span> <span class="mi">125</span>
+            <span class="n">delete_fast</span> <span class="o">=</span> <span class="mi">126</span>
+            <span class="n">raise_varargs</span> <span class="o">=</span> <span class="mi">130</span>
+            <span class="n">call_function</span> <span class="o">=</span> <span class="mi">131</span>
+            <span class="n">make_function</span> <span class="o">=</span> <span class="mi">132</span>
+            <span class="n">build_slice</span> <span class="o">=</span> <span class="mi">133</span>
+            <span class="n">make_closure</span> <span class="o">=</span> <span class="mi">134</span>
+            <span class="n">load_closure</span> <span class="o">=</span> <span class="mi">135</span>
+            <span class="n">load_deref</span> <span class="o">=</span> <span class="mi">136</span>
+            <span class="n">store_deref</span> <span class="o">=</span> <span class="mi">137</span>
+            <span class="n">call_function_var</span> <span class="o">=</span> <span class="mi">140</span>
+            <span class="n">call_function_kw</span> <span class="o">=</span> <span class="mi">141</span>
+            <span class="n">call_function_var_kw</span> <span class="o">=</span> <span class="mi">142</span>
+            <span class="n">setup_with</span> <span class="o">=</span> <span class="mi">143</span>
+            <span class="n">extended_arg</span> <span class="o">=</span> <span class="mi">145</span>
+            <span class="n">set_add</span> <span class="o">=</span> <span class="mi">146</span>
+            <span class="n">map_add</span> <span class="o">=</span> <span class="mi">147</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-
-        class StringRef(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.interned_list_index = self._io.read_u4le()
-
-
-        class PyTrue(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                pass
-
-
-        class Tuple(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.count = self._io.read_u4le()
-                self.items = [None] * (self.count)
-                for i in range(self.count):
-                    self.items[i] = self._root.PyObject(self._io, self, self._root)
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">op_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">OpArg</span><span class="o">.</span><span class="n">OpCodeEnum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">())</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">op_code</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">OpArg</span><span class="o">.</span><span class="n">OpCodeEnum</span><span class="o">.</span><span class="n">store_name</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
 
 
 
-        class UnicodeString(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
+    <span class="k">class</span> <span class="nc">PyObject</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 
-            def _read(self):
-                self.length = self._io.read_u4le()
-                self.data = (self._io.read_bytes(self.length)).decode(u&quot;utf-8&quot;)
+        <span class="k">class</span> <span class="nc">ObjectType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+            <span class="nb">tuple</span> <span class="o">=</span> <span class="mi">40</span>
+            <span class="n">py_false</span> <span class="o">=</span> <span class="mi">70</span>
+            <span class="n">none</span> <span class="o">=</span> <span class="mi">78</span>
+            <span class="n">string_ref</span> <span class="o">=</span> <span class="mi">82</span>
+            <span class="n">py_true</span> <span class="o">=</span> <span class="mi">84</span>
+            <span class="n">code_object</span> <span class="o">=</span> <span class="mi">99</span>
+            <span class="nb">int</span> <span class="o">=</span> <span class="mi">105</span>
+            <span class="n">string</span> <span class="o">=</span> <span class="mi">115</span>
+            <span class="n">interned</span> <span class="o">=</span> <span class="mi">116</span>
+            <span class="n">unicode_string</span> <span class="o">=</span> <span class="mi">117</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">ObjectType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">())</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">ObjectType</span><span class="o">.</span><span class="n">none</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">PyNone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">ObjectType</span><span class="o">.</span><span class="n">code_object</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">CodeObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">ObjectType</span><span class="o">.</span><span class="n">int</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">ObjectType</span><span class="o">.</span><span class="n">string_ref</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">StringRef</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">ObjectType</span><span class="o">.</span><span class="n">string</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">PyString</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">ObjectType</span><span class="o">.</span><span class="n">py_false</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">PyFalse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">ObjectType</span><span class="o">.</span><span class="n">interned</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">InternedString</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">ObjectType</span><span class="o">.</span><span class="n">tuple</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">Tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">ObjectType</span><span class="o">.</span><span class="n">py_true</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="o">.</span><span class="n">PyTrue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
-        class InternedString(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
+        <span class="k">class</span> <span class="nc">PyNone</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-            def _read(self):
-                self.length = self._io.read_u4le()
-                self.data = (self._io.read_bytes(self.length)).decode(u&quot;utf-8&quot;)
-
-
-        class PyString(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.length = self._io.read_u4le()
-                self.data = self._io.read_bytes(self.length)
-
-
-
-    class OpArgs(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.items = []
-            i = 0
-            while not self._io.is_eof():
-                self.items.append(self._root.OpArg(self._io, self, self._root))
-                i += 1
-
-
+            <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
 
 
-</code></pre>
+        <span class="k">class</span> <span class="nc">PyFalse</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
+
+
+        <span class="k">class</span> <span class="nc">StringRef</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">interned_list_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+
+        <span class="k">class</span> <span class="nc">PyTrue</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">pass</span>
+
+
+        <span class="k">class</span> <span class="nc">Tuple</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PyObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+
+        <span class="k">class</span> <span class="nc">UnicodeString</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+
+        <span class="k">class</span> <span class="nc">InternedString</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+
+        <span class="k">class</span> <span class="nc">PyString</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+            <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+
+
+
+    <span class="k">class</span> <span class="nc">OpArgs</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">OpArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
 
         </div>
         
@@ -671,8 +664,8 @@ class PythonPyc27(KaitaiStruct):
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

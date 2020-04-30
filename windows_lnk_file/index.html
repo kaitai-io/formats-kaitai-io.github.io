@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -239,279 +236,279 @@ with certain preconfigured arguments and some other options.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: windows_lnk_file
-  title: Windows shell link file
-  file-extension: lnk
-  xref:
-    justsolve: Windows_Shortcut
-    mime: application/x-ms-shortcut
-    pronom: x-fmt/428
-  license: CC0-1.0
-  endian: le
-  encoding: cp437
-  imports:
-    - windows_shell_items
-doc: |
-  Windows .lnk files (AKA &quot;shell link&quot; file) are most frequently used
-  in Windows shell to create &quot;shortcuts&quot; to another files, usually for
-  purposes of running a program from some other directory, sometimes
-  with certain preconfigured arguments and some other options.
-doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&#39;
-seq:
-  - id: header
-    type: file_header
-  - id: target_id_list
-    type: link_target_id_list
-    if: header.flags.has_link_target_id_list
-  - id: info
-    type: link_info
-    if: header.flags.has_link_info
-  - id: name
-    -orig-id: NAME_STRING
-    type: string_data
-    if: header.flags.has_name
-  - id: rel_path
-    -orig-id: RELATIVE_PATH
-    type: string_data
-    if: header.flags.has_rel_path
-  - id: work_dir
-    -orig-id: WORKING_DIR
-    type: string_data
-    if: header.flags.has_work_dir
-  - id: arguments
-    -orig-id: COMMAND_LINE_ARGUMENTS
-    type: string_data
-    if: header.flags.has_arguments
-  - id: icon_location
-    -orig-id: ICON_LOCATION
-    type: string_data
-    if: header.flags.has_icon_location
-types:
-  file_header:
-    doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.1&#39;
-    -orig-id: ShellLinkHeader
-    seq:
-      - id: len_header
-        -orig-id: HeaderSize
-        contents: [0x4c, 0, 0, 0]
-        doc: |
-          Technically, a size of the header, but in reality, it&#39;s
-          fixed by standard.
-      - id: link_clsid
-        contents: [0x01, 0x14, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46]
-        doc: |
-          16-byte class identified (CLSID), reserved for Windows shell
-          link files.
-      - id: flags
-        -orig-id: LinkFlags
-        type: link_flags
-        size: 4
-      - id: file_attrs
-        type: u4
-      - id: time_creation
-        -orig-id: CreationTime
-        type: u8
-      - id: time_access
-        -orig-id: AccessTime
-        type: u8
-      - id: time_write
-        -orig-id: WriteTime
-        type: u8
-      - id: target_file_size
-        -orig-id: FileSize
-        type: u4
-        doc: Lower 32 bits of the size of the file that this link targets
-      - id: icon_index
-        -orig-id: IconIndex
-        type: s4
-        doc: Index of an icon to use from target file
-      - id: show_command
-        -orig-id: ShowCommand
-        type: u4
-        enum: window_state
-        doc: Window state to set after the launch of target executable
-      - id: hotkey
-        type: u2
-      - id: reserved
-        contents: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  link_flags:
-    doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.1.1&#39;
-    seq:
-      # Byte #0
-      - id: is_unicode
-        -orig-id: IsUnicode (H)
-        type: b1
-      - id: has_icon_location
-        -orig-id: HasIconLocation (G)
-        type: b1
-      - id: has_arguments
-        -orig-id: HasArguments (F)
-        type: b1
-      - id: has_work_dir
-        -orig-id: HasWorkingDir (E)
-        type: b1
-      - id: has_rel_path
-        -orig-id: HasRelativePath (D)
-        type: b1
-      - id: has_name
-        -orig-id: HasName (C)
-        type: b1
-      - id: has_link_info
-        -orig-id: HasLinkInfo (B)
-        type: b1
-      - id: has_link_target_id_list
-        -orig-id: HasLinkTargetIDList (A)
-        type: b1
-      # Byte #1, 2
-      - type: b16
-      # Byte #3
-      - id: reserved
-        type: b5
-      - id: keep_local_id_list_for_unc_target
-        -orig-id: KeepLocalIDListForUNCTarget (AA)
-        type: b1
-      - type: b2
-  link_target_id_list:
-    -orig-id: LinkTargetIDList
-    doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.2&#39;
-    seq:
-      - id: len_id_list
-        -orig-id: IDListSize          
-        type: u2
-      - id: id_list
-        -orig-id: IDList
-        size: len_id_list
-        type: windows_shell_items
-  link_info:
-    -orig-id: LinkInfo
-    doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3&#39;
-    seq:
-      - id: len_all
-        -orig-id: LinkInfoSize
-        type: u4
-      - id: all
-        size: len_all - 4
-        type: all
-    types:
-      all:
-        doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3&#39;
-        seq:
-          - id: len_header
-            -orig-id: LinkInfoHeaderSize
-            type: u4
-          - id: header
-            size: len_header - 8 # LinkInfoSize and LinkInfoHeaderSize
-            type: header
-        instances:
-          volume_id:
-            -orig-id: VolumeID
-            pos: header.ofs_volume_id - 4
-            type: volume_id_spec
-            if: header.flags.has_volume_id_and_local_base_path
-          local_base_path:
-            -orig-id: LocalBasePath
-            pos: header.ofs_local_base_path - 4
-            terminator: 0
-            if: header.flags.has_volume_id_and_local_base_path
-      header:
-        doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3&#39;
-        seq:
-          - id: flags
-            -orig-id: LinkInfoFlags
-            type: link_info_flags
-          - id: ofs_volume_id
-            -orig-id: VolumeIDOffset
-            type: u4
-          - id: ofs_local_base_path
-            -orig-id: LocalBasePathOffset
-            type: u4
-          - id: ofs_common_net_rel_link
-            -orig-id: CommonNetworkRelativeLinkOffset
-            type: u4
-          - id: ofs_common_path_suffix
-            -orig-id: CommonPathSuffixOffset
-            type: u4
-          - id: ofs_local_base_path_unicode
-            -orig-id: LocalBasePathOffsetUnicode
-            type: u4
-            if: not _io.eof
-          - id: ofs_common_path_suffix_unicode
-            -orig-id: CommonPathSuffixOffsetUnicode
-            type: u4
-            if: not _io.eof
-      link_info_flags:
-        -orig-id: LinkInfoFlags
-        doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3&#39;
-        seq:
-          - id: reserved1
-            type: b6
-          - id: has_common_net_rel_link
-            -orig-id: CommonNetworkRelativeLinkAndPathSuffix (B)
-            type: b1
-          - id: has_volume_id_and_local_base_path
-            -orig-id: VolumeIDAndLocalBasePath (A)
-            type: b1
-          - id: reserved2
-            type: b24
-      volume_id_spec:
-        -orig-id: VolumeID
-        doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3.1&#39;
-        seq:
-          - id: len_all
-            -orig-id: VolumeIDSize
-            type: u4
-          - id: body
-            size: len_all - 4
-            type: volume_id_body
-      volume_id_body:
-        -orig-id: VolumeID
-        doc-ref: &#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf Section 2.3.1&#39;
-        seq:
-          - id: drive_type
-            -orig-id: DriveType
-            type: u4
-            enum: drive_types
-          - id: drive_serial_number
-            -orig-id: DriveSerialNumber
-            type: u4
-          - id: ofs_volume_label
-            -orig-id: VolumeLabelOffset
-            type: u4
-          - id: ofs_volume_label_unicode
-            -orig-id: VolumeLabelOffsetUnicode
-            type: u4
-            if: is_unicode
-        instances:
-          is_unicode:
-            value: ofs_volume_label == 0x14
-          volume_label_ansi:
-            pos: ofs_volume_label - 4
-            type: strz
-            if: not is_unicode
-  string_data:
-    seq:
-      - id: chars_str
-        -orig-id: CountCharacters
-        type: u2
-      - id: str
-        size: chars_str * 2
-        type: str
-        encoding: UTF-16LE
-enums:
-  window_state:
-    1: normal
-    3: maximized
-    7: min_no_active
-  drive_types:
-    0: unknown
-    1: no_root_dir
-    2: removable
-    3: fixed
-    4: remote
-    5: cdrom
-    6: ramdisk
-</code></pre>
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">windows_lnk_file</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Windows shell link file</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lnk</span>
+  <span class="nt">xref</span><span class="p">:</span>
+    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Windows_Shortcut</span>
+    <span class="nt">mime</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">application/x-ms-shortcut</span>
+    <span class="nt">pronom</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x-fmt/428</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+  <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cp437</span>
+  <span class="nt">imports</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">windows_shell_items</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">Windows .lnk files (AKA &quot;shell link&quot; file) are most frequently used</span>
+  <span class="no">in Windows shell to create &quot;shortcuts&quot; to another files, usually for</span>
+  <span class="no">purposes of running a program from some other directory, sometimes</span>
+  <span class="no">with certain preconfigured arguments and some other options.</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&#39;</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_header</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">target_id_list</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">link_target_id_list</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.flags.has_link_target_id_list</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">info</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">link_info</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.flags.has_link_info</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NAME_STRING</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string_data</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.flags.has_name</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rel_path</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RELATIVE_PATH</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string_data</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.flags.has_rel_path</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">work_dir</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">WORKING_DIR</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string_data</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.flags.has_work_dir</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arguments</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">COMMAND_LINE_ARGUMENTS</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string_data</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.flags.has_arguments</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">icon_location</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ICON_LOCATION</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string_data</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.flags.has_icon_location</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">file_header</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf</span><span class="nv"> </span><span class="s">Section</span><span class="nv"> </span><span class="s">2.1&#39;</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ShellLinkHeader</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_header</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HeaderSize</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0x4c</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">]</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Technically, a size of the header, but in reality, it&#39;s</span>
+          <span class="no">fixed by standard.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">link_clsid</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0x01</span><span class="p p-Indicator">,</span> <span class="nv">0x14</span><span class="p p-Indicator">,</span> <span class="nv">0x02</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span><span class="p p-Indicator">,</span> <span class="nv">0xc0</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span><span class="p p-Indicator">,</span> <span class="nv">0x46</span><span class="p p-Indicator">]</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">16-byte class identified (CLSID), reserved for Windows shell</span>
+          <span class="no">link files.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LinkFlags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">link_flags</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_attrs</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time_creation</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CreationTime</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time_access</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">AccessTime</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time_write</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">WriteTime</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">target_file_size</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">FileSize</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Lower 32 bits of the size of the file that this link targets</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">icon_index</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">IconIndex</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Index of an icon to use from target file</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">show_command</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ShowCommand</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">window_state</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Window state to set after the launch of target executable</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hotkey</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">]</span>
+  <span class="nt">link_flags</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf</span><span class="nv"> </span><span class="s">Section</span><span class="nv"> </span><span class="s">2.1.1&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="c1"># Byte #0</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_unicode</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">IsUnicode (H)</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_icon_location</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HasIconLocation (G)</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_arguments</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HasArguments (F)</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_work_dir</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HasWorkingDir (E)</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_rel_path</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HasRelativePath (D)</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_name</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HasName (C)</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_link_info</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HasLinkInfo (B)</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_link_target_id_list</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HasLinkTargetIDList (A)</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+      <span class="c1"># Byte #1, 2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b16</span>
+      <span class="c1"># Byte #3</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b5</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">keep_local_id_list_for_unc_target</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">KeepLocalIDListForUNCTarget (AA)</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b2</span>
+  <span class="nt">link_target_id_list</span><span class="p">:</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LinkTargetIDList</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf</span><span class="nv"> </span><span class="s">Section</span><span class="nv"> </span><span class="s">2.2&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_id_list</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">IDListSize</span>          
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">id_list</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">IDList</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_id_list</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">windows_shell_items</span>
+  <span class="nt">link_info</span><span class="p">:</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LinkInfo</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf</span><span class="nv"> </span><span class="s">Section</span><span class="nv"> </span><span class="s">2.3&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_all</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LinkInfoSize</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">all</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_all - 4</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">all</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">all</span><span class="p">:</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf</span><span class="nv"> </span><span class="s">Section</span><span class="nv"> </span><span class="s">2.3&#39;</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_header</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LinkInfoHeaderSize</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_header - 8</span> <span class="c1"># LinkInfoSize and LinkInfoHeaderSize</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">volume_id</span><span class="p">:</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">VolumeID</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.ofs_volume_id - 4</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">volume_id_spec</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.flags.has_volume_id_and_local_base_path</span>
+          <span class="nt">local_base_path</span><span class="p">:</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LocalBasePath</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.ofs_local_base_path - 4</span>
+            <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.flags.has_volume_id_and_local_base_path</span>
+      <span class="nt">header</span><span class="p">:</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf</span><span class="nv"> </span><span class="s">Section</span><span class="nv"> </span><span class="s">2.3&#39;</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LinkInfoFlags</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">link_info_flags</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_volume_id</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">VolumeIDOffset</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_local_base_path</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LocalBasePathOffset</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_common_net_rel_link</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CommonNetworkRelativeLinkOffset</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_common_path_suffix</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CommonPathSuffixOffset</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_local_base_path_unicode</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LocalBasePathOffsetUnicode</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not _io.eof</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_common_path_suffix_unicode</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CommonPathSuffixOffsetUnicode</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not _io.eof</span>
+      <span class="nt">link_info_flags</span><span class="p">:</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LinkInfoFlags</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf</span><span class="nv"> </span><span class="s">Section</span><span class="nv"> </span><span class="s">2.3&#39;</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved1</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b6</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_common_net_rel_link</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CommonNetworkRelativeLinkAndPathSuffix (B)</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_volume_id_and_local_base_path</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">VolumeIDAndLocalBasePath (A)</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved2</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b24</span>
+      <span class="nt">volume_id_spec</span><span class="p">:</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">VolumeID</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf</span><span class="nv"> </span><span class="s">Section</span><span class="nv"> </span><span class="s">2.3.1&#39;</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_all</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">VolumeIDSize</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_all - 4</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">volume_id_body</span>
+      <span class="nt">volume_id_body</span><span class="p">:</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">VolumeID</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf</span><span class="nv"> </span><span class="s">Section</span><span class="nv"> </span><span class="s">2.3.1&#39;</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">drive_type</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">DriveType</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">drive_types</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">drive_serial_number</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">DriveSerialNumber</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_volume_label</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">VolumeLabelOffset</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_volume_label_unicode</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">VolumeLabelOffsetUnicode</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_unicode</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">is_unicode</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_volume_label == 0x14</span>
+          <span class="nt">volume_label_ansi</span><span class="p">:</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_volume_label - 4</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not is_unicode</span>
+  <span class="nt">string_data</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chars_str</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CountCharacters</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chars_str * 2</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-16LE</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">window_state</span><span class="p">:</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">normal</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">maximized</span>
+    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">min_no_active</span>
+  <span class="nt">drive_types</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">no_root_dir</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">removable</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fixed</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">remote</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cdrom</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ramdisk</span>
+</pre></div>
     </div>
 </section>
 
@@ -535,8 +532,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -295,573 +292,570 @@ data = PythonPickle(KaitaiStream(BytesIO(raw)))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
-
-
-if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
-    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
-
-class PythonPickle(KaitaiStruct):
-    &quot;&quot;&quot;Python Pickle format serializes Python objects to a byte stream, as a sequence
-    of operations to run on the Pickle Virtual Machine.
-    
-    The format is mostly implementation defined, there is no formal specification.
-    Pickle data types are closely coupled to the Python object model.
-    Python singletons, and most builtin types (e.g. `None`, `int`,`dict`, `list`)
-    are serialised using dedicated Pickle opcodes.
-    Other builtin types, and all classes  (e.g. `set`, `datetime.datetime`) are
-    serialised by encoding the name of a constructor callable.
-    They are deserialised by importing that constructor, and calling it.
-    So, unpickling an arbitrary pickle, using the Python&#39;s stdlib pickle module
-    can cause arbitrary code execution.
-    
-    Pickle format has evolved with Python, later protocols add opcodes &amp; types.
-    Later Python releases can pickle to or unpickle from any earlier protocol.
-    
-    * Protocol 0: ASCII clean, no explicit version, fields are &#39;\n&#39; terminated.
-    * Protocol 1: Binary, no explicit version, first length prefixed types.
-    * Protocol 2: Python 2.3+. Explicit versioning, more length prefixed types.
-      https://www.python.org/dev/peps/pep-0307/
-    * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.
-    * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.
-      https://www.python.org/dev/peps/pep-3154/
-    * Protocol 5: Python 3.8+: Opcodes for `bytearray` and out of band data
-      https://www.python.org/dev/peps/pep-0574/
-    
-    .. seealso::
-       Source - https://github.com/python/cpython/blob/v3.8.1/Lib/pickletools.py
-    &quot;&quot;&quot;
-
-    class Opcode(Enum):
-        mark = 40
-        empty_tuple = 41
-        stop = 46
-        pop = 48
-        pop_mark = 49
-        dup = 50
-        binbytes = 66
-        short_binbytes = 67
-        float = 70
-        binfloat = 71
-        int = 73
-        binint = 74
-        binint1 = 75
-        long = 76
-        binint2 = 77
-        none = 78
-        persid = 80
-        binpersid = 81
-        reduce = 82
-        string = 83
-        binstring = 84
-        short_binstring = 85
-        unicode = 86
-        binunicode = 88
-        empty_list = 93
-        append = 97
-        build = 98
-        global = 99
-        dict = 100
-        appends = 101
-        get = 103
-        binget = 104
-        inst = 105
-        long_binget = 106
-        list = 108
-        obj = 111
-        put = 112
-        binput = 113
-        long_binput = 114
-        setitem = 115
-        tuple = 116
-        setitems = 117
-        empty_dict = 125
-        proto = 128
-        newobj = 129
-        ext1 = 130
-        ext2 = 131
-        ext4 = 132
-        tuple1 = 133
-        tuple2 = 134
-        tuple3 = 135
-        newtrue = 136
-        newfalse = 137
-        long1 = 138
-        long4 = 139
-        short_binunicode = 140
-        binunicode8 = 141
-        binbytes8 = 142
-        empty_set = 143
-        additems = 144
-        frozenset = 145
-        newobj_ex = 146
-        stack_global = 147
-        memoize = 148
-        frame = 149
-        bytearray8 = 150
-        next_buffer = 151
-        read_buffer = 152
-    def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
-        self._parent = _parent
-        self._root = _root if _root else self
-        self._read()
-
-    def _read(self):
-        self.ops = []
-        i = 0
-        while True:
-            _ = self._root.Op(self._io, self, self._root)
-            self.ops.append(_)
-            if _.code == self._root.Opcode.stop:
-                break
-            i += 1
-
-    class Unicodestring8(KaitaiStruct):
-        &quot;&quot;&quot;Length prefixed string, between 0 and 2**64-1 bytes long.
-        
-        Only a 64-bit build of Python would produce a pickle containing strings
-        large enough to need this type. Such a pickle could not be unpickled on
-        a 32-bit build of Python, because the string would be larger than
-        `sys.maxsize`.
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.len = self._io.read_u8le()
-            self.val = (self._io.read_bytes(self.len)).decode(u&quot;utf8&quot;)
-
-
-    class Long1(KaitaiStruct):
-        &quot;&quot;&quot;Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,
-        encoded as two&#39;s complement.
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.len = self._io.read_u1()
-            self.val = self._io.read_bytes(self.len)
-
-
-    class Bytes8(KaitaiStruct):
-        &quot;&quot;&quot;Length prefixed string, between 0 and 2**64-1 bytes long.
-        
-        Only a 64-bit build of Python would produce a pickle containing strings
-        large enough to need this type. Such a pickle could not be unpickled on
-        a 32-bit build of Python, because the string would be larger than
-        `sys.maxsize`.
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.len = self._io.read_u8le()
-            self.val = self._io.read_bytes(self.len)
-
-
-    class Bytes1(KaitaiStruct):
-        &quot;&quot;&quot;Length prefixed byte string, between 0 and 255 bytes long.&quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.len = self._io.read_u1()
-            self.val = self._io.read_bytes(self.len)
-
-
-    class Bytes4(KaitaiStruct):
-        &quot;&quot;&quot;Length prefixed string, between 0 and 2**32-1 bytes long.&quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.len = self._io.read_u4le()
-            self.val = self._io.read_bytes(self.len)
-
-
-    class NoArg(KaitaiStruct):
-        &quot;&quot;&quot;Some opcodes take no argument, this empty type is used for them.&quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            pass
-
-
-    class StringnlNoescape(KaitaiStruct):
-        &quot;&quot;&quot;Unquoted string, does not contain string escapes.&quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.val = (self._io.read_bytes_term(10, False, True, True)).decode(u&quot;ascii&quot;)
-
-
-    class DecimalnlLong(KaitaiStruct):
-        &quot;&quot;&quot;Integer, encoded with the ASCII chracters [0-9-], followed by &#39;L&#39;.&quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.val = (self._io.read_bytes_term(10, False, True, True)).decode(u&quot;ascii&quot;)
-
-
-    class Unicodestring4(KaitaiStruct):
-        &quot;&quot;&quot;Length prefixed string, between 0 and 2**32-1 bytes long.&quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.len = self._io.read_u4le()
-            self.val = (self._io.read_bytes(self.len)).decode(u&quot;utf8&quot;)
-
-
-    class Unicodestringnl(KaitaiStruct):
-        &quot;&quot;&quot;Unquoted string, containing Python Unicode escapes.&quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.val = (self._io.read_bytes_term(10, False, True, True)).decode(u&quot;ascii&quot;)
-
-
-    class Long4(KaitaiStruct):
-        &quot;&quot;&quot;Large signed integer, in the range -2**(8*2**32-1) to 2**(8*2**32-1)-1,
-        encoded as two&#39;s complement.
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.len = self._io.read_u4le()
-            self.val = self._io.read_bytes(self.len)
-
-
-    class String1(KaitaiStruct):
-        &quot;&quot;&quot;Length prefixed string, between 0 and 255 bytes long. Encoding is
-        unspecified.
-        
-        The default Python 2.x string type (`str`) is a sequence of bytes.
-        These are pickled as `string1` or `string4`, when protocol == 2.
-        The bytes are written directly, no explicit encoding is performed.
-        
-        Python 3.x will not pickle an object as `string1` or `string4`.
-        Instead, opcodes and types with a known encoding are used.
-        When unpickling
-        
-        - `pickle.Unpickler` objects default to ASCII, which can be overriden
-        - `pickletools.dis` uses latin1, and cannot be overriden
-        
-        .. seealso::
-           Source - https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.len = self._io.read_u1()
-            self.val = self._io.read_bytes(self.len)
-
-
-    class Bytearray8(KaitaiStruct):
-        &quot;&quot;&quot;Length prefixed string, between 0 and 2**64-1 bytes long.
-        
-        The contents are deserilised into a `bytearray` object.
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.len = self._io.read_u8le()
-            self.val = self._io.read_bytes(self.len)
-
-
-    class DecimalnlShort(KaitaiStruct):
-        &quot;&quot;&quot;Integer or boolean, encoded with the ASCII characters [0-9-].
-        
-        The values &#39;00&#39; and &#39;01&#39; encode the Python values `False` and `True`.
-        Normally a value would not contain leading &#39;0&#39; characters.
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.val = (self._io.read_bytes_term(10, False, True, True)).decode(u&quot;ascii&quot;)
-
-
-    class Unicodestring1(KaitaiStruct):
-        &quot;&quot;&quot;Length prefixed string, between 0 and 255 bytes long.&quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.len = self._io.read_u4le()
-            self.val = (self._io.read_bytes(self.len)).decode(u&quot;utf8&quot;)
-
-
-    class Stringnl(KaitaiStruct):
-        &quot;&quot;&quot;Quoted string, possibly containing Python string escapes.&quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.val = (self._io.read_bytes_term(10, False, True, True)).decode(u&quot;ascii&quot;)
-
-
-    class StringnlNoescapePair(KaitaiStruct):
-        &quot;&quot;&quot;Pair of unquoted, unescaped strings.&quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.val1 = self._root.StringnlNoescape(self._io, self, self._root)
-            self.val2 = self._root.StringnlNoescape(self._io, self, self._root)
-
-
-    class String4(KaitaiStruct):
-        &quot;&quot;&quot;Length prefixed string, between 0 and 2**31-1 bytes long. Encoding is
-        unspecified.
-        
-        Although the len field is signed, any length &lt; 0 will raise an exception
-        during unpickling.
-        
-        See the documentation for `string1` for further detail about encodings.
-        
-        .. seealso::
-           Source - https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.len = self._io.read_s4le()
-            self.val = self._io.read_bytes(self.len)
-
-
-    class Op(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.code = self._root.Opcode(self._io.read_u1())
-            _on = self.code
-            if _on == self._root.Opcode.list:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.ext2:
-                self.arg = self._io.read_u2le()
-            elif _on == self._root.Opcode.readonly_buffer:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.stop:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binunicode:
-                self.arg = self._root.Unicodestring4(self._io, self, self._root)
-            elif _on == self._root.Opcode.put:
-                self.arg = self._root.DecimalnlShort(self._io, self, self._root)
-            elif _on == self._root.Opcode.newfalse:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.long1:
-                self.arg = self._root.Long1(self._io, self, self._root)
-            elif _on == self._root.Opcode.unicode:
-                self.arg = self._root.Unicodestringnl(self._io, self, self._root)
-            elif _on == self._root.Opcode.empty_list:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.mark:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.persid:
-                self.arg = self._root.StringnlNoescape(self._io, self, self._root)
-            elif _on == self._root.Opcode.stack_global:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binint:
-                self.arg = self._io.read_s4le()
-            elif _on == self._root.Opcode.binput:
-                self.arg = self._io.read_u1()
-            elif _on == self._root.Opcode.binint1:
-                self.arg = self._io.read_u1()
-            elif _on == self._root.Opcode.binint2:
-                self.arg = self._io.read_u2le()
-            elif _on == self._root.Opcode.tuple:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.short_binstring:
-                self.arg = self._root.String1(self._io, self, self._root)
-            elif _on == self._root.Opcode.empty_set:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.string:
-                self.arg = self._root.Stringnl(self._io, self, self._root)
-            elif _on == self._root.Opcode.empty_dict:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binget:
-                self.arg = self._io.read_u1()
-            elif _on == self._root.Opcode.append:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.pop_mark:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.get:
-                self.arg = self._root.DecimalnlShort(self._io, self, self._root)
-            elif _on == self._root.Opcode.newobj:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.reduce:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binbytes:
-                self.arg = self._root.Bytes4(self._io, self, self._root)
-            elif _on == self._root.Opcode.next_buffer:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binbytes8:
-                self.arg = self._root.Bytes8(self._io, self, self._root)
-            elif _on == self._root.Opcode.setitem:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.frame:
-                self.arg = self._io.read_u8le()
-            elif _on == self._root.Opcode.float:
-                self.arg = self._root.Floatnl(self._io, self, self._root)
-            elif _on == self._root.Opcode.binunicode8:
-                self.arg = self._root.Unicodestring8(self._io, self, self._root)
-            elif _on == self._root.Opcode.int:
-                self.arg = self._root.DecimalnlShort(self._io, self, self._root)
-            elif _on == self._root.Opcode.long_binput:
-                self.arg = self._io.read_u4le()
-            elif _on == self._root.Opcode.empty_tuple:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.long:
-                self.arg = self._root.DecimalnlLong(self._io, self, self._root)
-            elif _on == self._root.Opcode.frozenset:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.global:
-                self.arg = self._root.StringnlNoescapePair(self._io, self, self._root)
-            elif _on == self._root.Opcode.obj:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.additems:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.tuple1:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.setitems:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.none:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.build:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.ext4:
-                self.arg = self._io.read_u4le()
-            elif _on == self._root.Opcode.newobj_ex:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binfloat:
-                self.arg = self._io.read_f8be()
-            elif _on == self._root.Opcode.dup:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.bytearray8:
-                self.arg = self._root.Bytearray8(self._io, self, self._root)
-            elif _on == self._root.Opcode.long4:
-                self.arg = self._root.Long4(self._io, self, self._root)
-            elif _on == self._root.Opcode.short_binunicode:
-                self.arg = self._root.Unicodestring1(self._io, self, self._root)
-            elif _on == self._root.Opcode.tuple3:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.short_binbytes:
-                self.arg = self._root.Bytes1(self._io, self, self._root)
-            elif _on == self._root.Opcode.ext1:
-                self.arg = self._io.read_u1()
-            elif _on == self._root.Opcode.dict:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.appends:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.inst:
-                self.arg = self._root.StringnlNoescapePair(self._io, self, self._root)
-            elif _on == self._root.Opcode.binpersid:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.memoize:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.proto:
-                self.arg = self._io.read_u1()
-            elif _on == self._root.Opcode.newtrue:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.binstring:
-                self.arg = self._root.String4(self._io, self, self._root)
-            elif _on == self._root.Opcode.tuple2:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.pop:
-                self.arg = self._root.NoArg(self._io, self, self._root)
-            elif _on == self._root.Opcode.long_binget:
-                self.arg = self._io.read_u4le()
-
-
-    class Floatnl(KaitaiStruct):
-        &quot;&quot;&quot;Double float, encoded with the ASCII characters [0-9.e+-], &#39;-inf&#39;, &#39;inf&#39;,
-        or &#39;nan&#39;.
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.val = (self._io.read_bytes_term(10, False, True, True)).decode(u&quot;ascii&quot;)
-
-
-
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">parse_version</span>
+<span class="kn">from</span> <span class="nn">kaitaistruct</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">ks_version</span><span class="p">,</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+
+
+<span class="k">if</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">ks_version</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">parse_version</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ks_version</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">PythonPickle</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Python Pickle format serializes Python objects to a byte stream, as a sequence</span>
+<span class="sd">    of operations to run on the Pickle Virtual Machine.</span>
+<span class="sd">    </span>
+<span class="sd">    The format is mostly implementation defined, there is no formal specification.</span>
+<span class="sd">    Pickle data types are closely coupled to the Python object model.</span>
+<span class="sd">    Python singletons, and most builtin types (e.g. `None`, `int`,`dict`, `list`)</span>
+<span class="sd">    are serialised using dedicated Pickle opcodes.</span>
+<span class="sd">    Other builtin types, and all classes  (e.g. `set`, `datetime.datetime`) are</span>
+<span class="sd">    serialised by encoding the name of a constructor callable.</span>
+<span class="sd">    They are deserialised by importing that constructor, and calling it.</span>
+<span class="sd">    So, unpickling an arbitrary pickle, using the Python&#39;s stdlib pickle module</span>
+<span class="sd">    can cause arbitrary code execution.</span>
+<span class="sd">    </span>
+<span class="sd">    Pickle format has evolved with Python, later protocols add opcodes &amp; types.</span>
+<span class="sd">    Later Python releases can pickle to or unpickle from any earlier protocol.</span>
+<span class="sd">    </span>
+<span class="sd">    * Protocol 0: ASCII clean, no explicit version, fields are &#39;\n&#39; terminated.</span>
+<span class="sd">    * Protocol 1: Binary, no explicit version, first length prefixed types.</span>
+<span class="sd">    * Protocol 2: Python 2.3+. Explicit versioning, more length prefixed types.</span>
+<span class="sd">      https://www.python.org/dev/peps/pep-0307/</span>
+<span class="sd">    * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.</span>
+<span class="sd">    * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.</span>
+<span class="sd">      https://www.python.org/dev/peps/pep-3154/</span>
+<span class="sd">    * Protocol 5: Python 3.8+: Opcodes for `bytearray` and out of band data</span>
+<span class="sd">      https://www.python.org/dev/peps/pep-0574/</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso::</span>
+<span class="sd">       Source - https://github.com/python/cpython/blob/v3.8.1/Lib/pickletools.py</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">class</span> <span class="nc">Opcode</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="n">mark</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="n">empty_tuple</span> <span class="o">=</span> <span class="mi">41</span>
+        <span class="n">stop</span> <span class="o">=</span> <span class="mi">46</span>
+        <span class="n">pop</span> <span class="o">=</span> <span class="mi">48</span>
+        <span class="n">pop_mark</span> <span class="o">=</span> <span class="mi">49</span>
+        <span class="n">dup</span> <span class="o">=</span> <span class="mi">50</span>
+        <span class="n">binbytes</span> <span class="o">=</span> <span class="mi">66</span>
+        <span class="n">short_binbytes</span> <span class="o">=</span> <span class="mi">67</span>
+        <span class="nb">float</span> <span class="o">=</span> <span class="mi">70</span>
+        <span class="n">binfloat</span> <span class="o">=</span> <span class="mi">71</span>
+        <span class="nb">int</span> <span class="o">=</span> <span class="mi">73</span>
+        <span class="n">binint</span> <span class="o">=</span> <span class="mi">74</span>
+        <span class="n">binint1</span> <span class="o">=</span> <span class="mi">75</span>
+        <span class="n">long</span> <span class="o">=</span> <span class="mi">76</span>
+        <span class="n">binint2</span> <span class="o">=</span> <span class="mi">77</span>
+        <span class="n">none</span> <span class="o">=</span> <span class="mi">78</span>
+        <span class="n">persid</span> <span class="o">=</span> <span class="mi">80</span>
+        <span class="n">binpersid</span> <span class="o">=</span> <span class="mi">81</span>
+        <span class="n">reduce</span> <span class="o">=</span> <span class="mi">82</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="mi">83</span>
+        <span class="n">binstring</span> <span class="o">=</span> <span class="mi">84</span>
+        <span class="n">short_binstring</span> <span class="o">=</span> <span class="mi">85</span>
+        <span class="n">unicode</span> <span class="o">=</span> <span class="mi">86</span>
+        <span class="n">binunicode</span> <span class="o">=</span> <span class="mi">88</span>
+        <span class="n">empty_list</span> <span class="o">=</span> <span class="mi">93</span>
+        <span class="n">append</span> <span class="o">=</span> <span class="mi">97</span>
+        <span class="n">build</span> <span class="o">=</span> <span class="mi">98</span>
+        <span class="k">global</span> <span class="o">=</span> <span class="mi">99</span>
+        <span class="nb">dict</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">appends</span> <span class="o">=</span> <span class="mi">101</span>
+        <span class="n">get</span> <span class="o">=</span> <span class="mi">103</span>
+        <span class="n">binget</span> <span class="o">=</span> <span class="mi">104</span>
+        <span class="n">inst</span> <span class="o">=</span> <span class="mi">105</span>
+        <span class="n">long_binget</span> <span class="o">=</span> <span class="mi">106</span>
+        <span class="nb">list</span> <span class="o">=</span> <span class="mi">108</span>
+        <span class="n">obj</span> <span class="o">=</span> <span class="mi">111</span>
+        <span class="n">put</span> <span class="o">=</span> <span class="mi">112</span>
+        <span class="n">binput</span> <span class="o">=</span> <span class="mi">113</span>
+        <span class="n">long_binput</span> <span class="o">=</span> <span class="mi">114</span>
+        <span class="n">setitem</span> <span class="o">=</span> <span class="mi">115</span>
+        <span class="nb">tuple</span> <span class="o">=</span> <span class="mi">116</span>
+        <span class="n">setitems</span> <span class="o">=</span> <span class="mi">117</span>
+        <span class="n">empty_dict</span> <span class="o">=</span> <span class="mi">125</span>
+        <span class="n">proto</span> <span class="o">=</span> <span class="mi">128</span>
+        <span class="n">newobj</span> <span class="o">=</span> <span class="mi">129</span>
+        <span class="n">ext1</span> <span class="o">=</span> <span class="mi">130</span>
+        <span class="n">ext2</span> <span class="o">=</span> <span class="mi">131</span>
+        <span class="n">ext4</span> <span class="o">=</span> <span class="mi">132</span>
+        <span class="n">tuple1</span> <span class="o">=</span> <span class="mi">133</span>
+        <span class="n">tuple2</span> <span class="o">=</span> <span class="mi">134</span>
+        <span class="n">tuple3</span> <span class="o">=</span> <span class="mi">135</span>
+        <span class="n">newtrue</span> <span class="o">=</span> <span class="mi">136</span>
+        <span class="n">newfalse</span> <span class="o">=</span> <span class="mi">137</span>
+        <span class="n">long1</span> <span class="o">=</span> <span class="mi">138</span>
+        <span class="n">long4</span> <span class="o">=</span> <span class="mi">139</span>
+        <span class="n">short_binunicode</span> <span class="o">=</span> <span class="mi">140</span>
+        <span class="n">binunicode8</span> <span class="o">=</span> <span class="mi">141</span>
+        <span class="n">binbytes8</span> <span class="o">=</span> <span class="mi">142</span>
+        <span class="n">empty_set</span> <span class="o">=</span> <span class="mi">143</span>
+        <span class="n">additems</span> <span class="o">=</span> <span class="mi">144</span>
+        <span class="nb">frozenset</span> <span class="o">=</span> <span class="mi">145</span>
+        <span class="n">newobj_ex</span> <span class="o">=</span> <span class="mi">146</span>
+        <span class="n">stack_global</span> <span class="o">=</span> <span class="mi">147</span>
+        <span class="n">memoize</span> <span class="o">=</span> <span class="mi">148</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="mi">149</span>
+        <span class="n">bytearray8</span> <span class="o">=</span> <span class="mi">150</span>
+        <span class="n">next_buffer</span> <span class="o">=</span> <span class="mi">151</span>
+        <span class="n">read_buffer</span> <span class="o">=</span> <span class="mi">152</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ops</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Op</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">_</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">stop</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">class</span> <span class="nc">Unicodestring8</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Length prefixed string, between 0 and 2**64-1 bytes long.</span>
+<span class="sd">        </span>
+<span class="sd">        Only a 64-bit build of Python would produce a pickle containing strings</span>
+<span class="sd">        large enough to need this type. Such a pickle could not be unpickled on</span>
+<span class="sd">        a 32-bit build of Python, because the string would be larger than</span>
+<span class="sd">        `sys.maxsize`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">Long1</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,</span>
+<span class="sd">        encoded as two&#39;s complement.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">Bytes8</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Length prefixed string, between 0 and 2**64-1 bytes long.</span>
+<span class="sd">        </span>
+<span class="sd">        Only a 64-bit build of Python would produce a pickle containing strings</span>
+<span class="sd">        large enough to need this type. Such a pickle could not be unpickled on</span>
+<span class="sd">        a 32-bit build of Python, because the string would be larger than</span>
+<span class="sd">        `sys.maxsize`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">Bytes1</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Length prefixed byte string, between 0 and 255 bytes long.&quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">Bytes4</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Length prefixed string, between 0 and 2**32-1 bytes long.&quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">NoArg</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Some opcodes take no argument, this empty type is used for them.&quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+
+    <span class="k">class</span> <span class="nc">StringnlNoescape</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Unquoted string, does not contain string escapes.&quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">DecimalnlLong</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Integer, encoded with the ASCII chracters [0-9-], followed by &#39;L&#39;.&quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">Unicodestring4</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Length prefixed string, between 0 and 2**32-1 bytes long.&quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">Unicodestringnl</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Unquoted string, containing Python Unicode escapes.&quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">Long4</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Large signed integer, in the range -2**(8*2**32-1) to 2**(8*2**32-1)-1,</span>
+<span class="sd">        encoded as two&#39;s complement.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">String1</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Length prefixed string, between 0 and 255 bytes long. Encoding is</span>
+<span class="sd">        unspecified.</span>
+<span class="sd">        </span>
+<span class="sd">        The default Python 2.x string type (`str`) is a sequence of bytes.</span>
+<span class="sd">        These are pickled as `string1` or `string4`, when protocol == 2.</span>
+<span class="sd">        The bytes are written directly, no explicit encoding is performed.</span>
+<span class="sd">        </span>
+<span class="sd">        Python 3.x will not pickle an object as `string1` or `string4`.</span>
+<span class="sd">        Instead, opcodes and types with a known encoding are used.</span>
+<span class="sd">        When unpickling</span>
+<span class="sd">        </span>
+<span class="sd">        - `pickle.Unpickler` objects default to ASCII, which can be overriden</span>
+<span class="sd">        - `pickletools.dis` uses latin1, and cannot be overriden</span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">Bytearray8</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Length prefixed string, between 0 and 2**64-1 bytes long.</span>
+<span class="sd">        </span>
+<span class="sd">        The contents are deserilised into a `bytearray` object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">DecimalnlShort</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Integer or boolean, encoded with the ASCII characters [0-9-].</span>
+<span class="sd">        </span>
+<span class="sd">        The values &#39;00&#39; and &#39;01&#39; encode the Python values `False` and `True`.</span>
+<span class="sd">        Normally a value would not contain leading &#39;0&#39; characters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">Unicodestring1</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Length prefixed string, between 0 and 255 bytes long.&quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">Stringnl</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Quoted string, possibly containing Python string escapes.&quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">StringnlNoescapePair</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pair of unquoted, unescaped strings.&quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">StringnlNoescape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">StringnlNoescape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">String4</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Length prefixed string, between 0 and 2**31-1 bytes long. Encoding is</span>
+<span class="sd">        unspecified.</span>
+<span class="sd">        </span>
+<span class="sd">        Although the len field is signed, any length &lt; 0 will raise an exception</span>
+<span class="sd">        during unpickling.</span>
+<span class="sd">        </span>
+<span class="sd">        See the documentation for `string1` for further detail about encodings.</span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">Op</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">())</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ext2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">readonly_buffer</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">stop</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">binunicode</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Unicodestring4</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">put</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">DecimalnlShort</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">newfalse</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">long1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Long1</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">unicode</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Unicodestringnl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">empty_list</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">mark</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">persid</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">StringnlNoescape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">stack_global</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">binint</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s4le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">binput</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">binint1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">binint2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">tuple</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">short_binstring</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">String1</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">empty_set</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">string</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Stringnl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">empty_dict</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">binget</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">append</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">pop_mark</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">get</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">DecimalnlShort</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">newobj</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">reduce</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">binbytes</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Bytes4</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">next_buffer</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">binbytes8</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Bytes8</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">setitem</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">frame</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">float</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Floatnl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">binunicode8</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Unicodestring8</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">int</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">DecimalnlShort</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">long_binput</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">empty_tuple</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">long</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">DecimalnlLong</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">frozenset</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="k">global</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">StringnlNoescapePair</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">obj</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">additems</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">tuple1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">setitems</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">none</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">build</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ext4</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">newobj_ex</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">binfloat</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_f8be</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">dup</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">bytearray8</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Bytearray8</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">long4</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Long4</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">short_binunicode</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Unicodestring1</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">tuple3</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">short_binbytes</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Bytes1</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">ext1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">dict</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">appends</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">inst</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">StringnlNoescapePair</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">binpersid</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">memoize</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">proto</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">newtrue</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">binstring</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">String4</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">tuple2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">pop</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">NoArg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Opcode</span><span class="o">.</span><span class="n">long_binget</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+
+    <span class="k">class</span> <span class="nc">Floatnl</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Double float, encoded with the ASCII characters [0-9.e+-], &#39;-inf&#39;, &#39;inf&#39;,</span>
+<span class="sd">        or &#39;nan&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+</pre></div>
 
         </div>
         
@@ -888,8 +882,8 @@ class PythonPickle(KaitaiStruct):
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

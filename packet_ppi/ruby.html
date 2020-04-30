@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -241,496 +238,496 @@ data = PacketPpi.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# PPI is a standard for link layer packet encapsulation, proposed as
-# generic extensible container to store both captured in-band data and
-# out-of-band data. Originally it was developed to provide 802.11n
-# radio information, but can be used for other purposes as well.
-# 
-# Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&amp;do=get&amp;target=Http.cap  
-# @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3
-class PacketPpi &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># PPI is a standard for link layer packet encapsulation, proposed as</span>
+<span class="c1"># generic extensible container to store both captured in-band data and</span>
+<span class="c1"># out-of-band data. Originally it was developed to provide 802.11n</span>
+<span class="c1"># radio information, but can be used for other purposes as well.</span>
+<span class="c1"># </span>
+<span class="c1"># Sample capture: https://wiki.wireshark.org/SampleCaptures?action=AttachFile&amp;do=get&amp;target=Http.cap  </span>
+<span class="c1"># @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3</span>
+<span class="k">class</span> <span class="nc">PacketPpi</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  PFH_TYPE = {
-    2 =&gt; :pfh_type_radio_802_11_common,
-    3 =&gt; :pfh_type_radio_802_11n_mac_ext,
-    4 =&gt; :pfh_type_radio_802_11n_mac_phy_ext,
-    5 =&gt; :pfh_type_spectrum_map,
-    6 =&gt; :pfh_type_process_info,
-    7 =&gt; :pfh_type_capture_info,
-  }
-  I__PFH_TYPE = PFH_TYPE.invert
+  <span class="no">PFH_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:pfh_type_radio_802_11_common</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:pfh_type_radio_802_11n_mac_ext</span><span class="p">,</span>
+    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:pfh_type_radio_802_11n_mac_phy_ext</span><span class="p">,</span>
+    <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:pfh_type_spectrum_map</span><span class="p">,</span>
+    <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:pfh_type_process_info</span><span class="p">,</span>
+    <span class="mi">7</span> <span class="o">=&gt;</span> <span class="ss">:pfh_type_capture_info</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__PFH_TYPE</span> <span class="o">=</span> <span class="no">PFH_TYPE</span><span class="o">.</span><span class="n">invert</span>
 
-  LINKTYPE = {
-    0 =&gt; :linktype_null_linktype,
-    1 =&gt; :linktype_ethernet,
-    3 =&gt; :linktype_ax25,
-    6 =&gt; :linktype_ieee802_5,
-    7 =&gt; :linktype_arcnet_bsd,
-    8 =&gt; :linktype_slip,
-    9 =&gt; :linktype_ppp,
-    10 =&gt; :linktype_fddi,
-    50 =&gt; :linktype_ppp_hdlc,
-    51 =&gt; :linktype_ppp_ether,
-    100 =&gt; :linktype_atm_rfc1483,
-    101 =&gt; :linktype_raw,
-    104 =&gt; :linktype_c_hdlc,
-    105 =&gt; :linktype_ieee802_11,
-    107 =&gt; :linktype_frelay,
-    108 =&gt; :linktype_loop,
-    113 =&gt; :linktype_linux_sll,
-    114 =&gt; :linktype_ltalk,
-    117 =&gt; :linktype_pflog,
-    119 =&gt; :linktype_ieee802_11_prism,
-    122 =&gt; :linktype_ip_over_fc,
-    123 =&gt; :linktype_sunatm,
-    127 =&gt; :linktype_ieee802_11_radiotap,
-    129 =&gt; :linktype_arcnet_linux,
-    138 =&gt; :linktype_apple_ip_over_ieee1394,
-    139 =&gt; :linktype_mtp2_with_phdr,
-    140 =&gt; :linktype_mtp2,
-    141 =&gt; :linktype_mtp3,
-    142 =&gt; :linktype_sccp,
-    143 =&gt; :linktype_docsis,
-    144 =&gt; :linktype_linux_irda,
-    147 =&gt; :linktype_user0,
-    148 =&gt; :linktype_user1,
-    149 =&gt; :linktype_user2,
-    150 =&gt; :linktype_user3,
-    151 =&gt; :linktype_user4,
-    152 =&gt; :linktype_user5,
-    153 =&gt; :linktype_user6,
-    154 =&gt; :linktype_user7,
-    155 =&gt; :linktype_user8,
-    156 =&gt; :linktype_user9,
-    157 =&gt; :linktype_user10,
-    158 =&gt; :linktype_user11,
-    159 =&gt; :linktype_user12,
-    160 =&gt; :linktype_user13,
-    161 =&gt; :linktype_user14,
-    162 =&gt; :linktype_user15,
-    163 =&gt; :linktype_ieee802_11_avs,
-    165 =&gt; :linktype_bacnet_ms_tp,
-    166 =&gt; :linktype_ppp_pppd,
-    169 =&gt; :linktype_gprs_llc,
-    170 =&gt; :linktype_gpf_t,
-    171 =&gt; :linktype_gpf_f,
-    177 =&gt; :linktype_linux_lapd,
-    187 =&gt; :linktype_bluetooth_hci_h4,
-    189 =&gt; :linktype_usb_linux,
-    192 =&gt; :linktype_ppi,
-    195 =&gt; :linktype_ieee802_15_4,
-    196 =&gt; :linktype_sita,
-    197 =&gt; :linktype_erf,
-    201 =&gt; :linktype_bluetooth_hci_h4_with_phdr,
-    202 =&gt; :linktype_ax25_kiss,
-    203 =&gt; :linktype_lapd,
-    204 =&gt; :linktype_ppp_with_dir,
-    205 =&gt; :linktype_c_hdlc_with_dir,
-    206 =&gt; :linktype_frelay_with_dir,
-    209 =&gt; :linktype_ipmb_linux,
-    215 =&gt; :linktype_ieee802_15_4_nonask_phy,
-    220 =&gt; :linktype_usb_linux_mmapped,
-    224 =&gt; :linktype_fc_2,
-    225 =&gt; :linktype_fc_2_with_frame_delims,
-    226 =&gt; :linktype_ipnet,
-    227 =&gt; :linktype_can_socketcan,
-    228 =&gt; :linktype_ipv4,
-    229 =&gt; :linktype_ipv6,
-    230 =&gt; :linktype_ieee802_15_4_nofcs,
-    231 =&gt; :linktype_dbus,
-    235 =&gt; :linktype_dvb_ci,
-    236 =&gt; :linktype_mux27010,
-    237 =&gt; :linktype_stanag_5066_d_pdu,
-    239 =&gt; :linktype_nflog,
-    240 =&gt; :linktype_netanalyzer,
-    241 =&gt; :linktype_netanalyzer_transparent,
-    242 =&gt; :linktype_ipoib,
-    243 =&gt; :linktype_mpeg_2_ts,
-    244 =&gt; :linktype_ng40,
-    245 =&gt; :linktype_nfc_llcp,
-    247 =&gt; :linktype_infiniband,
-    248 =&gt; :linktype_sctp,
-    249 =&gt; :linktype_usbpcap,
-    250 =&gt; :linktype_rtac_serial,
-    251 =&gt; :linktype_bluetooth_le_ll,
-    253 =&gt; :linktype_netlink,
-    254 =&gt; :linktype_bluetooth_linux_monitor,
-    255 =&gt; :linktype_bluetooth_bredr_bb,
-    256 =&gt; :linktype_bluetooth_le_ll_with_phdr,
-    257 =&gt; :linktype_profibus_dl,
-    258 =&gt; :linktype_pktap,
-    259 =&gt; :linktype_epon,
-    260 =&gt; :linktype_ipmi_hpm_2,
-    261 =&gt; :linktype_zwave_r1_r2,
-    262 =&gt; :linktype_zwave_r3,
-    263 =&gt; :linktype_wattstopper_dlm,
-    264 =&gt; :linktype_iso_14443,
-  }
-  I__LINKTYPE = LINKTYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">LINKTYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:linktype_null_linktype</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ethernet</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ax25</span><span class="p">,</span>
+    <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ieee802_5</span><span class="p">,</span>
+    <span class="mi">7</span> <span class="o">=&gt;</span> <span class="ss">:linktype_arcnet_bsd</span><span class="p">,</span>
+    <span class="mi">8</span> <span class="o">=&gt;</span> <span class="ss">:linktype_slip</span><span class="p">,</span>
+    <span class="mi">9</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ppp</span><span class="p">,</span>
+    <span class="mi">10</span> <span class="o">=&gt;</span> <span class="ss">:linktype_fddi</span><span class="p">,</span>
+    <span class="mi">50</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ppp_hdlc</span><span class="p">,</span>
+    <span class="mi">51</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ppp_ether</span><span class="p">,</span>
+    <span class="mi">100</span> <span class="o">=&gt;</span> <span class="ss">:linktype_atm_rfc1483</span><span class="p">,</span>
+    <span class="mi">101</span> <span class="o">=&gt;</span> <span class="ss">:linktype_raw</span><span class="p">,</span>
+    <span class="mi">104</span> <span class="o">=&gt;</span> <span class="ss">:linktype_c_hdlc</span><span class="p">,</span>
+    <span class="mi">105</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ieee802_11</span><span class="p">,</span>
+    <span class="mi">107</span> <span class="o">=&gt;</span> <span class="ss">:linktype_frelay</span><span class="p">,</span>
+    <span class="mi">108</span> <span class="o">=&gt;</span> <span class="ss">:linktype_loop</span><span class="p">,</span>
+    <span class="mi">113</span> <span class="o">=&gt;</span> <span class="ss">:linktype_linux_sll</span><span class="p">,</span>
+    <span class="mi">114</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ltalk</span><span class="p">,</span>
+    <span class="mi">117</span> <span class="o">=&gt;</span> <span class="ss">:linktype_pflog</span><span class="p">,</span>
+    <span class="mi">119</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ieee802_11_prism</span><span class="p">,</span>
+    <span class="mi">122</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ip_over_fc</span><span class="p">,</span>
+    <span class="mi">123</span> <span class="o">=&gt;</span> <span class="ss">:linktype_sunatm</span><span class="p">,</span>
+    <span class="mi">127</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ieee802_11_radiotap</span><span class="p">,</span>
+    <span class="mi">129</span> <span class="o">=&gt;</span> <span class="ss">:linktype_arcnet_linux</span><span class="p">,</span>
+    <span class="mi">138</span> <span class="o">=&gt;</span> <span class="ss">:linktype_apple_ip_over_ieee1394</span><span class="p">,</span>
+    <span class="mi">139</span> <span class="o">=&gt;</span> <span class="ss">:linktype_mtp2_with_phdr</span><span class="p">,</span>
+    <span class="mi">140</span> <span class="o">=&gt;</span> <span class="ss">:linktype_mtp2</span><span class="p">,</span>
+    <span class="mi">141</span> <span class="o">=&gt;</span> <span class="ss">:linktype_mtp3</span><span class="p">,</span>
+    <span class="mi">142</span> <span class="o">=&gt;</span> <span class="ss">:linktype_sccp</span><span class="p">,</span>
+    <span class="mi">143</span> <span class="o">=&gt;</span> <span class="ss">:linktype_docsis</span><span class="p">,</span>
+    <span class="mi">144</span> <span class="o">=&gt;</span> <span class="ss">:linktype_linux_irda</span><span class="p">,</span>
+    <span class="mi">147</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user0</span><span class="p">,</span>
+    <span class="mi">148</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user1</span><span class="p">,</span>
+    <span class="mi">149</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user2</span><span class="p">,</span>
+    <span class="mi">150</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user3</span><span class="p">,</span>
+    <span class="mi">151</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user4</span><span class="p">,</span>
+    <span class="mi">152</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user5</span><span class="p">,</span>
+    <span class="mi">153</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user6</span><span class="p">,</span>
+    <span class="mi">154</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user7</span><span class="p">,</span>
+    <span class="mi">155</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user8</span><span class="p">,</span>
+    <span class="mi">156</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user9</span><span class="p">,</span>
+    <span class="mi">157</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user10</span><span class="p">,</span>
+    <span class="mi">158</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user11</span><span class="p">,</span>
+    <span class="mi">159</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user12</span><span class="p">,</span>
+    <span class="mi">160</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user13</span><span class="p">,</span>
+    <span class="mi">161</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user14</span><span class="p">,</span>
+    <span class="mi">162</span> <span class="o">=&gt;</span> <span class="ss">:linktype_user15</span><span class="p">,</span>
+    <span class="mi">163</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ieee802_11_avs</span><span class="p">,</span>
+    <span class="mi">165</span> <span class="o">=&gt;</span> <span class="ss">:linktype_bacnet_ms_tp</span><span class="p">,</span>
+    <span class="mi">166</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ppp_pppd</span><span class="p">,</span>
+    <span class="mi">169</span> <span class="o">=&gt;</span> <span class="ss">:linktype_gprs_llc</span><span class="p">,</span>
+    <span class="mi">170</span> <span class="o">=&gt;</span> <span class="ss">:linktype_gpf_t</span><span class="p">,</span>
+    <span class="mi">171</span> <span class="o">=&gt;</span> <span class="ss">:linktype_gpf_f</span><span class="p">,</span>
+    <span class="mi">177</span> <span class="o">=&gt;</span> <span class="ss">:linktype_linux_lapd</span><span class="p">,</span>
+    <span class="mi">187</span> <span class="o">=&gt;</span> <span class="ss">:linktype_bluetooth_hci_h4</span><span class="p">,</span>
+    <span class="mi">189</span> <span class="o">=&gt;</span> <span class="ss">:linktype_usb_linux</span><span class="p">,</span>
+    <span class="mi">192</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ppi</span><span class="p">,</span>
+    <span class="mi">195</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ieee802_15_4</span><span class="p">,</span>
+    <span class="mi">196</span> <span class="o">=&gt;</span> <span class="ss">:linktype_sita</span><span class="p">,</span>
+    <span class="mi">197</span> <span class="o">=&gt;</span> <span class="ss">:linktype_erf</span><span class="p">,</span>
+    <span class="mi">201</span> <span class="o">=&gt;</span> <span class="ss">:linktype_bluetooth_hci_h4_with_phdr</span><span class="p">,</span>
+    <span class="mi">202</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ax25_kiss</span><span class="p">,</span>
+    <span class="mi">203</span> <span class="o">=&gt;</span> <span class="ss">:linktype_lapd</span><span class="p">,</span>
+    <span class="mi">204</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ppp_with_dir</span><span class="p">,</span>
+    <span class="mi">205</span> <span class="o">=&gt;</span> <span class="ss">:linktype_c_hdlc_with_dir</span><span class="p">,</span>
+    <span class="mi">206</span> <span class="o">=&gt;</span> <span class="ss">:linktype_frelay_with_dir</span><span class="p">,</span>
+    <span class="mi">209</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ipmb_linux</span><span class="p">,</span>
+    <span class="mi">215</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ieee802_15_4_nonask_phy</span><span class="p">,</span>
+    <span class="mi">220</span> <span class="o">=&gt;</span> <span class="ss">:linktype_usb_linux_mmapped</span><span class="p">,</span>
+    <span class="mi">224</span> <span class="o">=&gt;</span> <span class="ss">:linktype_fc_2</span><span class="p">,</span>
+    <span class="mi">225</span> <span class="o">=&gt;</span> <span class="ss">:linktype_fc_2_with_frame_delims</span><span class="p">,</span>
+    <span class="mi">226</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ipnet</span><span class="p">,</span>
+    <span class="mi">227</span> <span class="o">=&gt;</span> <span class="ss">:linktype_can_socketcan</span><span class="p">,</span>
+    <span class="mi">228</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ipv4</span><span class="p">,</span>
+    <span class="mi">229</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ipv6</span><span class="p">,</span>
+    <span class="mi">230</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ieee802_15_4_nofcs</span><span class="p">,</span>
+    <span class="mi">231</span> <span class="o">=&gt;</span> <span class="ss">:linktype_dbus</span><span class="p">,</span>
+    <span class="mi">235</span> <span class="o">=&gt;</span> <span class="ss">:linktype_dvb_ci</span><span class="p">,</span>
+    <span class="mi">236</span> <span class="o">=&gt;</span> <span class="ss">:linktype_mux27010</span><span class="p">,</span>
+    <span class="mi">237</span> <span class="o">=&gt;</span> <span class="ss">:linktype_stanag_5066_d_pdu</span><span class="p">,</span>
+    <span class="mi">239</span> <span class="o">=&gt;</span> <span class="ss">:linktype_nflog</span><span class="p">,</span>
+    <span class="mi">240</span> <span class="o">=&gt;</span> <span class="ss">:linktype_netanalyzer</span><span class="p">,</span>
+    <span class="mi">241</span> <span class="o">=&gt;</span> <span class="ss">:linktype_netanalyzer_transparent</span><span class="p">,</span>
+    <span class="mi">242</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ipoib</span><span class="p">,</span>
+    <span class="mi">243</span> <span class="o">=&gt;</span> <span class="ss">:linktype_mpeg_2_ts</span><span class="p">,</span>
+    <span class="mi">244</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ng40</span><span class="p">,</span>
+    <span class="mi">245</span> <span class="o">=&gt;</span> <span class="ss">:linktype_nfc_llcp</span><span class="p">,</span>
+    <span class="mi">247</span> <span class="o">=&gt;</span> <span class="ss">:linktype_infiniband</span><span class="p">,</span>
+    <span class="mi">248</span> <span class="o">=&gt;</span> <span class="ss">:linktype_sctp</span><span class="p">,</span>
+    <span class="mi">249</span> <span class="o">=&gt;</span> <span class="ss">:linktype_usbpcap</span><span class="p">,</span>
+    <span class="mi">250</span> <span class="o">=&gt;</span> <span class="ss">:linktype_rtac_serial</span><span class="p">,</span>
+    <span class="mi">251</span> <span class="o">=&gt;</span> <span class="ss">:linktype_bluetooth_le_ll</span><span class="p">,</span>
+    <span class="mi">253</span> <span class="o">=&gt;</span> <span class="ss">:linktype_netlink</span><span class="p">,</span>
+    <span class="mi">254</span> <span class="o">=&gt;</span> <span class="ss">:linktype_bluetooth_linux_monitor</span><span class="p">,</span>
+    <span class="mi">255</span> <span class="o">=&gt;</span> <span class="ss">:linktype_bluetooth_bredr_bb</span><span class="p">,</span>
+    <span class="mi">256</span> <span class="o">=&gt;</span> <span class="ss">:linktype_bluetooth_le_ll_with_phdr</span><span class="p">,</span>
+    <span class="mi">257</span> <span class="o">=&gt;</span> <span class="ss">:linktype_profibus_dl</span><span class="p">,</span>
+    <span class="mi">258</span> <span class="o">=&gt;</span> <span class="ss">:linktype_pktap</span><span class="p">,</span>
+    <span class="mi">259</span> <span class="o">=&gt;</span> <span class="ss">:linktype_epon</span><span class="p">,</span>
+    <span class="mi">260</span> <span class="o">=&gt;</span> <span class="ss">:linktype_ipmi_hpm_2</span><span class="p">,</span>
+    <span class="mi">261</span> <span class="o">=&gt;</span> <span class="ss">:linktype_zwave_r1_r2</span><span class="p">,</span>
+    <span class="mi">262</span> <span class="o">=&gt;</span> <span class="ss">:linktype_zwave_r3</span><span class="p">,</span>
+    <span class="mi">263</span> <span class="o">=&gt;</span> <span class="ss">:linktype_wattstopper_dlm</span><span class="p">,</span>
+    <span class="mi">264</span> <span class="o">=&gt;</span> <span class="ss">:linktype_iso_14443</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__LINKTYPE</span> <span class="o">=</span> <span class="no">LINKTYPE</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @header = PacketPpiHeader.new(@_io, self, @_root)
-    @_raw_fields = @_io.read_bytes((header.pph_len - 8))
-    io = Kaitai::Struct::Stream.new(@_raw_fields)
-    @fields = PacketPpiFields.new(io, self, @_root)
-    case header.pph_dlt
-    when :linktype_ppi
-      @_raw_body = @_io.read_bytes_full
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = PacketPpi.new(io)
-    when :linktype_ethernet
-      @_raw_body = @_io.read_bytes_full
-      io = Kaitai::Struct::Stream.new(@_raw_body)
-      @body = EthernetFrame.new(io)
-    else
-      @body = @_io.read_bytes_full
-    end
-    self
-  end
-  class PacketPpiFields &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@header</span> <span class="o">=</span> <span class="no">PacketPpiHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@_raw_fields</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">header</span><span class="o">.</span><span class="n">pph_len</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_fields</span><span class="p">)</span>
+    <span class="vi">@fields</span> <span class="o">=</span> <span class="no">PacketPpiFields</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">header</span><span class="o">.</span><span class="n">pph_dlt</span>
+    <span class="k">when</span> <span class="ss">:linktype_ppi</span>
+      <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+      <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+      <span class="vi">@body</span> <span class="o">=</span> <span class="no">PacketPpi</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
+    <span class="k">when</span> <span class="ss">:linktype_ethernet</span>
+      <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+      <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+      <span class="vi">@body</span> <span class="o">=</span> <span class="no">EthernetFrame</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">)</span>
+    <span class="k">else</span>
+      <span class="vi">@body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+    <span class="k">end</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">PacketPpiFields</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @entries = []
-      i = 0
-      while not @_io.eof?
-        @entries &lt;&lt; PacketPpiField.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :entries
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+        <span class="vi">@entries</span> <span class="o">&lt;&lt;</span> <span class="no">PacketPpiField</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:entries</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.3
-  class Radio80211nMacExtBody &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.3</span>
+  <span class="k">class</span> <span class="nc">Radio80211nMacExtBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @flags = MacFlags.new(@_io, self, @_root)
-      @a_mpdu_id = @_io.read_u4le
-      @num_delimiters = @_io.read_u1
-      @reserved = @_io.read_bytes(3)
-      self
-    end
-    attr_reader :flags
-    attr_reader :a_mpdu_id
-    attr_reader :num_delimiters
-    attr_reader :reserved
-  end
-  class MacFlags &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="no">MacFlags</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@a_mpdu_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@num_delimiters</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:a_mpdu_id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_delimiters</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">MacFlags</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @unused1 = @_io.read_bits_int(1) != 0
-      @aggregate_delimiter = @_io.read_bits_int(1) != 0
-      @more_aggregates = @_io.read_bits_int(1) != 0
-      @aggregate = @_io.read_bits_int(1) != 0
-      @dup_rx = @_io.read_bits_int(1) != 0
-      @rx_short_guard = @_io.read_bits_int(1) != 0
-      @is_ht_40 = @_io.read_bits_int(1) != 0
-      @greenfield = @_io.read_bits_int(1) != 0
-      @_io.align_to_byte
-      @unused2 = @_io.read_bytes(3)
-      self
-    end
-    attr_reader :unused1
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@unused1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@aggregate_delimiter</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@more_aggregates</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@aggregate</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@dup_rx</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@rx_short_guard</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@is_ht_40</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@greenfield</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">align_to_byte</span>
+      <span class="vi">@unused2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:unused1</span>
 
-    ##
-    # Aggregate delimiter CRC error after this frame
-    attr_reader :aggregate_delimiter
+    <span class="c1">##</span>
+    <span class="c1"># Aggregate delimiter CRC error after this frame</span>
+    <span class="kp">attr_reader</span> <span class="ss">:aggregate_delimiter</span>
 
-    ##
-    # More aggregates
-    attr_reader :more_aggregates
+    <span class="c1">##</span>
+    <span class="c1"># More aggregates</span>
+    <span class="kp">attr_reader</span> <span class="ss">:more_aggregates</span>
 
-    ##
-    # Aggregate
-    attr_reader :aggregate
+    <span class="c1">##</span>
+    <span class="c1"># Aggregate</span>
+    <span class="kp">attr_reader</span> <span class="ss">:aggregate</span>
 
-    ##
-    # Duplicate RX
-    attr_reader :dup_rx
+    <span class="c1">##</span>
+    <span class="c1"># Duplicate RX</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dup_rx</span>
 
-    ##
-    # RX short guard interval (SGI)
-    attr_reader :rx_short_guard
+    <span class="c1">##</span>
+    <span class="c1"># RX short guard interval (SGI)</span>
+    <span class="kp">attr_reader</span> <span class="ss">:rx_short_guard</span>
 
-    ##
-    # true = HT40, false = HT20
-    attr_reader :is_ht_40
+    <span class="c1">##</span>
+    <span class="c1"># true = HT40, false = HT20</span>
+    <span class="kp">attr_reader</span> <span class="ss">:is_ht_40</span>
 
-    ##
-    # Greenfield
-    attr_reader :greenfield
-    attr_reader :unused2
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Greenfield</span>
+    <span class="kp">attr_reader</span> <span class="ss">:greenfield</span>
+    <span class="kp">attr_reader</span> <span class="ss">:unused2</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
-  class PacketPpiHeader &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1</span>
+  <span class="k">class</span> <span class="nc">PacketPpiHeader</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @pph_version = @_io.read_u1
-      @pph_flags = @_io.read_u1
-      @pph_len = @_io.read_u2le
-      @pph_dlt = Kaitai::Struct::Stream::resolve_enum(LINKTYPE, @_io.read_u4le)
-      self
-    end
-    attr_reader :pph_version
-    attr_reader :pph_flags
-    attr_reader :pph_len
-    attr_reader :pph_dlt
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@pph_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@pph_flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@pph_len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@pph_dlt</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">LINKTYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pph_version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pph_flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pph_len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pph_dlt</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.2
-  class Radio80211CommonBody &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.2</span>
+  <span class="k">class</span> <span class="nc">Radio80211CommonBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @tsf_timer = @_io.read_u8le
-      @flags = @_io.read_u2le
-      @rate = @_io.read_u2le
-      @channel_freq = @_io.read_u2le
-      @channel_flags = @_io.read_u2le
-      @fhss_hopset = @_io.read_u1
-      @fhss_pattern = @_io.read_u1
-      @dbm_antsignal = @_io.read_s1
-      @dbm_antnoise = @_io.read_s1
-      self
-    end
-    attr_reader :tsf_timer
-    attr_reader :flags
-    attr_reader :rate
-    attr_reader :channel_freq
-    attr_reader :channel_flags
-    attr_reader :fhss_hopset
-    attr_reader :fhss_pattern
-    attr_reader :dbm_antsignal
-    attr_reader :dbm_antnoise
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@tsf_timer</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@rate</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@channel_freq</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@channel_flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@fhss_hopset</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@fhss_pattern</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@dbm_antsignal</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
+      <span class="vi">@dbm_antnoise</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:tsf_timer</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:rate</span>
+    <span class="kp">attr_reader</span> <span class="ss">:channel_freq</span>
+    <span class="kp">attr_reader</span> <span class="ss">:channel_flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:fhss_hopset</span>
+    <span class="kp">attr_reader</span> <span class="ss">:fhss_pattern</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dbm_antsignal</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dbm_antnoise</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1
-  class PacketPpiField &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 3.1</span>
+  <span class="k">class</span> <span class="nc">PacketPpiField</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @pfh_type = Kaitai::Struct::Stream::resolve_enum(PFH_TYPE, @_io.read_u2le)
-      @pfh_datalen = @_io.read_u2le
-      case pfh_type
-      when :pfh_type_radio_802_11_common
-        @_raw_body = @_io.read_bytes(pfh_datalen)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Radio80211CommonBody.new(io, self, @_root)
-      when :pfh_type_radio_802_11n_mac_ext
-        @_raw_body = @_io.read_bytes(pfh_datalen)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Radio80211nMacExtBody.new(io, self, @_root)
-      when :pfh_type_radio_802_11n_mac_phy_ext
-        @_raw_body = @_io.read_bytes(pfh_datalen)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Radio80211nMacPhyExtBody.new(io, self, @_root)
-      else
-        @body = @_io.read_bytes(pfh_datalen)
-      end
-      self
-    end
-    attr_reader :pfh_type
-    attr_reader :pfh_datalen
-    attr_reader :body
-    attr_reader :_raw_body
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@pfh_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">PFH_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="vi">@pfh_datalen</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">case</span> <span class="n">pfh_type</span>
+      <span class="k">when</span> <span class="ss">:pfh_type_radio_802_11_common</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">pfh_datalen</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">Radio80211CommonBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:pfh_type_radio_802_11n_mac_ext</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">pfh_datalen</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">Radio80211nMacExtBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:pfh_type_radio_802_11n_mac_phy_ext</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">pfh_datalen</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">Radio80211nMacPhyExtBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">pfh_datalen</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pfh_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pfh_datalen</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_body</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.4
-  class Radio80211nMacPhyExtBody &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.cacetech.com/documents/PPI_Header_format_1.0.1.pdf PPI header format spec, section 4.1.4</span>
+  <span class="k">class</span> <span class="nc">Radio80211nMacPhyExtBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @flags = MacFlags.new(@_io, self, @_root)
-      @a_mpdu_id = @_io.read_u4le
-      @num_delimiters = @_io.read_u1
-      @mcs = @_io.read_u1
-      @num_streams = @_io.read_u1
-      @rssi_combined = @_io.read_u1
-      @rssi_ant_ctl = Array.new(4)
-      (4).times { |i|
-        @rssi_ant_ctl[i] = @_io.read_u1
-      }
-      @rssi_ant_ext = Array.new(4)
-      (4).times { |i|
-        @rssi_ant_ext[i] = @_io.read_u1
-      }
-      @ext_channel_freq = @_io.read_u2le
-      @ext_channel_flags = ChannelFlags.new(@_io, self, @_root)
-      @rf_signal_noise = Array.new(4)
-      (4).times { |i|
-        @rf_signal_noise[i] = SignalNoise.new(@_io, self, @_root)
-      }
-      @evm = Array.new(4)
-      (4).times { |i|
-        @evm[i] = @_io.read_u4le
-      }
-      self
-    end
-    class ChannelFlags &lt; Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="no">MacFlags</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@a_mpdu_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@num_delimiters</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@mcs</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@num_streams</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@rssi_combined</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@rssi_ant_ctl</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@rssi_ant_ctl</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="p">}</span>
+      <span class="vi">@rssi_ant_ext</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@rssi_ant_ext</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="p">}</span>
+      <span class="vi">@ext_channel_freq</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@ext_channel_flags</span> <span class="o">=</span> <span class="no">ChannelFlags</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@rf_signal_noise</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@rf_signal_noise</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">SignalNoise</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="vi">@evm</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@evm</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">ChannelFlags</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
 
-      def _read
-        @spectrum_2ghz = @_io.read_bits_int(1) != 0
-        @ofdm = @_io.read_bits_int(1) != 0
-        @cck = @_io.read_bits_int(1) != 0
-        @turbo = @_io.read_bits_int(1) != 0
-        @unused = @_io.read_bits_int(8)
-        @gfsk = @_io.read_bits_int(1) != 0
-        @dyn_cck_ofdm = @_io.read_bits_int(1) != 0
-        @only_passive_scan = @_io.read_bits_int(1) != 0
-        @spectrum_5ghz = @_io.read_bits_int(1) != 0
-        self
-      end
+      <span class="k">def</span> <span class="nf">_read</span>
+        <span class="vi">@spectrum_2ghz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@ofdm</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@cck</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@turbo</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@unused</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+        <span class="vi">@gfsk</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@dyn_cck_ofdm</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@only_passive_scan</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@spectrum_5ghz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
 
-      ##
-      # 2 GHz spectrum
-      attr_reader :spectrum_2ghz
+      <span class="c1">##</span>
+      <span class="c1"># 2 GHz spectrum</span>
+      <span class="kp">attr_reader</span> <span class="ss">:spectrum_2ghz</span>
 
-      ##
-      # OFDM (Orthogonal Frequency-Division Multiplexing)
-      attr_reader :ofdm
+      <span class="c1">##</span>
+      <span class="c1"># OFDM (Orthogonal Frequency-Division Multiplexing)</span>
+      <span class="kp">attr_reader</span> <span class="ss">:ofdm</span>
 
-      ##
-      # CCK (Complementary Code Keying)
-      attr_reader :cck
-      attr_reader :turbo
-      attr_reader :unused
+      <span class="c1">##</span>
+      <span class="c1"># CCK (Complementary Code Keying)</span>
+      <span class="kp">attr_reader</span> <span class="ss">:cck</span>
+      <span class="kp">attr_reader</span> <span class="ss">:turbo</span>
+      <span class="kp">attr_reader</span> <span class="ss">:unused</span>
 
-      ##
-      # Gaussian Frequency Shift Keying
-      attr_reader :gfsk
+      <span class="c1">##</span>
+      <span class="c1"># Gaussian Frequency Shift Keying</span>
+      <span class="kp">attr_reader</span> <span class="ss">:gfsk</span>
 
-      ##
-      # Dynamic CCK-OFDM
-      attr_reader :dyn_cck_ofdm
+      <span class="c1">##</span>
+      <span class="c1"># Dynamic CCK-OFDM</span>
+      <span class="kp">attr_reader</span> <span class="ss">:dyn_cck_ofdm</span>
 
-      ##
-      # Only passive scan allowed
-      attr_reader :only_passive_scan
+      <span class="c1">##</span>
+      <span class="c1"># Only passive scan allowed</span>
+      <span class="kp">attr_reader</span> <span class="ss">:only_passive_scan</span>
 
-      ##
-      # 5 GHz spectrum
-      attr_reader :spectrum_5ghz
-    end
+      <span class="c1">##</span>
+      <span class="c1"># 5 GHz spectrum</span>
+      <span class="kp">attr_reader</span> <span class="ss">:spectrum_5ghz</span>
+    <span class="k">end</span>
 
-    ##
-    # RF signal + noise pair at a single antenna
-    class SignalNoise &lt; Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
+    <span class="c1">##</span>
+    <span class="c1"># RF signal + noise pair at a single antenna</span>
+    <span class="k">class</span> <span class="nc">SignalNoise</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
 
-      def _read
-        @signal = @_io.read_s1
-        @noise = @_io.read_s1
-        self
-      end
+      <span class="k">def</span> <span class="nf">_read</span>
+        <span class="vi">@signal</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
+        <span class="vi">@noise</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
 
-      ##
-      # RF signal, dBm
-      attr_reader :signal
+      <span class="c1">##</span>
+      <span class="c1"># RF signal, dBm</span>
+      <span class="kp">attr_reader</span> <span class="ss">:signal</span>
 
-      ##
-      # RF noise, dBm
-      attr_reader :noise
-    end
-    attr_reader :flags
-    attr_reader :a_mpdu_id
-    attr_reader :num_delimiters
+      <span class="c1">##</span>
+      <span class="c1"># RF noise, dBm</span>
+      <span class="kp">attr_reader</span> <span class="ss">:noise</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:a_mpdu_id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_delimiters</span>
 
-    ##
-    # Modulation Coding Scheme (MCS)
-    attr_reader :mcs
+    <span class="c1">##</span>
+    <span class="c1"># Modulation Coding Scheme (MCS)</span>
+    <span class="kp">attr_reader</span> <span class="ss">:mcs</span>
 
-    ##
-    # Number of spatial streams (0 = unknown)
-    attr_reader :num_streams
+    <span class="c1">##</span>
+    <span class="c1"># Number of spatial streams (0 = unknown)</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_streams</span>
 
-    ##
-    # RSSI (Received Signal Strength Indication), combined from all active antennas / channels
-    attr_reader :rssi_combined
+    <span class="c1">##</span>
+    <span class="c1"># RSSI (Received Signal Strength Indication), combined from all active antennas / channels</span>
+    <span class="kp">attr_reader</span> <span class="ss">:rssi_combined</span>
 
-    ##
-    # RSSI (Received Signal Strength Indication) for antennas 0-3, control channel
-    attr_reader :rssi_ant_ctl
+    <span class="c1">##</span>
+    <span class="c1"># RSSI (Received Signal Strength Indication) for antennas 0-3, control channel</span>
+    <span class="kp">attr_reader</span> <span class="ss">:rssi_ant_ctl</span>
 
-    ##
-    # RSSI (Received Signal Strength Indication) for antennas 0-3, extension channel
-    attr_reader :rssi_ant_ext
+    <span class="c1">##</span>
+    <span class="c1"># RSSI (Received Signal Strength Indication) for antennas 0-3, extension channel</span>
+    <span class="kp">attr_reader</span> <span class="ss">:rssi_ant_ext</span>
 
-    ##
-    # Extension channel frequency (MHz)
-    attr_reader :ext_channel_freq
+    <span class="c1">##</span>
+    <span class="c1"># Extension channel frequency (MHz)</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ext_channel_freq</span>
 
-    ##
-    # Extension channel flags
-    attr_reader :ext_channel_flags
+    <span class="c1">##</span>
+    <span class="c1"># Extension channel flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ext_channel_flags</span>
 
-    ##
-    # Signal + noise values for antennas 0-3
-    attr_reader :rf_signal_noise
+    <span class="c1">##</span>
+    <span class="c1"># Signal + noise values for antennas 0-3</span>
+    <span class="kp">attr_reader</span> <span class="ss">:rf_signal_noise</span>
 
-    ##
-    # EVM (Error Vector Magnitude) for chains 0-3
-    attr_reader :evm
-  end
-  attr_reader :header
-  attr_reader :fields
-  attr_reader :body
-  attr_reader :_raw_fields
-  attr_reader :_raw_body
-end
-</code></pre>
+    <span class="c1">##</span>
+    <span class="c1"># EVM (Error Vector Magnitude) for chains 0-3</span>
+    <span class="kp">attr_reader</span> <span class="ss">:evm</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:header</span>
+  <span class="kp">attr_reader</span> <span class="ss">:fields</span>
+  <span class="kp">attr_reader</span> <span class="ss">:body</span>
+  <span class="kp">attr_reader</span> <span class="ss">:_raw_fields</span>
+  <span class="kp">attr_reader</span> <span class="ss">:_raw_body</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -757,8 +754,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

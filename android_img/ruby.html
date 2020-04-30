@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -243,241 +240,241 @@ data = AndroidImg.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# @see https://source.android.com/devices/bootloader/boot-image-header Source
-class AndroidImg &lt; Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+<span class="c1">##</span>
+<span class="c1"># @see https://source.android.com/devices/bootloader/boot-image-header Source</span>
+<span class="k">class</span> <span class="nc">AndroidImg</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @magic = @_io.ensure_fixed_contents([65, 78, 68, 82, 79, 73, 68, 33].pack(&#39;C*&#39;))
-    @kernel = Load.new(@_io, self, @_root)
-    @ramdisk = Load.new(@_io, self, @_root)
-    @second = Load.new(@_io, self, @_root)
-    @tags_load = @_io.read_u4le
-    @page_size = @_io.read_u4le
-    @header_version = @_io.read_u4le
-    @os_version = OsVersion.new(@_io, self, @_root)
-    @name = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(16), 0, false)).force_encoding(&quot;ASCII&quot;)
-    @cmdline = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(512), 0, false)).force_encoding(&quot;ASCII&quot;)
-    @sha = @_io.read_bytes(32)
-    @extra_cmdline = (Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(1024), 0, false)).force_encoding(&quot;ASCII&quot;)
-    if header_version &gt; 0
-      @recovery_dtbo = SizeOffset.new(@_io, self, @_root)
-    end
-    if header_version &gt; 0
-      @boot_header_size = @_io.read_u4le
-    end
-    if header_version &gt; 1
-      @dtb = LoadLong.new(@_io, self, @_root)
-    end
-    self
-  end
-  class Load &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">65</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">33</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+    <span class="vi">@kernel</span> <span class="o">=</span> <span class="no">Load</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@ramdisk</span> <span class="o">=</span> <span class="no">Load</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@second</span> <span class="o">=</span> <span class="no">Load</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@tags_load</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+    <span class="vi">@page_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+    <span class="vi">@header_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+    <span class="vi">@os_version</span> <span class="o">=</span> <span class="no">OsVersion</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+    <span class="vi">@cmdline</span> <span class="o">=</span> <span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">512</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+    <span class="vi">@sha</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+    <span class="vi">@extra_cmdline</span> <span class="o">=</span> <span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1024</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">header_version</span> <span class="o">&gt;</span> <span class="mi">0</span>
+      <span class="vi">@recovery_dtbo</span> <span class="o">=</span> <span class="no">SizeOffset</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="k">if</span> <span class="n">header_version</span> <span class="o">&gt;</span> <span class="mi">0</span>
+      <span class="vi">@boot_header_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+    <span class="k">end</span>
+    <span class="k">if</span> <span class="n">header_version</span> <span class="o">&gt;</span> <span class="mi">1</span>
+      <span class="vi">@dtb</span> <span class="o">=</span> <span class="no">LoadLong</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Load</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @size = @_io.read_u4le
-      @addr = @_io.read_u4le
-      self
-    end
-    attr_reader :size
-    attr_reader :addr
-  end
-  class LoadLong &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@addr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:addr</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">LoadLong</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @size = @_io.read_u4le
-      @addr = @_io.read_u8le
-      self
-    end
-    attr_reader :size
-    attr_reader :addr
-  end
-  class SizeOffset &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@addr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:addr</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">SizeOffset</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @size = @_io.read_u4le
-      @offset = @_io.read_u8le
-      self
-    end
-    attr_reader :size
-    attr_reader :offset
-  end
-  class OsVersion &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@offset</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:offset</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">OsVersion</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @version = @_io.read_u4le
-      self
-    end
-    def month
-      return @month unless @month.nil?
-      @month = (version &amp; 15)
-      @month
-    end
-    def patch
-      return @patch unless @patch.nil?
-      @patch = ((version &gt;&gt; 11) &amp; 127)
-      @patch
-    end
-    def year
-      return @year unless @year.nil?
-      @year = (((version &gt;&gt; 4) &amp; 127) + 2000)
-      @year
-    end
-    def major
-      return @major unless @major.nil?
-      @major = ((version &gt;&gt; 25) &amp; 127)
-      @major
-    end
-    def minor
-      return @minor unless @minor.nil?
-      @minor = ((version &gt;&gt; 18) &amp; 127)
-      @minor
-    end
-    attr_reader :version
-  end
-  def kernel_img
-    return @kernel_img unless @kernel_img.nil?
-    _pos = @_io.pos
-    @_io.seek(page_size)
-    @kernel_img = @_io.read_bytes(kernel.size)
-    @_io.seek(_pos)
-    @kernel_img
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">month</span>
+      <span class="k">return</span> <span class="vi">@month</span> <span class="k">unless</span> <span class="vi">@month</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@month</span> <span class="o">=</span> <span class="p">(</span><span class="n">version</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">)</span>
+      <span class="vi">@month</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">patch</span>
+      <span class="k">return</span> <span class="vi">@patch</span> <span class="k">unless</span> <span class="vi">@patch</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@patch</span> <span class="o">=</span> <span class="p">((</span><span class="n">version</span> <span class="o">&gt;&gt;</span> <span class="mi">11</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">127</span><span class="p">)</span>
+      <span class="vi">@patch</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">year</span>
+      <span class="k">return</span> <span class="vi">@year</span> <span class="k">unless</span> <span class="vi">@year</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@year</span> <span class="o">=</span> <span class="p">(((</span><span class="n">version</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">127</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2000</span><span class="p">)</span>
+      <span class="vi">@year</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">major</span>
+      <span class="k">return</span> <span class="vi">@major</span> <span class="k">unless</span> <span class="vi">@major</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@major</span> <span class="o">=</span> <span class="p">((</span><span class="n">version</span> <span class="o">&gt;&gt;</span> <span class="mi">25</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">127</span><span class="p">)</span>
+      <span class="vi">@major</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">minor</span>
+      <span class="k">return</span> <span class="vi">@minor</span> <span class="k">unless</span> <span class="vi">@minor</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@minor</span> <span class="o">=</span> <span class="p">((</span><span class="n">version</span> <span class="o">&gt;&gt;</span> <span class="mi">18</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">127</span><span class="p">)</span>
+      <span class="vi">@minor</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">kernel_img</span>
+    <span class="k">return</span> <span class="vi">@kernel_img</span> <span class="k">unless</span> <span class="vi">@kernel_img</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">page_size</span><span class="p">)</span>
+    <span class="vi">@kernel_img</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">kernel</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+    <span class="vi">@kernel_img</span>
+  <span class="k">end</span>
 
-  ##
-  # tags offset from base
-  def tags_offset
-    return @tags_offset unless @tags_offset.nil?
-    @tags_offset = (tags_load - base)
-    @tags_offset
-  end
+  <span class="c1">##</span>
+  <span class="c1"># tags offset from base</span>
+  <span class="k">def</span> <span class="nf">tags_offset</span>
+    <span class="k">return</span> <span class="vi">@tags_offset</span> <span class="k">unless</span> <span class="vi">@tags_offset</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="vi">@tags_offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">tags_load</span> <span class="o">-</span> <span class="n">base</span><span class="p">)</span>
+    <span class="vi">@tags_offset</span>
+  <span class="k">end</span>
 
-  ##
-  # ramdisk offset from base
-  def ramdisk_offset
-    return @ramdisk_offset unless @ramdisk_offset.nil?
-    @ramdisk_offset = (ramdisk.addr &gt; 0 ? (ramdisk.addr - base) : 0)
-    @ramdisk_offset
-  end
+  <span class="c1">##</span>
+  <span class="c1"># ramdisk offset from base</span>
+  <span class="k">def</span> <span class="nf">ramdisk_offset</span>
+    <span class="k">return</span> <span class="vi">@ramdisk_offset</span> <span class="k">unless</span> <span class="vi">@ramdisk_offset</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="vi">@ramdisk_offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">ramdisk</span><span class="o">.</span><span class="n">addr</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="p">(</span><span class="n">ramdisk</span><span class="o">.</span><span class="n">addr</span> <span class="o">-</span> <span class="n">base</span><span class="p">)</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="vi">@ramdisk_offset</span>
+  <span class="k">end</span>
 
-  ##
-  # 2nd bootloader offset from base
-  def second_offset
-    return @second_offset unless @second_offset.nil?
-    @second_offset = (second.addr &gt; 0 ? (second.addr - base) : 0)
-    @second_offset
-  end
+  <span class="c1">##</span>
+  <span class="c1"># 2nd bootloader offset from base</span>
+  <span class="k">def</span> <span class="nf">second_offset</span>
+    <span class="k">return</span> <span class="vi">@second_offset</span> <span class="k">unless</span> <span class="vi">@second_offset</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="vi">@second_offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">second</span><span class="o">.</span><span class="n">addr</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="p">(</span><span class="n">second</span><span class="o">.</span><span class="n">addr</span> <span class="o">-</span> <span class="n">base</span><span class="p">)</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="vi">@second_offset</span>
+  <span class="k">end</span>
 
-  ##
-  # kernel offset from base
-  def kernel_offset
-    return @kernel_offset unless @kernel_offset.nil?
-    @kernel_offset = (kernel.addr - base)
-    @kernel_offset
-  end
+  <span class="c1">##</span>
+  <span class="c1"># kernel offset from base</span>
+  <span class="k">def</span> <span class="nf">kernel_offset</span>
+    <span class="k">return</span> <span class="vi">@kernel_offset</span> <span class="k">unless</span> <span class="vi">@kernel_offset</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="vi">@kernel_offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">kernel</span><span class="o">.</span><span class="n">addr</span> <span class="o">-</span> <span class="n">base</span><span class="p">)</span>
+    <span class="vi">@kernel_offset</span>
+  <span class="k">end</span>
 
-  ##
-  # dtb offset from base
-  def dtb_offset
-    return @dtb_offset unless @dtb_offset.nil?
-    if header_version &gt; 1
-      @dtb_offset = (dtb.addr &gt; 0 ? (dtb.addr - base) : 0)
-    end
-    @dtb_offset
-  end
-  def dtb_img
-    return @dtb_img unless @dtb_img.nil?
-    if  ((header_version &gt; 1) &amp;&amp; (dtb.size &gt; 0)) 
-      _pos = @_io.pos
-      @_io.seek(((((((((page_size + kernel.size) + ramdisk.size) + second.size) + recovery_dtbo.size) + page_size) - 1) / page_size) * page_size))
-      @dtb_img = @_io.read_bytes(dtb.size)
-      @_io.seek(_pos)
-    end
-    @dtb_img
-  end
-  def ramdisk_img
-    return @ramdisk_img unless @ramdisk_img.nil?
-    if ramdisk.size &gt; 0
-      _pos = @_io.pos
-      @_io.seek((((((page_size + kernel.size) + page_size) - 1) / page_size) * page_size))
-      @ramdisk_img = @_io.read_bytes(ramdisk.size)
-      @_io.seek(_pos)
-    end
-    @ramdisk_img
-  end
-  def recovery_dtbo_img
-    return @recovery_dtbo_img unless @recovery_dtbo_img.nil?
-    if  ((header_version &gt; 0) &amp;&amp; (recovery_dtbo.size &gt; 0)) 
-      _pos = @_io.pos
-      @_io.seek(recovery_dtbo.offset)
-      @recovery_dtbo_img = @_io.read_bytes(recovery_dtbo.size)
-      @_io.seek(_pos)
-    end
-    @recovery_dtbo_img
-  end
-  def second_img
-    return @second_img unless @second_img.nil?
-    if second.size &gt; 0
-      _pos = @_io.pos
-      @_io.seek(((((((page_size + kernel.size) + ramdisk.size) + page_size) - 1) / page_size) * page_size))
-      @second_img = @_io.read_bytes(second.size)
-      @_io.seek(_pos)
-    end
-    @second_img
-  end
+  <span class="c1">##</span>
+  <span class="c1"># dtb offset from base</span>
+  <span class="k">def</span> <span class="nf">dtb_offset</span>
+    <span class="k">return</span> <span class="vi">@dtb_offset</span> <span class="k">unless</span> <span class="vi">@dtb_offset</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="k">if</span> <span class="n">header_version</span> <span class="o">&gt;</span> <span class="mi">1</span>
+      <span class="vi">@dtb_offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">dtb</span><span class="o">.</span><span class="n">addr</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="p">(</span><span class="n">dtb</span><span class="o">.</span><span class="n">addr</span> <span class="o">-</span> <span class="n">base</span><span class="p">)</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="vi">@dtb_offset</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">dtb_img</span>
+    <span class="k">return</span> <span class="vi">@dtb_img</span> <span class="k">unless</span> <span class="vi">@dtb_img</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="k">if</span>  <span class="p">((</span><span class="n">header_version</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">dtb</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span> 
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(((((((((</span><span class="n">page_size</span> <span class="o">+</span> <span class="n">kernel</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">+</span> <span class="n">ramdisk</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">+</span> <span class="n">second</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">+</span> <span class="n">recovery_dtbo</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">+</span> <span class="n">page_size</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">page_size</span><span class="p">)</span> <span class="o">*</span> <span class="n">page_size</span><span class="p">))</span>
+      <span class="vi">@dtb_img</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">dtb</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="vi">@dtb_img</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">ramdisk_img</span>
+    <span class="k">return</span> <span class="vi">@ramdisk_img</span> <span class="k">unless</span> <span class="vi">@ramdisk_img</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="k">if</span> <span class="n">ramdisk</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">((((((</span><span class="n">page_size</span> <span class="o">+</span> <span class="n">kernel</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">+</span> <span class="n">page_size</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">page_size</span><span class="p">)</span> <span class="o">*</span> <span class="n">page_size</span><span class="p">))</span>
+      <span class="vi">@ramdisk_img</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">ramdisk</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="vi">@ramdisk_img</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">recovery_dtbo_img</span>
+    <span class="k">return</span> <span class="vi">@recovery_dtbo_img</span> <span class="k">unless</span> <span class="vi">@recovery_dtbo_img</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="k">if</span>  <span class="p">((</span><span class="n">header_version</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">recovery_dtbo</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span> 
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">recovery_dtbo</span><span class="o">.</span><span class="n">offset</span><span class="p">)</span>
+      <span class="vi">@recovery_dtbo_img</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">recovery_dtbo</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="vi">@recovery_dtbo_img</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">second_img</span>
+    <span class="k">return</span> <span class="vi">@second_img</span> <span class="k">unless</span> <span class="vi">@second_img</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="k">if</span> <span class="n">second</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(((((((</span><span class="n">page_size</span> <span class="o">+</span> <span class="n">kernel</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">+</span> <span class="n">ramdisk</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">+</span> <span class="n">page_size</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">page_size</span><span class="p">)</span> <span class="o">*</span> <span class="n">page_size</span><span class="p">))</span>
+      <span class="vi">@second_img</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">second</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="vi">@second_img</span>
+  <span class="k">end</span>
 
-  ##
-  # base loading address
-  def base
-    return @base unless @base.nil?
-    @base = (kernel.addr - 32768)
-    @base
-  end
-  attr_reader :magic
-  attr_reader :kernel
-  attr_reader :ramdisk
-  attr_reader :second
-  attr_reader :tags_load
-  attr_reader :page_size
-  attr_reader :header_version
-  attr_reader :os_version
-  attr_reader :name
-  attr_reader :cmdline
-  attr_reader :sha
-  attr_reader :extra_cmdline
-  attr_reader :recovery_dtbo
-  attr_reader :boot_header_size
-  attr_reader :dtb
-end
-</code></pre>
+  <span class="c1">##</span>
+  <span class="c1"># base loading address</span>
+  <span class="k">def</span> <span class="nf">base</span>
+    <span class="k">return</span> <span class="vi">@base</span> <span class="k">unless</span> <span class="vi">@base</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="vi">@base</span> <span class="o">=</span> <span class="p">(</span><span class="n">kernel</span><span class="o">.</span><span class="n">addr</span> <span class="o">-</span> <span class="mi">32768</span><span class="p">)</span>
+    <span class="vi">@base</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:magic</span>
+  <span class="kp">attr_reader</span> <span class="ss">:kernel</span>
+  <span class="kp">attr_reader</span> <span class="ss">:ramdisk</span>
+  <span class="kp">attr_reader</span> <span class="ss">:second</span>
+  <span class="kp">attr_reader</span> <span class="ss">:tags_load</span>
+  <span class="kp">attr_reader</span> <span class="ss">:page_size</span>
+  <span class="kp">attr_reader</span> <span class="ss">:header_version</span>
+  <span class="kp">attr_reader</span> <span class="ss">:os_version</span>
+  <span class="kp">attr_reader</span> <span class="ss">:name</span>
+  <span class="kp">attr_reader</span> <span class="ss">:cmdline</span>
+  <span class="kp">attr_reader</span> <span class="ss">:sha</span>
+  <span class="kp">attr_reader</span> <span class="ss">:extra_cmdline</span>
+  <span class="kp">attr_reader</span> <span class="ss">:recovery_dtbo</span>
+  <span class="kp">attr_reader</span> <span class="ss">:boot_header_size</span>
+  <span class="kp">attr_reader</span> <span class="ss">:dtb</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -504,8 +501,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

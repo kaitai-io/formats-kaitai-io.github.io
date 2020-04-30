@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -260,424 +257,424 @@ metainformation or image data.</p>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * GIF (Graphics Interchange Format) is an image file format, developed
- * in 1987. It became popular in 1990s as one of the main image formats
- * used in World Wide Web.
- * 
- * GIF format allows encoding of palette-based images up to 256 colors
- * (each of the colors can be chosen from a 24-bit RGB
- * colorspace). Image data stream uses LZW (Lempel–Ziv–Welch) lossless
- * compression.
- * 
- * Over the years, several version of the format were published and
- * several extensions to it were made, namely, a popular Netscape
- * extension that allows to store several images in one file, switching
- * between them, which produces crude form of animation.
- * 
- * Structurally, format consists of several mandatory headers and then
- * a stream of blocks follows. Blocks can carry additional
- * metainformation or image data.
- */
+<span class="sd">/**</span>
+<span class="sd"> * GIF (Graphics Interchange Format) is an image file format, developed</span>
+<span class="sd"> * in 1987. It became popular in 1990s as one of the main image formats</span>
+<span class="sd"> * used in World Wide Web.</span>
+<span class="sd"> * </span>
+<span class="sd"> * GIF format allows encoding of palette-based images up to 256 colors</span>
+<span class="sd"> * (each of the colors can be chosen from a 24-bit RGB</span>
+<span class="sd"> * colorspace). Image data stream uses LZW (Lempel–Ziv–Welch) lossless</span>
+<span class="sd"> * compression.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Over the years, several version of the format were published and</span>
+<span class="sd"> * several extensions to it were made, namely, a popular Netscape</span>
+<span class="sd"> * extension that allows to store several images in one file, switching</span>
+<span class="sd"> * between them, which produces crude form of animation.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Structurally, format consists of several mandatory headers and then</span>
+<span class="sd"> * a stream of blocks follows. Blocks can carry additional</span>
+<span class="sd"> * metainformation or image data.</span>
+<span class="sd"> */</span>
 
-class Gif extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Gif $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Gif</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_hdr = new \Gif\Header($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_logicalScreenDescriptor = new \Gif\LogicalScreenDescriptorStruct($this-&gt;_io, $this, $this-&gt;_root);
-        if ($this-&gt;logicalScreenDescriptor()-&gt;hasColorTable()) {
-            $this-&gt;_m__raw_globalColorTable = $this-&gt;_io-&gt;readBytes(($this-&gt;logicalScreenDescriptor()-&gt;colorTableSize() * 3));
-            $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_globalColorTable);
-            $this-&gt;_m_globalColorTable = new \Gif\ColorTable($io, $this, $this-&gt;_root);
-        }
-        $this-&gt;_m_blocks = [];
-        $i = 0;
-        do {
-            $_ = new \Gif\Block($this-&gt;_io, $this, $this-&gt;_root);
-            $this-&gt;_m_blocks[] = $_;
-            $i++;
-        } while (!( (($this-&gt;_io()-&gt;isEof()) || ($_-&gt;blockType() == \Gif\BlockType::END_OF_FILE)) ));
-    }
-    protected $_m_hdr;
-    protected $_m_logicalScreenDescriptor;
-    protected $_m_globalColorTable;
-    protected $_m_blocks;
-    protected $_m__raw_globalColorTable;
-    public function hdr() { return $this-&gt;_m_hdr; }
-    public function logicalScreenDescriptor() { return $this-&gt;_m_logicalScreenDescriptor; }
-    public function globalColorTable() { return $this-&gt;_m_globalColorTable; }
-    public function blocks() { return $this-&gt;_m_blocks; }
-    public function _raw_globalColorTable() { return $this-&gt;_m__raw_globalColorTable; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hdr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\Header</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_logicalScreenDescriptor</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\LogicalScreenDescriptorStruct</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">logicalScreenDescriptor</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">hasColorTable</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_globalColorTable</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">logicalScreenDescriptor</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">colorTableSize</span><span class="p">()</span> <span class="o">*</span> <span class="mi">3</span><span class="p">));</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_globalColorTable</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_globalColorTable</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\ColorTable</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blocks</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="nv">$_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\Block</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blocks</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$_</span><span class="p">;</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$_</span><span class="o">-&gt;</span><span class="na">blockType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Gif\BlockType</span><span class="o">::</span><span class="na">END_OF_FILE</span><span class="p">))</span> <span class="p">));</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_hdr</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_logicalScreenDescriptor</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_globalColorTable</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_blocks</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_globalColorTable</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hdr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hdr</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">logicalScreenDescriptor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_logicalScreenDescriptor</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">globalColorTable</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_globalColorTable</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">blocks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blocks</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_globalColorTable</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_globalColorTable</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gif;
+<span class="k">namespace</span> <span class="nx">\Gif</span><span class="p">;</span>
 
-class ImageData extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Gif\LocalImageDescriptor $_parent = null, \Gif $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ImageData</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Gif\LocalImageDescriptor</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_lzwMinCodeSize = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_subblocks = new \Gif\Subblocks($this-&gt;_io, $this, $this-&gt;_root);
-    }
-    protected $_m_lzwMinCodeSize;
-    protected $_m_subblocks;
-    public function lzwMinCodeSize() { return $this-&gt;_m_lzwMinCodeSize; }
-    public function subblocks() { return $this-&gt;_m_subblocks; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lzwMinCodeSize</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_subblocks</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\Subblocks</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lzwMinCodeSize</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_subblocks</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lzwMinCodeSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lzwMinCodeSize</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">subblocks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_subblocks</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gif;
+<span class="k">namespace</span> <span class="nx">\Gif</span><span class="p">;</span>
 
-class ColorTableEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Gif\ColorTable $_parent = null, \Gif $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ColorTableEntry</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Gif\ColorTable</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_red = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_green = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_blue = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_red;
-    protected $_m_green;
-    protected $_m_blue;
-    public function red() { return $this-&gt;_m_red; }
-    public function green() { return $this-&gt;_m_green; }
-    public function blue() { return $this-&gt;_m_blue; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_red</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_green</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blue</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_red</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_green</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_blue</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">red</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_red</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">green</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_green</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">blue</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blue</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gif;
+<span class="k">namespace</span> <span class="nx">\Gif</span><span class="p">;</span>
 
-class LogicalScreenDescriptorStruct extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Gif $_parent = null, \Gif $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">LogicalScreenDescriptorStruct</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_screenWidth = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_screenHeight = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_flags = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_bgColorIndex = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_pixelAspectRatio = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_hasColorTable;
-    public function hasColorTable() {
-        if ($this-&gt;_m_hasColorTable !== null)
-            return $this-&gt;_m_hasColorTable;
-        $this-&gt;_m_hasColorTable = ($this-&gt;flags() &amp; 128) != 0;
-        return $this-&gt;_m_hasColorTable;
-    }
-    protected $_m_colorTableSize;
-    public function colorTableSize() {
-        if ($this-&gt;_m_colorTableSize !== null)
-            return $this-&gt;_m_colorTableSize;
-        $this-&gt;_m_colorTableSize = (2 &lt;&lt; ($this-&gt;flags() &amp; 7));
-        return $this-&gt;_m_colorTableSize;
-    }
-    protected $_m_screenWidth;
-    protected $_m_screenHeight;
-    protected $_m_flags;
-    protected $_m_bgColorIndex;
-    protected $_m_pixelAspectRatio;
-    public function screenWidth() { return $this-&gt;_m_screenWidth; }
-    public function screenHeight() { return $this-&gt;_m_screenHeight; }
-    public function flags() { return $this-&gt;_m_flags; }
-    public function bgColorIndex() { return $this-&gt;_m_bgColorIndex; }
-    public function pixelAspectRatio() { return $this-&gt;_m_pixelAspectRatio; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_screenWidth</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_screenHeight</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bgColorIndex</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pixelAspectRatio</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasColorTable</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasColorTable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasColorTable</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasColorTable</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasColorTable</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasColorTable</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_colorTableSize</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">colorTableSize</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorTableSize</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorTableSize</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorTableSize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">));</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorTableSize</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_screenWidth</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_screenHeight</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_flags</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_bgColorIndex</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_pixelAspectRatio</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">screenWidth</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_screenWidth</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">screenHeight</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_screenHeight</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">bgColorIndex</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bgColorIndex</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">pixelAspectRatio</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pixelAspectRatio</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gif;
+<span class="k">namespace</span> <span class="nx">\Gif</span><span class="p">;</span>
 
-class LocalImageDescriptor extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Gif\Block $_parent = null, \Gif $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">LocalImageDescriptor</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Gif\Block</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_left = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_top = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_width = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_height = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_flags = $this-&gt;_io-&gt;readU1();
-        if ($this-&gt;hasColorTable()) {
-            $this-&gt;_m__raw_localColorTable = $this-&gt;_io-&gt;readBytes(($this-&gt;colorTableSize() * 3));
-            $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_localColorTable);
-            $this-&gt;_m_localColorTable = new \Gif\ColorTable($io, $this, $this-&gt;_root);
-        }
-        $this-&gt;_m_imageData = new \Gif\ImageData($this-&gt;_io, $this, $this-&gt;_root);
-    }
-    protected $_m_hasColorTable;
-    public function hasColorTable() {
-        if ($this-&gt;_m_hasColorTable !== null)
-            return $this-&gt;_m_hasColorTable;
-        $this-&gt;_m_hasColorTable = ($this-&gt;flags() &amp; 128) != 0;
-        return $this-&gt;_m_hasColorTable;
-    }
-    protected $_m_hasInterlace;
-    public function hasInterlace() {
-        if ($this-&gt;_m_hasInterlace !== null)
-            return $this-&gt;_m_hasInterlace;
-        $this-&gt;_m_hasInterlace = ($this-&gt;flags() &amp; 64) != 0;
-        return $this-&gt;_m_hasInterlace;
-    }
-    protected $_m_hasSortedColorTable;
-    public function hasSortedColorTable() {
-        if ($this-&gt;_m_hasSortedColorTable !== null)
-            return $this-&gt;_m_hasSortedColorTable;
-        $this-&gt;_m_hasSortedColorTable = ($this-&gt;flags() &amp; 32) != 0;
-        return $this-&gt;_m_hasSortedColorTable;
-    }
-    protected $_m_colorTableSize;
-    public function colorTableSize() {
-        if ($this-&gt;_m_colorTableSize !== null)
-            return $this-&gt;_m_colorTableSize;
-        $this-&gt;_m_colorTableSize = (2 &lt;&lt; ($this-&gt;flags() &amp; 7));
-        return $this-&gt;_m_colorTableSize;
-    }
-    protected $_m_left;
-    protected $_m_top;
-    protected $_m_width;
-    protected $_m_height;
-    protected $_m_flags;
-    protected $_m_localColorTable;
-    protected $_m_imageData;
-    protected $_m__raw_localColorTable;
-    public function left() { return $this-&gt;_m_left; }
-    public function top() { return $this-&gt;_m_top; }
-    public function width() { return $this-&gt;_m_width; }
-    public function height() { return $this-&gt;_m_height; }
-    public function flags() { return $this-&gt;_m_flags; }
-    public function localColorTable() { return $this-&gt;_m_localColorTable; }
-    public function imageData() { return $this-&gt;_m_imageData; }
-    public function _raw_localColorTable() { return $this-&gt;_m__raw_localColorTable; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_left</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_top</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_width</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_height</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasColorTable</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_localColorTable</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">colorTableSize</span><span class="p">()</span> <span class="o">*</span> <span class="mi">3</span><span class="p">));</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_localColorTable</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_localColorTable</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\ColorTable</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\ImageData</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasColorTable</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasColorTable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasColorTable</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasColorTable</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasColorTable</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasColorTable</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasInterlace</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasInterlace</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasInterlace</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasInterlace</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasInterlace</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasInterlace</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasSortedColorTable</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasSortedColorTable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasSortedColorTable</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasSortedColorTable</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasSortedColorTable</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasSortedColorTable</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_colorTableSize</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">colorTableSize</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorTableSize</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorTableSize</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorTableSize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">));</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorTableSize</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_left</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_top</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_width</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_height</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_flags</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_localColorTable</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_imageData</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_localColorTable</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">left</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_left</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">top</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_top</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">width</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_width</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">height</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_height</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">localColorTable</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_localColorTable</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">imageData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_imageData</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_localColorTable</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_localColorTable</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gif;
+<span class="k">namespace</span> <span class="nx">\Gif</span><span class="p">;</span>
 
-class Block extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Gif $_parent = null, \Gif $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Block</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_blockType = $this-&gt;_io-&gt;readU1();
-        switch ($this-&gt;blockType()) {
-            case \Gif\BlockType::EXTENSION:
-                $this-&gt;_m_body = new \Gif\Extension($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \Gif\BlockType::LOCAL_IMAGE_DESCRIPTOR:
-                $this-&gt;_m_body = new \Gif\LocalImageDescriptor($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-        }
-    }
-    protected $_m_blockType;
-    protected $_m_body;
-    public function blockType() { return $this-&gt;_m_blockType; }
-    public function body() { return $this-&gt;_m_body; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blockType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">blockType</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="nx">\Gif\BlockType</span><span class="o">::</span><span class="na">EXTENSION</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\Extension</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\Gif\BlockType</span><span class="o">::</span><span class="na">LOCAL_IMAGE_DESCRIPTOR</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\LocalImageDescriptor</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_blockType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">blockType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blockType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gif;
+<span class="k">namespace</span> <span class="nx">\Gif</span><span class="p">;</span>
 
-class ColorTable extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Gif $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ColorTable</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_entries = [];
-        $i = 0;
-        while (!$this-&gt;_io-&gt;isEof()) {
-            $this-&gt;_m_entries[] = new \Gif\ColorTableEntry($this-&gt;_io, $this, $this-&gt;_root);
-            $i++;
-        }
-    }
-    protected $_m_entries;
-    public function entries() { return $this-&gt;_m_entries; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\ColorTableEntry</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_entries</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gif;
+<span class="k">namespace</span> <span class="nx">\Gif</span><span class="p">;</span>
 
-class Header extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Gif $_parent = null, \Gif $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Header</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_magic = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x47\x49\x46&quot;);
-        $this-&gt;_m_version = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(3), &quot;ASCII&quot;);
-    }
-    protected $_m_magic;
-    protected $_m_version;
-    public function magic() { return $this-&gt;_m_magic; }
-    public function version() { return $this-&gt;_m_version; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x47\x49\x46</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_magic</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_version</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gif;
+<span class="k">namespace</span> <span class="nx">\Gif</span><span class="p">;</span>
 
-class ExtGraphicControl extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Gif\Extension $_parent = null, \Gif $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ExtGraphicControl</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Gif\Extension</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_blockSize = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x04&quot;);
-        $this-&gt;_m_flags = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_delayTime = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_transparentIdx = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_terminator = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00&quot;);
-    }
-    protected $_m_transparentColorFlag;
-    public function transparentColorFlag() {
-        if ($this-&gt;_m_transparentColorFlag !== null)
-            return $this-&gt;_m_transparentColorFlag;
-        $this-&gt;_m_transparentColorFlag = ($this-&gt;flags() &amp; 1) != 0;
-        return $this-&gt;_m_transparentColorFlag;
-    }
-    protected $_m_userInputFlag;
-    public function userInputFlag() {
-        if ($this-&gt;_m_userInputFlag !== null)
-            return $this-&gt;_m_userInputFlag;
-        $this-&gt;_m_userInputFlag = ($this-&gt;flags() &amp; 2) != 0;
-        return $this-&gt;_m_userInputFlag;
-    }
-    protected $_m_blockSize;
-    protected $_m_flags;
-    protected $_m_delayTime;
-    protected $_m_transparentIdx;
-    protected $_m_terminator;
-    public function blockSize() { return $this-&gt;_m_blockSize; }
-    public function flags() { return $this-&gt;_m_flags; }
-    public function delayTime() { return $this-&gt;_m_delayTime; }
-    public function transparentIdx() { return $this-&gt;_m_transparentIdx; }
-    public function terminator() { return $this-&gt;_m_terminator; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blockSize</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x04</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_delayTime</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_transparentIdx</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_terminator</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_transparentColorFlag</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">transparentColorFlag</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_transparentColorFlag</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_transparentColorFlag</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_transparentColorFlag</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_transparentColorFlag</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_userInputFlag</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">userInputFlag</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_userInputFlag</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_userInputFlag</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_userInputFlag</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_userInputFlag</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_blockSize</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_flags</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_delayTime</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_transparentIdx</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_terminator</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">blockSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_blockSize</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">delayTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_delayTime</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">transparentIdx</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_transparentIdx</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">terminator</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_terminator</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gif;
+<span class="k">namespace</span> <span class="nx">\Gif</span><span class="p">;</span>
 
-class Subblock extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Gif $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Subblock</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_lenBytes = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_bytes = $this-&gt;_io-&gt;readBytes($this-&gt;lenBytes());
-    }
-    protected $_m_lenBytes;
-    protected $_m_bytes;
-    public function lenBytes() { return $this-&gt;_m_lenBytes; }
-    public function bytes() { return $this-&gt;_m_bytes; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenBytes</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bytes</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBytes</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenBytes</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_bytes</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenBytes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenBytes</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">bytes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bytes</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gif;
+<span class="k">namespace</span> <span class="nx">\Gif</span><span class="p">;</span>
 
-class ExtApplication extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Gif\Extension $_parent = null, \Gif $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ExtApplication</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Gif\Extension</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_applicationId = new \Gif\Subblock($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_subblocks = [];
-        $i = 0;
-        do {
-            $_ = new \Gif\Subblock($this-&gt;_io, $this, $this-&gt;_root);
-            $this-&gt;_m_subblocks[] = $_;
-            $i++;
-        } while (!($_-&gt;lenBytes() == 0));
-    }
-    protected $_m_applicationId;
-    protected $_m_subblocks;
-    public function applicationId() { return $this-&gt;_m_applicationId; }
-    public function subblocks() { return $this-&gt;_m_subblocks; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_applicationId</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\Subblock</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_subblocks</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="nv">$_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\Subblock</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_subblocks</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$_</span><span class="p">;</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$_</span><span class="o">-&gt;</span><span class="na">lenBytes</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_applicationId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_subblocks</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">applicationId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_applicationId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">subblocks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_subblocks</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gif;
+<span class="k">namespace</span> <span class="nx">\Gif</span><span class="p">;</span>
 
-class Subblocks extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Gif $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Subblocks</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_entries = [];
-        $i = 0;
-        do {
-            $_ = new \Gif\Subblock($this-&gt;_io, $this, $this-&gt;_root);
-            $this-&gt;_m_entries[] = $_;
-            $i++;
-        } while (!($_-&gt;lenBytes() == 0));
-    }
-    protected $_m_entries;
-    public function entries() { return $this-&gt;_m_entries; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="nv">$_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\Subblock</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$_</span><span class="p">;</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$_</span><span class="o">-&gt;</span><span class="na">lenBytes</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_entries</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gif;
+<span class="k">namespace</span> <span class="nx">\Gif</span><span class="p">;</span>
 
-class Extension extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Gif\Block $_parent = null, \Gif $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Extension</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Gif\Block</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gif</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_label = $this-&gt;_io-&gt;readU1();
-        switch ($this-&gt;label()) {
-            case \Gif\ExtensionLabel::APPLICATION:
-                $this-&gt;_m_body = new \Gif\ExtApplication($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \Gif\ExtensionLabel::COMMENT:
-                $this-&gt;_m_body = new \Gif\Subblocks($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \Gif\ExtensionLabel::GRAPHIC_CONTROL:
-                $this-&gt;_m_body = new \Gif\ExtGraphicControl($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            default:
-                $this-&gt;_m_body = new \Gif\Subblocks($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-        }
-    }
-    protected $_m_label;
-    protected $_m_body;
-    public function label() { return $this-&gt;_m_label; }
-    public function body() { return $this-&gt;_m_body; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_label</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">label</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="nx">\Gif\ExtensionLabel</span><span class="o">::</span><span class="na">APPLICATION</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\ExtApplication</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\Gif\ExtensionLabel</span><span class="o">::</span><span class="na">COMMENT</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\Subblocks</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\Gif\ExtensionLabel</span><span class="o">::</span><span class="na">GRAPHIC_CONTROL</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\ExtGraphicControl</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">default</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gif\Subblocks</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_label</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">label</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_label</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gif;
+<span class="k">namespace</span> <span class="nx">\Gif</span><span class="p">;</span>
 
-class BlockType {
-    const EXTENSION = 33;
-    const LOCAL_IMAGE_DESCRIPTOR = 44;
-    const END_OF_FILE = 59;
-}
+<span class="k">class</span> <span class="nc">BlockType</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">EXTENSION</span> <span class="o">=</span> <span class="mi">33</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LOCAL_IMAGE_DESCRIPTOR</span> <span class="o">=</span> <span class="mi">44</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">END_OF_FILE</span> <span class="o">=</span> <span class="mi">59</span><span class="p">;</span>
+<span class="p">}</span>
 
-namespace \Gif;
+<span class="k">namespace</span> <span class="nx">\Gif</span><span class="p">;</span>
 
-class ExtensionLabel {
-    const GRAPHIC_CONTROL = 249;
-    const COMMENT = 254;
-    const APPLICATION = 255;
-}
-</code></pre>
+<span class="k">class</span> <span class="nc">ExtensionLabel</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">GRAPHIC_CONTROL</span> <span class="o">=</span> <span class="mi">249</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">COMMENT</span> <span class="o">=</span> <span class="mi">254</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">APPLICATION</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -704,8 +701,8 @@ class ExtensionLabel {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

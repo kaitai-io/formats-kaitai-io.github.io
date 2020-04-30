@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -232,126 +229,126 @@ for educational / research purposes.</p>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * UTF-8 is a popular character encoding scheme that allows to
- * represent strings as sequence of code points defined in Unicode
- * standard. Its features are:
- * 
- * * variable width (i.e. one code point might be represented by 1 to 4
- *   bytes)
- * * backward compatiblity with ASCII
- * * basic validity checking (and thus distinguishing from other legacy
- *   8-bit encodings)
- * * maintaining sort order of codepoints if sorted as a byte array
- * 
- * WARNING: For the vast majority of practical purposes of format
- * definitions in Kaitai Struct, you&#39;d likely NOT want to use this and
- * rather just use `type: str` with `encoding: utf8`. That will use
- * native string implementations, which are most likely more efficient
- * and will give you native language strings, rather than an array of
- * individual codepoints.  This format definition is provided mostly
- * for educational / research purposes.
- */
+<span class="sd">/**</span>
+<span class="sd"> * UTF-8 is a popular character encoding scheme that allows to</span>
+<span class="sd"> * represent strings as sequence of code points defined in Unicode</span>
+<span class="sd"> * standard. Its features are:</span>
+<span class="sd"> * </span>
+<span class="sd"> * * variable width (i.e. one code point might be represented by 1 to 4</span>
+<span class="sd"> *   bytes)</span>
+<span class="sd"> * * backward compatiblity with ASCII</span>
+<span class="sd"> * * basic validity checking (and thus distinguishing from other legacy</span>
+<span class="sd"> *   8-bit encodings)</span>
+<span class="sd"> * * maintaining sort order of codepoints if sorted as a byte array</span>
+<span class="sd"> * </span>
+<span class="sd"> * WARNING: For the vast majority of practical purposes of format</span>
+<span class="sd"> * definitions in Kaitai Struct, you&#39;d likely NOT want to use this and</span>
+<span class="sd"> * rather just use `type: str` with `encoding: utf8`. That will use</span>
+<span class="sd"> * native string implementations, which are most likely more efficient</span>
+<span class="sd"> * and will give you native language strings, rather than an array of</span>
+<span class="sd"> * individual codepoints.  This format definition is provided mostly</span>
+<span class="sd"> * for educational / research purposes.</span>
+<span class="sd"> */</span>
 
-class Utf8String extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Utf8String $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Utf8String</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Utf8String</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_codepoints = [];
-        $i = 0;
-        while (!$this-&gt;_io-&gt;isEof()) {
-            $this-&gt;_m_codepoints[] = new \Utf8String\Utf8Codepoint($this-&gt;_io, $this, $this-&gt;_root);
-            $i++;
-        }
-    }
-    protected $_m_codepoints;
-    public function codepoints() { return $this-&gt;_m_codepoints; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_codepoints</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_codepoints</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Utf8String\Utf8Codepoint</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_codepoints</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">codepoints</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_codepoints</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Utf8String;
+<span class="k">namespace</span> <span class="nx">\Utf8String</span><span class="p">;</span>
 
-class Utf8Codepoint extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Utf8String $_parent = null, \Utf8String $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Utf8Codepoint</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Utf8String</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Utf8String</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_byte1 = $this-&gt;_io-&gt;readU1();
-        if ($this-&gt;len() &gt;= 2) {
-            $this-&gt;_m_byte2 = $this-&gt;_io-&gt;readU1();
-        }
-        if ($this-&gt;len() &gt;= 3) {
-            $this-&gt;_m_byte3 = $this-&gt;_io-&gt;readU1();
-        }
-        if ($this-&gt;len() &gt;= 4) {
-            $this-&gt;_m_byte4 = $this-&gt;_io-&gt;readU1();
-        }
-    }
-    protected $_m_raw1;
-    public function raw1() {
-        if ($this-&gt;_m_raw1 !== null)
-            return $this-&gt;_m_raw1;
-        $this-&gt;_m_raw1 = ($this-&gt;byte1() &amp; ($this-&gt;len() == 1 ? 127 : ($this-&gt;len() == 2 ? 31 : ($this-&gt;len() == 3 ? 15 : ($this-&gt;len() == 4 ? 7 : 0)))));
-        return $this-&gt;_m_raw1;
-    }
-    protected $_m_raw4;
-    public function raw4() {
-        if ($this-&gt;_m_raw4 !== null)
-            return $this-&gt;_m_raw4;
-        if ($this-&gt;len() &gt;= 4) {
-            $this-&gt;_m_raw4 = ($this-&gt;byte4() &amp; 63);
-        }
-        return $this-&gt;_m_raw4;
-    }
-    protected $_m_raw3;
-    public function raw3() {
-        if ($this-&gt;_m_raw3 !== null)
-            return $this-&gt;_m_raw3;
-        if ($this-&gt;len() &gt;= 3) {
-            $this-&gt;_m_raw3 = ($this-&gt;byte3() &amp; 63);
-        }
-        return $this-&gt;_m_raw3;
-    }
-    protected $_m_valueAsInt;
-    public function valueAsInt() {
-        if ($this-&gt;_m_valueAsInt !== null)
-            return $this-&gt;_m_valueAsInt;
-        $this-&gt;_m_valueAsInt = ($this-&gt;len() == 1 ? $this-&gt;raw1() : ($this-&gt;len() == 2 ? (($this-&gt;raw1() &lt;&lt; 6) | $this-&gt;raw2()) : ($this-&gt;len() == 3 ? ((($this-&gt;raw1() &lt;&lt; 12) | ($this-&gt;raw2() &lt;&lt; 6)) | $this-&gt;raw3()) : ($this-&gt;len() == 4 ? (((($this-&gt;raw1() &lt;&lt; 18) | ($this-&gt;raw2() &lt;&lt; 12)) | ($this-&gt;raw3() &lt;&lt; 6)) | $this-&gt;raw4()) : -1))));
-        return $this-&gt;_m_valueAsInt;
-    }
-    protected $_m_raw2;
-    public function raw2() {
-        if ($this-&gt;_m_raw2 !== null)
-            return $this-&gt;_m_raw2;
-        if ($this-&gt;len() &gt;= 2) {
-            $this-&gt;_m_raw2 = ($this-&gt;byte2() &amp; 63);
-        }
-        return $this-&gt;_m_raw2;
-    }
-    protected $_m_len;
-    public function len() {
-        if ($this-&gt;_m_len !== null)
-            return $this-&gt;_m_len;
-        $this-&gt;_m_len = (($this-&gt;byte1() &amp; 128) == 0 ? 1 : (($this-&gt;byte1() &amp; 224) == 192 ? 2 : (($this-&gt;byte1() &amp; 240) == 224 ? 3 : (($this-&gt;byte1() &amp; 248) == 240 ? 4 : -1))));
-        return $this-&gt;_m_len;
-    }
-    protected $_m_byte1;
-    protected $_m_byte2;
-    protected $_m_byte3;
-    protected $_m_byte4;
-    public function byte1() { return $this-&gt;_m_byte1; }
-    public function byte2() { return $this-&gt;_m_byte2; }
-    public function byte3() { return $this-&gt;_m_byte3; }
-    public function byte4() { return $this-&gt;_m_byte4; }
-}
-</code></pre>
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte2</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte3</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte4</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_raw1</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">raw1</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw1</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw1</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw1</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">byte1</span><span class="p">()</span> <span class="o">&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="mi">127</span> <span class="o">:</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">?</span> <span class="mi">31</span> <span class="o">:</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">?</span> <span class="mi">15</span> <span class="o">:</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4</span> <span class="o">?</span> <span class="mi">7</span> <span class="o">:</span> <span class="mi">0</span><span class="p">)))));</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_raw4</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">raw4</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw4</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw4</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw4</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">byte4</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw4</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_raw3</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">raw3</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw3</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw3</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw3</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">byte3</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw3</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_valueAsInt</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">valueAsInt</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valueAsInt</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valueAsInt</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valueAsInt</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">raw1</span><span class="p">()</span> <span class="o">:</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">?</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">raw1</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">raw2</span><span class="p">())</span> <span class="o">:</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">?</span> <span class="p">(((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">raw1</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">raw2</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="o">|</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">raw3</span><span class="p">())</span> <span class="o">:</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4</span> <span class="o">?</span> <span class="p">((((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">raw1</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">18</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">raw2</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">raw3</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="o">|</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">raw4</span><span class="p">())</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">))));</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valueAsInt</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_raw2</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">raw2</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw2</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw2</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw2</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">byte2</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_raw2</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">byte1</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">byte1</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">224</span><span class="p">)</span> <span class="o">==</span> <span class="mi">192</span> <span class="o">?</span> <span class="mi">2</span> <span class="o">:</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">byte1</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">)</span> <span class="o">==</span> <span class="mi">224</span> <span class="o">?</span> <span class="mi">3</span> <span class="o">:</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">byte1</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">248</span><span class="p">)</span> <span class="o">==</span> <span class="mi">240</span> <span class="o">?</span> <span class="mi">4</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">))));</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_byte1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_byte2</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_byte3</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_byte4</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">byte1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">byte2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte2</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">byte3</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte3</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">byte4</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byte4</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -378,8 +375,8 @@ class Utf8Codepoint extends \Kaitai\Struct\Struct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

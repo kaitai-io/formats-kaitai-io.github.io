@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -275,382 +272,379 @@ data = Wmf(KaitaiStream(BytesIO(raw)))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
-
-
-if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
-    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
-
-class Wmf(KaitaiStruct):
-    &quot;&quot;&quot;WMF (Windows Metafile) is a relatively early vector image format
-    introduced for Microsoft Windows in 1990.
-    
-    Inside, it provides a serialized list of Windows GDI (Graphics
-    Device Interface) function calls, which, if played back, result in
-    an image being drawn on a given surface (display, off-screen buffer,
-    printer, etc).
-    
-    .. seealso::
-       Source - http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf
-    &quot;&quot;&quot;
-
-    class Func(Enum):
-        eof = 0
-        savedc = 30
-        realizepalette = 53
-        setpalentries = 55
-        createpalette = 247
-        setbkmode = 258
-        setmapmode = 259
-        setrop2 = 260
-        setrelabs = 261
-        setpolyfillmode = 262
-        setstretchbltmode = 263
-        settextcharextra = 264
-        restoredc = 295
-        invertregion = 298
-        paintregion = 299
-        selectclipregion = 300
-        selectobject = 301
-        settextalign = 302
-        resizepalette = 313
-        dibcreatepatternbrush = 322
-        setlayout = 329
-        deleteobject = 496
-        createpatternbrush = 505
-        setbkcolor = 513
-        settextcolor = 521
-        settextjustification = 522
-        setwindoworg = 523
-        setwindowext = 524
-        setviewportorg = 525
-        setviewportext = 526
-        offsetwindoworg = 527
-        offsetviewportorg = 529
-        lineto = 531
-        moveto = 532
-        offsetcliprgn = 544
-        fillregion = 552
-        setmapperflags = 561
-        selectpalette = 564
-        createpenindirect = 762
-        createfontindirect = 763
-        createbrushindirect = 764
-        polygon = 804
-        polyline = 805
-        scalewindowext = 1040
-        scaleviewportext = 1042
-        excludecliprect = 1045
-        intersectcliprect = 1046
-        ellipse = 1048
-        floodfill = 1049
-        rectangle = 1051
-        setpixel = 1055
-        frameregion = 1065
-        animatepalette = 1078
-        textout = 1313
-        polypolygon = 1336
-        extfloodfill = 1352
-        roundrect = 1564
-        patblt = 1565
-        escape = 1574
-        createregion = 1791
-        arc = 2071
-        pie = 2074
-        chord = 2096
-        bitblt = 2338
-        dibbitblt = 2368
-        exttextout = 2610
-        stretchblt = 2851
-        dibstretchblt = 2881
-        setdibtodev = 3379
-        stretchdib = 3907
-
-    class BinRasterOp(Enum):
-        black = 1
-        notmergepen = 2
-        masknotpen = 3
-        notcopypen = 4
-        maskpennot = 5
-        not = 6
-        xorpen = 7
-        notmaskpen = 8
-        maskpen = 9
-        notxorpen = 10
-        nop = 11
-        mergenotpen = 12
-        copypen = 13
-        mergepennot = 14
-        mergepen = 15
-        white = 16
-
-    class MixMode(Enum):
-        transparent = 1
-        opaque = 2
-
-    class PolyFillMode(Enum):
-        alternate = 1
-        winding = 2
-    def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
-        self._parent = _parent
-        self._root = _root if _root else self
-        self._read()
-
-    def _read(self):
-        self.special_header = self._root.SpecialHeader(self._io, self, self._root)
-        self.header = self._root.Header(self._io, self, self._root)
-        self.records = []
-        i = 0
-        while True:
-            _ = self._root.Record(self._io, self, self._root)
-            self.records.append(_)
-            if _.function == self._root.Func.eof:
-                break
-            i += 1
-
-    class ParamsSetwindoworg(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           section 2.3.5.31
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.y = self._io.read_s2le()
-            self.x = self._io.read_s2le()
+<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">parse_version</span>
+<span class="kn">from</span> <span class="nn">kaitaistruct</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">ks_version</span><span class="p">,</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
 
-    class ParamsSetbkmode(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           section 2.3.5.15
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+<span class="k">if</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">ks_version</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">parse_version</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ks_version</span><span class="p">))</span>
 
-        def _read(self):
-            self.bk_mode = self._root.MixMode(self._io.read_u2le())
+<span class="k">class</span> <span class="nc">Wmf</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;WMF (Windows Metafile) is a relatively early vector image format</span>
+<span class="sd">    introduced for Microsoft Windows in 1990.</span>
+<span class="sd">    </span>
+<span class="sd">    Inside, it provides a serialized list of Windows GDI (Graphics</span>
+<span class="sd">    Device Interface) function calls, which, if played back, result in</span>
+<span class="sd">    an image being drawn on a given surface (display, off-screen buffer,</span>
+<span class="sd">    printer, etc).</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso::</span>
+<span class="sd">       Source - http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">class</span> <span class="nc">Func</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="n">eof</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">savedc</span> <span class="o">=</span> <span class="mi">30</span>
+        <span class="n">realizepalette</span> <span class="o">=</span> <span class="mi">53</span>
+        <span class="n">setpalentries</span> <span class="o">=</span> <span class="mi">55</span>
+        <span class="n">createpalette</span> <span class="o">=</span> <span class="mi">247</span>
+        <span class="n">setbkmode</span> <span class="o">=</span> <span class="mi">258</span>
+        <span class="n">setmapmode</span> <span class="o">=</span> <span class="mi">259</span>
+        <span class="n">setrop2</span> <span class="o">=</span> <span class="mi">260</span>
+        <span class="n">setrelabs</span> <span class="o">=</span> <span class="mi">261</span>
+        <span class="n">setpolyfillmode</span> <span class="o">=</span> <span class="mi">262</span>
+        <span class="n">setstretchbltmode</span> <span class="o">=</span> <span class="mi">263</span>
+        <span class="n">settextcharextra</span> <span class="o">=</span> <span class="mi">264</span>
+        <span class="n">restoredc</span> <span class="o">=</span> <span class="mi">295</span>
+        <span class="n">invertregion</span> <span class="o">=</span> <span class="mi">298</span>
+        <span class="n">paintregion</span> <span class="o">=</span> <span class="mi">299</span>
+        <span class="n">selectclipregion</span> <span class="o">=</span> <span class="mi">300</span>
+        <span class="n">selectobject</span> <span class="o">=</span> <span class="mi">301</span>
+        <span class="n">settextalign</span> <span class="o">=</span> <span class="mi">302</span>
+        <span class="n">resizepalette</span> <span class="o">=</span> <span class="mi">313</span>
+        <span class="n">dibcreatepatternbrush</span> <span class="o">=</span> <span class="mi">322</span>
+        <span class="n">setlayout</span> <span class="o">=</span> <span class="mi">329</span>
+        <span class="n">deleteobject</span> <span class="o">=</span> <span class="mi">496</span>
+        <span class="n">createpatternbrush</span> <span class="o">=</span> <span class="mi">505</span>
+        <span class="n">setbkcolor</span> <span class="o">=</span> <span class="mi">513</span>
+        <span class="n">settextcolor</span> <span class="o">=</span> <span class="mi">521</span>
+        <span class="n">settextjustification</span> <span class="o">=</span> <span class="mi">522</span>
+        <span class="n">setwindoworg</span> <span class="o">=</span> <span class="mi">523</span>
+        <span class="n">setwindowext</span> <span class="o">=</span> <span class="mi">524</span>
+        <span class="n">setviewportorg</span> <span class="o">=</span> <span class="mi">525</span>
+        <span class="n">setviewportext</span> <span class="o">=</span> <span class="mi">526</span>
+        <span class="n">offsetwindoworg</span> <span class="o">=</span> <span class="mi">527</span>
+        <span class="n">offsetviewportorg</span> <span class="o">=</span> <span class="mi">529</span>
+        <span class="n">lineto</span> <span class="o">=</span> <span class="mi">531</span>
+        <span class="n">moveto</span> <span class="o">=</span> <span class="mi">532</span>
+        <span class="n">offsetcliprgn</span> <span class="o">=</span> <span class="mi">544</span>
+        <span class="n">fillregion</span> <span class="o">=</span> <span class="mi">552</span>
+        <span class="n">setmapperflags</span> <span class="o">=</span> <span class="mi">561</span>
+        <span class="n">selectpalette</span> <span class="o">=</span> <span class="mi">564</span>
+        <span class="n">createpenindirect</span> <span class="o">=</span> <span class="mi">762</span>
+        <span class="n">createfontindirect</span> <span class="o">=</span> <span class="mi">763</span>
+        <span class="n">createbrushindirect</span> <span class="o">=</span> <span class="mi">764</span>
+        <span class="n">polygon</span> <span class="o">=</span> <span class="mi">804</span>
+        <span class="n">polyline</span> <span class="o">=</span> <span class="mi">805</span>
+        <span class="n">scalewindowext</span> <span class="o">=</span> <span class="mi">1040</span>
+        <span class="n">scaleviewportext</span> <span class="o">=</span> <span class="mi">1042</span>
+        <span class="n">excludecliprect</span> <span class="o">=</span> <span class="mi">1045</span>
+        <span class="n">intersectcliprect</span> <span class="o">=</span> <span class="mi">1046</span>
+        <span class="n">ellipse</span> <span class="o">=</span> <span class="mi">1048</span>
+        <span class="n">floodfill</span> <span class="o">=</span> <span class="mi">1049</span>
+        <span class="n">rectangle</span> <span class="o">=</span> <span class="mi">1051</span>
+        <span class="n">setpixel</span> <span class="o">=</span> <span class="mi">1055</span>
+        <span class="n">frameregion</span> <span class="o">=</span> <span class="mi">1065</span>
+        <span class="n">animatepalette</span> <span class="o">=</span> <span class="mi">1078</span>
+        <span class="n">textout</span> <span class="o">=</span> <span class="mi">1313</span>
+        <span class="n">polypolygon</span> <span class="o">=</span> <span class="mi">1336</span>
+        <span class="n">extfloodfill</span> <span class="o">=</span> <span class="mi">1352</span>
+        <span class="n">roundrect</span> <span class="o">=</span> <span class="mi">1564</span>
+        <span class="n">patblt</span> <span class="o">=</span> <span class="mi">1565</span>
+        <span class="n">escape</span> <span class="o">=</span> <span class="mi">1574</span>
+        <span class="n">createregion</span> <span class="o">=</span> <span class="mi">1791</span>
+        <span class="n">arc</span> <span class="o">=</span> <span class="mi">2071</span>
+        <span class="n">pie</span> <span class="o">=</span> <span class="mi">2074</span>
+        <span class="n">chord</span> <span class="o">=</span> <span class="mi">2096</span>
+        <span class="n">bitblt</span> <span class="o">=</span> <span class="mi">2338</span>
+        <span class="n">dibbitblt</span> <span class="o">=</span> <span class="mi">2368</span>
+        <span class="n">exttextout</span> <span class="o">=</span> <span class="mi">2610</span>
+        <span class="n">stretchblt</span> <span class="o">=</span> <span class="mi">2851</span>
+        <span class="n">dibstretchblt</span> <span class="o">=</span> <span class="mi">2881</span>
+        <span class="n">setdibtodev</span> <span class="o">=</span> <span class="mi">3379</span>
+        <span class="n">stretchdib</span> <span class="o">=</span> <span class="mi">3907</span>
+
+    <span class="k">class</span> <span class="nc">BinRasterOp</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="n">black</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">notmergepen</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">masknotpen</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">notcopypen</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">maskpennot</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="ow">not</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="n">xorpen</span> <span class="o">=</span> <span class="mi">7</span>
+        <span class="n">notmaskpen</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="n">maskpen</span> <span class="o">=</span> <span class="mi">9</span>
+        <span class="n">notxorpen</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">nop</span> <span class="o">=</span> <span class="mi">11</span>
+        <span class="n">mergenotpen</span> <span class="o">=</span> <span class="mi">12</span>
+        <span class="n">copypen</span> <span class="o">=</span> <span class="mi">13</span>
+        <span class="n">mergepennot</span> <span class="o">=</span> <span class="mi">14</span>
+        <span class="n">mergepen</span> <span class="o">=</span> <span class="mi">15</span>
+        <span class="n">white</span> <span class="o">=</span> <span class="mi">16</span>
+
+    <span class="k">class</span> <span class="nc">MixMode</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="n">transparent</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">opaque</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="k">class</span> <span class="nc">PolyFillMode</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="n">alternate</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">winding</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">special_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">SpecialHeader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Header</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">records</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Record</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">_</span><span class="o">.</span><span class="n">function</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Func</span><span class="o">.</span><span class="n">eof</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">class</span> <span class="nc">ParamsSetwindoworg</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           section 2.3.5.31</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">()</span>
 
 
-    class PointS(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           section 2.2.1.12
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+    <span class="k">class</span> <span class="nc">ParamsSetbkmode</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           section 2.3.5.15</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-        def _read(self):
-            self.x = self._io.read_s2le()
-            self.y = self._io.read_s2le()
-
-
-    class ParamsSetwindowext(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           section 2.3.5.30
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.y = self._io.read_s2le()
-            self.x = self._io.read_s2le()
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bk_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">MixMode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">())</span>
 
 
-    class ParamsPolygon(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           section 2.3.3.15 = params_polyline
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+    <span class="k">class</span> <span class="nc">PointS</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           section 2.2.1.12</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-        def _read(self):
-            self.num_points = self._io.read_s2le()
-            self.points = [None] * (self.num_points)
-            for i in range(self.num_points):
-                self.points[i] = self._root.PointS(self._io, self, self._root)
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">()</span>
 
 
+    <span class="k">class</span> <span class="nc">ParamsSetwindowext</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           section 2.3.5.30</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-    class Header(KaitaiStruct):
-
-        class MetafileType(Enum):
-            memory_metafile = 1
-            disk_metafile = 2
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.metafile_type = self._root.Header.MetafileType(self._io.read_u2le())
-            self.header_size = self._io.read_u2le()
-            self.version = self._io.read_u2le()
-            self.size = self._io.read_u4le()
-            self.number_of_objects = self._io.read_u2le()
-            self.max_record = self._io.read_u4le()
-            self.number_of_members = self._io.read_u2le()
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">()</span>
 
 
-    class ColorRef(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           section 2.2.1.7
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+    <span class="k">class</span> <span class="nc">ParamsPolygon</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           section 2.3.3.15 = params_polyline</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-        def _read(self):
-            self.red = self._io.read_u1()
-            self.green = self._io.read_u1()
-            self.blue = self._io.read_u1()
-            self.reserved = self._io.read_u1()
-
-
-    class ParamsSetrop2(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           section 2.3.5.22
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.draw_mode = self._root.BinRasterOp(self._io.read_u2le())
-
-
-    class ParamsSetpolyfillmode(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           section 2.3.5.20
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.poly_fill_mode = self._root.PolyFillMode(self._io.read_u2le())
-
-
-    class ParamsPolyline(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           section 2.3.3.14
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.num_points = self._io.read_s2le()
-            self.points = [None] * (self.num_points)
-            for i in range(self.num_points):
-                self.points[i] = self._root.PointS(self._io, self, self._root)
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_points</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_points</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PointS</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
 
 
-    class SpecialHeader(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+    <span class="k">class</span> <span class="nc">Header</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 
-        def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b&quot;\xD7\xCD\xC6\x9A&quot;)
-            self.handle = self._io.ensure_fixed_contents(b&quot;\x00\x00&quot;)
-            self.left = self._io.read_s2le()
-            self.top = self._io.read_s2le()
-            self.right = self._io.read_s2le()
-            self.bottom = self._io.read_s2le()
-            self.inch = self._io.read_u2le()
-            self.reserved = self._io.ensure_fixed_contents(b&quot;\x00\x00\x00\x00&quot;)
-            self.checksum = self._io.read_u2le()
+        <span class="k">class</span> <span class="nc">MetafileType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+            <span class="n">memory_metafile</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">disk_metafile</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-
-    class Record(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.size = self._io.read_u4le()
-            self.function = self._root.Func(self._io.read_u2le())
-            _on = self.function
-            if _on == self._root.Func.setbkmode:
-                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                io = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ParamsSetbkmode(io, self, self._root)
-            elif _on == self._root.Func.setbkcolor:
-                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                io = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ColorRef(io, self, self._root)
-            elif _on == self._root.Func.setrop2:
-                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                io = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ParamsSetrop2(io, self, self._root)
-            elif _on == self._root.Func.polyline:
-                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                io = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ParamsPolyline(io, self, self._root)
-            elif _on == self._root.Func.setwindoworg:
-                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                io = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ParamsSetwindoworg(io, self, self._root)
-            elif _on == self._root.Func.polygon:
-                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                io = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ParamsPolygon(io, self, self._root)
-            elif _on == self._root.Func.setwindowext:
-                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                io = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ParamsSetwindowext(io, self, self._root)
-            elif _on == self._root.Func.setpolyfillmode:
-                self._raw_params = self._io.read_bytes(((self.size - 3) * 2))
-                io = KaitaiStream(BytesIO(self._raw_params))
-                self.params = self._root.ParamsSetpolyfillmode(io, self, self._root)
-            else:
-                self.params = self._io.read_bytes(((self.size - 3) * 2))
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metafile_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Header</span><span class="o">.</span><span class="n">MetafileType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">header_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">number_of_objects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">number_of_members</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
 
 
+    <span class="k">class</span> <span class="nc">ColorRef</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           section 2.2.1.7</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-</code></pre>
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">red</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">green</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">blue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+
+
+    <span class="k">class</span> <span class="nc">ParamsSetrop2</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           section 2.3.5.22</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">BinRasterOp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">())</span>
+
+
+    <span class="k">class</span> <span class="nc">ParamsSetpolyfillmode</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           section 2.3.5.20</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">poly_fill_mode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PolyFillMode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">())</span>
+
+
+    <span class="k">class</span> <span class="nc">ParamsPolyline</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           section 2.3.3.14</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_points</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_points</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">PointS</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+
+    <span class="k">class</span> <span class="nc">SpecialHeader</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">magic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\xD7\xCD\xC6\x9A</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x00</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">top</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bottom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x00\x00\x00</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checksum</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+
+
+    <span class="k">class</span> <span class="nc">Record</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">())</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Func</span><span class="o">.</span><span class="n">setbkmode</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">ParamsSetbkmode</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Func</span><span class="o">.</span><span class="n">setbkcolor</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">ColorRef</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Func</span><span class="o">.</span><span class="n">setrop2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">ParamsSetrop2</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Func</span><span class="o">.</span><span class="n">polyline</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">ParamsPolyline</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Func</span><span class="o">.</span><span class="n">setwindoworg</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">ParamsSetwindoworg</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Func</span><span class="o">.</span><span class="n">polygon</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">ParamsPolygon</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Func</span><span class="o">.</span><span class="n">setwindowext</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">ParamsSetwindowext</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Func</span><span class="o">.</span><span class="n">setpolyfillmode</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_params</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">ParamsSetpolyfillmode</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
 
         </div>
         
@@ -677,8 +671,8 @@ class Wmf(KaitaiStruct):
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

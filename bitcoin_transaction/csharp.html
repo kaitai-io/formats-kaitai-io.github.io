@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -237,367 +234,367 @@ var data = new BitcoinTransaction(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
 
-    /// &lt;remarks&gt;
-    /// Reference: &lt;a href=&quot;https://bitcoin.org/en/developer-guide#transactions
-    /// https://en.bitcoin.it/wiki/Transaction
-    /// &quot;&gt;Source&lt;/a&gt;
-    /// &lt;/remarks&gt;
-    public partial class BitcoinTransaction : KaitaiStruct
-    {
-        public static BitcoinTransaction FromFile(string fileName)
-        {
-            return new BitcoinTransaction(new KaitaiStream(fileName));
-        }
+    <span class="c1">/// &lt;remarks&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;https://bitcoin.org/en/developer-guide#transactions</span>
+    <span class="c1">/// https://en.bitcoin.it/wiki/Transaction</span>
+    <span class="c1">/// &quot;&gt;Source&lt;/a&gt;</span>
+    <span class="c1">/// &lt;/remarks&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">BitcoinTransaction</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">BitcoinTransaction</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">BitcoinTransaction</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public BitcoinTransaction(KaitaiStream p__io, KaitaiStruct p__parent = null, BitcoinTransaction p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            _read();
-        }
-        private void _read()
-        {
-            _version = m_io.ReadU4le();
-            _numVins = m_io.ReadU1();
-            _vins = new List&lt;Vin&gt;((int) (NumVins));
-            for (var i = 0; i &lt; NumVins; i++)
-            {
-                _vins.Add(new Vin(m_io, this, m_root));
-            }
-            _numVouts = m_io.ReadU1();
-            _vouts = new List&lt;Vout&gt;((int) (NumVouts));
-            for (var i = 0; i &lt; NumVouts; i++)
-            {
-                _vouts.Add(new Vout(m_io, this, m_root));
-            }
-            _locktime = m_io.ReadU4le();
-        }
-        public partial class Vin : KaitaiStruct
-        {
-            public static Vin FromFile(string fileName)
-            {
-                return new Vin(new KaitaiStream(fileName));
-            }
+        <span class="k">public</span> <span class="nf">BitcoinTransaction</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BitcoinTransaction</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_version</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+            <span class="n">_numVins</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_vins</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vin</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumVins</span><span class="p">));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumVins</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+            <span class="p">{</span>
+                <span class="n">_vins</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Vin</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="n">_numVouts</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_vouts</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vout</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumVouts</span><span class="p">));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumVouts</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+            <span class="p">{</span>
+                <span class="n">_vouts</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Vout</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="n">_locktime</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Vin</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Vin</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Vin</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Vin(KaitaiStream p__io, BitcoinTransaction p__parent = null, BitcoinTransaction p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _txid = m_io.ReadBytes(32);
-                _outputId = m_io.ReadU4le();
-                _lenScript = m_io.ReadU1();
-                __raw_scriptSig = m_io.ReadBytes(LenScript);
-                var io___raw_scriptSig = new KaitaiStream(__raw_scriptSig);
-                _scriptSig = new ScriptSignature(io___raw_scriptSig, this, m_root);
-                _endOfVin = m_io.EnsureFixedContents(new byte[] { 255, 255, 255, 255 });
-            }
-            public partial class ScriptSignature : KaitaiStruct
-            {
-                public static ScriptSignature FromFile(string fileName)
-                {
-                    return new ScriptSignature(new KaitaiStream(fileName));
-                }
+            <span class="k">public</span> <span class="nf">Vin</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BitcoinTransaction</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BitcoinTransaction</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_txid</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">32</span><span class="p">);</span>
+                <span class="n">_outputId</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_lenScript</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">__raw_scriptSig</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenScript</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_scriptSig</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_scriptSig</span><span class="p">);</span>
+                <span class="n">_scriptSig</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ScriptSignature</span><span class="p">(</span><span class="n">io___raw_scriptSig</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_endOfVin</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">255</span><span class="p">,</span> <span class="m">255</span><span class="p">,</span> <span class="m">255</span><span class="p">,</span> <span class="m">255</span> <span class="p">});</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ScriptSignature</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">ScriptSignature</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">ScriptSignature</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
 
 
-                public enum SighashType
-                {
-                    SighashAll = 1,
-                    SighashNone = 2,
-                    SighashSingle = 3,
-                    SighashAnyonecanpay = 80,
-                }
-                public ScriptSignature(KaitaiStream p__io, BitcoinTransaction.Vin p__parent = null, BitcoinTransaction p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _lenSigStack = m_io.ReadU1();
-                    _derSig = new DerSignature(m_io, this, m_root);
-                    _sigType = ((SighashType) m_io.ReadU1());
-                    _lenPubkeyStack = m_io.ReadU1();
-                    _pubkey = new PublicKey(m_io, this, m_root);
-                }
-                public partial class DerSignature : KaitaiStruct
-                {
-                    public static DerSignature FromFile(string fileName)
-                    {
-                        return new DerSignature(new KaitaiStream(fileName));
-                    }
+                <span class="k">public</span> <span class="k">enum</span> <span class="n">SighashType</span>
+                <span class="p">{</span>
+                    <span class="n">SighashAll</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+                    <span class="n">SighashNone</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+                    <span class="n">SighashSingle</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+                    <span class="n">SighashAnyonecanpay</span> <span class="p">=</span> <span class="m">80</span><span class="p">,</span>
+                <span class="p">}</span>
+                <span class="k">public</span> <span class="nf">ScriptSignature</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BitcoinTransaction</span><span class="p">.</span><span class="n">Vin</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BitcoinTransaction</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_lenSigStack</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                    <span class="n">_derSig</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DerSignature</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_sigType</span> <span class="p">=</span> <span class="p">((</span><span class="n">SighashType</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+                    <span class="n">_lenPubkeyStack</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                    <span class="n">_pubkey</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PublicKey</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DerSignature</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+                <span class="p">{</span>
+                    <span class="k">public</span> <span class="k">static</span> <span class="n">DerSignature</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                    <span class="p">{</span>
+                        <span class="k">return</span> <span class="k">new</span> <span class="nf">DerSignature</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                    <span class="p">}</span>
 
-                    public DerSignature(KaitaiStream p__io, BitcoinTransaction.Vin.ScriptSignature p__parent = null, BitcoinTransaction p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _sequence = m_io.EnsureFixedContents(new byte[] { 48 });
-                        _lenSig = m_io.ReadU1();
-                        _sep1 = m_io.EnsureFixedContents(new byte[] { 2 });
-                        _lenSigR = m_io.ReadU1();
-                        _sigR = m_io.ReadBytes(LenSigR);
-                        _sep2 = m_io.EnsureFixedContents(new byte[] { 2 });
-                        _lenSigS = m_io.ReadU1();
-                        _sigS = m_io.ReadBytes(LenSigS);
-                    }
-                    private byte[] _sequence;
-                    private byte _lenSig;
-                    private byte[] _sep1;
-                    private byte _lenSigR;
-                    private byte[] _sigR;
-                    private byte[] _sep2;
-                    private byte _lenSigS;
-                    private byte[] _sigS;
-                    private BitcoinTransaction m_root;
-                    private BitcoinTransaction.Vin.ScriptSignature m_parent;
-                    public byte[] Sequence { get { return _sequence; } }
-                    public byte LenSig { get { return _lenSig; } }
-                    public byte[] Sep1 { get { return _sep1; } }
+                    <span class="k">public</span> <span class="nf">DerSignature</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BitcoinTransaction</span><span class="p">.</span><span class="n">Vin</span><span class="p">.</span><span class="n">ScriptSignature</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BitcoinTransaction</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                    <span class="p">{</span>
+                        <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                        <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                        <span class="n">_read</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                    <span class="p">{</span>
+                        <span class="n">_sequence</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">48</span> <span class="p">});</span>
+                        <span class="n">_lenSig</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                        <span class="n">_sep1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">2</span> <span class="p">});</span>
+                        <span class="n">_lenSigR</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                        <span class="n">_sigR</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenSigR</span><span class="p">);</span>
+                        <span class="n">_sep2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">2</span> <span class="p">});</span>
+                        <span class="n">_lenSigS</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                        <span class="n">_sigS</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenSigS</span><span class="p">);</span>
+                    <span class="p">}</span>
+                    <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_sequence</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="kt">byte</span> <span class="n">_lenSig</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_sep1</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="kt">byte</span> <span class="n">_lenSigR</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_sigR</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_sep2</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="kt">byte</span> <span class="n">_lenSigS</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_sigS</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="n">BitcoinTransaction</span> <span class="n">m_root</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="n">BitcoinTransaction</span><span class="p">.</span><span class="n">Vin</span><span class="p">.</span><span class="n">ScriptSignature</span> <span class="n">m_parent</span><span class="p">;</span>
+                    <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Sequence</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sequence</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                    <span class="k">public</span> <span class="kt">byte</span> <span class="n">LenSig</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenSig</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                    <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Sep1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sep1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-                    /// &lt;summary&gt;
-                    /// &#39;r&#39; value&#39;s length.
-                    /// &lt;/summary&gt;
-                    public byte LenSigR { get { return _lenSigR; } }
+                    <span class="c1">/// &lt;summary&gt;</span>
+                    <span class="c1">/// &#39;r&#39; value&#39;s length.</span>
+                    <span class="c1">/// &lt;/summary&gt;</span>
+                    <span class="k">public</span> <span class="kt">byte</span> <span class="n">LenSigR</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenSigR</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-                    /// &lt;summary&gt;
-                    /// &#39;r&#39; value of the ECDSA signature.
-                    /// &lt;/summary&gt;
-                    /// &lt;remarks&gt;
-                    /// Reference: &lt;a href=&quot;https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm&quot;&gt;Source&lt;/a&gt;
-                    /// &lt;/remarks&gt;
-                    public byte[] SigR { get { return _sigR; } }
-                    public byte[] Sep2 { get { return _sep2; } }
+                    <span class="c1">/// &lt;summary&gt;</span>
+                    <span class="c1">/// &#39;r&#39; value of the ECDSA signature.</span>
+                    <span class="c1">/// &lt;/summary&gt;</span>
+                    <span class="c1">/// &lt;remarks&gt;</span>
+                    <span class="c1">/// Reference: &lt;a href=&quot;https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm&quot;&gt;Source&lt;/a&gt;</span>
+                    <span class="c1">/// &lt;/remarks&gt;</span>
+                    <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">SigR</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sigR</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                    <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Sep2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sep2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-                    /// &lt;summary&gt;
-                    /// &#39;s&#39; value&#39;s length.
-                    /// &lt;/summary&gt;
-                    public byte LenSigS { get { return _lenSigS; } }
+                    <span class="c1">/// &lt;summary&gt;</span>
+                    <span class="c1">/// &#39;s&#39; value&#39;s length.</span>
+                    <span class="c1">/// &lt;/summary&gt;</span>
+                    <span class="k">public</span> <span class="kt">byte</span> <span class="n">LenSigS</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenSigS</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-                    /// &lt;summary&gt;
-                    /// &#39;s&#39; value of the ECDSA signature.
-                    /// &lt;/summary&gt;
-                    /// &lt;remarks&gt;
-                    /// Reference: &lt;a href=&quot;https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm&quot;&gt;Source&lt;/a&gt;
-                    /// &lt;/remarks&gt;
-                    public byte[] SigS { get { return _sigS; } }
-                    public BitcoinTransaction M_Root { get { return m_root; } }
-                    public BitcoinTransaction.Vin.ScriptSignature M_Parent { get { return m_parent; } }
-                }
-                public partial class PublicKey : KaitaiStruct
-                {
-                    public static PublicKey FromFile(string fileName)
-                    {
-                        return new PublicKey(new KaitaiStream(fileName));
-                    }
+                    <span class="c1">/// &lt;summary&gt;</span>
+                    <span class="c1">/// &#39;s&#39; value of the ECDSA signature.</span>
+                    <span class="c1">/// &lt;/summary&gt;</span>
+                    <span class="c1">/// &lt;remarks&gt;</span>
+                    <span class="c1">/// Reference: &lt;a href=&quot;https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm&quot;&gt;Source&lt;/a&gt;</span>
+                    <span class="c1">/// &lt;/remarks&gt;</span>
+                    <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">SigS</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sigS</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                    <span class="k">public</span> <span class="n">BitcoinTransaction</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                    <span class="k">public</span> <span class="n">BitcoinTransaction</span><span class="p">.</span><span class="n">Vin</span><span class="p">.</span><span class="n">ScriptSignature</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">PublicKey</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+                <span class="p">{</span>
+                    <span class="k">public</span> <span class="k">static</span> <span class="n">PublicKey</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                    <span class="p">{</span>
+                        <span class="k">return</span> <span class="k">new</span> <span class="nf">PublicKey</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                    <span class="p">}</span>
 
-                    public PublicKey(KaitaiStream p__io, BitcoinTransaction.Vin.ScriptSignature p__parent = null, BitcoinTransaction p__root = null) : base(p__io)
-                    {
-                        m_parent = p__parent;
-                        m_root = p__root;
-                        _read();
-                    }
-                    private void _read()
-                    {
-                        _type = m_io.ReadU1();
-                        _x = m_io.ReadBytes(32);
-                        _y = m_io.ReadBytes(32);
-                    }
-                    private byte _type;
-                    private byte[] _x;
-                    private byte[] _y;
-                    private BitcoinTransaction m_root;
-                    private BitcoinTransaction.Vin.ScriptSignature m_parent;
-                    public byte Type { get { return _type; } }
+                    <span class="k">public</span> <span class="nf">PublicKey</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BitcoinTransaction</span><span class="p">.</span><span class="n">Vin</span><span class="p">.</span><span class="n">ScriptSignature</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BitcoinTransaction</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                    <span class="p">{</span>
+                        <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                        <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                        <span class="n">_read</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                    <span class="p">{</span>
+                        <span class="n">_type</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                        <span class="n">_x</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">32</span><span class="p">);</span>
+                        <span class="n">_y</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">32</span><span class="p">);</span>
+                    <span class="p">}</span>
+                    <span class="k">private</span> <span class="kt">byte</span> <span class="n">_type</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_x</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_y</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="n">BitcoinTransaction</span> <span class="n">m_root</span><span class="p">;</span>
+                    <span class="k">private</span> <span class="n">BitcoinTransaction</span><span class="p">.</span><span class="n">Vin</span><span class="p">.</span><span class="n">ScriptSignature</span> <span class="n">m_parent</span><span class="p">;</span>
+                    <span class="k">public</span> <span class="kt">byte</span> <span class="n">Type</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_type</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-                    /// &lt;summary&gt;
-                    /// &#39;x&#39; coordinate of the public key on the elliptic curve.
-                    /// &lt;/summary&gt;
-                    public byte[] X { get { return _x; } }
+                    <span class="c1">/// &lt;summary&gt;</span>
+                    <span class="c1">/// &#39;x&#39; coordinate of the public key on the elliptic curve.</span>
+                    <span class="c1">/// &lt;/summary&gt;</span>
+                    <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">X</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_x</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-                    /// &lt;summary&gt;
-                    /// &#39;y&#39; coordinate of the public key on the elliptic curve.
-                    /// &lt;/summary&gt;
-                    public byte[] Y { get { return _y; } }
-                    public BitcoinTransaction M_Root { get { return m_root; } }
-                    public BitcoinTransaction.Vin.ScriptSignature M_Parent { get { return m_parent; } }
-                }
-                private byte _lenSigStack;
-                private DerSignature _derSig;
-                private SighashType _sigType;
-                private byte _lenPubkeyStack;
-                private PublicKey _pubkey;
-                private BitcoinTransaction m_root;
-                private BitcoinTransaction.Vin m_parent;
-                public byte LenSigStack { get { return _lenSigStack; } }
+                    <span class="c1">/// &lt;summary&gt;</span>
+                    <span class="c1">/// &#39;y&#39; coordinate of the public key on the elliptic curve.</span>
+                    <span class="c1">/// &lt;/summary&gt;</span>
+                    <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Y</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_y</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                    <span class="k">public</span> <span class="n">BitcoinTransaction</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                    <span class="k">public</span> <span class="n">BitcoinTransaction</span><span class="p">.</span><span class="n">Vin</span><span class="p">.</span><span class="n">ScriptSignature</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">byte</span> <span class="n">_lenSigStack</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">DerSignature</span> <span class="n">_derSig</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">SighashType</span> <span class="n">_sigType</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">byte</span> <span class="n">_lenPubkeyStack</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">PublicKey</span> <span class="n">_pubkey</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">BitcoinTransaction</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">BitcoinTransaction</span><span class="p">.</span><span class="n">Vin</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">byte</span> <span class="n">LenSigStack</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenSigStack</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-                /// &lt;summary&gt;
-                /// DER-encoded ECDSA signature.
-                /// &lt;/summary&gt;
-                /// &lt;remarks&gt;
-                /// Reference: &lt;a href=&quot;https://en.wikipedia.org/wiki/X.690#DER_encoding
-                /// https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm
-                /// &quot;&gt;Source&lt;/a&gt;
-                /// &lt;/remarks&gt;
-                public DerSignature DerSig { get { return _derSig; } }
+                <span class="c1">/// &lt;summary&gt;</span>
+                <span class="c1">/// DER-encoded ECDSA signature.</span>
+                <span class="c1">/// &lt;/summary&gt;</span>
+                <span class="c1">/// &lt;remarks&gt;</span>
+                <span class="c1">/// Reference: &lt;a href=&quot;https://en.wikipedia.org/wiki/X.690#DER_encoding</span>
+                <span class="c1">/// https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm</span>
+                <span class="c1">/// &quot;&gt;Source&lt;/a&gt;</span>
+                <span class="c1">/// &lt;/remarks&gt;</span>
+                <span class="k">public</span> <span class="n">DerSignature</span> <span class="n">DerSig</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_derSig</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-                /// &lt;summary&gt;
-                /// Type of signature.
-                /// &lt;/summary&gt;
-                public SighashType SigType { get { return _sigType; } }
-                public byte LenPubkeyStack { get { return _lenPubkeyStack; } }
+                <span class="c1">/// &lt;summary&gt;</span>
+                <span class="c1">/// Type of signature.</span>
+                <span class="c1">/// &lt;/summary&gt;</span>
+                <span class="k">public</span> <span class="n">SighashType</span> <span class="n">SigType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sigType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">byte</span> <span class="n">LenPubkeyStack</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenPubkeyStack</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-                /// &lt;summary&gt;
-                /// Public key (bitcoin address of the recipient).
-                /// &lt;/summary&gt;
-                public PublicKey Pubkey { get { return _pubkey; } }
-                public BitcoinTransaction M_Root { get { return m_root; } }
-                public BitcoinTransaction.Vin M_Parent { get { return m_parent; } }
-            }
-            private byte[] _txid;
-            private uint _outputId;
-            private byte _lenScript;
-            private ScriptSignature _scriptSig;
-            private byte[] _endOfVin;
-            private BitcoinTransaction m_root;
-            private BitcoinTransaction m_parent;
-            private byte[] __raw_scriptSig;
+                <span class="c1">/// &lt;summary&gt;</span>
+                <span class="c1">/// Public key (bitcoin address of the recipient).</span>
+                <span class="c1">/// &lt;/summary&gt;</span>
+                <span class="k">public</span> <span class="n">PublicKey</span> <span class="n">Pubkey</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_pubkey</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">BitcoinTransaction</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">BitcoinTransaction</span><span class="p">.</span><span class="n">Vin</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_txid</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_outputId</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_lenScript</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">ScriptSignature</span> <span class="n">_scriptSig</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_endOfVin</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">BitcoinTransaction</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">BitcoinTransaction</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_scriptSig</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Previous transaction hash.
-            /// &lt;/summary&gt;
-            public byte[] Txid { get { return _txid; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Previous transaction hash.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Txid</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_txid</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// ID indexing an ouput of the transaction refered by txid.
-            /// This output will be used as an input in the present transaction.
-            /// &lt;/summary&gt;
-            public uint OutputId { get { return _outputId; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// ID indexing an ouput of the transaction refered by txid.</span>
+            <span class="c1">/// This output will be used as an input in the present transaction.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">OutputId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_outputId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// ScriptSig&#39;s length.
-            /// &lt;/summary&gt;
-            public byte LenScript { get { return _lenScript; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// ScriptSig&#39;s length.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">LenScript</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenScript</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// ScriptSig.
-            /// &lt;/summary&gt;
-            /// &lt;remarks&gt;
-            /// Reference: &lt;a href=&quot;https://en.bitcoin.it/wiki/Transaction#Input
-            /// https://en.bitcoin.it/wiki/Script
-            /// &quot;&gt;Source&lt;/a&gt;
-            /// &lt;/remarks&gt;
-            public ScriptSignature ScriptSig { get { return _scriptSig; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// ScriptSig.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="c1">/// &lt;remarks&gt;</span>
+            <span class="c1">/// Reference: &lt;a href=&quot;https://en.bitcoin.it/wiki/Transaction#Input</span>
+            <span class="c1">/// https://en.bitcoin.it/wiki/Script</span>
+            <span class="c1">/// &quot;&gt;Source&lt;/a&gt;</span>
+            <span class="c1">/// &lt;/remarks&gt;</span>
+            <span class="k">public</span> <span class="n">ScriptSignature</span> <span class="n">ScriptSig</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_scriptSig</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Magic number indicating the end of the current input.
-            /// &lt;/summary&gt;
-            public byte[] EndOfVin { get { return _endOfVin; } }
-            public BitcoinTransaction M_Root { get { return m_root; } }
-            public BitcoinTransaction M_Parent { get { return m_parent; } }
-            public byte[] M_RawScriptSig { get { return __raw_scriptSig; } }
-        }
-        public partial class Vout : KaitaiStruct
-        {
-            public static Vout FromFile(string fileName)
-            {
-                return new Vout(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Magic number indicating the end of the current input.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">EndOfVin</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_endOfVin</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">BitcoinTransaction</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">BitcoinTransaction</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawScriptSig</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_scriptSig</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Vout</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Vout</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Vout</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Vout(KaitaiStream p__io, BitcoinTransaction p__parent = null, BitcoinTransaction p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _amount = m_io.ReadU8le();
-                _lenScript = m_io.ReadU1();
-                _scriptPubKey = m_io.ReadBytes(LenScript);
-            }
-            private ulong _amount;
-            private byte _lenScript;
-            private byte[] _scriptPubKey;
-            private BitcoinTransaction m_root;
-            private BitcoinTransaction m_parent;
+            <span class="k">public</span> <span class="nf">Vout</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">BitcoinTransaction</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">BitcoinTransaction</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_amount</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                <span class="n">_lenScript</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_scriptPubKey</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenScript</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_amount</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_lenScript</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_scriptPubKey</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">BitcoinTransaction</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">BitcoinTransaction</span> <span class="n">m_parent</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Number of Satoshis to be transfered.
-            /// &lt;/summary&gt;
-            public ulong Amount { get { return _amount; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Number of Satoshis to be transfered.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Amount</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_amount</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// ScriptPubKey&#39;s length.
-            /// &lt;/summary&gt;
-            public byte LenScript { get { return _lenScript; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// ScriptPubKey&#39;s length.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">LenScript</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenScript</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// ScriptPubKey.
-            /// &lt;/summary&gt;
-            /// &lt;remarks&gt;
-            /// Reference: &lt;a href=&quot;https://en.bitcoin.it/wiki/Transaction#Output
-            /// https://en.bitcoin.it/wiki/Script
-            /// &quot;&gt;Source&lt;/a&gt;
-            /// &lt;/remarks&gt;
-            public byte[] ScriptPubKey { get { return _scriptPubKey; } }
-            public BitcoinTransaction M_Root { get { return m_root; } }
-            public BitcoinTransaction M_Parent { get { return m_parent; } }
-        }
-        private uint _version;
-        private byte _numVins;
-        private List&lt;Vin&gt; _vins;
-        private byte _numVouts;
-        private List&lt;Vout&gt; _vouts;
-        private uint _locktime;
-        private BitcoinTransaction m_root;
-        private KaitaiStruct m_parent;
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// ScriptPubKey.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="c1">/// &lt;remarks&gt;</span>
+            <span class="c1">/// Reference: &lt;a href=&quot;https://en.bitcoin.it/wiki/Transaction#Output</span>
+            <span class="c1">/// https://en.bitcoin.it/wiki/Script</span>
+            <span class="c1">/// &quot;&gt;Source&lt;/a&gt;</span>
+            <span class="c1">/// &lt;/remarks&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">ScriptPubKey</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_scriptPubKey</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">BitcoinTransaction</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">BitcoinTransaction</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_version</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_numVins</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vin</span><span class="p">&gt;</span> <span class="n">_vins</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_numVouts</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vout</span><span class="p">&gt;</span> <span class="n">_vouts</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_locktime</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">BitcoinTransaction</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
 
-        /// &lt;summary&gt;
-        /// Version number.
-        /// &lt;/summary&gt;
-        public uint Version { get { return _version; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Version number.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">Version</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_version</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Number of input transactions.
-        /// &lt;/summary&gt;
-        public byte NumVins { get { return _numVins; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Number of input transactions.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">NumVins</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numVins</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Input transactions.
-        /// An input refers to an output from a previous transaction.
-        /// &lt;/summary&gt;
-        public List&lt;Vin&gt; Vins { get { return _vins; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Input transactions.</span>
+        <span class="c1">/// An input refers to an output from a previous transaction.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vin</span><span class="p">&gt;</span> <span class="n">Vins</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_vins</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Number of output transactions.
-        /// &lt;/summary&gt;
-        public byte NumVouts { get { return _numVouts; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Number of output transactions.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">NumVouts</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numVouts</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Output transactions.
-        /// &lt;/summary&gt;
-        public List&lt;Vout&gt; Vouts { get { return _vouts; } }
-        public uint Locktime { get { return _locktime; } }
-        public BitcoinTransaction M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-    }
-}
-</code></pre>
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Output transactions.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vout</span><span class="p">&gt;</span> <span class="n">Vouts</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_vouts</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">Locktime</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_locktime</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">BitcoinTransaction</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -624,8 +621,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

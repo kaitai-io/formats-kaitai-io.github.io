@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -245,680 +242,680 @@ of 65536.
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
 
-    /// &lt;summary&gt;
-    /// SQLite3 is a popular serverless SQL engine, implemented as a library
-    /// to be used within other applications. It keeps its databases as
-    /// regular disk files.
-    /// 
-    /// Every database file is segmented into pages. First page (starting at
-    /// the very beginning) is special: it contains a file-global header
-    /// which specifies some data relevant to proper parsing (i.e. format
-    /// versions, size of page, etc). After the header, normal contents of
-    /// the first page follow.
-    /// 
-    /// Each page would be of some type, and generally, they would be
-    /// reached via the links starting from the first page. First page type
-    /// (`root_page`) is always &amp;quot;btree_page&amp;quot;.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;
-    /// Reference: &lt;a href=&quot;https://www.sqlite.org/fileformat.html&quot;&gt;Source&lt;/a&gt;
-    /// &lt;/remarks&gt;
-    public partial class Sqlite3 : KaitaiStruct
-    {
-        public static Sqlite3 FromFile(string fileName)
-        {
-            return new Sqlite3(new KaitaiStream(fileName));
-        }
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// SQLite3 is a popular serverless SQL engine, implemented as a library</span>
+    <span class="c1">/// to be used within other applications. It keeps its databases as</span>
+    <span class="c1">/// regular disk files.</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// Every database file is segmented into pages. First page (starting at</span>
+    <span class="c1">/// the very beginning) is special: it contains a file-global header</span>
+    <span class="c1">/// which specifies some data relevant to proper parsing (i.e. format</span>
+    <span class="c1">/// versions, size of page, etc). After the header, normal contents of</span>
+    <span class="c1">/// the first page follow.</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// Each page would be of some type, and generally, they would be</span>
+    <span class="c1">/// reached via the links starting from the first page. First page type</span>
+    <span class="c1">/// (`root_page`) is always &amp;quot;btree_page&amp;quot;.</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="c1">/// &lt;remarks&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;https://www.sqlite.org/fileformat.html&quot;&gt;Source&lt;/a&gt;</span>
+    <span class="c1">/// &lt;/remarks&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Sqlite3</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">Sqlite3</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Sqlite3</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
 
-        public enum Versions
-        {
-            Legacy = 1,
-            Wal = 2,
-        }
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">Versions</span>
+        <span class="p">{</span>
+            <span class="n">Legacy</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="n">Wal</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+        <span class="p">}</span>
 
-        public enum Encodings
-        {
-            Utf8 = 1,
-            Utf16le = 2,
-            Utf16be = 3,
-        }
-        public Sqlite3(KaitaiStream p__io, KaitaiStruct p__parent = null, Sqlite3 p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            f_lenPage = false;
-            _read();
-        }
-        private void _read()
-        {
-            _magic = m_io.EnsureFixedContents(new byte[] { 83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0 });
-            _lenPageMod = m_io.ReadU2be();
-            _writeVersion = ((Versions) m_io.ReadU1());
-            _readVersion = ((Versions) m_io.ReadU1());
-            _reservedSpace = m_io.ReadU1();
-            _maxPayloadFrac = m_io.ReadU1();
-            _minPayloadFrac = m_io.ReadU1();
-            _leafPayloadFrac = m_io.ReadU1();
-            _fileChangeCounter = m_io.ReadU4be();
-            _numPages = m_io.ReadU4be();
-            _firstFreelistTrunkPage = m_io.ReadU4be();
-            _numFreelistPages = m_io.ReadU4be();
-            _schemaCookie = m_io.ReadU4be();
-            _schemaFormat = m_io.ReadU4be();
-            _defPageCacheSize = m_io.ReadU4be();
-            _largestRootPage = m_io.ReadU4be();
-            _textEncoding = ((Encodings) m_io.ReadU4be());
-            _userVersion = m_io.ReadU4be();
-            _isIncrementalVacuum = m_io.ReadU4be();
-            _applicationId = m_io.ReadU4be();
-            _reserved = m_io.ReadBytes(20);
-            _versionValidFor = m_io.ReadU4be();
-            _sqliteVersionNumber = m_io.ReadU4be();
-            _rootPage = new BtreePage(m_io, this, m_root);
-        }
-        public partial class Serial : KaitaiStruct
-        {
-            public static Serial FromFile(string fileName)
-            {
-                return new Serial(new KaitaiStream(fileName));
-            }
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">Encodings</span>
+        <span class="p">{</span>
+            <span class="n">Utf8</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="n">Utf16le</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+            <span class="n">Utf16be</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="nf">Sqlite3</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Sqlite3</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">f_lenPage</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">83</span><span class="p">,</span> <span class="m">81</span><span class="p">,</span> <span class="m">76</span><span class="p">,</span> <span class="m">105</span><span class="p">,</span> <span class="m">116</span><span class="p">,</span> <span class="m">101</span><span class="p">,</span> <span class="m">32</span><span class="p">,</span> <span class="m">102</span><span class="p">,</span> <span class="m">111</span><span class="p">,</span> <span class="m">114</span><span class="p">,</span> <span class="m">109</span><span class="p">,</span> <span class="m">97</span><span class="p">,</span> <span class="m">116</span><span class="p">,</span> <span class="m">32</span><span class="p">,</span> <span class="m">51</span><span class="p">,</span> <span class="m">0</span> <span class="p">});</span>
+            <span class="n">_lenPageMod</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+            <span class="n">_writeVersion</span> <span class="p">=</span> <span class="p">((</span><span class="n">Versions</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+            <span class="n">_readVersion</span> <span class="p">=</span> <span class="p">((</span><span class="n">Versions</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+            <span class="n">_reservedSpace</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_maxPayloadFrac</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_minPayloadFrac</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_leafPayloadFrac</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_fileChangeCounter</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="n">_numPages</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="n">_firstFreelistTrunkPage</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="n">_numFreelistPages</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="n">_schemaCookie</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="n">_schemaFormat</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="n">_defPageCacheSize</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="n">_largestRootPage</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="n">_textEncoding</span> <span class="p">=</span> <span class="p">((</span><span class="n">Encodings</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">());</span>
+            <span class="n">_userVersion</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="n">_isIncrementalVacuum</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="n">_applicationId</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="n">_reserved</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">20</span><span class="p">);</span>
+            <span class="n">_versionValidFor</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="n">_sqliteVersionNumber</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="n">_rootPage</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BtreePage</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Serial</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Serial</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Serial</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Serial(KaitaiStream p__io, KaitaiStruct p__parent = null, Sqlite3 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_isBlob = false;
-                f_isString = false;
-                f_lenContent = false;
-                _read();
-            }
-            private void _read()
-            {
-                _code = new VlqBase128Be(m_io);
-            }
-            private bool f_isBlob;
-            private bool _isBlob;
-            public bool IsBlob
-            {
-                get
-                {
-                    if (f_isBlob)
-                        return _isBlob;
-                    _isBlob = (bool) ( ((Code.Value &gt;= 12) &amp;&amp; (KaitaiStream.Mod(Code.Value, 2) == 0)) );
-                    f_isBlob = true;
-                    return _isBlob;
-                }
-            }
-            private bool f_isString;
-            private bool _isString;
-            public bool IsString
-            {
-                get
-                {
-                    if (f_isString)
-                        return _isString;
-                    _isString = (bool) ( ((Code.Value &gt;= 13) &amp;&amp; (KaitaiStream.Mod(Code.Value, 2) == 1)) );
-                    f_isString = true;
-                    return _isString;
-                }
-            }
-            private bool f_lenContent;
-            private int? _lenContent;
-            public int? LenContent
-            {
-                get
-                {
-                    if (f_lenContent)
-                        return _lenContent;
-                    if (Code.Value &gt;= 12) {
-                        _lenContent = (int) (((Code.Value - 12) / 2));
-                    }
-                    f_lenContent = true;
-                    return _lenContent;
-                }
-            }
-            private VlqBase128Be _code;
-            private Sqlite3 m_root;
-            private KaitaiStruct m_parent;
-            public VlqBase128Be Code { get { return _code; } }
-            public Sqlite3 M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        public partial class BtreePage : KaitaiStruct
-        {
-            public static BtreePage FromFile(string fileName)
-            {
-                return new BtreePage(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">Serial</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Sqlite3</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_isBlob</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_isString</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_lenContent</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_code</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VlqBase128Be</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isBlob</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isBlob</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsBlob</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isBlob</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_isBlob</span><span class="p">;</span>
+                    <span class="n">_isBlob</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">Code</span><span class="p">.</span><span class="n">Value</span> <span class="p">&gt;=</span> <span class="m">12</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">Mod</span><span class="p">(</span><span class="n">Code</span><span class="p">.</span><span class="n">Value</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span> <span class="p">==</span> <span class="m">0</span><span class="p">))</span> <span class="p">);</span>
+                    <span class="n">f_isBlob</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_isBlob</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isString</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isString</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsString</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isString</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_isString</span><span class="p">;</span>
+                    <span class="n">_isString</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">Code</span><span class="p">.</span><span class="n">Value</span> <span class="p">&gt;=</span> <span class="m">13</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">Mod</span><span class="p">(</span><span class="n">Code</span><span class="p">.</span><span class="n">Value</span><span class="p">,</span> <span class="m">2</span><span class="p">)</span> <span class="p">==</span> <span class="m">1</span><span class="p">))</span> <span class="p">);</span>
+                    <span class="n">f_isString</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_isString</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_lenContent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int?</span> <span class="n">_lenContent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int?</span> <span class="n">LenContent</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_lenContent</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_lenContent</span><span class="p">;</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">Code</span><span class="p">.</span><span class="n">Value</span> <span class="p">&gt;=</span> <span class="m">12</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_lenContent</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">Code</span><span class="p">.</span><span class="n">Value</span> <span class="p">-</span> <span class="m">12</span><span class="p">)</span> <span class="p">/</span> <span class="m">2</span><span class="p">));</span>
+                    <span class="p">}</span>
+                    <span class="n">f_lenContent</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_lenContent</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">VlqBase128Be</span> <span class="n">_code</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">VlqBase128Be</span> <span class="n">Code</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_code</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">BtreePage</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">BtreePage</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">BtreePage</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public BtreePage(KaitaiStream p__io, Sqlite3 p__parent = null, Sqlite3 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _pageType = m_io.ReadU1();
-                _firstFreeblock = m_io.ReadU2be();
-                _numCells = m_io.ReadU2be();
-                _ofsCells = m_io.ReadU2be();
-                _numFragFreeBytes = m_io.ReadU1();
-                if ( ((PageType == 2) || (PageType == 5)) ) {
-                    _rightPtr = m_io.ReadU4be();
-                }
-                _cells = new List&lt;RefCell&gt;((int) (NumCells));
-                for (var i = 0; i &lt; NumCells; i++)
-                {
-                    _cells.Add(new RefCell(m_io, this, m_root));
-                }
-            }
-            private byte _pageType;
-            private ushort _firstFreeblock;
-            private ushort _numCells;
-            private ushort _ofsCells;
-            private byte _numFragFreeBytes;
-            private uint? _rightPtr;
-            private List&lt;RefCell&gt; _cells;
-            private Sqlite3 m_root;
-            private Sqlite3 m_parent;
-            public byte PageType { get { return _pageType; } }
-            public ushort FirstFreeblock { get { return _firstFreeblock; } }
-            public ushort NumCells { get { return _numCells; } }
-            public ushort OfsCells { get { return _ofsCells; } }
-            public byte NumFragFreeBytes { get { return _numFragFreeBytes; } }
-            public uint? RightPtr { get { return _rightPtr; } }
-            public List&lt;RefCell&gt; Cells { get { return _cells; } }
-            public Sqlite3 M_Root { get { return m_root; } }
-            public Sqlite3 M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">BtreePage</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Sqlite3</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Sqlite3</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_pageType</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_firstFreeblock</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_numCells</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_ofsCells</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_numFragFreeBytes</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">PageType</span> <span class="p">==</span> <span class="m">2</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">PageType</span> <span class="p">==</span> <span class="m">5</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_rightPtr</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="n">_cells</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RefCell</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumCells</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumCells</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_cells</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">RefCell</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_pageType</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_firstFreeblock</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_numCells</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_ofsCells</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_numFragFreeBytes</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint?</span> <span class="n">_rightPtr</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RefCell</span><span class="p">&gt;</span> <span class="n">_cells</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">PageType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_pageType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">FirstFreeblock</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_firstFreeblock</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">NumCells</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numCells</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">OfsCells</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsCells</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">NumFragFreeBytes</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numFragFreeBytes</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint?</span> <span class="n">RightPtr</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_rightPtr</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RefCell</span><span class="p">&gt;</span> <span class="n">Cells</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_cells</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.sqlite.org/fileformat.html#b_tree_pages&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class CellIndexLeaf : KaitaiStruct
-        {
-            public static CellIndexLeaf FromFile(string fileName)
-            {
-                return new CellIndexLeaf(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.sqlite.org/fileformat.html#b_tree_pages&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">CellIndexLeaf</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">CellIndexLeaf</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">CellIndexLeaf</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public CellIndexLeaf(KaitaiStream p__io, Sqlite3.RefCell p__parent = null, Sqlite3 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _lenPayload = new VlqBase128Be(m_io);
-                __raw_payload = m_io.ReadBytes(LenPayload.Value);
-                var io___raw_payload = new KaitaiStream(__raw_payload);
-                _payload = new CellPayload(io___raw_payload, this, m_root);
-            }
-            private VlqBase128Be _lenPayload;
-            private CellPayload _payload;
-            private Sqlite3 m_root;
-            private Sqlite3.RefCell m_parent;
-            private byte[] __raw_payload;
-            public VlqBase128Be LenPayload { get { return _lenPayload; } }
-            public CellPayload Payload { get { return _payload; } }
-            public Sqlite3 M_Root { get { return m_root; } }
-            public Sqlite3.RefCell M_Parent { get { return m_parent; } }
-            public byte[] M_RawPayload { get { return __raw_payload; } }
-        }
-        public partial class Serials : KaitaiStruct
-        {
-            public static Serials FromFile(string fileName)
-            {
-                return new Serials(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">CellIndexLeaf</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">RefCell</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Sqlite3</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_lenPayload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VlqBase128Be</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+                <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenPayload</span><span class="p">.</span><span class="n">Value</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
+                <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CellPayload</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">VlqBase128Be</span> <span class="n">_lenPayload</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">CellPayload</span> <span class="n">_payload</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">RefCell</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_payload</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">VlqBase128Be</span> <span class="n">LenPayload</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenPayload</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">CellPayload</span> <span class="n">Payload</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_payload</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">RefCell</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawPayload</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_payload</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Serials</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Serials</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Serials</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Serials(KaitaiStream p__io, Sqlite3.CellPayload p__parent = null, Sqlite3 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _entries = new List&lt;VlqBase128Be&gt;();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _entries.Add(new VlqBase128Be(m_io));
-                        i++;
-                    }
-                }
-            }
-            private List&lt;VlqBase128Be&gt; _entries;
-            private Sqlite3 m_root;
-            private Sqlite3.CellPayload m_parent;
-            public List&lt;VlqBase128Be&gt; Entries { get { return _entries; } }
-            public Sqlite3 M_Root { get { return m_root; } }
-            public Sqlite3.CellPayload M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">Serials</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">CellPayload</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Sqlite3</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">VlqBase128Be</span><span class="p">&gt;();</span>
+                <span class="p">{</span>
+                    <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                    <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">VlqBase128Be</span><span class="p">(</span><span class="n">m_io</span><span class="p">));</span>
+                        <span class="n">i</span><span class="p">++;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">VlqBase128Be</span><span class="p">&gt;</span> <span class="n">_entries</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">CellPayload</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">VlqBase128Be</span><span class="p">&gt;</span> <span class="n">Entries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_entries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">CellPayload</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.sqlite.org/fileformat.html#b_tree_pages&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class CellTableLeaf : KaitaiStruct
-        {
-            public static CellTableLeaf FromFile(string fileName)
-            {
-                return new CellTableLeaf(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.sqlite.org/fileformat.html#b_tree_pages&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">CellTableLeaf</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">CellTableLeaf</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">CellTableLeaf</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public CellTableLeaf(KaitaiStream p__io, Sqlite3.RefCell p__parent = null, Sqlite3 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _lenPayload = new VlqBase128Be(m_io);
-                _rowId = new VlqBase128Be(m_io);
-                __raw_payload = m_io.ReadBytes(LenPayload.Value);
-                var io___raw_payload = new KaitaiStream(__raw_payload);
-                _payload = new CellPayload(io___raw_payload, this, m_root);
-            }
-            private VlqBase128Be _lenPayload;
-            private VlqBase128Be _rowId;
-            private CellPayload _payload;
-            private Sqlite3 m_root;
-            private Sqlite3.RefCell m_parent;
-            private byte[] __raw_payload;
-            public VlqBase128Be LenPayload { get { return _lenPayload; } }
-            public VlqBase128Be RowId { get { return _rowId; } }
-            public CellPayload Payload { get { return _payload; } }
-            public Sqlite3 M_Root { get { return m_root; } }
-            public Sqlite3.RefCell M_Parent { get { return m_parent; } }
-            public byte[] M_RawPayload { get { return __raw_payload; } }
-        }
+            <span class="k">public</span> <span class="nf">CellTableLeaf</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">RefCell</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Sqlite3</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_lenPayload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VlqBase128Be</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+                <span class="n">_rowId</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VlqBase128Be</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+                <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenPayload</span><span class="p">.</span><span class="n">Value</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
+                <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CellPayload</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">VlqBase128Be</span> <span class="n">_lenPayload</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">VlqBase128Be</span> <span class="n">_rowId</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">CellPayload</span> <span class="n">_payload</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">RefCell</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_payload</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">VlqBase128Be</span> <span class="n">LenPayload</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenPayload</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">VlqBase128Be</span> <span class="n">RowId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_rowId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">CellPayload</span> <span class="n">Payload</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_payload</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">RefCell</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawPayload</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_payload</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://sqlite.org/fileformat2.html#record_format&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class CellPayload : KaitaiStruct
-        {
-            public static CellPayload FromFile(string fileName)
-            {
-                return new CellPayload(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://sqlite.org/fileformat2.html#record_format&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">CellPayload</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">CellPayload</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">CellPayload</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public CellPayload(KaitaiStream p__io, KaitaiStruct p__parent = null, Sqlite3 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _lenHeaderAndLen = new VlqBase128Be(m_io);
-                __raw_columnSerials = m_io.ReadBytes((LenHeaderAndLen.Value - 1));
-                var io___raw_columnSerials = new KaitaiStream(__raw_columnSerials);
-                _columnSerials = new Serials(io___raw_columnSerials, this, m_root);
-                _columnContents = new List&lt;ColumnContent&gt;((int) (ColumnSerials.Entries.Count));
-                for (var i = 0; i &lt; ColumnSerials.Entries.Count; i++)
-                {
-                    _columnContents.Add(new ColumnContent(ColumnSerials.Entries[i], m_io, this, m_root));
-                }
-            }
-            private VlqBase128Be _lenHeaderAndLen;
-            private Serials _columnSerials;
-            private List&lt;ColumnContent&gt; _columnContents;
-            private Sqlite3 m_root;
-            private KaitaiStruct m_parent;
-            private byte[] __raw_columnSerials;
-            public VlqBase128Be LenHeaderAndLen { get { return _lenHeaderAndLen; } }
-            public Serials ColumnSerials { get { return _columnSerials; } }
-            public List&lt;ColumnContent&gt; ColumnContents { get { return _columnContents; } }
-            public Sqlite3 M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-            public byte[] M_RawColumnSerials { get { return __raw_columnSerials; } }
-        }
+            <span class="k">public</span> <span class="nf">CellPayload</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Sqlite3</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_lenHeaderAndLen</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VlqBase128Be</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+                <span class="n">__raw_columnSerials</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">LenHeaderAndLen</span><span class="p">.</span><span class="n">Value</span> <span class="p">-</span> <span class="m">1</span><span class="p">));</span>
+                <span class="kt">var</span> <span class="n">io___raw_columnSerials</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_columnSerials</span><span class="p">);</span>
+                <span class="n">_columnSerials</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Serials</span><span class="p">(</span><span class="n">io___raw_columnSerials</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_columnContents</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ColumnContent</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">ColumnSerials</span><span class="p">.</span><span class="n">Entries</span><span class="p">.</span><span class="n">Count</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">ColumnSerials</span><span class="p">.</span><span class="n">Entries</span><span class="p">.</span><span class="n">Count</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_columnContents</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">ColumnContent</span><span class="p">(</span><span class="n">ColumnSerials</span><span class="p">.</span><span class="n">Entries</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">VlqBase128Be</span> <span class="n">_lenHeaderAndLen</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Serials</span> <span class="n">_columnSerials</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ColumnContent</span><span class="p">&gt;</span> <span class="n">_columnContents</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_columnSerials</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">VlqBase128Be</span> <span class="n">LenHeaderAndLen</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenHeaderAndLen</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Serials</span> <span class="n">ColumnSerials</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_columnSerials</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ColumnContent</span><span class="p">&gt;</span> <span class="n">ColumnContents</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_columnContents</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawColumnSerials</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_columnSerials</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.sqlite.org/fileformat.html#b_tree_pages&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class CellTableInterior : KaitaiStruct
-        {
-            public static CellTableInterior FromFile(string fileName)
-            {
-                return new CellTableInterior(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.sqlite.org/fileformat.html#b_tree_pages&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">CellTableInterior</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">CellTableInterior</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">CellTableInterior</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public CellTableInterior(KaitaiStream p__io, Sqlite3.RefCell p__parent = null, Sqlite3 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _leftChildPage = m_io.ReadU4be();
-                _rowId = new VlqBase128Be(m_io);
-            }
-            private uint _leftChildPage;
-            private VlqBase128Be _rowId;
-            private Sqlite3 m_root;
-            private Sqlite3.RefCell m_parent;
-            public uint LeftChildPage { get { return _leftChildPage; } }
-            public VlqBase128Be RowId { get { return _rowId; } }
-            public Sqlite3 M_Root { get { return m_root; } }
-            public Sqlite3.RefCell M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">CellTableInterior</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">RefCell</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Sqlite3</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_leftChildPage</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="n">_rowId</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VlqBase128Be</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_leftChildPage</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">VlqBase128Be</span> <span class="n">_rowId</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">RefCell</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LeftChildPage</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_leftChildPage</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">VlqBase128Be</span> <span class="n">RowId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_rowId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">RefCell</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.sqlite.org/fileformat.html#b_tree_pages&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class CellIndexInterior : KaitaiStruct
-        {
-            public static CellIndexInterior FromFile(string fileName)
-            {
-                return new CellIndexInterior(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.sqlite.org/fileformat.html#b_tree_pages&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">CellIndexInterior</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">CellIndexInterior</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">CellIndexInterior</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public CellIndexInterior(KaitaiStream p__io, Sqlite3.RefCell p__parent = null, Sqlite3 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _leftChildPage = m_io.ReadU4be();
-                _lenPayload = new VlqBase128Be(m_io);
-                __raw_payload = m_io.ReadBytes(LenPayload.Value);
-                var io___raw_payload = new KaitaiStream(__raw_payload);
-                _payload = new CellPayload(io___raw_payload, this, m_root);
-            }
-            private uint _leftChildPage;
-            private VlqBase128Be _lenPayload;
-            private CellPayload _payload;
-            private Sqlite3 m_root;
-            private Sqlite3.RefCell m_parent;
-            private byte[] __raw_payload;
-            public uint LeftChildPage { get { return _leftChildPage; } }
-            public VlqBase128Be LenPayload { get { return _lenPayload; } }
-            public CellPayload Payload { get { return _payload; } }
-            public Sqlite3 M_Root { get { return m_root; } }
-            public Sqlite3.RefCell M_Parent { get { return m_parent; } }
-            public byte[] M_RawPayload { get { return __raw_payload; } }
-        }
-        public partial class ColumnContent : KaitaiStruct
-        {
-            public ColumnContent(KaitaiStruct p_ser, KaitaiStream p__io, Sqlite3.CellPayload p__parent = null, Sqlite3 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _ser = p_ser;
-                f_serialType = false;
-                _read();
-            }
-            private void _read()
-            {
-                if ( ((SerialType.Code.Value &gt;= 1) &amp;&amp; (SerialType.Code.Value &lt;= 6)) ) {
-                    switch (SerialType.Code.Value) {
-                    case 4: {
-                        _asInt = m_io.ReadU4be();
-                        break;
-                    }
-                    case 6: {
-                        _asInt = m_io.ReadU8be();
-                        break;
-                    }
-                    case 1: {
-                        _asInt = m_io.ReadU1();
-                        break;
-                    }
-                    case 3: {
-                        _asInt = m_io.ReadBitsInt(24);
-                        break;
-                    }
-                    case 5: {
-                        _asInt = m_io.ReadBitsInt(48);
-                        break;
-                    }
-                    case 2: {
-                        _asInt = m_io.ReadU2be();
-                        break;
-                    }
-                    }
-                }
-                if (SerialType.Code.Value == 7) {
-                    _asFloat = m_io.ReadF8be();
-                }
-                if (SerialType.IsBlob) {
-                    _asBlob = m_io.ReadBytes(SerialType.LenContent);
-                }
-                _asStr = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(SerialType.LenContent));
-            }
-            private bool f_serialType;
-            private Sqlite3.Serial _serialType;
-            public Sqlite3.Serial SerialType
-            {
-                get
-                {
-                    if (f_serialType)
-                        return _serialType;
-                    _serialType = (Sqlite3.Serial) (((Serial) (Ser)));
-                    f_serialType = true;
-                    return _serialType;
-                }
-            }
-            private int _asInt;
-            private double? _asFloat;
-            private byte[] _asBlob;
-            private string _asStr;
-            private KaitaiStruct _ser;
-            private Sqlite3 m_root;
-            private Sqlite3.CellPayload m_parent;
-            public int AsInt { get { return _asInt; } }
-            public double? AsFloat { get { return _asFloat; } }
-            public byte[] AsBlob { get { return _asBlob; } }
-            public string AsStr { get { return _asStr; } }
-            public KaitaiStruct Ser { get { return _ser; } }
-            public Sqlite3 M_Root { get { return m_root; } }
-            public Sqlite3.CellPayload M_Parent { get { return m_parent; } }
-        }
-        public partial class RefCell : KaitaiStruct
-        {
-            public static RefCell FromFile(string fileName)
-            {
-                return new RefCell(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">CellIndexInterior</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">RefCell</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Sqlite3</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_leftChildPage</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="n">_lenPayload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VlqBase128Be</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+                <span class="n">__raw_payload</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenPayload</span><span class="p">.</span><span class="n">Value</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_payload</span><span class="p">);</span>
+                <span class="n">_payload</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CellPayload</span><span class="p">(</span><span class="n">io___raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_leftChildPage</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">VlqBase128Be</span> <span class="n">_lenPayload</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">CellPayload</span> <span class="n">_payload</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">RefCell</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_payload</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LeftChildPage</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_leftChildPage</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">VlqBase128Be</span> <span class="n">LenPayload</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenPayload</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">CellPayload</span> <span class="n">Payload</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_payload</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">RefCell</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawPayload</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_payload</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ColumnContent</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="nf">ColumnContent</span><span class="p">(</span><span class="n">KaitaiStruct</span> <span class="n">p_ser</span><span class="p">,</span> <span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">CellPayload</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Sqlite3</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_ser</span> <span class="p">=</span> <span class="n">p_ser</span><span class="p">;</span>
+                <span class="n">f_serialType</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">SerialType</span><span class="p">.</span><span class="n">Code</span><span class="p">.</span><span class="n">Value</span> <span class="p">&gt;=</span> <span class="m">1</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">SerialType</span><span class="p">.</span><span class="n">Code</span><span class="p">.</span><span class="n">Value</span> <span class="p">&lt;=</span> <span class="m">6</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">SerialType</span><span class="p">.</span><span class="n">Code</span><span class="p">.</span><span class="n">Value</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="m">4</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_asInt</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="m">6</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_asInt</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="m">1</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_asInt</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="m">3</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_asInt</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">24</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="m">5</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_asInt</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">48</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="m">2</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_asInt</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">SerialType</span><span class="p">.</span><span class="n">Code</span><span class="p">.</span><span class="n">Value</span> <span class="p">==</span> <span class="m">7</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_asFloat</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF8be</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">SerialType</span><span class="p">.</span><span class="n">IsBlob</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_asBlob</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">SerialType</span><span class="p">.</span><span class="n">LenContent</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="n">_asStr</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">SerialType</span><span class="p">.</span><span class="n">LenContent</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_serialType</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">Serial</span> <span class="n">_serialType</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">Serial</span> <span class="n">SerialType</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_serialType</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_serialType</span><span class="p">;</span>
+                    <span class="n">_serialType</span> <span class="p">=</span> <span class="p">(</span><span class="n">Sqlite3</span><span class="p">.</span><span class="n">Serial</span><span class="p">)</span> <span class="p">(((</span><span class="n">Serial</span><span class="p">)</span> <span class="p">(</span><span class="n">Ser</span><span class="p">)));</span>
+                    <span class="n">f_serialType</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_serialType</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_asInt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">double?</span> <span class="n">_asFloat</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_asBlob</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_asStr</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">_ser</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">CellPayload</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">AsInt</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_asInt</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">double?</span> <span class="n">AsFloat</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_asFloat</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">AsBlob</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_asBlob</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">AsStr</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_asStr</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">Ser</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ser</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">CellPayload</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">RefCell</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">RefCell</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">RefCell</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public RefCell(KaitaiStream p__io, Sqlite3.BtreePage p__parent = null, Sqlite3 p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_body = false;
-                _read();
-            }
-            private void _read()
-            {
-                _ofsBody = m_io.ReadU2be();
-            }
-            private bool f_body;
-            private KaitaiStruct _body;
-            public KaitaiStruct Body
-            {
-                get
-                {
-                    if (f_body)
-                        return _body;
-                    long _pos = m_io.Pos;
-                    m_io.Seek(OfsBody);
-                    switch (M_Parent.PageType) {
-                    case 13: {
-                        _body = new CellTableLeaf(m_io, this, m_root);
-                        break;
-                    }
-                    case 5: {
-                        _body = new CellTableInterior(m_io, this, m_root);
-                        break;
-                    }
-                    case 10: {
-                        _body = new CellIndexLeaf(m_io, this, m_root);
-                        break;
-                    }
-                    case 2: {
-                        _body = new CellIndexInterior(m_io, this, m_root);
-                        break;
-                    }
-                    }
-                    m_io.Seek(_pos);
-                    f_body = true;
-                    return _body;
-                }
-            }
-            private ushort _ofsBody;
-            private Sqlite3 m_root;
-            private Sqlite3.BtreePage m_parent;
-            public ushort OfsBody { get { return _ofsBody; } }
-            public Sqlite3 M_Root { get { return m_root; } }
-            public Sqlite3.BtreePage M_Parent { get { return m_parent; } }
-        }
-        private bool f_lenPage;
-        private int _lenPage;
-        public int LenPage
-        {
-            get
-            {
-                if (f_lenPage)
-                    return _lenPage;
-                _lenPage = (int) ((LenPageMod == 1 ? 65536 : LenPageMod));
-                f_lenPage = true;
-                return _lenPage;
-            }
-        }
-        private byte[] _magic;
-        private ushort _lenPageMod;
-        private Versions _writeVersion;
-        private Versions _readVersion;
-        private byte _reservedSpace;
-        private byte _maxPayloadFrac;
-        private byte _minPayloadFrac;
-        private byte _leafPayloadFrac;
-        private uint _fileChangeCounter;
-        private uint _numPages;
-        private uint _firstFreelistTrunkPage;
-        private uint _numFreelistPages;
-        private uint _schemaCookie;
-        private uint _schemaFormat;
-        private uint _defPageCacheSize;
-        private uint _largestRootPage;
-        private Encodings _textEncoding;
-        private uint _userVersion;
-        private uint _isIncrementalVacuum;
-        private uint _applicationId;
-        private byte[] _reserved;
-        private uint _versionValidFor;
-        private uint _sqliteVersionNumber;
-        private BtreePage _rootPage;
-        private Sqlite3 m_root;
-        private KaitaiStruct m_parent;
-        public byte[] Magic { get { return _magic; } }
+            <span class="k">public</span> <span class="nf">RefCell</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">BtreePage</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Sqlite3</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_body</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_ofsBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_body</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">_body</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">Body</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_body</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_body</span><span class="p">;</span>
+                    <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+                    <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsBody</span><span class="p">);</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">PageType</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="m">13</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CellTableLeaf</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="m">5</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CellTableInterior</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="m">10</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CellIndexLeaf</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="m">2</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CellIndexInterior</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                    <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                    <span class="n">f_body</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_body</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_ofsBody</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">BtreePage</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">OfsBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Sqlite3</span><span class="p">.</span><span class="n">BtreePage</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_lenPage</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_lenPage</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">LenPage</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_lenPage</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_lenPage</span><span class="p">;</span>
+                <span class="n">_lenPage</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">LenPageMod</span> <span class="p">==</span> <span class="m">1</span> <span class="p">?</span> <span class="m">65536</span> <span class="p">:</span> <span class="n">LenPageMod</span><span class="p">));</span>
+                <span class="n">f_lenPage</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_lenPage</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_lenPageMod</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Versions</span> <span class="n">_writeVersion</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Versions</span> <span class="n">_readVersion</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_reservedSpace</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_maxPayloadFrac</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_minPayloadFrac</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_leafPayloadFrac</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_fileChangeCounter</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numPages</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_firstFreelistTrunkPage</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numFreelistPages</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_schemaCookie</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_schemaFormat</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_defPageCacheSize</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_largestRootPage</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Encodings</span> <span class="n">_textEncoding</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_userVersion</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_isIncrementalVacuum</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_applicationId</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_reserved</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_versionValidFor</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_sqliteVersionNumber</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">BtreePage</span> <span class="n">_rootPage</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Sqlite3</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// The database page size in bytes. Must be a power of two between
-        /// 512 and 32768 inclusive, or the value 1 representing a page size
-        /// of 65536.
-        /// &lt;/summary&gt;
-        public ushort LenPageMod { get { return _lenPageMod; } }
-        public Versions WriteVersion { get { return _writeVersion; } }
-        public Versions ReadVersion { get { return _readVersion; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// The database page size in bytes. Must be a power of two between</span>
+        <span class="c1">/// 512 and 32768 inclusive, or the value 1 representing a page size</span>
+        <span class="c1">/// of 65536.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">ushort</span> <span class="n">LenPageMod</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenPageMod</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Versions</span> <span class="n">WriteVersion</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_writeVersion</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Versions</span> <span class="n">ReadVersion</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_readVersion</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Bytes of unused &amp;quot;reserved&amp;quot; space at the end of each page. Usually 0.
-        /// &lt;/summary&gt;
-        public byte ReservedSpace { get { return _reservedSpace; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Bytes of unused &amp;quot;reserved&amp;quot; space at the end of each page. Usually 0.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">ReservedSpace</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reservedSpace</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Maximum embedded payload fraction. Must be 64.
-        /// &lt;/summary&gt;
-        public byte MaxPayloadFrac { get { return _maxPayloadFrac; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Maximum embedded payload fraction. Must be 64.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">MaxPayloadFrac</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_maxPayloadFrac</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Minimum embedded payload fraction. Must be 32.
-        /// &lt;/summary&gt;
-        public byte MinPayloadFrac { get { return _minPayloadFrac; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Minimum embedded payload fraction. Must be 32.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">MinPayloadFrac</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_minPayloadFrac</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Leaf payload fraction. Must be 32.
-        /// &lt;/summary&gt;
-        public byte LeafPayloadFrac { get { return _leafPayloadFrac; } }
-        public uint FileChangeCounter { get { return _fileChangeCounter; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Leaf payload fraction. Must be 32.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">LeafPayloadFrac</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_leafPayloadFrac</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">FileChangeCounter</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fileChangeCounter</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Size of the database file in pages. The &amp;quot;in-header database size&amp;quot;.
-        /// &lt;/summary&gt;
-        public uint NumPages { get { return _numPages; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Size of the database file in pages. The &amp;quot;in-header database size&amp;quot;.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumPages</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numPages</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Page number of the first freelist trunk page.
-        /// &lt;/summary&gt;
-        public uint FirstFreelistTrunkPage { get { return _firstFreelistTrunkPage; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Page number of the first freelist trunk page.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">FirstFreelistTrunkPage</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_firstFreelistTrunkPage</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Total number of freelist pages.
-        /// &lt;/summary&gt;
-        public uint NumFreelistPages { get { return _numFreelistPages; } }
-        public uint SchemaCookie { get { return _schemaCookie; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Total number of freelist pages.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumFreelistPages</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numFreelistPages</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">SchemaCookie</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_schemaCookie</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// The schema format number. Supported schema formats are 1, 2, 3, and 4.
-        /// &lt;/summary&gt;
-        public uint SchemaFormat { get { return _schemaFormat; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// The schema format number. Supported schema formats are 1, 2, 3, and 4.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">SchemaFormat</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_schemaFormat</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Default page cache size.
-        /// &lt;/summary&gt;
-        public uint DefPageCacheSize { get { return _defPageCacheSize; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Default page cache size.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">DefPageCacheSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_defPageCacheSize</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// The page number of the largest root b-tree page when in auto-vacuum or incremental-vacuum modes, or zero otherwise.
-        /// &lt;/summary&gt;
-        public uint LargestRootPage { get { return _largestRootPage; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// The page number of the largest root b-tree page when in auto-vacuum or incremental-vacuum modes, or zero otherwise.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">LargestRootPage</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_largestRootPage</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// The database text encoding. A value of 1 means UTF-8. A value of 2 means UTF-16le. A value of 3 means UTF-16be.
-        /// &lt;/summary&gt;
-        public Encodings TextEncoding { get { return _textEncoding; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// The database text encoding. A value of 1 means UTF-8. A value of 2 means UTF-16le. A value of 3 means UTF-16be.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="n">Encodings</span> <span class="n">TextEncoding</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_textEncoding</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// The &amp;quot;user version&amp;quot; as read and set by the user_version pragma.
-        /// &lt;/summary&gt;
-        public uint UserVersion { get { return _userVersion; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// The &amp;quot;user version&amp;quot; as read and set by the user_version pragma.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">UserVersion</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_userVersion</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// True (non-zero) for incremental-vacuum mode. False (zero) otherwise.
-        /// &lt;/summary&gt;
-        public uint IsIncrementalVacuum { get { return _isIncrementalVacuum; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// True (non-zero) for incremental-vacuum mode. False (zero) otherwise.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">IsIncrementalVacuum</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isIncrementalVacuum</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// The &amp;quot;Application ID&amp;quot; set by PRAGMA application_id.
-        /// &lt;/summary&gt;
-        public uint ApplicationId { get { return _applicationId; } }
-        public byte[] Reserved { get { return _reserved; } }
-        public uint VersionValidFor { get { return _versionValidFor; } }
-        public uint SqliteVersionNumber { get { return _sqliteVersionNumber; } }
-        public BtreePage RootPage { get { return _rootPage; } }
-        public Sqlite3 M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-    }
-}
-</code></pre>
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// The &amp;quot;Application ID&amp;quot; set by PRAGMA application_id.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">ApplicationId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_applicationId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Reserved</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reserved</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">VersionValidFor</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_versionValidFor</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">SqliteVersionNumber</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sqliteVersionNumber</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">BtreePage</span> <span class="n">RootPage</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_rootPage</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Sqlite3</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -945,8 +942,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

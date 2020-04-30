@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -242,156 +239,156 @@ Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</p>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * The Real-time Transport Protocol (RTP) is a widely used network
- * protocol for transmitting audio or video. It usually works with the
- * RTP Control Protocol (RTCP). The transmission can be based on
- * Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
- */
+<span class="sd">/**</span>
+<span class="sd"> * The Real-time Transport Protocol (RTP) is a widely used network</span>
+<span class="sd"> * protocol for transmitting audio or video. It usually works with the</span>
+<span class="sd"> * RTP Control Protocol (RTCP). The transmission can be based on</span>
+<span class="sd"> * Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</span>
+<span class="sd"> */</span>
 
-class RtpPacket extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \RtpPacket $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">RtpPacket</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\RtpPacket</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_version = $this-&gt;_io-&gt;readBitsInt(2);
-        $this-&gt;_m_hasPadding = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_hasExtension = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_csrcCount = $this-&gt;_io-&gt;readBitsInt(4);
-        $this-&gt;_m_marker = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_payloadType = $this-&gt;_io-&gt;readBitsInt(7);
-        $this-&gt;_io-&gt;alignToByte();
-        $this-&gt;_m_sequenceNumber = $this-&gt;_io-&gt;readU2be();
-        $this-&gt;_m_timestamp = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_ssrc = $this-&gt;_io-&gt;readU4be();
-        if ($this-&gt;hasExtension()) {
-            $this-&gt;_m_headerExtension = new \RtpPacket\HeaderExtention($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        $this-&gt;_m_data = $this-&gt;_io-&gt;readBytes((($this-&gt;_io()-&gt;size() - $this-&gt;_io()-&gt;pos()) - $this-&gt;lenPadding()));
-        $this-&gt;_m_padding = $this-&gt;_io-&gt;readBytes($this-&gt;lenPadding());
-    }
-    protected $_m_lenPaddingIfExists;
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasPadding</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasExtension</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_csrcCount</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_marker</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payloadType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">alignToByte</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sequenceNumber</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timestamp</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ssrc</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasExtension</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headerExtension</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\RtpPacket\HeaderExtention</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">())</span> <span class="o">-</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenPadding</span><span class="p">()));</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padding</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenPadding</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenPaddingIfExists</span><span class="p">;</span>
 
-    /**
-     * If padding bit is enabled, last byte of data contains number of
-     * bytes appended to the payload as padding.
-     */
-    public function lenPaddingIfExists() {
-        if ($this-&gt;_m_lenPaddingIfExists !== null)
-            return $this-&gt;_m_lenPaddingIfExists;
-        if ($this-&gt;hasPadding()) {
-            $_pos = $this-&gt;_io-&gt;pos();
-            $this-&gt;_io-&gt;seek(($this-&gt;_io()-&gt;size() - 1));
-            $this-&gt;_m_lenPaddingIfExists = $this-&gt;_io-&gt;readU1();
-            $this-&gt;_io-&gt;seek($_pos);
-        }
-        return $this-&gt;_m_lenPaddingIfExists;
-    }
-    protected $_m_lenPadding;
+    <span class="sd">/**</span>
+<span class="sd">     * If padding bit is enabled, last byte of data contains number of</span>
+<span class="sd">     * bytes appended to the payload as padding.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenPaddingIfExists</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPaddingIfExists</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPaddingIfExists</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasPadding</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPaddingIfExists</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPaddingIfExists</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenPadding</span><span class="p">;</span>
 
-    /**
-     * Always returns number of padding bytes to in the payload.
-     */
-    public function lenPadding() {
-        if ($this-&gt;_m_lenPadding !== null)
-            return $this-&gt;_m_lenPadding;
-        $this-&gt;_m_lenPadding = ($this-&gt;hasPadding() ? $this-&gt;lenPaddingIfExists() : 0);
-        return $this-&gt;_m_lenPadding;
-    }
-    protected $_m_version;
-    protected $_m_hasPadding;
-    protected $_m_hasExtension;
-    protected $_m_csrcCount;
-    protected $_m_marker;
-    protected $_m_payloadType;
-    protected $_m_sequenceNumber;
-    protected $_m_timestamp;
-    protected $_m_ssrc;
-    protected $_m_headerExtension;
-    protected $_m_data;
-    protected $_m_padding;
-    public function version() { return $this-&gt;_m_version; }
-    public function hasPadding() { return $this-&gt;_m_hasPadding; }
-    public function hasExtension() { return $this-&gt;_m_hasExtension; }
-    public function csrcCount() { return $this-&gt;_m_csrcCount; }
-    public function marker() { return $this-&gt;_m_marker; }
-    public function payloadType() { return $this-&gt;_m_payloadType; }
-    public function sequenceNumber() { return $this-&gt;_m_sequenceNumber; }
-    public function timestamp() { return $this-&gt;_m_timestamp; }
-    public function ssrc() { return $this-&gt;_m_ssrc; }
-    public function headerExtension() { return $this-&gt;_m_headerExtension; }
+    <span class="sd">/**</span>
+<span class="sd">     * Always returns number of padding bytes to in the payload.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenPadding</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPadding</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPadding</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPadding</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hasPadding</span><span class="p">()</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenPaddingIfExists</span><span class="p">()</span> <span class="o">:</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPadding</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_version</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasPadding</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasExtension</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_csrcCount</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_marker</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_payloadType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_sequenceNumber</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_timestamp</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_ssrc</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_headerExtension</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_padding</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasPadding</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasPadding</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasExtension</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasExtension</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">csrcCount</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_csrcCount</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">marker</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_marker</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">payloadType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payloadType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sequenceNumber</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sequenceNumber</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">timestamp</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timestamp</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">ssrc</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ssrc</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">headerExtension</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headerExtension</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Payload without padding.
-     */
-    public function data() { return $this-&gt;_m_data; }
-    public function padding() { return $this-&gt;_m_padding; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * Payload without padding.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">padding</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padding</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \RtpPacket;
+<span class="k">namespace</span> <span class="nx">\RtpPacket</span><span class="p">;</span>
 
-class HeaderExtention extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \RtpPacket $_parent = null, \RtpPacket $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">HeaderExtention</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\RtpPacket</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\RtpPacket</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_id = $this-&gt;_io-&gt;readU2be();
-        $this-&gt;_m_length = $this-&gt;_io-&gt;readU2be();
-    }
-    protected $_m_id;
-    protected $_m_length;
-    public function id() { return $this-&gt;_m_id; }
-    public function length() { return $this-&gt;_m_length; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_id</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_length</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_id</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_length</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_id</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">length</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_length</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \RtpPacket;
+<span class="k">namespace</span> <span class="nx">\RtpPacket</span><span class="p">;</span>
 
-class PayloadTypeEnum {
-    const PCMU = 0;
-    const RESERVED1 = 1;
-    const RESERVED2 = 2;
-    const GSM = 3;
-    const G723 = 4;
-    const DVI4_1 = 5;
-    const DVI4_2 = 6;
-    const LPC = 7;
-    const PAMA = 8;
-    const G722 = 9;
-    const L16_1 = 10;
-    const L16_2 = 11;
-    const QCELP = 12;
-    const CN = 13;
-    const MPA = 14;
-    const G728 = 15;
-    const DVI4_3 = 16;
-    const DVI4_4 = 17;
-    const G729 = 18;
-    const RESERVED3 = 19;
-    const UNASSIGNED1 = 20;
-    const UNASSIGNED2 = 21;
-    const UNASSIGNED3 = 22;
-    const UNASSIGNED4 = 23;
-    const UNASSIGNED5 = 24;
-    const CELB = 25;
-    const JPEG = 26;
-    const UNASSIGNED6 = 27;
-    const NV = 28;
-    const UNASSIGNED7 = 29;
-    const UNASSIGNED8 = 30;
-    const H261 = 31;
-    const MPV = 32;
-    const MP2T = 33;
-    const H263 = 34;
-    const MPEG_PS = 96;
-}
-</code></pre>
+<span class="k">class</span> <span class="nc">PayloadTypeEnum</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">PCMU</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RESERVED1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RESERVED2</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">GSM</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">G723</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DVI4_1</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DVI4_2</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LPC</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">PAMA</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">G722</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">L16_1</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">L16_2</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">QCELP</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CN</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MPA</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">G728</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DVI4_3</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DVI4_4</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">G729</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RESERVED3</span> <span class="o">=</span> <span class="mi">19</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNASSIGNED1</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNASSIGNED2</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNASSIGNED3</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNASSIGNED4</span> <span class="o">=</span> <span class="mi">23</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNASSIGNED5</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CELB</span> <span class="o">=</span> <span class="mi">25</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">JPEG</span> <span class="o">=</span> <span class="mi">26</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNASSIGNED6</span> <span class="o">=</span> <span class="mi">27</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">NV</span> <span class="o">=</span> <span class="mi">28</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNASSIGNED7</span> <span class="o">=</span> <span class="mi">29</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNASSIGNED8</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">H261</span> <span class="o">=</span> <span class="mi">31</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MPV</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MP2T</span> <span class="o">=</span> <span class="mi">33</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">H263</span> <span class="o">=</span> <span class="mi">34</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MPEG_PS</span> <span class="o">=</span> <span class="mi">96</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -418,8 +415,8 @@ class PayloadTypeEnum {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

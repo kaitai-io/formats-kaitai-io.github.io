@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -290,197 +287,194 @@ data = WindowsResourceFile(KaitaiStream(BytesIO(raw)))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
-
-
-if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
-    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
-
-class WindowsResourceFile(KaitaiStruct):
-    &quot;&quot;&quot;Windows resource file (.res) are binary bundles of
-    &quot;resources&quot;. Resource has some sort of ID (numerical or string),
-    type (predefined or user-defined), and raw value. Resource files can
-    be seen standalone (as .res file), or embedded inside PE executable
-    (.exe, .dll) files.
-    
-    Typical use cases include:
-    
-    * providing information about the application (such as title, copyrights, etc)
-    * embedding icon(s) to be displayed in file managers into .exe
-    * adding non-code data into the binary, such as menus, dialog forms,
-      cursor images, fonts, various misc bitmaps, and locale-aware
-      strings
-    
-    Windows provides special API to access &quot;resources&quot; from a binary.
-    
-    Normally, resources files are created with `rc` compiler: it takes a
-    .rc file (so called &quot;resource-definition script&quot;) + all the raw
-    resource binary files for input, and outputs .res file. That .res
-    file can be linked into an .exe / .dll afterwards using a linker.
-    
-    Internally, resource file is just a sequence of individual resource
-    definitions. RC tool ensures that first resource (#0) is always
-    empty.
-    &quot;&quot;&quot;
-    def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
-        self._parent = _parent
-        self._root = _root if _root else self
-        self._read()
-
-    def _read(self):
-        self.resources = []
-        i = 0
-        while not self._io.is_eof():
-            self.resources.append(self._root.Resource(self._io, self, self._root))
-            i += 1
+<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">parse_version</span>
+<span class="kn">from</span> <span class="nn">kaitaistruct</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">ks_version</span><span class="p">,</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
 
-    class Resource(KaitaiStruct):
-        &quot;&quot;&quot;Each resource has a `type` and a `name`, which can be used to
-        identify it, and a `value`. Both `type` and `name` can be a
-        number or a string.
-        
-        .. seealso::
-           Source - https://msdn.microsoft.com/en-us/library/windows/desktop/ms648027.aspx
-        &quot;&quot;&quot;
+<span class="k">if</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">ks_version</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">parse_version</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ks_version</span><span class="p">))</span>
 
-        class PredefTypes(Enum):
-            cursor = 1
-            bitmap = 2
-            icon = 3
-            menu = 4
-            dialog = 5
-            string = 6
-            fontdir = 7
-            font = 8
-            accelerator = 9
-            rcdata = 10
-            messagetable = 11
-            group_cursor = 12
-            group_icon = 14
-            version = 16
-            dlginclude = 17
-            plugplay = 19
-            vxd = 20
-            anicursor = 21
-            aniicon = 22
-            html = 23
-            manifest = 24
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+<span class="k">class</span> <span class="nc">WindowsResourceFile</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Windows resource file (.res) are binary bundles of</span>
+<span class="sd">    &quot;resources&quot;. Resource has some sort of ID (numerical or string),</span>
+<span class="sd">    type (predefined or user-defined), and raw value. Resource files can</span>
+<span class="sd">    be seen standalone (as .res file), or embedded inside PE executable</span>
+<span class="sd">    (.exe, .dll) files.</span>
+<span class="sd">    </span>
+<span class="sd">    Typical use cases include:</span>
+<span class="sd">    </span>
+<span class="sd">    * providing information about the application (such as title, copyrights, etc)</span>
+<span class="sd">    * embedding icon(s) to be displayed in file managers into .exe</span>
+<span class="sd">    * adding non-code data into the binary, such as menus, dialog forms,</span>
+<span class="sd">      cursor images, fonts, various misc bitmaps, and locale-aware</span>
+<span class="sd">      strings</span>
+<span class="sd">    </span>
+<span class="sd">    Windows provides special API to access &quot;resources&quot; from a binary.</span>
+<span class="sd">    </span>
+<span class="sd">    Normally, resources files are created with `rc` compiler: it takes a</span>
+<span class="sd">    .rc file (so called &quot;resource-definition script&quot;) + all the raw</span>
+<span class="sd">    resource binary files for input, and outputs .res file. That .res</span>
+<span class="sd">    file can be linked into an .exe / .dll afterwards using a linker.</span>
+<span class="sd">    </span>
+<span class="sd">    Internally, resource file is just a sequence of individual resource</span>
+<span class="sd">    definitions. RC tool ensures that first resource (#0) is always</span>
+<span class="sd">    empty.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-        def _read(self):
-            self.value_size = self._io.read_u4le()
-            self.header_size = self._io.read_u4le()
-            self.type = self._root.UnicodeOrId(self._io, self, self._root)
-            self.name = self._root.UnicodeOrId(self._io, self, self._root)
-            self.padding1 = self._io.read_bytes(((4 - self._io.pos()) % 4))
-            self.format_version = self._io.read_u4le()
-            self.flags = self._io.read_u2le()
-            self.language = self._io.read_u2le()
-            self.value_version = self._io.read_u4le()
-            self.characteristics = self._io.read_u4le()
-            self.value = self._io.read_bytes(self.value_size)
-            self.padding2 = self._io.read_bytes(((4 - self._io.pos()) % 4))
-
-        @property
-        def type_as_predef(self):
-            &quot;&quot;&quot;Numeric type IDs in range of [0..0xff] are reserved for
-            system usage in Windows, and there are some predefined,
-            well-known values in that range. This instance allows to get
-            it as enum value, if applicable.
-            &quot;&quot;&quot;
-            if hasattr(self, &#39;_m_type_as_predef&#39;):
-                return self._m_type_as_predef if hasattr(self, &#39;_m_type_as_predef&#39;) else None
-
-            if  ((not (self.type.is_string)) and (self.type.as_numeric &lt;= 255)) :
-                self._m_type_as_predef = self._root.Resource.PredefTypes(self.type.as_numeric)
-
-            return self._m_type_as_predef if hasattr(self, &#39;_m_type_as_predef&#39;) else None
+    <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resources</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">resources</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Resource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
 
-    class UnicodeOrId(KaitaiStruct):
-        &quot;&quot;&quot;Resources use a special serialization of names and types: they
-        can be either a number or a string.
-        
-        Use `is_string` to check which kind we&#39;ve got here, and then use
-        `as_numeric` or `as_string` to get relevant value.
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+    <span class="k">class</span> <span class="nc">Resource</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Each resource has a `type` and a `name`, which can be used to</span>
+<span class="sd">        identify it, and a `value`. Both `type` and `name` can be a</span>
+<span class="sd">        number or a string.</span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://msdn.microsoft.com/en-us/library/windows/desktop/ms648027.aspx</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-        def _read(self):
-            if self.save_pos1 &gt;= 0:
-                self.first = self._io.read_u2le()
+        <span class="k">class</span> <span class="nc">PredefTypes</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">bitmap</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="n">icon</span> <span class="o">=</span> <span class="mi">3</span>
+            <span class="n">menu</span> <span class="o">=</span> <span class="mi">4</span>
+            <span class="n">dialog</span> <span class="o">=</span> <span class="mi">5</span>
+            <span class="n">string</span> <span class="o">=</span> <span class="mi">6</span>
+            <span class="n">fontdir</span> <span class="o">=</span> <span class="mi">7</span>
+            <span class="n">font</span> <span class="o">=</span> <span class="mi">8</span>
+            <span class="n">accelerator</span> <span class="o">=</span> <span class="mi">9</span>
+            <span class="n">rcdata</span> <span class="o">=</span> <span class="mi">10</span>
+            <span class="n">messagetable</span> <span class="o">=</span> <span class="mi">11</span>
+            <span class="n">group_cursor</span> <span class="o">=</span> <span class="mi">12</span>
+            <span class="n">group_icon</span> <span class="o">=</span> <span class="mi">14</span>
+            <span class="n">version</span> <span class="o">=</span> <span class="mi">16</span>
+            <span class="n">dlginclude</span> <span class="o">=</span> <span class="mi">17</span>
+            <span class="n">plugplay</span> <span class="o">=</span> <span class="mi">19</span>
+            <span class="n">vxd</span> <span class="o">=</span> <span class="mi">20</span>
+            <span class="n">anicursor</span> <span class="o">=</span> <span class="mi">21</span>
+            <span class="n">aniicon</span> <span class="o">=</span> <span class="mi">22</span>
+            <span class="n">html</span> <span class="o">=</span> <span class="mi">23</span>
+            <span class="n">manifest</span> <span class="o">=</span> <span class="mi">24</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-            if not (self.is_string):
-                self.as_numeric = self._io.read_u2le()
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">header_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">UnicodeOrId</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">UnicodeOrId</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">padding1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="mi">4</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span> <span class="o">%</span> <span class="mi">4</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">format_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">characteristics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_size</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">padding2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="mi">4</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span> <span class="o">%</span> <span class="mi">4</span><span class="p">))</span>
 
-            if self.is_string:
-                self.rest = []
-                i = 0
-                while True:
-                    _ = self._io.read_u2le()
-                    self.rest.append(_)
-                    if _ == 0:
-                        break
-                    i += 1
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">type_as_predef</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Numeric type IDs in range of [0..0xff] are reserved for</span>
+<span class="sd">            system usage in Windows, and there are some predefined,</span>
+<span class="sd">            well-known values in that range. This instance allows to get</span>
+<span class="sd">            it as enum value, if applicable.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_type_as_predef&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_type_as_predef</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_type_as_predef&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
-            if  ((self.is_string) and (self.save_pos2 &gt;= 0)) :
-                self.noop = self._io.read_bytes(0)
+            <span class="k">if</span>  <span class="p">((</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">is_string</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">as_numeric</span> <span class="o">&lt;=</span> <span class="mi">255</span><span class="p">))</span> <span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_type_as_predef</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Resource</span><span class="o">.</span><span class="n">PredefTypes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">as_numeric</span><span class="p">)</span>
 
-
-        @property
-        def save_pos1(self):
-            if hasattr(self, &#39;_m_save_pos1&#39;):
-                return self._m_save_pos1 if hasattr(self, &#39;_m_save_pos1&#39;) else None
-
-            self._m_save_pos1 = self._io.pos()
-            return self._m_save_pos1 if hasattr(self, &#39;_m_save_pos1&#39;) else None
-
-        @property
-        def save_pos2(self):
-            if hasattr(self, &#39;_m_save_pos2&#39;):
-                return self._m_save_pos2 if hasattr(self, &#39;_m_save_pos2&#39;) else None
-
-            self._m_save_pos2 = self._io.pos()
-            return self._m_save_pos2 if hasattr(self, &#39;_m_save_pos2&#39;) else None
-
-        @property
-        def is_string(self):
-            if hasattr(self, &#39;_m_is_string&#39;):
-                return self._m_is_string if hasattr(self, &#39;_m_is_string&#39;) else None
-
-            self._m_is_string = self.first != 65535
-            return self._m_is_string if hasattr(self, &#39;_m_is_string&#39;) else None
-
-        @property
-        def as_string(self):
-            if hasattr(self, &#39;_m_as_string&#39;):
-                return self._m_as_string if hasattr(self, &#39;_m_as_string&#39;) else None
-
-            if self.is_string:
-                _pos = self._io.pos()
-                self._io.seek(self.save_pos1)
-                self._m_as_string = (self._io.read_bytes(((self.save_pos2 - self.save_pos1) - 2))).decode(u&quot;UTF-16LE&quot;)
-                self._io.seek(_pos)
-
-            return self._m_as_string if hasattr(self, &#39;_m_as_string&#39;) else None
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_type_as_predef</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_type_as_predef&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
 
+    <span class="k">class</span> <span class="nc">UnicodeOrId</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Resources use a special serialization of names and types: they</span>
+<span class="sd">        can be either a number or a string.</span>
+<span class="sd">        </span>
+<span class="sd">        Use `is_string` to check which kind we&#39;ve got here, and then use</span>
+<span class="sd">        `as_numeric` or `as_string` to get relevant value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-</code></pre>
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_pos1</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_string</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">as_numeric</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_string</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rest</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">rest</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">_</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">break</span>
+                    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">is_string</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_pos2</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">))</span> <span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">noop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">save_pos1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_save_pos1&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_save_pos1</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_save_pos1&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_save_pos1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_save_pos1</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_save_pos1&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">save_pos2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_save_pos2&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_save_pos2</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_save_pos2&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_save_pos2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_save_pos2</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_save_pos2&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">is_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_string&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_string</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_string&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">first</span> <span class="o">!=</span> <span class="mi">65535</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_string</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_string&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">as_string</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_string&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_string</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_string&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_string</span><span class="p">:</span>
+                <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_pos1</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_string</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">save_pos2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_pos1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-16LE&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_as_string</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_as_string&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+</pre></div>
 
         </div>
         
@@ -507,8 +501,8 @@ class WindowsResourceFile(KaitaiStruct):
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

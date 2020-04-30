@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -260,846 +257,846 @@ var data = new Edid(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-using System.Collections.Generic;
-
-namespace Kaitai
-{
-    public partial class Edid : KaitaiStruct
-    {
-        public static Edid FromFile(string fileName)
-        {
-            return new Edid(new KaitaiStream(fileName));
-        }
-
-        public Edid(KaitaiStream p__io, KaitaiStruct p__parent = null, Edid p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            f_mfgYear = false;
-            f_mfgIdCh1 = false;
-            f_mfgIdCh3 = false;
-            f_gamma = false;
-            f_mfgIdCh2 = false;
-            _read();
-        }
-        private void _read()
-        {
-            _magic = m_io.EnsureFixedContents(new byte[] { 0, 255, 255, 255, 255, 255, 255, 0 });
-            _mfgBytes = m_io.ReadU2le();
-            _productCode = m_io.ReadU2le();
-            _serial = m_io.ReadU4le();
-            _mfgWeek = m_io.ReadU1();
-            _mfgYearMod = m_io.ReadU1();
-            _edidVersionMajor = m_io.ReadU1();
-            _edidVersionMinor = m_io.ReadU1();
-            _inputFlags = m_io.ReadU1();
-            _screenSizeH = m_io.ReadU1();
-            _screenSizeV = m_io.ReadU1();
-            _gammaMod = m_io.ReadU1();
-            _featuresFlags = m_io.ReadU1();
-            _chromacity = new ChromacityInfo(m_io, this, m_root);
-            _estTimings = new EstTimingsInfo(m_io, this, m_root);
-            _stdTimings = new List&lt;StdTiming&gt;((int) (8));
-            for (var i = 0; i &lt; 8; i++)
-            {
-                _stdTimings.Add(new StdTiming(m_io, this, m_root));
-            }
-        }
-
-        /// &lt;summary&gt;
-        /// Chromaticity information: colorimetry and white point
-        /// coordinates. All coordinates are stored as fixed precision
-        /// 10-bit numbers, bits are shuffled for compactness.
-        /// &lt;/summary&gt;
-        public partial class ChromacityInfo : KaitaiStruct
-        {
-            public static ChromacityInfo FromFile(string fileName)
-            {
-                return new ChromacityInfo(new KaitaiStream(fileName));
-            }
-
-            public ChromacityInfo(KaitaiStream p__io, Edid p__parent = null, Edid p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_greenXInt = false;
-                f_redY = false;
-                f_greenYInt = false;
-                f_whiteY = false;
-                f_redX = false;
-                f_whiteX = false;
-                f_blueX = false;
-                f_whiteXInt = false;
-                f_whiteYInt = false;
-                f_greenX = false;
-                f_redXInt = false;
-                f_redYInt = false;
-                f_blueXInt = false;
-                f_blueY = false;
-                f_greenY = false;
-                f_blueYInt = false;
-                _read();
-            }
-            private void _read()
-            {
-                _redX10 = m_io.ReadBitsInt(2);
-                _redY10 = m_io.ReadBitsInt(2);
-                _greenX10 = m_io.ReadBitsInt(2);
-                _greenY10 = m_io.ReadBitsInt(2);
-                _blueX10 = m_io.ReadBitsInt(2);
-                _blueY10 = m_io.ReadBitsInt(2);
-                _whiteX10 = m_io.ReadBitsInt(2);
-                _whiteY10 = m_io.ReadBitsInt(2);
-                m_io.AlignToByte();
-                _redX92 = m_io.ReadU1();
-                _redY92 = m_io.ReadU1();
-                _greenX92 = m_io.ReadU1();
-                _greenY92 = m_io.ReadU1();
-                _blueX92 = m_io.ReadU1();
-                _blueY92 = m_io.ReadU1();
-                _whiteX92 = m_io.ReadU1();
-                _whiteY92 = m_io.ReadU1();
-            }
-            private bool f_greenXInt;
-            private int _greenXInt;
-            public int GreenXInt
-            {
-                get
-                {
-                    if (f_greenXInt)
-                        return _greenXInt;
-                    _greenXInt = (int) (((GreenX92 &lt;&lt; 2) | GreenX10));
-                    f_greenXInt = true;
-                    return _greenXInt;
-                }
-            }
-            private bool f_redY;
-            private double _redY;
-
-            /// &lt;summary&gt;
-            /// Red Y coordinate
-            /// &lt;/summary&gt;
-            public double RedY
-            {
-                get
-                {
-                    if (f_redY)
-                        return _redY;
-                    _redY = (double) ((RedYInt / 1024.0));
-                    f_redY = true;
-                    return _redY;
-                }
-            }
-            private bool f_greenYInt;
-            private int _greenYInt;
-            public int GreenYInt
-            {
-                get
-                {
-                    if (f_greenYInt)
-                        return _greenYInt;
-                    _greenYInt = (int) (((GreenY92 &lt;&lt; 2) | GreenY10));
-                    f_greenYInt = true;
-                    return _greenYInt;
-                }
-            }
-            private bool f_whiteY;
-            private double _whiteY;
-
-            /// &lt;summary&gt;
-            /// White Y coordinate
-            /// &lt;/summary&gt;
-            public double WhiteY
-            {
-                get
-                {
-                    if (f_whiteY)
-                        return _whiteY;
-                    _whiteY = (double) ((WhiteYInt / 1024.0));
-                    f_whiteY = true;
-                    return _whiteY;
-                }
-            }
-            private bool f_redX;
-            private double _redX;
-
-            /// &lt;summary&gt;
-            /// Red X coordinate
-            /// &lt;/summary&gt;
-            public double RedX
-            {
-                get
-                {
-                    if (f_redX)
-                        return _redX;
-                    _redX = (double) ((RedXInt / 1024.0));
-                    f_redX = true;
-                    return _redX;
-                }
-            }
-            private bool f_whiteX;
-            private double _whiteX;
-
-            /// &lt;summary&gt;
-            /// White X coordinate
-            /// &lt;/summary&gt;
-            public double WhiteX
-            {
-                get
-                {
-                    if (f_whiteX)
-                        return _whiteX;
-                    _whiteX = (double) ((WhiteXInt / 1024.0));
-                    f_whiteX = true;
-                    return _whiteX;
-                }
-            }
-            private bool f_blueX;
-            private double _blueX;
-
-            /// &lt;summary&gt;
-            /// Blue X coordinate
-            /// &lt;/summary&gt;
-            public double BlueX
-            {
-                get
-                {
-                    if (f_blueX)
-                        return _blueX;
-                    _blueX = (double) ((BlueXInt / 1024.0));
-                    f_blueX = true;
-                    return _blueX;
-                }
-            }
-            private bool f_whiteXInt;
-            private int _whiteXInt;
-            public int WhiteXInt
-            {
-                get
-                {
-                    if (f_whiteXInt)
-                        return _whiteXInt;
-                    _whiteXInt = (int) (((WhiteX92 &lt;&lt; 2) | WhiteX10));
-                    f_whiteXInt = true;
-                    return _whiteXInt;
-                }
-            }
-            private bool f_whiteYInt;
-            private int _whiteYInt;
-            public int WhiteYInt
-            {
-                get
-                {
-                    if (f_whiteYInt)
-                        return _whiteYInt;
-                    _whiteYInt = (int) (((WhiteY92 &lt;&lt; 2) | WhiteY10));
-                    f_whiteYInt = true;
-                    return _whiteYInt;
-                }
-            }
-            private bool f_greenX;
-            private double _greenX;
-
-            /// &lt;summary&gt;
-            /// Green X coordinate
-            /// &lt;/summary&gt;
-            public double GreenX
-            {
-                get
-                {
-                    if (f_greenX)
-                        return _greenX;
-                    _greenX = (double) ((GreenXInt / 1024.0));
-                    f_greenX = true;
-                    return _greenX;
-                }
-            }
-            private bool f_redXInt;
-            private int _redXInt;
-            public int RedXInt
-            {
-                get
-                {
-                    if (f_redXInt)
-                        return _redXInt;
-                    _redXInt = (int) (((RedX92 &lt;&lt; 2) | RedX10));
-                    f_redXInt = true;
-                    return _redXInt;
-                }
-            }
-            private bool f_redYInt;
-            private int _redYInt;
-            public int RedYInt
-            {
-                get
-                {
-                    if (f_redYInt)
-                        return _redYInt;
-                    _redYInt = (int) (((RedY92 &lt;&lt; 2) | RedY10));
-                    f_redYInt = true;
-                    return _redYInt;
-                }
-            }
-            private bool f_blueXInt;
-            private int _blueXInt;
-            public int BlueXInt
-            {
-                get
-                {
-                    if (f_blueXInt)
-                        return _blueXInt;
-                    _blueXInt = (int) (((BlueX92 &lt;&lt; 2) | BlueX10));
-                    f_blueXInt = true;
-                    return _blueXInt;
-                }
-            }
-            private bool f_blueY;
-            private double _blueY;
-
-            /// &lt;summary&gt;
-            /// Blue Y coordinate
-            /// &lt;/summary&gt;
-            public double BlueY
-            {
-                get
-                {
-                    if (f_blueY)
-                        return _blueY;
-                    _blueY = (double) ((BlueYInt / 1024.0));
-                    f_blueY = true;
-                    return _blueY;
-                }
-            }
-            private bool f_greenY;
-            private double _greenY;
-
-            /// &lt;summary&gt;
-            /// Green Y coordinate
-            /// &lt;/summary&gt;
-            public double GreenY
-            {
-                get
-                {
-                    if (f_greenY)
-                        return _greenY;
-                    _greenY = (double) ((GreenYInt / 1024.0));
-                    f_greenY = true;
-                    return _greenY;
-                }
-            }
-            private bool f_blueYInt;
-            private int _blueYInt;
-            public int BlueYInt
-            {
-                get
-                {
-                    if (f_blueYInt)
-                        return _blueYInt;
-                    _blueYInt = (int) (((BlueY92 &lt;&lt; 2) | BlueY10));
-                    f_blueYInt = true;
-                    return _blueYInt;
-                }
-            }
-            private ulong _redX10;
-            private ulong _redY10;
-            private ulong _greenX10;
-            private ulong _greenY10;
-            private ulong _blueX10;
-            private ulong _blueY10;
-            private ulong _whiteX10;
-            private ulong _whiteY10;
-            private byte _redX92;
-            private byte _redY92;
-            private byte _greenX92;
-            private byte _greenY92;
-            private byte _blueX92;
-            private byte _blueY92;
-            private byte _whiteX92;
-            private byte _whiteY92;
-            private Edid m_root;
-            private Edid m_parent;
-
-            /// &lt;summary&gt;
-            /// Red X, bits 1..0
-            /// &lt;/summary&gt;
-            public ulong RedX10 { get { return _redX10; } }
-
-            /// &lt;summary&gt;
-            /// Red Y, bits 1..0
-            /// &lt;/summary&gt;
-            public ulong RedY10 { get { return _redY10; } }
-
-            /// &lt;summary&gt;
-            /// Green X, bits 1..0
-            /// &lt;/summary&gt;
-            public ulong GreenX10 { get { return _greenX10; } }
-
-            /// &lt;summary&gt;
-            /// Green Y, bits 1..0
-            /// &lt;/summary&gt;
-            public ulong GreenY10 { get { return _greenY10; } }
-
-            /// &lt;summary&gt;
-            /// Blue X, bits 1..0
-            /// &lt;/summary&gt;
-            public ulong BlueX10 { get { return _blueX10; } }
-
-            /// &lt;summary&gt;
-            /// Blue Y, bits 1..0
-            /// &lt;/summary&gt;
-            public ulong BlueY10 { get { return _blueY10; } }
-
-            /// &lt;summary&gt;
-            /// White X, bits 1..0
-            /// &lt;/summary&gt;
-            public ulong WhiteX10 { get { return _whiteX10; } }
-
-            /// &lt;summary&gt;
-            /// White Y, bits 1..0
-            /// &lt;/summary&gt;
-            public ulong WhiteY10 { get { return _whiteY10; } }
-
-            /// &lt;summary&gt;
-            /// Red X, bits 9..2
-            /// &lt;/summary&gt;
-            public byte RedX92 { get { return _redX92; } }
-
-            /// &lt;summary&gt;
-            /// Red Y, bits 9..2
-            /// &lt;/summary&gt;
-            public byte RedY92 { get { return _redY92; } }
-
-            /// &lt;summary&gt;
-            /// Green X, bits 9..2
-            /// &lt;/summary&gt;
-            public byte GreenX92 { get { return _greenX92; } }
-
-            /// &lt;summary&gt;
-            /// Green Y, bits 9..2
-            /// &lt;/summary&gt;
-            public byte GreenY92 { get { return _greenY92; } }
-
-            /// &lt;summary&gt;
-            /// Blue X, bits 9..2
-            /// &lt;/summary&gt;
-            public byte BlueX92 { get { return _blueX92; } }
-
-            /// &lt;summary&gt;
-            /// Blue Y, bits 9..2
-            /// &lt;/summary&gt;
-            public byte BlueY92 { get { return _blueY92; } }
-
-            /// &lt;summary&gt;
-            /// White X, bits 9..2
-            /// &lt;/summary&gt;
-            public byte WhiteX92 { get { return _whiteX92; } }
-
-            /// &lt;summary&gt;
-            /// White Y, bits 9..2
-            /// &lt;/summary&gt;
-            public byte WhiteY92 { get { return _whiteY92; } }
-            public Edid M_Root { get { return m_root; } }
-            public Edid M_Parent { get { return m_parent; } }
-        }
-        public partial class EstTimingsInfo : KaitaiStruct
-        {
-            public static EstTimingsInfo FromFile(string fileName)
-            {
-                return new EstTimingsInfo(new KaitaiStream(fileName));
-            }
-
-            public EstTimingsInfo(KaitaiStream p__io, Edid p__parent = null, Edid p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _can72040070 = m_io.ReadBitsInt(1) != 0;
-                _can72040088 = m_io.ReadBitsInt(1) != 0;
-                _can64048060 = m_io.ReadBitsInt(1) != 0;
-                _can64048067 = m_io.ReadBitsInt(1) != 0;
-                _can64048072 = m_io.ReadBitsInt(1) != 0;
-                _can64048075 = m_io.ReadBitsInt(1) != 0;
-                _can80060056 = m_io.ReadBitsInt(1) != 0;
-                _can80060060 = m_io.ReadBitsInt(1) != 0;
-                _can80060072 = m_io.ReadBitsInt(1) != 0;
-                _can80060075 = m_io.ReadBitsInt(1) != 0;
-                _can83262475 = m_io.ReadBitsInt(1) != 0;
-                _can102476887I = m_io.ReadBitsInt(1) != 0;
-                _can102476860 = m_io.ReadBitsInt(1) != 0;
-                _can102476870 = m_io.ReadBitsInt(1) != 0;
-                _can102476875 = m_io.ReadBitsInt(1) != 0;
-                _can1280102475 = m_io.ReadBitsInt(1) != 0;
-                _can115287075 = m_io.ReadBitsInt(1) != 0;
-                _reserved = m_io.ReadBitsInt(7);
-            }
-            private bool _can72040070;
-            private bool _can72040088;
-            private bool _can64048060;
-            private bool _can64048067;
-            private bool _can64048072;
-            private bool _can64048075;
-            private bool _can80060056;
-            private bool _can80060060;
-            private bool _can80060072;
-            private bool _can80060075;
-            private bool _can83262475;
-            private bool _can102476887I;
-            private bool _can102476860;
-            private bool _can102476870;
-            private bool _can102476875;
-            private bool _can1280102475;
-            private bool _can115287075;
-            private ulong _reserved;
-            private Edid m_root;
-            private Edid m_parent;
-
-            /// &lt;summary&gt;
-            /// Supports 720 x 400 @ 70Hz
-            /// &lt;/summary&gt;
-            public bool Can72040070 { get { return _can72040070; } }
-
-            /// &lt;summary&gt;
-            /// Supports 720 x 400 @ 88Hz
-            /// &lt;/summary&gt;
-            public bool Can72040088 { get { return _can72040088; } }
-
-            /// &lt;summary&gt;
-            /// Supports 640 x 480 @ 60Hz
-            /// &lt;/summary&gt;
-            public bool Can64048060 { get { return _can64048060; } }
-
-            /// &lt;summary&gt;
-            /// Supports 640 x 480 @ 67Hz
-            /// &lt;/summary&gt;
-            public bool Can64048067 { get { return _can64048067; } }
-
-            /// &lt;summary&gt;
-            /// Supports 640 x 480 @ 72Hz
-            /// &lt;/summary&gt;
-            public bool Can64048072 { get { return _can64048072; } }
-
-            /// &lt;summary&gt;
-            /// Supports 640 x 480 @ 75Hz
-            /// &lt;/summary&gt;
-            public bool Can64048075 { get { return _can64048075; } }
-
-            /// &lt;summary&gt;
-            /// Supports 800 x 600 @ 56Hz
-            /// &lt;/summary&gt;
-            public bool Can80060056 { get { return _can80060056; } }
-
-            /// &lt;summary&gt;
-            /// Supports 800 x 600 @ 60Hz
-            /// &lt;/summary&gt;
-            public bool Can80060060 { get { return _can80060060; } }
-
-            /// &lt;summary&gt;
-            /// Supports 800 x 600 @ 72Hz
-            /// &lt;/summary&gt;
-            public bool Can80060072 { get { return _can80060072; } }
-
-            /// &lt;summary&gt;
-            /// Supports 800 x 600 @ 75Hz
-            /// &lt;/summary&gt;
-            public bool Can80060075 { get { return _can80060075; } }
-
-            /// &lt;summary&gt;
-            /// Supports 832 x 624 @ 75Hz
-            /// &lt;/summary&gt;
-            public bool Can83262475 { get { return _can83262475; } }
-
-            /// &lt;summary&gt;
-            /// Supports 1024 x 768 @ 87Hz(I)
-            /// &lt;/summary&gt;
-            public bool Can102476887I { get { return _can102476887I; } }
-
-            /// &lt;summary&gt;
-            /// Supports 1024 x 768 @ 60Hz
-            /// &lt;/summary&gt;
-            public bool Can102476860 { get { return _can102476860; } }
-
-            /// &lt;summary&gt;
-            /// Supports 1024 x 768 @ 70Hz
-            /// &lt;/summary&gt;
-            public bool Can102476870 { get { return _can102476870; } }
-
-            /// &lt;summary&gt;
-            /// Supports 1024 x 768 @ 75Hz
-            /// &lt;/summary&gt;
-            public bool Can102476875 { get { return _can102476875; } }
-
-            /// &lt;summary&gt;
-            /// Supports 1280 x 1024 @ 75Hz
-            /// &lt;/summary&gt;
-            public bool Can1280102475 { get { return _can1280102475; } }
-
-            /// &lt;summary&gt;
-            /// Supports 1152 x 870 @ 75Hz
-            /// &lt;/summary&gt;
-            public bool Can115287075 { get { return _can115287075; } }
-            public ulong Reserved { get { return _reserved; } }
-            public Edid M_Root { get { return m_root; } }
-            public Edid M_Parent { get { return m_parent; } }
-        }
-        public partial class StdTiming : KaitaiStruct
-        {
-            public static StdTiming FromFile(string fileName)
-            {
-                return new StdTiming(new KaitaiStream(fileName));
-            }
-
-
-            public enum AspectRatios
-            {
-                Ratio1610 = 0,
-                Ratio43 = 1,
-                Ratio54 = 2,
-                Ratio169 = 3,
-            }
-            public StdTiming(KaitaiStream p__io, Edid p__parent = null, Edid p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_horizActivePixels = false;
-                f_refreshRate = false;
-                _read();
-            }
-            private void _read()
-            {
-                _horizActivePixelsMod = m_io.ReadU1();
-                _aspectRatio = ((AspectRatios) m_io.ReadBitsInt(2));
-                _refreshRateMod = m_io.ReadBitsInt(5);
-            }
-            private bool f_horizActivePixels;
-            private int _horizActivePixels;
-
-            /// &lt;summary&gt;
-            /// Range of horizontal active pixels.
-            /// &lt;/summary&gt;
-            public int HorizActivePixels
-            {
-                get
-                {
-                    if (f_horizActivePixels)
-                        return _horizActivePixels;
-                    _horizActivePixels = (int) (((HorizActivePixelsMod + 31) * 8));
-                    f_horizActivePixels = true;
-                    return _horizActivePixels;
-                }
-            }
-            private bool f_refreshRate;
-            private int _refreshRate;
-
-            /// &lt;summary&gt;
-            /// Vertical refresh rate, Hz.
-            /// &lt;/summary&gt;
-            public int RefreshRate
-            {
-                get
-                {
-                    if (f_refreshRate)
-                        return _refreshRate;
-                    _refreshRate = (int) ((RefreshRateMod + 60));
-                    f_refreshRate = true;
-                    return _refreshRate;
-                }
-            }
-            private byte _horizActivePixelsMod;
-            private AspectRatios _aspectRatio;
-            private ulong _refreshRateMod;
-            private Edid m_root;
-            private Edid m_parent;
-
-            /// &lt;summary&gt;
-            /// Range of horizontal active pixels, written in modified form:
-            /// `(horiz_active_pixels / 8) - 31`. This yields an effective
-            /// range of 256..2288, with steps of 8 pixels.
-            /// &lt;/summary&gt;
-            public byte HorizActivePixelsMod { get { return _horizActivePixelsMod; } }
-
-            /// &lt;summary&gt;
-            /// Aspect ratio of the image. Can be used to calculate number
-            /// of vertical pixels.
-            /// &lt;/summary&gt;
-            public AspectRatios AspectRatio { get { return _aspectRatio; } }
-
-            /// &lt;summary&gt;
-            /// Refresh rate in Hz, written in modified form: `refresh_rate
-            /// - 60`. This yields an effective range of 60..123 Hz.
-            /// &lt;/summary&gt;
-            public ulong RefreshRateMod { get { return _refreshRateMod; } }
-            public Edid M_Root { get { return m_root; } }
-            public Edid M_Parent { get { return m_parent; } }
-        }
-        private bool f_mfgYear;
-        private int _mfgYear;
-        public int MfgYear
-        {
-            get
-            {
-                if (f_mfgYear)
-                    return _mfgYear;
-                _mfgYear = (int) ((MfgYearMod + 1990));
-                f_mfgYear = true;
-                return _mfgYear;
-            }
-        }
-        private bool f_mfgIdCh1;
-        private int _mfgIdCh1;
-        public int MfgIdCh1
-        {
-            get
-            {
-                if (f_mfgIdCh1)
-                    return _mfgIdCh1;
-                _mfgIdCh1 = (int) (((MfgBytes &amp; 31744) &gt;&gt; 10));
-                f_mfgIdCh1 = true;
-                return _mfgIdCh1;
-            }
-        }
-        private bool f_mfgIdCh3;
-        private int _mfgIdCh3;
-        public int MfgIdCh3
-        {
-            get
-            {
-                if (f_mfgIdCh3)
-                    return _mfgIdCh3;
-                _mfgIdCh3 = (int) ((MfgBytes &amp; 31));
-                f_mfgIdCh3 = true;
-                return _mfgIdCh3;
-            }
-        }
-        private bool f_gamma;
-        private double? _gamma;
-        public double? Gamma
-        {
-            get
-            {
-                if (f_gamma)
-                    return _gamma;
-                if (GammaMod != 255) {
-                    _gamma = (double) (((GammaMod + 100) / 100.0));
-                }
-                f_gamma = true;
-                return _gamma;
-            }
-        }
-        private bool f_mfgIdCh2;
-        private int _mfgIdCh2;
-        public int MfgIdCh2
-        {
-            get
-            {
-                if (f_mfgIdCh2)
-                    return _mfgIdCh2;
-                _mfgIdCh2 = (int) (((MfgBytes &amp; 992) &gt;&gt; 5));
-                f_mfgIdCh2 = true;
-                return _mfgIdCh2;
-            }
-        }
-        private byte[] _magic;
-        private ushort _mfgBytes;
-        private ushort _productCode;
-        private uint _serial;
-        private byte _mfgWeek;
-        private byte _mfgYearMod;
-        private byte _edidVersionMajor;
-        private byte _edidVersionMinor;
-        private byte _inputFlags;
-        private byte _screenSizeH;
-        private byte _screenSizeV;
-        private byte _gammaMod;
-        private byte _featuresFlags;
-        private ChromacityInfo _chromacity;
-        private EstTimingsInfo _estTimings;
-        private List&lt;StdTiming&gt; _stdTimings;
-        private Edid m_root;
-        private KaitaiStruct m_parent;
-        public byte[] Magic { get { return _magic; } }
-        public ushort MfgBytes { get { return _mfgBytes; } }
-
-        /// &lt;summary&gt;
-        /// Manufacturer product code
-        /// &lt;/summary&gt;
-        public ushort ProductCode { get { return _productCode; } }
-
-        /// &lt;summary&gt;
-        /// Serial number
-        /// &lt;/summary&gt;
-        public uint Serial { get { return _serial; } }
-
-        /// &lt;summary&gt;
-        /// Week of manufacture. Week numbering is not consistent between manufacturers.
-        /// &lt;/summary&gt;
-        public byte MfgWeek { get { return _mfgWeek; } }
-
-        /// &lt;summary&gt;
-        /// Year of manufacture, less 1990. (1990–2245). If week=255, it is the model year instead.
-        /// &lt;/summary&gt;
-        public byte MfgYearMod { get { return _mfgYearMod; } }
-
-        /// &lt;summary&gt;
-        /// EDID version, usually 1 (for 1.3)
-        /// &lt;/summary&gt;
-        public byte EdidVersionMajor { get { return _edidVersionMajor; } }
-
-        /// &lt;summary&gt;
-        /// EDID revision, usually 3 (for 1.3)
-        /// &lt;/summary&gt;
-        public byte EdidVersionMinor { get { return _edidVersionMinor; } }
-        public byte InputFlags { get { return _inputFlags; } }
-
-        /// &lt;summary&gt;
-        /// Maximum horizontal image size, in centimetres (max 292 cm/115 in at 16:9 aspect ratio)
-        /// &lt;/summary&gt;
-        public byte ScreenSizeH { get { return _screenSizeH; } }
-
-        /// &lt;summary&gt;
-        /// Maximum vertical image size, in centimetres. If either byte is 0, undefined (e.g. projector)
-        /// &lt;/summary&gt;
-        public byte ScreenSizeV { get { return _screenSizeV; } }
-
-        /// &lt;summary&gt;
-        /// Display gamma, datavalue = (gamma*100)-100 (range 1.00–3.54)
-        /// &lt;/summary&gt;
-        public byte GammaMod { get { return _gammaMod; } }
-        public byte FeaturesFlags { get { return _featuresFlags; } }
-
-        /// &lt;summary&gt;
-        /// Phosphor or filter chromaticity structure, which provides info on colorimetry and white point
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        /// Reference: Standard, section 3.7
-        /// &lt;/remarks&gt;
-        public ChromacityInfo Chromacity { get { return _chromacity; } }
-
-        /// &lt;summary&gt;
-        /// Block of bit flags that indicates support of so called
-        /// &amp;quot;established timings&amp;quot;, which is a commonly used subset of VESA
-        /// DMT (Discrete Monitor Timings) modes.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        /// Reference: Standard, section 3.8
-        /// &lt;/remarks&gt;
-        public EstTimingsInfo EstTimings { get { return _estTimings; } }
-
-        /// &lt;summary&gt;
-        /// Array of descriptions of so called &amp;quot;standard timings&amp;quot;, which are
-        /// used to specify up to 8 additional timings not included in
-        /// &amp;quot;established timings&amp;quot;.
-        /// &lt;/summary&gt;
-        public List&lt;StdTiming&gt; StdTimings { get { return _stdTimings; } }
-        public Edid M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-    }
-}
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Edid</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">Edid</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Edid</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="nf">Edid</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Edid</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">f_mfgYear</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_mfgIdCh1</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_mfgIdCh3</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_gamma</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_mfgIdCh2</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span><span class="p">,</span> <span class="m">255</span><span class="p">,</span> <span class="m">255</span><span class="p">,</span> <span class="m">255</span><span class="p">,</span> <span class="m">255</span><span class="p">,</span> <span class="m">255</span><span class="p">,</span> <span class="m">255</span><span class="p">,</span> <span class="m">0</span> <span class="p">});</span>
+            <span class="n">_mfgBytes</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+            <span class="n">_productCode</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+            <span class="n">_serial</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+            <span class="n">_mfgWeek</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_mfgYearMod</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_edidVersionMajor</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_edidVersionMinor</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_inputFlags</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_screenSizeH</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_screenSizeV</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_gammaMod</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_featuresFlags</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_chromacity</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ChromacityInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="n">_estTimings</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EstTimingsInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="n">_stdTimings</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">StdTiming</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="m">8</span><span class="p">));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">8</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+            <span class="p">{</span>
+                <span class="n">_stdTimings</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">StdTiming</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Chromaticity information: colorimetry and white point</span>
+        <span class="c1">/// coordinates. All coordinates are stored as fixed precision</span>
+        <span class="c1">/// 10-bit numbers, bits are shuffled for compactness.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ChromacityInfo</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">ChromacityInfo</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">ChromacityInfo</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">ChromacityInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Edid</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Edid</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_greenXInt</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_redY</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_greenYInt</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_whiteY</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_redX</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_whiteX</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_blueX</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_whiteXInt</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_whiteYInt</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_greenX</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_redXInt</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_redYInt</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_blueXInt</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_blueY</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_greenY</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_blueYInt</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_redX10</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                <span class="n">_redY10</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                <span class="n">_greenX10</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                <span class="n">_greenY10</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                <span class="n">_blueX10</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                <span class="n">_blueY10</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                <span class="n">_whiteX10</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                <span class="n">_whiteY10</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+                <span class="n">m_io</span><span class="p">.</span><span class="n">AlignToByte</span><span class="p">();</span>
+                <span class="n">_redX92</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_redY92</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_greenX92</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_greenY92</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_blueX92</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_blueY92</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_whiteX92</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_whiteY92</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_greenXInt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_greenXInt</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">GreenXInt</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_greenXInt</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_greenXInt</span><span class="p">;</span>
+                    <span class="n">_greenXInt</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">GreenX92</span> <span class="p">&lt;&lt;</span> <span class="m">2</span><span class="p">)</span> <span class="p">|</span> <span class="n">GreenX10</span><span class="p">));</span>
+                    <span class="n">f_greenXInt</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_greenXInt</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_redY</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">double</span> <span class="n">_redY</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Red Y coordinate</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">double</span> <span class="n">RedY</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_redY</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_redY</span><span class="p">;</span>
+                    <span class="n">_redY</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">((</span><span class="n">RedYInt</span> <span class="p">/</span> <span class="m">1024.0</span><span class="p">));</span>
+                    <span class="n">f_redY</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_redY</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_greenYInt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_greenYInt</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">GreenYInt</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_greenYInt</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_greenYInt</span><span class="p">;</span>
+                    <span class="n">_greenYInt</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">GreenY92</span> <span class="p">&lt;&lt;</span> <span class="m">2</span><span class="p">)</span> <span class="p">|</span> <span class="n">GreenY10</span><span class="p">));</span>
+                    <span class="n">f_greenYInt</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_greenYInt</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_whiteY</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">double</span> <span class="n">_whiteY</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// White Y coordinate</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">double</span> <span class="n">WhiteY</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_whiteY</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_whiteY</span><span class="p">;</span>
+                    <span class="n">_whiteY</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">((</span><span class="n">WhiteYInt</span> <span class="p">/</span> <span class="m">1024.0</span><span class="p">));</span>
+                    <span class="n">f_whiteY</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_whiteY</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_redX</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">double</span> <span class="n">_redX</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Red X coordinate</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">double</span> <span class="n">RedX</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_redX</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_redX</span><span class="p">;</span>
+                    <span class="n">_redX</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">((</span><span class="n">RedXInt</span> <span class="p">/</span> <span class="m">1024.0</span><span class="p">));</span>
+                    <span class="n">f_redX</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_redX</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_whiteX</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">double</span> <span class="n">_whiteX</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// White X coordinate</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">double</span> <span class="n">WhiteX</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_whiteX</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_whiteX</span><span class="p">;</span>
+                    <span class="n">_whiteX</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">((</span><span class="n">WhiteXInt</span> <span class="p">/</span> <span class="m">1024.0</span><span class="p">));</span>
+                    <span class="n">f_whiteX</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_whiteX</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_blueX</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">double</span> <span class="n">_blueX</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Blue X coordinate</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">double</span> <span class="n">BlueX</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_blueX</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_blueX</span><span class="p">;</span>
+                    <span class="n">_blueX</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">((</span><span class="n">BlueXInt</span> <span class="p">/</span> <span class="m">1024.0</span><span class="p">));</span>
+                    <span class="n">f_blueX</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_blueX</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_whiteXInt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_whiteXInt</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">WhiteXInt</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_whiteXInt</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_whiteXInt</span><span class="p">;</span>
+                    <span class="n">_whiteXInt</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">WhiteX92</span> <span class="p">&lt;&lt;</span> <span class="m">2</span><span class="p">)</span> <span class="p">|</span> <span class="n">WhiteX10</span><span class="p">));</span>
+                    <span class="n">f_whiteXInt</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_whiteXInt</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_whiteYInt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_whiteYInt</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">WhiteYInt</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_whiteYInt</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_whiteYInt</span><span class="p">;</span>
+                    <span class="n">_whiteYInt</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">WhiteY92</span> <span class="p">&lt;&lt;</span> <span class="m">2</span><span class="p">)</span> <span class="p">|</span> <span class="n">WhiteY10</span><span class="p">));</span>
+                    <span class="n">f_whiteYInt</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_whiteYInt</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_greenX</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">double</span> <span class="n">_greenX</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Green X coordinate</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">double</span> <span class="n">GreenX</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_greenX</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_greenX</span><span class="p">;</span>
+                    <span class="n">_greenX</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">((</span><span class="n">GreenXInt</span> <span class="p">/</span> <span class="m">1024.0</span><span class="p">));</span>
+                    <span class="n">f_greenX</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_greenX</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_redXInt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_redXInt</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">RedXInt</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_redXInt</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_redXInt</span><span class="p">;</span>
+                    <span class="n">_redXInt</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">RedX92</span> <span class="p">&lt;&lt;</span> <span class="m">2</span><span class="p">)</span> <span class="p">|</span> <span class="n">RedX10</span><span class="p">));</span>
+                    <span class="n">f_redXInt</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_redXInt</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_redYInt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_redYInt</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">RedYInt</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_redYInt</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_redYInt</span><span class="p">;</span>
+                    <span class="n">_redYInt</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">RedY92</span> <span class="p">&lt;&lt;</span> <span class="m">2</span><span class="p">)</span> <span class="p">|</span> <span class="n">RedY10</span><span class="p">));</span>
+                    <span class="n">f_redYInt</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_redYInt</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_blueXInt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_blueXInt</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">BlueXInt</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_blueXInt</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_blueXInt</span><span class="p">;</span>
+                    <span class="n">_blueXInt</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">BlueX92</span> <span class="p">&lt;&lt;</span> <span class="m">2</span><span class="p">)</span> <span class="p">|</span> <span class="n">BlueX10</span><span class="p">));</span>
+                    <span class="n">f_blueXInt</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_blueXInt</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_blueY</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">double</span> <span class="n">_blueY</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Blue Y coordinate</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">double</span> <span class="n">BlueY</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_blueY</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_blueY</span><span class="p">;</span>
+                    <span class="n">_blueY</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">((</span><span class="n">BlueYInt</span> <span class="p">/</span> <span class="m">1024.0</span><span class="p">));</span>
+                    <span class="n">f_blueY</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_blueY</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_greenY</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">double</span> <span class="n">_greenY</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Green Y coordinate</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">double</span> <span class="n">GreenY</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_greenY</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_greenY</span><span class="p">;</span>
+                    <span class="n">_greenY</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">((</span><span class="n">GreenYInt</span> <span class="p">/</span> <span class="m">1024.0</span><span class="p">));</span>
+                    <span class="n">f_greenY</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_greenY</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_blueYInt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_blueYInt</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">BlueYInt</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_blueYInt</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_blueYInt</span><span class="p">;</span>
+                    <span class="n">_blueYInt</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">BlueY92</span> <span class="p">&lt;&lt;</span> <span class="m">2</span><span class="p">)</span> <span class="p">|</span> <span class="n">BlueY10</span><span class="p">));</span>
+                    <span class="n">f_blueYInt</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_blueYInt</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_redX10</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_redY10</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_greenX10</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_greenY10</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_blueX10</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_blueY10</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_whiteX10</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_whiteY10</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_redX92</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_redY92</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_greenX92</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_greenY92</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_blueX92</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_blueY92</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_whiteX92</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_whiteY92</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Edid</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Edid</span> <span class="n">m_parent</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Red X, bits 1..0</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">RedX10</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_redX10</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Red Y, bits 1..0</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">RedY10</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_redY10</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Green X, bits 1..0</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">GreenX10</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_greenX10</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Green Y, bits 1..0</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">GreenY10</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_greenY10</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Blue X, bits 1..0</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">BlueX10</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_blueX10</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Blue Y, bits 1..0</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">BlueY10</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_blueY10</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// White X, bits 1..0</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">WhiteX10</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_whiteX10</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// White Y, bits 1..0</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">WhiteY10</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_whiteY10</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Red X, bits 9..2</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">RedX92</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_redX92</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Red Y, bits 9..2</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">RedY92</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_redY92</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Green X, bits 9..2</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">GreenX92</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_greenX92</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Green Y, bits 9..2</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">GreenY92</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_greenY92</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Blue X, bits 9..2</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">BlueX92</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_blueX92</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Blue Y, bits 9..2</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">BlueY92</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_blueY92</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// White X, bits 9..2</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">WhiteX92</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_whiteX92</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// White Y, bits 9..2</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">WhiteY92</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_whiteY92</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Edid</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Edid</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">EstTimingsInfo</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">EstTimingsInfo</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">EstTimingsInfo</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">EstTimingsInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Edid</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Edid</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_can72040070</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can72040088</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can64048060</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can64048067</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can64048072</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can64048075</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can80060056</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can80060060</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can80060072</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can80060075</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can83262475</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can102476887I</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can102476860</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can102476870</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can102476875</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can1280102475</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_can115287075</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_reserved</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">7</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can72040070</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can72040088</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can64048060</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can64048067</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can64048072</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can64048075</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can80060056</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can80060060</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can80060072</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can80060075</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can83262475</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can102476887I</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can102476860</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can102476870</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can102476875</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can1280102475</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_can115287075</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_reserved</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Edid</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Edid</span> <span class="n">m_parent</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 720 x 400 @ 70Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can72040070</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can72040070</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 720 x 400 @ 88Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can72040088</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can72040088</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 640 x 480 @ 60Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can64048060</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can64048060</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 640 x 480 @ 67Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can64048067</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can64048067</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 640 x 480 @ 72Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can64048072</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can64048072</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 640 x 480 @ 75Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can64048075</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can64048075</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 800 x 600 @ 56Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can80060056</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can80060056</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 800 x 600 @ 60Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can80060060</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can80060060</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 800 x 600 @ 72Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can80060072</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can80060072</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 800 x 600 @ 75Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can80060075</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can80060075</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 832 x 624 @ 75Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can83262475</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can83262475</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 1024 x 768 @ 87Hz(I)</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can102476887I</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can102476887I</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 1024 x 768 @ 60Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can102476860</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can102476860</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 1024 x 768 @ 70Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can102476870</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can102476870</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 1024 x 768 @ 75Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can102476875</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can102476875</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 1280 x 1024 @ 75Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can1280102475</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can1280102475</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Supports 1152 x 870 @ 75Hz</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Can115287075</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_can115287075</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Reserved</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reserved</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Edid</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Edid</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">StdTiming</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">StdTiming</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">StdTiming</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+
+            <span class="k">public</span> <span class="k">enum</span> <span class="n">AspectRatios</span>
+            <span class="p">{</span>
+                <span class="n">Ratio1610</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+                <span class="n">Ratio43</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+                <span class="n">Ratio54</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+                <span class="n">Ratio169</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="nf">StdTiming</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Edid</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Edid</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_horizActivePixels</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_refreshRate</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_horizActivePixelsMod</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_aspectRatio</span> <span class="p">=</span> <span class="p">((</span><span class="n">AspectRatios</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">2</span><span class="p">));</span>
+                <span class="n">_refreshRateMod</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">5</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_horizActivePixels</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_horizActivePixels</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Range of horizontal active pixels.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">HorizActivePixels</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_horizActivePixels</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_horizActivePixels</span><span class="p">;</span>
+                    <span class="n">_horizActivePixels</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">HorizActivePixelsMod</span> <span class="p">+</span> <span class="m">31</span><span class="p">)</span> <span class="p">*</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="n">f_horizActivePixels</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_horizActivePixels</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_refreshRate</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_refreshRate</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Vertical refresh rate, Hz.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">RefreshRate</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_refreshRate</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_refreshRate</span><span class="p">;</span>
+                    <span class="n">_refreshRate</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">RefreshRateMod</span> <span class="p">+</span> <span class="m">60</span><span class="p">));</span>
+                    <span class="n">f_refreshRate</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_refreshRate</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_horizActivePixelsMod</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">AspectRatios</span> <span class="n">_aspectRatio</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_refreshRateMod</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Edid</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Edid</span> <span class="n">m_parent</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Range of horizontal active pixels, written in modified form:</span>
+            <span class="c1">/// `(horiz_active_pixels / 8) - 31`. This yields an effective</span>
+            <span class="c1">/// range of 256..2288, with steps of 8 pixels.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">HorizActivePixelsMod</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_horizActivePixelsMod</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Aspect ratio of the image. Can be used to calculate number</span>
+            <span class="c1">/// of vertical pixels.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">AspectRatios</span> <span class="n">AspectRatio</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_aspectRatio</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Refresh rate in Hz, written in modified form: `refresh_rate</span>
+            <span class="c1">/// - 60`. This yields an effective range of 60..123 Hz.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">RefreshRateMod</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_refreshRateMod</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Edid</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Edid</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_mfgYear</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_mfgYear</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">MfgYear</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_mfgYear</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_mfgYear</span><span class="p">;</span>
+                <span class="n">_mfgYear</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">MfgYearMod</span> <span class="p">+</span> <span class="m">1990</span><span class="p">));</span>
+                <span class="n">f_mfgYear</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_mfgYear</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_mfgIdCh1</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_mfgIdCh1</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">MfgIdCh1</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_mfgIdCh1</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_mfgIdCh1</span><span class="p">;</span>
+                <span class="n">_mfgIdCh1</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">MfgBytes</span> <span class="p">&amp;</span> <span class="m">31744</span><span class="p">)</span> <span class="p">&gt;&gt;</span> <span class="m">10</span><span class="p">));</span>
+                <span class="n">f_mfgIdCh1</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_mfgIdCh1</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_mfgIdCh3</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_mfgIdCh3</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">MfgIdCh3</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_mfgIdCh3</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_mfgIdCh3</span><span class="p">;</span>
+                <span class="n">_mfgIdCh3</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">MfgBytes</span> <span class="p">&amp;</span> <span class="m">31</span><span class="p">));</span>
+                <span class="n">f_mfgIdCh3</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_mfgIdCh3</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_gamma</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">double?</span> <span class="n">_gamma</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">double?</span> <span class="n">Gamma</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_gamma</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_gamma</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">GammaMod</span> <span class="p">!=</span> <span class="m">255</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_gamma</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">(((</span><span class="n">GammaMod</span> <span class="p">+</span> <span class="m">100</span><span class="p">)</span> <span class="p">/</span> <span class="m">100.0</span><span class="p">));</span>
+                <span class="p">}</span>
+                <span class="n">f_gamma</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_gamma</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_mfgIdCh2</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_mfgIdCh2</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">MfgIdCh2</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_mfgIdCh2</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_mfgIdCh2</span><span class="p">;</span>
+                <span class="n">_mfgIdCh2</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">MfgBytes</span> <span class="p">&amp;</span> <span class="m">992</span><span class="p">)</span> <span class="p">&gt;&gt;</span> <span class="m">5</span><span class="p">));</span>
+                <span class="n">f_mfgIdCh2</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_mfgIdCh2</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_mfgBytes</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_productCode</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_serial</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_mfgWeek</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_mfgYearMod</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_edidVersionMajor</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_edidVersionMinor</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_inputFlags</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_screenSizeH</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_screenSizeV</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_gammaMod</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_featuresFlags</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">ChromacityInfo</span> <span class="n">_chromacity</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">EstTimingsInfo</span> <span class="n">_estTimings</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">StdTiming</span><span class="p">&gt;</span> <span class="n">_stdTimings</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Edid</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">ushort</span> <span class="n">MfgBytes</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_mfgBytes</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Manufacturer product code</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">ushort</span> <span class="n">ProductCode</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_productCode</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Serial number</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">Serial</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_serial</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Week of manufacture. Week numbering is not consistent between manufacturers.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">MfgWeek</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_mfgWeek</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Year of manufacture, less 1990. (1990–2245). If week=255, it is the model year instead.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">MfgYearMod</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_mfgYearMod</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// EDID version, usually 1 (for 1.3)</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">EdidVersionMajor</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_edidVersionMajor</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// EDID revision, usually 3 (for 1.3)</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">EdidVersionMinor</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_edidVersionMinor</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">InputFlags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_inputFlags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Maximum horizontal image size, in centimetres (max 292 cm/115 in at 16:9 aspect ratio)</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">ScreenSizeH</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_screenSizeH</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Maximum vertical image size, in centimetres. If either byte is 0, undefined (e.g. projector)</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">ScreenSizeV</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_screenSizeV</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Display gamma, datavalue = (gamma*100)-100 (range 1.00–3.54)</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">GammaMod</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_gammaMod</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">FeaturesFlags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_featuresFlags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Phosphor or filter chromaticity structure, which provides info on colorimetry and white point</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: Standard, section 3.7</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="n">ChromacityInfo</span> <span class="n">Chromacity</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_chromacity</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Block of bit flags that indicates support of so called</span>
+        <span class="c1">/// &amp;quot;established timings&amp;quot;, which is a commonly used subset of VESA</span>
+        <span class="c1">/// DMT (Discrete Monitor Timings) modes.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: Standard, section 3.8</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="n">EstTimingsInfo</span> <span class="n">EstTimings</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_estTimings</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Array of descriptions of so called &amp;quot;standard timings&amp;quot;, which are</span>
+        <span class="c1">/// used to specify up to 8 additional timings not included in</span>
+        <span class="c1">/// &amp;quot;established timings&amp;quot;.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">StdTiming</span><span class="p">&gt;</span> <span class="n">StdTimings</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_stdTimings</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Edid</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1126,8 +1123,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

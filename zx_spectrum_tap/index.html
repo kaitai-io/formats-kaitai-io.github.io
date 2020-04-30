@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -241,96 +238,96 @@ metainformation prepended as a header.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: zx_spectrum_tap
-  file-extension: tap
-  endian: le
-  license: CC0-1.0
-  title: ZX Spectrum tape file
-  xref:
-    justsolve: TAP_(ZX_Spectrum)
-    pronom: fmt/801
-doc: |
-  TAP files are used by emulators of ZX Spectrum computer (released in
-  1982 by Sinclair Research). TAP file stores blocks of data as if
-  they are written to magnetic tape, which was used as primary media
-  for ZX Spectrum. Contents of this file can be viewed as a very
-  simple linear filesystem, storing named files with some basic
-  metainformation prepended as a header.
-doc-ref: https://faqwiki.zxnet.co.uk/wiki/TAP_format
-seq:
-  - id: block
-    type: block
-    repeat: eos
-enums:
-  flag_enum:
-    0x00: header
-    0xFF: data
-  header_type_enum:
-    0: program
-    1: num_array
-    2: char_array
-    3: bytes
-types:
-  block:
-    seq:
-      - id: len_block
-        type: u2
-      - id: flag
-        type: u1
-        enum: flag_enum
-      - id: header
-        type: header
-        if: len_block == 0x13 and flag == flag_enum::header
-      - id: data
-        size: header.len_data + 4
-        if: len_block == 0x13
-      - id: headerless_data
-        size: len_block - 1
-        if: flag == flag_enum::data
-  header:
-    seq:
-      - id: header_type
-        type: u1
-        enum: header_type_enum
-      - id: filename
-        size: 10
-        pad-right: 0x20
-      - id: len_data
-        type: u2
-      - id: params
-        type:
-          switch-on: header_type
-          cases:
-            &#39;header_type_enum::program&#39;: program_params
-            &#39;header_type_enum::num_arry&#39;: array_params
-            &#39;header_type_enum::char_arry&#39;: array_params
-            &#39;header_type_enum::bytes&#39;: bytes_params
-      - id: checksum
-        type: u1
-        doc: Bitwise XOR of all bytes including the flag byte
-  program_params:
-    seq:
-      - id: autostart_line
-        type: u2
-      - id: len_program
-        type: u2
-  array_params:
-    seq:
-      - id: reserved
-        type: u1
-      - id: var_name
-        type: u1
-        doc: Variable name (1..26 meaning A$..Z$ +192)
-      - id: reserved1
-        contents: [0x00, 0x80]
-  bytes_params:
-    seq:
-      - id: start_address
-        type: u2
-      - id: reserved
-        size: 2
-</code></pre>
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zx_spectrum_tap</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tap</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ZX Spectrum tape file</span>
+  <span class="nt">xref</span><span class="p">:</span>
+    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">TAP_(ZX_Spectrum)</span>
+    <span class="nt">pronom</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fmt/801</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">TAP files are used by emulators of ZX Spectrum computer (released in</span>
+  <span class="no">1982 by Sinclair Research). TAP file stores blocks of data as if</span>
+  <span class="no">they are written to magnetic tape, which was used as primary media</span>
+  <span class="no">for ZX Spectrum. Contents of this file can be viewed as a very</span>
+  <span class="no">simple linear filesystem, storing named files with some basic</span>
+  <span class="no">metainformation prepended as a header.</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://faqwiki.zxnet.co.uk/wiki/TAP_format</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">block</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">block</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">flag_enum</span><span class="p">:</span>
+    <span class="nt">0x00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">0xFF</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+  <span class="nt">header_type_enum</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">program</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_array</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">char_array</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bytes</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">block</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_block</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flag</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flag_enum</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_block == 0x13 and flag == flag_enum::header</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.len_data + 4</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_block == 0x13</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">headerless_data</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_block - 1</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flag == flag_enum::data</span>
+  <span class="nt">header</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_type_enum</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filename</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+        <span class="nt">pad-right</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x20</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">params</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;header_type_enum::program&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">program_params</span>
+            <span class="s">&#39;header_type_enum::num_arry&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">array_params</span>
+            <span class="s">&#39;header_type_enum::char_arry&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">array_params</span>
+            <span class="s">&#39;header_type_enum::bytes&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bytes_params</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">checksum</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Bitwise XOR of all bytes including the flag byte</span>
+  <span class="nt">program_params</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">autostart_line</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_program</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+  <span class="nt">array_params</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">var_name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Variable name (1..26 meaning A$..Z$ +192)</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved1</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0x00</span><span class="p p-Indicator">,</span> <span class="nv">0x80</span><span class="p p-Indicator">]</span>
+  <span class="nt">bytes_params</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start_address</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+</pre></div>
     </div>
 </section>
 
@@ -354,8 +351,8 @@ types:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

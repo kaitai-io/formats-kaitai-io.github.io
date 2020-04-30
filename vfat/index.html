@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -204,298 +201,298 @@ section#format-index .row {
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: vfat
-  # actually FAT12
-  license: CC0-1.0
-  endian: le
-seq:
-  - id: boot_sector
-    type: boot_sector
-instances:
-  fats:
-    pos: boot_sector.pos_fats
-    size: boot_sector.size_fat
-    repeat: expr
-    repeat-expr: boot_sector.bpb.num_fats
-  root_dir:
-    pos: boot_sector.pos_root_dir
-    size: boot_sector.size_root_dir
-    type: root_directory
-types:
-  boot_sector:
-    seq:
-      - id: jmp_instruction
-        size: 3
-      - id: oem_name
-        type: str
-        encoding: ASCII
-        pad-right: 0x20
-        size: 8
-      - id: bpb
-        type: bios_param_block
-        doc: Basic BIOS parameter block, present in all versions of FAT
-      - id: ebpb_fat16
-        type: ext_bios_param_block_fat16
-        if: not is_fat32
-        doc: FAT12/16-specific extended BIOS parameter block
-      - id: ebpb_fat32
-        type: ext_bios_param_block_fat32
-        if: is_fat32
-        doc: FAT32-specific extended BIOS parameter block
-    instances:
-      is_fat32:
-        value: bpb.max_root_dir_rec == 0
-        doc: |
-          Determines if filesystem is FAT32 (true) or FAT12/16 (false)
-          by analyzing some preliminary conditions in BPB. Used to
-          determine whether we should parse post-BPB data as
-          `ext_bios_param_block_fat16` or `ext_bios_param_block_fat32`.
-      pos_fats:
-        value: bpb.bytes_per_ls * bpb.num_reserved_ls
-        doc: Offset of FATs in bytes from start of filesystem
-      ls_per_fat:
-        value: &#39;is_fat32 ? ebpb_fat32.ls_per_fat : bpb.ls_per_fat&#39;
-      size_fat:
-        value: bpb.bytes_per_ls * ls_per_fat
-        doc: Size of one FAT in bytes
-      pos_root_dir:
-        value: bpb.bytes_per_ls * (bpb.num_reserved_ls + ls_per_fat * bpb.num_fats)
-        doc: Offset of root directory in bytes from start of filesystem
-      ls_per_root_dir:
-        -orig-id: RootDirSectors
-        value: (bpb.max_root_dir_rec * 32 + bpb.bytes_per_ls - 1) / bpb.bytes_per_ls
-        doc: Size of root directory in logical sectors
-        doc-ref: &#39;FAT: General Overview of On-Disk Format, section &quot;FAT Data Structure&quot;&#39;
-      size_root_dir:
-        value: ls_per_root_dir * bpb.bytes_per_ls
-        doc: Size of root directory in bytes
-  bios_param_block:
-    seq:
-      # Basic BIOS Parameter block, DOS 2.0+
-      - id: bytes_per_ls
-        -orig-id: BPB_BytsPerSec
-        type: u2
-        doc: Bytes per logical sector
-      - id: ls_per_clus
-        -orig-id: BPB_SecPerClus
-        type: u1
-        doc: Logical sectors per cluster
-      - id: num_reserved_ls
-        -orig-id: BPB_RsvdSecCnt
-        type: u2
-        doc: |
-          Count of reserved logical sectors. The number of logical
-          sectors before the first FAT in the file system image.
-      - id: num_fats
-        -orig-id: BPB_NumFATs
-        type: u1
-        doc: Number of File Allocation Tables
-      - id: max_root_dir_rec
-        -orig-id: BPB_RootEntCnt
-        type: u2
-        doc: |
-          Maximum number of FAT12 or FAT16 root directory entries. 0
-          for FAT32, where the root directory is stored in ordinary
-          data clusters.
-      - id: total_ls_2
-        -orig-id: BPB_TotSec16
-        type: u2
-        doc: Total logical sectors (if zero, use total_ls_4)
-      - id: media_code
-        -orig-id: BPB_Media
-        type: u1
-        doc: Media descriptor
-      - id: ls_per_fat
-        -orig-id: BPB_FATSz16
-        type: u2
-        doc: |
-          Logical sectors per File Allocation Table for
-          FAT12/FAT16. FAT32 sets this to 0 and uses the 32-bit value
-          at offset 0x024 instead.
-      # FIXME: DOS 3.0 and 3.2 BPBs continuation should follow here
-      # and they differ from DOS 3.31+ that most modern
-      # implementations use. We&#39;ll skip them for now, as they seem to
-      # be very rare.
-      #
-      # DOS 3.31+ BPB
-      - id: ps_per_track
-        -orig-id: BPB_SecPerTrk
-        type: u2
-        doc: |
-          Physical sectors per track for disks with INT 13h CHS
-          geometry, e.g., 15 for a “1.20 MB” (1200 KB) floppy. A zero
-          entry indicates that this entry is reserved, but not used.
-      - id: num_heads
-        -orig-id: BPB_NumHeads
-        type: u2
-        doc: |
-          Number of heads for disks with INT 13h CHS geometry,[9]
-          e.g., 2 for a double sided floppy.
-      - id: num_hidden_sectors
-        -orig-id: BPB_HiddSec
-        type: u4
-        doc: |
-          Number of hidden sectors preceding the partition that
-          contains this FAT volume. This field should always be zero
-          on media that are not partitioned. This DOS 3.0 entry is
-          incompatible with a similar entry at offset 0x01C in BPBs
-          since DOS 3.31.  It must not be used if the logical sectors
-          entry at offset 0x013 is zero.
-      - id: total_ls_4
-        -orig-id: BPB_TotSec32
-        type: u4
-        doc: |
-          Total logical sectors including hidden sectors. This DOS 3.2
-          entry is incompatible with a similar entry at offset 0x020
-          in BPBs since DOS 3.31. It must not be used if the logical
-          sectors entry at offset 0x013 is zero.
-  ext_bios_param_block_fat16:
-    doc: |
-      Extended BIOS Parameter Block (DOS 4.0+, OS/2 1.0+). Used only
-      for FAT12 and FAT16.
-    seq:
-      - id: phys_drive_num
-        type: u1
-        doc: |
-          Physical drive number (0x00 for (first) removable media,
-          0x80 for (first) fixed disk as per INT 13h).
-      - id: reserved1
-        type: u1
-      - id: ext_boot_sign
-        type: u1
-        doc: |
-          Should be 0x29 to indicate that an EBPB with the following 3
-          entries exists.
-      - id: volume_id
-        size: 4
-        doc: |
-          Volume ID (serial number).
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vfat</span>
+  <span class="c1"># actually FAT12</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_sector</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_sector</span>
+<span class="nt">instances</span><span class="p">:</span>
+  <span class="nt">fats</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_sector.pos_fats</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_sector.size_fat</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_sector.bpb.num_fats</span>
+  <span class="nt">root_dir</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_sector.pos_root_dir</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_sector.size_root_dir</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">root_directory</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">boot_sector</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jmp_instruction</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">oem_name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+        <span class="nt">pad-right</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x20</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bpb</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bios_param_block</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Basic BIOS parameter block, present in all versions of FAT</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ebpb_fat16</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ext_bios_param_block_fat16</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not is_fat32</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">FAT12/16-specific extended BIOS parameter block</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ebpb_fat32</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ext_bios_param_block_fat32</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_fat32</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">FAT32-specific extended BIOS parameter block</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">is_fat32</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bpb.max_root_dir_rec == 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Determines if filesystem is FAT32 (true) or FAT12/16 (false)</span>
+          <span class="no">by analyzing some preliminary conditions in BPB. Used to</span>
+          <span class="no">determine whether we should parse post-BPB data as</span>
+          <span class="no">`ext_bios_param_block_fat16` or `ext_bios_param_block_fat32`.</span>
+      <span class="nt">pos_fats</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bpb.bytes_per_ls * bpb.num_reserved_ls</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Offset of FATs in bytes from start of filesystem</span>
+      <span class="nt">ls_per_fat</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;is_fat32</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">ebpb_fat32.ls_per_fat</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">bpb.ls_per_fat&#39;</span>
+      <span class="nt">size_fat</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bpb.bytes_per_ls * ls_per_fat</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Size of one FAT in bytes</span>
+      <span class="nt">pos_root_dir</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bpb.bytes_per_ls * (bpb.num_reserved_ls + ls_per_fat * bpb.num_fats)</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Offset of root directory in bytes from start of filesystem</span>
+      <span class="nt">ls_per_root_dir</span><span class="p">:</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RootDirSectors</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(bpb.max_root_dir_rec * 32 + bpb.bytes_per_ls - 1) / bpb.bytes_per_ls</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Size of root directory in logical sectors</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;FAT:</span><span class="nv"> </span><span class="s">General</span><span class="nv"> </span><span class="s">Overview</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">On-Disk</span><span class="nv"> </span><span class="s">Format,</span><span class="nv"> </span><span class="s">section</span><span class="nv"> </span><span class="s">&quot;FAT</span><span class="nv"> </span><span class="s">Data</span><span class="nv"> </span><span class="s">Structure&quot;&#39;</span>
+      <span class="nt">size_root_dir</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ls_per_root_dir * bpb.bytes_per_ls</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Size of root directory in bytes</span>
+  <span class="nt">bios_param_block</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="c1"># Basic BIOS Parameter block, DOS 2.0+</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bytes_per_ls</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BPB_BytsPerSec</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Bytes per logical sector</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ls_per_clus</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BPB_SecPerClus</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Logical sectors per cluster</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_reserved_ls</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BPB_RsvdSecCnt</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Count of reserved logical sectors. The number of logical</span>
+          <span class="no">sectors before the first FAT in the file system image.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_fats</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BPB_NumFATs</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Number of File Allocation Tables</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">max_root_dir_rec</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BPB_RootEntCnt</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Maximum number of FAT12 or FAT16 root directory entries. 0</span>
+          <span class="no">for FAT32, where the root directory is stored in ordinary</span>
+          <span class="no">data clusters.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">total_ls_2</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BPB_TotSec16</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Total logical sectors (if zero, use total_ls_4)</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">media_code</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BPB_Media</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Media descriptor</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ls_per_fat</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BPB_FATSz16</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Logical sectors per File Allocation Table for</span>
+          <span class="no">FAT12/FAT16. FAT32 sets this to 0 and uses the 32-bit value</span>
+          <span class="no">at offset 0x024 instead.</span>
+      <span class="c1"># FIXME: DOS 3.0 and 3.2 BPBs continuation should follow here</span>
+      <span class="c1"># and they differ from DOS 3.31+ that most modern</span>
+      <span class="c1"># implementations use. We&#39;ll skip them for now, as they seem to</span>
+      <span class="c1"># be very rare.</span>
+      <span class="c1">#</span>
+      <span class="c1"># DOS 3.31+ BPB</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ps_per_track</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BPB_SecPerTrk</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Physical sectors per track for disks with INT 13h CHS</span>
+          <span class="no">geometry, e.g., 15 for a “1.20 MB” (1200 KB) floppy. A zero</span>
+          <span class="no">entry indicates that this entry is reserved, but not used.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_heads</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BPB_NumHeads</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Number of heads for disks with INT 13h CHS geometry,[9]</span>
+          <span class="no">e.g., 2 for a double sided floppy.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_hidden_sectors</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BPB_HiddSec</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Number of hidden sectors preceding the partition that</span>
+          <span class="no">contains this FAT volume. This field should always be zero</span>
+          <span class="no">on media that are not partitioned. This DOS 3.0 entry is</span>
+          <span class="no">incompatible with a similar entry at offset 0x01C in BPBs</span>
+          <span class="no">since DOS 3.31.  It must not be used if the logical sectors</span>
+          <span class="no">entry at offset 0x013 is zero.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">total_ls_4</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BPB_TotSec32</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Total logical sectors including hidden sectors. This DOS 3.2</span>
+          <span class="no">entry is incompatible with a similar entry at offset 0x020</span>
+          <span class="no">in BPBs since DOS 3.31. It must not be used if the logical</span>
+          <span class="no">sectors entry at offset 0x013 is zero.</span>
+  <span class="nt">ext_bios_param_block_fat16</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Extended BIOS Parameter Block (DOS 4.0+, OS/2 1.0+). Used only</span>
+      <span class="no">for FAT12 and FAT16.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">phys_drive_num</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Physical drive number (0x00 for (first) removable media,</span>
+          <span class="no">0x80 for (first) fixed disk as per INT 13h).</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved1</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ext_boot_sign</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Should be 0x29 to indicate that an EBPB with the following 3</span>
+          <span class="no">entries exists.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">volume_id</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Volume ID (serial number).</span>
 
-          Typically the serial number &quot;xxxx-xxxx&quot; is created by a
-          16-bit addition of both DX values returned by INT 21h/AH=2Ah
-          (get system date) and INT 21h/AH=2Ch (get system time) for
-          the high word and another 16-bit addition of both CX values
-          for the low word of the serial number. Alternatively, some
-          DR-DOS disk utilities provide a /# option to generate a
-          human-readable time stamp &quot;mmdd-hhmm&quot; build from BCD-encoded
-          8-bit values for the month, day, hour and minute instead of
-          a serial number.
-      - id: partition_volume_label
-        size: 11
-        type: str
-        encoding: ASCII
-        pad-right: 0x20
-      - id: fs_type_str
-        size: 8
-        type: str
-        encoding: ASCII
-        pad-right: 0x20
-  ext_bios_param_block_fat32:
-    doc: Extended BIOS Parameter Block for FAT32
-    seq:
-      - id: ls_per_fat
-        type: u4
-        doc: |
-          Logical sectors per file allocation table (corresponds with
-          the old entry `ls_per_fat` in the DOS 2.0 BPB).
-      - id: has_active_fat
-        type: b1
-        doc: |
-          If true, then there is &quot;active&quot; FAT, which is designated in
-          `active_fat` attribute. If false, all FATs are mirrored as
-          usual.
-      - id: reserved1
-        type: b3
-      - id: active_fat_id
-        type: b4
-        doc: |
-          Zero-based number of active FAT, if `has_active_fat`
-          attribute is true.
-      - id: reserved2
-        contents: [0]
-      - id: fat_version
-        type: u2
-      - id: root_dir_start_clus
-        type: u4
-        doc: |
-          Cluster number of root directory start, typically 2 if it
-          contains no bad sector. (Microsoft&#39;s FAT32 implementation
-          imposes an artificial limit of 65,535 entries per directory,
-          whilst many third-party implementations do not.)
-      - id: ls_fs_info
-        type: u2
-        doc: |
-          Logical sector number of FS Information Sector, typically 1,
-          i.e., the second of the three FAT32 boot sectors. Values
-          like 0 and 0xFFFF are used by some FAT32 implementations to
-          designate abscence of FS Information Sector.
-      - id: boot_sectors_copy_start_ls
-        type: u2
-        doc: |
-          First logical sector number of a copy of the three FAT32
-          boot sectors, typically 6.
-      - id: reserved3
-        size: 12
-      - id: phys_drive_num
-        type: u1
-        doc: |
-          Physical drive number (0x00 for (first) removable media,
-          0x80 for (first) fixed disk as per INT 13h).
-      - id: reserved4
-        type: u1
-      - id: ext_boot_sign
-        type: u1
-        doc: |
-          Should be 0x29 to indicate that an EBPB with the following 3
-          entries exists.
-      - id: volume_id
-        size: 4
-        doc: |
-          Volume ID (serial number).
+          <span class="no">Typically the serial number &quot;xxxx-xxxx&quot; is created by a</span>
+          <span class="no">16-bit addition of both DX values returned by INT 21h/AH=2Ah</span>
+          <span class="no">(get system date) and INT 21h/AH=2Ch (get system time) for</span>
+          <span class="no">the high word and another 16-bit addition of both CX values</span>
+          <span class="no">for the low word of the serial number. Alternatively, some</span>
+          <span class="no">DR-DOS disk utilities provide a /# option to generate a</span>
+          <span class="no">human-readable time stamp &quot;mmdd-hhmm&quot; build from BCD-encoded</span>
+          <span class="no">8-bit values for the month, day, hour and minute instead of</span>
+          <span class="no">a serial number.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">partition_volume_label</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">11</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+        <span class="nt">pad-right</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x20</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fs_type_str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+        <span class="nt">pad-right</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x20</span>
+  <span class="nt">ext_bios_param_block_fat32</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Extended BIOS Parameter Block for FAT32</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ls_per_fat</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Logical sectors per file allocation table (corresponds with</span>
+          <span class="no">the old entry `ls_per_fat` in the DOS 2.0 BPB).</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_active_fat</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">If true, then there is &quot;active&quot; FAT, which is designated in</span>
+          <span class="no">`active_fat` attribute. If false, all FATs are mirrored as</span>
+          <span class="no">usual.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved1</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b3</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">active_fat_id</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Zero-based number of active FAT, if `has_active_fat`</span>
+          <span class="no">attribute is true.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved2</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">]</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fat_version</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">root_dir_start_clus</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Cluster number of root directory start, typically 2 if it</span>
+          <span class="no">contains no bad sector. (Microsoft&#39;s FAT32 implementation</span>
+          <span class="no">imposes an artificial limit of 65,535 entries per directory,</span>
+          <span class="no">whilst many third-party implementations do not.)</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ls_fs_info</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Logical sector number of FS Information Sector, typically 1,</span>
+          <span class="no">i.e., the second of the three FAT32 boot sectors. Values</span>
+          <span class="no">like 0 and 0xFFFF are used by some FAT32 implementations to</span>
+          <span class="no">designate abscence of FS Information Sector.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_sectors_copy_start_ls</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">First logical sector number of a copy of the three FAT32</span>
+          <span class="no">boot sectors, typically 6.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved3</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">12</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">phys_drive_num</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Physical drive number (0x00 for (first) removable media,</span>
+          <span class="no">0x80 for (first) fixed disk as per INT 13h).</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved4</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ext_boot_sign</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Should be 0x29 to indicate that an EBPB with the following 3</span>
+          <span class="no">entries exists.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">volume_id</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Volume ID (serial number).</span>
 
-          Typically the serial number &quot;xxxx-xxxx&quot; is created by a
-          16-bit addition of both DX values returned by INT 21h/AH=2Ah
-          (get system date) and INT 21h/AH=2Ch (get system time) for
-          the high word and another 16-bit addition of both CX values
-          for the low word of the serial number. Alternatively, some
-          DR-DOS disk utilities provide a /# option to generate a
-          human-readable time stamp &quot;mmdd-hhmm&quot; build from BCD-encoded
-          8-bit values for the month, day, hour and minute instead of
-          a serial number.
-      - id: partition_volume_label
-        size: 11
-        type: str
-        encoding: ASCII
-        pad-right: 0x20
-      - id: fs_type_str
-        size: 8
-        type: str
-        encoding: ASCII
-        pad-right: 0x20
-  root_directory:
-    seq:
-      - id: records
-        type: root_directory_rec
-        repeat: expr
-        repeat-expr: _root.boot_sector.bpb.max_root_dir_rec
-  root_directory_rec:
-    seq:
-      - id: file_name
-        size: 11
-      - id: attribute
-        type: u1
-      - id: reserved
-        size: 10
-      - id: time
-        type: u2
-      - id: date
-        type: u2
-      - id: start_clus
-        type: u2
-      - id: file_size
-        type: u4
-</code></pre>
+          <span class="no">Typically the serial number &quot;xxxx-xxxx&quot; is created by a</span>
+          <span class="no">16-bit addition of both DX values returned by INT 21h/AH=2Ah</span>
+          <span class="no">(get system date) and INT 21h/AH=2Ch (get system time) for</span>
+          <span class="no">the high word and another 16-bit addition of both CX values</span>
+          <span class="no">for the low word of the serial number. Alternatively, some</span>
+          <span class="no">DR-DOS disk utilities provide a /# option to generate a</span>
+          <span class="no">human-readable time stamp &quot;mmdd-hhmm&quot; build from BCD-encoded</span>
+          <span class="no">8-bit values for the month, day, hour and minute instead of</span>
+          <span class="no">a serial number.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">partition_volume_label</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">11</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+        <span class="nt">pad-right</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x20</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fs_type_str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+        <span class="nt">pad-right</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x20</span>
+  <span class="nt">root_directory</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">records</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">root_directory_rec</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.boot_sector.bpb.max_root_dir_rec</span>
+  <span class="nt">root_directory_rec</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_name</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">11</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attribute</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">date</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start_clus</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+</pre></div>
     </div>
 </section>
 
@@ -519,8 +516,8 @@ types:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

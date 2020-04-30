@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -294,472 +291,472 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef DNS_PACKET_H_
-#define DNS_PACKET_H_
-
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef DNS_PACKET_H_</span>
+<span class="cp">#define DNS_PACKET_H_</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;kaitai/kaitaistruct.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
 
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
 
-/**
- * (No support for Auth-Name + Add-Name for simplicity)
- */
+<span class="cm">/**</span>
+<span class="cm"> * (No support for Auth-Name + Add-Name for simplicity)</span>
+<span class="cm"> */</span>
 
-class dns_packet_t : public kaitai::kstruct {
+<span class="k">class</span> <span class="nc">dns_packet_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-public:
-    class pointer_struct_t;
-    class label_t;
-    class query_t;
-    class domain_name_t;
-    class address_t;
-    class answer_t;
-    class packet_flags_t;
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">pointer_struct_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">label_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">query_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">domain_name_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">address_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">answer_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">packet_flags_t</span><span class="p">;</span>
 
-    enum class_type_t {
-        CLASS_TYPE_IN_CLASS = 1,
-        CLASS_TYPE_CS = 2,
-        CLASS_TYPE_CH = 3,
-        CLASS_TYPE_HS = 4
-    };
+    <span class="k">enum</span> <span class="n">class_type_t</span> <span class="p">{</span>
+        <span class="n">CLASS_TYPE_IN_CLASS</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">CLASS_TYPE_CS</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">CLASS_TYPE_CH</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">CLASS_TYPE_HS</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="p">};</span>
 
-    enum type_type_t {
-        TYPE_TYPE_A = 1,
-        TYPE_TYPE_NS = 2,
-        TYPE_TYPE_MD = 3,
-        TYPE_TYPE_MF = 4,
-        TYPE_TYPE_CNAME = 5,
-        TYPE_TYPE_SOE = 6,
-        TYPE_TYPE_MB = 7,
-        TYPE_TYPE_MG = 8,
-        TYPE_TYPE_MR = 9,
-        TYPE_TYPE_NULL = 10,
-        TYPE_TYPE_WKS = 11,
-        TYPE_TYPE_PTR = 12,
-        TYPE_TYPE_HINFO = 13,
-        TYPE_TYPE_MINFO = 14,
-        TYPE_TYPE_MX = 15,
-        TYPE_TYPE_TXT = 16
-    };
+    <span class="k">enum</span> <span class="n">type_type_t</span> <span class="p">{</span>
+        <span class="n">TYPE_TYPE_A</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">TYPE_TYPE_NS</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">TYPE_TYPE_MD</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">TYPE_TYPE_MF</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">TYPE_TYPE_CNAME</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">TYPE_TYPE_SOE</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="n">TYPE_TYPE_MB</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="n">TYPE_TYPE_MG</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="n">TYPE_TYPE_MR</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="n">TYPE_TYPE_NULL</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">TYPE_TYPE_WKS</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+        <span class="n">TYPE_TYPE_PTR</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="n">TYPE_TYPE_HINFO</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="n">TYPE_TYPE_MINFO</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+        <span class="n">TYPE_TYPE_MX</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="n">TYPE_TYPE_TXT</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="p">};</span>
 
-    dns_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, dns_packet_t* p__root = 0);
+    <span class="n">dns_packet_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-private:
-    void _read();
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-public:
-    ~dns_packet_t();
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">dns_packet_t</span><span class="p">();</span>
 
-    class pointer_struct_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">pointer_struct_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        pointer_struct_t(kaitai::kstream* p__io, dns_packet_t::label_t* p__parent = 0, dns_packet_t* p__root = 0);
+        <span class="n">pointer_struct_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">label_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~pointer_struct_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">pointer_struct_t</span><span class="p">();</span>
 
-    private:
-        bool f_contents;
-        domain_name_t* m_contents;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_contents</span><span class="p">;</span>
+        <span class="n">domain_name_t</span><span class="o">*</span> <span class="n">m_contents</span><span class="p">;</span>
 
-    public:
-        domain_name_t* contents();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">domain_name_t</span><span class="o">*</span> <span class="n">contents</span><span class="p">();</span>
 
-    private:
-        uint8_t m_value;
-        dns_packet_t* m__root;
-        dns_packet_t::label_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_value</span><span class="p">;</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">label_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        /**
-         * Read one byte, then offset to that position, read one domain-name and return
-         */
-        uint8_t value() const { return m_value; }
-        dns_packet_t* _root() const { return m__root; }
-        dns_packet_t::label_t* _parent() const { return m__parent; }
-    };
+        <span class="cm">/**</span>
+<span class="cm">         * Read one byte, then offset to that position, read one domain-name and return</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">value</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_value</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">label_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class label_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">label_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        label_t(kaitai::kstream* p__io, dns_packet_t::domain_name_t* p__parent = 0, dns_packet_t* p__root = 0);
+        <span class="n">label_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">domain_name_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~label_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">label_t</span><span class="p">();</span>
 
-    private:
-        bool f_is_pointer;
-        bool m_is_pointer;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_pointer</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_pointer</span><span class="p">;</span>
 
-    public:
-        bool is_pointer();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">is_pointer</span><span class="p">();</span>
 
-    private:
-        uint8_t m_length;
-        pointer_struct_t* m_pointer;
-        bool n_pointer;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_length</span><span class="p">;</span>
+        <span class="n">pointer_struct_t</span><span class="o">*</span> <span class="n">m_pointer</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_pointer</span><span class="p">;</span>
 
-    public:
-        bool _is_null_pointer() { pointer(); return n_pointer; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_pointer</span><span class="p">()</span> <span class="p">{</span> <span class="n">pointer</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_pointer</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
-        std::string m_name;
-        bool n_name;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_name</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_name</span><span class="p">;</span>
 
-    public:
-        bool _is_null_name() { name(); return n_name; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_name</span><span class="p">()</span> <span class="p">{</span> <span class="n">name</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_name</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
-        dns_packet_t* m__root;
-        dns_packet_t::domain_name_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">domain_name_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        /**
-         * RFC1035 4.1.4: If the first two bits are raised it&#39;s a pointer-offset to a previously defined name
-         */
-        uint8_t length() const { return m_length; }
-        pointer_struct_t* pointer() const { return m_pointer; }
+        <span class="cm">/**</span>
+<span class="cm">         * RFC1035 4.1.4: If the first two bits are raised it&#39;s a pointer-offset to a previously defined name</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">length</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_length</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">pointer_struct_t</span><span class="o">*</span> <span class="n">pointer</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_pointer</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Otherwise its a string the length of the length value
-         */
-        std::string name() const { return m_name; }
-        dns_packet_t* _root() const { return m__root; }
-        dns_packet_t::domain_name_t* _parent() const { return m__parent; }
-    };
+        <span class="cm">/**</span>
+<span class="cm">         * Otherwise its a string the length of the length value</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">domain_name_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class query_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">query_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        query_t(kaitai::kstream* p__io, dns_packet_t* p__parent = 0, dns_packet_t* p__root = 0);
+        <span class="n">query_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~query_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">query_t</span><span class="p">();</span>
 
-    private:
-        domain_name_t* m_name;
-        type_type_t m_type;
-        class_type_t m_query_class;
-        dns_packet_t* m__root;
-        dns_packet_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">domain_name_t</span><span class="o">*</span> <span class="n">m_name</span><span class="p">;</span>
+        <span class="n">type_type_t</span> <span class="n">m_type</span><span class="p">;</span>
+        <span class="n">class_type_t</span> <span class="n">m_query_class</span><span class="p">;</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        domain_name_t* name() const { return m_name; }
-        type_type_t type() const { return m_type; }
-        class_type_t query_class() const { return m_query_class; }
-        dns_packet_t* _root() const { return m__root; }
-        dns_packet_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">domain_name_t</span><span class="o">*</span> <span class="n">name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">type_type_t</span> <span class="n">type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_type</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">class_type_t</span> <span class="n">query_class</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_query_class</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class domain_name_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">domain_name_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        domain_name_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, dns_packet_t* p__root = 0);
+        <span class="n">domain_name_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~domain_name_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">domain_name_t</span><span class="p">();</span>
 
-    private:
-        std::vector&lt;label_t*&gt;* m_name;
-        dns_packet_t* m__root;
-        kaitai::kstruct* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">label_t</span><span class="o">*&gt;*</span> <span class="n">m_name</span><span class="p">;</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        /**
-         * Repeat until the length is 0 or it is a pointer (bit-hack to get around lack of OR operator)
-         */
-        std::vector&lt;label_t*&gt;* name() const { return m_name; }
-        dns_packet_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
+        <span class="cm">/**</span>
+<span class="cm">         * Repeat until the length is 0 or it is a pointer (bit-hack to get around lack of OR operator)</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">label_t</span><span class="o">*&gt;*</span> <span class="n">name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class address_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">address_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        address_t(kaitai::kstream* p__io, dns_packet_t::answer_t* p__parent = 0, dns_packet_t* p__root = 0);
+        <span class="n">address_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">answer_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~address_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">address_t</span><span class="p">();</span>
 
-    private:
-        std::vector&lt;uint8_t&gt;* m_ip;
-        dns_packet_t* m__root;
-        dns_packet_t::answer_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;*</span> <span class="n">m_ip</span><span class="p">;</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">answer_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        std::vector&lt;uint8_t&gt;* ip() const { return m_ip; }
-        dns_packet_t* _root() const { return m__root; }
-        dns_packet_t::answer_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;*</span> <span class="n">ip</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ip</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">answer_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class answer_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">answer_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        answer_t(kaitai::kstream* p__io, dns_packet_t* p__parent = 0, dns_packet_t* p__root = 0);
+        <span class="n">answer_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~answer_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">answer_t</span><span class="p">();</span>
 
-    private:
-        domain_name_t* m_name;
-        type_type_t m_type;
-        class_type_t m_answer_class;
-        int32_t m_ttl;
-        uint16_t m_rdlength;
-        domain_name_t* m_ptrdname;
-        bool n_ptrdname;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">domain_name_t</span><span class="o">*</span> <span class="n">m_name</span><span class="p">;</span>
+        <span class="n">type_type_t</span> <span class="n">m_type</span><span class="p">;</span>
+        <span class="n">class_type_t</span> <span class="n">m_answer_class</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_ttl</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_rdlength</span><span class="p">;</span>
+        <span class="n">domain_name_t</span><span class="o">*</span> <span class="n">m_ptrdname</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_ptrdname</span><span class="p">;</span>
 
-    public:
-        bool _is_null_ptrdname() { ptrdname(); return n_ptrdname; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_ptrdname</span><span class="p">()</span> <span class="p">{</span> <span class="n">ptrdname</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_ptrdname</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
-        address_t* m_address;
-        bool n_address;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">address_t</span><span class="o">*</span> <span class="n">m_address</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_address</span><span class="p">;</span>
 
-    public:
-        bool _is_null_address() { address(); return n_address; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_address</span><span class="p">()</span> <span class="p">{</span> <span class="n">address</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_address</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
-        dns_packet_t* m__root;
-        dns_packet_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        domain_name_t* name() const { return m_name; }
-        type_type_t type() const { return m_type; }
-        class_type_t answer_class() const { return m_answer_class; }
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">domain_name_t</span><span class="o">*</span> <span class="n">name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">type_type_t</span> <span class="n">type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_type</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">class_type_t</span> <span class="n">answer_class</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_answer_class</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Time to live (in seconds)
-         */
-        int32_t ttl() const { return m_ttl; }
+        <span class="cm">/**</span>
+<span class="cm">         * Time to live (in seconds)</span>
+<span class="cm">         */</span>
+        <span class="kt">int32_t</span> <span class="n">ttl</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ttl</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Length in octets of the following payload
-         */
-        uint16_t rdlength() const { return m_rdlength; }
-        domain_name_t* ptrdname() const { return m_ptrdname; }
-        address_t* address() const { return m_address; }
-        dns_packet_t* _root() const { return m__root; }
-        dns_packet_t* _parent() const { return m__parent; }
-    };
+        <span class="cm">/**</span>
+<span class="cm">         * Length in octets of the following payload</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">rdlength</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_rdlength</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">domain_name_t</span><span class="o">*</span> <span class="n">ptrdname</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ptrdname</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">address_t</span><span class="o">*</span> <span class="n">address</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_address</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class packet_flags_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">packet_flags_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        packet_flags_t(kaitai::kstream* p__io, dns_packet_t* p__parent = 0, dns_packet_t* p__root = 0);
+        <span class="n">packet_flags_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~packet_flags_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">packet_flags_t</span><span class="p">();</span>
 
-    private:
-        bool f_qr;
-        int32_t m_qr;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_qr</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_qr</span><span class="p">;</span>
 
-    public:
-        int32_t qr();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">qr</span><span class="p">();</span>
 
-    private:
-        bool f_ra;
-        int32_t m_ra;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_ra</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_ra</span><span class="p">;</span>
 
-    public:
-        int32_t ra();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">ra</span><span class="p">();</span>
 
-    private:
-        bool f_tc;
-        int32_t m_tc;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_tc</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_tc</span><span class="p">;</span>
 
-    public:
-        int32_t tc();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">tc</span><span class="p">();</span>
 
-    private:
-        bool f_is_opcode_valid;
-        bool m_is_opcode_valid;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_opcode_valid</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_opcode_valid</span><span class="p">;</span>
 
-    public:
-        bool is_opcode_valid();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">is_opcode_valid</span><span class="p">();</span>
 
-    private:
-        bool f_rcode;
-        int32_t m_rcode;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_rcode</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_rcode</span><span class="p">;</span>
 
-    public:
-        int32_t rcode();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">rcode</span><span class="p">();</span>
 
-    private:
-        bool f_opcode;
-        int32_t m_opcode;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_opcode</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_opcode</span><span class="p">;</span>
 
-    public:
-        int32_t opcode();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">opcode</span><span class="p">();</span>
 
-    private:
-        bool f_aa;
-        int32_t m_aa;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_aa</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_aa</span><span class="p">;</span>
 
-    public:
-        int32_t aa();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">aa</span><span class="p">();</span>
 
-    private:
-        bool f_z;
-        int32_t m_z;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_z</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_z</span><span class="p">;</span>
 
-    public:
-        int32_t z();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">z</span><span class="p">();</span>
 
-    private:
-        bool f_rd;
-        int32_t m_rd;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_rd</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_rd</span><span class="p">;</span>
 
-    public:
-        int32_t rd();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">rd</span><span class="p">();</span>
 
-    private:
-        bool f_cd;
-        int32_t m_cd;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_cd</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_cd</span><span class="p">;</span>
 
-    public:
-        int32_t cd();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">cd</span><span class="p">();</span>
 
-    private:
-        bool f_ad;
-        int32_t m_ad;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_ad</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_ad</span><span class="p">;</span>
 
-    public:
-        int32_t ad();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">ad</span><span class="p">();</span>
 
-    private:
-        uint16_t m_flag;
-        dns_packet_t* m__root;
-        dns_packet_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">m_flag</span><span class="p">;</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint16_t flag() const { return m_flag; }
-        dns_packet_t* _root() const { return m__root; }
-        dns_packet_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">flag</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flag</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-private:
-    uint16_t m_transaction_id;
-    packet_flags_t* m_flags;
-    uint16_t m_qdcount;
-    bool n_qdcount;
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">uint16_t</span> <span class="n">m_transaction_id</span><span class="p">;</span>
+    <span class="n">packet_flags_t</span><span class="o">*</span> <span class="n">m_flags</span><span class="p">;</span>
+    <span class="kt">uint16_t</span> <span class="n">m_qdcount</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">n_qdcount</span><span class="p">;</span>
 
-public:
-    bool _is_null_qdcount() { qdcount(); return n_qdcount; };
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">_is_null_qdcount</span><span class="p">()</span> <span class="p">{</span> <span class="n">qdcount</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_qdcount</span><span class="p">;</span> <span class="p">};</span>
 
-private:
-    uint16_t m_ancount;
-    bool n_ancount;
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">uint16_t</span> <span class="n">m_ancount</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">n_ancount</span><span class="p">;</span>
 
-public:
-    bool _is_null_ancount() { ancount(); return n_ancount; };
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">_is_null_ancount</span><span class="p">()</span> <span class="p">{</span> <span class="n">ancount</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_ancount</span><span class="p">;</span> <span class="p">};</span>
 
-private:
-    uint16_t m_nscount;
-    bool n_nscount;
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">uint16_t</span> <span class="n">m_nscount</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">n_nscount</span><span class="p">;</span>
 
-public:
-    bool _is_null_nscount() { nscount(); return n_nscount; };
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">_is_null_nscount</span><span class="p">()</span> <span class="p">{</span> <span class="n">nscount</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_nscount</span><span class="p">;</span> <span class="p">};</span>
 
-private:
-    uint16_t m_arcount;
-    bool n_arcount;
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">uint16_t</span> <span class="n">m_arcount</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">n_arcount</span><span class="p">;</span>
 
-public:
-    bool _is_null_arcount() { arcount(); return n_arcount; };
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">_is_null_arcount</span><span class="p">()</span> <span class="p">{</span> <span class="n">arcount</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_arcount</span><span class="p">;</span> <span class="p">};</span>
 
-private:
-    std::vector&lt;query_t*&gt;* m_queries;
-    bool n_queries;
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">query_t</span><span class="o">*&gt;*</span> <span class="n">m_queries</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">n_queries</span><span class="p">;</span>
 
-public:
-    bool _is_null_queries() { queries(); return n_queries; };
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">_is_null_queries</span><span class="p">()</span> <span class="p">{</span> <span class="n">queries</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_queries</span><span class="p">;</span> <span class="p">};</span>
 
-private:
-    std::vector&lt;answer_t*&gt;* m_answers;
-    bool n_answers;
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">answer_t</span><span class="o">*&gt;*</span> <span class="n">m_answers</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">n_answers</span><span class="p">;</span>
 
-public:
-    bool _is_null_answers() { answers(); return n_answers; };
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">_is_null_answers</span><span class="p">()</span> <span class="p">{</span> <span class="n">answers</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_answers</span><span class="p">;</span> <span class="p">};</span>
 
-private:
-    dns_packet_t* m__root;
-    kaitai::kstruct* m__parent;
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-public:
+<span class="k">public</span><span class="o">:</span>
 
-    /**
-     * ID to keep track of request/responces
-     */
-    uint16_t transaction_id() const { return m_transaction_id; }
-    packet_flags_t* flags() const { return m_flags; }
+    <span class="cm">/**</span>
+<span class="cm">     * ID to keep track of request/responces</span>
+<span class="cm">     */</span>
+    <span class="kt">uint16_t</span> <span class="n">transaction_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_transaction_id</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">packet_flags_t</span><span class="o">*</span> <span class="n">flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flags</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * How many questions are there
-     */
-    uint16_t qdcount() const { return m_qdcount; }
+    <span class="cm">/**</span>
+<span class="cm">     * How many questions are there</span>
+<span class="cm">     */</span>
+    <span class="kt">uint16_t</span> <span class="n">qdcount</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_qdcount</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of resource records answering the question
-     */
-    uint16_t ancount() const { return m_ancount; }
+    <span class="cm">/**</span>
+<span class="cm">     * Number of resource records answering the question</span>
+<span class="cm">     */</span>
+    <span class="kt">uint16_t</span> <span class="n">ancount</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ancount</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of resource records pointing toward an authority
-     */
-    uint16_t nscount() const { return m_nscount; }
+    <span class="cm">/**</span>
+<span class="cm">     * Number of resource records pointing toward an authority</span>
+<span class="cm">     */</span>
+    <span class="kt">uint16_t</span> <span class="n">nscount</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_nscount</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of resource records holding additional information
-     */
-    uint16_t arcount() const { return m_arcount; }
-    std::vector&lt;query_t*&gt;* queries() const { return m_queries; }
-    std::vector&lt;answer_t*&gt;* answers() const { return m_answers; }
-    dns_packet_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-};
+    <span class="cm">/**</span>
+<span class="cm">     * Number of resource records holding additional information</span>
+<span class="cm">     */</span>
+    <span class="kt">uint16_t</span> <span class="n">arcount</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_arcount</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">query_t</span><span class="o">*&gt;*</span> <span class="n">queries</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_queries</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">answer_t</span><span class="o">*&gt;*</span> <span class="n">answers</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_answers</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
 
-#endif  // DNS_PACKET_H_
-</code></pre>
+<span class="cp">#endif  </span><span class="c1">// DNS_PACKET_H_</span>
+</pre></div>
 
         </div>
         
@@ -775,360 +772,360 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;dns_packet.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;dns_packet.h&quot;</span><span class="cp"></span>
 
 
 
-dns_packet_t::dns_packet_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    _read();
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">dns_packet_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void dns_packet_t::_read() {
-    m_transaction_id = m__io-&gt;read_u2be();
-    m_flags = new packet_flags_t(m__io, this, m__root);
-    n_qdcount = true;
-    if (flags()-&gt;is_opcode_valid()) {
-        n_qdcount = false;
-        m_qdcount = m__io-&gt;read_u2be();
-    }
-    n_ancount = true;
-    if (flags()-&gt;is_opcode_valid()) {
-        n_ancount = false;
-        m_ancount = m__io-&gt;read_u2be();
-    }
-    n_nscount = true;
-    if (flags()-&gt;is_opcode_valid()) {
-        n_nscount = false;
-        m_nscount = m__io-&gt;read_u2be();
-    }
-    n_arcount = true;
-    if (flags()-&gt;is_opcode_valid()) {
-        n_arcount = false;
-        m_arcount = m__io-&gt;read_u2be();
-    }
-    n_queries = true;
-    if (flags()-&gt;is_opcode_valid()) {
-        n_queries = false;
-        int l_queries = qdcount();
-        m_queries = new std::vector&lt;query_t*&gt;();
-        m_queries-&gt;reserve(l_queries);
-        for (int i = 0; i &lt; l_queries; i++) {
-            m_queries-&gt;push_back(new query_t(m__io, this, m__root));
-        }
-    }
-    n_answers = true;
-    if (flags()-&gt;is_opcode_valid()) {
-        n_answers = false;
-        int l_answers = ancount();
-        m_answers = new std::vector&lt;answer_t*&gt;();
-        m_answers-&gt;reserve(l_answers);
-        for (int i = 0; i &lt; l_answers; i++) {
-            m_answers-&gt;push_back(new answer_t(m__io, this, m__root));
-        }
-    }
-}
+<span class="kt">void</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_transaction_id</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">m_flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">packet_flags_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">n_qdcount</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_opcode_valid</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">n_qdcount</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_qdcount</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">n_ancount</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_opcode_valid</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">n_ancount</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_ancount</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">n_nscount</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_opcode_valid</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">n_nscount</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_nscount</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">n_arcount</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_opcode_valid</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">n_arcount</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_arcount</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">n_queries</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_opcode_valid</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">n_queries</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">l_queries</span> <span class="o">=</span> <span class="n">qdcount</span><span class="p">();</span>
+        <span class="n">m_queries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">query_t</span><span class="o">*&gt;</span><span class="p">();</span>
+        <span class="n">m_queries</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_queries</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_queries</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">m_queries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">query_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">n_answers</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_opcode_valid</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">n_answers</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">l_answers</span> <span class="o">=</span> <span class="n">ancount</span><span class="p">();</span>
+        <span class="n">m_answers</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">answer_t</span><span class="o">*&gt;</span><span class="p">();</span>
+        <span class="n">m_answers</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_answers</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_answers</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">m_answers</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">answer_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-dns_packet_t::~dns_packet_t() {
-    delete m_flags;
-    if (!n_qdcount) {
-    }
-    if (!n_ancount) {
-    }
-    if (!n_nscount) {
-    }
-    if (!n_arcount) {
-    }
-    if (!n_queries) {
-        for (std::vector&lt;query_t*&gt;::iterator it = m_queries-&gt;begin(); it != m_queries-&gt;end(); ++it) {
-            delete *it;
-        }
-        delete m_queries;
-    }
-    if (!n_answers) {
-        for (std::vector&lt;answer_t*&gt;::iterator it = m_answers-&gt;begin(); it != m_answers-&gt;end(); ++it) {
-            delete *it;
-        }
-        delete m_answers;
-    }
-}
+<span class="n">dns_packet_t</span><span class="o">::~</span><span class="n">dns_packet_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_flags</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_qdcount</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_ancount</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_nscount</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_arcount</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_queries</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">query_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_queries</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_queries</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">delete</span> <span class="n">m_queries</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_answers</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">answer_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_answers</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_answers</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">delete</span> <span class="n">m_answers</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-dns_packet_t::pointer_struct_t::pointer_struct_t(kaitai::kstream* p__io, dns_packet_t::label_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_contents = false;
-    _read();
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">pointer_struct_t</span><span class="o">::</span><span class="n">pointer_struct_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">label_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_contents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void dns_packet_t::pointer_struct_t::_read() {
-    m_value = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">pointer_struct_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_value</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-dns_packet_t::pointer_struct_t::~pointer_struct_t() {
-    if (f_contents) {
-        delete m_contents;
-    }
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">pointer_struct_t</span><span class="o">::~</span><span class="n">pointer_struct_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_contents</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_contents</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-dns_packet_t::domain_name_t* dns_packet_t::pointer_struct_t::contents() {
-    if (f_contents)
-        return m_contents;
-    kaitai::kstream *io = _root()-&gt;_io();
-    std::streampos _pos = io-&gt;pos();
-    io-&gt;seek(value());
-    m_contents = new domain_name_t(io, this, m__root);
-    io-&gt;seek(_pos);
-    f_contents = true;
-    return m_contents;
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">domain_name_t</span><span class="o">*</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">pointer_struct_t</span><span class="o">::</span><span class="n">contents</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_contents</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_contents</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="o">*</span><span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">value</span><span class="p">());</span>
+    <span class="n">m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="n">domain_name_t</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_contents</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_contents</span><span class="p">;</span>
+<span class="p">}</span>
 
-dns_packet_t::label_t::label_t(kaitai::kstream* p__io, dns_packet_t::domain_name_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_is_pointer = false;
-    _read();
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">label_t</span><span class="o">::</span><span class="n">label_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">domain_name_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_is_pointer</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void dns_packet_t::label_t::_read() {
-    m_length = m__io-&gt;read_u1();
-    n_pointer = true;
-    if (is_pointer()) {
-        n_pointer = false;
-        m_pointer = new pointer_struct_t(m__io, this, m__root);
-    }
-    n_name = true;
-    if (!(is_pointer())) {
-        n_name = false;
-        m_name = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(length()), std::string(&quot;ASCII&quot;));
-    }
-}
+<span class="kt">void</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">label_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_length</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">n_pointer</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">is_pointer</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">n_pointer</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_pointer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">pointer_struct_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">n_name</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">is_pointer</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="n">n_name</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_name</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">length</span><span class="p">()),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-dns_packet_t::label_t::~label_t() {
-    if (!n_pointer) {
-        delete m_pointer;
-    }
-    if (!n_name) {
-    }
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">label_t</span><span class="o">::~</span><span class="n">label_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_pointer</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_pointer</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-bool dns_packet_t::label_t::is_pointer() {
-    if (f_is_pointer)
-        return m_is_pointer;
-    m_is_pointer = length() == 192;
-    f_is_pointer = true;
-    return m_is_pointer;
-}
+<span class="kt">bool</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">label_t</span><span class="o">::</span><span class="n">is_pointer</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_pointer</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_pointer</span><span class="p">;</span>
+    <span class="n">m_is_pointer</span> <span class="o">=</span> <span class="n">length</span><span class="p">()</span> <span class="o">==</span> <span class="mi">192</span><span class="p">;</span>
+    <span class="n">f_is_pointer</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_pointer</span><span class="p">;</span>
+<span class="p">}</span>
 
-dns_packet_t::query_t::query_t(kaitai::kstream* p__io, dns_packet_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">query_t</span><span class="o">::</span><span class="n">query_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void dns_packet_t::query_t::_read() {
-    m_name = new domain_name_t(m__io, this, m__root);
-    m_type = static_cast&lt;dns_packet_t::type_type_t&gt;(m__io-&gt;read_u2be());
-    m_query_class = static_cast&lt;dns_packet_t::class_type_t&gt;(m__io-&gt;read_u2be());
-}
+<span class="kt">void</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">query_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">domain_name_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">dns_packet_t</span><span class="o">::</span><span class="n">type_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">());</span>
+    <span class="n">m_query_class</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">dns_packet_t</span><span class="o">::</span><span class="n">class_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">());</span>
+<span class="p">}</span>
 
-dns_packet_t::query_t::~query_t() {
-    delete m_name;
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">query_t</span><span class="o">::~</span><span class="n">query_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_name</span><span class="p">;</span>
+<span class="p">}</span>
 
-dns_packet_t::domain_name_t::domain_name_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">domain_name_t</span><span class="o">::</span><span class="n">domain_name_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void dns_packet_t::domain_name_t::_read() {
-    m_name = new std::vector&lt;label_t*&gt;();
-    {
-        int i = 0;
-        label_t* _;
-        do {
-            _ = new label_t(m__io, this, m__root);
-            m_name-&gt;push_back(_);
-            i++;
-        } while (!( ((_-&gt;length() == 0) || (_-&gt;length() == 192)) ));
-    }
-}
+<span class="kt">void</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">domain_name_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">label_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">label_t</span><span class="o">*</span> <span class="n">_</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="k">new</span> <span class="n">label_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+            <span class="n">m_name</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">_</span><span class="p">);</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="n">_</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">_</span><span class="o">-&gt;</span><span class="n">length</span><span class="p">()</span> <span class="o">==</span> <span class="mi">192</span><span class="p">))</span> <span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-dns_packet_t::domain_name_t::~domain_name_t() {
-    for (std::vector&lt;label_t*&gt;::iterator it = m_name-&gt;begin(); it != m_name-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_name;
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">domain_name_t</span><span class="o">::~</span><span class="n">domain_name_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">label_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_name</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_name</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_name</span><span class="p">;</span>
+<span class="p">}</span>
 
-dns_packet_t::address_t::address_t(kaitai::kstream* p__io, dns_packet_t::answer_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">address_t</span><span class="o">::</span><span class="n">address_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">answer_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void dns_packet_t::address_t::_read() {
-    int l_ip = 4;
-    m_ip = new std::vector&lt;uint8_t&gt;();
-    m_ip-&gt;reserve(l_ip);
-    for (int i = 0; i &lt; l_ip; i++) {
-        m_ip-&gt;push_back(m__io-&gt;read_u1());
-    }
-}
+<span class="kt">void</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">address_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">l_ip</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="n">m_ip</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="n">m_ip</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_ip</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_ip</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_ip</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-dns_packet_t::address_t::~address_t() {
-    delete m_ip;
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">address_t</span><span class="o">::~</span><span class="n">address_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_ip</span><span class="p">;</span>
+<span class="p">}</span>
 
-dns_packet_t::answer_t::answer_t(kaitai::kstream* p__io, dns_packet_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">answer_t</span><span class="o">::</span><span class="n">answer_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void dns_packet_t::answer_t::_read() {
-    m_name = new domain_name_t(m__io, this, m__root);
-    m_type = static_cast&lt;dns_packet_t::type_type_t&gt;(m__io-&gt;read_u2be());
-    m_answer_class = static_cast&lt;dns_packet_t::class_type_t&gt;(m__io-&gt;read_u2be());
-    m_ttl = m__io-&gt;read_s4be();
-    m_rdlength = m__io-&gt;read_u2be();
-    n_ptrdname = true;
-    if (type() == TYPE_TYPE_PTR) {
-        n_ptrdname = false;
-        m_ptrdname = new domain_name_t(m__io, this, m__root);
-    }
-    n_address = true;
-    if (type() == TYPE_TYPE_A) {
-        n_address = false;
-        m_address = new address_t(m__io, this, m__root);
-    }
-}
+<span class="kt">void</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">answer_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">domain_name_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">dns_packet_t</span><span class="o">::</span><span class="n">type_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">());</span>
+    <span class="n">m_answer_class</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">dns_packet_t</span><span class="o">::</span><span class="n">class_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">());</span>
+    <span class="n">m_ttl</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s4be</span><span class="p">();</span>
+    <span class="n">m_rdlength</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">n_ptrdname</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">TYPE_TYPE_PTR</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_ptrdname</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_ptrdname</span> <span class="o">=</span> <span class="k">new</span> <span class="n">domain_name_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">n_address</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">TYPE_TYPE_A</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_address</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_address</span> <span class="o">=</span> <span class="k">new</span> <span class="n">address_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-dns_packet_t::answer_t::~answer_t() {
-    delete m_name;
-    if (!n_ptrdname) {
-        delete m_ptrdname;
-    }
-    if (!n_address) {
-        delete m_address;
-    }
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">answer_t</span><span class="o">::~</span><span class="n">answer_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_name</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_ptrdname</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_ptrdname</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_address</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_address</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-dns_packet_t::packet_flags_t::packet_flags_t(kaitai::kstream* p__io, dns_packet_t* p__parent, dns_packet_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_qr = false;
-    f_ra = false;
-    f_tc = false;
-    f_is_opcode_valid = false;
-    f_rcode = false;
-    f_opcode = false;
-    f_aa = false;
-    f_z = false;
-    f_rd = false;
-    f_cd = false;
-    f_ad = false;
-    _read();
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">packet_flags_t</span><span class="o">::</span><span class="n">packet_flags_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">dns_packet_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_qr</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_ra</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_tc</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_opcode_valid</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_rcode</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_opcode</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_aa</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_z</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_rd</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_cd</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_ad</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void dns_packet_t::packet_flags_t::_read() {
-    m_flag = m__io-&gt;read_u2be();
-}
+<span class="kt">void</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">packet_flags_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_flag</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="p">}</span>
 
-dns_packet_t::packet_flags_t::~packet_flags_t() {
-}
+<span class="n">dns_packet_t</span><span class="o">::</span><span class="n">packet_flags_t</span><span class="o">::~</span><span class="n">packet_flags_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-int32_t dns_packet_t::packet_flags_t::qr() {
-    if (f_qr)
-        return m_qr;
-    m_qr = ((flag() &amp; 32768) &gt;&gt; 15);
-    f_qr = true;
-    return m_qr;
-}
+<span class="kt">int32_t</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">packet_flags_t</span><span class="o">::</span><span class="n">qr</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_qr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_qr</span><span class="p">;</span>
+    <span class="n">m_qr</span> <span class="o">=</span> <span class="p">((</span><span class="n">flag</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">15</span><span class="p">);</span>
+    <span class="n">f_qr</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_qr</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t dns_packet_t::packet_flags_t::ra() {
-    if (f_ra)
-        return m_ra;
-    m_ra = ((flag() &amp; 128) &gt;&gt; 7);
-    f_ra = true;
-    return m_ra;
-}
+<span class="kt">int32_t</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">packet_flags_t</span><span class="o">::</span><span class="n">ra</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_ra</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_ra</span><span class="p">;</span>
+    <span class="n">m_ra</span> <span class="o">=</span> <span class="p">((</span><span class="n">flag</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">7</span><span class="p">);</span>
+    <span class="n">f_ra</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_ra</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t dns_packet_t::packet_flags_t::tc() {
-    if (f_tc)
-        return m_tc;
-    m_tc = ((flag() &amp; 512) &gt;&gt; 9);
-    f_tc = true;
-    return m_tc;
-}
+<span class="kt">int32_t</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">packet_flags_t</span><span class="o">::</span><span class="n">tc</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_tc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_tc</span><span class="p">;</span>
+    <span class="n">m_tc</span> <span class="o">=</span> <span class="p">((</span><span class="n">flag</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">9</span><span class="p">);</span>
+    <span class="n">f_tc</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_tc</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool dns_packet_t::packet_flags_t::is_opcode_valid() {
-    if (f_is_opcode_valid)
-        return m_is_opcode_valid;
-    m_is_opcode_valid =  ((opcode() == 0) || (opcode() == 1) || (opcode() == 2)) ;
-    f_is_opcode_valid = true;
-    return m_is_opcode_valid;
-}
+<span class="kt">bool</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">packet_flags_t</span><span class="o">::</span><span class="n">is_opcode_valid</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_opcode_valid</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_opcode_valid</span><span class="p">;</span>
+    <span class="n">m_is_opcode_valid</span> <span class="o">=</span>  <span class="p">((</span><span class="n">opcode</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">opcode</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">opcode</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">))</span> <span class="p">;</span>
+    <span class="n">f_is_opcode_valid</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_opcode_valid</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t dns_packet_t::packet_flags_t::rcode() {
-    if (f_rcode)
-        return m_rcode;
-    m_rcode = ((flag() &amp; 15) &gt;&gt; 0);
-    f_rcode = true;
-    return m_rcode;
-}
+<span class="kt">int32_t</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">packet_flags_t</span><span class="o">::</span><span class="n">rcode</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_rcode</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_rcode</span><span class="p">;</span>
+    <span class="n">m_rcode</span> <span class="o">=</span> <span class="p">((</span><span class="n">flag</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="n">f_rcode</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_rcode</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t dns_packet_t::packet_flags_t::opcode() {
-    if (f_opcode)
-        return m_opcode;
-    m_opcode = ((flag() &amp; 30720) &gt;&gt; 11);
-    f_opcode = true;
-    return m_opcode;
-}
+<span class="kt">int32_t</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">packet_flags_t</span><span class="o">::</span><span class="n">opcode</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_opcode</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_opcode</span><span class="p">;</span>
+    <span class="n">m_opcode</span> <span class="o">=</span> <span class="p">((</span><span class="n">flag</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">30720</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">11</span><span class="p">);</span>
+    <span class="n">f_opcode</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_opcode</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t dns_packet_t::packet_flags_t::aa() {
-    if (f_aa)
-        return m_aa;
-    m_aa = ((flag() &amp; 1024) &gt;&gt; 10);
-    f_aa = true;
-    return m_aa;
-}
+<span class="kt">int32_t</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">packet_flags_t</span><span class="o">::</span><span class="n">aa</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_aa</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_aa</span><span class="p">;</span>
+    <span class="n">m_aa</span> <span class="o">=</span> <span class="p">((</span><span class="n">flag</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">10</span><span class="p">);</span>
+    <span class="n">f_aa</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_aa</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t dns_packet_t::packet_flags_t::z() {
-    if (f_z)
-        return m_z;
-    m_z = ((flag() &amp; 64) &gt;&gt; 6);
-    f_z = true;
-    return m_z;
-}
+<span class="kt">int32_t</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">packet_flags_t</span><span class="o">::</span><span class="n">z</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_z</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_z</span><span class="p">;</span>
+    <span class="n">m_z</span> <span class="o">=</span> <span class="p">((</span><span class="n">flag</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">6</span><span class="p">);</span>
+    <span class="n">f_z</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_z</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t dns_packet_t::packet_flags_t::rd() {
-    if (f_rd)
-        return m_rd;
-    m_rd = ((flag() &amp; 256) &gt;&gt; 8);
-    f_rd = true;
-    return m_rd;
-}
+<span class="kt">int32_t</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">packet_flags_t</span><span class="o">::</span><span class="n">rd</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_rd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_rd</span><span class="p">;</span>
+    <span class="n">m_rd</span> <span class="o">=</span> <span class="p">((</span><span class="n">flag</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">);</span>
+    <span class="n">f_rd</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_rd</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t dns_packet_t::packet_flags_t::cd() {
-    if (f_cd)
-        return m_cd;
-    m_cd = ((flag() &amp; 16) &gt;&gt; 4);
-    f_cd = true;
-    return m_cd;
-}
+<span class="kt">int32_t</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">packet_flags_t</span><span class="o">::</span><span class="n">cd</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_cd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_cd</span><span class="p">;</span>
+    <span class="n">m_cd</span> <span class="o">=</span> <span class="p">((</span><span class="n">flag</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">);</span>
+    <span class="n">f_cd</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_cd</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t dns_packet_t::packet_flags_t::ad() {
-    if (f_ad)
-        return m_ad;
-    m_ad = ((flag() &amp; 32) &gt;&gt; 5);
-    f_ad = true;
-    return m_ad;
-}
-</code></pre>
+<span class="kt">int32_t</span> <span class="n">dns_packet_t</span><span class="o">::</span><span class="n">packet_flags_t</span><span class="o">::</span><span class="n">ad</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_ad</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_ad</span><span class="p">;</span>
+    <span class="n">m_ad</span> <span class="o">=</span> <span class="p">((</span><span class="n">flag</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">);</span>
+    <span class="n">f_ad</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_ad</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1155,8 +1152,8 @@ int32_t dns_packet_t::packet_flags_t::ad() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

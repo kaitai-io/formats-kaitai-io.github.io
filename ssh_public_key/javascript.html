@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -241,256 +238,256 @@ var data = new SshPublicKey(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.SshPublicKey = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-/**
- * SSH public keys are encoded in a special binary format, typically represented
- * to end users as either one-liner OpenSSH format or multi-line PEM format
- * (commerical SSH). Text wrapper carries extra information about user who
- * created the key, comment, etc, but the inner binary is always base64-encoded
- * and follows the same internal format.
- * 
- * This format spec deals with this internal binary format (called &quot;blob&quot; in
- * openssh sources) only. Buffer is expected to be raw binary and not base64-d.
- * Implementation closely follows code in OpenSSH.
- * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970|Source}
- */
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">SshPublicKey</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * SSH public keys are encoded in a special binary format, typically represented</span>
+<span class="cm"> * to end users as either one-liner OpenSSH format or multi-line PEM format</span>
+<span class="cm"> * (commerical SSH). Text wrapper carries extra information about user who</span>
+<span class="cm"> * created the key, comment, etc, but the inner binary is always base64-encoded</span>
+<span class="cm"> * and follows the same internal format.</span>
+<span class="cm"> * </span>
+<span class="cm"> * This format spec deals with this internal binary format (called &quot;blob&quot; in</span>
+<span class="cm"> * openssh sources) only. Buffer is expected to be raw binary and not base64-d.</span>
+<span class="cm"> * Implementation closely follows code in OpenSSH.</span>
+<span class="cm"> * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970|Source}</span>
+<span class="cm"> */</span>
 
-var SshPublicKey = (function() {
-  function SshPublicKey(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
+<span class="kd">var</span> <span class="nx">SshPublicKey</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">SshPublicKey</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-    this._read();
-  }
-  SshPublicKey.prototype._read = function() {
-    this.keyName = new Cstring(this._io, this, this._root);
-    switch (this.keyName.value) {
-    case &quot;ssh-rsa&quot;:
-      this.body = new KeyRsa(this._io, this, this._root);
-      break;
-    case &quot;ecdsa-sha2-nistp256&quot;:
-      this.body = new KeyEcdsa(this._io, this, this._root);
-      break;
-    case &quot;ssh-ed25519&quot;:
-      this.body = new KeyEd25519(this._io, this, this._root);
-      break;
-    case &quot;ssh-dss&quot;:
-      this.body = new KeyDsa(this._io, this, this._root);
-      break;
-    }
-  }
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">SshPublicKey</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">keyName</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Cstring</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">keyName</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="s2">&quot;ssh-rsa&quot;</span><span class="o">:</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KeyRsa</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="s2">&quot;ecdsa-sha2-nistp256&quot;</span><span class="o">:</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KeyEcdsa</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="s2">&quot;ssh-ed25519&quot;</span><span class="o">:</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KeyEd25519</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="s2">&quot;ssh-dss&quot;</span><span class="o">:</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KeyDsa</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
 
-  /**
-   * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028|Source}</span>
+<span class="cm">   */</span>
 
-  var KeyRsa = SshPublicKey.KeyRsa = (function() {
-    function KeyRsa(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">KeyRsa</span> <span class="o">=</span> <span class="nx">SshPublicKey</span><span class="p">.</span><span class="nx">KeyRsa</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">KeyRsa</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    KeyRsa.prototype._read = function() {
-      this.rsaE = new Bignum2(this._io, this, this._root);
-      this.rsaN = new Bignum2(this._io, this, this._root);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">KeyRsa</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">rsaE</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bignum2</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">rsaN</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bignum2</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    /**
-     * Key length in bits
-     */
-    Object.defineProperty(KeyRsa.prototype, &#39;keyLength&#39;, {
-      get: function() {
-        if (this._m_keyLength !== undefined)
-          return this._m_keyLength;
-        this._m_keyLength = this.rsaN.lengthInBits;
-        return this._m_keyLength;
-      }
-    });
+    <span class="cm">/**</span>
+<span class="cm">     * Key length in bits</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">KeyRsa</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;keyLength&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_keyLength</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_keyLength</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_keyLength</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">rsaN</span><span class="p">.</span><span class="nx">lengthInBits</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_keyLength</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    /**
-     * Public key exponent, designated `e` in RSA documentation.
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Public key exponent, designated `e` in RSA documentation.</span>
+<span class="cm">     */</span>
 
-    /**
-     * Modulus of both public and private keys, designated `n` in RSA
-     * documentation. Its length in bits is designated as &quot;key length&quot;.
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Modulus of both public and private keys, designated `n` in RSA</span>
+<span class="cm">     * documentation. Its length in bits is designated as &quot;key length&quot;.</span>
+<span class="cm">     */</span>
 
-    return KeyRsa;
-  })();
+    <span class="k">return</span> <span class="nx">KeyRsa</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124|Source}</span>
+<span class="cm">   */</span>
 
-  var KeyEd25519 = SshPublicKey.KeyEd25519 = (function() {
-    function KeyEd25519(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">KeyEd25519</span> <span class="o">=</span> <span class="nx">SshPublicKey</span><span class="p">.</span><span class="nx">KeyEd25519</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">KeyEd25519</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    KeyEd25519.prototype._read = function() {
-      this.lenPk = this._io.readU4be();
-      this.pk = this._io.readBytes(this.lenPk);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">KeyEd25519</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lenPk</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">pk</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenPk</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return KeyEd25519;
-  })();
+    <span class="k">return</span> <span class="nx">KeyEd25519</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103|Source}</span>
+<span class="cm">   */</span>
 
-  var KeyEcdsa = SshPublicKey.KeyEcdsa = (function() {
-    function KeyEcdsa(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">KeyEcdsa</span> <span class="o">=</span> <span class="nx">SshPublicKey</span><span class="p">.</span><span class="nx">KeyEcdsa</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">KeyEcdsa</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    KeyEcdsa.prototype._read = function() {
-      this.curveName = new Cstring(this._io, this, this._root);
-      this.ec = new EllipticCurve(this._io, this, this._root);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">KeyEcdsa</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">curveName</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Cstring</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">ec</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EllipticCurve</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return KeyEcdsa;
-  })();
+    <span class="k">return</span> <span class="nx">KeyEcdsa</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * A integer-prefixed string designed to be read using `sshbuf_get_cstring`
-   * and written by `sshbuf_put_cstring` routines in ssh sources. Name is an
-   * obscure misnomer, as typically &quot;C string&quot; means a null-terminated string.
-   * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * A integer-prefixed string designed to be read using `sshbuf_get_cstring`</span>
+<span class="cm">   * and written by `sshbuf_put_cstring` routines in ssh sources. Name is an</span>
+<span class="cm">   * obscure misnomer, as typically &quot;C string&quot; means a null-terminated string.</span>
+<span class="cm">   * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181|Source}</span>
+<span class="cm">   */</span>
 
-  var Cstring = SshPublicKey.Cstring = (function() {
-    function Cstring(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Cstring</span> <span class="o">=</span> <span class="nx">SshPublicKey</span><span class="p">.</span><span class="nx">Cstring</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Cstring</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Cstring.prototype._read = function() {
-      this.len = this._io.readU4be();
-      this.value = KaitaiStream.bytesToStr(this._io.readBytes(this.len), &quot;ASCII&quot;);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Cstring</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return Cstring;
-  })();
+    <span class="k">return</span> <span class="nx">Cstring</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051|Source}</span>
+<span class="cm">   */</span>
 
-  var KeyDsa = SshPublicKey.KeyDsa = (function() {
-    function KeyDsa(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">KeyDsa</span> <span class="o">=</span> <span class="nx">SshPublicKey</span><span class="p">.</span><span class="nx">KeyDsa</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">KeyDsa</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    KeyDsa.prototype._read = function() {
-      this.dsaP = new Bignum2(this._io, this, this._root);
-      this.dsaQ = new Bignum2(this._io, this, this._root);
-      this.dsaG = new Bignum2(this._io, this, this._root);
-      this.dsaPubKey = new Bignum2(this._io, this, this._root);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">KeyDsa</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">dsaP</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bignum2</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">dsaQ</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bignum2</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">dsaG</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bignum2</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">dsaPubKey</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bignum2</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return KeyDsa;
-  })();
+    <span class="k">return</span> <span class="nx">KeyDsa</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * Elliptic curve dump format used by ssh. In OpenSSH code, the following
-   * routines are used to read/write it:
-   * 
-   * * sshbuf_get_ec
-   * * get_ec
-   * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L90
-   * https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L76
-   * |Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Elliptic curve dump format used by ssh. In OpenSSH code, the following</span>
+<span class="cm">   * routines are used to read/write it:</span>
+<span class="cm">   * </span>
+<span class="cm">   * * sshbuf_get_ec</span>
+<span class="cm">   * * get_ec</span>
+<span class="cm">   * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L90</span>
+<span class="cm">   * https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L76</span>
+<span class="cm">   * |Source}</span>
+<span class="cm">   */</span>
 
-  var EllipticCurve = SshPublicKey.EllipticCurve = (function() {
-    function EllipticCurve(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">EllipticCurve</span> <span class="o">=</span> <span class="nx">SshPublicKey</span><span class="p">.</span><span class="nx">EllipticCurve</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">EllipticCurve</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    EllipticCurve.prototype._read = function() {
-      this.len = this._io.readU4be();
-      this.body = this._io.readBytes(this.len);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">EllipticCurve</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return EllipticCurve;
-  })();
+    <span class="k">return</span> <span class="nx">EllipticCurve</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * Big integers serialization format used by ssh, v2. In the code, the following
-   * routines are used to read/write it:
-   * 
-   * * sshbuf_get_bignum2
-   * * sshbuf_get_bignum2_bytes_direct
-   * * sshbuf_put_bignum2
-   * * sshbuf_get_bignum2_bytes_direct
-   * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L35
-   * https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L431
-   * |Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Big integers serialization format used by ssh, v2. In the code, the following</span>
+<span class="cm">   * routines are used to read/write it:</span>
+<span class="cm">   * </span>
+<span class="cm">   * * sshbuf_get_bignum2</span>
+<span class="cm">   * * sshbuf_get_bignum2_bytes_direct</span>
+<span class="cm">   * * sshbuf_put_bignum2</span>
+<span class="cm">   * * sshbuf_get_bignum2_bytes_direct</span>
+<span class="cm">   * @see {@link https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L35</span>
+<span class="cm">   * https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L431</span>
+<span class="cm">   * |Source}</span>
+<span class="cm">   */</span>
 
-  var Bignum2 = SshPublicKey.Bignum2 = (function() {
-    function Bignum2(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Bignum2</span> <span class="o">=</span> <span class="nx">SshPublicKey</span><span class="p">.</span><span class="nx">Bignum2</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Bignum2</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Bignum2.prototype._read = function() {
-      this.len = this._io.readU4be();
-      this.body = this._io.readBytes(this.len);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Bignum2</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    /**
-     * Length of big integer in bits. In OpenSSH sources, this corresponds to
-     * `BN_num_bits` function.
-     */
-    Object.defineProperty(Bignum2.prototype, &#39;lengthInBits&#39;, {
-      get: function() {
-        if (this._m_lengthInBits !== undefined)
-          return this._m_lengthInBits;
-        this._m_lengthInBits = ((this.len - 1) * 8);
-        return this._m_lengthInBits;
-      }
-    });
+    <span class="cm">/**</span>
+<span class="cm">     * Length of big integer in bits. In OpenSSH sources, this corresponds to</span>
+<span class="cm">     * `BN_num_bits` function.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Bignum2</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;lengthInBits&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_lengthInBits</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lengthInBits</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_lengthInBits</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_lengthInBits</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    return Bignum2;
-  })();
+    <span class="k">return</span> <span class="nx">Bignum2</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  return SshPublicKey;
-})();
-return SshPublicKey;
-}));
-</code></pre>
+  <span class="k">return</span> <span class="nx">SshPublicKey</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">SshPublicKey</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -517,8 +514,8 @@ return SshPublicKey;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

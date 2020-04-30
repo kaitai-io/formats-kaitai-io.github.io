@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -238,750 +235,750 @@ of the B-tree from the block addresses.
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.nio.charset.Charset;
-
-
-/**
- * Apple macOS &#39;.DS_Store&#39; file format.
- * @see &lt;a href=&quot;https://en.wikipedia.org/wiki/.DS_Store
- * https://metacpan.org/pod/distribution/Mac-Finder-DSStore/DSStoreFormat.pod
- * https://0day.work/parsing-the-ds_store-file-format
- * &quot;&gt;Source&lt;/a&gt;
- */
-public class DsStore extends KaitaiStruct {
-    public static DsStore fromFile(String fileName) throws IOException {
-        return new DsStore(new ByteBufferKaitaiStream(fileName));
-    }
-
-    public DsStore(KaitaiStream _io) {
-        this(_io, null, null);
-    }
-
-    public DsStore(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
-
-    public DsStore(KaitaiStream _io, KaitaiStruct _parent, DsStore _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.alignmentHeader = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 1 });
-        this.buddyAllocatorHeader = new BuddyAllocatorHeader(this._io, this, _root);
-    }
-    public static class BuddyAllocatorHeader extends KaitaiStruct {
-        public static BuddyAllocatorHeader fromFile(String fileName) throws IOException {
-            return new BuddyAllocatorHeader(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BuddyAllocatorHeader(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BuddyAllocatorHeader(KaitaiStream _io, DsStore _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BuddyAllocatorHeader(KaitaiStream _io, DsStore _parent, DsStore _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 66, 117, 100, 49 });
-            this.ofsBookkeepingInfoBlock = this._io.readU4be();
-            this.lenBookkeepingInfoBlock = this._io.readU4be();
-            this.copyOfsBookkeepingInfoBlock = this._io.readU4be();
-            this._unnamed4 = this._io.readBytes(16);
-        }
-        private byte[] magic;
-        private long ofsBookkeepingInfoBlock;
-        private long lenBookkeepingInfoBlock;
-        private long copyOfsBookkeepingInfoBlock;
-        private byte[] _unnamed4;
-        private DsStore _root;
-        private DsStore _parent;
-
-        /**
-         * Magic number &#39;Bud1&#39;.
-         */
-        public byte[] magic() { return magic; }
-        public long ofsBookkeepingInfoBlock() { return ofsBookkeepingInfoBlock; }
-        public long lenBookkeepingInfoBlock() { return lenBookkeepingInfoBlock; }
-
-        /**
-         * Needs to match &#39;offset_bookkeeping_info_block&#39;.
-         */
-        public long copyOfsBookkeepingInfoBlock() { return copyOfsBookkeepingInfoBlock; }
-
-        /**
-         * Unused field which might simply be the unused space at the end of the block,
-         * since the minimum allocation size is 32 bytes.
-         */
-        public byte[] _unnamed4() { return _unnamed4; }
-        public DsStore _root() { return _root; }
-        public DsStore _parent() { return _parent; }
-    }
-    public static class BuddyAllocatorBody extends KaitaiStruct {
-        public static BuddyAllocatorBody fromFile(String fileName) throws IOException {
-            return new BuddyAllocatorBody(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public BuddyAllocatorBody(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public BuddyAllocatorBody(KaitaiStream _io, DsStore _parent) {
-            this(_io, _parent, null);
-        }
-
-        public BuddyAllocatorBody(KaitaiStream _io, DsStore _parent, DsStore _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numBlocks = this._io.readU4be();
-            this._unnamed1 = this._io.readBytes(4);
-            blockAddresses = new ArrayList&lt;BlockDescriptor&gt;((int) (numBlockAddresses()));
-            for (int i = 0; i &lt; numBlockAddresses(); i++) {
-                this.blockAddresses.add(new BlockDescriptor(this._io, this, _root));
-            }
-            this.numDirectories = this._io.readU4be();
-            directoryEntries = new ArrayList&lt;DirectoryEntry&gt;((int) (numDirectories()));
-            for (int i = 0; i &lt; numDirectories(); i++) {
-                this.directoryEntries.add(new DirectoryEntry(this._io, this, _root));
-            }
-            freeLists = new ArrayList&lt;FreeList&gt;((int) (numFreeLists()));
-            for (int i = 0; i &lt; numFreeLists(); i++) {
-                this.freeLists.add(new FreeList(this._io, this, _root));
-            }
-        }
-        public static class BlockDescriptor extends KaitaiStruct {
-            public static BlockDescriptor fromFile(String fileName) throws IOException {
-                return new BlockDescriptor(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public BlockDescriptor(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public BlockDescriptor(KaitaiStream _io, DsStore.BuddyAllocatorBody _parent) {
-                this(_io, _parent, null);
-            }
-
-            public BlockDescriptor(KaitaiStream _io, DsStore.BuddyAllocatorBody _parent, DsStore _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.addressRaw = this._io.readU4be();
-            }
-            private Integer offset;
-            public Integer offset() {
-                if (this.offset != null)
-                    return this.offset;
-                int _tmp = (int) (((addressRaw() &amp; ~(_root.blockAddressMask())) + 4));
-                this.offset = _tmp;
-                return this.offset;
-            }
-            private Integer size;
-            public Integer size() {
-                if (this.size != null)
-                    return this.size;
-                int _tmp = (int) (((1 &lt;&lt; addressRaw()) &amp; _root.blockAddressMask()));
-                this.size = _tmp;
-                return this.size;
-            }
-            private long addressRaw;
-            private DsStore _root;
-            private DsStore.BuddyAllocatorBody _parent;
-            public long addressRaw() { return addressRaw; }
-            public DsStore _root() { return _root; }
-            public DsStore.BuddyAllocatorBody _parent() { return _parent; }
-        }
-        public static class DirectoryEntry extends KaitaiStruct {
-            public static DirectoryEntry fromFile(String fileName) throws IOException {
-                return new DirectoryEntry(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public DirectoryEntry(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public DirectoryEntry(KaitaiStream _io, DsStore.BuddyAllocatorBody _parent) {
-                this(_io, _parent, null);
-            }
-
-            public DirectoryEntry(KaitaiStream _io, DsStore.BuddyAllocatorBody _parent, DsStore _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.lenName = this._io.readU1();
-                this.name = new String(this._io.readBytes(lenName()), Charset.forName(&quot;UTF-8&quot;));
-                this.blockId = this._io.readU4be();
-            }
-            private int lenName;
-            private String name;
-            private long blockId;
-            private DsStore _root;
-            private DsStore.BuddyAllocatorBody _parent;
-            public int lenName() { return lenName; }
-            public String name() { return name; }
-            public long blockId() { return blockId; }
-            public DsStore _root() { return _root; }
-            public DsStore.BuddyAllocatorBody _parent() { return _parent; }
-        }
-        public static class FreeList extends KaitaiStruct {
-            public static FreeList fromFile(String fileName) throws IOException {
-                return new FreeList(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public FreeList(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public FreeList(KaitaiStream _io, DsStore.BuddyAllocatorBody _parent) {
-                this(_io, _parent, null);
-            }
-
-            public FreeList(KaitaiStream _io, DsStore.BuddyAllocatorBody _parent, DsStore _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.counter = this._io.readU4be();
-                offsets = new ArrayList&lt;Long&gt;((int) (counter()));
-                for (int i = 0; i &lt; counter(); i++) {
-                    this.offsets.add(this._io.readU4be());
-                }
-            }
-            private long counter;
-            private ArrayList&lt;Long&gt; offsets;
-            private DsStore _root;
-            private DsStore.BuddyAllocatorBody _parent;
-            public long counter() { return counter; }
-            public ArrayList&lt;Long&gt; offsets() { return offsets; }
-            public DsStore _root() { return _root; }
-            public DsStore.BuddyAllocatorBody _parent() { return _parent; }
-        }
-        private Integer numBlockAddresses;
-        public Integer numBlockAddresses() {
-            if (this.numBlockAddresses != null)
-                return this.numBlockAddresses;
-            int _tmp = (int) (256);
-            this.numBlockAddresses = _tmp;
-            return this.numBlockAddresses;
-        }
-        private Byte numFreeLists;
-        public Byte numFreeLists() {
-            if (this.numFreeLists != null)
-                return this.numFreeLists;
-            byte _tmp = (byte) (32);
-            this.numFreeLists = _tmp;
-            return this.numFreeLists;
-        }
-        private ArrayList&lt;MasterBlockRef&gt; directories;
-
-        /**
-         * Master blocks of the different B-trees.
-         */
-        public ArrayList&lt;MasterBlockRef&gt; directories() {
-            if (this.directories != null)
-                return this.directories;
-            KaitaiStream io = _root._io();
-            directories = new ArrayList&lt;MasterBlockRef&gt;((int) (numDirectories()));
-            for (int i = 0; i &lt; numDirectories(); i++) {
-                this.directories.add(new MasterBlockRef(io, this, _root, i));
-            }
-            return this.directories;
-        }
-        private long numBlocks;
-        private byte[] _unnamed1;
-        private ArrayList&lt;BlockDescriptor&gt; blockAddresses;
-        private long numDirectories;
-        private ArrayList&lt;DirectoryEntry&gt; directoryEntries;
-        private ArrayList&lt;FreeList&gt; freeLists;
-        private DsStore _root;
-        private DsStore _parent;
-
-        /**
-         * Number of blocks in the allocated-blocks list.
-         */
-        public long numBlocks() { return numBlocks; }
-
-        /**
-         * Unknown field which appears to always be 0.
-         */
-        public byte[] _unnamed1() { return _unnamed1; }
-
-        /**
-         * Addresses of the different blocks.
-         */
-        public ArrayList&lt;BlockDescriptor&gt; blockAddresses() { return blockAddresses; }
-
-        /**
-         * Indicates the number of directory entries.
-         */
-        public long numDirectories() { return numDirectories; }
-
-        /**
-         * Each directory is an independent B-tree.
-         */
-        public ArrayList&lt;DirectoryEntry&gt; directoryEntries() { return directoryEntries; }
-        public ArrayList&lt;FreeList&gt; freeLists() { return freeLists; }
-        public DsStore _root() { return _root; }
-        public DsStore _parent() { return _parent; }
-    }
-    public static class MasterBlockRef extends KaitaiStruct {
-
-        public MasterBlockRef(KaitaiStream _io, long idx) {
-            this(_io, null, null, idx);
-        }
-
-        public MasterBlockRef(KaitaiStream _io, DsStore.BuddyAllocatorBody _parent, long idx) {
-            this(_io, _parent, null, idx);
-        }
-
-        public MasterBlockRef(KaitaiStream _io, DsStore.BuddyAllocatorBody _parent, DsStore _root, long idx) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            this.idx = idx;
-            _read();
-        }
-        private void _read() {
-        }
-        public static class MasterBlock extends KaitaiStruct {
-            public static MasterBlock fromFile(String fileName) throws IOException {
-                return new MasterBlock(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public MasterBlock(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public MasterBlock(KaitaiStream _io, DsStore.MasterBlockRef _parent) {
-                this(_io, _parent, null);
-            }
-
-            public MasterBlock(KaitaiStream _io, DsStore.MasterBlockRef _parent, DsStore _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.blockId = this._io.readU4be();
-                this.numInternalNodes = this._io.readU4be();
-                this.numRecords = this._io.readU4be();
-                this.numNodes = this._io.readU4be();
-                this._unnamed4 = this._io.readU4be();
-            }
-            private Block rootBlock;
-            public Block rootBlock() {
-                if (this.rootBlock != null)
-                    return this.rootBlock;
-                KaitaiStream io = _root._io();
-                long _pos = io.pos();
-                io.seek(_root.buddyAllocatorBody().blockAddresses().get((int) blockId()).offset());
-                this.rootBlock = new Block(io, this, _root);
-                io.seek(_pos);
-                return this.rootBlock;
-            }
-            private long blockId;
-            private long numInternalNodes;
-            private long numRecords;
-            private long numNodes;
-            private long _unnamed4;
-            private DsStore _root;
-            private DsStore.MasterBlockRef _parent;
-
-            /**
-             * Block number of the B-tree&#39;s root node.
-             */
-            public long blockId() { return blockId; }
-
-            /**
-             * Number of internal node levels.
-             */
-            public long numInternalNodes() { return numInternalNodes; }
-
-            /**
-             * Number of records in the tree.
-             */
-            public long numRecords() { return numRecords; }
-
-            /**
-             * Number of nodes in the tree.
-             */
-            public long numNodes() { return numNodes; }
-
-            /**
-             * Always 0x1000, probably the B-tree node page size.
-             */
-            public long _unnamed4() { return _unnamed4; }
-            public DsStore _root() { return _root; }
-            public DsStore.MasterBlockRef _parent() { return _parent; }
-        }
-        private MasterBlock masterBlock;
-        public MasterBlock masterBlock() {
-            if (this.masterBlock != null)
-                return this.masterBlock;
-            long _pos = this._io.pos();
-            this._io.seek(_parent().blockAddresses().get((int) _parent().directoryEntries().get((int) idx()).blockId()).offset());
-            this._raw_masterBlock = this._io.readBytes(_parent().blockAddresses().get((int) _parent().directoryEntries().get((int) idx()).blockId()).size());
-            KaitaiStream _io__raw_masterBlock = new ByteBufferKaitaiStream(_raw_masterBlock);
-            this.masterBlock = new MasterBlock(_io__raw_masterBlock, this, _root);
-            this._io.seek(_pos);
-            return this.masterBlock;
-        }
-        private long idx;
-        private DsStore _root;
-        private DsStore.BuddyAllocatorBody _parent;
-        private byte[] _raw_masterBlock;
-        public long idx() { return idx; }
-        public DsStore _root() { return _root; }
-        public DsStore.BuddyAllocatorBody _parent() { return _parent; }
-        public byte[] _raw_masterBlock() { return _raw_masterBlock; }
-    }
-    public static class Block extends KaitaiStruct {
-        public static Block fromFile(String fileName) throws IOException {
-            return new Block(new ByteBufferKaitaiStream(fileName));
-        }
-
-        public Block(KaitaiStream _io) {
-            this(_io, null, null);
-        }
-
-        public Block(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
-
-        public Block(KaitaiStream _io, KaitaiStruct _parent, DsStore _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.mode = this._io.readU4be();
-            this.counter = this._io.readU4be();
-            data = new ArrayList&lt;BlockData&gt;((int) (counter()));
-            for (int i = 0; i &lt; counter(); i++) {
-                this.data.add(new BlockData(this._io, this, _root, mode()));
-            }
-        }
-        public static class BlockData extends KaitaiStruct {
-
-            public BlockData(KaitaiStream _io, long mode) {
-                this(_io, null, null, mode);
-            }
-
-            public BlockData(KaitaiStream _io, DsStore.Block _parent, long mode) {
-                this(_io, _parent, null, mode);
-            }
-
-            public BlockData(KaitaiStream _io, DsStore.Block _parent, DsStore _root, long mode) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                this.mode = mode;
-                _read();
-            }
-            private void _read() {
-                if (mode() &gt; 0) {
-                    this.blockId = this._io.readU4be();
-                }
-                this.record = new Record(this._io, this, _root);
-            }
-            public static class Record extends KaitaiStruct {
-                public static Record fromFile(String fileName) throws IOException {
-                    return new Record(new ByteBufferKaitaiStream(fileName));
-                }
-
-                public Record(KaitaiStream _io) {
-                    this(_io, null, null);
-                }
-
-                public Record(KaitaiStream _io, DsStore.Block.BlockData _parent) {
-                    this(_io, _parent, null);
-                }
-
-                public Record(KaitaiStream _io, DsStore.Block.BlockData _parent, DsStore _root) {
-                    super(_io);
-                    this._parent = _parent;
-                    this._root = _root;
-                    _read();
-                }
-                private void _read() {
-                    this.filename = new Ustr(this._io, this, _root);
-                    this.structureType = new FourCharCode(this._io, this, _root);
-                    this.dataType = new String(this._io.readBytes(4), Charset.forName(&quot;UTF-8&quot;));
-                    switch (dataType()) {
-                    case &quot;long&quot;: {
-                        this.value = (Object) (this._io.readU4be());
-                        break;
-                    }
-                    case &quot;shor&quot;: {
-                        this.value = (Object) (this._io.readU4be());
-                        break;
-                    }
-                    case &quot;comp&quot;: {
-                        this.value = (Object) (this._io.readU8be());
-                        break;
-                    }
-                    case &quot;bool&quot;: {
-                        this.value = (Object) (this._io.readU1());
-                        break;
-                    }
-                    case &quot;ustr&quot;: {
-                        this.value = new Ustr(this._io, this, _root);
-                        break;
-                    }
-                    case &quot;dutc&quot;: {
-                        this.value = (Object) (this._io.readU8be());
-                        break;
-                    }
-                    case &quot;type&quot;: {
-                        this.value = new FourCharCode(this._io, this, _root);
-                        break;
-                    }
-                    case &quot;blob&quot;: {
-                        this.value = new RecordBlob(this._io, this, _root);
-                        break;
-                    }
-                    }
-                }
-                public static class RecordBlob extends KaitaiStruct {
-                    public static RecordBlob fromFile(String fileName) throws IOException {
-                        return new RecordBlob(new ByteBufferKaitaiStream(fileName));
-                    }
-
-                    public RecordBlob(KaitaiStream _io) {
-                        this(_io, null, null);
-                    }
-
-                    public RecordBlob(KaitaiStream _io, DsStore.Block.BlockData.Record _parent) {
-                        this(_io, _parent, null);
-                    }
-
-                    public RecordBlob(KaitaiStream _io, DsStore.Block.BlockData.Record _parent, DsStore _root) {
-                        super(_io);
-                        this._parent = _parent;
-                        this._root = _root;
-                        _read();
-                    }
-                    private void _read() {
-                        this.length = this._io.readU4be();
-                        this.value = this._io.readBytes(length());
-                    }
-                    private long length;
-                    private byte[] value;
-                    private DsStore _root;
-                    private DsStore.Block.BlockData.Record _parent;
-                    public long length() { return length; }
-                    public byte[] value() { return value; }
-                    public DsStore _root() { return _root; }
-                    public DsStore.Block.BlockData.Record _parent() { return _parent; }
-                }
-                public static class Ustr extends KaitaiStruct {
-                    public static Ustr fromFile(String fileName) throws IOException {
-                        return new Ustr(new ByteBufferKaitaiStream(fileName));
-                    }
-
-                    public Ustr(KaitaiStream _io) {
-                        this(_io, null, null);
-                    }
-
-                    public Ustr(KaitaiStream _io, DsStore.Block.BlockData.Record _parent) {
-                        this(_io, _parent, null);
-                    }
-
-                    public Ustr(KaitaiStream _io, DsStore.Block.BlockData.Record _parent, DsStore _root) {
-                        super(_io);
-                        this._parent = _parent;
-                        this._root = _root;
-                        _read();
-                    }
-                    private void _read() {
-                        this.length = this._io.readU4be();
-                        this.value = new String(this._io.readBytes((2 * length())), Charset.forName(&quot;UTF-16BE&quot;));
-                    }
-                    private long length;
-                    private String value;
-                    private DsStore _root;
-                    private DsStore.Block.BlockData.Record _parent;
-                    public long length() { return length; }
-                    public String value() { return value; }
-                    public DsStore _root() { return _root; }
-                    public DsStore.Block.BlockData.Record _parent() { return _parent; }
-                }
-                public static class FourCharCode extends KaitaiStruct {
-                    public static FourCharCode fromFile(String fileName) throws IOException {
-                        return new FourCharCode(new ByteBufferKaitaiStream(fileName));
-                    }
-
-                    public FourCharCode(KaitaiStream _io) {
-                        this(_io, null, null);
-                    }
-
-                    public FourCharCode(KaitaiStream _io, DsStore.Block.BlockData.Record _parent) {
-                        this(_io, _parent, null);
-                    }
-
-                    public FourCharCode(KaitaiStream _io, DsStore.Block.BlockData.Record _parent, DsStore _root) {
-                        super(_io);
-                        this._parent = _parent;
-                        this._root = _root;
-                        _read();
-                    }
-                    private void _read() {
-                        this.value = new String(this._io.readBytes(4), Charset.forName(&quot;UTF-8&quot;));
-                    }
-                    private String value;
-                    private DsStore _root;
-                    private DsStore.Block.BlockData.Record _parent;
-                    public String value() { return value; }
-                    public DsStore _root() { return _root; }
-                    public DsStore.Block.BlockData.Record _parent() { return _parent; }
-                }
-                private Ustr filename;
-                private FourCharCode structureType;
-                private String dataType;
-                private Object value;
-                private DsStore _root;
-                private DsStore.Block.BlockData _parent;
-                public Ustr filename() { return filename; }
-
-                /**
-                 * Description of the entry&#39;s property.
-                 */
-                public FourCharCode structureType() { return structureType; }
-
-                /**
-                 * Data type of the value.
-                 */
-                public String dataType() { return dataType; }
-                public Object value() { return value; }
-                public DsStore _root() { return _root; }
-                public DsStore.Block.BlockData _parent() { return _parent; }
-            }
-            private Block block;
-            public Block block() {
-                if (this.block != null)
-                    return this.block;
-                if (mode() &gt; 0) {
-                    KaitaiStream io = _root._io();
-                    long _pos = io.pos();
-                    io.seek(_root.buddyAllocatorBody().blockAddresses().get((int) blockId()).offset());
-                    this.block = new Block(io, this, _root);
-                    io.seek(_pos);
-                }
-                return this.block;
-            }
-            private Long blockId;
-            private Record record;
-            private long mode;
-            private DsStore _root;
-            private DsStore.Block _parent;
-            public Long blockId() { return blockId; }
-            public Record record() { return record; }
-            public long mode() { return mode; }
-            public DsStore _root() { return _root; }
-            public DsStore.Block _parent() { return _parent; }
-        }
-        private Block rightmostBlock;
-
-        /**
-         * Rightmost child block pointer.
-         */
-        public Block rightmostBlock() {
-            if (this.rightmostBlock != null)
-                return this.rightmostBlock;
-            if (mode() &gt; 0) {
-                KaitaiStream io = _root._io();
-                long _pos = io.pos();
-                io.seek(_root.buddyAllocatorBody().blockAddresses().get((int) mode()).offset());
-                this.rightmostBlock = new Block(io, this, _root);
-                io.seek(_pos);
-            }
-            return this.rightmostBlock;
-        }
-        private long mode;
-        private long counter;
-        private ArrayList&lt;BlockData&gt; data;
-        private DsStore _root;
-        private KaitaiStruct _parent;
-
-        /**
-         * If mode is 0, this is a leaf node, otherwise it is an internal node.
-         */
-        public long mode() { return mode; }
-
-        /**
-         * Number of records or number of block id + record pairs.
-         */
-        public long counter() { return counter; }
-        public ArrayList&lt;BlockData&gt; data() { return data; }
-        public DsStore _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-    private BuddyAllocatorBody buddyAllocatorBody;
-    public BuddyAllocatorBody buddyAllocatorBody() {
-        if (this.buddyAllocatorBody != null)
-            return this.buddyAllocatorBody;
-        long _pos = this._io.pos();
-        this._io.seek((buddyAllocatorHeader().ofsBookkeepingInfoBlock() + 4));
-        this._raw_buddyAllocatorBody = this._io.readBytes(buddyAllocatorHeader().lenBookkeepingInfoBlock());
-        KaitaiStream _io__raw_buddyAllocatorBody = new ByteBufferKaitaiStream(_raw_buddyAllocatorBody);
-        this.buddyAllocatorBody = new BuddyAllocatorBody(_io__raw_buddyAllocatorBody, this, _root);
-        this._io.seek(_pos);
-        return this.buddyAllocatorBody;
-    }
-    private Byte blockAddressMask;
-
-    /**
-     * Bitmask used to calculate the position and the size of each block
-     * of the B-tree from the block addresses.
-     */
-    public Byte blockAddressMask() {
-        if (this.blockAddressMask != null)
-            return this.blockAddressMask;
-        byte _tmp = (byte) (31);
-        this.blockAddressMask = _tmp;
-        return this.blockAddressMask;
-    }
-    private byte[] alignmentHeader;
-    private BuddyAllocatorHeader buddyAllocatorHeader;
-    private DsStore _root;
-    private KaitaiStruct _parent;
-    private byte[] _raw_buddyAllocatorBody;
-    public byte[] alignmentHeader() { return alignmentHeader; }
-    public BuddyAllocatorHeader buddyAllocatorHeader() { return buddyAllocatorHeader; }
-    public DsStore _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_buddyAllocatorBody() { return _raw_buddyAllocatorBody; }
-}
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * Apple macOS &#39;.DS_Store&#39; file format.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://en.wikipedia.org/wiki/.DS_Store</span>
+<span class="cm"> * https://metacpan.org/pod/distribution/Mac-Finder-DSStore/DSStoreFormat.pod</span>
+<span class="cm"> * https://0day.work/parsing-the-ds_store-file-format</span>
+<span class="cm"> * &quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">DsStore</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">DsStore</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">DsStore</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="nf">DsStore</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="nf">DsStore</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="nf">DsStore</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">alignmentHeader</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="p">});</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">buddyAllocatorHeader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BuddyAllocatorHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">BuddyAllocatorHeader</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">BuddyAllocatorHeader</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">BuddyAllocatorHeader</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">BuddyAllocatorHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">BuddyAllocatorHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">BuddyAllocatorHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">66</span><span class="p">,</span> <span class="mi">117</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">49</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsBookkeepingInfoBlock</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenBookkeepingInfoBlock</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">copyOfsBookkeepingInfoBlock</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_unnamed4</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">magic</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsBookkeepingInfoBlock</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenBookkeepingInfoBlock</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">copyOfsBookkeepingInfoBlock</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_unnamed4</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_parent</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Magic number &#39;Bud1&#39;.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">magic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsBookkeepingInfoBlock</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsBookkeepingInfoBlock</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenBookkeepingInfoBlock</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenBookkeepingInfoBlock</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Needs to match &#39;offset_bookkeeping_info_block&#39;.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">copyOfsBookkeepingInfoBlock</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">copyOfsBookkeepingInfoBlock</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Unused field which might simply be the unused space at the end of the block,</span>
+<span class="cm">         * since the minimum allocation size is 32 bytes.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_unnamed4</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unnamed4</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">BuddyAllocatorBody</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">BuddyAllocatorBody</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">BuddyAllocatorBody</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">BuddyAllocatorBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">BuddyAllocatorBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">BuddyAllocatorBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numBlocks</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_unnamed1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+            <span class="n">blockAddresses</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BlockDescriptor</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numBlockAddresses</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numBlockAddresses</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">blockAddresses</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">BlockDescriptor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numDirectories</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="n">directoryEntries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DirectoryEntry</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numDirectories</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numDirectories</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">directoryEntries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">DirectoryEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="n">freeLists</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">FreeList</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numFreeLists</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numFreeLists</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">freeLists</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">FreeList</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">BlockDescriptor</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">BlockDescriptor</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">BlockDescriptor</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">BlockDescriptor</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">BlockDescriptor</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">BlockDescriptor</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">addressRaw</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">Integer</span> <span class="n">offset</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">offset</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">offset</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">offset</span><span class="p">;</span>
+                <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">addressRaw</span><span class="p">()</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">blockAddressMask</span><span class="p">()))</span> <span class="o">+</span> <span class="mi">4</span><span class="p">));</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">offset</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">offset</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">Integer</span> <span class="n">size</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">size</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">size</span><span class="p">;</span>
+                <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">addressRaw</span><span class="p">())</span> <span class="o">&amp;</span> <span class="n">_root</span><span class="p">.</span><span class="na">blockAddressMask</span><span class="p">()));</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">size</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">size</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">addressRaw</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">addressRaw</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">addressRaw</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DirectoryEntry</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">DirectoryEntry</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">DirectoryEntry</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">DirectoryEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">DirectoryEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">DirectoryEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">lenName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenName</span><span class="p">()),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">blockId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">int</span> <span class="n">lenName</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">blockId</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lenName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenName</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">String</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">name</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">blockId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">blockId</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">FreeList</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">FreeList</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">FreeList</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">FreeList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">FreeList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">FreeList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">counter</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+                <span class="n">offsets</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">counter</span><span class="p">()));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">counter</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">offsets</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">counter</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="n">offsets</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">counter</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">counter</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Long</span><span class="o">&gt;</span> <span class="nf">offsets</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">offsets</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">numBlockAddresses</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">numBlockAddresses</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">numBlockAddresses</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">numBlockAddresses</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mi">256</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numBlockAddresses</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">numBlockAddresses</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Byte</span> <span class="n">numFreeLists</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Byte</span> <span class="nf">numFreeLists</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">numFreeLists</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">numFreeLists</span><span class="p">;</span>
+            <span class="kt">byte</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="mi">32</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numFreeLists</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">numFreeLists</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">MasterBlockRef</span><span class="o">&gt;</span> <span class="n">directories</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Master blocks of the different B-trees.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">MasterBlockRef</span><span class="o">&gt;</span> <span class="nf">directories</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">directories</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">directories</span><span class="p">;</span>
+            <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+            <span class="n">directories</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">MasterBlockRef</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numDirectories</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numDirectories</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">directories</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">MasterBlockRef</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">i</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">directories</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numBlocks</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_unnamed1</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BlockDescriptor</span><span class="o">&gt;</span> <span class="n">blockAddresses</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numDirectories</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DirectoryEntry</span><span class="o">&gt;</span> <span class="n">directoryEntries</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">FreeList</span><span class="o">&gt;</span> <span class="n">freeLists</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_parent</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Number of blocks in the allocated-blocks list.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numBlocks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numBlocks</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Unknown field which appears to always be 0.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_unnamed1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unnamed1</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Addresses of the different blocks.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BlockDescriptor</span><span class="o">&gt;</span> <span class="nf">blockAddresses</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">blockAddresses</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Indicates the number of directory entries.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numDirectories</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numDirectories</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Each directory is an independent B-tree.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DirectoryEntry</span><span class="o">&gt;</span> <span class="nf">directoryEntries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">directoryEntries</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">FreeList</span><span class="o">&gt;</span> <span class="nf">freeLists</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">freeLists</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MasterBlockRef</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+
+        <span class="kd">public</span> <span class="nf">MasterBlockRef</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="kt">long</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">idx</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">MasterBlockRef</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="n">_parent</span><span class="p">,</span> <span class="kt">long</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">idx</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">MasterBlockRef</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">,</span> <span class="kt">long</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">idx</span> <span class="o">=</span> <span class="n">idx</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MasterBlock</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">MasterBlock</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">MasterBlock</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">MasterBlock</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">MasterBlock</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">MasterBlockRef</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">MasterBlock</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">MasterBlockRef</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">blockId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">numInternalNodes</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">numRecords</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">numNodes</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_unnamed4</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">Block</span> <span class="n">rootBlock</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">Block</span> <span class="nf">rootBlock</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">rootBlock</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">rootBlock</span><span class="p">;</span>
+                <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">buddyAllocatorBody</span><span class="p">().</span><span class="na">blockAddresses</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">blockId</span><span class="p">()).</span><span class="na">offset</span><span class="p">());</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">rootBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Block</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">rootBlock</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">blockId</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">numInternalNodes</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">numRecords</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">numNodes</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">_unnamed4</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">MasterBlockRef</span> <span class="n">_parent</span><span class="p">;</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Block number of the B-tree&#39;s root node.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">blockId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">blockId</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Number of internal node levels.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numInternalNodes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numInternalNodes</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Number of records in the tree.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numRecords</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numRecords</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Number of nodes in the tree.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numNodes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numNodes</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Always 0x1000, probably the B-tree node page size.</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">_unnamed4</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unnamed4</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">MasterBlockRef</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">MasterBlock</span> <span class="n">masterBlock</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">MasterBlock</span> <span class="nf">masterBlock</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">masterBlock</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">masterBlock</span><span class="p">;</span>
+            <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_parent</span><span class="p">().</span><span class="na">blockAddresses</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">_parent</span><span class="p">().</span><span class="na">directoryEntries</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">idx</span><span class="p">()).</span><span class="na">blockId</span><span class="p">()).</span><span class="na">offset</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_masterBlock</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">_parent</span><span class="p">().</span><span class="na">blockAddresses</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">_parent</span><span class="p">().</span><span class="na">directoryEntries</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">idx</span><span class="p">()).</span><span class="na">blockId</span><span class="p">()).</span><span class="na">size</span><span class="p">());</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_masterBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_masterBlock</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">masterBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MasterBlock</span><span class="p">(</span><span class="n">_io__raw_masterBlock</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">masterBlock</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">idx</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_masterBlock</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">idx</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idx</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">BuddyAllocatorBody</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_masterBlock</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_masterBlock</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Block</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Block</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Block</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Block</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Block</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">Block</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">mode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">counter</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BlockData</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">counter</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">counter</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">data</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">BlockData</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">mode</span><span class="p">()));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">BlockData</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+
+            <span class="kd">public</span> <span class="nf">BlockData</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="kt">long</span> <span class="n">mode</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">mode</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">BlockData</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span> <span class="n">_parent</span><span class="p">,</span> <span class="kt">long</span> <span class="n">mode</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">mode</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">BlockData</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">,</span> <span class="kt">long</span> <span class="n">mode</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">mode</span> <span class="o">=</span> <span class="n">mode</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">mode</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">blockId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">record</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Record</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+                <span class="kd">public</span> <span class="kd">static</span> <span class="n">Record</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="kd">public</span> <span class="nf">Record</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                <span class="p">}</span>
+
+                <span class="kd">public</span> <span class="nf">Record</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                <span class="p">}</span>
+
+                <span class="kd">public</span> <span class="nf">Record</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">filename</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ustr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">structureType</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FourCharCode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">dataType</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">dataType</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="s">&quot;long&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="s">&quot;shor&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="s">&quot;comp&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="s">&quot;bool&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="s">&quot;ustr&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ustr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="s">&quot;dutc&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8be</span><span class="p">());</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="s">&quot;type&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FourCharCode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="s">&quot;blob&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RecordBlob</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">RecordBlob</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+                    <span class="kd">public</span> <span class="kd">static</span> <span class="n">RecordBlob</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                        <span class="k">return</span> <span class="k">new</span> <span class="n">RecordBlob</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">public</span> <span class="nf">RecordBlob</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">public</span> <span class="nf">RecordBlob</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">public</span> <span class="nf">RecordBlob</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                        <span class="n">_read</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">length</span><span class="p">());</span>
+                    <span class="p">}</span>
+                    <span class="kd">private</span> <span class="kt">long</span> <span class="n">length</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">value</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">;</span>
+                    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">length</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">length</span><span class="p">;</span> <span class="p">}</span>
+                    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+                    <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+                    <span class="kd">public</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span><span class="p">.</span><span class="na">Record</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Ustr</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+                    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Ustr</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                        <span class="k">return</span> <span class="k">new</span> <span class="n">Ustr</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">public</span> <span class="nf">Ustr</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">public</span> <span class="nf">Ustr</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">public</span> <span class="nf">Ustr</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                        <span class="n">_read</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">length</span><span class="p">())),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-16BE&quot;</span><span class="p">));</span>
+                    <span class="p">}</span>
+                    <span class="kd">private</span> <span class="kt">long</span> <span class="n">length</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="n">String</span> <span class="n">value</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">;</span>
+                    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">length</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">length</span><span class="p">;</span> <span class="p">}</span>
+                    <span class="kd">public</span> <span class="n">String</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+                    <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+                    <span class="kd">public</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span><span class="p">.</span><span class="na">Record</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">FourCharCode</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+                    <span class="kd">public</span> <span class="kd">static</span> <span class="n">FourCharCode</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                        <span class="k">return</span> <span class="k">new</span> <span class="n">FourCharCode</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">public</span> <span class="nf">FourCharCode</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">public</span> <span class="nf">FourCharCode</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+                    <span class="p">}</span>
+
+                    <span class="kd">public</span> <span class="nf">FourCharCode</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                        <span class="n">_read</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+                    <span class="p">}</span>
+                    <span class="kd">private</span> <span class="n">String</span> <span class="n">value</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">;</span>
+                    <span class="kd">private</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span><span class="p">.</span><span class="na">Record</span> <span class="n">_parent</span><span class="p">;</span>
+                    <span class="kd">public</span> <span class="n">String</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+                    <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+                    <span class="kd">public</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span><span class="p">.</span><span class="na">Record</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="kd">private</span> <span class="n">Ustr</span> <span class="n">filename</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="n">FourCharCode</span> <span class="n">structureType</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="n">String</span> <span class="n">dataType</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="n">Object</span> <span class="n">value</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="kd">private</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="kd">public</span> <span class="n">Ustr</span> <span class="nf">filename</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">filename</span><span class="p">;</span> <span class="p">}</span>
+
+                <span class="cm">/**</span>
+<span class="cm">                 * Description of the entry&#39;s property.</span>
+<span class="cm">                 */</span>
+                <span class="kd">public</span> <span class="n">FourCharCode</span> <span class="nf">structureType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">structureType</span><span class="p">;</span> <span class="p">}</span>
+
+                <span class="cm">/**</span>
+<span class="cm">                 * Data type of the value.</span>
+<span class="cm">                 */</span>
+                <span class="kd">public</span> <span class="n">String</span> <span class="nf">dataType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">dataType</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kd">public</span> <span class="n">Object</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+                <span class="kd">public</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span><span class="p">.</span><span class="na">BlockData</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">Block</span> <span class="n">block</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">Block</span> <span class="nf">block</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">block</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">block</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">mode</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+                    <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                    <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">buddyAllocatorBody</span><span class="p">().</span><span class="na">blockAddresses</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">blockId</span><span class="p">()).</span><span class="na">offset</span><span class="p">());</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">block</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Block</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                    <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">block</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">Long</span> <span class="n">blockId</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">Record</span> <span class="n">record</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">mode</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">Long</span> <span class="nf">blockId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">blockId</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">Record</span> <span class="nf">record</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">record</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">mode</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">mode</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">DsStore</span><span class="p">.</span><span class="na">Block</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Block</span> <span class="n">rightmostBlock</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Rightmost child block pointer.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Block</span> <span class="nf">rightmostBlock</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">rightmostBlock</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">rightmostBlock</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">mode</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">buddyAllocatorBody</span><span class="p">().</span><span class="na">blockAddresses</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">mode</span><span class="p">()).</span><span class="na">offset</span><span class="p">());</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">rightmostBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Block</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">rightmostBlock</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">mode</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">counter</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BlockData</span><span class="o">&gt;</span> <span class="n">data</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * If mode is 0, this is a leaf node, otherwise it is an internal node.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">mode</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">mode</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Number of records or number of block id + record pairs.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">counter</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">counter</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">BlockData</span><span class="o">&gt;</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">BuddyAllocatorBody</span> <span class="n">buddyAllocatorBody</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">BuddyAllocatorBody</span> <span class="nf">buddyAllocatorBody</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">buddyAllocatorBody</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">buddyAllocatorBody</span><span class="p">;</span>
+        <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">buddyAllocatorHeader</span><span class="p">().</span><span class="na">ofsBookkeepingInfoBlock</span><span class="p">()</span> <span class="o">+</span> <span class="mi">4</span><span class="p">));</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_raw_buddyAllocatorBody</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">buddyAllocatorHeader</span><span class="p">().</span><span class="na">lenBookkeepingInfoBlock</span><span class="p">());</span>
+        <span class="n">KaitaiStream</span> <span class="n">_io__raw_buddyAllocatorBody</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_buddyAllocatorBody</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">buddyAllocatorBody</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BuddyAllocatorBody</span><span class="p">(</span><span class="n">_io__raw_buddyAllocatorBody</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">buddyAllocatorBody</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">Byte</span> <span class="n">blockAddressMask</span><span class="p">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Bitmask used to calculate the position and the size of each block</span>
+<span class="cm">     * of the B-tree from the block addresses.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">Byte</span> <span class="nf">blockAddressMask</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">blockAddressMask</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">blockAddressMask</span><span class="p">;</span>
+        <span class="kt">byte</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="mi">31</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">blockAddressMask</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">blockAddressMask</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">alignmentHeader</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">BuddyAllocatorHeader</span> <span class="n">buddyAllocatorHeader</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">DsStore</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_buddyAllocatorBody</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">alignmentHeader</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">alignmentHeader</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">BuddyAllocatorHeader</span> <span class="nf">buddyAllocatorHeader</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">buddyAllocatorHeader</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">DsStore</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_buddyAllocatorBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_buddyAllocatorBody</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1008,8 +1005,8 @@ public class DsStore extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -255,73 +252,73 @@ describes binary version.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: stl
-  endian: le
-  application: 3D Systems Stereolithography
-  file-extension: stl
-  xref:
-    wikidata: Q1238229
-  license: CC0-1.0
-doc: |
-  STL files are used to represent simple 3D models, defined using
-  triangular 3D faces.
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stl</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3D Systems Stereolithography</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stl</span>
+  <span class="nt">xref</span><span class="p">:</span>
+    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q1238229</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">STL files are used to represent simple 3D models, defined using</span>
+  <span class="no">triangular 3D faces.</span>
 
-  Initially it was introduced as native format for 3D Systems
-  Stereolithography CAD system, but due to its extreme simplicity, it
-  was adopted by a wide range of 3D modelling, CAD, rapid prototyping
-  and 3D printing applications as the simplest 3D model exchange
-  format.
+  <span class="no">Initially it was introduced as native format for 3D Systems</span>
+  <span class="no">Stereolithography CAD system, but due to its extreme simplicity, it</span>
+  <span class="no">was adopted by a wide range of 3D modelling, CAD, rapid prototyping</span>
+  <span class="no">and 3D printing applications as the simplest 3D model exchange</span>
+  <span class="no">format.</span>
 
-  STL is extremely bare-bones format: there are no complex headers, no
-  texture / color support, no units specifications, no distinct vertex
-  arrays. Whole model is specified as a collection of triangular
-  faces.
+  <span class="no">STL is extremely bare-bones format: there are no complex headers, no</span>
+  <span class="no">texture / color support, no units specifications, no distinct vertex</span>
+  <span class="no">arrays. Whole model is specified as a collection of triangular</span>
+  <span class="no">faces.</span>
 
-  There are two versions of the format (text and binary), this spec
-  describes binary version.
-seq:
-  - id: header
-    size: 80
-  - id: num_triangles
-    type: u4
-  - id: triangles
-    type: triangle
-    repeat: expr
-    repeat-expr: num_triangles
-types:
-  triangle:
-    doc: |
-      Each STL triangle is defined by its 3 points in 3D space and a
-      normal vector, which is generally used to determine where is
-      &quot;inside&quot; and &quot;outside&quot; of the model.
-    seq:
-      - id: normal
-        type: vec3d
-      - id: vertices
-        type: vec3d
-        repeat: expr
-        repeat-expr: 3
-      - id: abr
-        type: u2
-        doc: |
-          In theory (per standard), it&#39;s &quot;attribute byte count&quot; with
-          no other details given on what &quot;attribute&quot; is and what
-          should be stored in this field.
+  <span class="no">There are two versions of the format (text and binary), this spec</span>
+  <span class="no">describes binary version.</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">80</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_triangles</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">triangles</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">triangle</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_triangles</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">triangle</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Each STL triangle is defined by its 3 points in 3D space and a</span>
+      <span class="no">normal vector, which is generally used to determine where is</span>
+      <span class="no">&quot;inside&quot; and &quot;outside&quot; of the model.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">normal</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vec3d</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vertices</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vec3d</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">abr</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">In theory (per standard), it&#39;s &quot;attribute byte count&quot; with</span>
+          <span class="no">no other details given on what &quot;attribute&quot; is and what</span>
+          <span class="no">should be stored in this field.</span>
 
-          In practice, software dealing with STL either expected to
-          see 0 here, or uses this 16-bit field per se to store
-          additional attributes (such as RGB color of a vertex or
-          color index).
-  vec3d:
-    seq:
-      - id: x
-        type: f4
-      - id: y
-        type: f4
-      - id: z
-        type: f4
-</code></pre>
+          <span class="no">In practice, software dealing with STL either expected to</span>
+          <span class="no">see 0 here, or uses this 16-bit field per se to store</span>
+          <span class="no">additional attributes (such as RGB color of a vertex or</span>
+          <span class="no">color index).</span>
+  <span class="nt">vec3d</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">z</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+</pre></div>
     </div>
 </section>
 
@@ -345,8 +342,8 @@ types:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

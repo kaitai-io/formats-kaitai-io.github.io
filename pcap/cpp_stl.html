@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -308,283 +305,283 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef PCAP_H_
-#define PCAP_H_
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef PCAP_H_</span>
+<span class="cp">#define PCAP_H_</span>
 
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;kaitai/kaitaistruct.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
 
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
-class ethernet_frame_t;
-class packet_ppi_t;
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
+<span class="k">class</span> <span class="nc">ethernet_frame_t</span><span class="p">;</span>
+<span class="k">class</span> <span class="nc">packet_ppi_t</span><span class="p">;</span>
 
-/**
- * PCAP (named after libpcap / winpcap) is a popular format for saving
- * network traffic grabbed by network sniffers. It is typically
- * produced by tools like [tcpdump](https://www.tcpdump.org/) or
- * [Wireshark](https://www.wireshark.org/).
- * \sa Source
- */
+<span class="cm">/**</span>
+<span class="cm"> * PCAP (named after libpcap / winpcap) is a popular format for saving</span>
+<span class="cm"> * network traffic grabbed by network sniffers. It is typically</span>
+<span class="cm"> * produced by tools like [tcpdump](https://www.tcpdump.org/) or</span>
+<span class="cm"> * [Wireshark](https://www.wireshark.org/).</span>
+<span class="cm"> * \sa Source</span>
+<span class="cm"> */</span>
 
-class pcap_t : public kaitai::kstruct {
+<span class="k">class</span> <span class="nc">pcap_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-public:
-    class header_t;
-    class packet_t;
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">header_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">packet_t</span><span class="p">;</span>
 
-    enum linktype_t {
-        LINKTYPE_NULL_LINKTYPE = 0,
-        LINKTYPE_ETHERNET = 1,
-        LINKTYPE_AX25 = 3,
-        LINKTYPE_IEEE802_5 = 6,
-        LINKTYPE_ARCNET_BSD = 7,
-        LINKTYPE_SLIP = 8,
-        LINKTYPE_PPP = 9,
-        LINKTYPE_FDDI = 10,
-        LINKTYPE_PPP_HDLC = 50,
-        LINKTYPE_PPP_ETHER = 51,
-        LINKTYPE_ATM_RFC1483 = 100,
-        LINKTYPE_RAW = 101,
-        LINKTYPE_C_HDLC = 104,
-        LINKTYPE_IEEE802_11 = 105,
-        LINKTYPE_FRELAY = 107,
-        LINKTYPE_LOOP = 108,
-        LINKTYPE_LINUX_SLL = 113,
-        LINKTYPE_LTALK = 114,
-        LINKTYPE_PFLOG = 117,
-        LINKTYPE_IEEE802_11_PRISM = 119,
-        LINKTYPE_IP_OVER_FC = 122,
-        LINKTYPE_SUNATM = 123,
-        LINKTYPE_IEEE802_11_RADIOTAP = 127,
-        LINKTYPE_ARCNET_LINUX = 129,
-        LINKTYPE_APPLE_IP_OVER_IEEE1394 = 138,
-        LINKTYPE_MTP2_WITH_PHDR = 139,
-        LINKTYPE_MTP2 = 140,
-        LINKTYPE_MTP3 = 141,
-        LINKTYPE_SCCP = 142,
-        LINKTYPE_DOCSIS = 143,
-        LINKTYPE_LINUX_IRDA = 144,
-        LINKTYPE_USER0 = 147,
-        LINKTYPE_USER1 = 148,
-        LINKTYPE_USER2 = 149,
-        LINKTYPE_USER3 = 150,
-        LINKTYPE_USER4 = 151,
-        LINKTYPE_USER5 = 152,
-        LINKTYPE_USER6 = 153,
-        LINKTYPE_USER7 = 154,
-        LINKTYPE_USER8 = 155,
-        LINKTYPE_USER9 = 156,
-        LINKTYPE_USER10 = 157,
-        LINKTYPE_USER11 = 158,
-        LINKTYPE_USER12 = 159,
-        LINKTYPE_USER13 = 160,
-        LINKTYPE_USER14 = 161,
-        LINKTYPE_USER15 = 162,
-        LINKTYPE_IEEE802_11_AVS = 163,
-        LINKTYPE_BACNET_MS_TP = 165,
-        LINKTYPE_PPP_PPPD = 166,
-        LINKTYPE_GPRS_LLC = 169,
-        LINKTYPE_GPF_T = 170,
-        LINKTYPE_GPF_F = 171,
-        LINKTYPE_LINUX_LAPD = 177,
-        LINKTYPE_BLUETOOTH_HCI_H4 = 187,
-        LINKTYPE_USB_LINUX = 189,
-        LINKTYPE_PPI = 192,
-        LINKTYPE_IEEE802_15_4 = 195,
-        LINKTYPE_SITA = 196,
-        LINKTYPE_ERF = 197,
-        LINKTYPE_BLUETOOTH_HCI_H4_WITH_PHDR = 201,
-        LINKTYPE_AX25_KISS = 202,
-        LINKTYPE_LAPD = 203,
-        LINKTYPE_PPP_WITH_DIR = 204,
-        LINKTYPE_C_HDLC_WITH_DIR = 205,
-        LINKTYPE_FRELAY_WITH_DIR = 206,
-        LINKTYPE_IPMB_LINUX = 209,
-        LINKTYPE_IEEE802_15_4_NONASK_PHY = 215,
-        LINKTYPE_USB_LINUX_MMAPPED = 220,
-        LINKTYPE_FC_2 = 224,
-        LINKTYPE_FC_2_WITH_FRAME_DELIMS = 225,
-        LINKTYPE_IPNET = 226,
-        LINKTYPE_CAN_SOCKETCAN = 227,
-        LINKTYPE_IPV4 = 228,
-        LINKTYPE_IPV6 = 229,
-        LINKTYPE_IEEE802_15_4_NOFCS = 230,
-        LINKTYPE_DBUS = 231,
-        LINKTYPE_DVB_CI = 235,
-        LINKTYPE_MUX27010 = 236,
-        LINKTYPE_STANAG_5066_D_PDU = 237,
-        LINKTYPE_NFLOG = 239,
-        LINKTYPE_NETANALYZER = 240,
-        LINKTYPE_NETANALYZER_TRANSPARENT = 241,
-        LINKTYPE_IPOIB = 242,
-        LINKTYPE_MPEG_2_TS = 243,
-        LINKTYPE_NG40 = 244,
-        LINKTYPE_NFC_LLCP = 245,
-        LINKTYPE_INFINIBAND = 247,
-        LINKTYPE_SCTP = 248,
-        LINKTYPE_USBPCAP = 249,
-        LINKTYPE_RTAC_SERIAL = 250,
-        LINKTYPE_BLUETOOTH_LE_LL = 251,
-        LINKTYPE_NETLINK = 253,
-        LINKTYPE_BLUETOOTH_LINUX_MONITOR = 254,
-        LINKTYPE_BLUETOOTH_BREDR_BB = 255,
-        LINKTYPE_BLUETOOTH_LE_LL_WITH_PHDR = 256,
-        LINKTYPE_PROFIBUS_DL = 257,
-        LINKTYPE_PKTAP = 258,
-        LINKTYPE_EPON = 259,
-        LINKTYPE_IPMI_HPM_2 = 260,
-        LINKTYPE_ZWAVE_R1_R2 = 261,
-        LINKTYPE_ZWAVE_R3 = 262,
-        LINKTYPE_WATTSTOPPER_DLM = 263,
-        LINKTYPE_ISO_14443 = 264
-    };
+    <span class="k">enum</span> <span class="n">linktype_t</span> <span class="p">{</span>
+        <span class="n">LINKTYPE_NULL_LINKTYPE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">LINKTYPE_ETHERNET</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">LINKTYPE_AX25</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">LINKTYPE_IEEE802_5</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="n">LINKTYPE_ARCNET_BSD</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+        <span class="n">LINKTYPE_SLIP</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="n">LINKTYPE_PPP</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+        <span class="n">LINKTYPE_FDDI</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">LINKTYPE_PPP_HDLC</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+        <span class="n">LINKTYPE_PPP_ETHER</span> <span class="o">=</span> <span class="mi">51</span><span class="p">,</span>
+        <span class="n">LINKTYPE_ATM_RFC1483</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">LINKTYPE_RAW</span> <span class="o">=</span> <span class="mi">101</span><span class="p">,</span>
+        <span class="n">LINKTYPE_C_HDLC</span> <span class="o">=</span> <span class="mi">104</span><span class="p">,</span>
+        <span class="n">LINKTYPE_IEEE802_11</span> <span class="o">=</span> <span class="mi">105</span><span class="p">,</span>
+        <span class="n">LINKTYPE_FRELAY</span> <span class="o">=</span> <span class="mi">107</span><span class="p">,</span>
+        <span class="n">LINKTYPE_LOOP</span> <span class="o">=</span> <span class="mi">108</span><span class="p">,</span>
+        <span class="n">LINKTYPE_LINUX_SLL</span> <span class="o">=</span> <span class="mi">113</span><span class="p">,</span>
+        <span class="n">LINKTYPE_LTALK</span> <span class="o">=</span> <span class="mi">114</span><span class="p">,</span>
+        <span class="n">LINKTYPE_PFLOG</span> <span class="o">=</span> <span class="mi">117</span><span class="p">,</span>
+        <span class="n">LINKTYPE_IEEE802_11_PRISM</span> <span class="o">=</span> <span class="mi">119</span><span class="p">,</span>
+        <span class="n">LINKTYPE_IP_OVER_FC</span> <span class="o">=</span> <span class="mi">122</span><span class="p">,</span>
+        <span class="n">LINKTYPE_SUNATM</span> <span class="o">=</span> <span class="mi">123</span><span class="p">,</span>
+        <span class="n">LINKTYPE_IEEE802_11_RADIOTAP</span> <span class="o">=</span> <span class="mi">127</span><span class="p">,</span>
+        <span class="n">LINKTYPE_ARCNET_LINUX</span> <span class="o">=</span> <span class="mi">129</span><span class="p">,</span>
+        <span class="n">LINKTYPE_APPLE_IP_OVER_IEEE1394</span> <span class="o">=</span> <span class="mi">138</span><span class="p">,</span>
+        <span class="n">LINKTYPE_MTP2_WITH_PHDR</span> <span class="o">=</span> <span class="mi">139</span><span class="p">,</span>
+        <span class="n">LINKTYPE_MTP2</span> <span class="o">=</span> <span class="mi">140</span><span class="p">,</span>
+        <span class="n">LINKTYPE_MTP3</span> <span class="o">=</span> <span class="mi">141</span><span class="p">,</span>
+        <span class="n">LINKTYPE_SCCP</span> <span class="o">=</span> <span class="mi">142</span><span class="p">,</span>
+        <span class="n">LINKTYPE_DOCSIS</span> <span class="o">=</span> <span class="mi">143</span><span class="p">,</span>
+        <span class="n">LINKTYPE_LINUX_IRDA</span> <span class="o">=</span> <span class="mi">144</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER0</span> <span class="o">=</span> <span class="mi">147</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER1</span> <span class="o">=</span> <span class="mi">148</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER2</span> <span class="o">=</span> <span class="mi">149</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER3</span> <span class="o">=</span> <span class="mi">150</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER4</span> <span class="o">=</span> <span class="mi">151</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER5</span> <span class="o">=</span> <span class="mi">152</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER6</span> <span class="o">=</span> <span class="mi">153</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER7</span> <span class="o">=</span> <span class="mi">154</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER8</span> <span class="o">=</span> <span class="mi">155</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER9</span> <span class="o">=</span> <span class="mi">156</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER10</span> <span class="o">=</span> <span class="mi">157</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER11</span> <span class="o">=</span> <span class="mi">158</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER12</span> <span class="o">=</span> <span class="mi">159</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER13</span> <span class="o">=</span> <span class="mi">160</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER14</span> <span class="o">=</span> <span class="mi">161</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USER15</span> <span class="o">=</span> <span class="mi">162</span><span class="p">,</span>
+        <span class="n">LINKTYPE_IEEE802_11_AVS</span> <span class="o">=</span> <span class="mi">163</span><span class="p">,</span>
+        <span class="n">LINKTYPE_BACNET_MS_TP</span> <span class="o">=</span> <span class="mi">165</span><span class="p">,</span>
+        <span class="n">LINKTYPE_PPP_PPPD</span> <span class="o">=</span> <span class="mi">166</span><span class="p">,</span>
+        <span class="n">LINKTYPE_GPRS_LLC</span> <span class="o">=</span> <span class="mi">169</span><span class="p">,</span>
+        <span class="n">LINKTYPE_GPF_T</span> <span class="o">=</span> <span class="mi">170</span><span class="p">,</span>
+        <span class="n">LINKTYPE_GPF_F</span> <span class="o">=</span> <span class="mi">171</span><span class="p">,</span>
+        <span class="n">LINKTYPE_LINUX_LAPD</span> <span class="o">=</span> <span class="mi">177</span><span class="p">,</span>
+        <span class="n">LINKTYPE_BLUETOOTH_HCI_H4</span> <span class="o">=</span> <span class="mi">187</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USB_LINUX</span> <span class="o">=</span> <span class="mi">189</span><span class="p">,</span>
+        <span class="n">LINKTYPE_PPI</span> <span class="o">=</span> <span class="mi">192</span><span class="p">,</span>
+        <span class="n">LINKTYPE_IEEE802_15_4</span> <span class="o">=</span> <span class="mi">195</span><span class="p">,</span>
+        <span class="n">LINKTYPE_SITA</span> <span class="o">=</span> <span class="mi">196</span><span class="p">,</span>
+        <span class="n">LINKTYPE_ERF</span> <span class="o">=</span> <span class="mi">197</span><span class="p">,</span>
+        <span class="n">LINKTYPE_BLUETOOTH_HCI_H4_WITH_PHDR</span> <span class="o">=</span> <span class="mi">201</span><span class="p">,</span>
+        <span class="n">LINKTYPE_AX25_KISS</span> <span class="o">=</span> <span class="mi">202</span><span class="p">,</span>
+        <span class="n">LINKTYPE_LAPD</span> <span class="o">=</span> <span class="mi">203</span><span class="p">,</span>
+        <span class="n">LINKTYPE_PPP_WITH_DIR</span> <span class="o">=</span> <span class="mi">204</span><span class="p">,</span>
+        <span class="n">LINKTYPE_C_HDLC_WITH_DIR</span> <span class="o">=</span> <span class="mi">205</span><span class="p">,</span>
+        <span class="n">LINKTYPE_FRELAY_WITH_DIR</span> <span class="o">=</span> <span class="mi">206</span><span class="p">,</span>
+        <span class="n">LINKTYPE_IPMB_LINUX</span> <span class="o">=</span> <span class="mi">209</span><span class="p">,</span>
+        <span class="n">LINKTYPE_IEEE802_15_4_NONASK_PHY</span> <span class="o">=</span> <span class="mi">215</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USB_LINUX_MMAPPED</span> <span class="o">=</span> <span class="mi">220</span><span class="p">,</span>
+        <span class="n">LINKTYPE_FC_2</span> <span class="o">=</span> <span class="mi">224</span><span class="p">,</span>
+        <span class="n">LINKTYPE_FC_2_WITH_FRAME_DELIMS</span> <span class="o">=</span> <span class="mi">225</span><span class="p">,</span>
+        <span class="n">LINKTYPE_IPNET</span> <span class="o">=</span> <span class="mi">226</span><span class="p">,</span>
+        <span class="n">LINKTYPE_CAN_SOCKETCAN</span> <span class="o">=</span> <span class="mi">227</span><span class="p">,</span>
+        <span class="n">LINKTYPE_IPV4</span> <span class="o">=</span> <span class="mi">228</span><span class="p">,</span>
+        <span class="n">LINKTYPE_IPV6</span> <span class="o">=</span> <span class="mi">229</span><span class="p">,</span>
+        <span class="n">LINKTYPE_IEEE802_15_4_NOFCS</span> <span class="o">=</span> <span class="mi">230</span><span class="p">,</span>
+        <span class="n">LINKTYPE_DBUS</span> <span class="o">=</span> <span class="mi">231</span><span class="p">,</span>
+        <span class="n">LINKTYPE_DVB_CI</span> <span class="o">=</span> <span class="mi">235</span><span class="p">,</span>
+        <span class="n">LINKTYPE_MUX27010</span> <span class="o">=</span> <span class="mi">236</span><span class="p">,</span>
+        <span class="n">LINKTYPE_STANAG_5066_D_PDU</span> <span class="o">=</span> <span class="mi">237</span><span class="p">,</span>
+        <span class="n">LINKTYPE_NFLOG</span> <span class="o">=</span> <span class="mi">239</span><span class="p">,</span>
+        <span class="n">LINKTYPE_NETANALYZER</span> <span class="o">=</span> <span class="mi">240</span><span class="p">,</span>
+        <span class="n">LINKTYPE_NETANALYZER_TRANSPARENT</span> <span class="o">=</span> <span class="mi">241</span><span class="p">,</span>
+        <span class="n">LINKTYPE_IPOIB</span> <span class="o">=</span> <span class="mi">242</span><span class="p">,</span>
+        <span class="n">LINKTYPE_MPEG_2_TS</span> <span class="o">=</span> <span class="mi">243</span><span class="p">,</span>
+        <span class="n">LINKTYPE_NG40</span> <span class="o">=</span> <span class="mi">244</span><span class="p">,</span>
+        <span class="n">LINKTYPE_NFC_LLCP</span> <span class="o">=</span> <span class="mi">245</span><span class="p">,</span>
+        <span class="n">LINKTYPE_INFINIBAND</span> <span class="o">=</span> <span class="mi">247</span><span class="p">,</span>
+        <span class="n">LINKTYPE_SCTP</span> <span class="o">=</span> <span class="mi">248</span><span class="p">,</span>
+        <span class="n">LINKTYPE_USBPCAP</span> <span class="o">=</span> <span class="mi">249</span><span class="p">,</span>
+        <span class="n">LINKTYPE_RTAC_SERIAL</span> <span class="o">=</span> <span class="mi">250</span><span class="p">,</span>
+        <span class="n">LINKTYPE_BLUETOOTH_LE_LL</span> <span class="o">=</span> <span class="mi">251</span><span class="p">,</span>
+        <span class="n">LINKTYPE_NETLINK</span> <span class="o">=</span> <span class="mi">253</span><span class="p">,</span>
+        <span class="n">LINKTYPE_BLUETOOTH_LINUX_MONITOR</span> <span class="o">=</span> <span class="mi">254</span><span class="p">,</span>
+        <span class="n">LINKTYPE_BLUETOOTH_BREDR_BB</span> <span class="o">=</span> <span class="mi">255</span><span class="p">,</span>
+        <span class="n">LINKTYPE_BLUETOOTH_LE_LL_WITH_PHDR</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span>
+        <span class="n">LINKTYPE_PROFIBUS_DL</span> <span class="o">=</span> <span class="mi">257</span><span class="p">,</span>
+        <span class="n">LINKTYPE_PKTAP</span> <span class="o">=</span> <span class="mi">258</span><span class="p">,</span>
+        <span class="n">LINKTYPE_EPON</span> <span class="o">=</span> <span class="mi">259</span><span class="p">,</span>
+        <span class="n">LINKTYPE_IPMI_HPM_2</span> <span class="o">=</span> <span class="mi">260</span><span class="p">,</span>
+        <span class="n">LINKTYPE_ZWAVE_R1_R2</span> <span class="o">=</span> <span class="mi">261</span><span class="p">,</span>
+        <span class="n">LINKTYPE_ZWAVE_R3</span> <span class="o">=</span> <span class="mi">262</span><span class="p">,</span>
+        <span class="n">LINKTYPE_WATTSTOPPER_DLM</span> <span class="o">=</span> <span class="mi">263</span><span class="p">,</span>
+        <span class="n">LINKTYPE_ISO_14443</span> <span class="o">=</span> <span class="mi">264</span>
+    <span class="p">};</span>
 
-    pcap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, pcap_t* p__root = 0);
+    <span class="n">pcap_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pcap_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-private:
-    void _read();
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-public:
-    ~pcap_t();
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">pcap_t</span><span class="p">();</span>
 
-    /**
-     * \sa Source
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * \sa Source</span>
+<span class="cm">     */</span>
 
-    class header_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">header_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        header_t(kaitai::kstream* p__io, pcap_t* p__parent = 0, pcap_t* p__root = 0);
+        <span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">pcap_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pcap_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~header_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">header_t</span><span class="p">();</span>
 
-    private:
-        std::string m_magic_number;
-        uint16_t m_version_major;
-        uint16_t m_version_minor;
-        int32_t m_thiszone;
-        uint32_t m_sigfigs;
-        uint32_t m_snaplen;
-        linktype_t m_network;
-        pcap_t* m__root;
-        pcap_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_magic_number</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_version_major</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_version_minor</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_thiszone</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_sigfigs</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_snaplen</span><span class="p">;</span>
+        <span class="n">linktype_t</span> <span class="n">m_network</span><span class="p">;</span>
+        <span class="n">pcap_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">pcap_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        std::string magic_number() const { return m_magic_number; }
-        uint16_t version_major() const { return m_version_major; }
-        uint16_t version_minor() const { return m_version_minor; }
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">magic_number</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_magic_number</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">version_major</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_version_major</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">version_minor</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_version_minor</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Correction time in seconds between UTC and the local
-         * timezone of the following packet header timestamps.
-         */
-        int32_t thiszone() const { return m_thiszone; }
+        <span class="cm">/**</span>
+<span class="cm">         * Correction time in seconds between UTC and the local</span>
+<span class="cm">         * timezone of the following packet header timestamps.</span>
+<span class="cm">         */</span>
+        <span class="kt">int32_t</span> <span class="n">thiszone</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_thiszone</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * In theory, the accuracy of time stamps in the capture; in
-         * practice, all tools set it to 0.
-         */
-        uint32_t sigfigs() const { return m_sigfigs; }
+        <span class="cm">/**</span>
+<span class="cm">         * In theory, the accuracy of time stamps in the capture; in</span>
+<span class="cm">         * practice, all tools set it to 0.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">sigfigs</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_sigfigs</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * The &quot;snapshot length&quot; for the capture (typically 65535 or
-         * even more, but might be limited by the user), see: incl_len
-         * vs. orig_len.
-         */
-        uint32_t snaplen() const { return m_snaplen; }
+        <span class="cm">/**</span>
+<span class="cm">         * The &quot;snapshot length&quot; for the capture (typically 65535 or</span>
+<span class="cm">         * even more, but might be limited by the user), see: incl_len</span>
+<span class="cm">         * vs. orig_len.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">snaplen</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_snaplen</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Link-layer header type, specifying the type of headers at
-         * the beginning of the packet.
-         */
-        linktype_t network() const { return m_network; }
-        pcap_t* _root() const { return m__root; }
-        pcap_t* _parent() const { return m__parent; }
-    };
+        <span class="cm">/**</span>
+<span class="cm">         * Link-layer header type, specifying the type of headers at</span>
+<span class="cm">         * the beginning of the packet.</span>
+<span class="cm">         */</span>
+        <span class="n">linktype_t</span> <span class="n">network</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_network</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">pcap_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">pcap_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    /**
-     * \sa Source
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * \sa Source</span>
+<span class="cm">     */</span>
 
-    class packet_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">packet_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        packet_t(kaitai::kstream* p__io, pcap_t* p__parent = 0, pcap_t* p__root = 0);
+        <span class="n">packet_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">pcap_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pcap_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~packet_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">packet_t</span><span class="p">();</span>
 
-    private:
-        uint32_t m_ts_sec;
-        uint32_t m_ts_usec;
-        uint32_t m_incl_len;
-        uint32_t m_orig_len;
-        kaitai::kstruct* m_body;
-        bool n_body;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">m_ts_sec</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_ts_usec</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_incl_len</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_orig_len</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m_body</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_body</span><span class="p">;</span>
 
-    public:
-        bool _is_null_body() { body(); return n_body; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_body</span><span class="p">()</span> <span class="p">{</span> <span class="n">body</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_body</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
-        pcap_t* m__root;
-        pcap_t* m__parent;
-        std::string m__raw_body;
-        kaitai::kstream* m__io__raw_body;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">pcap_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">pcap_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_body</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_body</span><span class="p">;</span>
 
-    public:
-        uint32_t ts_sec() const { return m_ts_sec; }
-        uint32_t ts_usec() const { return m_ts_usec; }
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">ts_sec</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ts_sec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">ts_usec</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ts_usec</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Number of bytes of packet data actually captured and saved in the file.
-         */
-        uint32_t incl_len() const { return m_incl_len; }
+        <span class="cm">/**</span>
+<span class="cm">         * Number of bytes of packet data actually captured and saved in the file.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">incl_len</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_incl_len</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Length of the packet as it appeared on the network when it was captured.
-         */
-        uint32_t orig_len() const { return m_orig_len; }
+        <span class="cm">/**</span>
+<span class="cm">         * Length of the packet as it appeared on the network when it was captured.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">orig_len</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_orig_len</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * \sa Source
-         */
-        kaitai::kstruct* body() const { return m_body; }
-        pcap_t* _root() const { return m__root; }
-        pcap_t* _parent() const { return m__parent; }
-        std::string _raw_body() const { return m__raw_body; }
-        kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
-    };
+        <span class="cm">/**</span>
+<span class="cm">         * \sa Source</span>
+<span class="cm">         */</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">pcap_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">pcap_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-private:
-    header_t* m_hdr;
-    std::vector&lt;packet_t*&gt;* m_packets;
-    pcap_t* m__root;
-    kaitai::kstruct* m__parent;
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">header_t</span><span class="o">*</span> <span class="n">m_hdr</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">packet_t</span><span class="o">*&gt;*</span> <span class="n">m_packets</span><span class="p">;</span>
+    <span class="n">pcap_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-public:
-    header_t* hdr() const { return m_hdr; }
-    std::vector&lt;packet_t*&gt;* packets() const { return m_packets; }
-    pcap_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-};
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">header_t</span><span class="o">*</span> <span class="n">hdr</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_hdr</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">packet_t</span><span class="o">*&gt;*</span> <span class="n">packets</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_packets</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">pcap_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
 
-#endif  // PCAP_H_
-</code></pre>
+<span class="cp">#endif  </span><span class="c1">// PCAP_H_</span>
+</pre></div>
 
         </div>
         
@@ -600,100 +597,100 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;pcap.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;pcap.h&quot;</span><span class="cp"></span>
 
 
-#include &quot;ethernet_frame.h&quot;
-#include &quot;packet_ppi.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;ethernet_frame.h&quot;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;packet_ppi.h&quot;</span><span class="cp"></span>
 
-pcap_t::pcap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, pcap_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    _read();
-}
+<span class="n">pcap_t</span><span class="o">::</span><span class="n">pcap_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">pcap_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void pcap_t::_read() {
-    m_hdr = new header_t(m__io, this, m__root);
-    m_packets = new std::vector&lt;packet_t*&gt;();
-    {
-        int i = 0;
-        while (!m__io-&gt;is_eof()) {
-            m_packets-&gt;push_back(new packet_t(m__io, this, m__root));
-            i++;
-        }
-    }
-}
+<span class="kt">void</span> <span class="n">pcap_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_hdr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">header_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_packets</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">packet_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">m_packets</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">packet_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-pcap_t::~pcap_t() {
-    delete m_hdr;
-    for (std::vector&lt;packet_t*&gt;::iterator it = m_packets-&gt;begin(); it != m_packets-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_packets;
-}
+<span class="n">pcap_t</span><span class="o">::~</span><span class="n">pcap_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_hdr</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">packet_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_packets</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_packets</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_packets</span><span class="p">;</span>
+<span class="p">}</span>
 
-pcap_t::header_t::header_t(kaitai::kstream* p__io, pcap_t* p__parent, pcap_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">pcap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">pcap_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">pcap_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void pcap_t::header_t::_read() {
-    m_magic_number = m__io-&gt;ensure_fixed_contents(std::string(&quot;\xD4\xC3\xB2\xA1&quot;, 4));
-    m_version_major = m__io-&gt;read_u2le();
-    m_version_minor = m__io-&gt;read_u2le();
-    m_thiszone = m__io-&gt;read_s4le();
-    m_sigfigs = m__io-&gt;read_u4le();
-    m_snaplen = m__io-&gt;read_u4le();
-    m_network = static_cast&lt;pcap_t::linktype_t&gt;(m__io-&gt;read_u4le());
-}
+<span class="kt">void</span> <span class="n">pcap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_magic_number</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\xD4\xC3\xB2\xA1</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">));</span>
+    <span class="n">m_version_major</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_version_minor</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_thiszone</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s4le</span><span class="p">();</span>
+    <span class="n">m_sigfigs</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_snaplen</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_network</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">pcap_t</span><span class="o">::</span><span class="n">linktype_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">());</span>
+<span class="p">}</span>
 
-pcap_t::header_t::~header_t() {
-}
+<span class="n">pcap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::~</span><span class="n">header_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-pcap_t::packet_t::packet_t(kaitai::kstream* p__io, pcap_t* p__parent, pcap_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">pcap_t</span><span class="o">::</span><span class="n">packet_t</span><span class="o">::</span><span class="n">packet_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">pcap_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">pcap_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void pcap_t::packet_t::_read() {
-    m_ts_sec = m__io-&gt;read_u4le();
-    m_ts_usec = m__io-&gt;read_u4le();
-    m_incl_len = m__io-&gt;read_u4le();
-    m_orig_len = m__io-&gt;read_u4le();
-    n_body = true;
-    switch (_root()-&gt;hdr()-&gt;network()) {
-    case LINKTYPE_PPI: {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(incl_len());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new packet_ppi_t(m__io__raw_body);
-        break;
-    }
-    case LINKTYPE_ETHERNET: {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(incl_len());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new ethernet_frame_t(m__io__raw_body);
-        break;
-    }
-    default: {
-        m__raw_body = m__io-&gt;read_bytes(incl_len());
-        break;
-    }
-    }
-}
+<span class="kt">void</span> <span class="n">pcap_t</span><span class="o">::</span><span class="n">packet_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_ts_sec</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_ts_usec</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_incl_len</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_orig_len</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">n_body</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">hdr</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">network</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nl">LINKTYPE_PPI</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">incl_len</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">packet_ppi_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">LINKTYPE_ETHERNET</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">incl_len</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ethernet_frame_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">default</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">incl_len</span><span class="p">());</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-pcap_t::packet_t::~packet_t() {
-    if (!n_body) {
-        delete m__io__raw_body;
-        delete m_body;
-    }
-}
-</code></pre>
+<span class="n">pcap_t</span><span class="o">::</span><span class="n">packet_t</span><span class="o">::~</span><span class="n">packet_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_body</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="n">m_body</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -720,8 +717,8 @@ pcap_t::packet_t::~packet_t() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -245,360 +242,356 @@ data = QuicktimeMov(KaitaiStream(BytesIO(raw)))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
-
-
-if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
-    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
-
-class QuicktimeMov(KaitaiStruct):
-    &quot;&quot;&quot;
-    .. seealso::
-       Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF
-    &quot;&quot;&quot;
-
-    class AtomType(Enum):
-        xtra = 1484026465
-        dinf = 1684631142
-        dref = 1685218662
-        edts = 1701082227
-        elst = 1701606260
-        free = 1718773093
-        ftyp = 1718909296
-        hdlr = 1751411826
-        iods = 1768907891
-        mdat = 1835295092
-        mdhd = 1835296868
-        mdia = 1835297121
-        meta = 1835365473
-        minf = 1835626086
-        moof = 1836019558
-        moov = 1836019574
-        mvhd = 1836476516
-        smhd = 1936549988
-        stbl = 1937007212
-        stco = 1937007471
-        stsc = 1937011555
-        stsd = 1937011556
-        stsz = 1937011578
-        stts = 1937011827
-        tkhd = 1953196132
-        traf = 1953653094
-        trak = 1953653099
-        tref = 1953654118
-        udta = 1969517665
-        vmhd = 1986881636
-
-    class Brand(Enum):
-        x_3g2a = 862401121
-        x_3ge6 = 862414134
-        x_3ge9 = 862414137
-        x_3gf9 = 862414393
-        x_3gg6 = 862414646
-        x_3gg9 = 862414649
-        x_3gh9 = 862414905
-        x_3gm9 = 862416185
-        x_3gp4 = 862416948
-        x_3gp5 = 862416949
-        x_3gp6 = 862416950
-        x_3gp7 = 862416951
-        x_3gp8 = 862416952
-        x_3gp9 = 862416953
-        x_3gr6 = 862417462
-        x_3gr9 = 862417465
-        x_3gs6 = 862417718
-        x_3gs9 = 862417721
-        x_3gt9 = 862417977
-        arri = 1095914057
-        caep = 1128351056
-        cdes = 1128555891
-        j2p0 = 1244811312
-        j2p1 = 1244811313
-        lcag = 1279476039
-        m4a = 1295270176
-        m4b = 1295270432
-        m4p = 1295274016
-        m4v = 1295275552
-        mfsm = 1296454477
-        mgsv = 1296520022
-        mppi = 1297109065
-        msnv = 1297305174
-        ross = 1380930387
-        seau = 1397047637
-        sebk = 1397047883
-        xavc = 1480676931
-        avc1 = 1635148593
-        bbxm = 1650620525
-        caqv = 1667330422
-        ccff = 1667458662
-        da0a = 1684090977
-        da0b = 1684090978
-        da1a = 1684091233
-        da1b = 1684091234
-        da2a = 1684091489
-        da2b = 1684091490
-        da3a = 1684091745
-        da3b = 1684091746
-        dash = 1684108136
-        dby1 = 1684175153
-        dmb1 = 1684890161
-        dsms = 1685286259
-        dv1a = 1685467489
-        dv1b = 1685467490
-        dv2a = 1685467745
-        dv2b = 1685467746
-        dv3a = 1685468001
-        dv3b = 1685468002
-        dvr1 = 1685484081
-        dvt1 = 1685484593
-        dxo = 1685614368
-        emsg = 1701671783
-        ifrm = 1768321645
-        isc2 = 1769169714
-        iso2 = 1769172786
-        iso3 = 1769172787
-        iso4 = 1769172788
-        iso5 = 1769172789
-        iso6 = 1769172790
-        isom = 1769172845
-        jp2 = 1785737760
-        jpm = 1785752864
-        jpsi = 1785754473
-        jpx = 1785755680
-        jpxb = 1785755746
-        lmsg = 1819112295
-        mj2s = 1835676275
-        mjp2 = 1835692082
-        mp21 = 1836069425
-        mp41 = 1836069937
-        mp42 = 1836069938
-        mp71 = 1836070705
-        msdh = 1836278888
-        msix = 1836280184
-        niko = 1852402543
-        odcf = 1868850022
-        opf2 = 1869637170
-        opx2 = 1869641778
-        pana = 1885433441
-        piff = 1885955686
-        pnvi = 1886287465
-        qt = 1903435808
-        risx = 1919513464
-        sdv = 1935963680
-        senv = 1936027254
-        sims = 1936289139
-        sisx = 1936290680
-        ssss = 1936946035
-        uvvu = 1970697845
-    def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
-        self._parent = _parent
-        self._root = _root if _root else self
-        self._read()
-
-    def _read(self):
-        self.atoms = self._root.AtomList(self._io, self, self._root)
-
-    class MvhdBody(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.version = self._io.read_u1()
-            self.flags = self._io.read_bytes(3)
-            self.creation_time = self._io.read_u4be()
-            self.modification_time = self._io.read_u4be()
-            self.time_scale = self._io.read_u4be()
-            self.duration = self._io.read_u4be()
-            self.preferred_rate = self._root.Fixed32(self._io, self, self._root)
-            self.preferred_volume = self._root.Fixed16(self._io, self, self._root)
-            self.reserved1 = self._io.read_bytes(10)
-            self.matrix = self._io.read_bytes(36)
-            self.preview_time = self._io.read_u4be()
-            self.preview_duration = self._io.read_u4be()
-            self.poster_time = self._io.read_u4be()
-            self.selection_time = self._io.read_u4be()
-            self.selection_duration = self._io.read_u4be()
-            self.current_time = self._io.read_u4be()
-            self.next_track_id = self._io.read_u4be()
+<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">parse_version</span>
+<span class="kn">from</span> <span class="nn">kaitaistruct</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">ks_version</span><span class="p">,</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
 
-    class FtypBody(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+<span class="k">if</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">ks_version</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">parse_version</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ks_version</span><span class="p">))</span>
 
-        def _read(self):
-            self.major_brand = self._root.Brand(self._io.read_u4be())
-            self.minor_version = self._io.read_bytes(4)
-            self.compatible_brands = []
-            i = 0
-            while not self._io.is_eof():
-                self.compatible_brands.append(self._root.Brand(self._io.read_u4be()))
-                i += 1
+<span class="k">class</span> <span class="nc">QuicktimeMov</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    .. seealso::</span>
+<span class="sd">       Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">class</span> <span class="nc">AtomType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="n">xtra</span> <span class="o">=</span> <span class="mi">1484026465</span>
+        <span class="n">dinf</span> <span class="o">=</span> <span class="mi">1684631142</span>
+        <span class="n">dref</span> <span class="o">=</span> <span class="mi">1685218662</span>
+        <span class="n">edts</span> <span class="o">=</span> <span class="mi">1701082227</span>
+        <span class="n">elst</span> <span class="o">=</span> <span class="mi">1701606260</span>
+        <span class="n">free</span> <span class="o">=</span> <span class="mi">1718773093</span>
+        <span class="n">ftyp</span> <span class="o">=</span> <span class="mi">1718909296</span>
+        <span class="n">hdlr</span> <span class="o">=</span> <span class="mi">1751411826</span>
+        <span class="n">iods</span> <span class="o">=</span> <span class="mi">1768907891</span>
+        <span class="n">mdat</span> <span class="o">=</span> <span class="mi">1835295092</span>
+        <span class="n">mdhd</span> <span class="o">=</span> <span class="mi">1835296868</span>
+        <span class="n">mdia</span> <span class="o">=</span> <span class="mi">1835297121</span>
+        <span class="n">meta</span> <span class="o">=</span> <span class="mi">1835365473</span>
+        <span class="n">minf</span> <span class="o">=</span> <span class="mi">1835626086</span>
+        <span class="n">moof</span> <span class="o">=</span> <span class="mi">1836019558</span>
+        <span class="n">moov</span> <span class="o">=</span> <span class="mi">1836019574</span>
+        <span class="n">mvhd</span> <span class="o">=</span> <span class="mi">1836476516</span>
+        <span class="n">smhd</span> <span class="o">=</span> <span class="mi">1936549988</span>
+        <span class="n">stbl</span> <span class="o">=</span> <span class="mi">1937007212</span>
+        <span class="n">stco</span> <span class="o">=</span> <span class="mi">1937007471</span>
+        <span class="n">stsc</span> <span class="o">=</span> <span class="mi">1937011555</span>
+        <span class="n">stsd</span> <span class="o">=</span> <span class="mi">1937011556</span>
+        <span class="n">stsz</span> <span class="o">=</span> <span class="mi">1937011578</span>
+        <span class="n">stts</span> <span class="o">=</span> <span class="mi">1937011827</span>
+        <span class="n">tkhd</span> <span class="o">=</span> <span class="mi">1953196132</span>
+        <span class="n">traf</span> <span class="o">=</span> <span class="mi">1953653094</span>
+        <span class="n">trak</span> <span class="o">=</span> <span class="mi">1953653099</span>
+        <span class="n">tref</span> <span class="o">=</span> <span class="mi">1953654118</span>
+        <span class="n">udta</span> <span class="o">=</span> <span class="mi">1969517665</span>
+        <span class="n">vmhd</span> <span class="o">=</span> <span class="mi">1986881636</span>
+
+    <span class="k">class</span> <span class="nc">Brand</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="n">x_3g2a</span> <span class="o">=</span> <span class="mi">862401121</span>
+        <span class="n">x_3ge6</span> <span class="o">=</span> <span class="mi">862414134</span>
+        <span class="n">x_3ge9</span> <span class="o">=</span> <span class="mi">862414137</span>
+        <span class="n">x_3gf9</span> <span class="o">=</span> <span class="mi">862414393</span>
+        <span class="n">x_3gg6</span> <span class="o">=</span> <span class="mi">862414646</span>
+        <span class="n">x_3gg9</span> <span class="o">=</span> <span class="mi">862414649</span>
+        <span class="n">x_3gh9</span> <span class="o">=</span> <span class="mi">862414905</span>
+        <span class="n">x_3gm9</span> <span class="o">=</span> <span class="mi">862416185</span>
+        <span class="n">x_3gp4</span> <span class="o">=</span> <span class="mi">862416948</span>
+        <span class="n">x_3gp5</span> <span class="o">=</span> <span class="mi">862416949</span>
+        <span class="n">x_3gp6</span> <span class="o">=</span> <span class="mi">862416950</span>
+        <span class="n">x_3gp7</span> <span class="o">=</span> <span class="mi">862416951</span>
+        <span class="n">x_3gp8</span> <span class="o">=</span> <span class="mi">862416952</span>
+        <span class="n">x_3gp9</span> <span class="o">=</span> <span class="mi">862416953</span>
+        <span class="n">x_3gr6</span> <span class="o">=</span> <span class="mi">862417462</span>
+        <span class="n">x_3gr9</span> <span class="o">=</span> <span class="mi">862417465</span>
+        <span class="n">x_3gs6</span> <span class="o">=</span> <span class="mi">862417718</span>
+        <span class="n">x_3gs9</span> <span class="o">=</span> <span class="mi">862417721</span>
+        <span class="n">x_3gt9</span> <span class="o">=</span> <span class="mi">862417977</span>
+        <span class="n">arri</span> <span class="o">=</span> <span class="mi">1095914057</span>
+        <span class="n">caep</span> <span class="o">=</span> <span class="mi">1128351056</span>
+        <span class="n">cdes</span> <span class="o">=</span> <span class="mi">1128555891</span>
+        <span class="n">j2p0</span> <span class="o">=</span> <span class="mi">1244811312</span>
+        <span class="n">j2p1</span> <span class="o">=</span> <span class="mi">1244811313</span>
+        <span class="n">lcag</span> <span class="o">=</span> <span class="mi">1279476039</span>
+        <span class="n">m4a</span> <span class="o">=</span> <span class="mi">1295270176</span>
+        <span class="n">m4b</span> <span class="o">=</span> <span class="mi">1295270432</span>
+        <span class="n">m4p</span> <span class="o">=</span> <span class="mi">1295274016</span>
+        <span class="n">m4v</span> <span class="o">=</span> <span class="mi">1295275552</span>
+        <span class="n">mfsm</span> <span class="o">=</span> <span class="mi">1296454477</span>
+        <span class="n">mgsv</span> <span class="o">=</span> <span class="mi">1296520022</span>
+        <span class="n">mppi</span> <span class="o">=</span> <span class="mi">1297109065</span>
+        <span class="n">msnv</span> <span class="o">=</span> <span class="mi">1297305174</span>
+        <span class="n">ross</span> <span class="o">=</span> <span class="mi">1380930387</span>
+        <span class="n">seau</span> <span class="o">=</span> <span class="mi">1397047637</span>
+        <span class="n">sebk</span> <span class="o">=</span> <span class="mi">1397047883</span>
+        <span class="n">xavc</span> <span class="o">=</span> <span class="mi">1480676931</span>
+        <span class="n">avc1</span> <span class="o">=</span> <span class="mi">1635148593</span>
+        <span class="n">bbxm</span> <span class="o">=</span> <span class="mi">1650620525</span>
+        <span class="n">caqv</span> <span class="o">=</span> <span class="mi">1667330422</span>
+        <span class="n">ccff</span> <span class="o">=</span> <span class="mi">1667458662</span>
+        <span class="n">da0a</span> <span class="o">=</span> <span class="mi">1684090977</span>
+        <span class="n">da0b</span> <span class="o">=</span> <span class="mi">1684090978</span>
+        <span class="n">da1a</span> <span class="o">=</span> <span class="mi">1684091233</span>
+        <span class="n">da1b</span> <span class="o">=</span> <span class="mi">1684091234</span>
+        <span class="n">da2a</span> <span class="o">=</span> <span class="mi">1684091489</span>
+        <span class="n">da2b</span> <span class="o">=</span> <span class="mi">1684091490</span>
+        <span class="n">da3a</span> <span class="o">=</span> <span class="mi">1684091745</span>
+        <span class="n">da3b</span> <span class="o">=</span> <span class="mi">1684091746</span>
+        <span class="n">dash</span> <span class="o">=</span> <span class="mi">1684108136</span>
+        <span class="n">dby1</span> <span class="o">=</span> <span class="mi">1684175153</span>
+        <span class="n">dmb1</span> <span class="o">=</span> <span class="mi">1684890161</span>
+        <span class="n">dsms</span> <span class="o">=</span> <span class="mi">1685286259</span>
+        <span class="n">dv1a</span> <span class="o">=</span> <span class="mi">1685467489</span>
+        <span class="n">dv1b</span> <span class="o">=</span> <span class="mi">1685467490</span>
+        <span class="n">dv2a</span> <span class="o">=</span> <span class="mi">1685467745</span>
+        <span class="n">dv2b</span> <span class="o">=</span> <span class="mi">1685467746</span>
+        <span class="n">dv3a</span> <span class="o">=</span> <span class="mi">1685468001</span>
+        <span class="n">dv3b</span> <span class="o">=</span> <span class="mi">1685468002</span>
+        <span class="n">dvr1</span> <span class="o">=</span> <span class="mi">1685484081</span>
+        <span class="n">dvt1</span> <span class="o">=</span> <span class="mi">1685484593</span>
+        <span class="n">dxo</span> <span class="o">=</span> <span class="mi">1685614368</span>
+        <span class="n">emsg</span> <span class="o">=</span> <span class="mi">1701671783</span>
+        <span class="n">ifrm</span> <span class="o">=</span> <span class="mi">1768321645</span>
+        <span class="n">isc2</span> <span class="o">=</span> <span class="mi">1769169714</span>
+        <span class="n">iso2</span> <span class="o">=</span> <span class="mi">1769172786</span>
+        <span class="n">iso3</span> <span class="o">=</span> <span class="mi">1769172787</span>
+        <span class="n">iso4</span> <span class="o">=</span> <span class="mi">1769172788</span>
+        <span class="n">iso5</span> <span class="o">=</span> <span class="mi">1769172789</span>
+        <span class="n">iso6</span> <span class="o">=</span> <span class="mi">1769172790</span>
+        <span class="n">isom</span> <span class="o">=</span> <span class="mi">1769172845</span>
+        <span class="n">jp2</span> <span class="o">=</span> <span class="mi">1785737760</span>
+        <span class="n">jpm</span> <span class="o">=</span> <span class="mi">1785752864</span>
+        <span class="n">jpsi</span> <span class="o">=</span> <span class="mi">1785754473</span>
+        <span class="n">jpx</span> <span class="o">=</span> <span class="mi">1785755680</span>
+        <span class="n">jpxb</span> <span class="o">=</span> <span class="mi">1785755746</span>
+        <span class="n">lmsg</span> <span class="o">=</span> <span class="mi">1819112295</span>
+        <span class="n">mj2s</span> <span class="o">=</span> <span class="mi">1835676275</span>
+        <span class="n">mjp2</span> <span class="o">=</span> <span class="mi">1835692082</span>
+        <span class="n">mp21</span> <span class="o">=</span> <span class="mi">1836069425</span>
+        <span class="n">mp41</span> <span class="o">=</span> <span class="mi">1836069937</span>
+        <span class="n">mp42</span> <span class="o">=</span> <span class="mi">1836069938</span>
+        <span class="n">mp71</span> <span class="o">=</span> <span class="mi">1836070705</span>
+        <span class="n">msdh</span> <span class="o">=</span> <span class="mi">1836278888</span>
+        <span class="n">msix</span> <span class="o">=</span> <span class="mi">1836280184</span>
+        <span class="n">niko</span> <span class="o">=</span> <span class="mi">1852402543</span>
+        <span class="n">odcf</span> <span class="o">=</span> <span class="mi">1868850022</span>
+        <span class="n">opf2</span> <span class="o">=</span> <span class="mi">1869637170</span>
+        <span class="n">opx2</span> <span class="o">=</span> <span class="mi">1869641778</span>
+        <span class="n">pana</span> <span class="o">=</span> <span class="mi">1885433441</span>
+        <span class="n">piff</span> <span class="o">=</span> <span class="mi">1885955686</span>
+        <span class="n">pnvi</span> <span class="o">=</span> <span class="mi">1886287465</span>
+        <span class="n">qt</span> <span class="o">=</span> <span class="mi">1903435808</span>
+        <span class="n">risx</span> <span class="o">=</span> <span class="mi">1919513464</span>
+        <span class="n">sdv</span> <span class="o">=</span> <span class="mi">1935963680</span>
+        <span class="n">senv</span> <span class="o">=</span> <span class="mi">1936027254</span>
+        <span class="n">sims</span> <span class="o">=</span> <span class="mi">1936289139</span>
+        <span class="n">sisx</span> <span class="o">=</span> <span class="mi">1936290680</span>
+        <span class="n">ssss</span> <span class="o">=</span> <span class="mi">1936946035</span>
+        <span class="n">uvvu</span> <span class="o">=</span> <span class="mi">1970697845</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atoms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">MvhdBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">creation_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modification_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preferred_rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Fixed32</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preferred_volume</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Fixed16</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reserved1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preview_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preview_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">poster_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selection_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selection_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">next_track_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
 
 
+    <span class="k">class</span> <span class="nc">FtypBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-    class Fixed32(KaitaiStruct):
-        &quot;&quot;&quot;Fixed-point 32-bit number.&quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.int_part = self._io.read_s2be()
-            self.frac_part = self._io.read_u2be()
-
-
-    class Fixed16(KaitaiStruct):
-        &quot;&quot;&quot;Fixed-point 16-bit number.&quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.int_part = self._io.read_s1()
-            self.frac_part = self._io.read_u1()
-
-
-    class Atom(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.len32 = self._io.read_u4be()
-            self.atom_type = self._root.AtomType(self._io.read_u4be())
-            if self.len32 == 1:
-                self.len64 = self._io.read_u8be()
-
-            _on = self.atom_type
-            if _on == self._root.AtomType.stbl:
-                self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(io, self, self._root)
-            elif _on == self._root.AtomType.moof:
-                self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(io, self, self._root)
-            elif _on == self._root.AtomType.mvhd:
-                self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.MvhdBody(io, self, self._root)
-            elif _on == self._root.AtomType.minf:
-                self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(io, self, self._root)
-            elif _on == self._root.AtomType.trak:
-                self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(io, self, self._root)
-            elif _on == self._root.AtomType.traf:
-                self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(io, self, self._root)
-            elif _on == self._root.AtomType.mdia:
-                self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(io, self, self._root)
-            elif _on == self._root.AtomType.ftyp:
-                self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.FtypBody(io, self, self._root)
-            elif _on == self._root.AtomType.moov:
-                self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(io, self, self._root)
-            elif _on == self._root.AtomType.tkhd:
-                self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.TkhdBody(io, self, self._root)
-            elif _on == self._root.AtomType.dinf:
-                self._raw_body = self._io.read_bytes(self.len)
-                io = KaitaiStream(BytesIO(self._raw_body))
-                self.body = self._root.AtomList(io, self, self._root)
-            else:
-                self.body = self._io.read_bytes(self.len)
-
-        @property
-        def len(self):
-            if hasattr(self, &#39;_m_len&#39;):
-                return self._m_len if hasattr(self, &#39;_m_len&#39;) else None
-
-            self._m_len = ((self._io.size() - 8) if self.len32 == 0 else ((self.len64 - 16) if self.len32 == 1 else (self.len32 - 8)))
-            return self._m_len if hasattr(self, &#39;_m_len&#39;) else None
-
-
-    class TkhdBody(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.version = self._io.read_u1()
-            self.flags = self._io.read_bytes(3)
-            self.creation_time = self._io.read_u4be()
-            self.modification_time = self._io.read_u4be()
-            self.track_id = self._io.read_u4be()
-            self.reserved1 = self._io.read_bytes(4)
-            self.duration = self._io.read_u4be()
-            self.reserved2 = self._io.read_bytes(8)
-            self.layer = self._io.read_u2be()
-            self.alternative_group = self._io.read_u2be()
-            self.volume = self._io.read_u2be()
-            self.reserved3 = self._io.read_u2be()
-            self.matrix = self._io.read_bytes(36)
-            self.width = self._root.Fixed32(self._io, self, self._root)
-            self.height = self._root.Fixed32(self._io, self, self._root)
-
-
-    class AtomList(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.items = []
-            i = 0
-            while not self._io.is_eof():
-                self.items.append(self._root.Atom(self._io, self, self._root))
-                i += 1
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">major_brand</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Brand</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">minor_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">compatible_brands</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">compatible_brands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Brand</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()))</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
 
 
+    <span class="k">class</span> <span class="nc">Fixed32</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fixed-point 32-bit number.&quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-</code></pre>
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">int_part</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s2be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frac_part</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+
+
+    <span class="k">class</span> <span class="nc">Fixed16</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fixed-point 16-bit number.&quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">int_part</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frac_part</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+
+
+    <span class="k">class</span> <span class="nc">Atom</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">len32</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">atom_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">())</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len32</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">len64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8be</span><span class="p">()</span>
+
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom_type</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomType</span><span class="o">.</span><span class="n">stbl</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomType</span><span class="o">.</span><span class="n">moof</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomType</span><span class="o">.</span><span class="n">mvhd</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">MvhdBody</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomType</span><span class="o">.</span><span class="n">minf</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomType</span><span class="o">.</span><span class="n">trak</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomType</span><span class="o">.</span><span class="n">traf</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomType</span><span class="o">.</span><span class="n">mdia</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomType</span><span class="o">.</span><span class="n">ftyp</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">FtypBody</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomType</span><span class="o">.</span><span class="n">moov</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomType</span><span class="o">.</span><span class="n">tkhd</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">TkhdBody</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomType</span><span class="o">.</span><span class="n">dinf</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">AtomList</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len</span><span class="p">)</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">len</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_len</span> <span class="o">=</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len32</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">len64</span> <span class="o">-</span> <span class="mi">16</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">len32</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">len32</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)))</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_len</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_len&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+
+    <span class="k">class</span> <span class="nc">TkhdBody</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">creation_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modification_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">track_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reserved1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reserved2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">alternative_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">volume</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reserved3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Fixed32</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Fixed32</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+    <span class="k">class</span> <span class="nc">AtomList</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Atom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">))</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+</pre></div>
 
         </div>
         
@@ -625,8 +618,8 @@ class QuicktimeMov(KaitaiStruct):
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

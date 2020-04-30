@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -204,331 +201,331 @@ particular hardware samplers or synths.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: fasttracker_xm_module
-  title: Extended Module
-  application:
-    - FastTracker 2
-    - Protracker
-    - MilkyTracker
-    - libmodplug
-    - Mikmod
-  file-extension: xm
-  xref:
-    justsolve: Extended_Module
-    pronom: fmt/323
-    wikidata: Q376852
-  license: Unlicense
-  endian: le
-  encoding: utf-8
-doc: |
-  XM (standing for eXtended Module) is a popular module music file
-  format, that was introduced in 1994 in FastTracker2 by Triton demo
-  group. Akin to MOD files, it bundles both digital samples
-  (instruments) and instructions on which note to play at what time
-  (patterns), which provides good audio quality with relatively small
-  file size. Audio is reproducible without relying on the sound of
-  particular hardware samplers or synths.
-doc-ref: |
-  http://sid.ethz.ch/debian/milkytracker/milkytracker-0.90.85%2Bdfsg/resources/reference/xm-form.txt
-  ftp://ftp.modland.com/pub/documents/format_documentation/FastTracker%202%20v2.04%20(.xm).html
-seq:
-  - id: preheader
-    type: preheader
-  - id: header
-    size: preheader.header_size - 4
-    type: header
-  - id: patterns
-    type: pattern
-    repeat: expr
-    repeat-expr: header.num_patterns
-  - id: instruments
-    type: instrument
-    repeat: expr
-    repeat-expr: header.num_instruments
-types:
-  preheader:
-    seq:
-      - id: signature0
-        contents: &#39;Extended Module: &#39;
-      - id: module_name
-        size: 20
-        type: strz
-        doc: Module name, padded with zeroes
-      - id: signature1
-        contents: [0x1a]
-      - id: tracker_name
-        size: 20
-        type: strz
-        doc: Tracker name
-      - id: version_number
-        type: version
-        doc: &quot;Format versions below [0x01, 0x04] have a LOT of differences. Check this field!&quot;
-      - id: header_size
-        type: u4
-        doc: Header size &lt;&lt; Calculated FROM THIS OFFSET, not from the beginning of the file! &gt;&gt;
-    types:
-      version:
-        seq:
-          - id: minor
-            type: u1
-            doc: currently 0x04
-          - id: major
-            type: u1
-            doc: currently 0x01
-        instances:
-          value:
-            value: (major&lt;&lt;8) | minor
-  header:
-    seq:
-      - id: song_length
-        type: u2
-        doc: Song length (in pattern order table)
-      - id: restart_position
-        type: u2
-      - id: num_channels
-        type: u2
-        doc: &quot;(2,4,6,8,10,...,32)&quot;
-      - id: num_patterns
-        type: u2
-        doc: &quot;(max 256)&quot;
-      - id: num_instruments
-        type: u2
-        doc: &quot;(max 128)&quot;
-      - id: flags
-        type: flags
-      - id: default_tempo
-        type: u2
-      - id: default_bpm
-        type: u2
-      - id: pattern_order_table
-        type: u1
-        doc: &quot;max 256&quot;
-        repeat: expr
-        #repeat-expr: song_length
-        repeat-expr: 256
-  flags:
-    seq:
-      - id: reserved
-        type: b15
-      - id: freq_table_type
-        type: b1
-        doc: &quot;0 = Amiga frequency table (see below); 1 = Linear frequency table&quot;
-  pattern:
-    seq:
-      - id: header
-        type: header
-      - id: packed_data
-        size: header.main.len_packed_pattern
-    types:
-      header:
-        seq:
-          - id: header_length
-            type: u4
-            doc: Pattern header length
-          - id: main
-            type: header_main
-            size: header_length - 4
-        types:
-          header_main:
-            seq:
-                - id: packing_type
-                  type: u1
-                  doc: Packing type (always 0)
-                - id: num_rows_raw
-                  type:
-                    switch-on: _root.preheader.version_number.value
-                    cases:
-                      0x0102: u1
-                      _: u2
-                  doc: Number of rows in pattern (1..256)
-                - id: len_packed_pattern
-                  type: u2
-                  doc: Packed pattern data size
-            instances:
-              num_rows:
-                value: &#39;num_rows_raw + (_root.preheader.version_number.value == 0x0102 ? 1 : 0)&#39;
-  instrument:
-    doc: |
-      XM&#39;s notion of &quot;instrument&quot; typically constitutes of a
-      instrument metadata and one or several samples. Metadata
-      includes:
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fasttracker_xm_module</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Extended Module</span>
+  <span class="nt">application</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">FastTracker 2</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Protracker</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">MilkyTracker</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">libmodplug</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Mikmod</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xm</span>
+  <span class="nt">xref</span><span class="p">:</span>
+    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Extended_Module</span>
+    <span class="nt">pronom</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fmt/323</span>
+    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q376852</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Unlicense</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+  <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf-8</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">XM (standing for eXtended Module) is a popular module music file</span>
+  <span class="no">format, that was introduced in 1994 in FastTracker2 by Triton demo</span>
+  <span class="no">group. Akin to MOD files, it bundles both digital samples</span>
+  <span class="no">(instruments) and instructions on which note to play at what time</span>
+  <span class="no">(patterns), which provides good audio quality with relatively small</span>
+  <span class="no">file size. Audio is reproducible without relying on the sound of</span>
+  <span class="no">particular hardware samplers or synths.</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">http://sid.ethz.ch/debian/milkytracker/milkytracker-0.90.85%2Bdfsg/resources/reference/xm-form.txt</span>
+  <span class="no">ftp://ftp.modland.com/pub/documents/format_documentation/FastTracker%202%20v2.04%20(.xm).html</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">preheader</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">preheader</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">preheader.header_size - 4</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">patterns</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pattern</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.num_patterns</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">instruments</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">instrument</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.num_instruments</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">preheader</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature0</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;Extended</span><span class="nv"> </span><span class="s">Module:</span><span class="nv"> </span><span class="s">&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">module_name</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">20</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Module name, padded with zeroes</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature1</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0x1a</span><span class="p p-Indicator">]</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tracker_name</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">20</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Tracker name</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version_number</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Format</span><span class="nv"> </span><span class="s">versions</span><span class="nv"> </span><span class="s">below</span><span class="nv"> </span><span class="s">[0x01,</span><span class="nv"> </span><span class="s">0x04]</span><span class="nv"> </span><span class="s">have</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">LOT</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">differences.</span><span class="nv"> </span><span class="s">Check</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">field!&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Header size &lt;&lt; Calculated FROM THIS OFFSET, not from the beginning of the file! &gt;&gt;</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">version</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minor</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">currently 0x04</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">major</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">currently 0x01</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">value</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(major&lt;&lt;8) | minor</span>
+  <span class="nt">header</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">song_length</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Song length (in pattern order table)</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">restart_position</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_channels</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;(2,4,6,8,10,...,32)&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_patterns</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;(max</span><span class="nv"> </span><span class="s">256)&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_instruments</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;(max</span><span class="nv"> </span><span class="s">128)&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default_tempo</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default_bpm</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pattern_order_table</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;max</span><span class="nv"> </span><span class="s">256&quot;</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="c1">#repeat-expr: song_length</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">256</span>
+  <span class="nt">flags</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b15</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">freq_table_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;0</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">Amiga</span><span class="nv"> </span><span class="s">frequency</span><span class="nv"> </span><span class="s">table</span><span class="nv"> </span><span class="s">(see</span><span class="nv"> </span><span class="s">below);</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">=</span><span class="nv"> </span><span class="s">Linear</span><span class="nv"> </span><span class="s">frequency</span><span class="nv"> </span><span class="s">table&quot;</span>
+  <span class="nt">pattern</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">packed_data</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.main.len_packed_pattern</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">header</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_length</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Pattern header length</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">main</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_main</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_length - 4</span>
+        <span class="nt">types</span><span class="p">:</span>
+          <span class="nt">header_main</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+                <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">packing_type</span>
+                  <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                  <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Packing type (always 0)</span>
+                <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_rows_raw</span>
+                  <span class="nt">type</span><span class="p">:</span>
+                    <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.preheader.version_number.value</span>
+                    <span class="nt">cases</span><span class="p">:</span>
+                      <span class="nt">0x0102</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                      <span class="nt">_</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                  <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Number of rows in pattern (1..256)</span>
+                <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_packed_pattern</span>
+                  <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                  <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Packed pattern data size</span>
+            <span class="nt">instances</span><span class="p">:</span>
+              <span class="nt">num_rows</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;num_rows_raw</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">(_root.preheader.version_number.value</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">0x0102</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">0)&#39;</span>
+  <span class="nt">instrument</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">XM&#39;s notion of &quot;instrument&quot; typically constitutes of a</span>
+      <span class="no">instrument metadata and one or several samples. Metadata</span>
+      <span class="no">includes:</span>
 
-      * instrument&#39;s name
-      * instruction of which sample to use for which note
-      * volume and panning envelopes and looping instructions
-      * vibrato settings
-    seq:
-      - id: header_size
-        type: u4
-        doc: |
-          Instrument size &lt;&lt; header that is &gt;&gt;
-          &lt;&lt; &quot;Instrument Size&quot; field tends to be more than the actual size of the structure documented here (it includes also the extended instrument sample header above). So remember to check it and skip the additional bytes before the first sample header &gt;&gt;
-      - id: header
-        size: header_size - 4
-        type: header
-      - id: samples_headers
-        type: sample_header
-        repeat: expr
-        repeat-expr: header.num_samples
-      - id: samples
-        type: samples_data(samples_headers[_index])
-        repeat: expr
-        repeat-expr: header.num_samples
-    types:
-      header:
-        seq:
-          - id: name
-            size: 22
-            type: strz
-          - id: type
-            type: u1
-            doc: Usually zero, but this seems pretty random, don&#39;t assume it&#39;s zero
-          - id: num_samples
-            type: u2
-          - id: extra_header
-            type: extra_header
-            if: num_samples &gt; 0
-      extra_header:
-        seq:
-          - id: len_sample_header
-            type: u4
-          - id: idx_sample_per_note
-            type: u1
-            repeat: expr
-            repeat-expr: 96
-            doc: |
-              Index of sample that should be used for any particular
-              note. In the simplest case, where it&#39;s only one sample
-              is available, it&#39;s an array of full of zeroes.
-          - id: volume_points
-            type: envelope_point
-            repeat: expr
-            repeat-expr: 12
-            doc: Points for volume envelope. Only `num_volume_points` will be actually used.
-          - id: panning_points
-            type: envelope_point
-            repeat: expr
-            repeat-expr: 12
-            doc: Points for panning envelope. Only `num_panning_points` will be actually used.
-          - id: num_volume_points
-            type: u1
-          - id: num_panning_points
-            type: u1
+      <span class="no">* instrument&#39;s name</span>
+      <span class="no">* instruction of which sample to use for which note</span>
+      <span class="no">* volume and panning envelopes and looping instructions</span>
+      <span class="no">* vibrato settings</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Instrument size &lt;&lt; header that is &gt;&gt;</span>
+          <span class="no">&lt;&lt; &quot;Instrument Size&quot; field tends to be more than the actual size of the structure documented here (it includes also the extended instrument sample header above). So remember to check it and skip the additional bytes before the first sample header &gt;&gt;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_size - 4</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">samples_headers</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sample_header</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.num_samples</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">samples</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">samples_data(samples_headers[_index])</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.num_samples</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">header</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">22</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Usually zero, but this seems pretty random, don&#39;t assume it&#39;s zero</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_samples</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extra_header</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extra_header</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_samples &gt; 0</span>
+      <span class="nt">extra_header</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_sample_header</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">idx_sample_per_note</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">96</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">Index of sample that should be used for any particular</span>
+              <span class="no">note. In the simplest case, where it&#39;s only one sample</span>
+              <span class="no">is available, it&#39;s an array of full of zeroes.</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">volume_points</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">envelope_point</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">12</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Points for volume envelope. Only `num_volume_points` will be actually used.</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">panning_points</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">envelope_point</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">12</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Points for panning envelope. Only `num_panning_points` will be actually used.</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_volume_points</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_panning_points</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
           
-          - id: volume_sustain_point
-            type: u1
-          - id: volume_loop_start_point
-            type: u1
-          - id: volume_loop_end_point
-            type: u1
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">volume_sustain_point</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">volume_loop_start_point</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">volume_loop_end_point</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
           
-          - id: panning_sustain_point
-            type: u1
-          - id: panning_loop_start_point
-            type: u1
-          - id: panning_loop_end_point
-            type: u1
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">panning_sustain_point</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">panning_loop_start_point</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">panning_loop_end_point</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
           
-          - id: volume_type
-            type: u1
-            enum: type
-          - id: panning_type
-            type: u1
-            enum: type
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">volume_type</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">panning_type</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
           
-          - id: vibrato_type
-            type: u1
-          - id: vibrato_sweep
-            type: u1
-          - id: vibrato_depth
-            type: u1
-          - id: vibrato_rate
-            type: u1
-          - id: volume_fadeout
-            type: u2
-          - id: reserved
-            type: u2
-        types:
-          envelope_point:
-            doc: |
-              Envelope frame-counters work in range 0..FFFFh (0..65535 dec).
-              BUT! FT2 only itself supports only range 0..FFh (0..255 dec).
-              Some other trackers (like SoundTracker for Unix), however, can use the full range 0..FFFF, so it should be supported.
-              !!TIP: This is also a good way to detect if the module has been made with FT2 or not. (In case the tracker name is brain- deadly left unchanged!)
-              Of course it does not help if all instruments have the values inside FT2 supported range.
-              The value-field of the envelope point is ranged between 00..3Fh (0..64 dec).
-            seq:
-              - id: x
-                type: u2
-                doc: Frame number of the point
-              - id: y
-                type: u2
-                doc: Value of the point
-        enums:
-          type:
-            0: on
-            1: sustain
-            2: loop
-      samples_data:
-        doc: |
-          The saved data uses simple delta-encoding to achieve better compression ratios (when compressed with pkzip, etc.)
-          Pseudocode for converting the delta-coded data to normal data,
-          old = 0;
-          for i in range(data_len):
-            new = sample[i] + old;
-            sample[i] = new;
-            old = new;
-        params:
-          - id: header
-            type: sample_header
-        seq:
-          - id: data
-            size: &#39;header.sample_length * (header.type.is_sample_data_16_bit ? 2 : 1)&#39;
-      sample_header:
-        seq:
-          - id: sample_length
-            type: u4
-          - id: sample_loop_start
-            type: u4
-          - id: sample_loop_length
-            type: u4
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vibrato_type</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vibrato_sweep</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vibrato_depth</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vibrato_rate</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">volume_fadeout</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">types</span><span class="p">:</span>
+          <span class="nt">envelope_point</span><span class="p">:</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">Envelope frame-counters work in range 0..FFFFh (0..65535 dec).</span>
+              <span class="no">BUT! FT2 only itself supports only range 0..FFh (0..255 dec).</span>
+              <span class="no">Some other trackers (like SoundTracker for Unix), however, can use the full range 0..FFFF, so it should be supported.</span>
+              <span class="no">!!TIP: This is also a good way to detect if the module has been made with FT2 or not. (In case the tracker name is brain- deadly left unchanged!)</span>
+              <span class="no">Of course it does not help if all instruments have the values inside FT2 supported range.</span>
+              <span class="no">The value-field of the envelope point is ranged between 00..3Fh (0..64 dec).</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Frame number of the point</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Value of the point</span>
+        <span class="nt">enums</span><span class="p">:</span>
+          <span class="nt">type</span><span class="p">:</span>
+            <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">on</span>
+            <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sustain</span>
+            <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">loop</span>
+      <span class="nt">samples_data</span><span class="p">:</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The saved data uses simple delta-encoding to achieve better compression ratios (when compressed with pkzip, etc.)</span>
+          <span class="no">Pseudocode for converting the delta-coded data to normal data,</span>
+          <span class="no">old = 0;</span>
+          <span class="no">for i in range(data_len):</span>
+            <span class="no">new = sample[i] + old;</span>
+            <span class="no">sample[i] = new;</span>
+            <span class="no">old = new;</span>
+        <span class="nt">params</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sample_header</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="s">&#39;header.sample_length</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">(header.type.is_sample_data_16_bit</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">2</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">1)&#39;</span>
+      <span class="nt">sample_header</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sample_length</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sample_loop_start</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sample_loop_length</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
           
-          - id: volume
-            type: u1
-          - id: fine_tune
-            type: s1
-            doc: -16..+15
-          - id: type
-            type: loop_type
-          - id: panning
-            type: u1
-            doc: (0-255)
-          - id: relative_note_number
-            type: s1
-          - id: reserved
-            type: u1
-          - id: name
-            size: 22
-            type: strz
-        types:
-          loop_type:
-            seq:
-              - id: reserved0
-                type: b3
-              - id: is_sample_data_16_bit
-                type: b1
-              - id: reserved1
-                type: b2
-              - id: loop_type
-                type: b2
-                enum: loop_type
-            enums:
-              loop_type:
-                0: none
-                1: forward
-                2: ping_pong
-</code></pre>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">volume</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fine_tune</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-16..+15</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">loop_type</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">panning</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(0-255)</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">relative_note_number</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">22</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">types</span><span class="p">:</span>
+          <span class="nt">loop_type</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved0</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b3</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_sample_data_16_bit</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved1</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b2</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">loop_type</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b2</span>
+                <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">loop_type</span>
+            <span class="nt">enums</span><span class="p">:</span>
+              <span class="nt">loop_type</span><span class="p">:</span>
+                <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+                <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">forward</span>
+                <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ping_pong</span>
+</pre></div>
     </div>
 </section>
 
@@ -552,8 +549,8 @@ types:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

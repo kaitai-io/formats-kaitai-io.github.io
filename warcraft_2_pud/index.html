@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -255,249 +252,249 @@ features got limited support in v1.3).</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: warcraft_2_pud
-  title: Warcraft II map files
-  file-extension: pud
-  application: Warcraft II engine
-  xref:
-    justsolve: Warcraft_II_PUD
-    wikidata: Q28009492
-  license: CC0-1.0
-  ks-version: 0.6
-  endian: le
-doc: |
-  Warcraft II game engine uses this format for map files. External
-  maps can be edited by official Warcraft II map editor and saved in
-  .pud files. Maps supplied with the game (i.e. single player
-  campaign) follow the same format, but are instead embedded inside
-  the game container files.
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">warcraft_2_pud</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Warcraft II map files</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pud</span>
+  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Warcraft II engine</span>
+  <span class="nt">xref</span><span class="p">:</span>
+    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Warcraft_II_PUD</span>
+    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q28009492</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.6</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">Warcraft II game engine uses this format for map files. External</span>
+  <span class="no">maps can be edited by official Warcraft II map editor and saved in</span>
+  <span class="no">.pud files. Maps supplied with the game (i.e. single player</span>
+  <span class="no">campaign) follow the same format, but are instead embedded inside</span>
+  <span class="no">the game container files.</span>
 
-  There are two major versions: 0x11 (original one) and 0x13 (roughly
-  corresponds to v1.33 of the game engine, although some of the
-  features got limited support in v1.3).
+  <span class="no">There are two major versions: 0x11 (original one) and 0x13 (roughly</span>
+  <span class="no">corresponds to v1.33 of the game engine, although some of the</span>
+  <span class="no">features got limited support in v1.3).</span>
 
-  File consists of a sequence of typed sections.
-doc-ref: http://cade.datamax.bg/war2x/pudspec.html
-seq:
-  - id: sections
-    type: section
-    repeat: eos
-types:
-  section:
-    seq:
-      - id: name
-        type: str
-        size: 4
-        encoding: ASCII
-      - id: size
-        type: u4
-      - id: body
-        size: size
-        type:
-          switch-on: name
-          cases:
-            &#39;&quot;TYPE&quot;&#39;: section_type
-            &#39;&quot;VER &quot;&#39;: section_ver
-            #&#39;&quot;DESC&quot;&#39;: section_desc
-            &#39;&quot;OWNR&quot;&#39;: section_ownr
-            &#39;&quot;ERA &quot;&#39;: section_era
-            &#39;&quot;ERAX&quot;&#39;: section_era
-            &#39;&quot;DIM &quot;&#39;: section_dim
-            &#39;&quot;SGLD&quot;&#39;: section_starting_resource
-            &#39;&quot;SLBR&quot;&#39;: section_starting_resource
-            &#39;&quot;SOIL&quot;&#39;: section_starting_resource
-            &#39;&quot;UNIT&quot;&#39;: section_unit
-  section_type:
-    doc: |
-      Section that confirms that this file is a &quot;map file&quot; by certain
-      magic string and supplies a tag that could be used in
-      multiplayer to check that all player use the same version of the
-      map.
-    seq:
-      - id: magic
-        contents: [&quot;WAR2 MAP&quot;, 0, 0]
-      - id: unused
-        size: 2
-        doc: unused (always set to $0a and $ff by editor, but can be anything for the game)
-      - id: id_tag
-        type: u4
-        doc: id tag (for consistency check in multiplayer)
-  section_ver:
-    doc: Section that specifies format version.
-    seq:
-      - id: version
-        type: u2
-  section_ownr:
-    doc: Section that specifies who controls each player.
-    seq:
-      - id: controller_by_player
-        type: u1
-        enum: controller
-        repeat: eos
-  section_era:
-    doc: Section that specifies terrain type for this map.
-    seq:
-      - id: terrain
-        type: u2
-        enum: terrain_type
-  section_dim:
-    seq:
-      - id: x
-        type: u2
-      - id: y
-        type: u2
-  section_starting_resource:
-    seq:
-      - id: resources_by_player
-        type: u2
-        repeat: eos
-  section_unit:
-    seq:
-      - id: units
-        type: unit
-        repeat: eos
-  unit:
-    seq:
-      - id: x
-        type: u2
-      - id: y
-        type: u2
-      - id: u_type
-        type: u1
-        enum: unit_type
-      - id: owner
-        type: u1
-      - id: options
-        type: u2
-        doc: if gold mine or oil well, contains 2500 * this, otherwise 0 passive 1 active
-    instances:
-      resource:
-        value: options * 2500
-        if: &gt;
-          u_type == unit_type::gold_mine or
-          u_type == unit_type::human_oil_well or
-          u_type == unit_type::orc_oil_well or
-          u_type == unit_type::oil_patch
-enums:
-  controller:
-    # official values
-    0x02: passive_computer
-    0x03: nobody
-    0x04: computer
-    0x05: human
-    0x06: rescue_passive
-    0x07: rescue_active
-    # also supported by game engine
-    0x01: computer
-    # everything else is &quot;passive_computer&quot;
-  terrain_type:
-    0x00: forest
-    0x01: winter
-    0x02: wasteland
-    0x03: swamp
-  unit_type:
-    0x00: infantry
-    0x01: grunt
-    0x02: peasant
-    0x03: peon
-    0x04: ballista
-    0x05: catapult
-    0x06: knight
-    0x07: ogre
-    0x08: archer
-    0x09: axethrower
-    0x0a: mage
-    0x0b: death_knight
-    0x0c: paladin
-    0x0d: ogre_mage
-    0x0e: dwarves
-    0x0f: goblin_sapper
-    0x10: attack_peasant
-    0x11: attack_peon
-    0x12: ranger
-    0x13: berserker
-    0x14: alleria
-    0x15: teron_gorefiend
-    0x16: kurdan_and_sky_ree
-    0x17: dentarg
-    0x18: khadgar
-    0x19: grom_hellscream
-    0x1a: human_tanker
-    0x1b: orc_tanker
-    0x1c: human_transport
-    0x1d: orc_transport
-    0x1e: elven_destroyer
-    0x1f: troll_destroyer
-    0x20: battleship
-    0x21: juggernaught
-    0x23: deathwing
-    0x26: gnomish_submarine
-    0x27: giant_turtle
-    0x28: gnomish_flying_machine
-    0x29: goblin_zepplin
-    0x2a: gryphon_rider
-    0x2b: dragon
-    0x2c: turalyon
-    0x2d: eye_of_kilrogg
-    0x2e: danath
-    0x2f: khorgath_bladefist
-    0x31: cho_gall
-    0x32: lothar
-    0x33: gul_dan
-    0x34: uther_lightbringer
-    0x35: zuljin
-    0x37: skeleton
-    0x38: daemon
-    0x39: critter
-    0x3a: farm
-    0x3b: pig_farm
-    0x3c: human_barracks
-    0x3d: orc_barracks
-    0x3e: church
-    0x3f: altar_of_storms
-    0x40: human_scout_tower
-    0x41: orc_scout_tower
-    0x42: stables
-    0x43: ogre_mound
-    0x44: gnomish_inventor
-    0x45: goblin_alchemist
-    0x46: gryphon_aviary
-    0x47: dragon_roost
-    0x48: human_shipyard
-    0x49: orc_shipyard
-    0x4a: town_hall
-    0x4b: great_hall
-    0x4c: elven_lumber_mill
-    0x4d: troll_lumber_mill
-    0x4e: human_foundry
-    0x4f: orc_foundry
-    0x50: mage_tower
-    0x51: temple_of_the_damned
-    0x52: human_blacksmith
-    0x53: orc_blacksmith
-    0x54: human_refinery
-    0x55: orc_refinery
-    0x56: human_oil_well
-    0x57: orc_oil_well
-    0x58: keep
-    0x59: stronghold
-    0x5a: castle
-    0x5b: fortress
-    0x5c: gold_mine
-    0x5d: oil_patch
-    0x5e: human_start
-    0x5f: orc_start
-    0x60: human_guard_tower
-    0x61: orc_guard_tower
-    0x62: human_cannon_tower
-    0x63: orc_cannon_tower
-    0x64: circle_of_power
-    0x65: dark_portal
-    0x66: runestone
-    0x67: human_wall
-    0x68: orc_wall
-</code></pre>
+  <span class="no">File consists of a sequence of typed sections.</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http://cade.datamax.bg/war2x/pudspec.html</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sections</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">section</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;&quot;TYPE&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">section_type</span>
+            <span class="s">&#39;&quot;VER</span><span class="nv"> </span><span class="s">&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">section_ver</span>
+            <span class="c1">#&#39;&quot;DESC&quot;&#39;: section_desc</span>
+            <span class="s">&#39;&quot;OWNR&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">section_ownr</span>
+            <span class="s">&#39;&quot;ERA</span><span class="nv"> </span><span class="s">&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">section_era</span>
+            <span class="s">&#39;&quot;ERAX&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">section_era</span>
+            <span class="s">&#39;&quot;DIM</span><span class="nv"> </span><span class="s">&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">section_dim</span>
+            <span class="s">&#39;&quot;SGLD&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">section_starting_resource</span>
+            <span class="s">&#39;&quot;SLBR&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">section_starting_resource</span>
+            <span class="s">&#39;&quot;SOIL&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">section_starting_resource</span>
+            <span class="s">&#39;&quot;UNIT&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">section_unit</span>
+  <span class="nt">section_type</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Section that confirms that this file is a &quot;map file&quot; by certain</span>
+      <span class="no">magic string and supplies a tag that could be used in</span>
+      <span class="no">multiplayer to check that all player use the same version of the</span>
+      <span class="no">map.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="s">&quot;WAR2</span><span class="nv"> </span><span class="s">MAP&quot;</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">]</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused (always set to $0a and $ff by editor, but can be anything for the game)</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">id_tag</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">id tag (for consistency check in multiplayer)</span>
+  <span class="nt">section_ver</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Section that specifies format version.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+  <span class="nt">section_ownr</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Section that specifies who controls each player.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">controller_by_player</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">controller</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+  <span class="nt">section_era</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Section that specifies terrain type for this map.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">terrain</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">terrain_type</span>
+  <span class="nt">section_dim</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+  <span class="nt">section_starting_resource</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">resources_by_player</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+  <span class="nt">section_unit</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">units</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unit</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+  <span class="nt">unit</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unit_type</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">owner</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">options</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">if gold mine or oil well, contains 2500 * this, otherwise 0 passive 1 active</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">resource</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">options * 2500</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="p p-Indicator">&gt;</span>
+          <span class="no">u_type == unit_type::gold_mine or</span>
+          <span class="no">u_type == unit_type::human_oil_well or</span>
+          <span class="no">u_type == unit_type::orc_oil_well or</span>
+          <span class="no">u_type == unit_type::oil_patch</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">controller</span><span class="p">:</span>
+    <span class="c1"># official values</span>
+    <span class="nt">0x02</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">passive_computer</span>
+    <span class="nt">0x03</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nobody</span>
+    <span class="nt">0x04</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">computer</span>
+    <span class="nt">0x05</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">human</span>
+    <span class="nt">0x06</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rescue_passive</span>
+    <span class="nt">0x07</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rescue_active</span>
+    <span class="c1"># also supported by game engine</span>
+    <span class="nt">0x01</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">computer</span>
+    <span class="c1"># everything else is &quot;passive_computer&quot;</span>
+  <span class="nt">terrain_type</span><span class="p">:</span>
+    <span class="nt">0x00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">forest</span>
+    <span class="nt">0x01</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">winter</span>
+    <span class="nt">0x02</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wasteland</span>
+    <span class="nt">0x03</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">swamp</span>
+  <span class="nt">unit_type</span><span class="p">:</span>
+    <span class="nt">0x00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">infantry</span>
+    <span class="nt">0x01</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">grunt</span>
+    <span class="nt">0x02</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">peasant</span>
+    <span class="nt">0x03</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">peon</span>
+    <span class="nt">0x04</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ballista</span>
+    <span class="nt">0x05</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">catapult</span>
+    <span class="nt">0x06</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">knight</span>
+    <span class="nt">0x07</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ogre</span>
+    <span class="nt">0x08</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">archer</span>
+    <span class="nt">0x09</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">axethrower</span>
+    <span class="nt">0x0a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mage</span>
+    <span class="nt">0x0b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">death_knight</span>
+    <span class="nt">0x0c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">paladin</span>
+    <span class="nt">0x0d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ogre_mage</span>
+    <span class="nt">0x0e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dwarves</span>
+    <span class="nt">0x0f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">goblin_sapper</span>
+    <span class="nt">0x10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attack_peasant</span>
+    <span class="nt">0x11</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">attack_peon</span>
+    <span class="nt">0x12</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ranger</span>
+    <span class="nt">0x13</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">berserker</span>
+    <span class="nt">0x14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alleria</span>
+    <span class="nt">0x15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">teron_gorefiend</span>
+    <span class="nt">0x16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kurdan_and_sky_ree</span>
+    <span class="nt">0x17</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dentarg</span>
+    <span class="nt">0x18</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">khadgar</span>
+    <span class="nt">0x19</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">grom_hellscream</span>
+    <span class="nt">0x1a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">human_tanker</span>
+    <span class="nt">0x1b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orc_tanker</span>
+    <span class="nt">0x1c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">human_transport</span>
+    <span class="nt">0x1d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orc_transport</span>
+    <span class="nt">0x1e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">elven_destroyer</span>
+    <span class="nt">0x1f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">troll_destroyer</span>
+    <span class="nt">0x20</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">battleship</span>
+    <span class="nt">0x21</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">juggernaught</span>
+    <span class="nt">0x23</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deathwing</span>
+    <span class="nt">0x26</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnomish_submarine</span>
+    <span class="nt">0x27</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">giant_turtle</span>
+    <span class="nt">0x28</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnomish_flying_machine</span>
+    <span class="nt">0x29</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">goblin_zepplin</span>
+    <span class="nt">0x2a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gryphon_rider</span>
+    <span class="nt">0x2b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dragon</span>
+    <span class="nt">0x2c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">turalyon</span>
+    <span class="nt">0x2d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eye_of_kilrogg</span>
+    <span class="nt">0x2e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">danath</span>
+    <span class="nt">0x2f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">khorgath_bladefist</span>
+    <span class="nt">0x31</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cho_gall</span>
+    <span class="nt">0x32</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lothar</span>
+    <span class="nt">0x33</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gul_dan</span>
+    <span class="nt">0x34</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uther_lightbringer</span>
+    <span class="nt">0x35</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zuljin</span>
+    <span class="nt">0x37</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">skeleton</span>
+    <span class="nt">0x38</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">daemon</span>
+    <span class="nt">0x39</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">critter</span>
+    <span class="nt">0x3a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">farm</span>
+    <span class="nt">0x3b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pig_farm</span>
+    <span class="nt">0x3c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">human_barracks</span>
+    <span class="nt">0x3d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orc_barracks</span>
+    <span class="nt">0x3e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">church</span>
+    <span class="nt">0x3f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">altar_of_storms</span>
+    <span class="nt">0x40</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">human_scout_tower</span>
+    <span class="nt">0x41</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orc_scout_tower</span>
+    <span class="nt">0x42</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stables</span>
+    <span class="nt">0x43</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ogre_mound</span>
+    <span class="nt">0x44</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnomish_inventor</span>
+    <span class="nt">0x45</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">goblin_alchemist</span>
+    <span class="nt">0x46</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gryphon_aviary</span>
+    <span class="nt">0x47</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dragon_roost</span>
+    <span class="nt">0x48</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">human_shipyard</span>
+    <span class="nt">0x49</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orc_shipyard</span>
+    <span class="nt">0x4a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">town_hall</span>
+    <span class="nt">0x4b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">great_hall</span>
+    <span class="nt">0x4c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">elven_lumber_mill</span>
+    <span class="nt">0x4d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">troll_lumber_mill</span>
+    <span class="nt">0x4e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">human_foundry</span>
+    <span class="nt">0x4f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orc_foundry</span>
+    <span class="nt">0x50</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mage_tower</span>
+    <span class="nt">0x51</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">temple_of_the_damned</span>
+    <span class="nt">0x52</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">human_blacksmith</span>
+    <span class="nt">0x53</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orc_blacksmith</span>
+    <span class="nt">0x54</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">human_refinery</span>
+    <span class="nt">0x55</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orc_refinery</span>
+    <span class="nt">0x56</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">human_oil_well</span>
+    <span class="nt">0x57</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orc_oil_well</span>
+    <span class="nt">0x58</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">keep</span>
+    <span class="nt">0x59</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stronghold</span>
+    <span class="nt">0x5a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">castle</span>
+    <span class="nt">0x5b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fortress</span>
+    <span class="nt">0x5c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gold_mine</span>
+    <span class="nt">0x5d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">oil_patch</span>
+    <span class="nt">0x5e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">human_start</span>
+    <span class="nt">0x5f</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orc_start</span>
+    <span class="nt">0x60</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">human_guard_tower</span>
+    <span class="nt">0x61</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orc_guard_tower</span>
+    <span class="nt">0x62</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">human_cannon_tower</span>
+    <span class="nt">0x63</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orc_cannon_tower</span>
+    <span class="nt">0x64</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">circle_of_power</span>
+    <span class="nt">0x65</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dark_portal</span>
+    <span class="nt">0x66</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">runestone</span>
+    <span class="nt">0x67</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">human_wall</span>
+    <span class="nt">0x68</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orc_wall</span>
+</pre></div>
     </div>
 </section>
 
@@ -521,8 +518,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -287,517 +284,517 @@ var data = new Rar(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
 
-    /// &lt;summary&gt;
-    /// RAR is a archive format used by popular proprietary RAR archiver,
-    /// created by Eugene Roshal. There are two major versions of format
-    /// (v1.5-4.0 and RAR v5+).
-    /// 
-    /// File format essentially consists of a linear sequence of
-    /// blocks. Each block has fixed header and custom body (that depends on
-    /// block type), so it&#39;s possible to skip block even if one doesn&#39;t know
-    /// how to process a certain block type.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;
-    /// Reference: &lt;a href=&quot;http://acritum.com/winrar/rar-format&quot;&gt;&lt;/a&gt;
-    /// &lt;/remarks&gt;
-    public partial class Rar : KaitaiStruct
-    {
-        public static Rar FromFile(string fileName)
-        {
-            return new Rar(new KaitaiStream(fileName));
-        }
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// RAR is a archive format used by popular proprietary RAR archiver,</span>
+    <span class="c1">/// created by Eugene Roshal. There are two major versions of format</span>
+    <span class="c1">/// (v1.5-4.0 and RAR v5+).</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// File format essentially consists of a linear sequence of</span>
+    <span class="c1">/// blocks. Each block has fixed header and custom body (that depends on</span>
+    <span class="c1">/// block type), so it&#39;s possible to skip block even if one doesn&#39;t know</span>
+    <span class="c1">/// how to process a certain block type.</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="c1">/// &lt;remarks&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;http://acritum.com/winrar/rar-format&quot;&gt;&lt;/a&gt;</span>
+    <span class="c1">/// &lt;/remarks&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Rar</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">Rar</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Rar</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
 
-        public enum BlockTypes
-        {
-            Marker = 114,
-            ArchiveHeader = 115,
-            FileHeader = 116,
-            OldStyleCommentHeader = 117,
-            OldStyleAuthenticityInfo76 = 118,
-            OldStyleSubblock = 119,
-            OldStyleRecoveryRecord = 120,
-            OldStyleAuthenticityInfo79 = 121,
-            Subblock = 122,
-            Terminator = 123,
-        }
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">BlockTypes</span>
+        <span class="p">{</span>
+            <span class="n">Marker</span> <span class="p">=</span> <span class="m">114</span><span class="p">,</span>
+            <span class="n">ArchiveHeader</span> <span class="p">=</span> <span class="m">115</span><span class="p">,</span>
+            <span class="n">FileHeader</span> <span class="p">=</span> <span class="m">116</span><span class="p">,</span>
+            <span class="n">OldStyleCommentHeader</span> <span class="p">=</span> <span class="m">117</span><span class="p">,</span>
+            <span class="n">OldStyleAuthenticityInfo76</span> <span class="p">=</span> <span class="m">118</span><span class="p">,</span>
+            <span class="n">OldStyleSubblock</span> <span class="p">=</span> <span class="m">119</span><span class="p">,</span>
+            <span class="n">OldStyleRecoveryRecord</span> <span class="p">=</span> <span class="m">120</span><span class="p">,</span>
+            <span class="n">OldStyleAuthenticityInfo79</span> <span class="p">=</span> <span class="m">121</span><span class="p">,</span>
+            <span class="n">Subblock</span> <span class="p">=</span> <span class="m">122</span><span class="p">,</span>
+            <span class="n">Terminator</span> <span class="p">=</span> <span class="m">123</span><span class="p">,</span>
+        <span class="p">}</span>
 
-        public enum Oses
-        {
-            MsDos = 0,
-            Os2 = 1,
-            Windows = 2,
-            Unix = 3,
-            MacOs = 4,
-            Beos = 5,
-        }
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">Oses</span>
+        <span class="p">{</span>
+            <span class="n">MsDos</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">Os2</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="n">Windows</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+            <span class="n">Unix</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+            <span class="n">MacOs</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
+            <span class="n">Beos</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+        <span class="p">}</span>
 
-        public enum Methods
-        {
-            Store = 48,
-            Fastest = 49,
-            Fast = 50,
-            Normal = 51,
-            Good = 52,
-            Best = 53,
-        }
-        public Rar(KaitaiStream p__io, KaitaiStruct p__parent = null, Rar p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            _read();
-        }
-        private void _read()
-        {
-            _magic = new MagicSignature(m_io, this, m_root);
-            _blocks = new List&lt;KaitaiStruct&gt;();
-            {
-                var i = 0;
-                while (!m_io.IsEof) {
-                    switch (Magic.Version) {
-                    case 0: {
-                        _blocks.Add(new Block(m_io, this, m_root));
-                        break;
-                    }
-                    case 1: {
-                        _blocks.Add(new BlockV5(m_io, this, m_root));
-                        break;
-                    }
-                    }
-                    i++;
-                }
-            }
-        }
-        public partial class BlockV5 : KaitaiStruct
-        {
-            public static BlockV5 FromFile(string fileName)
-            {
-                return new BlockV5(new KaitaiStream(fileName));
-            }
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">Methods</span>
+        <span class="p">{</span>
+            <span class="n">Store</span> <span class="p">=</span> <span class="m">48</span><span class="p">,</span>
+            <span class="n">Fastest</span> <span class="p">=</span> <span class="m">49</span><span class="p">,</span>
+            <span class="n">Fast</span> <span class="p">=</span> <span class="m">50</span><span class="p">,</span>
+            <span class="n">Normal</span> <span class="p">=</span> <span class="m">51</span><span class="p">,</span>
+            <span class="n">Good</span> <span class="p">=</span> <span class="m">52</span><span class="p">,</span>
+            <span class="n">Best</span> <span class="p">=</span> <span class="m">53</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="nf">Rar</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_magic</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MagicSignature</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="n">_blocks</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">KaitaiStruct</span><span class="p">&gt;();</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">Magic</span><span class="p">.</span><span class="n">Version</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="m">0</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_blocks</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Block</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="m">1</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_blocks</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">BlockV5</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                    <span class="n">i</span><span class="p">++;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">BlockV5</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">BlockV5</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">BlockV5</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public BlockV5(KaitaiStream p__io, Rar p__parent = null, Rar p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-            }
-            private Rar m_root;
-            private Rar m_parent;
-            public Rar M_Root { get { return m_root; } }
-            public Rar M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">BlockV5</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Rar</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Rar</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">Rar</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Rar</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Basic block that RAR files consist of. There are several block
-        /// types (see `block_type`), which have different `body` and
-        /// `add_body`.
-        /// &lt;/summary&gt;
-        public partial class Block : KaitaiStruct
-        {
-            public static Block FromFile(string fileName)
-            {
-                return new Block(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Basic block that RAR files consist of. There are several block</span>
+        <span class="c1">/// types (see `block_type`), which have different `body` and</span>
+        <span class="c1">/// `add_body`.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Block</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Block</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Block</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Block(KaitaiStream p__io, Rar p__parent = null, Rar p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_hasAdd = false;
-                f_headerSize = false;
-                f_bodySize = false;
-                _read();
-            }
-            private void _read()
-            {
-                _crc16 = m_io.ReadU2le();
-                _blockType = ((Rar.BlockTypes) m_io.ReadU1());
-                _flags = m_io.ReadU2le();
-                _blockSize = m_io.ReadU2le();
-                if (HasAdd) {
-                    _addSize = m_io.ReadU4le();
-                }
-                switch (BlockType) {
-                case Rar.BlockTypes.FileHeader: {
-                    __raw_body = m_io.ReadBytes(BodySize);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new BlockFileHeader(io___raw_body, this, m_root);
-                    break;
-                }
-                default: {
-                    _body = m_io.ReadBytes(BodySize);
-                    break;
-                }
-                }
-                if (HasAdd) {
-                    _addBody = m_io.ReadBytes(AddSize);
-                }
-            }
-            private bool f_hasAdd;
-            private bool _hasAdd;
+            <span class="k">public</span> <span class="nf">Block</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_hasAdd</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_headerSize</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_bodySize</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_crc16</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_blockType</span> <span class="p">=</span> <span class="p">((</span><span class="n">Rar</span><span class="p">.</span><span class="n">BlockTypes</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+                <span class="n">_flags</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_blockSize</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">HasAdd</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_addSize</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">BlockType</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">Rar</span><span class="p">.</span><span class="n">BlockTypes</span><span class="p">.</span><span class="n">FileHeader</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">BodySize</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BlockFileHeader</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">BodySize</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">HasAdd</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_addBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">AddSize</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_hasAdd</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_hasAdd</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// True if block has additional content attached to it
-            /// &lt;/summary&gt;
-            public bool HasAdd
-            {
-                get
-                {
-                    if (f_hasAdd)
-                        return _hasAdd;
-                    _hasAdd = (bool) ((Flags &amp; 32768) != 0);
-                    f_hasAdd = true;
-                    return _hasAdd;
-                }
-            }
-            private bool f_headerSize;
-            private sbyte _headerSize;
-            public sbyte HeaderSize
-            {
-                get
-                {
-                    if (f_headerSize)
-                        return _headerSize;
-                    _headerSize = (sbyte) ((HasAdd ? 11 : 7));
-                    f_headerSize = true;
-                    return _headerSize;
-                }
-            }
-            private bool f_bodySize;
-            private int _bodySize;
-            public int BodySize
-            {
-                get
-                {
-                    if (f_bodySize)
-                        return _bodySize;
-                    _bodySize = (int) ((BlockSize - HeaderSize));
-                    f_bodySize = true;
-                    return _bodySize;
-                }
-            }
-            private ushort _crc16;
-            private BlockTypes _blockType;
-            private ushort _flags;
-            private ushort _blockSize;
-            private uint? _addSize;
-            private object _body;
-            private byte[] _addBody;
-            private Rar m_root;
-            private Rar m_parent;
-            private byte[] __raw_body;
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// True if block has additional content attached to it</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">HasAdd</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_hasAdd</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_hasAdd</span><span class="p">;</span>
+                    <span class="n">_hasAdd</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Flags</span> <span class="p">&amp;</span> <span class="m">32768</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_hasAdd</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_hasAdd</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_headerSize</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">sbyte</span> <span class="n">_headerSize</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">sbyte</span> <span class="n">HeaderSize</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_headerSize</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_headerSize</span><span class="p">;</span>
+                    <span class="n">_headerSize</span> <span class="p">=</span> <span class="p">(</span><span class="kt">sbyte</span><span class="p">)</span> <span class="p">((</span><span class="n">HasAdd</span> <span class="p">?</span> <span class="m">11</span> <span class="p">:</span> <span class="m">7</span><span class="p">));</span>
+                    <span class="n">f_headerSize</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_headerSize</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_bodySize</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_bodySize</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">BodySize</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_bodySize</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_bodySize</span><span class="p">;</span>
+                    <span class="n">_bodySize</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">BlockSize</span> <span class="p">-</span> <span class="n">HeaderSize</span><span class="p">));</span>
+                    <span class="n">f_bodySize</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_bodySize</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_crc16</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">BlockTypes</span> <span class="n">_blockType</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_flags</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_blockSize</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint?</span> <span class="n">_addSize</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">object</span> <span class="n">_body</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_addBody</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Rar</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Rar</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_body</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// CRC16 of whole block or some part of it (depends on block type)
-            /// &lt;/summary&gt;
-            public ushort Crc16 { get { return _crc16; } }
-            public BlockTypes BlockType { get { return _blockType; } }
-            public ushort Flags { get { return _flags; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// CRC16 of whole block or some part of it (depends on block type)</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Crc16</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_crc16</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">BlockTypes</span> <span class="n">BlockType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_blockType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Flags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_flags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Size of block (header + body, but without additional content)
-            /// &lt;/summary&gt;
-            public ushort BlockSize { get { return _blockSize; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Size of block (header + body, but without additional content)</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">BlockSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_blockSize</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Size of additional content in this block
-            /// &lt;/summary&gt;
-            public uint? AddSize { get { return _addSize; } }
-            public object Body { get { return _body; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Size of additional content in this block</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint?</span> <span class="n">AddSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_addSize</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">object</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Additional content in this block
-            /// &lt;/summary&gt;
-            public byte[] AddBody { get { return _addBody; } }
-            public Rar M_Root { get { return m_root; } }
-            public Rar M_Parent { get { return m_parent; } }
-            public byte[] M_RawBody { get { return __raw_body; } }
-        }
-        public partial class BlockFileHeader : KaitaiStruct
-        {
-            public static BlockFileHeader FromFile(string fileName)
-            {
-                return new BlockFileHeader(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Additional content in this block</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">AddBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_addBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Rar</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Rar</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">BlockFileHeader</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">BlockFileHeader</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">BlockFileHeader</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public BlockFileHeader(KaitaiStream p__io, Rar.Block p__parent = null, Rar p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _lowUnpSize = m_io.ReadU4le();
-                _hostOs = ((Rar.Oses) m_io.ReadU1());
-                _fileCrc32 = m_io.ReadU4le();
-                _fileTime = new DosTime(m_io, this, m_root);
-                _rarVersion = m_io.ReadU1();
-                _method = ((Rar.Methods) m_io.ReadU1());
-                _nameSize = m_io.ReadU2le();
-                _attr = m_io.ReadU4le();
-                if ((M_Parent.Flags &amp; 256) != 0) {
-                    _highPackSize = m_io.ReadU4le();
-                }
-                _fileName = m_io.ReadBytes(NameSize);
-                if ((M_Parent.Flags &amp; 1024) != 0) {
-                    _salt = m_io.ReadU8le();
-                }
-            }
-            private uint _lowUnpSize;
-            private Oses _hostOs;
-            private uint _fileCrc32;
-            private DosTime _fileTime;
-            private byte _rarVersion;
-            private Methods _method;
-            private ushort _nameSize;
-            private uint _attr;
-            private uint? _highPackSize;
-            private byte[] _fileName;
-            private ulong? _salt;
-            private Rar m_root;
-            private Rar.Block m_parent;
+            <span class="k">public</span> <span class="nf">BlockFileHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Rar</span><span class="p">.</span><span class="n">Block</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_lowUnpSize</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_hostOs</span> <span class="p">=</span> <span class="p">((</span><span class="n">Rar</span><span class="p">.</span><span class="n">Oses</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+                <span class="n">_fileCrc32</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_fileTime</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DosTime</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_rarVersion</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_method</span> <span class="p">=</span> <span class="p">((</span><span class="n">Rar</span><span class="p">.</span><span class="n">Methods</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+                <span class="n">_nameSize</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_attr</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">((</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Flags</span> <span class="p">&amp;</span> <span class="m">256</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_highPackSize</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="n">_fileName</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">NameSize</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">((</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Flags</span> <span class="p">&amp;</span> <span class="m">1024</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_salt</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lowUnpSize</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Oses</span> <span class="n">_hostOs</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_fileCrc32</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">DosTime</span> <span class="n">_fileTime</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_rarVersion</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Methods</span> <span class="n">_method</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_nameSize</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_attr</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint?</span> <span class="n">_highPackSize</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_fileName</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ulong?</span> <span class="n">_salt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Rar</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Rar</span><span class="p">.</span><span class="n">Block</span> <span class="n">m_parent</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Uncompressed file size (lower 32 bits, if 64-bit header flag is present)
-            /// &lt;/summary&gt;
-            public uint LowUnpSize { get { return _lowUnpSize; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Uncompressed file size (lower 32 bits, if 64-bit header flag is present)</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LowUnpSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lowUnpSize</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Operating system used for archiving
-            /// &lt;/summary&gt;
-            public Oses HostOs { get { return _hostOs; } }
-            public uint FileCrc32 { get { return _fileCrc32; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Operating system used for archiving</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">Oses</span> <span class="n">HostOs</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_hostOs</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">FileCrc32</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fileCrc32</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Date and time in standard MS DOS format
-            /// &lt;/summary&gt;
-            public DosTime FileTime { get { return _fileTime; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Date and time in standard MS DOS format</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">DosTime</span> <span class="n">FileTime</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fileTime</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// RAR version needed to extract file (Version number is encoded as 10 * Major version + minor version.)
-            /// &lt;/summary&gt;
-            public byte RarVersion { get { return _rarVersion; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// RAR version needed to extract file (Version number is encoded as 10 * Major version + minor version.)</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">RarVersion</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_rarVersion</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Compression method
-            /// &lt;/summary&gt;
-            public Methods Method { get { return _method; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Compression method</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">Methods</span> <span class="n">Method</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_method</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// File name size
-            /// &lt;/summary&gt;
-            public ushort NameSize { get { return _nameSize; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// File name size</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">NameSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_nameSize</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// File attributes
-            /// &lt;/summary&gt;
-            public uint Attr { get { return _attr; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// File attributes</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Attr</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_attr</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Compressed file size, high 32 bits, only if 64-bit header flag is present
-            /// &lt;/summary&gt;
-            public uint? HighPackSize { get { return _highPackSize; } }
-            public byte[] FileName { get { return _fileName; } }
-            public ulong? Salt { get { return _salt; } }
-            public Rar M_Root { get { return m_root; } }
-            public Rar.Block M_Parent { get { return m_parent; } }
-        }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Compressed file size, high 32 bits, only if 64-bit header flag is present</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint?</span> <span class="n">HighPackSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_highPackSize</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">FileName</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fileName</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ulong?</span> <span class="n">Salt</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_salt</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Rar</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Rar</span><span class="p">.</span><span class="n">Block</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
-        /// 8-byte magic (and pretty different block format) for v5+. This
-        /// type would parse and validate both versions of signature. Note
-        /// that actually this signature is a valid RAR &amp;quot;block&amp;quot;: in theory,
-        /// one can omit signature reading at all, and read this normally,
-        /// as a block, if exact RAR version is known (and thus it&#39;s
-        /// possible to choose correct block format).
-        /// &lt;/summary&gt;
-        public partial class MagicSignature : KaitaiStruct
-        {
-            public static MagicSignature FromFile(string fileName)
-            {
-                return new MagicSignature(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and</span>
+        <span class="c1">/// 8-byte magic (and pretty different block format) for v5+. This</span>
+        <span class="c1">/// type would parse and validate both versions of signature. Note</span>
+        <span class="c1">/// that actually this signature is a valid RAR &amp;quot;block&amp;quot;: in theory,</span>
+        <span class="c1">/// one can omit signature reading at all, and read this normally,</span>
+        <span class="c1">/// as a block, if exact RAR version is known (and thus it&#39;s</span>
+        <span class="c1">/// possible to choose correct block format).</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">MagicSignature</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">MagicSignature</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">MagicSignature</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public MagicSignature(KaitaiStream p__io, Rar p__parent = null, Rar p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _magic1 = m_io.EnsureFixedContents(new byte[] { 82, 97, 114, 33, 26, 7 });
-                _version = m_io.ReadU1();
-                if (Version == 1) {
-                    _magic3 = m_io.EnsureFixedContents(new byte[] { 0 });
-                }
-            }
-            private byte[] _magic1;
-            private byte _version;
-            private byte[] _magic3;
-            private Rar m_root;
-            private Rar m_parent;
+            <span class="k">public</span> <span class="nf">MagicSignature</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_magic1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">82</span><span class="p">,</span> <span class="m">97</span><span class="p">,</span> <span class="m">114</span><span class="p">,</span> <span class="m">33</span><span class="p">,</span> <span class="m">26</span><span class="p">,</span> <span class="m">7</span> <span class="p">});</span>
+                <span class="n">_version</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">Version</span> <span class="p">==</span> <span class="m">1</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_magic3</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span> <span class="p">});</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic1</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_version</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic3</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Rar</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Rar</span> <span class="n">m_parent</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version
-            /// &lt;/summary&gt;
-            public byte[] Magic1 { get { return _magic1; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Magic1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-            /// format, 1 means new (RAR 5+) format
-            /// &lt;/summary&gt;
-            public byte Version { get { return _version; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Variable part of magic signature: 0 means old (RAR 1.5-4.0)</span>
+            <span class="c1">/// format, 1 means new (RAR 5+) format</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Version</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_version</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// New format (RAR 5+) magic contains extra byte
-            /// &lt;/summary&gt;
-            public byte[] Magic3 { get { return _magic3; } }
-            public Rar M_Root { get { return m_root; } }
-            public Rar M_Parent { get { return m_parent; } }
-        }
-        public partial class DosTime : KaitaiStruct
-        {
-            public static DosTime FromFile(string fileName)
-            {
-                return new DosTime(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// New format (RAR 5+) magic contains extra byte</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Magic3</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic3</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Rar</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Rar</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DosTime</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">DosTime</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">DosTime</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public DosTime(KaitaiStream p__io, Rar.BlockFileHeader p__parent = null, Rar p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_month = false;
-                f_seconds = false;
-                f_year = false;
-                f_minutes = false;
-                f_day = false;
-                f_hours = false;
-                _read();
-            }
-            private void _read()
-            {
-                _time = m_io.ReadU2le();
-                _date = m_io.ReadU2le();
-            }
-            private bool f_month;
-            private int _month;
-            public int Month
-            {
-                get
-                {
-                    if (f_month)
-                        return _month;
-                    _month = (int) (((Date &amp; 480) &gt;&gt; 5));
-                    f_month = true;
-                    return _month;
-                }
-            }
-            private bool f_seconds;
-            private int _seconds;
-            public int Seconds
-            {
-                get
-                {
-                    if (f_seconds)
-                        return _seconds;
-                    _seconds = (int) (((Time &amp; 31) * 2));
-                    f_seconds = true;
-                    return _seconds;
-                }
-            }
-            private bool f_year;
-            private int _year;
-            public int Year
-            {
-                get
-                {
-                    if (f_year)
-                        return _year;
-                    _year = (int) ((((Date &amp; 65024) &gt;&gt; 9) + 1980));
-                    f_year = true;
-                    return _year;
-                }
-            }
-            private bool f_minutes;
-            private int _minutes;
-            public int Minutes
-            {
-                get
-                {
-                    if (f_minutes)
-                        return _minutes;
-                    _minutes = (int) (((Time &amp; 2016) &gt;&gt; 5));
-                    f_minutes = true;
-                    return _minutes;
-                }
-            }
-            private bool f_day;
-            private int _day;
-            public int Day
-            {
-                get
-                {
-                    if (f_day)
-                        return _day;
-                    _day = (int) ((Date &amp; 31));
-                    f_day = true;
-                    return _day;
-                }
-            }
-            private bool f_hours;
-            private int _hours;
-            public int Hours
-            {
-                get
-                {
-                    if (f_hours)
-                        return _hours;
-                    _hours = (int) (((Time &amp; 63488) &gt;&gt; 11));
-                    f_hours = true;
-                    return _hours;
-                }
-            }
-            private ushort _time;
-            private ushort _date;
-            private Rar m_root;
-            private Rar.BlockFileHeader m_parent;
-            public ushort Time { get { return _time; } }
-            public ushort Date { get { return _date; } }
-            public Rar M_Root { get { return m_root; } }
-            public Rar.BlockFileHeader M_Parent { get { return m_parent; } }
-        }
-        private MagicSignature _magic;
-        private List&lt;KaitaiStruct&gt; _blocks;
-        private Rar m_root;
-        private KaitaiStruct m_parent;
+            <span class="k">public</span> <span class="nf">DosTime</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Rar</span><span class="p">.</span><span class="n">BlockFileHeader</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_month</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_seconds</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_year</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_minutes</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_day</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_hours</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_time</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_date</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_month</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_month</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Month</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_month</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_month</span><span class="p">;</span>
+                    <span class="n">_month</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">Date</span> <span class="p">&amp;</span> <span class="m">480</span><span class="p">)</span> <span class="p">&gt;&gt;</span> <span class="m">5</span><span class="p">));</span>
+                    <span class="n">f_month</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_month</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_seconds</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_seconds</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Seconds</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_seconds</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_seconds</span><span class="p">;</span>
+                    <span class="n">_seconds</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">Time</span> <span class="p">&amp;</span> <span class="m">31</span><span class="p">)</span> <span class="p">*</span> <span class="m">2</span><span class="p">));</span>
+                    <span class="n">f_seconds</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_seconds</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_year</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_year</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Year</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_year</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_year</span><span class="p">;</span>
+                    <span class="n">_year</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((((</span><span class="n">Date</span> <span class="p">&amp;</span> <span class="m">65024</span><span class="p">)</span> <span class="p">&gt;&gt;</span> <span class="m">9</span><span class="p">)</span> <span class="p">+</span> <span class="m">1980</span><span class="p">));</span>
+                    <span class="n">f_year</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_year</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_minutes</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_minutes</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Minutes</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_minutes</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_minutes</span><span class="p">;</span>
+                    <span class="n">_minutes</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">Time</span> <span class="p">&amp;</span> <span class="m">2016</span><span class="p">)</span> <span class="p">&gt;&gt;</span> <span class="m">5</span><span class="p">));</span>
+                    <span class="n">f_minutes</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_minutes</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_day</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_day</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Day</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_day</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_day</span><span class="p">;</span>
+                    <span class="n">_day</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">Date</span> <span class="p">&amp;</span> <span class="m">31</span><span class="p">));</span>
+                    <span class="n">f_day</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_day</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_hours</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_hours</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Hours</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_hours</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_hours</span><span class="p">;</span>
+                    <span class="n">_hours</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">Time</span> <span class="p">&amp;</span> <span class="m">63488</span><span class="p">)</span> <span class="p">&gt;&gt;</span> <span class="m">11</span><span class="p">));</span>
+                    <span class="n">f_hours</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_hours</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_time</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_date</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Rar</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Rar</span><span class="p">.</span><span class="n">BlockFileHeader</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Time</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_time</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Date</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_date</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Rar</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Rar</span><span class="p">.</span><span class="n">BlockFileHeader</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="n">MagicSignature</span> <span class="n">_magic</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">KaitaiStruct</span><span class="p">&gt;</span> <span class="n">_blocks</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Rar</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
 
-        /// &lt;summary&gt;
-        /// File format signature to validate that it is indeed a RAR archive
-        /// &lt;/summary&gt;
-        public MagicSignature Magic { get { return _magic; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// File format signature to validate that it is indeed a RAR archive</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="n">MagicSignature</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Sequence of blocks that constitute the RAR file
-        /// &lt;/summary&gt;
-        public List&lt;KaitaiStruct&gt; Blocks { get { return _blocks; } }
-        public Rar M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-    }
-}
-</code></pre>
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Sequence of blocks that constitute the RAR file</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">KaitaiStruct</span><span class="p">&gt;</span> <span class="n">Blocks</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_blocks</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Rar</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -824,8 +821,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

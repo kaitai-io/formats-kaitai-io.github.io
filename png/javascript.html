@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -270,589 +267,589 @@ var data = new Png(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.Png = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-var Png = (function() {
-  Png.ColorType = Object.freeze({
-    GREYSCALE: 0,
-    TRUECOLOR: 2,
-    INDEXED: 3,
-    GREYSCALE_ALPHA: 4,
-    TRUECOLOR_ALPHA: 6,
-
-    0: &quot;GREYSCALE&quot;,
-    2: &quot;TRUECOLOR&quot;,
-    3: &quot;INDEXED&quot;,
-    4: &quot;GREYSCALE_ALPHA&quot;,
-    6: &quot;TRUECOLOR_ALPHA&quot;,
-  });
-
-  Png.PhysUnit = Object.freeze({
-    UNKNOWN: 0,
-    METER: 1,
-
-    0: &quot;UNKNOWN&quot;,
-    1: &quot;METER&quot;,
-  });
-
-  Png.CompressionMethods = Object.freeze({
-    ZLIB: 0,
-
-    0: &quot;ZLIB&quot;,
-  });
-
-  function Png(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
-
-    this._read();
-  }
-  Png.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([137, 80, 78, 71, 13, 10, 26, 10]);
-    this.ihdrLen = this._io.ensureFixedContents([0, 0, 0, 13]);
-    this.ihdrType = this._io.ensureFixedContents([73, 72, 68, 82]);
-    this.ihdr = new IhdrChunk(this._io, this, this._root);
-    this.ihdrCrc = this._io.readBytes(4);
-    this.chunks = []
-    var i = 0;
-    do {
-      var _ = new Chunk(this._io, this, this._root);
-      this.chunks.push(_);
-      i++;
-    } while (!( ((_.type == &quot;IEND&quot;) || (this._io.isEof())) ));
-  }
-
-  var Rgb = Png.Rgb = (function() {
-    function Rgb(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Rgb.prototype._read = function() {
-      this.r = this._io.readU1();
-      this.g = this._io.readU1();
-      this.b = this._io.readU1();
-    }
-
-    return Rgb;
-  })();
-
-  var Chunk = Png.Chunk = (function() {
-    function Chunk(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Chunk.prototype._read = function() {
-      this.len = this._io.readU4be();
-      this.type = KaitaiStream.bytesToStr(this._io.readBytes(4), &quot;UTF-8&quot;);
-      switch (this.type) {
-      case &quot;iTXt&quot;:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new InternationalTextChunk(_io__raw_body, this, this._root);
-        break;
-      case &quot;gAMA&quot;:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new GamaChunk(_io__raw_body, this, this._root);
-        break;
-      case &quot;tIME&quot;:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new TimeChunk(_io__raw_body, this, this._root);
-        break;
-      case &quot;PLTE&quot;:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new PlteChunk(_io__raw_body, this, this._root);
-        break;
-      case &quot;bKGD&quot;:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new BkgdChunk(_io__raw_body, this, this._root);
-        break;
-      case &quot;pHYs&quot;:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new PhysChunk(_io__raw_body, this, this._root);
-        break;
-      case &quot;tEXt&quot;:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new TextChunk(_io__raw_body, this, this._root);
-        break;
-      case &quot;cHRM&quot;:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new ChrmChunk(_io__raw_body, this, this._root);
-        break;
-      case &quot;sRGB&quot;:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new SrgbChunk(_io__raw_body, this, this._root);
-        break;
-      case &quot;zTXt&quot;:
-        this._raw_body = this._io.readBytes(this.len);
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new CompressedTextChunk(_io__raw_body, this, this._root);
-        break;
-      default:
-        this.body = this._io.readBytes(this.len);
-        break;
-      }
-      this.crc = this._io.readBytes(4);
-    }
-
-    return Chunk;
-  })();
-
-  /**
-   * Background chunk for images with indexed palette.
-   */
-
-  var BkgdIndexed = Png.BkgdIndexed = (function() {
-    function BkgdIndexed(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BkgdIndexed.prototype._read = function() {
-      this.paletteIndex = this._io.readU1();
-    }
-
-    return BkgdIndexed;
-  })();
-
-  var Point = Png.Point = (function() {
-    function Point(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Point.prototype._read = function() {
-      this.xInt = this._io.readU4be();
-      this.yInt = this._io.readU4be();
-    }
-    Object.defineProperty(Point.prototype, &#39;x&#39;, {
-      get: function() {
-        if (this._m_x !== undefined)
-          return this._m_x;
-        this._m_x = (this.xInt / 100000.0);
-        return this._m_x;
-      }
-    });
-    Object.defineProperty(Point.prototype, &#39;y&#39;, {
-      get: function() {
-        if (this._m_y !== undefined)
-          return this._m_y;
-        this._m_y = (this.yInt / 100000.0);
-        return this._m_y;
-      }
-    });
-
-    return Point;
-  })();
-
-  /**
-   * Background chunk for greyscale images.
-   */
-
-  var BkgdGreyscale = Png.BkgdGreyscale = (function() {
-    function BkgdGreyscale(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BkgdGreyscale.prototype._read = function() {
-      this.value = this._io.readU2be();
-    }
-
-    return BkgdGreyscale;
-  })();
-
-  /**
-   * @see {@link https://www.w3.org/TR/PNG/#11cHRM|Source}
-   */
-
-  var ChrmChunk = Png.ChrmChunk = (function() {
-    function ChrmChunk(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ChrmChunk.prototype._read = function() {
-      this.whitePoint = new Point(this._io, this, this._root);
-      this.red = new Point(this._io, this, this._root);
-      this.green = new Point(this._io, this, this._root);
-      this.blue = new Point(this._io, this, this._root);
-    }
-
-    return ChrmChunk;
-  })();
-
-  /**
-   * @see {@link https://www.w3.org/TR/PNG/#11IHDR|Source}
-   */
-
-  var IhdrChunk = Png.IhdrChunk = (function() {
-    function IhdrChunk(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    IhdrChunk.prototype._read = function() {
-      this.width = this._io.readU4be();
-      this.height = this._io.readU4be();
-      this.bitDepth = this._io.readU1();
-      this.colorType = this._io.readU1();
-      this.compressionMethod = this._io.readU1();
-      this.filterMethod = this._io.readU1();
-      this.interlaceMethod = this._io.readU1();
-    }
-
-    return IhdrChunk;
-  })();
-
-  /**
-   * @see {@link https://www.w3.org/TR/PNG/#11PLTE|Source}
-   */
-
-  var PlteChunk = Png.PlteChunk = (function() {
-    function PlteChunk(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PlteChunk.prototype._read = function() {
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new Rgb(this._io, this, this._root));
-        i++;
-      }
-    }
-
-    return PlteChunk;
-  })();
-
-  /**
-   * @see {@link https://www.w3.org/TR/PNG/#11sRGB|Source}
-   */
-
-  var SrgbChunk = Png.SrgbChunk = (function() {
-    SrgbChunk.Intent = Object.freeze({
-      PERCEPTUAL: 0,
-      RELATIVE_COLORIMETRIC: 1,
-      SATURATION: 2,
-      ABSOLUTE_COLORIMETRIC: 3,
-
-      0: &quot;PERCEPTUAL&quot;,
-      1: &quot;RELATIVE_COLORIMETRIC&quot;,
-      2: &quot;SATURATION&quot;,
-      3: &quot;ABSOLUTE_COLORIMETRIC&quot;,
-    });
-
-    function SrgbChunk(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SrgbChunk.prototype._read = function() {
-      this.renderIntent = this._io.readU1();
-    }
-
-    return SrgbChunk;
-  })();
-
-  /**
-   * Compressed text chunk effectively allows to store key-value
-   * string pairs in PNG container, compressing &quot;value&quot; part (which
-   * can be quite lengthy) with zlib compression.
-   * @see {@link https://www.w3.org/TR/PNG/#11zTXt|Source}
-   */
-
-  var CompressedTextChunk = Png.CompressedTextChunk = (function() {
-    function CompressedTextChunk(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    CompressedTextChunk.prototype._read = function() {
-      this.keyword = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), &quot;UTF-8&quot;);
-      this.compressionMethod = this._io.readU1();
-      this._raw_textDatastream = this._io.readBytesFull();
-      this.textDatastream = KaitaiStream.processZlib(this._raw_textDatastream);
-    }
-
-    /**
-     * Indicates purpose of the following text data.
-     */
-
-    return CompressedTextChunk;
-  })();
-
-  /**
-   * Background chunk for truecolor images.
-   */
-
-  var BkgdTruecolor = Png.BkgdTruecolor = (function() {
-    function BkgdTruecolor(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BkgdTruecolor.prototype._read = function() {
-      this.red = this._io.readU2be();
-      this.green = this._io.readU2be();
-      this.blue = this._io.readU2be();
-    }
-
-    return BkgdTruecolor;
-  })();
-
-  /**
-   * @see {@link https://www.w3.org/TR/PNG/#11gAMA|Source}
-   */
-
-  var GamaChunk = Png.GamaChunk = (function() {
-    function GamaChunk(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    GamaChunk.prototype._read = function() {
-      this.gammaInt = this._io.readU4be();
-    }
-    Object.defineProperty(GamaChunk.prototype, &#39;gammaRatio&#39;, {
-      get: function() {
-        if (this._m_gammaRatio !== undefined)
-          return this._m_gammaRatio;
-        this._m_gammaRatio = (100000.0 / this.gammaInt);
-        return this._m_gammaRatio;
-      }
-    });
-
-    return GamaChunk;
-  })();
-
-  /**
-   * Background chunk stores default background color to display this
-   * image against. Contents depend on `color_type` of the image.
-   * @see {@link https://www.w3.org/TR/PNG/#11bKGD|Source}
-   */
-
-  var BkgdChunk = Png.BkgdChunk = (function() {
-    function BkgdChunk(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    BkgdChunk.prototype._read = function() {
-      switch (this._root.ihdr.colorType) {
-      case Png.ColorType.GREYSCALE_ALPHA:
-        this.bkgd = new BkgdGreyscale(this._io, this, this._root);
-        break;
-      case Png.ColorType.INDEXED:
-        this.bkgd = new BkgdIndexed(this._io, this, this._root);
-        break;
-      case Png.ColorType.GREYSCALE:
-        this.bkgd = new BkgdGreyscale(this._io, this, this._root);
-        break;
-      case Png.ColorType.TRUECOLOR_ALPHA:
-        this.bkgd = new BkgdTruecolor(this._io, this, this._root);
-        break;
-      case Png.ColorType.TRUECOLOR:
-        this.bkgd = new BkgdTruecolor(this._io, this, this._root);
-        break;
-      }
-    }
-
-    return BkgdChunk;
-  })();
-
-  /**
-   * &quot;Physical size&quot; chunk stores data that allows to translate
-   * logical pixels into physical units (meters, etc) and vice-versa.
-   * @see {@link https://www.w3.org/TR/PNG/#11pHYs|Source}
-   */
-
-  var PhysChunk = Png.PhysChunk = (function() {
-    function PhysChunk(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PhysChunk.prototype._read = function() {
-      this.pixelsPerUnitX = this._io.readU4be();
-      this.pixelsPerUnitY = this._io.readU4be();
-      this.unit = this._io.readU1();
-    }
-
-    /**
-     * Number of pixels per physical unit (typically, 1 meter) by X
-     * axis.
-     */
-
-    /**
-     * Number of pixels per physical unit (typically, 1 meter) by Y
-     * axis.
-     */
-
-    return PhysChunk;
-  })();
-
-  /**
-   * International text chunk effectively allows to store key-value string pairs in
-   * PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are
-   * given in pre-defined subset of iso8859-1 without control
-   * characters.
-   * @see {@link https://www.w3.org/TR/PNG/#11iTXt|Source}
-   */
-
-  var InternationalTextChunk = Png.InternationalTextChunk = (function() {
-    function InternationalTextChunk(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    InternationalTextChunk.prototype._read = function() {
-      this.keyword = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), &quot;UTF-8&quot;);
-      this.compressionFlag = this._io.readU1();
-      this.compressionMethod = this._io.readU1();
-      this.languageTag = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), &quot;ASCII&quot;);
-      this.translatedKeyword = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), &quot;UTF-8&quot;);
-      this.text = KaitaiStream.bytesToStr(this._io.readBytesFull(), &quot;UTF-8&quot;);
-    }
-
-    /**
-     * Indicates purpose of the following text data.
-     */
-
-    /**
-     * 0 = text is uncompressed, 1 = text is compressed with a
-     * method specified in `compression_method`.
-     */
-
-    /**
-     * Human language used in `translated_keyword` and `text`
-     * attributes - should be a language code conforming to ISO
-     * 646.IRV:1991.
-     */
-
-    /**
-     * Keyword translated into language specified in
-     * `language_tag`. Line breaks are not allowed.
-     */
-
-    /**
-     * Text contents (&quot;value&quot; of this key-value pair), written in
-     * language specified in `language_tag`. Linke breaks are
-     * allowed.
-     */
-
-    return InternationalTextChunk;
-  })();
-
-  /**
-   * Text chunk effectively allows to store key-value string pairs in
-   * PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are
-   * given in pre-defined subset of iso8859-1 without control
-   * characters.
-   * @see {@link https://www.w3.org/TR/PNG/#11tEXt|Source}
-   */
-
-  var TextChunk = Png.TextChunk = (function() {
-    function TextChunk(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    TextChunk.prototype._read = function() {
-      this.keyword = KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), &quot;iso8859-1&quot;);
-      this.text = KaitaiStream.bytesToStr(this._io.readBytesFull(), &quot;iso8859-1&quot;);
-    }
-
-    /**
-     * Indicates purpose of the following text data.
-     */
-
-    return TextChunk;
-  })();
-
-  /**
-   * Time chunk stores time stamp of last modification of this image,
-   * up to 1 second precision in UTC timezone.
-   * @see {@link https://www.w3.org/TR/PNG/#11tIME|Source}
-   */
-
-  var TimeChunk = Png.TimeChunk = (function() {
-    function TimeChunk(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    TimeChunk.prototype._read = function() {
-      this.year = this._io.readU2be();
-      this.month = this._io.readU1();
-      this.day = this._io.readU1();
-      this.hour = this._io.readU1();
-      this.minute = this._io.readU1();
-      this.second = this._io.readU1();
-    }
-
-    return TimeChunk;
-  })();
-
-  return Png;
-})();
-return Png;
-}));
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">Png</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">var</span> <span class="nx">Png</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">Png</span><span class="p">.</span><span class="nx">ColorType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">GREYSCALE</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">TRUECOLOR</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">INDEXED</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nx">GREYSCALE_ALPHA</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nx">TRUECOLOR_ALPHA</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;GREYSCALE&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;TRUECOLOR&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;INDEXED&quot;</span><span class="p">,</span>
+    <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;GREYSCALE_ALPHA&quot;</span><span class="p">,</span>
+    <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;TRUECOLOR_ALPHA&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="nx">Png</span><span class="p">.</span><span class="nx">PhysUnit</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">UNKNOWN</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">METER</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;UNKNOWN&quot;</span><span class="p">,</span>
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;METER&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="nx">Png</span><span class="p">.</span><span class="nx">CompressionMethods</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">ZLIB</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;ZLIB&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="kd">function</span> <span class="nx">Png</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">Png</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">137</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">71</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">10</span><span class="p">]);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">ihdrLen</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">13</span><span class="p">]);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">ihdrType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">73</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">82</span><span class="p">]);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">ihdr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">IhdrChunk</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">ihdrCrc</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">do</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Chunk</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">chunks</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_</span><span class="p">);</span>
+      <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="nx">_</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="s2">&quot;IEND&quot;</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">()))</span> <span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">Rgb</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">Rgb</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Rgb</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Rgb</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">r</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">g</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Rgb</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Chunk</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">Chunk</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Chunk</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Chunk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="s2">&quot;iTXt&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">InternationalTextChunk</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;gAMA&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GamaChunk</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;tIME&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TimeChunk</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;PLTE&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PlteChunk</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;bKGD&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BkgdChunk</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;pHYs&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PhysChunk</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;tEXt&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TextChunk</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;cHRM&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ChrmChunk</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;sRGB&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SrgbChunk</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="s2">&quot;zTXt&quot;</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CompressedTextChunk</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">default</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">crc</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Chunk</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Background chunk for images with indexed palette.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">BkgdIndexed</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">BkgdIndexed</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">BkgdIndexed</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">BkgdIndexed</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">paletteIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">BkgdIndexed</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Point</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">Point</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Point</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Point</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">xInt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">yInt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Point</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_x</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_x</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_x</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">xInt</span> <span class="o">/</span> <span class="mf">100000.0</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_x</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Point</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_y</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_y</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_y</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">yInt</span> <span class="o">/</span> <span class="mf">100000.0</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_y</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">Point</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Background chunk for greyscale images.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">BkgdGreyscale</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">BkgdGreyscale</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">BkgdGreyscale</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">BkgdGreyscale</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">BkgdGreyscale</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.w3.org/TR/PNG/#11cHRM|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">ChrmChunk</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">ChrmChunk</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ChrmChunk</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ChrmChunk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">whitePoint</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Point</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">red</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Point</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">green</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Point</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">blue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Point</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">ChrmChunk</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.w3.org/TR/PNG/#11IHDR|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">IhdrChunk</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">IhdrChunk</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">IhdrChunk</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">IhdrChunk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">bitDepth</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">colorType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">compressionMethod</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">filterMethod</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">interlaceMethod</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">IhdrChunk</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.w3.org/TR/PNG/#11PLTE|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">PlteChunk</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">PlteChunk</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">PlteChunk</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">PlteChunk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">Rgb</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">PlteChunk</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.w3.org/TR/PNG/#11sRGB|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">SrgbChunk</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">SrgbChunk</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">SrgbChunk</span><span class="p">.</span><span class="nx">Intent</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+      <span class="nx">PERCEPTUAL</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">RELATIVE_COLORIMETRIC</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">SATURATION</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="nx">ABSOLUTE_COLORIMETRIC</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+
+      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;PERCEPTUAL&quot;</span><span class="p">,</span>
+      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;RELATIVE_COLORIMETRIC&quot;</span><span class="p">,</span>
+      <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;SATURATION&quot;</span><span class="p">,</span>
+      <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;ABSOLUTE_COLORIMETRIC&quot;</span><span class="p">,</span>
+    <span class="p">});</span>
+
+    <span class="kd">function</span> <span class="nx">SrgbChunk</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">SrgbChunk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">renderIntent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">SrgbChunk</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Compressed text chunk effectively allows to store key-value</span>
+<span class="cm">   * string pairs in PNG container, compressing &quot;value&quot; part (which</span>
+<span class="cm">   * can be quite lengthy) with zlib compression.</span>
+<span class="cm">   * @see {@link https://www.w3.org/TR/PNG/#11zTXt|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">CompressedTextChunk</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">CompressedTextChunk</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">CompressedTextChunk</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">CompressedTextChunk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">keyword</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">compressionMethod</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_textDatastream</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesFull</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">textDatastream</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">processZlib</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_textDatastream</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Indicates purpose of the following text data.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">CompressedTextChunk</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Background chunk for truecolor images.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">BkgdTruecolor</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">BkgdTruecolor</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">BkgdTruecolor</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">BkgdTruecolor</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">red</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">green</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">blue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">BkgdTruecolor</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.w3.org/TR/PNG/#11gAMA|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">GamaChunk</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">GamaChunk</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">GamaChunk</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">GamaChunk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">gammaInt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">GamaChunk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;gammaRatio&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_gammaRatio</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_gammaRatio</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_gammaRatio</span> <span class="o">=</span> <span class="p">(</span><span class="mf">100000.0</span> <span class="o">/</span> <span class="k">this</span><span class="p">.</span><span class="nx">gammaInt</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_gammaRatio</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">GamaChunk</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Background chunk stores default background color to display this</span>
+<span class="cm">   * image against. Contents depend on `color_type` of the image.</span>
+<span class="cm">   * @see {@link https://www.w3.org/TR/PNG/#11bKGD|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">BkgdChunk</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">BkgdChunk</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">BkgdChunk</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">BkgdChunk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">ihdr</span><span class="p">.</span><span class="nx">colorType</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">ColorType</span><span class="p">.</span><span class="nx">GREYSCALE_ALPHA</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">bkgd</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BkgdGreyscale</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">ColorType</span><span class="p">.</span><span class="nx">INDEXED</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">bkgd</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BkgdIndexed</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">ColorType</span><span class="p">.</span><span class="nx">GREYSCALE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">bkgd</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BkgdGreyscale</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">ColorType</span><span class="p">.</span><span class="nx">TRUECOLOR_ALPHA</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">bkgd</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BkgdTruecolor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">ColorType</span><span class="p">.</span><span class="nx">TRUECOLOR</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">bkgd</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BkgdTruecolor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">BkgdChunk</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * &quot;Physical size&quot; chunk stores data that allows to translate</span>
+<span class="cm">   * logical pixels into physical units (meters, etc) and vice-versa.</span>
+<span class="cm">   * @see {@link https://www.w3.org/TR/PNG/#11pHYs|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">PhysChunk</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">PhysChunk</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">PhysChunk</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">PhysChunk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">pixelsPerUnitX</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">pixelsPerUnitY</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">unit</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Number of pixels per physical unit (typically, 1 meter) by X</span>
+<span class="cm">     * axis.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Number of pixels per physical unit (typically, 1 meter) by Y</span>
+<span class="cm">     * axis.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">PhysChunk</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * International text chunk effectively allows to store key-value string pairs in</span>
+<span class="cm">   * PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
+<span class="cm">   * given in pre-defined subset of iso8859-1 without control</span>
+<span class="cm">   * characters.</span>
+<span class="cm">   * @see {@link https://www.w3.org/TR/PNG/#11iTXt|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">InternationalTextChunk</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">InternationalTextChunk</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">InternationalTextChunk</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">InternationalTextChunk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">keyword</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">compressionFlag</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">compressionMethod</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">languageTag</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">translatedKeyword</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesFull</span><span class="p">(),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Indicates purpose of the following text data.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 0 = text is uncompressed, 1 = text is compressed with a</span>
+<span class="cm">     * method specified in `compression_method`.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Human language used in `translated_keyword` and `text`</span>
+<span class="cm">     * attributes - should be a language code conforming to ISO</span>
+<span class="cm">     * 646.IRV:1991.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Keyword translated into language specified in</span>
+<span class="cm">     * `language_tag`. Line breaks are not allowed.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Text contents (&quot;value&quot; of this key-value pair), written in</span>
+<span class="cm">     * language specified in `language_tag`. Linke breaks are</span>
+<span class="cm">     * allowed.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">InternationalTextChunk</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Text chunk effectively allows to store key-value string pairs in</span>
+<span class="cm">   * PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
+<span class="cm">   * given in pre-defined subset of iso8859-1 without control</span>
+<span class="cm">   * characters.</span>
+<span class="cm">   * @see {@link https://www.w3.org/TR/PNG/#11tEXt|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">TextChunk</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">TextChunk</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">TextChunk</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">TextChunk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">keyword</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;iso8859-1&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesFull</span><span class="p">(),</span> <span class="s2">&quot;iso8859-1&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Indicates purpose of the following text data.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">TextChunk</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Time chunk stores time stamp of last modification of this image,</span>
+<span class="cm">   * up to 1 second precision in UTC timezone.</span>
+<span class="cm">   * @see {@link https://www.w3.org/TR/PNG/#11tIME|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">TimeChunk</span> <span class="o">=</span> <span class="nx">Png</span><span class="p">.</span><span class="nx">TimeChunk</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">TimeChunk</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">TimeChunk</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">year</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">month</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">day</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">hour</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">minute</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">second</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">TimeChunk</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="k">return</span> <span class="nx">Png</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">Png</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -879,8 +876,8 @@ return Png;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

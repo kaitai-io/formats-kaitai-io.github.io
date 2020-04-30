@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -290,355 +287,355 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef TR_DOS_IMAGE_H_
-#define TR_DOS_IMAGE_H_
-
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-#include &quot;kaitai/kaitaistruct.h&quot;
-
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
-
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
-
-/**
- * .trd file is a raw dump of TR-DOS (ZX-Spectrum) floppy. .trd files are
- * headerless and contain consequent &quot;logical tracks&quot;, each logical track
- * consists of 16 256-byte sectors.
- * 
- * Logical tracks are defined the same way as used by TR-DOS: for single-side
- * floppies it&#39;s just a physical track number, for two-side floppies sides are
- * interleaved, i.e. logical_track_num = (physical_track_num &lt;&lt; 1) | side
- * 
- * So, this format definition is more for TR-DOS filesystem than for .trd files,
- * which are formatless.
- * 
- * Strings (file names, disk label, disk password) are padded with spaces and use
- * ZX Spectrum character set, including UDGs, block drawing chars and Basic
- * tokens. ASCII range is mostly standard ASCII, with few characters (^, `, DEL)
- * replaced with (up arrow, pound, copyright symbol).
- * 
- * .trd file can be smaller than actual floppy disk, if last logical tracks are
- * empty (contain no file data) they can be omitted.
- */
-
-class tr_dos_image_t : public kaitai::kstruct {
-
-public:
-    class volume_info_t;
-    class position_and_length_code_t;
-    class filename_t;
-    class position_and_length_print_t;
-    class position_and_length_generic_t;
-    class position_and_length_basic_t;
-    class file_t;
-
-    enum disk_type_t {
-        DISK_TYPE_TYPE_80_TRACKS_DOUBLE_SIDE = 22,
-        DISK_TYPE_TYPE_40_TRACKS_DOUBLE_SIDE = 23,
-        DISK_TYPE_TYPE_80_TRACKS_SINGLE_SIDE = 24,
-        DISK_TYPE_TYPE_40_TRACKS_SINGLE_SIDE = 25
-    };
-
-    tr_dos_image_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, tr_dos_image_t* p__root = 0);
-
-private:
-    void _read();
-
-public:
-    ~tr_dos_image_t();
-
-    class volume_info_t : public kaitai::kstruct {
-
-    public:
-
-        volume_info_t(kaitai::kstream* p__io, tr_dos_image_t* p__parent = 0, tr_dos_image_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~volume_info_t();
-
-    private:
-        bool f_num_tracks;
-        int8_t m_num_tracks;
-
-    public:
-        int8_t num_tracks();
-
-    private:
-        bool f_num_sides;
-        int8_t m_num_sides;
-
-    public:
-        int8_t num_sides();
-
-    private:
-        std::string m_catalog_end;
-        std::string m_unused;
-        uint8_t m_first_free_sector_sector;
-        uint8_t m_first_free_sector_track;
-        disk_type_t m_disk_type;
-        uint8_t m_num_files;
-        uint16_t m_num_free_sectors;
-        std::string m_tr_dos_id;
-        std::string m_unused_2;
-        std::string m_password;
-        std::string m_unused_3;
-        uint8_t m_num_deleted_files;
-        std::string m_label;
-        std::string m_unused_4;
-        tr_dos_image_t* m__root;
-        tr_dos_image_t* m__parent;
-
-    public:
-        std::string catalog_end() const { return m_catalog_end; }
-        std::string unused() const { return m_unused; }
-        uint8_t first_free_sector_sector() const { return m_first_free_sector_sector; }
-
-        /**
-         * track number is logical, for double-sided disks it&#39;s
-         * (physical_track &lt;&lt; 1) | side, the same way that tracks are stored
-         * sequentially in .trd file
-         */
-        uint8_t first_free_sector_track() const { return m_first_free_sector_track; }
-        disk_type_t disk_type() const { return m_disk_type; }
-
-        /**
-         * Number of non-deleted files. Directory can have more than
-         * number_of_files entries due to deleted files
-         */
-        uint8_t num_files() const { return m_num_files; }
-        uint16_t num_free_sectors() const { return m_num_free_sectors; }
-        std::string tr_dos_id() const { return m_tr_dos_id; }
-        std::string unused_2() const { return m_unused_2; }
-        std::string password() const { return m_password; }
-        std::string unused_3() const { return m_unused_3; }
-        uint8_t num_deleted_files() const { return m_num_deleted_files; }
-        std::string label() const { return m_label; }
-        std::string unused_4() const { return m_unused_4; }
-        tr_dos_image_t* _root() const { return m__root; }
-        tr_dos_image_t* _parent() const { return m__parent; }
-    };
-
-    class position_and_length_code_t : public kaitai::kstruct {
-
-    public:
-
-        position_and_length_code_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent = 0, tr_dos_image_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~position_and_length_code_t();
-
-    private:
-        uint16_t m_start_address;
-        uint16_t m_length;
-        tr_dos_image_t* m__root;
-        tr_dos_image_t::file_t* m__parent;
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef TR_DOS_IMAGE_H_</span>
+<span class="cp">#define TR_DOS_IMAGE_H_</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * .trd file is a raw dump of TR-DOS (ZX-Spectrum) floppy. .trd files are</span>
+<span class="cm"> * headerless and contain consequent &quot;logical tracks&quot;, each logical track</span>
+<span class="cm"> * consists of 16 256-byte sectors.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Logical tracks are defined the same way as used by TR-DOS: for single-side</span>
+<span class="cm"> * floppies it&#39;s just a physical track number, for two-side floppies sides are</span>
+<span class="cm"> * interleaved, i.e. logical_track_num = (physical_track_num &lt;&lt; 1) | side</span>
+<span class="cm"> * </span>
+<span class="cm"> * So, this format definition is more for TR-DOS filesystem than for .trd files,</span>
+<span class="cm"> * which are formatless.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Strings (file names, disk label, disk password) are padded with spaces and use</span>
+<span class="cm"> * ZX Spectrum character set, including UDGs, block drawing chars and Basic</span>
+<span class="cm"> * tokens. ASCII range is mostly standard ASCII, with few characters (^, `, DEL)</span>
+<span class="cm"> * replaced with (up arrow, pound, copyright symbol).</span>
+<span class="cm"> * </span>
+<span class="cm"> * .trd file can be smaller than actual floppy disk, if last logical tracks are</span>
+<span class="cm"> * empty (contain no file data) they can be omitted.</span>
+<span class="cm"> */</span>
+
+<span class="k">class</span> <span class="nc">tr_dos_image_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">volume_info_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">position_and_length_code_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">filename_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">position_and_length_print_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">position_and_length_generic_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">position_and_length_basic_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">file_t</span><span class="p">;</span>
+
+    <span class="k">enum</span> <span class="n">disk_type_t</span> <span class="p">{</span>
+        <span class="n">DISK_TYPE_TYPE_80_TRACKS_DOUBLE_SIDE</span> <span class="o">=</span> <span class="mi">22</span><span class="p">,</span>
+        <span class="n">DISK_TYPE_TYPE_40_TRACKS_DOUBLE_SIDE</span> <span class="o">=</span> <span class="mi">23</span><span class="p">,</span>
+        <span class="n">DISK_TYPE_TYPE_80_TRACKS_SINGLE_SIDE</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span>
+        <span class="n">DISK_TYPE_TYPE_40_TRACKS_SINGLE_SIDE</span> <span class="o">=</span> <span class="mi">25</span>
+    <span class="p">};</span>
+
+    <span class="n">tr_dos_image_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">tr_dos_image_t</span><span class="p">();</span>
+
+    <span class="k">class</span> <span class="nc">volume_info_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">volume_info_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">volume_info_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_num_tracks</span><span class="p">;</span>
+        <span class="kt">int8_t</span> <span class="n">m_num_tracks</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int8_t</span> <span class="n">num_tracks</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_num_sides</span><span class="p">;</span>
+        <span class="kt">int8_t</span> <span class="n">m_num_sides</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int8_t</span> <span class="n">num_sides</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_catalog_end</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_unused</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_first_free_sector_sector</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_first_free_sector_track</span><span class="p">;</span>
+        <span class="n">disk_type_t</span> <span class="n">m_disk_type</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_num_files</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_num_free_sectors</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_tr_dos_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_unused_2</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_password</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_unused_3</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_num_deleted_files</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_label</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_unused_4</span><span class="p">;</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">catalog_end</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_catalog_end</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">unused</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_unused</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">first_free_sector_sector</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_first_free_sector_sector</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * track number is logical, for double-sided disks it&#39;s</span>
+<span class="cm">         * (physical_track &lt;&lt; 1) | side, the same way that tracks are stored</span>
+<span class="cm">         * sequentially in .trd file</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">first_free_sector_track</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_first_free_sector_track</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">disk_type_t</span> <span class="n">disk_type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_disk_type</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Number of non-deleted files. Directory can have more than</span>
+<span class="cm">         * number_of_files entries due to deleted files</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">num_files</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_files</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">num_free_sectors</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_free_sectors</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">tr_dos_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_tr_dos_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">unused_2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_unused_2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">password</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_password</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">unused_3</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_unused_3</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">num_deleted_files</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_deleted_files</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">label</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_label</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">unused_4</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_unused_4</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">position_and_length_code_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">position_and_length_code_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">position_and_length_code_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">m_start_address</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_length</span><span class="p">;</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-
-        /**
-         * Default memory address to load this byte array into
-         */
-        uint16_t start_address() const { return m_start_address; }
-        uint16_t length() const { return m_length; }
-        tr_dos_image_t* _root() const { return m__root; }
-        tr_dos_image_t::file_t* _parent() const { return m__parent; }
-    };
-
-    class filename_t : public kaitai::kstruct {
-
-    public:
-
-        filename_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent = 0, tr_dos_image_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~filename_t();
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Default memory address to load this byte array into</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">start_address</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_start_address</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">length</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_length</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">filename_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">filename_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">filename_t</span><span class="p">();</span>
 
-    private:
-        bool f_first_byte;
-        uint8_t m_first_byte;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_first_byte</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_first_byte</span><span class="p">;</span>
 
-    public:
-        uint8_t first_byte();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">first_byte</span><span class="p">();</span>
 
-    private:
-        std::string m_name;
-        tr_dos_image_t* m__root;
-        tr_dos_image_t::file_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_name</span><span class="p">;</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        std::string name() const { return m_name; }
-        tr_dos_image_t* _root() const { return m__root; }
-        tr_dos_image_t::file_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class position_and_length_print_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">position_and_length_print_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        position_and_length_print_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent = 0, tr_dos_image_t* p__root = 0);
+        <span class="n">position_and_length_print_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~position_and_length_print_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">position_and_length_print_t</span><span class="p">();</span>
 
-    private:
-        uint8_t m_extent_no;
-        uint8_t m_reserved;
-        uint16_t m_length;
-        tr_dos_image_t* m__root;
-        tr_dos_image_t::file_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_extent_no</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_reserved</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_length</span><span class="p">;</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint8_t extent_no() const { return m_extent_no; }
-        uint8_t reserved() const { return m_reserved; }
-        uint16_t length() const { return m_length; }
-        tr_dos_image_t* _root() const { return m__root; }
-        tr_dos_image_t::file_t* _parent() const { return m__parent; }
-    };
-
-    class position_and_length_generic_t : public kaitai::kstruct {
-
-    public:
-
-        position_and_length_generic_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent = 0, tr_dos_image_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~position_and_length_generic_t();
-
-    private:
-        uint16_t m_reserved;
-        uint16_t m_length;
-        tr_dos_image_t* m__root;
-        tr_dos_image_t::file_t* m__parent;
-
-    public:
-        uint16_t reserved() const { return m_reserved; }
-        uint16_t length() const { return m_length; }
-        tr_dos_image_t* _root() const { return m__root; }
-        tr_dos_image_t::file_t* _parent() const { return m__parent; }
-    };
-
-    class position_and_length_basic_t : public kaitai::kstruct {
-
-    public:
-
-        position_and_length_basic_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent = 0, tr_dos_image_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~position_and_length_basic_t();
-
-    private:
-        uint16_t m_program_and_data_length;
-        uint16_t m_program_length;
-        tr_dos_image_t* m__root;
-        tr_dos_image_t::file_t* m__parent;
-
-    public:
-        uint16_t program_and_data_length() const { return m_program_and_data_length; }
-        uint16_t program_length() const { return m_program_length; }
-        tr_dos_image_t* _root() const { return m__root; }
-        tr_dos_image_t::file_t* _parent() const { return m__parent; }
-    };
-
-    class file_t : public kaitai::kstruct {
-
-    public:
-
-        file_t(kaitai::kstream* p__io, tr_dos_image_t* p__parent = 0, tr_dos_image_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~file_t();
-
-    private:
-        bool f_is_deleted;
-        bool m_is_deleted;
-
-    public:
-        bool is_deleted();
-
-    private:
-        bool f_is_terminator;
-        bool m_is_terminator;
-
-    public:
-        bool is_terminator();
-
-    private:
-        bool f_contents;
-        std::string m_contents;
-
-    public:
-        std::string contents();
-
-    private:
-        filename_t* m_name;
-        uint8_t m_extension;
-        kaitai::kstruct* m_position_and_length;
-        uint8_t m_length_sectors;
-        uint8_t m_starting_sector;
-        uint8_t m_starting_track;
-        tr_dos_image_t* m__root;
-        tr_dos_image_t* m__parent;
-        std::string m__raw_name;
-        kaitai::kstream* m__io__raw_name;
-
-    public:
-        filename_t* name() const { return m_name; }
-        uint8_t extension() const { return m_extension; }
-        kaitai::kstruct* position_and_length() const { return m_position_and_length; }
-        uint8_t length_sectors() const { return m_length_sectors; }
-        uint8_t starting_sector() const { return m_starting_sector; }
-        uint8_t starting_track() const { return m_starting_track; }
-        tr_dos_image_t* _root() const { return m__root; }
-        tr_dos_image_t* _parent() const { return m__parent; }
-        std::string _raw_name() const { return m__raw_name; }
-        kaitai::kstream* _io__raw_name() const { return m__io__raw_name; }
-    };
-
-private:
-    bool f_volume_info;
-    volume_info_t* m_volume_info;
-
-public:
-    volume_info_t* volume_info();
-
-private:
-    std::vector&lt;file_t*&gt;* m_files;
-    tr_dos_image_t* m__root;
-    kaitai::kstruct* m__parent;
-
-public:
-    std::vector&lt;file_t*&gt;* files() const { return m_files; }
-    tr_dos_image_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-};
-
-#endif  // TR_DOS_IMAGE_H_
-</code></pre>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">extent_no</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_extent_no</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">reserved</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">length</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_length</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">position_and_length_generic_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">position_and_length_generic_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">position_and_length_generic_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">m_reserved</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_length</span><span class="p">;</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">reserved</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">length</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_length</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">position_and_length_basic_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">position_and_length_basic_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">position_and_length_basic_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">m_program_and_data_length</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_program_length</span><span class="p">;</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">program_and_data_length</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_program_and_data_length</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">program_length</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_program_length</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">file_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">file_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">file_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_deleted</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_deleted</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">is_deleted</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_terminator</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_terminator</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">is_terminator</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_contents</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_contents</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">contents</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">filename_t</span><span class="o">*</span> <span class="n">m_name</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_extension</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m_position_and_length</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_length_sectors</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_starting_sector</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_starting_track</span><span class="p">;</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_name</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_name</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">filename_t</span><span class="o">*</span> <span class="n">name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">extension</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_extension</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">position_and_length</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_position_and_length</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">length_sectors</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_length_sectors</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">starting_sector</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_starting_sector</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">starting_track</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_starting_track</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_name</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_volume_info</span><span class="p">;</span>
+    <span class="n">volume_info_t</span><span class="o">*</span> <span class="n">m_volume_info</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">volume_info_t</span><span class="o">*</span> <span class="n">volume_info</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">file_t</span><span class="o">*&gt;*</span> <span class="n">m_files</span><span class="p">;</span>
+    <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">file_t</span><span class="o">*&gt;*</span> <span class="n">files</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_files</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cp">#endif  </span><span class="c1">// TR_DOS_IMAGE_H_</span>
+</pre></div>
 
         </div>
         
@@ -654,253 +651,253 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;tr_dos_image.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;tr_dos_image.h&quot;</span><span class="cp"></span>
 
 
 
-tr_dos_image_t::tr_dos_image_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    f_volume_info = false;
-    _read();
-}
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">tr_dos_image_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">f_volume_info</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void tr_dos_image_t::_read() {
-    m_files = new std::vector&lt;file_t*&gt;();
-    {
-        int i = 0;
-        file_t* _;
-        do {
-            _ = new file_t(m__io, this, m__root);
-            m_files-&gt;push_back(_);
-            i++;
-        } while (!(_-&gt;is_terminator()));
-    }
-}
+<span class="kt">void</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_files</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">file_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">file_t</span><span class="o">*</span> <span class="n">_</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="k">new</span> <span class="n">file_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+            <span class="n">m_files</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">_</span><span class="p">);</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_</span><span class="o">-&gt;</span><span class="n">is_terminator</span><span class="p">()));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-tr_dos_image_t::~tr_dos_image_t() {
-    for (std::vector&lt;file_t*&gt;::iterator it = m_files-&gt;begin(); it != m_files-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_files;
-    if (f_volume_info) {
-        delete m_volume_info;
-    }
-}
+<span class="n">tr_dos_image_t</span><span class="o">::~</span><span class="n">tr_dos_image_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">file_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_files</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_files</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_files</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_volume_info</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_volume_info</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-tr_dos_image_t::volume_info_t::volume_info_t(kaitai::kstream* p__io, tr_dos_image_t* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_num_tracks = false;
-    f_num_sides = false;
-    _read();
-}
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">volume_info_t</span><span class="o">::</span><span class="n">volume_info_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_num_tracks</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_num_sides</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void tr_dos_image_t::volume_info_t::_read() {
-    m_catalog_end = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x00&quot;, 1));
-    m_unused = m__io-&gt;read_bytes(224);
-    m_first_free_sector_sector = m__io-&gt;read_u1();
-    m_first_free_sector_track = m__io-&gt;read_u1();
-    m_disk_type = static_cast&lt;tr_dos_image_t::disk_type_t&gt;(m__io-&gt;read_u1());
-    m_num_files = m__io-&gt;read_u1();
-    m_num_free_sectors = m__io-&gt;read_u2le();
-    m_tr_dos_id = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x10&quot;, 1));
-    m_unused_2 = m__io-&gt;read_bytes(2);
-    m_password = m__io-&gt;read_bytes(9);
-    m_unused_3 = m__io-&gt;read_bytes(1);
-    m_num_deleted_files = m__io-&gt;read_u1();
-    m_label = m__io-&gt;read_bytes(8);
-    m_unused_4 = m__io-&gt;read_bytes(3);
-}
+<span class="kt">void</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">volume_info_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_catalog_end</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+    <span class="n">m_unused</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">224</span><span class="p">);</span>
+    <span class="n">m_first_free_sector_sector</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_first_free_sector_track</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_disk_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">disk_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">m_num_files</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_num_free_sectors</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_tr_dos_id</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x10</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+    <span class="n">m_unused_2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+    <span class="n">m_password</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span>
+    <span class="n">m_unused_3</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_num_deleted_files</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_label</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+    <span class="n">m_unused_4</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="p">}</span>
 
-tr_dos_image_t::volume_info_t::~volume_info_t() {
-}
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">volume_info_t</span><span class="o">::~</span><span class="n">volume_info_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-int8_t tr_dos_image_t::volume_info_t::num_tracks() {
-    if (f_num_tracks)
-        return m_num_tracks;
-    m_num_tracks = (((disk_type() &amp; 1) != 0) ? (40) : (80));
-    f_num_tracks = true;
-    return m_num_tracks;
-}
+<span class="kt">int8_t</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">volume_info_t</span><span class="o">::</span><span class="n">num_tracks</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_num_tracks</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_num_tracks</span><span class="p">;</span>
+    <span class="n">m_num_tracks</span> <span class="o">=</span> <span class="p">(((</span><span class="n">disk_type</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">40</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="mi">80</span><span class="p">));</span>
+    <span class="n">f_num_tracks</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_num_tracks</span><span class="p">;</span>
+<span class="p">}</span>
 
-int8_t tr_dos_image_t::volume_info_t::num_sides() {
-    if (f_num_sides)
-        return m_num_sides;
-    m_num_sides = (((disk_type() &amp; 8) != 0) ? (1) : (2));
-    f_num_sides = true;
-    return m_num_sides;
-}
+<span class="kt">int8_t</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">volume_info_t</span><span class="o">::</span><span class="n">num_sides</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_num_sides</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_num_sides</span><span class="p">;</span>
+    <span class="n">m_num_sides</span> <span class="o">=</span> <span class="p">(((</span><span class="n">disk_type</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">));</span>
+    <span class="n">f_num_sides</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_num_sides</span><span class="p">;</span>
+<span class="p">}</span>
 
-tr_dos_image_t::position_and_length_code_t::position_and_length_code_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">position_and_length_code_t</span><span class="o">::</span><span class="n">position_and_length_code_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void tr_dos_image_t::position_and_length_code_t::_read() {
-    m_start_address = m__io-&gt;read_u2le();
-    m_length = m__io-&gt;read_u2le();
-}
+<span class="kt">void</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">position_and_length_code_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_start_address</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_length</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="p">}</span>
 
-tr_dos_image_t::position_and_length_code_t::~position_and_length_code_t() {
-}
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">position_and_length_code_t</span><span class="o">::~</span><span class="n">position_and_length_code_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-tr_dos_image_t::filename_t::filename_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_first_byte = false;
-    _read();
-}
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">filename_t</span><span class="o">::</span><span class="n">filename_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_first_byte</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void tr_dos_image_t::filename_t::_read() {
-    m_name = m__io-&gt;read_bytes(8);
-}
+<span class="kt">void</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">filename_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_name</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+<span class="p">}</span>
 
-tr_dos_image_t::filename_t::~filename_t() {
-    if (f_first_byte) {
-    }
-}
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">filename_t</span><span class="o">::~</span><span class="n">filename_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_first_byte</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-uint8_t tr_dos_image_t::filename_t::first_byte() {
-    if (f_first_byte)
-        return m_first_byte;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek(0);
-    m_first_byte = m__io-&gt;read_u1();
-    m__io-&gt;seek(_pos);
-    f_first_byte = true;
-    return m_first_byte;
-}
+<span class="kt">uint8_t</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">filename_t</span><span class="o">::</span><span class="n">first_byte</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_first_byte</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_first_byte</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">m_first_byte</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_first_byte</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_first_byte</span><span class="p">;</span>
+<span class="p">}</span>
 
-tr_dos_image_t::position_and_length_print_t::position_and_length_print_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">position_and_length_print_t</span><span class="o">::</span><span class="n">position_and_length_print_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void tr_dos_image_t::position_and_length_print_t::_read() {
-    m_extent_no = m__io-&gt;read_u1();
-    m_reserved = m__io-&gt;read_u1();
-    m_length = m__io-&gt;read_u2le();
-}
+<span class="kt">void</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">position_and_length_print_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_extent_no</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_reserved</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_length</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="p">}</span>
 
-tr_dos_image_t::position_and_length_print_t::~position_and_length_print_t() {
-}
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">position_and_length_print_t</span><span class="o">::~</span><span class="n">position_and_length_print_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-tr_dos_image_t::position_and_length_generic_t::position_and_length_generic_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">position_and_length_generic_t</span><span class="o">::</span><span class="n">position_and_length_generic_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void tr_dos_image_t::position_and_length_generic_t::_read() {
-    m_reserved = m__io-&gt;read_u2le();
-    m_length = m__io-&gt;read_u2le();
-}
+<span class="kt">void</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">position_and_length_generic_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_reserved</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_length</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="p">}</span>
 
-tr_dos_image_t::position_and_length_generic_t::~position_and_length_generic_t() {
-}
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">position_and_length_generic_t</span><span class="o">::~</span><span class="n">position_and_length_generic_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-tr_dos_image_t::position_and_length_basic_t::position_and_length_basic_t(kaitai::kstream* p__io, tr_dos_image_t::file_t* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">position_and_length_basic_t</span><span class="o">::</span><span class="n">position_and_length_basic_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void tr_dos_image_t::position_and_length_basic_t::_read() {
-    m_program_and_data_length = m__io-&gt;read_u2le();
-    m_program_length = m__io-&gt;read_u2le();
-}
+<span class="kt">void</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">position_and_length_basic_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_program_and_data_length</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_program_length</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="p">}</span>
 
-tr_dos_image_t::position_and_length_basic_t::~position_and_length_basic_t() {
-}
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">position_and_length_basic_t</span><span class="o">::~</span><span class="n">position_and_length_basic_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-tr_dos_image_t::file_t::file_t(kaitai::kstream* p__io, tr_dos_image_t* p__parent, tr_dos_image_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_is_deleted = false;
-    f_is_terminator = false;
-    f_contents = false;
-    _read();
-}
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">::</span><span class="n">file_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">tr_dos_image_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_is_deleted</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_terminator</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_contents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void tr_dos_image_t::file_t::_read() {
-    m__raw_name = m__io-&gt;read_bytes(8);
-    m__io__raw_name = new kaitai::kstream(m__raw_name);
-    m_name = new filename_t(m__io__raw_name, this, m__root);
-    m_extension = m__io-&gt;read_u1();
-    switch (extension()) {
-    case 66: {
-        m_position_and_length = new position_and_length_basic_t(m__io, this, m__root);
-        break;
-    }
-    case 67: {
-        m_position_and_length = new position_and_length_code_t(m__io, this, m__root);
-        break;
-    }
-    case 35: {
-        m_position_and_length = new position_and_length_print_t(m__io, this, m__root);
-        break;
-    }
-    default: {
-        m_position_and_length = new position_and_length_generic_t(m__io, this, m__root);
-        break;
-    }
-    }
-    m_length_sectors = m__io-&gt;read_u1();
-    m_starting_sector = m__io-&gt;read_u1();
-    m_starting_track = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m__raw_name</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+    <span class="n">m__io__raw_name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_name</span><span class="p">);</span>
+    <span class="n">m_name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">filename_t</span><span class="p">(</span><span class="n">m__io__raw_name</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_extension</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">extension</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="mi">66</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">m_position_and_length</span> <span class="o">=</span> <span class="k">new</span> <span class="n">position_and_length_basic_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">67</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">m_position_and_length</span> <span class="o">=</span> <span class="k">new</span> <span class="n">position_and_length_code_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">35</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">m_position_and_length</span> <span class="o">=</span> <span class="k">new</span> <span class="n">position_and_length_print_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">default</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">m_position_and_length</span> <span class="o">=</span> <span class="k">new</span> <span class="n">position_and_length_generic_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">m_length_sectors</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_starting_sector</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_starting_track</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-tr_dos_image_t::file_t::~file_t() {
-    delete m__io__raw_name;
-    delete m_name;
-    delete m_position_and_length;
-    if (f_contents) {
-    }
-}
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">::~</span><span class="n">file_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m__io__raw_name</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_name</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_position_and_length</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_contents</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-bool tr_dos_image_t::file_t::is_deleted() {
-    if (f_is_deleted)
-        return m_is_deleted;
-    m_is_deleted = name()-&gt;first_byte() == 1;
-    f_is_deleted = true;
-    return m_is_deleted;
-}
+<span class="kt">bool</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">::</span><span class="n">is_deleted</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_deleted</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_deleted</span><span class="p">;</span>
+    <span class="n">m_is_deleted</span> <span class="o">=</span> <span class="n">name</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">first_byte</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">f_is_deleted</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_deleted</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool tr_dos_image_t::file_t::is_terminator() {
-    if (f_is_terminator)
-        return m_is_terminator;
-    m_is_terminator = name()-&gt;first_byte() == 0;
-    f_is_terminator = true;
-    return m_is_terminator;
-}
+<span class="kt">bool</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">::</span><span class="n">is_terminator</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_terminator</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_terminator</span><span class="p">;</span>
+    <span class="n">m_is_terminator</span> <span class="o">=</span> <span class="n">name</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">first_byte</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">f_is_terminator</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_terminator</span><span class="p">;</span>
+<span class="p">}</span>
 
-std::string tr_dos_image_t::file_t::contents() {
-    if (f_contents)
-        return m_contents;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek((((starting_track() * 256) * 16) + (starting_sector() * 256)));
-    m_contents = m__io-&gt;read_bytes((length_sectors() * 256));
-    m__io-&gt;seek(_pos);
-    f_contents = true;
-    return m_contents;
-}
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">file_t</span><span class="o">::</span><span class="n">contents</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_contents</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_contents</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">((((</span><span class="n">starting_track</span><span class="p">()</span> <span class="o">*</span> <span class="mi">256</span><span class="p">)</span> <span class="o">*</span> <span class="mi">16</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">starting_sector</span><span class="p">()</span> <span class="o">*</span> <span class="mi">256</span><span class="p">)));</span>
+    <span class="n">m_contents</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length_sectors</span><span class="p">()</span> <span class="o">*</span> <span class="mi">256</span><span class="p">));</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_contents</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_contents</span><span class="p">;</span>
+<span class="p">}</span>
 
-tr_dos_image_t::volume_info_t* tr_dos_image_t::volume_info() {
-    if (f_volume_info)
-        return m_volume_info;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek(2048);
-    m_volume_info = new volume_info_t(m__io, this, m__root);
-    m__io-&gt;seek(_pos);
-    f_volume_info = true;
-    return m_volume_info;
-}
-</code></pre>
+<span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">volume_info_t</span><span class="o">*</span> <span class="n">tr_dos_image_t</span><span class="o">::</span><span class="n">volume_info</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_volume_info</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_volume_info</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="mi">2048</span><span class="p">);</span>
+    <span class="n">m_volume_info</span> <span class="o">=</span> <span class="k">new</span> <span class="n">volume_info_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_volume_info</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_volume_info</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -927,8 +924,8 @@ tr_dos_image_t::volume_info_t* tr_dos_image_t::volume_info() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

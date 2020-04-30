@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -253,424 +250,424 @@ prior to declaration of header.
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
 
 
-/**
- * systemd, a popular user-space system/service management suite on Linux,
- * offers logging functionality, storing incoming logs in a binary journal
- * format.
- * 
- * On live Linux system running systemd, these journals are typically located at:
- * 
- * * /run/log/journal/machine-id/*.journal (volatile, lost after reboot)
- * * /var/log/journal/machine-id/*.journal (persistent, but disabled by default on Debian / Ubuntu)
- * @see &lt;a href=&quot;https://www.freedesktop.org/wiki/Software/systemd/journal-files/&quot;&gt;Source&lt;/a&gt;
- */
-public class SystemdJournal extends KaitaiStruct {
-    public static SystemdJournal fromFile(String fileName) throws IOException {
-        return new SystemdJournal(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * systemd, a popular user-space system/service management suite on Linux,</span>
+<span class="cm"> * offers logging functionality, storing incoming logs in a binary journal</span>
+<span class="cm"> * format.</span>
+<span class="cm"> * </span>
+<span class="cm"> * On live Linux system running systemd, these journals are typically located at:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * /run/log/journal/machine-id/*.journal (volatile, lost after reboot)</span>
+<span class="cm"> * * /var/log/journal/machine-id/*.journal (persistent, but disabled by default on Debian / Ubuntu)</span>
+<span class="cm"> * @see &lt;a href=&quot;https://www.freedesktop.org/wiki/Software/systemd/journal-files/&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SystemdJournal</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">SystemdJournal</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">SystemdJournal</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public enum State {
-        OFFLINE(0),
-        ONLINE(1),
-        ARCHIVED(2);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">State</span> <span class="p">{</span>
+        <span class="n">OFFLINE</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+        <span class="n">ONLINE</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">ARCHIVED</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
 
-        private final long id;
-        State(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, State&gt; byId = new HashMap&lt;Long, State&gt;(3);
-        static {
-            for (State e : State.values())
-                byId.put(e.id(), e);
-        }
-        public static State byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">State</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">State</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">State</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">State</span> <span class="n">e</span> <span class="p">:</span> <span class="n">State</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">State</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public SystemdJournal(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">SystemdJournal</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public SystemdJournal(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">SystemdJournal</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public SystemdJournal(KaitaiStream _io, KaitaiStruct _parent, SystemdJournal _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this._raw_header = this._io.readBytes(lenHeader());
-        KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-        this.header = new Header(_io__raw_header, this, _root);
-        objects = new ArrayList&lt;JournalObject&gt;((int) (header().numObjects()));
-        for (int i = 0; i &lt; header().numObjects(); i++) {
-            this.objects.add(new JournalObject(this._io, this, _root));
-        }
-    }
-    public static class Header extends KaitaiStruct {
-        public static Header fromFile(String fileName) throws IOException {
-            return new Header(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="kd">public</span> <span class="nf">SystemdJournal</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">SystemdJournal</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_raw_header</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenHeader</span><span class="p">());</span>
+        <span class="n">KaitaiStream</span> <span class="n">_io__raw_header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_header</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Header</span><span class="p">(</span><span class="n">_io__raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="n">objects</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">JournalObject</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">numObjects</span><span class="p">()));</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">header</span><span class="p">().</span><span class="na">numObjects</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">objects</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">JournalObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Header</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Header</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Header</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Header(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Header(KaitaiStream _io, SystemdJournal _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">SystemdJournal</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Header(KaitaiStream _io, SystemdJournal _parent, SystemdJournal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.signature = this._io.ensureFixedContents(new byte[] { 76, 80, 75, 83, 72, 72, 82, 72 });
-            this.compatibleFlags = this._io.readU4le();
-            this.incompatibleFlags = this._io.readU4le();
-            this.state = SystemdJournal.State.byId(this._io.readU1());
-            this.reserved = this._io.readBytes(7);
-            this.fileId = this._io.readBytes(16);
-            this.machineId = this._io.readBytes(16);
-            this.bootId = this._io.readBytes(16);
-            this.seqnumId = this._io.readBytes(16);
-            this.lenHeader = this._io.readU8le();
-            this.lenArena = this._io.readU8le();
-            this.ofsDataHashTable = this._io.readU8le();
-            this.lenDataHashTable = this._io.readU8le();
-            this.ofsFieldHashTable = this._io.readU8le();
-            this.lenFieldHashTable = this._io.readU8le();
-            this.ofsTailObject = this._io.readU8le();
-            this.numObjects = this._io.readU8le();
-            this.numEntries = this._io.readU8le();
-            this.tailEntrySeqnum = this._io.readU8le();
-            this.headEntrySeqnum = this._io.readU8le();
-            this.ofsEntryArray = this._io.readU8le();
-            this.headEntryRealtime = this._io.readU8le();
-            this.tailEntryRealtime = this._io.readU8le();
-            this.tailEntryMonotonic = this._io.readU8le();
-            if (!(_io().isEof())) {
-                this.numData = this._io.readU8le();
-            }
-            if (!(_io().isEof())) {
-                this.numFields = this._io.readU8le();
-            }
-            if (!(_io().isEof())) {
-                this.numTags = this._io.readU8le();
-            }
-            if (!(_io().isEof())) {
-                this.numEntryArrays = this._io.readU8le();
-            }
-        }
-        private byte[] signature;
-        private long compatibleFlags;
-        private long incompatibleFlags;
-        private State state;
-        private byte[] reserved;
-        private byte[] fileId;
-        private byte[] machineId;
-        private byte[] bootId;
-        private byte[] seqnumId;
-        private long lenHeader;
-        private long lenArena;
-        private long ofsDataHashTable;
-        private long lenDataHashTable;
-        private long ofsFieldHashTable;
-        private long lenFieldHashTable;
-        private long ofsTailObject;
-        private long numObjects;
-        private long numEntries;
-        private long tailEntrySeqnum;
-        private long headEntrySeqnum;
-        private long ofsEntryArray;
-        private long headEntryRealtime;
-        private long tailEntryRealtime;
-        private long tailEntryMonotonic;
-        private Long numData;
-        private Long numFields;
-        private Long numTags;
-        private Long numEntryArrays;
-        private SystemdJournal _root;
-        private SystemdJournal _parent;
-        public byte[] signature() { return signature; }
-        public long compatibleFlags() { return compatibleFlags; }
-        public long incompatibleFlags() { return incompatibleFlags; }
-        public State state() { return state; }
-        public byte[] reserved() { return reserved; }
-        public byte[] fileId() { return fileId; }
-        public byte[] machineId() { return machineId; }
-        public byte[] bootId() { return bootId; }
-        public byte[] seqnumId() { return seqnumId; }
-        public long lenHeader() { return lenHeader; }
-        public long lenArena() { return lenArena; }
-        public long ofsDataHashTable() { return ofsDataHashTable; }
-        public long lenDataHashTable() { return lenDataHashTable; }
-        public long ofsFieldHashTable() { return ofsFieldHashTable; }
-        public long lenFieldHashTable() { return lenFieldHashTable; }
-        public long ofsTailObject() { return ofsTailObject; }
-        public long numObjects() { return numObjects; }
-        public long numEntries() { return numEntries; }
-        public long tailEntrySeqnum() { return tailEntrySeqnum; }
-        public long headEntrySeqnum() { return headEntrySeqnum; }
-        public long ofsEntryArray() { return ofsEntryArray; }
-        public long headEntryRealtime() { return headEntryRealtime; }
-        public long tailEntryRealtime() { return tailEntryRealtime; }
-        public long tailEntryMonotonic() { return tailEntryMonotonic; }
-        public Long numData() { return numData; }
-        public Long numFields() { return numFields; }
-        public Long numTags() { return numTags; }
-        public Long numEntryArrays() { return numEntryArrays; }
-        public SystemdJournal _root() { return _root; }
-        public SystemdJournal _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">SystemdJournal</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">SystemdJournal</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">signature</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">72</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">compatibleFlags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">incompatibleFlags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">state</span> <span class="o">=</span> <span class="n">SystemdJournal</span><span class="p">.</span><span class="na">State</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fileId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">machineId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">bootId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">seqnumId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenHeader</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenArena</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsDataHashTable</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenDataHashTable</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsFieldHashTable</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenFieldHashTable</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsTailObject</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numObjects</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numEntries</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">tailEntrySeqnum</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">headEntrySeqnum</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsEntryArray</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">headEntryRealtime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">tailEntryRealtime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">tailEntryMonotonic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="p">().</span><span class="na">isEof</span><span class="p">()))</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">numData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="p">().</span><span class="na">isEof</span><span class="p">()))</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">numFields</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="p">().</span><span class="na">isEof</span><span class="p">()))</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">numTags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="p">().</span><span class="na">isEof</span><span class="p">()))</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">numEntryArrays</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">signature</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">compatibleFlags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">incompatibleFlags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">State</span> <span class="n">state</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">reserved</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">fileId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">machineId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">bootId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">seqnumId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenHeader</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenArena</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsDataHashTable</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenDataHashTable</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsFieldHashTable</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenFieldHashTable</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsTailObject</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numObjects</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numEntries</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">tailEntrySeqnum</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">headEntrySeqnum</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsEntryArray</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">headEntryRealtime</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">tailEntryRealtime</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">tailEntryMonotonic</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Long</span> <span class="n">numData</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Long</span> <span class="n">numFields</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Long</span> <span class="n">numTags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Long</span> <span class="n">numEntryArrays</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">SystemdJournal</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">SystemdJournal</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">signature</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">signature</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">compatibleFlags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">compatibleFlags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">incompatibleFlags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">incompatibleFlags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">State</span> <span class="nf">state</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">state</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">fileId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">machineId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">machineId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">bootId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">bootId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">seqnumId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">seqnumId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenHeader</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenHeader</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenArena</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenArena</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsDataHashTable</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsDataHashTable</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenDataHashTable</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenDataHashTable</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsFieldHashTable</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsFieldHashTable</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenFieldHashTable</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenFieldHashTable</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsTailObject</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsTailObject</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numObjects</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numObjects</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numEntries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numEntries</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">tailEntrySeqnum</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">tailEntrySeqnum</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">headEntrySeqnum</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">headEntrySeqnum</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsEntryArray</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsEntryArray</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">headEntryRealtime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">headEntryRealtime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">tailEntryRealtime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">tailEntryRealtime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">tailEntryMonotonic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">tailEntryMonotonic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Long</span> <span class="nf">numData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numData</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Long</span> <span class="nf">numFields</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numFields</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Long</span> <span class="nf">numTags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numTags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Long</span> <span class="nf">numEntryArrays</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numEntryArrays</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">SystemdJournal</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">SystemdJournal</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://www.freedesktop.org/wiki/Software/systemd/journal-files/#objects&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class JournalObject extends KaitaiStruct {
-        public static JournalObject fromFile(String fileName) throws IOException {
-            return new JournalObject(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://www.freedesktop.org/wiki/Software/systemd/journal-files/#objects&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">JournalObject</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">JournalObject</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">JournalObject</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public enum ObjectTypes {
-            UNUSED(0),
-            DATA(1),
-            FIELD(2),
-            ENTRY(3),
-            DATA_HASH_TABLE(4),
-            FIELD_HASH_TABLE(5),
-            ENTRY_ARRAY(6),
-            TAG(7);
+        <span class="kd">public</span> <span class="kd">enum</span> <span class="n">ObjectTypes</span> <span class="p">{</span>
+            <span class="n">UNUSED</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+            <span class="n">DATA</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">FIELD</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+            <span class="n">ENTRY</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+            <span class="n">DATA_HASH_TABLE</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+            <span class="n">FIELD_HASH_TABLE</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+            <span class="n">ENTRY_ARRAY</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span>
+            <span class="n">TAG</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
 
-            private final long id;
-            ObjectTypes(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map&lt;Long, ObjectTypes&gt; byId = new HashMap&lt;Long, ObjectTypes&gt;(8);
-            static {
-                for (ObjectTypes e : ObjectTypes.values())
-                    byId.put(e.id(), e);
-            }
-            public static ObjectTypes byId(long id) { return byId.get(id); }
-        }
+            <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+            <span class="n">ObjectTypes</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">ObjectTypes</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">ObjectTypes</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+            <span class="kd">static</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">ObjectTypes</span> <span class="n">e</span> <span class="p">:</span> <span class="n">ObjectTypes</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                    <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">ObjectTypes</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        public JournalObject(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">JournalObject</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public JournalObject(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">JournalObject</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public JournalObject(KaitaiStream _io, KaitaiStruct _parent, SystemdJournal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.padding = this._io.readBytes(KaitaiStream.mod((8 - _io().pos()), 8));
-            this.objectType = ObjectTypes.byId(this._io.readU1());
-            this.flags = this._io.readU1();
-            this.reserved = this._io.readBytes(6);
-            this.lenObject = this._io.readU8le();
-            switch (objectType()) {
-            case DATA: {
-                this._raw_payload = this._io.readBytes((lenObject() - 16));
-                KaitaiStream _io__raw_payload = new ByteBufferKaitaiStream(_raw_payload);
-                this.payload = new DataObject(_io__raw_payload, this, _root);
-                break;
-            }
-            default: {
-                this.payload = this._io.readBytes((lenObject() - 16));
-                break;
-            }
-            }
-        }
-        private byte[] padding;
-        private ObjectTypes objectType;
-        private int flags;
-        private byte[] reserved;
-        private long lenObject;
-        private Object payload;
-        private SystemdJournal _root;
-        private KaitaiStruct _parent;
-        private byte[] _raw_payload;
-        public byte[] padding() { return padding; }
-        public ObjectTypes objectType() { return objectType; }
-        public int flags() { return flags; }
-        public byte[] reserved() { return reserved; }
-        public long lenObject() { return lenObject; }
-        public Object payload() { return payload; }
-        public SystemdJournal _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-        public byte[] _raw_payload() { return _raw_payload; }
-    }
+        <span class="kd">public</span> <span class="nf">JournalObject</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">SystemdJournal</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">padding</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="na">mod</span><span class="p">((</span><span class="mi">8</span> <span class="o">-</span> <span class="n">_io</span><span class="p">().</span><span class="na">pos</span><span class="p">()),</span> <span class="mi">8</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">objectType</span> <span class="o">=</span> <span class="n">ObjectTypes</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenObject</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">objectType</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">DATA</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">lenObject</span><span class="p">()</span> <span class="o">-</span> <span class="mi">16</span><span class="p">));</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_payload</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">payload</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DataObject</span><span class="p">(</span><span class="n">_io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">lenObject</span><span class="p">()</span> <span class="o">-</span> <span class="mi">16</span><span class="p">));</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">padding</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ObjectTypes</span> <span class="n">objectType</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">reserved</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenObject</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Object</span> <span class="n">payload</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">SystemdJournal</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_payload</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">padding</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">padding</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ObjectTypes</span> <span class="nf">objectType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">objectType</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenObject</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenObject</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Object</span> <span class="nf">payload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">payload</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">SystemdJournal</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_payload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_payload</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * Data objects are designed to carry log payload, typically in
-     * form of a &quot;key=value&quot; string in `payload` attribute.
-     * @see &lt;a href=&quot;https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class DataObject extends KaitaiStruct {
-        public static DataObject fromFile(String fileName) throws IOException {
-            return new DataObject(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * Data objects are designed to carry log payload, typically in</span>
+<span class="cm">     * form of a &quot;key=value&quot; string in `payload` attribute.</span>
+<span class="cm">     * @see &lt;a href=&quot;https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DataObject</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">DataObject</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">DataObject</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public DataObject(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">DataObject</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DataObject(KaitaiStream _io, SystemdJournal.JournalObject _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">DataObject</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">SystemdJournal</span><span class="p">.</span><span class="na">JournalObject</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DataObject(KaitaiStream _io, SystemdJournal.JournalObject _parent, SystemdJournal _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.hash = this._io.readU8le();
-            this.ofsNextHash = this._io.readU8le();
-            this.ofsHeadField = this._io.readU8le();
-            this.ofsEntry = this._io.readU8le();
-            this.ofsEntryArray = this._io.readU8le();
-            this.numEntries = this._io.readU8le();
-            this.payload = this._io.readBytesFull();
-        }
-        private JournalObject nextHash;
-        public JournalObject nextHash() {
-            if (this.nextHash != null)
-                return this.nextHash;
-            if (ofsNextHash() != 0) {
-                KaitaiStream io = _root._io();
-                long _pos = io.pos();
-                io.seek(ofsNextHash());
-                this.nextHash = new JournalObject(io, this, _root);
-                io.seek(_pos);
-            }
-            return this.nextHash;
-        }
-        private JournalObject headField;
-        public JournalObject headField() {
-            if (this.headField != null)
-                return this.headField;
-            if (ofsHeadField() != 0) {
-                KaitaiStream io = _root._io();
-                long _pos = io.pos();
-                io.seek(ofsHeadField());
-                this.headField = new JournalObject(io, this, _root);
-                io.seek(_pos);
-            }
-            return this.headField;
-        }
-        private JournalObject entry;
-        public JournalObject entry() {
-            if (this.entry != null)
-                return this.entry;
-            if (ofsEntry() != 0) {
-                KaitaiStream io = _root._io();
-                long _pos = io.pos();
-                io.seek(ofsEntry());
-                this.entry = new JournalObject(io, this, _root);
-                io.seek(_pos);
-            }
-            return this.entry;
-        }
-        private JournalObject entryArray;
-        public JournalObject entryArray() {
-            if (this.entryArray != null)
-                return this.entryArray;
-            if (ofsEntryArray() != 0) {
-                KaitaiStream io = _root._io();
-                long _pos = io.pos();
-                io.seek(ofsEntryArray());
-                this.entryArray = new JournalObject(io, this, _root);
-                io.seek(_pos);
-            }
-            return this.entryArray;
-        }
-        private long hash;
-        private long ofsNextHash;
-        private long ofsHeadField;
-        private long ofsEntry;
-        private long ofsEntryArray;
-        private long numEntries;
-        private byte[] payload;
-        private SystemdJournal _root;
-        private SystemdJournal.JournalObject _parent;
-        public long hash() { return hash; }
-        public long ofsNextHash() { return ofsNextHash; }
-        public long ofsHeadField() { return ofsHeadField; }
-        public long ofsEntry() { return ofsEntry; }
-        public long ofsEntryArray() { return ofsEntryArray; }
-        public long numEntries() { return numEntries; }
-        public byte[] payload() { return payload; }
-        public SystemdJournal _root() { return _root; }
-        public SystemdJournal.JournalObject _parent() { return _parent; }
-    }
-    private Long lenHeader;
+        <span class="kd">public</span> <span class="nf">DataObject</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">SystemdJournal</span><span class="p">.</span><span class="na">JournalObject</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">SystemdJournal</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hash</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsNextHash</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsHeadField</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsEntry</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ofsEntryArray</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numEntries</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">payload</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">JournalObject</span> <span class="n">nextHash</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">JournalObject</span> <span class="nf">nextHash</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">nextHash</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nextHash</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">ofsNextHash</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsNextHash</span><span class="p">());</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">nextHash</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JournalObject</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nextHash</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">JournalObject</span> <span class="n">headField</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">JournalObject</span> <span class="nf">headField</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">headField</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">headField</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">ofsHeadField</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsHeadField</span><span class="p">());</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">headField</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JournalObject</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">headField</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">JournalObject</span> <span class="n">entry</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">JournalObject</span> <span class="nf">entry</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">entry</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">entry</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">ofsEntry</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsEntry</span><span class="p">());</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">entry</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JournalObject</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">entry</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">JournalObject</span> <span class="n">entryArray</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">JournalObject</span> <span class="nf">entryArray</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">entryArray</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">entryArray</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">ofsEntryArray</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsEntryArray</span><span class="p">());</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">entryArray</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JournalObject</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">entryArray</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">hash</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsNextHash</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsHeadField</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsEntry</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsEntryArray</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numEntries</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">payload</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">SystemdJournal</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">SystemdJournal</span><span class="p">.</span><span class="na">JournalObject</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">hash</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hash</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsNextHash</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsNextHash</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsHeadField</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsHeadField</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsEntry</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsEntry</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsEntryArray</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsEntryArray</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numEntries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numEntries</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">payload</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">payload</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">SystemdJournal</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">SystemdJournal</span><span class="p">.</span><span class="na">JournalObject</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">Long</span> <span class="n">lenHeader</span><span class="p">;</span>
 
-    /**
-     * Header length is used to set substream size, as it thus required
-     * prior to declaration of header.
-     */
-    public Long lenHeader() {
-        if (this.lenHeader != null)
-            return this.lenHeader;
-        long _pos = this._io.pos();
-        this._io.seek(88);
-        this.lenHeader = this._io.readU8le();
-        this._io.seek(_pos);
-        return this.lenHeader;
-    }
-    private byte[] dataHashTable;
-    public byte[] dataHashTable() {
-        if (this.dataHashTable != null)
-            return this.dataHashTable;
-        long _pos = this._io.pos();
-        this._io.seek(header().ofsDataHashTable());
-        this.dataHashTable = this._io.readBytes(header().lenDataHashTable());
-        this._io.seek(_pos);
-        return this.dataHashTable;
-    }
-    private byte[] fieldHashTable;
-    public byte[] fieldHashTable() {
-        if (this.fieldHashTable != null)
-            return this.fieldHashTable;
-        long _pos = this._io.pos();
-        this._io.seek(header().ofsFieldHashTable());
-        this.fieldHashTable = this._io.readBytes(header().lenFieldHashTable());
-        this._io.seek(_pos);
-        return this.fieldHashTable;
-    }
-    private Header header;
-    private ArrayList&lt;JournalObject&gt; objects;
-    private SystemdJournal _root;
-    private KaitaiStruct _parent;
-    private byte[] _raw_header;
-    public Header header() { return header; }
-    public ArrayList&lt;JournalObject&gt; objects() { return objects; }
-    public SystemdJournal _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_header() { return _raw_header; }
-}
-</code></pre>
+    <span class="cm">/**</span>
+<span class="cm">     * Header length is used to set substream size, as it thus required</span>
+<span class="cm">     * prior to declaration of header.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">Long</span> <span class="nf">lenHeader</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">lenHeader</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">lenHeader</span><span class="p">;</span>
+        <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="mi">88</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">lenHeader</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">lenHeader</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">dataHashTable</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">dataHashTable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">dataHashTable</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">dataHashTable</span><span class="p">;</span>
+        <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">ofsDataHashTable</span><span class="p">());</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">dataHashTable</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">lenDataHashTable</span><span class="p">());</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">dataHashTable</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">fieldHashTable</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">fieldHashTable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">fieldHashTable</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">fieldHashTable</span><span class="p">;</span>
+        <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">ofsFieldHashTable</span><span class="p">());</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">fieldHashTable</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">lenFieldHashTable</span><span class="p">());</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">fieldHashTable</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">Header</span> <span class="n">header</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">JournalObject</span><span class="o">&gt;</span> <span class="n">objects</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">SystemdJournal</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_header</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">Header</span> <span class="nf">header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">header</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">JournalObject</span><span class="o">&gt;</span> <span class="nf">objects</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">objects</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">SystemdJournal</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_header</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -697,8 +694,8 @@ public class SystemdJournal extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

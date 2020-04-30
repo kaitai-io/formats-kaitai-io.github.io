@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -273,863 +270,863 @@ var data = new Png(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
-    public partial class Png : KaitaiStruct
-    {
-        public static Png FromFile(string fileName)
-        {
-            return new Png(new KaitaiStream(fileName));
-        }
-
-
-        public enum ColorType
-        {
-            Greyscale = 0,
-            Truecolor = 2,
-            Indexed = 3,
-            GreyscaleAlpha = 4,
-            TruecolorAlpha = 6,
-        }
-
-        public enum PhysUnit
-        {
-            Unknown = 0,
-            Meter = 1,
-        }
-
-        public enum CompressionMethods
-        {
-            Zlib = 0,
-        }
-        public Png(KaitaiStream p__io, KaitaiStruct p__parent = null, Png p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            _read();
-        }
-        private void _read()
-        {
-            _magic = m_io.EnsureFixedContents(new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 });
-            _ihdrLen = m_io.EnsureFixedContents(new byte[] { 0, 0, 0, 13 });
-            _ihdrType = m_io.EnsureFixedContents(new byte[] { 73, 72, 68, 82 });
-            _ihdr = new IhdrChunk(m_io, this, m_root);
-            _ihdrCrc = m_io.ReadBytes(4);
-            _chunks = new List&lt;Chunk&gt;();
-            {
-                var i = 0;
-                Chunk M_;
-                do {
-                    M_ = new Chunk(m_io, this, m_root);
-                    _chunks.Add(M_);
-                    i++;
-                } while (!( ((M_.Type == &quot;IEND&quot;) || (M_Io.IsEof)) ));
-            }
-        }
-        public partial class Rgb : KaitaiStruct
-        {
-            public static Rgb FromFile(string fileName)
-            {
-                return new Rgb(new KaitaiStream(fileName));
-            }
-
-            public Rgb(KaitaiStream p__io, Png.PlteChunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _r = m_io.ReadU1();
-                _g = m_io.ReadU1();
-                _b = m_io.ReadU1();
-            }
-            private byte _r;
-            private byte _g;
-            private byte _b;
-            private Png m_root;
-            private Png.PlteChunk m_parent;
-            public byte R { get { return _r; } }
-            public byte G { get { return _g; } }
-            public byte B { get { return _b; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.PlteChunk M_Parent { get { return m_parent; } }
-        }
-        public partial class Chunk : KaitaiStruct
-        {
-            public static Chunk FromFile(string fileName)
-            {
-                return new Chunk(new KaitaiStream(fileName));
-            }
-
-            public Chunk(KaitaiStream p__io, Png p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _len = m_io.ReadU4be();
-                _type = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(4));
-                switch (Type) {
-                case &quot;iTXt&quot;: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new InternationalTextChunk(io___raw_body, this, m_root);
-                    break;
-                }
-                case &quot;gAMA&quot;: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new GamaChunk(io___raw_body, this, m_root);
-                    break;
-                }
-                case &quot;tIME&quot;: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new TimeChunk(io___raw_body, this, m_root);
-                    break;
-                }
-                case &quot;PLTE&quot;: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new PlteChunk(io___raw_body, this, m_root);
-                    break;
-                }
-                case &quot;bKGD&quot;: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new BkgdChunk(io___raw_body, this, m_root);
-                    break;
-                }
-                case &quot;pHYs&quot;: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new PhysChunk(io___raw_body, this, m_root);
-                    break;
-                }
-                case &quot;tEXt&quot;: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new TextChunk(io___raw_body, this, m_root);
-                    break;
-                }
-                case &quot;cHRM&quot;: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new ChrmChunk(io___raw_body, this, m_root);
-                    break;
-                }
-                case &quot;sRGB&quot;: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new SrgbChunk(io___raw_body, this, m_root);
-                    break;
-                }
-                case &quot;zTXt&quot;: {
-                    __raw_body = m_io.ReadBytes(Len);
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new CompressedTextChunk(io___raw_body, this, m_root);
-                    break;
-                }
-                default: {
-                    _body = m_io.ReadBytes(Len);
-                    break;
-                }
-                }
-                _crc = m_io.ReadBytes(4);
-            }
-            private uint _len;
-            private string _type;
-            private object _body;
-            private byte[] _crc;
-            private Png m_root;
-            private Png m_parent;
-            private byte[] __raw_body;
-            public uint Len { get { return _len; } }
-            public string Type { get { return _type; } }
-            public object Body { get { return _body; } }
-            public byte[] Crc { get { return _crc; } }
-            public Png M_Root { get { return m_root; } }
-            public Png M_Parent { get { return m_parent; } }
-            public byte[] M_RawBody { get { return __raw_body; } }
-        }
-
-        /// &lt;summary&gt;
-        /// Background chunk for images with indexed palette.
-        /// &lt;/summary&gt;
-        public partial class BkgdIndexed : KaitaiStruct
-        {
-            public static BkgdIndexed FromFile(string fileName)
-            {
-                return new BkgdIndexed(new KaitaiStream(fileName));
-            }
-
-            public BkgdIndexed(KaitaiStream p__io, Png.BkgdChunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _paletteIndex = m_io.ReadU1();
-            }
-            private byte _paletteIndex;
-            private Png m_root;
-            private Png.BkgdChunk m_parent;
-            public byte PaletteIndex { get { return _paletteIndex; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.BkgdChunk M_Parent { get { return m_parent; } }
-        }
-        public partial class Point : KaitaiStruct
-        {
-            public static Point FromFile(string fileName)
-            {
-                return new Point(new KaitaiStream(fileName));
-            }
-
-            public Point(KaitaiStream p__io, Png.ChrmChunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_x = false;
-                f_y = false;
-                _read();
-            }
-            private void _read()
-            {
-                _xInt = m_io.ReadU4be();
-                _yInt = m_io.ReadU4be();
-            }
-            private bool f_x;
-            private double _x;
-            public double X
-            {
-                get
-                {
-                    if (f_x)
-                        return _x;
-                    _x = (double) ((XInt / 100000.0));
-                    f_x = true;
-                    return _x;
-                }
-            }
-            private bool f_y;
-            private double _y;
-            public double Y
-            {
-                get
-                {
-                    if (f_y)
-                        return _y;
-                    _y = (double) ((YInt / 100000.0));
-                    f_y = true;
-                    return _y;
-                }
-            }
-            private uint _xInt;
-            private uint _yInt;
-            private Png m_root;
-            private Png.ChrmChunk m_parent;
-            public uint XInt { get { return _xInt; } }
-            public uint YInt { get { return _yInt; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.ChrmChunk M_Parent { get { return m_parent; } }
-        }
-
-        /// &lt;summary&gt;
-        /// Background chunk for greyscale images.
-        /// &lt;/summary&gt;
-        public partial class BkgdGreyscale : KaitaiStruct
-        {
-            public static BkgdGreyscale FromFile(string fileName)
-            {
-                return new BkgdGreyscale(new KaitaiStream(fileName));
-            }
-
-            public BkgdGreyscale(KaitaiStream p__io, Png.BkgdChunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _value = m_io.ReadU2be();
-            }
-            private ushort _value;
-            private Png m_root;
-            private Png.BkgdChunk m_parent;
-            public ushort Value { get { return _value; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.BkgdChunk M_Parent { get { return m_parent; } }
-        }
-
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11cHRM&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class ChrmChunk : KaitaiStruct
-        {
-            public static ChrmChunk FromFile(string fileName)
-            {
-                return new ChrmChunk(new KaitaiStream(fileName));
-            }
-
-            public ChrmChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _whitePoint = new Point(m_io, this, m_root);
-                _red = new Point(m_io, this, m_root);
-                _green = new Point(m_io, this, m_root);
-                _blue = new Point(m_io, this, m_root);
-            }
-            private Point _whitePoint;
-            private Point _red;
-            private Point _green;
-            private Point _blue;
-            private Png m_root;
-            private Png.Chunk m_parent;
-            public Point WhitePoint { get { return _whitePoint; } }
-            public Point Red { get { return _red; } }
-            public Point Green { get { return _green; } }
-            public Point Blue { get { return _blue; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.Chunk M_Parent { get { return m_parent; } }
-        }
-
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11IHDR&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class IhdrChunk : KaitaiStruct
-        {
-            public static IhdrChunk FromFile(string fileName)
-            {
-                return new IhdrChunk(new KaitaiStream(fileName));
-            }
-
-            public IhdrChunk(KaitaiStream p__io, Png p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _width = m_io.ReadU4be();
-                _height = m_io.ReadU4be();
-                _bitDepth = m_io.ReadU1();
-                _colorType = ((Png.ColorType) m_io.ReadU1());
-                _compressionMethod = m_io.ReadU1();
-                _filterMethod = m_io.ReadU1();
-                _interlaceMethod = m_io.ReadU1();
-            }
-            private uint _width;
-            private uint _height;
-            private byte _bitDepth;
-            private ColorType _colorType;
-            private byte _compressionMethod;
-            private byte _filterMethod;
-            private byte _interlaceMethod;
-            private Png m_root;
-            private Png m_parent;
-            public uint Width { get { return _width; } }
-            public uint Height { get { return _height; } }
-            public byte BitDepth { get { return _bitDepth; } }
-            public ColorType ColorType { get { return _colorType; } }
-            public byte CompressionMethod { get { return _compressionMethod; } }
-            public byte FilterMethod { get { return _filterMethod; } }
-            public byte InterlaceMethod { get { return _interlaceMethod; } }
-            public Png M_Root { get { return m_root; } }
-            public Png M_Parent { get { return m_parent; } }
-        }
-
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11PLTE&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class PlteChunk : KaitaiStruct
-        {
-            public static PlteChunk FromFile(string fileName)
-            {
-                return new PlteChunk(new KaitaiStream(fileName));
-            }
-
-            public PlteChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _entries = new List&lt;Rgb&gt;();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _entries.Add(new Rgb(m_io, this, m_root));
-                        i++;
-                    }
-                }
-            }
-            private List&lt;Rgb&gt; _entries;
-            private Png m_root;
-            private Png.Chunk m_parent;
-            public List&lt;Rgb&gt; Entries { get { return _entries; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.Chunk M_Parent { get { return m_parent; } }
-        }
-
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11sRGB&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class SrgbChunk : KaitaiStruct
-        {
-            public static SrgbChunk FromFile(string fileName)
-            {
-                return new SrgbChunk(new KaitaiStream(fileName));
-            }
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Png</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">Png</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Png</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
 
-            public enum Intent
-            {
-                Perceptual = 0,
-                RelativeColorimetric = 1,
-                Saturation = 2,
-                AbsoluteColorimetric = 3,
-            }
-            public SrgbChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _renderIntent = ((Intent) m_io.ReadU1());
-            }
-            private Intent _renderIntent;
-            private Png m_root;
-            private Png.Chunk m_parent;
-            public Intent RenderIntent { get { return _renderIntent; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.Chunk M_Parent { get { return m_parent; } }
-        }
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">ColorType</span>
+        <span class="p">{</span>
+            <span class="n">Greyscale</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">Truecolor</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+            <span class="n">Indexed</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+            <span class="n">GreyscaleAlpha</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
+            <span class="n">TruecolorAlpha</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
+        <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Compressed text chunk effectively allows to store key-value
-        /// string pairs in PNG container, compressing &amp;quot;value&amp;quot; part (which
-        /// can be quite lengthy) with zlib compression.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11zTXt&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class CompressedTextChunk : KaitaiStruct
-        {
-            public static CompressedTextChunk FromFile(string fileName)
-            {
-                return new CompressedTextChunk(new KaitaiStream(fileName));
-            }
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">PhysUnit</span>
+        <span class="p">{</span>
+            <span class="n">Unknown</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">Meter</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+        <span class="p">}</span>
 
-            public CompressedTextChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _keyword = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true));
-                _compressionMethod = ((Png.CompressionMethods) m_io.ReadU1());
-                __raw_textDatastream = m_io.ReadBytesFull();
-                _textDatastream = m_io.ProcessZlib(__raw_textDatastream);
-            }
-            private string _keyword;
-            private CompressionMethods _compressionMethod;
-            private byte[] _textDatastream;
-            private Png m_root;
-            private Png.Chunk m_parent;
-            private byte[] __raw_textDatastream;
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">CompressionMethods</span>
+        <span class="p">{</span>
+            <span class="n">Zlib</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="nf">Png</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">137</span><span class="p">,</span> <span class="m">80</span><span class="p">,</span> <span class="m">78</span><span class="p">,</span> <span class="m">71</span><span class="p">,</span> <span class="m">13</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">26</span><span class="p">,</span> <span class="m">10</span> <span class="p">});</span>
+            <span class="n">_ihdrLen</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">13</span> <span class="p">});</span>
+            <span class="n">_ihdrType</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">73</span><span class="p">,</span> <span class="m">72</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">82</span> <span class="p">});</span>
+            <span class="n">_ihdr</span> <span class="p">=</span> <span class="k">new</span> <span class="n">IhdrChunk</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="n">_ihdrCrc</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+            <span class="n">_chunks</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Chunk</span><span class="p">&gt;();</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">Chunk</span> <span class="n">M_</span><span class="p">;</span>
+                <span class="k">do</span> <span class="p">{</span>
+                    <span class="n">M_</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Chunk</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_chunks</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">M_</span><span class="p">);</span>
+                    <span class="n">i</span><span class="p">++;</span>
+                <span class="p">}</span> <span class="k">while</span> <span class="p">(!(</span> <span class="p">((</span><span class="n">M_</span><span class="p">.</span><span class="n">Type</span> <span class="p">==</span> <span class="s">&quot;IEND&quot;</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">M_Io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">))</span> <span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Rgb</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Rgb</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Rgb</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Indicates purpose of the following text data.
-            /// &lt;/summary&gt;
-            public string Keyword { get { return _keyword; } }
-            public CompressionMethods CompressionMethod { get { return _compressionMethod; } }
-            public byte[] TextDatastream { get { return _textDatastream; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.Chunk M_Parent { get { return m_parent; } }
-            public byte[] M_RawTextDatastream { get { return __raw_textDatastream; } }
-        }
+            <span class="k">public</span> <span class="nf">Rgb</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">PlteChunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_r</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_g</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_b</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_r</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_g</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_b</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">PlteChunk</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">R</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_r</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">G</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_g</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">B</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_b</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">PlteChunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Chunk</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Chunk</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Chunk</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Background chunk for truecolor images.
-        /// &lt;/summary&gt;
-        public partial class BkgdTruecolor : KaitaiStruct
-        {
-            public static BkgdTruecolor FromFile(string fileName)
-            {
-                return new BkgdTruecolor(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">Chunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_len</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="n">_type</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">));</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">Type</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="s">&quot;iTXt&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">InternationalTextChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="s">&quot;gAMA&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">GamaChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="s">&quot;tIME&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TimeChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="s">&quot;PLTE&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PlteChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="s">&quot;bKGD&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BkgdChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="s">&quot;pHYs&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PhysChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="s">&quot;tEXt&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TextChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="s">&quot;cHRM&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ChrmChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="s">&quot;sRGB&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SrgbChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="s">&quot;zTXt&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CompressedTextChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="n">_crc</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_len</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_type</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">object</span> <span class="n">_body</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_crc</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_body</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Len</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_len</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Type</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_type</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">object</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Crc</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_crc</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-            public BkgdTruecolor(KaitaiStream p__io, Png.BkgdChunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _red = m_io.ReadU2be();
-                _green = m_io.ReadU2be();
-                _blue = m_io.ReadU2be();
-            }
-            private ushort _red;
-            private ushort _green;
-            private ushort _blue;
-            private Png m_root;
-            private Png.BkgdChunk m_parent;
-            public ushort Red { get { return _red; } }
-            public ushort Green { get { return _green; } }
-            public ushort Blue { get { return _blue; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.BkgdChunk M_Parent { get { return m_parent; } }
-        }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Background chunk for images with indexed palette.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">BkgdIndexed</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">BkgdIndexed</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">BkgdIndexed</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11gAMA&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class GamaChunk : KaitaiStruct
-        {
-            public static GamaChunk FromFile(string fileName)
-            {
-                return new GamaChunk(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">BkgdIndexed</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">BkgdChunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_paletteIndex</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_paletteIndex</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">BkgdChunk</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">PaletteIndex</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_paletteIndex</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">BkgdChunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Point</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Point</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Point</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public GamaChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_gammaRatio = false;
-                _read();
-            }
-            private void _read()
-            {
-                _gammaInt = m_io.ReadU4be();
-            }
-            private bool f_gammaRatio;
-            private double _gammaRatio;
-            public double GammaRatio
-            {
-                get
-                {
-                    if (f_gammaRatio)
-                        return _gammaRatio;
-                    _gammaRatio = (double) ((100000.0 / GammaInt));
-                    f_gammaRatio = true;
-                    return _gammaRatio;
-                }
-            }
-            private uint _gammaInt;
-            private Png m_root;
-            private Png.Chunk m_parent;
-            public uint GammaInt { get { return _gammaInt; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.Chunk M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">Point</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">ChrmChunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_x</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_y</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_xInt</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="n">_yInt</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_x</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">double</span> <span class="n">_x</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">double</span> <span class="n">X</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_x</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_x</span><span class="p">;</span>
+                    <span class="n">_x</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">((</span><span class="n">XInt</span> <span class="p">/</span> <span class="m">100000.0</span><span class="p">));</span>
+                    <span class="n">f_x</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_x</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_y</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">double</span> <span class="n">_y</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">double</span> <span class="n">Y</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_y</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_y</span><span class="p">;</span>
+                    <span class="n">_y</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">((</span><span class="n">YInt</span> <span class="p">/</span> <span class="m">100000.0</span><span class="p">));</span>
+                    <span class="n">f_y</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_y</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_xInt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_yInt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">ChrmChunk</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">XInt</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_xInt</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">YInt</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_yInt</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">ChrmChunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Background chunk stores default background color to display this
-        /// image against. Contents depend on `color_type` of the image.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11bKGD&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class BkgdChunk : KaitaiStruct
-        {
-            public static BkgdChunk FromFile(string fileName)
-            {
-                return new BkgdChunk(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Background chunk for greyscale images.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">BkgdGreyscale</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">BkgdGreyscale</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">BkgdGreyscale</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public BkgdChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                switch (M_Root.Ihdr.ColorType) {
-                case Png.ColorType.GreyscaleAlpha: {
-                    _bkgd = new BkgdGreyscale(m_io, this, m_root);
-                    break;
-                }
-                case Png.ColorType.Indexed: {
-                    _bkgd = new BkgdIndexed(m_io, this, m_root);
-                    break;
-                }
-                case Png.ColorType.Greyscale: {
-                    _bkgd = new BkgdGreyscale(m_io, this, m_root);
-                    break;
-                }
-                case Png.ColorType.TruecolorAlpha: {
-                    _bkgd = new BkgdTruecolor(m_io, this, m_root);
-                    break;
-                }
-                case Png.ColorType.Truecolor: {
-                    _bkgd = new BkgdTruecolor(m_io, this, m_root);
-                    break;
-                }
-                }
-            }
-            private KaitaiStruct _bkgd;
-            private Png m_root;
-            private Png.Chunk m_parent;
-            public KaitaiStruct Bkgd { get { return _bkgd; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.Chunk M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">BkgdGreyscale</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">BkgdChunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_value</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">BkgdChunk</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">BkgdChunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// &amp;quot;Physical size&amp;quot; chunk stores data that allows to translate
-        /// logical pixels into physical units (meters, etc) and vice-versa.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11pHYs&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class PhysChunk : KaitaiStruct
-        {
-            public static PhysChunk FromFile(string fileName)
-            {
-                return new PhysChunk(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11cHRM&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ChrmChunk</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">ChrmChunk</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">ChrmChunk</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public PhysChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _pixelsPerUnitX = m_io.ReadU4be();
-                _pixelsPerUnitY = m_io.ReadU4be();
-                _unit = ((Png.PhysUnit) m_io.ReadU1());
-            }
-            private uint _pixelsPerUnitX;
-            private uint _pixelsPerUnitY;
-            private PhysUnit _unit;
-            private Png m_root;
-            private Png.Chunk m_parent;
+            <span class="k">public</span> <span class="nf">ChrmChunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_whitePoint</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Point</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_red</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Point</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_green</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Point</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_blue</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Point</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Point</span> <span class="n">_whitePoint</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Point</span> <span class="n">_red</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Point</span> <span class="n">_green</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Point</span> <span class="n">_blue</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">Point</span> <span class="n">WhitePoint</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_whitePoint</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Point</span> <span class="n">Red</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_red</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Point</span> <span class="n">Green</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_green</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Point</span> <span class="n">Blue</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_blue</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Number of pixels per physical unit (typically, 1 meter) by X
-            /// axis.
-            /// &lt;/summary&gt;
-            public uint PixelsPerUnitX { get { return _pixelsPerUnitX; } }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11IHDR&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">IhdrChunk</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">IhdrChunk</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">IhdrChunk</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Number of pixels per physical unit (typically, 1 meter) by Y
-            /// axis.
-            /// &lt;/summary&gt;
-            public uint PixelsPerUnitY { get { return _pixelsPerUnitY; } }
-            public PhysUnit Unit { get { return _unit; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.Chunk M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">IhdrChunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_width</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="n">_height</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="n">_bitDepth</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_colorType</span> <span class="p">=</span> <span class="p">((</span><span class="n">Png</span><span class="p">.</span><span class="n">ColorType</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+                <span class="n">_compressionMethod</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_filterMethod</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_interlaceMethod</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_width</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_height</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_bitDepth</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">ColorType</span> <span class="n">_colorType</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_compressionMethod</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_filterMethod</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_interlaceMethod</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Width</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_width</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Height</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_height</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">BitDepth</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_bitDepth</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">ColorType</span> <span class="n">ColorType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_colorType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">CompressionMethod</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_compressionMethod</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">FilterMethod</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_filterMethod</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">InterlaceMethod</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_interlaceMethod</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// International text chunk effectively allows to store key-value string pairs in
-        /// PNG container. Both &amp;quot;key&amp;quot; (keyword) and &amp;quot;value&amp;quot; (text) parts are
-        /// given in pre-defined subset of iso8859-1 without control
-        /// characters.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11iTXt&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class InternationalTextChunk : KaitaiStruct
-        {
-            public static InternationalTextChunk FromFile(string fileName)
-            {
-                return new InternationalTextChunk(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11PLTE&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">PlteChunk</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">PlteChunk</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">PlteChunk</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public InternationalTextChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _keyword = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true));
-                _compressionFlag = m_io.ReadU1();
-                _compressionMethod = ((Png.CompressionMethods) m_io.ReadU1());
-                _languageTag = System.Text.Encoding.GetEncoding(&quot;ASCII&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true));
-                _translatedKeyword = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true));
-                _text = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytesFull());
-            }
-            private string _keyword;
-            private byte _compressionFlag;
-            private CompressionMethods _compressionMethod;
-            private string _languageTag;
-            private string _translatedKeyword;
-            private string _text;
-            private Png m_root;
-            private Png.Chunk m_parent;
+            <span class="k">public</span> <span class="nf">PlteChunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Rgb</span><span class="p">&gt;();</span>
+                <span class="p">{</span>
+                    <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                    <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Rgb</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                        <span class="n">i</span><span class="p">++;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Rgb</span><span class="p">&gt;</span> <span class="n">_entries</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Rgb</span><span class="p">&gt;</span> <span class="n">Entries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_entries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Indicates purpose of the following text data.
-            /// &lt;/summary&gt;
-            public string Keyword { get { return _keyword; } }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11sRGB&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SrgbChunk</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">SrgbChunk</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">SrgbChunk</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// 0 = text is uncompressed, 1 = text is compressed with a
-            /// method specified in `compression_method`.
-            /// &lt;/summary&gt;
-            public byte CompressionFlag { get { return _compressionFlag; } }
-            public CompressionMethods CompressionMethod { get { return _compressionMethod; } }
 
-            /// &lt;summary&gt;
-            /// Human language used in `translated_keyword` and `text`
-            /// attributes - should be a language code conforming to ISO
-            /// 646.IRV:1991.
-            /// &lt;/summary&gt;
-            public string LanguageTag { get { return _languageTag; } }
+            <span class="k">public</span> <span class="k">enum</span> <span class="n">Intent</span>
+            <span class="p">{</span>
+                <span class="n">Perceptual</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+                <span class="n">RelativeColorimetric</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+                <span class="n">Saturation</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+                <span class="n">AbsoluteColorimetric</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="nf">SrgbChunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_renderIntent</span> <span class="p">=</span> <span class="p">((</span><span class="n">Intent</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Intent</span> <span class="n">_renderIntent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">Intent</span> <span class="n">RenderIntent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_renderIntent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Keyword translated into language specified in
-            /// `language_tag`. Line breaks are not allowed.
-            /// &lt;/summary&gt;
-            public string TranslatedKeyword { get { return _translatedKeyword; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Compressed text chunk effectively allows to store key-value</span>
+        <span class="c1">/// string pairs in PNG container, compressing &amp;quot;value&amp;quot; part (which</span>
+        <span class="c1">/// can be quite lengthy) with zlib compression.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11zTXt&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">CompressedTextChunk</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">CompressedTextChunk</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">CompressedTextChunk</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Text contents (&amp;quot;value&amp;quot; of this key-value pair), written in
-            /// language specified in `language_tag`. Linke breaks are
-            /// allowed.
-            /// &lt;/summary&gt;
-            public string Text { get { return _text; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.Chunk M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">CompressedTextChunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_keyword</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
+                <span class="n">_compressionMethod</span> <span class="p">=</span> <span class="p">((</span><span class="n">Png</span><span class="p">.</span><span class="n">CompressionMethods</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+                <span class="n">__raw_textDatastream</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
+                <span class="n">_textDatastream</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ProcessZlib</span><span class="p">(</span><span class="n">__raw_textDatastream</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_keyword</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">CompressionMethods</span> <span class="n">_compressionMethod</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_textDatastream</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_textDatastream</span><span class="p">;</span>
 
-        /// &lt;summary&gt;
-        /// Text chunk effectively allows to store key-value string pairs in
-        /// PNG container. Both &amp;quot;key&amp;quot; (keyword) and &amp;quot;value&amp;quot; (text) parts are
-        /// given in pre-defined subset of iso8859-1 without control
-        /// characters.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11tEXt&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class TextChunk : KaitaiStruct
-        {
-            public static TextChunk FromFile(string fileName)
-            {
-                return new TextChunk(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Indicates purpose of the following text data.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Keyword</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_keyword</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">CompressionMethods</span> <span class="n">CompressionMethod</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_compressionMethod</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">TextDatastream</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_textDatastream</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawTextDatastream</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_textDatastream</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-            public TextChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _keyword = System.Text.Encoding.GetEncoding(&quot;iso8859-1&quot;).GetString(m_io.ReadBytesTerm(0, false, true, true));
-                _text = System.Text.Encoding.GetEncoding(&quot;iso8859-1&quot;).GetString(m_io.ReadBytesFull());
-            }
-            private string _keyword;
-            private string _text;
-            private Png m_root;
-            private Png.Chunk m_parent;
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Background chunk for truecolor images.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">BkgdTruecolor</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">BkgdTruecolor</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">BkgdTruecolor</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Indicates purpose of the following text data.
-            /// &lt;/summary&gt;
-            public string Keyword { get { return _keyword; } }
-            public string Text { get { return _text; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.Chunk M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">BkgdTruecolor</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">BkgdChunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_red</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_green</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_blue</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_red</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_green</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_blue</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">BkgdChunk</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Red</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_red</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Green</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_green</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Blue</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_blue</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">BkgdChunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Time chunk stores time stamp of last modification of this image,
-        /// up to 1 second precision in UTC timezone.
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11tIME&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class TimeChunk : KaitaiStruct
-        {
-            public static TimeChunk FromFile(string fileName)
-            {
-                return new TimeChunk(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11gAMA&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">GamaChunk</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">GamaChunk</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">GamaChunk</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public TimeChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _year = m_io.ReadU2be();
-                _month = m_io.ReadU1();
-                _day = m_io.ReadU1();
-                _hour = m_io.ReadU1();
-                _minute = m_io.ReadU1();
-                _second = m_io.ReadU1();
-            }
-            private ushort _year;
-            private byte _month;
-            private byte _day;
-            private byte _hour;
-            private byte _minute;
-            private byte _second;
-            private Png m_root;
-            private Png.Chunk m_parent;
-            public ushort Year { get { return _year; } }
-            public byte Month { get { return _month; } }
-            public byte Day { get { return _day; } }
-            public byte Hour { get { return _hour; } }
-            public byte Minute { get { return _minute; } }
-            public byte Second { get { return _second; } }
-            public Png M_Root { get { return m_root; } }
-            public Png.Chunk M_Parent { get { return m_parent; } }
-        }
-        private byte[] _magic;
-        private byte[] _ihdrLen;
-        private byte[] _ihdrType;
-        private IhdrChunk _ihdr;
-        private byte[] _ihdrCrc;
-        private List&lt;Chunk&gt; _chunks;
-        private Png m_root;
-        private KaitaiStruct m_parent;
-        public byte[] Magic { get { return _magic; } }
-        public byte[] IhdrLen { get { return _ihdrLen; } }
-        public byte[] IhdrType { get { return _ihdrType; } }
-        public IhdrChunk Ihdr { get { return _ihdr; } }
-        public byte[] IhdrCrc { get { return _ihdrCrc; } }
-        public List&lt;Chunk&gt; Chunks { get { return _chunks; } }
-        public Png M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-    }
-}
-</code></pre>
+            <span class="k">public</span> <span class="nf">GamaChunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_gammaRatio</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_gammaInt</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_gammaRatio</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">double</span> <span class="n">_gammaRatio</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">double</span> <span class="n">GammaRatio</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_gammaRatio</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_gammaRatio</span><span class="p">;</span>
+                    <span class="n">_gammaRatio</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">((</span><span class="m">100000.0</span> <span class="p">/</span> <span class="n">GammaInt</span><span class="p">));</span>
+                    <span class="n">f_gammaRatio</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_gammaRatio</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_gammaInt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">GammaInt</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_gammaInt</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Background chunk stores default background color to display this</span>
+        <span class="c1">/// image against. Contents depend on `color_type` of the image.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11bKGD&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">BkgdChunk</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">BkgdChunk</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">BkgdChunk</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">BkgdChunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Ihdr</span><span class="p">.</span><span class="n">ColorType</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">Png</span><span class="p">.</span><span class="n">ColorType</span><span class="p">.</span><span class="n">GreyscaleAlpha</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_bkgd</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BkgdGreyscale</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">Png</span><span class="p">.</span><span class="n">ColorType</span><span class="p">.</span><span class="n">Indexed</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_bkgd</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BkgdIndexed</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">Png</span><span class="p">.</span><span class="n">ColorType</span><span class="p">.</span><span class="n">Greyscale</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_bkgd</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BkgdGreyscale</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">Png</span><span class="p">.</span><span class="n">ColorType</span><span class="p">.</span><span class="n">TruecolorAlpha</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_bkgd</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BkgdTruecolor</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">Png</span><span class="p">.</span><span class="n">ColorType</span><span class="p">.</span><span class="n">Truecolor</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_bkgd</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BkgdTruecolor</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">_bkgd</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">Bkgd</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_bkgd</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// &amp;quot;Physical size&amp;quot; chunk stores data that allows to translate</span>
+        <span class="c1">/// logical pixels into physical units (meters, etc) and vice-versa.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11pHYs&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">PhysChunk</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">PhysChunk</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">PhysChunk</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">PhysChunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_pixelsPerUnitX</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="n">_pixelsPerUnitY</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="n">_unit</span> <span class="p">=</span> <span class="p">((</span><span class="n">Png</span><span class="p">.</span><span class="n">PhysUnit</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_pixelsPerUnitX</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_pixelsPerUnitY</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">PhysUnit</span> <span class="n">_unit</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">m_parent</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Number of pixels per physical unit (typically, 1 meter) by X</span>
+            <span class="c1">/// axis.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">PixelsPerUnitX</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_pixelsPerUnitX</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Number of pixels per physical unit (typically, 1 meter) by Y</span>
+            <span class="c1">/// axis.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">PixelsPerUnitY</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_pixelsPerUnitY</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">PhysUnit</span> <span class="n">Unit</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unit</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// International text chunk effectively allows to store key-value string pairs in</span>
+        <span class="c1">/// PNG container. Both &amp;quot;key&amp;quot; (keyword) and &amp;quot;value&amp;quot; (text) parts are</span>
+        <span class="c1">/// given in pre-defined subset of iso8859-1 without control</span>
+        <span class="c1">/// characters.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11iTXt&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">InternationalTextChunk</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">InternationalTextChunk</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">InternationalTextChunk</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">InternationalTextChunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_keyword</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
+                <span class="n">_compressionFlag</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_compressionMethod</span> <span class="p">=</span> <span class="p">((</span><span class="n">Png</span><span class="p">.</span><span class="n">CompressionMethods</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+                <span class="n">_languageTag</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
+                <span class="n">_translatedKeyword</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
+                <span class="n">_text</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_keyword</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_compressionFlag</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">CompressionMethods</span> <span class="n">_compressionMethod</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_languageTag</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_translatedKeyword</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_text</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">m_parent</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Indicates purpose of the following text data.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Keyword</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_keyword</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// 0 = text is uncompressed, 1 = text is compressed with a</span>
+            <span class="c1">/// method specified in `compression_method`.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">CompressionFlag</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_compressionFlag</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">CompressionMethods</span> <span class="n">CompressionMethod</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_compressionMethod</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Human language used in `translated_keyword` and `text`</span>
+            <span class="c1">/// attributes - should be a language code conforming to ISO</span>
+            <span class="c1">/// 646.IRV:1991.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">LanguageTag</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_languageTag</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Keyword translated into language specified in</span>
+            <span class="c1">/// `language_tag`. Line breaks are not allowed.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">TranslatedKeyword</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_translatedKeyword</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Text contents (&amp;quot;value&amp;quot; of this key-value pair), written in</span>
+            <span class="c1">/// language specified in `language_tag`. Linke breaks are</span>
+            <span class="c1">/// allowed.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Text</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_text</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Text chunk effectively allows to store key-value string pairs in</span>
+        <span class="c1">/// PNG container. Both &amp;quot;key&amp;quot; (keyword) and &amp;quot;value&amp;quot; (text) parts are</span>
+        <span class="c1">/// given in pre-defined subset of iso8859-1 without control</span>
+        <span class="c1">/// characters.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11tEXt&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">TextChunk</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">TextChunk</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">TextChunk</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">TextChunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_keyword</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;iso8859-1&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
+                <span class="n">_text</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;iso8859-1&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_keyword</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_text</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">m_parent</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Indicates purpose of the following text data.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Keyword</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_keyword</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Text</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_text</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Time chunk stores time stamp of last modification of this image,</span>
+        <span class="c1">/// up to 1 second precision in UTC timezone.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.w3.org/TR/PNG/#11tIME&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">TimeChunk</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">TimeChunk</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">TimeChunk</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">TimeChunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_year</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_month</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_day</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_hour</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_minute</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_second</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_year</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_month</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_day</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_hour</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_minute</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_second</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Year</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_year</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Month</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_month</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Day</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_day</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Hour</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_hour</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Minute</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_minute</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Second</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_second</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_ihdrLen</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_ihdrType</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">IhdrChunk</span> <span class="n">_ihdr</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_ihdrCrc</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Chunk</span><span class="p">&gt;</span> <span class="n">_chunks</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">IhdrLen</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ihdrLen</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">IhdrType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ihdrType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">IhdrChunk</span> <span class="n">Ihdr</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ihdr</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">IhdrCrc</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ihdrCrc</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Chunk</span><span class="p">&gt;</span> <span class="n">Chunks</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_chunks</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1156,8 +1153,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -252,320 +249,320 @@ data = CreativeVoiceFile.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# Creative Voice File is a container file format for digital audio
-# wave data. Initial revisions were able to support only unsigned
-# 8-bit PCM and ADPCM data, later versions were revised to add support
-# for 16-bit PCM and a-law / u-law formats.
-# 
-# This format was actively used in 1990s, around the advent of
-# Creative&#39;s sound cards (Sound Blaster family). It was a popular
-# choice for a digital sound container in lots of games and multimedia
-# software due to simplicity and availability of Creative&#39;s recording
-# / editing tools.
-# @see https://wiki.multimedia.cx/index.php?title=Creative_Voice Source
-class CreativeVoiceFile &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># Creative Voice File is a container file format for digital audio</span>
+<span class="c1"># wave data. Initial revisions were able to support only unsigned</span>
+<span class="c1"># 8-bit PCM and ADPCM data, later versions were revised to add support</span>
+<span class="c1"># for 16-bit PCM and a-law / u-law formats.</span>
+<span class="c1"># </span>
+<span class="c1"># This format was actively used in 1990s, around the advent of</span>
+<span class="c1"># Creative&#39;s sound cards (Sound Blaster family). It was a popular</span>
+<span class="c1"># choice for a digital sound container in lots of games and multimedia</span>
+<span class="c1"># software due to simplicity and availability of Creative&#39;s recording</span>
+<span class="c1"># / editing tools.</span>
+<span class="c1"># @see https://wiki.multimedia.cx/index.php?title=Creative_Voice Source</span>
+<span class="k">class</span> <span class="nc">CreativeVoiceFile</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  BLOCK_TYPES = {
-    0 =&gt; :block_types_terminator,
-    1 =&gt; :block_types_sound_data,
-    2 =&gt; :block_types_sound_data_cont,
-    3 =&gt; :block_types_silence,
-    4 =&gt; :block_types_marker,
-    5 =&gt; :block_types_text,
-    6 =&gt; :block_types_repeat_start,
-    7 =&gt; :block_types_repeat_end,
-    8 =&gt; :block_types_extra_info,
-    9 =&gt; :block_types_sound_data_new,
-  }
-  I__BLOCK_TYPES = BLOCK_TYPES.invert
+  <span class="no">BLOCK_TYPES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:block_types_terminator</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:block_types_sound_data</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:block_types_sound_data_cont</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:block_types_silence</span><span class="p">,</span>
+    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:block_types_marker</span><span class="p">,</span>
+    <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:block_types_text</span><span class="p">,</span>
+    <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:block_types_repeat_start</span><span class="p">,</span>
+    <span class="mi">7</span> <span class="o">=&gt;</span> <span class="ss">:block_types_repeat_end</span><span class="p">,</span>
+    <span class="mi">8</span> <span class="o">=&gt;</span> <span class="ss">:block_types_extra_info</span><span class="p">,</span>
+    <span class="mi">9</span> <span class="o">=&gt;</span> <span class="ss">:block_types_sound_data_new</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__BLOCK_TYPES</span> <span class="o">=</span> <span class="no">BLOCK_TYPES</span><span class="o">.</span><span class="n">invert</span>
 
-  CODECS = {
-    0 =&gt; :codecs_pcm_8bit_unsigned,
-    1 =&gt; :codecs_adpcm_4bit,
-    2 =&gt; :codecs_adpcm_2_6bit,
-    3 =&gt; :codecs_adpcm_2_bit,
-    4 =&gt; :codecs_pcm_16bit_signed,
-    6 =&gt; :codecs_alaw,
-    7 =&gt; :codecs_ulaw,
-    512 =&gt; :codecs_adpcm_4_to_16bit,
-  }
-  I__CODECS = CODECS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">CODECS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:codecs_pcm_8bit_unsigned</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:codecs_adpcm_4bit</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:codecs_adpcm_2_6bit</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:codecs_adpcm_2_bit</span><span class="p">,</span>
+    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:codecs_pcm_16bit_signed</span><span class="p">,</span>
+    <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:codecs_alaw</span><span class="p">,</span>
+    <span class="mi">7</span> <span class="o">=&gt;</span> <span class="ss">:codecs_ulaw</span><span class="p">,</span>
+    <span class="mi">512</span> <span class="o">=&gt;</span> <span class="ss">:codecs_adpcm_4_to_16bit</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__CODECS</span> <span class="o">=</span> <span class="no">CODECS</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @magic = @_io.ensure_fixed_contents([67, 114, 101, 97, 116, 105, 118, 101, 32, 86, 111, 105, 99, 101, 32, 70, 105, 108, 101, 26].pack(&#39;C*&#39;))
-    @header_size = @_io.read_u2le
-    @version = @_io.read_u2le
-    @checksum = @_io.read_u2le
-    @blocks = []
-    i = 0
-    while not @_io.eof?
-      @blocks &lt;&lt; Block.new(@_io, self, @_root)
-      i += 1
-    end
-    self
-  end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">67</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">116</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span> <span class="mi">118</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">111</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span> <span class="mi">99</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">26</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+    <span class="vi">@header_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+    <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+    <span class="vi">@checksum</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+    <span class="vi">@blocks</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+      <span class="vi">@blocks</span> <span class="o">&lt;&lt;</span> <span class="no">Block</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x04:_Marker Source
-  class BlockMarker &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x04:_Marker Source</span>
+  <span class="k">class</span> <span class="nc">BlockMarker</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @marker_id = @_io.read_u2le
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@marker_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Marker ID
-    attr_reader :marker_id
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Marker ID</span>
+    <span class="kp">attr_reader</span> <span class="ss">:marker_id</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x03:_Silence Source
-  class BlockSilence &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x03:_Silence Source</span>
+  <span class="k">class</span> <span class="nc">BlockSilence</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @duration_samples = @_io.read_u2le
-      @freq_div = @_io.read_u1
-      self
-    end
-    def sample_rate
-      return @sample_rate unless @sample_rate.nil?
-      @sample_rate = (1000000.0 / (256 - freq_div))
-      @sample_rate
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@duration_samples</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@freq_div</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">sample_rate</span>
+      <span class="k">return</span> <span class="vi">@sample_rate</span> <span class="k">unless</span> <span class="vi">@sample_rate</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@sample_rate</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1000000</span><span class="o">.</span><span class="mi">0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">256</span> <span class="o">-</span> <span class="n">freq_div</span><span class="p">))</span>
+      <span class="vi">@sample_rate</span>
+    <span class="k">end</span>
 
-    ##
-    # Duration of silence, in seconds
-    def duration_sec
-      return @duration_sec unless @duration_sec.nil?
-      @duration_sec = (duration_samples / sample_rate)
-      @duration_sec
-    end
+    <span class="c1">##</span>
+    <span class="c1"># Duration of silence, in seconds</span>
+    <span class="k">def</span> <span class="nf">duration_sec</span>
+      <span class="k">return</span> <span class="vi">@duration_sec</span> <span class="k">unless</span> <span class="vi">@duration_sec</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@duration_sec</span> <span class="o">=</span> <span class="p">(</span><span class="n">duration_samples</span> <span class="o">/</span> <span class="n">sample_rate</span><span class="p">)</span>
+      <span class="vi">@duration_sec</span>
+    <span class="k">end</span>
 
-    ##
-    # Duration of silence, in samples
-    attr_reader :duration_samples
+    <span class="c1">##</span>
+    <span class="c1"># Duration of silence, in samples</span>
+    <span class="kp">attr_reader</span> <span class="ss">:duration_samples</span>
 
-    ##
-    # Frequency divisor, used to determine sample rate
-    attr_reader :freq_div
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Frequency divisor, used to determine sample rate</span>
+    <span class="kp">attr_reader</span> <span class="ss">:freq_div</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x09:_Sound_data_.28New_format.29 Source
-  class BlockSoundDataNew &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x09:_Sound_data_.28New_format.29 Source</span>
+  <span class="k">class</span> <span class="nc">BlockSoundDataNew</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @sample_rate = @_io.read_u4le
-      @bits_per_sample = @_io.read_u1
-      @num_channels = @_io.read_u1
-      @codec = Kaitai::Struct::Stream::resolve_enum(CODECS, @_io.read_u2le)
-      @reserved = @_io.read_bytes(4)
-      @wave = @_io.read_bytes_full
-      self
-    end
-    attr_reader :sample_rate
-    attr_reader :bits_per_sample
-    attr_reader :num_channels
-    attr_reader :codec
-    attr_reader :reserved
-    attr_reader :wave
-  end
-  class Block &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@sample_rate</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@bits_per_sample</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@num_channels</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@codec</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">CODECS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="vi">@wave</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:sample_rate</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bits_per_sample</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_channels</span>
+    <span class="kp">attr_reader</span> <span class="ss">:codec</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
+    <span class="kp">attr_reader</span> <span class="ss">:wave</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Block</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @block_type = Kaitai::Struct::Stream::resolve_enum(BLOCK_TYPES, @_io.read_u1)
-      if block_type != :block_types_terminator
-        @body_size1 = @_io.read_u2le
-      end
-      if block_type != :block_types_terminator
-        @body_size2 = @_io.read_u1
-      end
-      if block_type != :block_types_terminator
-        case block_type
-        when :block_types_silence
-          @_raw_body = @_io.read_bytes(body_size)
-          io = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockSilence.new(io, self, @_root)
-        when :block_types_sound_data
-          @_raw_body = @_io.read_bytes(body_size)
-          io = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockSoundData.new(io, self, @_root)
-        when :block_types_marker
-          @_raw_body = @_io.read_bytes(body_size)
-          io = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockMarker.new(io, self, @_root)
-        when :block_types_sound_data_new
-          @_raw_body = @_io.read_bytes(body_size)
-          io = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockSoundDataNew.new(io, self, @_root)
-        when :block_types_repeat_start
-          @_raw_body = @_io.read_bytes(body_size)
-          io = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockRepeatStart.new(io, self, @_root)
-        when :block_types_extra_info
-          @_raw_body = @_io.read_bytes(body_size)
-          io = Kaitai::Struct::Stream.new(@_raw_body)
-          @body = BlockExtraInfo.new(io, self, @_root)
-        else
-          @body = @_io.read_bytes(body_size)
-        end
-      end
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@block_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">BLOCK_TYPES</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">block_type</span> <span class="o">!=</span> <span class="ss">:block_types_terminator</span>
+        <span class="vi">@body_size1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">block_type</span> <span class="o">!=</span> <span class="ss">:block_types_terminator</span>
+        <span class="vi">@body_size2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">block_type</span> <span class="o">!=</span> <span class="ss">:block_types_terminator</span>
+        <span class="k">case</span> <span class="n">block_type</span>
+        <span class="k">when</span> <span class="ss">:block_types_silence</span>
+          <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">body_size</span><span class="p">)</span>
+          <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+          <span class="vi">@body</span> <span class="o">=</span> <span class="no">BlockSilence</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:block_types_sound_data</span>
+          <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">body_size</span><span class="p">)</span>
+          <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+          <span class="vi">@body</span> <span class="o">=</span> <span class="no">BlockSoundData</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:block_types_marker</span>
+          <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">body_size</span><span class="p">)</span>
+          <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+          <span class="vi">@body</span> <span class="o">=</span> <span class="no">BlockMarker</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:block_types_sound_data_new</span>
+          <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">body_size</span><span class="p">)</span>
+          <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+          <span class="vi">@body</span> <span class="o">=</span> <span class="no">BlockSoundDataNew</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:block_types_repeat_start</span>
+          <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">body_size</span><span class="p">)</span>
+          <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+          <span class="vi">@body</span> <span class="o">=</span> <span class="no">BlockRepeatStart</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:block_types_extra_info</span>
+          <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">body_size</span><span class="p">)</span>
+          <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+          <span class="vi">@body</span> <span class="o">=</span> <span class="no">BlockExtraInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">else</span>
+          <span class="vi">@body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">body_size</span><span class="p">)</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # body_size is a 24-bit little-endian integer, so we&#39;re
-    # emulating that by adding two standard-sized integers
-    # (body_size1 and body_size2).
-    def body_size
-      return @body_size unless @body_size.nil?
-      if block_type != :block_types_terminator
-        @body_size = (body_size1 + (body_size2 &lt;&lt; 16))
-      end
-      @body_size
-    end
+    <span class="c1">##</span>
+    <span class="c1"># body_size is a 24-bit little-endian integer, so we&#39;re</span>
+    <span class="c1"># emulating that by adding two standard-sized integers</span>
+    <span class="c1"># (body_size1 and body_size2).</span>
+    <span class="k">def</span> <span class="nf">body_size</span>
+      <span class="k">return</span> <span class="vi">@body_size</span> <span class="k">unless</span> <span class="vi">@body_size</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">block_type</span> <span class="o">!=</span> <span class="ss">:block_types_terminator</span>
+        <span class="vi">@body_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">body_size1</span> <span class="o">+</span> <span class="p">(</span><span class="n">body_size2</span> <span class="o">&lt;&lt;</span> <span class="mi">16</span><span class="p">))</span>
+      <span class="k">end</span>
+      <span class="vi">@body_size</span>
+    <span class="k">end</span>
 
-    ##
-    # Byte that determines type of block content
-    attr_reader :block_type
-    attr_reader :body_size1
-    attr_reader :body_size2
+    <span class="c1">##</span>
+    <span class="c1"># Byte that determines type of block content</span>
+    <span class="kp">attr_reader</span> <span class="ss">:block_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body_size1</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body_size2</span>
 
-    ##
-    # Block body, type depends on block type byte
-    attr_reader :body
-    attr_reader :_raw_body
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Block body, type depends on block type byte</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_body</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x06:_Repeat_start Source
-  class BlockRepeatStart &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x06:_Repeat_start Source</span>
+  <span class="k">class</span> <span class="nc">BlockRepeatStart</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @repeat_count_1 = @_io.read_u2le
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@repeat_count_1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Number of repetitions minus 1; 0xffff means infinite repetitions
-    attr_reader :repeat_count_1
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Number of repetitions minus 1; 0xffff means infinite repetitions</span>
+    <span class="kp">attr_reader</span> <span class="ss">:repeat_count_1</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x01:_Sound_data Source
-  class BlockSoundData &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x01:_Sound_data Source</span>
+  <span class="k">class</span> <span class="nc">BlockSoundData</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @freq_div = @_io.read_u1
-      @codec = Kaitai::Struct::Stream::resolve_enum(CODECS, @_io.read_u1)
-      @wave = @_io.read_bytes_full
-      self
-    end
-    def sample_rate
-      return @sample_rate unless @sample_rate.nil?
-      @sample_rate = (1000000.0 / (256 - freq_div))
-      @sample_rate
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@freq_div</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@codec</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">CODECS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@wave</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">sample_rate</span>
+      <span class="k">return</span> <span class="vi">@sample_rate</span> <span class="k">unless</span> <span class="vi">@sample_rate</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@sample_rate</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1000000</span><span class="o">.</span><span class="mi">0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">256</span> <span class="o">-</span> <span class="n">freq_div</span><span class="p">))</span>
+      <span class="vi">@sample_rate</span>
+    <span class="k">end</span>
 
-    ##
-    # Frequency divisor, used to determine sample rate
-    attr_reader :freq_div
-    attr_reader :codec
-    attr_reader :wave
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Frequency divisor, used to determine sample rate</span>
+    <span class="kp">attr_reader</span> <span class="ss">:freq_div</span>
+    <span class="kp">attr_reader</span> <span class="ss">:codec</span>
+    <span class="kp">attr_reader</span> <span class="ss">:wave</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x08:_Extra_info Source
-  class BlockExtraInfo &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://wiki.multimedia.cx/index.php?title=Creative_Voice#Block_type_0x08:_Extra_info Source</span>
+  <span class="k">class</span> <span class="nc">BlockExtraInfo</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @freq_div = @_io.read_u2le
-      @codec = Kaitai::Struct::Stream::resolve_enum(CODECS, @_io.read_u1)
-      @num_channels_1 = @_io.read_u1
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@freq_div</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@codec</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">CODECS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@num_channels_1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Number of channels (1 = mono, 2 = stereo)
-    def num_channels
-      return @num_channels unless @num_channels.nil?
-      @num_channels = (num_channels_1 + 1)
-      @num_channels
-    end
-    def sample_rate
-      return @sample_rate unless @sample_rate.nil?
-      @sample_rate = (256000000.0 / (num_channels * (65536 - freq_div)))
-      @sample_rate
-    end
+    <span class="c1">##</span>
+    <span class="c1"># Number of channels (1 = mono, 2 = stereo)</span>
+    <span class="k">def</span> <span class="nf">num_channels</span>
+      <span class="k">return</span> <span class="vi">@num_channels</span> <span class="k">unless</span> <span class="vi">@num_channels</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@num_channels</span> <span class="o">=</span> <span class="p">(</span><span class="n">num_channels_1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="vi">@num_channels</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">sample_rate</span>
+      <span class="k">return</span> <span class="vi">@sample_rate</span> <span class="k">unless</span> <span class="vi">@sample_rate</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@sample_rate</span> <span class="o">=</span> <span class="p">(</span><span class="mi">256000000</span><span class="o">.</span><span class="mi">0</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_channels</span> <span class="o">*</span> <span class="p">(</span><span class="mi">65536</span> <span class="o">-</span> <span class="n">freq_div</span><span class="p">)))</span>
+      <span class="vi">@sample_rate</span>
+    <span class="k">end</span>
 
-    ##
-    # Frequency divisor
-    attr_reader :freq_div
-    attr_reader :codec
+    <span class="c1">##</span>
+    <span class="c1"># Frequency divisor</span>
+    <span class="kp">attr_reader</span> <span class="ss">:freq_div</span>
+    <span class="kp">attr_reader</span> <span class="ss">:codec</span>
 
-    ##
-    # Number of channels minus 1 (0 = mono, 1 = stereo)
-    attr_reader :num_channels_1
-  end
-  attr_reader :magic
+    <span class="c1">##</span>
+    <span class="c1"># Number of channels minus 1 (0 = mono, 1 = stereo)</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_channels_1</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:magic</span>
 
-  ##
-  # Total size of this main header (usually 0x001A)
-  attr_reader :header_size
-  attr_reader :version
+  <span class="c1">##</span>
+  <span class="c1"># Total size of this main header (usually 0x001A)</span>
+  <span class="kp">attr_reader</span> <span class="ss">:header_size</span>
+  <span class="kp">attr_reader</span> <span class="ss">:version</span>
 
-  ##
-  # Checksum: this must be equal to ~version + 0x1234
-  attr_reader :checksum
+  <span class="c1">##</span>
+  <span class="c1"># Checksum: this must be equal to ~version + 0x1234</span>
+  <span class="kp">attr_reader</span> <span class="ss">:checksum</span>
 
-  ##
-  # Series of blocks that contain the actual audio data
-  attr_reader :blocks
-end
-</code></pre>
+  <span class="c1">##</span>
+  <span class="c1"># Series of blocks that contain the actual audio data</span>
+  <span class="kp">attr_reader</span> <span class="ss">:blocks</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -592,8 +589,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

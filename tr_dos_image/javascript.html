@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -254,296 +251,296 @@ var data = new TrDosImage(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.TrDosImage = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-/**
- * .trd file is a raw dump of TR-DOS (ZX-Spectrum) floppy. .trd files are
- * headerless and contain consequent &quot;logical tracks&quot;, each logical track
- * consists of 16 256-byte sectors.
- * 
- * Logical tracks are defined the same way as used by TR-DOS: for single-side
- * floppies it&#39;s just a physical track number, for two-side floppies sides are
- * interleaved, i.e. logical_track_num = (physical_track_num &lt;&lt; 1) | side
- * 
- * So, this format definition is more for TR-DOS filesystem than for .trd files,
- * which are formatless.
- * 
- * Strings (file names, disk label, disk password) are padded with spaces and use
- * ZX Spectrum character set, including UDGs, block drawing chars and Basic
- * tokens. ASCII range is mostly standard ASCII, with few characters (^, `, DEL)
- * replaced with (up arrow, pound, copyright symbol).
- * 
- * .trd file can be smaller than actual floppy disk, if last logical tracks are
- * empty (contain no file data) they can be omitted.
- */
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">TrDosImage</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * .trd file is a raw dump of TR-DOS (ZX-Spectrum) floppy. .trd files are</span>
+<span class="cm"> * headerless and contain consequent &quot;logical tracks&quot;, each logical track</span>
+<span class="cm"> * consists of 16 256-byte sectors.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Logical tracks are defined the same way as used by TR-DOS: for single-side</span>
+<span class="cm"> * floppies it&#39;s just a physical track number, for two-side floppies sides are</span>
+<span class="cm"> * interleaved, i.e. logical_track_num = (physical_track_num &lt;&lt; 1) | side</span>
+<span class="cm"> * </span>
+<span class="cm"> * So, this format definition is more for TR-DOS filesystem than for .trd files,</span>
+<span class="cm"> * which are formatless.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Strings (file names, disk label, disk password) are padded with spaces and use</span>
+<span class="cm"> * ZX Spectrum character set, including UDGs, block drawing chars and Basic</span>
+<span class="cm"> * tokens. ASCII range is mostly standard ASCII, with few characters (^, `, DEL)</span>
+<span class="cm"> * replaced with (up arrow, pound, copyright symbol).</span>
+<span class="cm"> * </span>
+<span class="cm"> * .trd file can be smaller than actual floppy disk, if last logical tracks are</span>
+<span class="cm"> * empty (contain no file data) they can be omitted.</span>
+<span class="cm"> */</span>
 
-var TrDosImage = (function() {
-  TrDosImage.DiskType = Object.freeze({
-    TYPE_80_TRACKS_DOUBLE_SIDE: 22,
-    TYPE_40_TRACKS_DOUBLE_SIDE: 23,
-    TYPE_80_TRACKS_SINGLE_SIDE: 24,
-    TYPE_40_TRACKS_SINGLE_SIDE: 25,
+<span class="kd">var</span> <span class="nx">TrDosImage</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">TrDosImage</span><span class="p">.</span><span class="nx">DiskType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">TYPE_80_TRACKS_DOUBLE_SIDE</span><span class="o">:</span> <span class="mi">22</span><span class="p">,</span>
+    <span class="nx">TYPE_40_TRACKS_DOUBLE_SIDE</span><span class="o">:</span> <span class="mi">23</span><span class="p">,</span>
+    <span class="nx">TYPE_80_TRACKS_SINGLE_SIDE</span><span class="o">:</span> <span class="mi">24</span><span class="p">,</span>
+    <span class="nx">TYPE_40_TRACKS_SINGLE_SIDE</span><span class="o">:</span> <span class="mi">25</span><span class="p">,</span>
 
-    22: &quot;TYPE_80_TRACKS_DOUBLE_SIDE&quot;,
-    23: &quot;TYPE_40_TRACKS_DOUBLE_SIDE&quot;,
-    24: &quot;TYPE_80_TRACKS_SINGLE_SIDE&quot;,
-    25: &quot;TYPE_40_TRACKS_SINGLE_SIDE&quot;,
-  });
+    <span class="mi">22</span><span class="o">:</span> <span class="s2">&quot;TYPE_80_TRACKS_DOUBLE_SIDE&quot;</span><span class="p">,</span>
+    <span class="mi">23</span><span class="o">:</span> <span class="s2">&quot;TYPE_40_TRACKS_DOUBLE_SIDE&quot;</span><span class="p">,</span>
+    <span class="mi">24</span><span class="o">:</span> <span class="s2">&quot;TYPE_80_TRACKS_SINGLE_SIDE&quot;</span><span class="p">,</span>
+    <span class="mi">25</span><span class="o">:</span> <span class="s2">&quot;TYPE_40_TRACKS_SINGLE_SIDE&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
 
-  function TrDosImage(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
+  <span class="kd">function</span> <span class="nx">TrDosImage</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-    this._read();
-  }
-  TrDosImage.prototype._read = function() {
-    this.files = []
-    var i = 0;
-    do {
-      var _ = new File(this._io, this, this._root);
-      this.files.push(_);
-      i++;
-    } while (!(_.isTerminator));
-  }
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">TrDosImage</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">files</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">do</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">File</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">files</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_</span><span class="p">);</span>
+      <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isTerminator</span><span class="p">));</span>
+  <span class="p">}</span>
 
-  var VolumeInfo = TrDosImage.VolumeInfo = (function() {
-    function VolumeInfo(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">VolumeInfo</span> <span class="o">=</span> <span class="nx">TrDosImage</span><span class="p">.</span><span class="nx">VolumeInfo</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">VolumeInfo</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    VolumeInfo.prototype._read = function() {
-      this.catalogEnd = this._io.ensureFixedContents([0]);
-      this.unused = this._io.readBytes(224);
-      this.firstFreeSectorSector = this._io.readU1();
-      this.firstFreeSectorTrack = this._io.readU1();
-      this.diskType = this._io.readU1();
-      this.numFiles = this._io.readU1();
-      this.numFreeSectors = this._io.readU2le();
-      this.trDosId = this._io.ensureFixedContents([16]);
-      this.unused2 = this._io.readBytes(2);
-      this.password = this._io.readBytes(9);
-      this.unused3 = this._io.readBytes(1);
-      this.numDeletedFiles = this._io.readU1();
-      this.label = this._io.readBytes(8);
-      this.unused4 = this._io.readBytes(3);
-    }
-    Object.defineProperty(VolumeInfo.prototype, &#39;numTracks&#39;, {
-      get: function() {
-        if (this._m_numTracks !== undefined)
-          return this._m_numTracks;
-        this._m_numTracks = ((this.diskType &amp; 1) != 0 ? 40 : 80);
-        return this._m_numTracks;
-      }
-    });
-    Object.defineProperty(VolumeInfo.prototype, &#39;numSides&#39;, {
-      get: function() {
-        if (this._m_numSides !== undefined)
-          return this._m_numSides;
-        this._m_numSides = ((this.diskType &amp; 8) != 0 ? 1 : 2);
-        return this._m_numSides;
-      }
-    });
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">VolumeInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">catalogEnd</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">0</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">unused</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">224</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">firstFreeSectorSector</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">firstFreeSectorTrack</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">diskType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numFiles</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numFreeSectors</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">trDosId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">16</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">unused2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">password</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">unused3</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numDeletedFiles</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">label</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">unused4</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">VolumeInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;numTracks&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_numTracks</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numTracks</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_numTracks</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">diskType</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">40</span> <span class="o">:</span> <span class="mi">80</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numTracks</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">VolumeInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;numSides&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_numSides</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numSides</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_numSides</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">diskType</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">2</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numSides</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    /**
-     * track number is logical, for double-sided disks it&#39;s
-     * (physical_track &lt;&lt; 1) | side, the same way that tracks are stored
-     * sequentially in .trd file
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * track number is logical, for double-sided disks it&#39;s</span>
+<span class="cm">     * (physical_track &lt;&lt; 1) | side, the same way that tracks are stored</span>
+<span class="cm">     * sequentially in .trd file</span>
+<span class="cm">     */</span>
 
-    /**
-     * Number of non-deleted files. Directory can have more than
-     * number_of_files entries due to deleted files
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Number of non-deleted files. Directory can have more than</span>
+<span class="cm">     * number_of_files entries due to deleted files</span>
+<span class="cm">     */</span>
 
-    return VolumeInfo;
-  })();
+    <span class="k">return</span> <span class="nx">VolumeInfo</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var PositionAndLengthCode = TrDosImage.PositionAndLengthCode = (function() {
-    function PositionAndLengthCode(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">PositionAndLengthCode</span> <span class="o">=</span> <span class="nx">TrDosImage</span><span class="p">.</span><span class="nx">PositionAndLengthCode</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">PositionAndLengthCode</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    PositionAndLengthCode.prototype._read = function() {
-      this.startAddress = this._io.readU2le();
-      this.length = this._io.readU2le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">PositionAndLengthCode</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">startAddress</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    /**
-     * Default memory address to load this byte array into
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Default memory address to load this byte array into</span>
+<span class="cm">     */</span>
 
-    return PositionAndLengthCode;
-  })();
+    <span class="k">return</span> <span class="nx">PositionAndLengthCode</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var Filename = TrDosImage.Filename = (function() {
-    function Filename(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Filename</span> <span class="o">=</span> <span class="nx">TrDosImage</span><span class="p">.</span><span class="nx">Filename</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Filename</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Filename.prototype._read = function() {
-      this.name = this._io.readBytes(8);
-    }
-    Object.defineProperty(Filename.prototype, &#39;firstByte&#39;, {
-      get: function() {
-        if (this._m_firstByte !== undefined)
-          return this._m_firstByte;
-        var _pos = this._io.pos;
-        this._io.seek(0);
-        this._m_firstByte = this._io.readU1();
-        this._io.seek(_pos);
-        return this._m_firstByte;
-      }
-    });
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Filename</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Filename</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;firstByte&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_firstByte</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_firstByte</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_firstByte</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_firstByte</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    return Filename;
-  })();
+    <span class="k">return</span> <span class="nx">Filename</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var PositionAndLengthPrint = TrDosImage.PositionAndLengthPrint = (function() {
-    function PositionAndLengthPrint(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">PositionAndLengthPrint</span> <span class="o">=</span> <span class="nx">TrDosImage</span><span class="p">.</span><span class="nx">PositionAndLengthPrint</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">PositionAndLengthPrint</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    PositionAndLengthPrint.prototype._read = function() {
-      this.extentNo = this._io.readU1();
-      this.reserved = this._io.readU1();
-      this.length = this._io.readU2le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">PositionAndLengthPrint</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">extentNo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return PositionAndLengthPrint;
-  })();
+    <span class="k">return</span> <span class="nx">PositionAndLengthPrint</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var PositionAndLengthGeneric = TrDosImage.PositionAndLengthGeneric = (function() {
-    function PositionAndLengthGeneric(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">PositionAndLengthGeneric</span> <span class="o">=</span> <span class="nx">TrDosImage</span><span class="p">.</span><span class="nx">PositionAndLengthGeneric</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">PositionAndLengthGeneric</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    PositionAndLengthGeneric.prototype._read = function() {
-      this.reserved = this._io.readU2le();
-      this.length = this._io.readU2le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">PositionAndLengthGeneric</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return PositionAndLengthGeneric;
-  })();
+    <span class="k">return</span> <span class="nx">PositionAndLengthGeneric</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var PositionAndLengthBasic = TrDosImage.PositionAndLengthBasic = (function() {
-    function PositionAndLengthBasic(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">PositionAndLengthBasic</span> <span class="o">=</span> <span class="nx">TrDosImage</span><span class="p">.</span><span class="nx">PositionAndLengthBasic</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">PositionAndLengthBasic</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    PositionAndLengthBasic.prototype._read = function() {
-      this.programAndDataLength = this._io.readU2le();
-      this.programLength = this._io.readU2le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">PositionAndLengthBasic</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">programAndDataLength</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">programLength</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return PositionAndLengthBasic;
-  })();
+    <span class="k">return</span> <span class="nx">PositionAndLengthBasic</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var File = TrDosImage.File = (function() {
-    function File(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">File</span> <span class="o">=</span> <span class="nx">TrDosImage</span><span class="p">.</span><span class="nx">File</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">File</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    File.prototype._read = function() {
-      this._raw_name = this._io.readBytes(8);
-      var _io__raw_name = new KaitaiStream(this._raw_name);
-      this.name = new Filename(_io__raw_name, this, this._root);
-      this.extension = this._io.readU1();
-      switch (this.extension) {
-      case 66:
-        this.positionAndLength = new PositionAndLengthBasic(this._io, this, this._root);
-        break;
-      case 67:
-        this.positionAndLength = new PositionAndLengthCode(this._io, this, this._root);
-        break;
-      case 35:
-        this.positionAndLength = new PositionAndLengthPrint(this._io, this, this._root);
-        break;
-      default:
-        this.positionAndLength = new PositionAndLengthGeneric(this._io, this, this._root);
-        break;
-      }
-      this.lengthSectors = this._io.readU1();
-      this.startingSector = this._io.readU1();
-      this.startingTrack = this._io.readU1();
-    }
-    Object.defineProperty(File.prototype, &#39;isDeleted&#39;, {
-      get: function() {
-        if (this._m_isDeleted !== undefined)
-          return this._m_isDeleted;
-        this._m_isDeleted = this.name.firstByte == 1;
-        return this._m_isDeleted;
-      }
-    });
-    Object.defineProperty(File.prototype, &#39;isTerminator&#39;, {
-      get: function() {
-        if (this._m_isTerminator !== undefined)
-          return this._m_isTerminator;
-        this._m_isTerminator = this.name.firstByte == 0;
-        return this._m_isTerminator;
-      }
-    });
-    Object.defineProperty(File.prototype, &#39;contents&#39;, {
-      get: function() {
-        if (this._m_contents !== undefined)
-          return this._m_contents;
-        var _pos = this._io.pos;
-        this._io.seek((((this.startingTrack * 256) * 16) + (this.startingSector * 256)));
-        this._m_contents = this._io.readBytes((this.lengthSectors * 256));
-        this._io.seek(_pos);
-        return this._m_contents;
-      }
-    });
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">File</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_name</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_name</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_name</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Filename</span><span class="p">(</span><span class="nx">_io__raw_name</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">extension</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">extension</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="mi">66</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">positionAndLength</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PositionAndLengthBasic</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">67</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">positionAndLength</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PositionAndLengthCode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">35</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">positionAndLength</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PositionAndLengthPrint</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">default</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">positionAndLength</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PositionAndLengthGeneric</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lengthSectors</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">startingSector</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">startingTrack</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">File</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isDeleted&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isDeleted</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isDeleted</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isDeleted</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">firstByte</span> <span class="o">==</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isDeleted</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">File</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isTerminator&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isTerminator</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isTerminator</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isTerminator</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">.</span><span class="nx">firstByte</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isTerminator</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">File</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;contents&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">((((</span><span class="k">this</span><span class="p">.</span><span class="nx">startingTrack</span> <span class="o">*</span> <span class="mi">256</span><span class="p">)</span> <span class="o">*</span> <span class="mi">16</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">startingSector</span> <span class="o">*</span> <span class="mi">256</span><span class="p">)));</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">lengthSectors</span> <span class="o">*</span> <span class="mi">256</span><span class="p">));</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_contents</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    return File;
-  })();
-  Object.defineProperty(TrDosImage.prototype, &#39;volumeInfo&#39;, {
-    get: function() {
-      if (this._m_volumeInfo !== undefined)
-        return this._m_volumeInfo;
-      var _pos = this._io.pos;
-      this._io.seek(2048);
-      this._m_volumeInfo = new VolumeInfo(this._io, this, this._root);
-      this._io.seek(_pos);
-      return this._m_volumeInfo;
-    }
-  });
+    <span class="k">return</span> <span class="nx">File</span><span class="p">;</span>
+  <span class="p">})();</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">TrDosImage</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;volumeInfo&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_volumeInfo</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_volumeInfo</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="mi">2048</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_volumeInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">VolumeInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_volumeInfo</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
 
-  return TrDosImage;
-})();
-return TrDosImage;
-}));
-</code></pre>
+  <span class="k">return</span> <span class="nx">TrDosImage</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">TrDosImage</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -570,8 +567,8 @@ return TrDosImage;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

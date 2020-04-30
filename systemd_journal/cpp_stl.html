@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -286,350 +283,350 @@ prior to declaration of header.
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef SYSTEMD_JOURNAL_H_
-#define SYSTEMD_JOURNAL_H_
-
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-#include &quot;kaitai/kaitaistruct.h&quot;
-
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
-
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
-
-/**
- * systemd, a popular user-space system/service management suite on Linux,
- * offers logging functionality, storing incoming logs in a binary journal
- * format.
- * 
- * On live Linux system running systemd, these journals are typically located at:
- * 
- * * /run/log/journal/machine-id/*.journal (volatile, lost after reboot)
- * * /var/log/journal/machine-id/*.journal (persistent, but disabled by default on Debian / Ubuntu)
- * \sa Source
- */
-
-class systemd_journal_t : public kaitai::kstruct {
-
-public:
-    class header_t;
-    class journal_object_t;
-    class data_object_t;
-
-    enum state_t {
-        STATE_OFFLINE = 0,
-        STATE_ONLINE = 1,
-        STATE_ARCHIVED = 2
-    };
-
-    systemd_journal_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, systemd_journal_t* p__root = 0);
-
-private:
-    void _read();
-
-public:
-    ~systemd_journal_t();
-
-    class header_t : public kaitai::kstruct {
-
-    public:
-
-        header_t(kaitai::kstream* p__io, systemd_journal_t* p__parent = 0, systemd_journal_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~header_t();
-
-    private:
-        std::string m_signature;
-        uint32_t m_compatible_flags;
-        uint32_t m_incompatible_flags;
-        state_t m_state;
-        std::string m_reserved;
-        std::string m_file_id;
-        std::string m_machine_id;
-        std::string m_boot_id;
-        std::string m_seqnum_id;
-        uint64_t m_len_header;
-        uint64_t m_len_arena;
-        uint64_t m_ofs_data_hash_table;
-        uint64_t m_len_data_hash_table;
-        uint64_t m_ofs_field_hash_table;
-        uint64_t m_len_field_hash_table;
-        uint64_t m_ofs_tail_object;
-        uint64_t m_num_objects;
-        uint64_t m_num_entries;
-        uint64_t m_tail_entry_seqnum;
-        uint64_t m_head_entry_seqnum;
-        uint64_t m_ofs_entry_array;
-        uint64_t m_head_entry_realtime;
-        uint64_t m_tail_entry_realtime;
-        uint64_t m_tail_entry_monotonic;
-        uint64_t m_num_data;
-        bool n_num_data;
-
-    public:
-        bool _is_null_num_data() { num_data(); return n_num_data; };
-
-    private:
-        uint64_t m_num_fields;
-        bool n_num_fields;
-
-    public:
-        bool _is_null_num_fields() { num_fields(); return n_num_fields; };
-
-    private:
-        uint64_t m_num_tags;
-        bool n_num_tags;
-
-    public:
-        bool _is_null_num_tags() { num_tags(); return n_num_tags; };
-
-    private:
-        uint64_t m_num_entry_arrays;
-        bool n_num_entry_arrays;
-
-    public:
-        bool _is_null_num_entry_arrays() { num_entry_arrays(); return n_num_entry_arrays; };
-
-    private:
-        systemd_journal_t* m__root;
-        systemd_journal_t* m__parent;
-
-    public:
-        std::string signature() const { return m_signature; }
-        uint32_t compatible_flags() const { return m_compatible_flags; }
-        uint32_t incompatible_flags() const { return m_incompatible_flags; }
-        state_t state() const { return m_state; }
-        std::string reserved() const { return m_reserved; }
-        std::string file_id() const { return m_file_id; }
-        std::string machine_id() const { return m_machine_id; }
-        std::string boot_id() const { return m_boot_id; }
-        std::string seqnum_id() const { return m_seqnum_id; }
-        uint64_t len_header() const { return m_len_header; }
-        uint64_t len_arena() const { return m_len_arena; }
-        uint64_t ofs_data_hash_table() const { return m_ofs_data_hash_table; }
-        uint64_t len_data_hash_table() const { return m_len_data_hash_table; }
-        uint64_t ofs_field_hash_table() const { return m_ofs_field_hash_table; }
-        uint64_t len_field_hash_table() const { return m_len_field_hash_table; }
-        uint64_t ofs_tail_object() const { return m_ofs_tail_object; }
-        uint64_t num_objects() const { return m_num_objects; }
-        uint64_t num_entries() const { return m_num_entries; }
-        uint64_t tail_entry_seqnum() const { return m_tail_entry_seqnum; }
-        uint64_t head_entry_seqnum() const { return m_head_entry_seqnum; }
-        uint64_t ofs_entry_array() const { return m_ofs_entry_array; }
-        uint64_t head_entry_realtime() const { return m_head_entry_realtime; }
-        uint64_t tail_entry_realtime() const { return m_tail_entry_realtime; }
-        uint64_t tail_entry_monotonic() const { return m_tail_entry_monotonic; }
-        uint64_t num_data() const { return m_num_data; }
-        uint64_t num_fields() const { return m_num_fields; }
-        uint64_t num_tags() const { return m_num_tags; }
-        uint64_t num_entry_arrays() const { return m_num_entry_arrays; }
-        systemd_journal_t* _root() const { return m__root; }
-        systemd_journal_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa Source
-     */
-
-    class journal_object_t : public kaitai::kstruct {
-
-    public:
-
-        enum object_types_t {
-            OBJECT_TYPES_UNUSED = 0,
-            OBJECT_TYPES_DATA = 1,
-            OBJECT_TYPES_FIELD = 2,
-            OBJECT_TYPES_ENTRY = 3,
-            OBJECT_TYPES_DATA_HASH_TABLE = 4,
-            OBJECT_TYPES_FIELD_HASH_TABLE = 5,
-            OBJECT_TYPES_ENTRY_ARRAY = 6,
-            OBJECT_TYPES_TAG = 7
-        };
-
-        journal_object_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, systemd_journal_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~journal_object_t();
-
-    private:
-        std::string m_padding;
-        object_types_t m_object_type;
-        uint8_t m_flags;
-        std::string m_reserved;
-        uint64_t m_len_object;
-        data_object_t* m_payload;
-        bool n_payload;
-
-    public:
-        bool _is_null_payload() { payload(); return n_payload; };
-
-    private:
-        systemd_journal_t* m__root;
-        kaitai::kstruct* m__parent;
-        std::string m__raw_payload;
-        kaitai::kstream* m__io__raw_payload;
-
-    public:
-        std::string padding() const { return m_padding; }
-        object_types_t object_type() const { return m_object_type; }
-        uint8_t flags() const { return m_flags; }
-        std::string reserved() const { return m_reserved; }
-        uint64_t len_object() const { return m_len_object; }
-        data_object_t* payload() const { return m_payload; }
-        systemd_journal_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-        std::string _raw_payload() const { return m__raw_payload; }
-        kaitai::kstream* _io__raw_payload() const { return m__io__raw_payload; }
-    };
-
-    /**
-     * Data objects are designed to carry log payload, typically in
-     * form of a &quot;key=value&quot; string in `payload` attribute.
-     * \sa Source
-     */
-
-    class data_object_t : public kaitai::kstruct {
-
-    public:
-
-        data_object_t(kaitai::kstream* p__io, systemd_journal_t::journal_object_t* p__parent = 0, systemd_journal_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~data_object_t();
-
-    private:
-        bool f_next_hash;
-        journal_object_t* m_next_hash;
-        bool n_next_hash;
-
-    public:
-        bool _is_null_next_hash() { next_hash(); return n_next_hash; };
-
-    private:
-
-    public:
-        journal_object_t* next_hash();
-
-    private:
-        bool f_head_field;
-        journal_object_t* m_head_field;
-        bool n_head_field;
-
-    public:
-        bool _is_null_head_field() { head_field(); return n_head_field; };
-
-    private:
-
-    public:
-        journal_object_t* head_field();
-
-    private:
-        bool f_entry;
-        journal_object_t* m_entry;
-        bool n_entry;
-
-    public:
-        bool _is_null_entry() { entry(); return n_entry; };
-
-    private:
-
-    public:
-        journal_object_t* entry();
-
-    private:
-        bool f_entry_array;
-        journal_object_t* m_entry_array;
-        bool n_entry_array;
-
-    public:
-        bool _is_null_entry_array() { entry_array(); return n_entry_array; };
-
-    private:
-
-    public:
-        journal_object_t* entry_array();
-
-    private:
-        uint64_t m_hash;
-        uint64_t m_ofs_next_hash;
-        uint64_t m_ofs_head_field;
-        uint64_t m_ofs_entry;
-        uint64_t m_ofs_entry_array;
-        uint64_t m_num_entries;
-        std::string m_payload;
-        systemd_journal_t* m__root;
-        systemd_journal_t::journal_object_t* m__parent;
-
-    public:
-        uint64_t hash() const { return m_hash; }
-        uint64_t ofs_next_hash() const { return m_ofs_next_hash; }
-        uint64_t ofs_head_field() const { return m_ofs_head_field; }
-        uint64_t ofs_entry() const { return m_ofs_entry; }
-        uint64_t ofs_entry_array() const { return m_ofs_entry_array; }
-        uint64_t num_entries() const { return m_num_entries; }
-        std::string payload() const { return m_payload; }
-        systemd_journal_t* _root() const { return m__root; }
-        systemd_journal_t::journal_object_t* _parent() const { return m__parent; }
-    };
-
-private:
-    bool f_len_header;
-    uint64_t m_len_header;
-
-public:
-
-    /**
-     * Header length is used to set substream size, as it thus required
-     * prior to declaration of header.
-     */
-    uint64_t len_header();
-
-private:
-    bool f_data_hash_table;
-    std::string m_data_hash_table;
-
-public:
-    std::string data_hash_table();
-
-private:
-    bool f_field_hash_table;
-    std::string m_field_hash_table;
-
-public:
-    std::string field_hash_table();
-
-private:
-    header_t* m_header;
-    std::vector&lt;journal_object_t*&gt;* m_objects;
-    systemd_journal_t* m__root;
-    kaitai::kstruct* m__parent;
-    std::string m__raw_header;
-    kaitai::kstream* m__io__raw_header;
-
-public:
-    header_t* header() const { return m_header; }
-    std::vector&lt;journal_object_t*&gt;* objects() const { return m_objects; }
-    systemd_journal_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-    std::string _raw_header() const { return m__raw_header; }
-    kaitai::kstream* _io__raw_header() const { return m__io__raw_header; }
-};
-
-#endif  // SYSTEMD_JOURNAL_H_
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef SYSTEMD_JOURNAL_H_</span>
+<span class="cp">#define SYSTEMD_JOURNAL_H_</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * systemd, a popular user-space system/service management suite on Linux,</span>
+<span class="cm"> * offers logging functionality, storing incoming logs in a binary journal</span>
+<span class="cm"> * format.</span>
+<span class="cm"> * </span>
+<span class="cm"> * On live Linux system running systemd, these journals are typically located at:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * /run/log/journal/machine-id/*.journal (volatile, lost after reboot)</span>
+<span class="cm"> * * /var/log/journal/machine-id/*.journal (persistent, but disabled by default on Debian / Ubuntu)</span>
+<span class="cm"> * \sa Source</span>
+<span class="cm"> */</span>
+
+<span class="k">class</span> <span class="nc">systemd_journal_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">header_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">journal_object_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">data_object_t</span><span class="p">;</span>
+
+    <span class="k">enum</span> <span class="n">state_t</span> <span class="p">{</span>
+        <span class="n">STATE_OFFLINE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">STATE_ONLINE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">STATE_ARCHIVED</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="p">};</span>
+
+    <span class="n">systemd_journal_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">systemd_journal_t</span><span class="p">();</span>
+
+    <span class="k">class</span> <span class="nc">header_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">header_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_signature</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_compatible_flags</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_incompatible_flags</span><span class="p">;</span>
+        <span class="n">state_t</span> <span class="n">m_state</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_reserved</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_file_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_machine_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_boot_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_seqnum_id</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_len_header</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_len_arena</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_ofs_data_hash_table</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_len_data_hash_table</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_ofs_field_hash_table</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_len_field_hash_table</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_ofs_tail_object</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_num_objects</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_num_entries</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_tail_entry_seqnum</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_head_entry_seqnum</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_ofs_entry_array</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_head_entry_realtime</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_tail_entry_realtime</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_tail_entry_monotonic</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_num_data</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_num_data</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_num_data</span><span class="p">()</span> <span class="p">{</span> <span class="n">num_data</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_num_data</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint64_t</span> <span class="n">m_num_fields</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_num_fields</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_num_fields</span><span class="p">()</span> <span class="p">{</span> <span class="n">num_fields</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_num_fields</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint64_t</span> <span class="n">m_num_tags</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_num_tags</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_num_tags</span><span class="p">()</span> <span class="p">{</span> <span class="n">num_tags</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_num_tags</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint64_t</span> <span class="n">m_num_entry_arrays</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_num_entry_arrays</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_num_entry_arrays</span><span class="p">()</span> <span class="p">{</span> <span class="n">num_entry_arrays</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_num_entry_arrays</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">signature</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_signature</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">compatible_flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_compatible_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">incompatible_flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_incompatible_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">state_t</span> <span class="n">state</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_state</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reserved</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">file_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_file_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">machine_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_machine_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">boot_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_boot_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">seqnum_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_seqnum_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">len_header</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_header</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">len_arena</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_arena</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">ofs_data_hash_table</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_data_hash_table</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">len_data_hash_table</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_data_hash_table</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">ofs_field_hash_table</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_field_hash_table</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">len_field_hash_table</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_field_hash_table</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">ofs_tail_object</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_tail_object</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">num_objects</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_objects</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">num_entries</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_entries</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">tail_entry_seqnum</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_tail_entry_seqnum</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">head_entry_seqnum</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_head_entry_seqnum</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">ofs_entry_array</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_entry_array</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">head_entry_realtime</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_head_entry_realtime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">tail_entry_realtime</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_tail_entry_realtime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">tail_entry_monotonic</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_tail_entry_monotonic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">num_data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">num_fields</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_fields</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">num_tags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_tags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">num_entry_arrays</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_entry_arrays</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">journal_object_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="k">enum</span> <span class="n">object_types_t</span> <span class="p">{</span>
+            <span class="n">OBJECT_TYPES_UNUSED</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">OBJECT_TYPES_DATA</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">OBJECT_TYPES_FIELD</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">OBJECT_TYPES_ENTRY</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="n">OBJECT_TYPES_DATA_HASH_TABLE</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="n">OBJECT_TYPES_FIELD_HASH_TABLE</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="n">OBJECT_TYPES_ENTRY_ARRAY</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+            <span class="n">OBJECT_TYPES_TAG</span> <span class="o">=</span> <span class="mi">7</span>
+        <span class="p">};</span>
+
+        <span class="n">journal_object_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">journal_object_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_padding</span><span class="p">;</span>
+        <span class="n">object_types_t</span> <span class="n">m_object_type</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_flags</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_reserved</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_len_object</span><span class="p">;</span>
+        <span class="n">data_object_t</span><span class="o">*</span> <span class="n">m_payload</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_payload</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_payload</span><span class="p">()</span> <span class="p">{</span> <span class="n">payload</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_payload</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_payload</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_payload</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">padding</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_padding</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">object_types_t</span> <span class="n">object_type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_object_type</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reserved</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">len_object</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_object</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">data_object_t</span><span class="o">*</span> <span class="n">payload</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_payload</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_payload</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_payload</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_payload</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_payload</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Data objects are designed to carry log payload, typically in</span>
+<span class="cm">     * form of a &quot;key=value&quot; string in `payload` attribute.</span>
+<span class="cm">     * \sa Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">data_object_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">data_object_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">journal_object_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">data_object_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_next_hash</span><span class="p">;</span>
+        <span class="n">journal_object_t</span><span class="o">*</span> <span class="n">m_next_hash</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_next_hash</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_next_hash</span><span class="p">()</span> <span class="p">{</span> <span class="n">next_hash</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_next_hash</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">journal_object_t</span><span class="o">*</span> <span class="n">next_hash</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_head_field</span><span class="p">;</span>
+        <span class="n">journal_object_t</span><span class="o">*</span> <span class="n">m_head_field</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_head_field</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_head_field</span><span class="p">()</span> <span class="p">{</span> <span class="n">head_field</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_head_field</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">journal_object_t</span><span class="o">*</span> <span class="n">head_field</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_entry</span><span class="p">;</span>
+        <span class="n">journal_object_t</span><span class="o">*</span> <span class="n">m_entry</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_entry</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_entry</span><span class="p">()</span> <span class="p">{</span> <span class="n">entry</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_entry</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">journal_object_t</span><span class="o">*</span> <span class="n">entry</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_entry_array</span><span class="p">;</span>
+        <span class="n">journal_object_t</span><span class="o">*</span> <span class="n">m_entry_array</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_entry_array</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_entry_array</span><span class="p">()</span> <span class="p">{</span> <span class="n">entry_array</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_entry_array</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">journal_object_t</span><span class="o">*</span> <span class="n">entry_array</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint64_t</span> <span class="n">m_hash</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_ofs_next_hash</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_ofs_head_field</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_ofs_entry</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_ofs_entry_array</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_num_entries</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_payload</span><span class="p">;</span>
+        <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">journal_object_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint64_t</span> <span class="n">hash</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_hash</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">ofs_next_hash</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_next_hash</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">ofs_head_field</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_head_field</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">ofs_entry</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_entry</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">ofs_entry_array</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_entry_array</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">num_entries</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_entries</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">payload</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_payload</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">journal_object_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_len_header</span><span class="p">;</span>
+    <span class="kt">uint64_t</span> <span class="n">m_len_header</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Header length is used to set substream size, as it thus required</span>
+<span class="cm">     * prior to declaration of header.</span>
+<span class="cm">     */</span>
+    <span class="kt">uint64_t</span> <span class="n">len_header</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_data_hash_table</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_data_hash_table</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">data_hash_table</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_field_hash_table</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_field_hash_table</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">field_hash_table</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">header_t</span><span class="o">*</span> <span class="n">m_header</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">journal_object_t</span><span class="o">*&gt;*</span> <span class="n">m_objects</span><span class="p">;</span>
+    <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_header</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_header</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">header_t</span><span class="o">*</span> <span class="n">header</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_header</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">journal_object_t</span><span class="o">*&gt;*</span> <span class="n">objects</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_objects</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_header</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_header</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_header</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_header</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cp">#endif  </span><span class="c1">// SYSTEMD_JOURNAL_H_</span>
+</pre></div>
 
         </div>
         
@@ -645,279 +642,279 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;systemd_journal.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;systemd_journal.h&quot;</span><span class="cp"></span>
 
 
 
-systemd_journal_t::systemd_journal_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, systemd_journal_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    f_len_header = false;
-    f_data_hash_table = false;
-    f_field_hash_table = false;
-    _read();
-}
+<span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">systemd_journal_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">f_len_header</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_data_hash_table</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_field_hash_table</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void systemd_journal_t::_read() {
-    m__raw_header = m__io-&gt;read_bytes(len_header());
-    m__io__raw_header = new kaitai::kstream(m__raw_header);
-    m_header = new header_t(m__io__raw_header, this, m__root);
-    int l_objects = header()-&gt;num_objects();
-    m_objects = new std::vector&lt;journal_object_t*&gt;();
-    m_objects-&gt;reserve(l_objects);
-    for (int i = 0; i &lt; l_objects; i++) {
-        m_objects-&gt;push_back(new journal_object_t(m__io, this, m__root));
-    }
-}
+<span class="kt">void</span> <span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m__raw_header</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_header</span><span class="p">());</span>
+    <span class="n">m__io__raw_header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_header</span><span class="p">);</span>
+    <span class="n">m_header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">header_t</span><span class="p">(</span><span class="n">m__io__raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">l_objects</span> <span class="o">=</span> <span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_objects</span><span class="p">();</span>
+    <span class="n">m_objects</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">journal_object_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="n">m_objects</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_objects</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_objects</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_objects</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">journal_object_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-systemd_journal_t::~systemd_journal_t() {
-    delete m__io__raw_header;
-    delete m_header;
-    for (std::vector&lt;journal_object_t*&gt;::iterator it = m_objects-&gt;begin(); it != m_objects-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_objects;
-    if (f_len_header) {
-    }
-    if (f_data_hash_table) {
-    }
-    if (f_field_hash_table) {
-    }
-}
+<span class="n">systemd_journal_t</span><span class="o">::~</span><span class="n">systemd_journal_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m__io__raw_header</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_header</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">journal_object_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_objects</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_objects</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_objects</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_len_header</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_data_hash_table</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_field_hash_table</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-systemd_journal_t::header_t::header_t(kaitai::kstream* p__io, systemd_journal_t* p__parent, systemd_journal_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void systemd_journal_t::header_t::_read() {
-    m_signature = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x4C\x50\x4B\x53\x48\x48\x52\x48&quot;, 8));
-    m_compatible_flags = m__io-&gt;read_u4le();
-    m_incompatible_flags = m__io-&gt;read_u4le();
-    m_state = static_cast&lt;systemd_journal_t::state_t&gt;(m__io-&gt;read_u1());
-    m_reserved = m__io-&gt;read_bytes(7);
-    m_file_id = m__io-&gt;read_bytes(16);
-    m_machine_id = m__io-&gt;read_bytes(16);
-    m_boot_id = m__io-&gt;read_bytes(16);
-    m_seqnum_id = m__io-&gt;read_bytes(16);
-    m_len_header = m__io-&gt;read_u8le();
-    m_len_arena = m__io-&gt;read_u8le();
-    m_ofs_data_hash_table = m__io-&gt;read_u8le();
-    m_len_data_hash_table = m__io-&gt;read_u8le();
-    m_ofs_field_hash_table = m__io-&gt;read_u8le();
-    m_len_field_hash_table = m__io-&gt;read_u8le();
-    m_ofs_tail_object = m__io-&gt;read_u8le();
-    m_num_objects = m__io-&gt;read_u8le();
-    m_num_entries = m__io-&gt;read_u8le();
-    m_tail_entry_seqnum = m__io-&gt;read_u8le();
-    m_head_entry_seqnum = m__io-&gt;read_u8le();
-    m_ofs_entry_array = m__io-&gt;read_u8le();
-    m_head_entry_realtime = m__io-&gt;read_u8le();
-    m_tail_entry_realtime = m__io-&gt;read_u8le();
-    m_tail_entry_monotonic = m__io-&gt;read_u8le();
-    n_num_data = true;
-    if (!(_io()-&gt;is_eof())) {
-        n_num_data = false;
-        m_num_data = m__io-&gt;read_u8le();
-    }
-    n_num_fields = true;
-    if (!(_io()-&gt;is_eof())) {
-        n_num_fields = false;
-        m_num_fields = m__io-&gt;read_u8le();
-    }
-    n_num_tags = true;
-    if (!(_io()-&gt;is_eof())) {
-        n_num_tags = false;
-        m_num_tags = m__io-&gt;read_u8le();
-    }
-    n_num_entry_arrays = true;
-    if (!(_io()-&gt;is_eof())) {
-        n_num_entry_arrays = false;
-        m_num_entry_arrays = m__io-&gt;read_u8le();
-    }
-}
+<span class="kt">void</span> <span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_signature</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x4C\x50\x4B\x53\x48\x48\x52\x48</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">));</span>
+    <span class="n">m_compatible_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_incompatible_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_state</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">state_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">m_reserved</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+    <span class="n">m_file_id</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+    <span class="n">m_machine_id</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+    <span class="n">m_boot_id</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+    <span class="n">m_seqnum_id</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+    <span class="n">m_len_header</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_len_arena</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_ofs_data_hash_table</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_len_data_hash_table</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_ofs_field_hash_table</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_len_field_hash_table</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_ofs_tail_object</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_num_objects</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_num_entries</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_tail_entry_seqnum</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_head_entry_seqnum</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_ofs_entry_array</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_head_entry_realtime</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_tail_entry_realtime</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_tail_entry_monotonic</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">n_num_data</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="n">n_num_data</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_num_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">n_num_fields</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="n">n_num_fields</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_num_fields</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">n_num_tags</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="n">n_num_tags</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_num_tags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">n_num_entry_arrays</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">()))</span> <span class="p">{</span>
+        <span class="n">n_num_entry_arrays</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_num_entry_arrays</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-systemd_journal_t::header_t::~header_t() {
-    if (!n_num_data) {
-    }
-    if (!n_num_fields) {
-    }
-    if (!n_num_tags) {
-    }
-    if (!n_num_entry_arrays) {
-    }
-}
+<span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::~</span><span class="n">header_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_num_data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_num_fields</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_num_tags</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_num_entry_arrays</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-systemd_journal_t::journal_object_t::journal_object_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, systemd_journal_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">journal_object_t</span><span class="o">::</span><span class="n">journal_object_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void systemd_journal_t::journal_object_t::_read() {
-    m_padding = m__io-&gt;read_bytes(kaitai::kstream::mod((8 - _io()-&gt;pos()), 8));
-    m_object_type = static_cast&lt;systemd_journal_t::journal_object_t::object_types_t&gt;(m__io-&gt;read_u1());
-    m_flags = m__io-&gt;read_u1();
-    m_reserved = m__io-&gt;read_bytes(6);
-    m_len_object = m__io-&gt;read_u8le();
-    n_payload = true;
-    switch (object_type()) {
-    case OBJECT_TYPES_DATA: {
-        n_payload = false;
-        m__raw_payload = m__io-&gt;read_bytes((len_object() - 16));
-        m__io__raw_payload = new kaitai::kstream(m__raw_payload);
-        m_payload = new data_object_t(m__io__raw_payload, this, m__root);
-        break;
-    }
-    default: {
-        m__raw_payload = m__io-&gt;read_bytes((len_object() - 16));
-        break;
-    }
-    }
-}
+<span class="kt">void</span> <span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">journal_object_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_padding</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">mod</span><span class="p">((</span><span class="mi">8</span> <span class="o">-</span> <span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">()),</span> <span class="mi">8</span><span class="p">));</span>
+    <span class="n">m_object_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">journal_object_t</span><span class="o">::</span><span class="n">object_types_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">m_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_reserved</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+    <span class="n">m_len_object</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">n_payload</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">object_type</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nl">OBJECT_TYPES_DATA</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_payload</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_payload</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_object</span><span class="p">()</span> <span class="o">-</span> <span class="mi">16</span><span class="p">));</span>
+        <span class="n">m__io__raw_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_payload</span><span class="p">);</span>
+        <span class="n">m_payload</span> <span class="o">=</span> <span class="k">new</span> <span class="n">data_object_t</span><span class="p">(</span><span class="n">m__io__raw_payload</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">default</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">m__raw_payload</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_object</span><span class="p">()</span> <span class="o">-</span> <span class="mi">16</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-systemd_journal_t::journal_object_t::~journal_object_t() {
-    if (!n_payload) {
-        delete m__io__raw_payload;
-        delete m_payload;
-    }
-}
+<span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">journal_object_t</span><span class="o">::~</span><span class="n">journal_object_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_payload</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_payload</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="n">m_payload</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-systemd_journal_t::data_object_t::data_object_t(kaitai::kstream* p__io, systemd_journal_t::journal_object_t* p__parent, systemd_journal_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_next_hash = false;
-    f_head_field = false;
-    f_entry = false;
-    f_entry_array = false;
-    _read();
-}
+<span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">data_object_t</span><span class="o">::</span><span class="n">data_object_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">journal_object_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">systemd_journal_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_next_hash</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_head_field</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_entry</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_entry_array</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void systemd_journal_t::data_object_t::_read() {
-    m_hash = m__io-&gt;read_u8le();
-    m_ofs_next_hash = m__io-&gt;read_u8le();
-    m_ofs_head_field = m__io-&gt;read_u8le();
-    m_ofs_entry = m__io-&gt;read_u8le();
-    m_ofs_entry_array = m__io-&gt;read_u8le();
-    m_num_entries = m__io-&gt;read_u8le();
-    m_payload = m__io-&gt;read_bytes_full();
-}
+<span class="kt">void</span> <span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">data_object_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_hash</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_ofs_next_hash</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_ofs_head_field</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_ofs_entry</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_ofs_entry_array</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_num_entries</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m_payload</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
+<span class="p">}</span>
 
-systemd_journal_t::data_object_t::~data_object_t() {
-    if (f_next_hash &amp;&amp; !n_next_hash) {
-        delete m_next_hash;
-    }
-    if (f_head_field &amp;&amp; !n_head_field) {
-        delete m_head_field;
-    }
-    if (f_entry &amp;&amp; !n_entry) {
-        delete m_entry;
-    }
-    if (f_entry_array &amp;&amp; !n_entry_array) {
-        delete m_entry_array;
-    }
-}
+<span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">data_object_t</span><span class="o">::~</span><span class="n">data_object_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_next_hash</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">n_next_hash</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_next_hash</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_head_field</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">n_head_field</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_head_field</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_entry</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">n_entry</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_entry</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_entry_array</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">n_entry_array</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_entry_array</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::next_hash() {
-    if (f_next_hash)
-        return m_next_hash;
-    n_next_hash = true;
-    if (ofs_next_hash() != 0) {
-        n_next_hash = false;
-        kaitai::kstream *io = _root()-&gt;_io();
-        std::streampos _pos = io-&gt;pos();
-        io-&gt;seek(ofs_next_hash());
-        m_next_hash = new journal_object_t(io, this, m__root);
-        io-&gt;seek(_pos);
-    }
-    f_next_hash = true;
-    return m_next_hash;
-}
+<span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">journal_object_t</span><span class="o">*</span> <span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">data_object_t</span><span class="o">::</span><span class="n">next_hash</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_next_hash</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_next_hash</span><span class="p">;</span>
+    <span class="n">n_next_hash</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ofs_next_hash</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_next_hash</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="o">*</span><span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_next_hash</span><span class="p">());</span>
+        <span class="n">m_next_hash</span> <span class="o">=</span> <span class="k">new</span> <span class="n">journal_object_t</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">f_next_hash</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_next_hash</span><span class="p">;</span>
+<span class="p">}</span>
 
-systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::head_field() {
-    if (f_head_field)
-        return m_head_field;
-    n_head_field = true;
-    if (ofs_head_field() != 0) {
-        n_head_field = false;
-        kaitai::kstream *io = _root()-&gt;_io();
-        std::streampos _pos = io-&gt;pos();
-        io-&gt;seek(ofs_head_field());
-        m_head_field = new journal_object_t(io, this, m__root);
-        io-&gt;seek(_pos);
-    }
-    f_head_field = true;
-    return m_head_field;
-}
+<span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">journal_object_t</span><span class="o">*</span> <span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">data_object_t</span><span class="o">::</span><span class="n">head_field</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_head_field</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_head_field</span><span class="p">;</span>
+    <span class="n">n_head_field</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ofs_head_field</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_head_field</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="o">*</span><span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_head_field</span><span class="p">());</span>
+        <span class="n">m_head_field</span> <span class="o">=</span> <span class="k">new</span> <span class="n">journal_object_t</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">f_head_field</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_head_field</span><span class="p">;</span>
+<span class="p">}</span>
 
-systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::entry() {
-    if (f_entry)
-        return m_entry;
-    n_entry = true;
-    if (ofs_entry() != 0) {
-        n_entry = false;
-        kaitai::kstream *io = _root()-&gt;_io();
-        std::streampos _pos = io-&gt;pos();
-        io-&gt;seek(ofs_entry());
-        m_entry = new journal_object_t(io, this, m__root);
-        io-&gt;seek(_pos);
-    }
-    f_entry = true;
-    return m_entry;
-}
+<span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">journal_object_t</span><span class="o">*</span> <span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">data_object_t</span><span class="o">::</span><span class="n">entry</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_entry</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_entry</span><span class="p">;</span>
+    <span class="n">n_entry</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ofs_entry</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_entry</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="o">*</span><span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_entry</span><span class="p">());</span>
+        <span class="n">m_entry</span> <span class="o">=</span> <span class="k">new</span> <span class="n">journal_object_t</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">f_entry</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_entry</span><span class="p">;</span>
+<span class="p">}</span>
 
-systemd_journal_t::journal_object_t* systemd_journal_t::data_object_t::entry_array() {
-    if (f_entry_array)
-        return m_entry_array;
-    n_entry_array = true;
-    if (ofs_entry_array() != 0) {
-        n_entry_array = false;
-        kaitai::kstream *io = _root()-&gt;_io();
-        std::streampos _pos = io-&gt;pos();
-        io-&gt;seek(ofs_entry_array());
-        m_entry_array = new journal_object_t(io, this, m__root);
-        io-&gt;seek(_pos);
-    }
-    f_entry_array = true;
-    return m_entry_array;
-}
+<span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">journal_object_t</span><span class="o">*</span> <span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">data_object_t</span><span class="o">::</span><span class="n">entry_array</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_entry_array</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_entry_array</span><span class="p">;</span>
+    <span class="n">n_entry_array</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ofs_entry_array</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_entry_array</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="o">*</span><span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_entry_array</span><span class="p">());</span>
+        <span class="n">m_entry_array</span> <span class="o">=</span> <span class="k">new</span> <span class="n">journal_object_t</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">f_entry_array</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_entry_array</span><span class="p">;</span>
+<span class="p">}</span>
 
-uint64_t systemd_journal_t::len_header() {
-    if (f_len_header)
-        return m_len_header;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek(88);
-    m_len_header = m__io-&gt;read_u8le();
-    m__io-&gt;seek(_pos);
-    f_len_header = true;
-    return m_len_header;
-}
+<span class="kt">uint64_t</span> <span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">len_header</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_len_header</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_len_header</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="mi">88</span><span class="p">);</span>
+    <span class="n">m_len_header</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_len_header</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_len_header</span><span class="p">;</span>
+<span class="p">}</span>
 
-std::string systemd_journal_t::data_hash_table() {
-    if (f_data_hash_table)
-        return m_data_hash_table;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek(header()-&gt;ofs_data_hash_table());
-    m_data_hash_table = m__io-&gt;read_bytes(header()-&gt;len_data_hash_table());
-    m__io-&gt;seek(_pos);
-    f_data_hash_table = true;
-    return m_data_hash_table;
-}
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">data_hash_table</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_data_hash_table</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_data_hash_table</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">ofs_data_hash_table</span><span class="p">());</span>
+    <span class="n">m_data_hash_table</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">len_data_hash_table</span><span class="p">());</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_data_hash_table</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_data_hash_table</span><span class="p">;</span>
+<span class="p">}</span>
 
-std::string systemd_journal_t::field_hash_table() {
-    if (f_field_hash_table)
-        return m_field_hash_table;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek(header()-&gt;ofs_field_hash_table());
-    m_field_hash_table = m__io-&gt;read_bytes(header()-&gt;len_field_hash_table());
-    m__io-&gt;seek(_pos);
-    f_field_hash_table = true;
-    return m_field_hash_table;
-}
-</code></pre>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">systemd_journal_t</span><span class="o">::</span><span class="n">field_hash_table</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_field_hash_table</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_field_hash_table</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">ofs_field_hash_table</span><span class="p">());</span>
+    <span class="n">m_field_hash_table</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">len_field_hash_table</span><span class="p">());</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_field_hash_table</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_field_hash_table</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -944,8 +941,8 @@ std::string systemd_journal_t::field_hash_table() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

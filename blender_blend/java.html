@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -286,451 +283,451 @@ BlenderBlend data = new BlenderBlend(new ByteBufferKaitaiStream(someArray));</co
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.nio.charset.Charset;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
 
 
-/**
- * Blender is an open source suite for 3D modelling, sculpting,
- * animation, compositing, rendering, preparation of assets for its own
- * game engine and exporting to others, etc. `.blend` is its own binary
- * format that saves whole state of suite: current scene, animations,
- * all software settings, extensions, etc.
- * 
- * Internally, .blend format is a hybrid semi-self-descriptive
- * format. On top level, it contains a simple header and a sequence of
- * file blocks, which more or less follow typical [TLV
- * pattern](https://en.wikipedia.org/wiki/Type-length-value). Pre-last
- * block would be a structure with code `DNA1`, which is a essentially
- * a machine-readable schema of all other structures used in this file.
- */
-public class BlenderBlend extends KaitaiStruct {
-    public static BlenderBlend fromFile(String fileName) throws IOException {
-        return new BlenderBlend(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * Blender is an open source suite for 3D modelling, sculpting,</span>
+<span class="cm"> * animation, compositing, rendering, preparation of assets for its own</span>
+<span class="cm"> * game engine and exporting to others, etc. `.blend` is its own binary</span>
+<span class="cm"> * format that saves whole state of suite: current scene, animations,</span>
+<span class="cm"> * all software settings, extensions, etc.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Internally, .blend format is a hybrid semi-self-descriptive</span>
+<span class="cm"> * format. On top level, it contains a simple header and a sequence of</span>
+<span class="cm"> * file blocks, which more or less follow typical [TLV</span>
+<span class="cm"> * pattern](https://en.wikipedia.org/wiki/Type-length-value). Pre-last</span>
+<span class="cm"> * block would be a structure with code `DNA1`, which is a essentially</span>
+<span class="cm"> * a machine-readable schema of all other structures used in this file.</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">BlenderBlend</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">BlenderBlend</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">BlenderBlend</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public enum PtrSize {
-        BITS_64(45),
-        BITS_32(95);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">PtrSize</span> <span class="p">{</span>
+        <span class="n">BITS_64</span><span class="p">(</span><span class="mi">45</span><span class="p">),</span>
+        <span class="n">BITS_32</span><span class="p">(</span><span class="mi">95</span><span class="p">);</span>
 
-        private final long id;
-        PtrSize(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, PtrSize&gt; byId = new HashMap&lt;Long, PtrSize&gt;(2);
-        static {
-            for (PtrSize e : PtrSize.values())
-                byId.put(e.id(), e);
-        }
-        public static PtrSize byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">PtrSize</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">PtrSize</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">PtrSize</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">PtrSize</span> <span class="n">e</span> <span class="p">:</span> <span class="n">PtrSize</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PtrSize</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public enum Endian {
-        BE(86),
-        LE(118);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">Endian</span> <span class="p">{</span>
+        <span class="n">BE</span><span class="p">(</span><span class="mi">86</span><span class="p">),</span>
+        <span class="n">LE</span><span class="p">(</span><span class="mi">118</span><span class="p">);</span>
 
-        private final long id;
-        Endian(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, Endian&gt; byId = new HashMap&lt;Long, Endian&gt;(2);
-        static {
-            for (Endian e : Endian.values())
-                byId.put(e.id(), e);
-        }
-        public static Endian byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">Endian</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Endian</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Endian</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">Endian</span> <span class="n">e</span> <span class="p">:</span> <span class="n">Endian</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Endian</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public BlenderBlend(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">BlenderBlend</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public BlenderBlend(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">BlenderBlend</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public BlenderBlend(KaitaiStream _io, KaitaiStruct _parent, BlenderBlend _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.hdr = new Header(this._io, this, _root);
-        this.blocks = new ArrayList&lt;FileBlock&gt;();
-        {
-            int i = 0;
-            while (!this._io.isEof()) {
-                this.blocks.add(new FileBlock(this._io, this, _root));
-                i++;
-            }
-        }
-    }
+    <span class="kd">public</span> <span class="nf">BlenderBlend</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">BlenderBlend</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">hdr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Header</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">blocks</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">FileBlock</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">blocks</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">FileBlock</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+                <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * DNA struct contains a `type` (type name), which is specified as
-     * an index in types table, and sequence of fields.
-     */
-    public static class DnaStruct extends KaitaiStruct {
-        public static DnaStruct fromFile(String fileName) throws IOException {
-            return new DnaStruct(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * DNA struct contains a `type` (type name), which is specified as</span>
+<span class="cm">     * an index in types table, and sequence of fields.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DnaStruct</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">DnaStruct</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">DnaStruct</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public DnaStruct(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">DnaStruct</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DnaStruct(KaitaiStream _io, BlenderBlend.Dna1Body _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">DnaStruct</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">BlenderBlend</span><span class="p">.</span><span class="na">Dna1Body</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DnaStruct(KaitaiStream _io, BlenderBlend.Dna1Body _parent, BlenderBlend _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.idxType = this._io.readU2le();
-            this.numFields = this._io.readU2le();
-            fields = new ArrayList&lt;DnaField&gt;((int) (numFields()));
-            for (int i = 0; i &lt; numFields(); i++) {
-                this.fields.add(new DnaField(this._io, this, _root));
-            }
-        }
-        private String type;
-        public String type() {
-            if (this.type != null)
-                return this.type;
-            this.type = _parent().types().get((int) idxType());
-            return this.type;
-        }
-        private int idxType;
-        private int numFields;
-        private ArrayList&lt;DnaField&gt; fields;
-        private BlenderBlend _root;
-        private BlenderBlend.Dna1Body _parent;
-        public int idxType() { return idxType; }
-        public int numFields() { return numFields; }
-        public ArrayList&lt;DnaField&gt; fields() { return fields; }
-        public BlenderBlend _root() { return _root; }
-        public BlenderBlend.Dna1Body _parent() { return _parent; }
-    }
-    public static class FileBlock extends KaitaiStruct {
-        public static FileBlock fromFile(String fileName) throws IOException {
-            return new FileBlock(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">DnaStruct</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">BlenderBlend</span><span class="p">.</span><span class="na">Dna1Body</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">BlenderBlend</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">idxType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numFields</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DnaField</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numFields</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numFields</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">fields</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">DnaField</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">type</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">type</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">type</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">type</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">().</span><span class="na">types</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">idxType</span><span class="p">());</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">type</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">idxType</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">numFields</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DnaField</span><span class="o">&gt;</span> <span class="n">fields</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">BlenderBlend</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">BlenderBlend</span><span class="p">.</span><span class="na">Dna1Body</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">idxType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idxType</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numFields</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numFields</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DnaField</span><span class="o">&gt;</span> <span class="nf">fields</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fields</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">BlenderBlend</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">BlenderBlend</span><span class="p">.</span><span class="na">Dna1Body</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">FileBlock</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">FileBlock</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">FileBlock</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public FileBlock(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">FileBlock</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public FileBlock(KaitaiStream _io, BlenderBlend _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">FileBlock</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">BlenderBlend</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public FileBlock(KaitaiStream _io, BlenderBlend _parent, BlenderBlend _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.code = new String(this._io.readBytes(4), Charset.forName(&quot;ASCII&quot;));
-            this.lenBody = this._io.readU4le();
-            this.memAddr = this._io.readBytes(_root.hdr().psize());
-            this.sdnaIndex = this._io.readU4le();
-            this.count = this._io.readU4le();
-            switch (code()) {
-            case &quot;DNA1&quot;: {
-                this._raw_body = this._io.readBytes(lenBody());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new Dna1Body(_io__raw_body, this, _root);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes(lenBody());
-                break;
-            }
-            }
-        }
-        private DnaStruct sdnaStruct;
-        public DnaStruct sdnaStruct() {
-            if (this.sdnaStruct != null)
-                return this.sdnaStruct;
-            if (sdnaIndex() != 0) {
-                this.sdnaStruct = _root.sdnaStructs().get((int) sdnaIndex());
-            }
-            return this.sdnaStruct;
-        }
-        private String code;
-        private long lenBody;
-        private byte[] memAddr;
-        private long sdnaIndex;
-        private long count;
-        private Object body;
-        private BlenderBlend _root;
-        private BlenderBlend _parent;
-        private byte[] _raw_body;
+        <span class="kd">public</span> <span class="nf">FileBlock</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">BlenderBlend</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">BlenderBlend</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">code</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenBody</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">memAddr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">hdr</span><span class="p">().</span><span class="na">psize</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">sdnaIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">count</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">code</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="s">&quot;DNA1&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Dna1Body</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">DnaStruct</span> <span class="n">sdnaStruct</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">DnaStruct</span> <span class="nf">sdnaStruct</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">sdnaStruct</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">sdnaStruct</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">sdnaIndex</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">sdnaStruct</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">sdnaStructs</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">sdnaIndex</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">sdnaStruct</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">code</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenBody</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">memAddr</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">sdnaIndex</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">count</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Object</span> <span class="n">body</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">BlenderBlend</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">BlenderBlend</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_body</span><span class="p">;</span>
 
-        /**
-         * Identifier of the file block
-         */
-        public String code() { return code; }
+        <span class="cm">/**</span>
+<span class="cm">         * Identifier of the file block</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">code</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">code</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Total length of the data after the header of file block
-         */
-        public long lenBody() { return lenBody; }
+        <span class="cm">/**</span>
+<span class="cm">         * Total length of the data after the header of file block</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenBody</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Memory address the structure was located when written to disk
-         */
-        public byte[] memAddr() { return memAddr; }
+        <span class="cm">/**</span>
+<span class="cm">         * Memory address the structure was located when written to disk</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">memAddr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">memAddr</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Index of the SDNA structure
-         */
-        public long sdnaIndex() { return sdnaIndex; }
+        <span class="cm">/**</span>
+<span class="cm">         * Index of the SDNA structure</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">sdnaIndex</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">sdnaIndex</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Number of structure located in this file-block
-         */
-        public long count() { return count; }
-        public Object body() { return body; }
-        public BlenderBlend _root() { return _root; }
-        public BlenderBlend _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
-    }
+        <span class="cm">/**</span>
+<span class="cm">         * Number of structure located in this file-block</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">count</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">count</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Object</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">BlenderBlend</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">BlenderBlend</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * DNA1, also known as &quot;Structure DNA&quot;, is a special block in
-     * .blend file, which contains machine-readable specifications of
-     * all other structures used in this .blend file.
-     * 
-     * Effectively, this block contains:
-     * 
-     * * a sequence of &quot;names&quot; (strings which represent field names)
-     * * a sequence of &quot;types&quot; (strings which represent type name)
-     * * a sequence of &quot;type lengths&quot;
-     * * a sequence of &quot;structs&quot; (which describe contents of every
-     *   structure, referring to types and names by index)
-     * @see &lt;a href=&quot;https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class Dna1Body extends KaitaiStruct {
-        public static Dna1Body fromFile(String fileName) throws IOException {
-            return new Dna1Body(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * DNA1, also known as &quot;Structure DNA&quot;, is a special block in</span>
+<span class="cm">     * .blend file, which contains machine-readable specifications of</span>
+<span class="cm">     * all other structures used in this .blend file.</span>
+<span class="cm">     * </span>
+<span class="cm">     * Effectively, this block contains:</span>
+<span class="cm">     * </span>
+<span class="cm">     * * a sequence of &quot;names&quot; (strings which represent field names)</span>
+<span class="cm">     * * a sequence of &quot;types&quot; (strings which represent type name)</span>
+<span class="cm">     * * a sequence of &quot;type lengths&quot;</span>
+<span class="cm">     * * a sequence of &quot;structs&quot; (which describe contents of every</span>
+<span class="cm">     *   structure, referring to types and names by index)</span>
+<span class="cm">     * @see &lt;a href=&quot;https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Dna1Body</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Dna1Body</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Dna1Body</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Dna1Body(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Dna1Body</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Dna1Body(KaitaiStream _io, BlenderBlend.FileBlock _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Dna1Body</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">BlenderBlend</span><span class="p">.</span><span class="na">FileBlock</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Dna1Body(KaitaiStream _io, BlenderBlend.FileBlock _parent, BlenderBlend _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.id = this._io.ensureFixedContents(new byte[] { 83, 68, 78, 65 });
-            this.nameMagic = this._io.ensureFixedContents(new byte[] { 78, 65, 77, 69 });
-            this.numNames = this._io.readU4le();
-            names = new ArrayList&lt;String&gt;((int) (numNames()));
-            for (int i = 0; i &lt; numNames(); i++) {
-                this.names.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName(&quot;UTF-8&quot;)));
-            }
-            this.padding1 = this._io.readBytes(KaitaiStream.mod((4 - _io().pos()), 4));
-            this.typeMagic = this._io.ensureFixedContents(new byte[] { 84, 89, 80, 69 });
-            this.numTypes = this._io.readU4le();
-            types = new ArrayList&lt;String&gt;((int) (numTypes()));
-            for (int i = 0; i &lt; numTypes(); i++) {
-                this.types.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName(&quot;UTF-8&quot;)));
-            }
-            this.padding2 = this._io.readBytes(KaitaiStream.mod((4 - _io().pos()), 4));
-            this.tlenMagic = this._io.ensureFixedContents(new byte[] { 84, 76, 69, 78 });
-            lengths = new ArrayList&lt;Integer&gt;((int) (numTypes()));
-            for (int i = 0; i &lt; numTypes(); i++) {
-                this.lengths.add(this._io.readU2le());
-            }
-            this.padding3 = this._io.readBytes(KaitaiStream.mod((4 - _io().pos()), 4));
-            this.strcMagic = this._io.ensureFixedContents(new byte[] { 83, 84, 82, 67 });
-            this.numStructs = this._io.readU4le();
-            structs = new ArrayList&lt;DnaStruct&gt;((int) (numStructs()));
-            for (int i = 0; i &lt; numStructs(); i++) {
-                this.structs.add(new DnaStruct(this._io, this, _root));
-            }
-        }
-        private byte[] id;
-        private byte[] nameMagic;
-        private long numNames;
-        private ArrayList&lt;String&gt; names;
-        private byte[] padding1;
-        private byte[] typeMagic;
-        private long numTypes;
-        private ArrayList&lt;String&gt; types;
-        private byte[] padding2;
-        private byte[] tlenMagic;
-        private ArrayList&lt;Integer&gt; lengths;
-        private byte[] padding3;
-        private byte[] strcMagic;
-        private long numStructs;
-        private ArrayList&lt;DnaStruct&gt; structs;
-        private BlenderBlend _root;
-        private BlenderBlend.FileBlock _parent;
-        public byte[] id() { return id; }
-        public byte[] nameMagic() { return nameMagic; }
-        public long numNames() { return numNames; }
-        public ArrayList&lt;String&gt; names() { return names; }
-        public byte[] padding1() { return padding1; }
-        public byte[] typeMagic() { return typeMagic; }
-        public long numTypes() { return numTypes; }
-        public ArrayList&lt;String&gt; types() { return types; }
-        public byte[] padding2() { return padding2; }
-        public byte[] tlenMagic() { return tlenMagic; }
-        public ArrayList&lt;Integer&gt; lengths() { return lengths; }
-        public byte[] padding3() { return padding3; }
-        public byte[] strcMagic() { return strcMagic; }
-        public long numStructs() { return numStructs; }
-        public ArrayList&lt;DnaStruct&gt; structs() { return structs; }
-        public BlenderBlend _root() { return _root; }
-        public BlenderBlend.FileBlock _parent() { return _parent; }
-    }
-    public static class Header extends KaitaiStruct {
-        public static Header fromFile(String fileName) throws IOException {
-            return new Header(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">Dna1Body</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">BlenderBlend</span><span class="p">.</span><span class="na">FileBlock</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">BlenderBlend</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">65</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">nameMagic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">69</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numNames</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numNames</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numNames</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">names</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">)));</span>
+            <span class="p">}</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">padding1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="na">mod</span><span class="p">((</span><span class="mi">4</span> <span class="o">-</span> <span class="n">_io</span><span class="p">().</span><span class="na">pos</span><span class="p">()),</span> <span class="mi">4</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">typeMagic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">89</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">69</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numTypes</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="n">types</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numTypes</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numTypes</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">types</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">)));</span>
+            <span class="p">}</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">padding2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="na">mod</span><span class="p">((</span><span class="mi">4</span> <span class="o">-</span> <span class="n">_io</span><span class="p">().</span><span class="na">pos</span><span class="p">()),</span> <span class="mi">4</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">tlenMagic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">78</span> <span class="p">});</span>
+            <span class="n">lengths</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numTypes</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numTypes</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">lengths</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">padding3</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="na">mod</span><span class="p">((</span><span class="mi">4</span> <span class="o">-</span> <span class="n">_io</span><span class="p">().</span><span class="na">pos</span><span class="p">()),</span> <span class="mi">4</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">strcMagic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">67</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numStructs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="n">structs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DnaStruct</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numStructs</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numStructs</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">structs</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">DnaStruct</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">id</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">nameMagic</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numNames</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">names</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">padding1</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">typeMagic</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numTypes</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">types</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">padding2</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">tlenMagic</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">lengths</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">padding3</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">strcMagic</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numStructs</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DnaStruct</span><span class="o">&gt;</span> <span class="n">structs</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">BlenderBlend</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">BlenderBlend</span><span class="p">.</span><span class="na">FileBlock</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">nameMagic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">nameMagic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numNames</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numNames</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">names</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">names</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">padding1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">padding1</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">typeMagic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">typeMagic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numTypes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numTypes</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">types</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">types</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">padding2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">padding2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">tlenMagic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">tlenMagic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">lengths</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lengths</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">padding3</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">padding3</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">strcMagic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">strcMagic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numStructs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numStructs</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DnaStruct</span><span class="o">&gt;</span> <span class="nf">structs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">structs</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">BlenderBlend</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">BlenderBlend</span><span class="p">.</span><span class="na">FileBlock</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Header</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Header</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Header</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Header(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Header(KaitaiStream _io, BlenderBlend _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">BlenderBlend</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Header(KaitaiStream _io, BlenderBlend _parent, BlenderBlend _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.magic = this._io.ensureFixedContents(new byte[] { 66, 76, 69, 78, 68, 69, 82 });
-            this.ptrSizeId = BlenderBlend.PtrSize.byId(this._io.readU1());
-            this.endian = BlenderBlend.Endian.byId(this._io.readU1());
-            this.version = new String(this._io.readBytes(3), Charset.forName(&quot;ASCII&quot;));
-        }
-        private Byte psize;
+        <span class="kd">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">BlenderBlend</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">BlenderBlend</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">66</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">82</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ptrSizeId</span> <span class="o">=</span> <span class="n">BlenderBlend</span><span class="p">.</span><span class="na">PtrSize</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">endian</span> <span class="o">=</span> <span class="n">BlenderBlend</span><span class="p">.</span><span class="na">Endian</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">version</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Byte</span> <span class="n">psize</span><span class="p">;</span>
 
-        /**
-         * Number of bytes that a pointer occupies
-         */
-        public Byte psize() {
-            if (this.psize != null)
-                return this.psize;
-            byte _tmp = (byte) ((ptrSizeId() == BlenderBlend.PtrSize.BITS_64 ? 8 : 4));
-            this.psize = _tmp;
-            return this.psize;
-        }
-        private byte[] magic;
-        private PtrSize ptrSizeId;
-        private Endian endian;
-        private String version;
-        private BlenderBlend _root;
-        private BlenderBlend _parent;
-        public byte[] magic() { return magic; }
+        <span class="cm">/**</span>
+<span class="cm">         * Number of bytes that a pointer occupies</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Byte</span> <span class="nf">psize</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">psize</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">psize</span><span class="p">;</span>
+            <span class="kt">byte</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">byte</span><span class="p">)</span> <span class="p">((</span><span class="n">ptrSizeId</span><span class="p">()</span> <span class="o">==</span> <span class="n">BlenderBlend</span><span class="p">.</span><span class="na">PtrSize</span><span class="p">.</span><span class="na">BITS_64</span> <span class="o">?</span> <span class="mi">8</span> <span class="p">:</span> <span class="mi">4</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">psize</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">psize</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">magic</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">PtrSize</span> <span class="n">ptrSizeId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Endian</span> <span class="n">endian</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">version</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">BlenderBlend</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">BlenderBlend</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">magic</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Size of a pointer; all pointers in the file are stored in this format
-         */
-        public PtrSize ptrSizeId() { return ptrSizeId; }
+        <span class="cm">/**</span>
+<span class="cm">         * Size of a pointer; all pointers in the file are stored in this format</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">PtrSize</span> <span class="nf">ptrSizeId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ptrSizeId</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Type of byte ordering used
-         */
-        public Endian endian() { return endian; }
+        <span class="cm">/**</span>
+<span class="cm">         * Type of byte ordering used</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Endian</span> <span class="nf">endian</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">endian</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Blender version used to save this file
-         */
-        public String version() { return version; }
-        public BlenderBlend _root() { return _root; }
-        public BlenderBlend _parent() { return _parent; }
-    }
-    public static class DnaField extends KaitaiStruct {
-        public static DnaField fromFile(String fileName) throws IOException {
-            return new DnaField(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="cm">/**</span>
+<span class="cm">         * Blender version used to save this file</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">version</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">BlenderBlend</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">BlenderBlend</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DnaField</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">DnaField</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">DnaField</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public DnaField(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">DnaField</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DnaField(KaitaiStream _io, BlenderBlend.DnaStruct _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">DnaField</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">BlenderBlend</span><span class="p">.</span><span class="na">DnaStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DnaField(KaitaiStream _io, BlenderBlend.DnaStruct _parent, BlenderBlend _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.idxType = this._io.readU2le();
-            this.idxName = this._io.readU2le();
-        }
-        private String type;
-        public String type() {
-            if (this.type != null)
-                return this.type;
-            this.type = _parent()._parent().types().get((int) idxType());
-            return this.type;
-        }
-        private String name;
-        public String name() {
-            if (this.name != null)
-                return this.name;
-            this.name = _parent()._parent().names().get((int) idxName());
-            return this.name;
-        }
-        private int idxType;
-        private int idxName;
-        private BlenderBlend _root;
-        private BlenderBlend.DnaStruct _parent;
-        public int idxType() { return idxType; }
-        public int idxName() { return idxName; }
-        public BlenderBlend _root() { return _root; }
-        public BlenderBlend.DnaStruct _parent() { return _parent; }
-    }
-    private ArrayList&lt;DnaStruct&gt; sdnaStructs;
-    public ArrayList&lt;DnaStruct&gt; sdnaStructs() {
-        if (this.sdnaStructs != null)
-            return this.sdnaStructs;
-        this.sdnaStructs = ((Dna1Body) (blocks().get((int) (blocks().size() - 2)).body())).structs();
-        return this.sdnaStructs;
-    }
-    private Header hdr;
-    private ArrayList&lt;FileBlock&gt; blocks;
-    private BlenderBlend _root;
-    private KaitaiStruct _parent;
-    public Header hdr() { return hdr; }
-    public ArrayList&lt;FileBlock&gt; blocks() { return blocks; }
-    public BlenderBlend _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-}
-</code></pre>
+        <span class="kd">public</span> <span class="nf">DnaField</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">BlenderBlend</span><span class="p">.</span><span class="na">DnaStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">BlenderBlend</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">idxType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">idxName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">type</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">type</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">type</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">type</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">type</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">().</span><span class="na">_parent</span><span class="p">().</span><span class="na">types</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">idxType</span><span class="p">());</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">type</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">name</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">().</span><span class="na">_parent</span><span class="p">().</span><span class="na">names</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="n">idxName</span><span class="p">());</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">name</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">idxType</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">idxName</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">BlenderBlend</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">BlenderBlend</span><span class="p">.</span><span class="na">DnaStruct</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">idxType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idxType</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">idxName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idxName</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">BlenderBlend</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">BlenderBlend</span><span class="p">.</span><span class="na">DnaStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DnaStruct</span><span class="o">&gt;</span> <span class="n">sdnaStructs</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DnaStruct</span><span class="o">&gt;</span> <span class="nf">sdnaStructs</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">sdnaStructs</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">sdnaStructs</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">sdnaStructs</span> <span class="o">=</span> <span class="p">((</span><span class="n">Dna1Body</span><span class="p">)</span> <span class="p">(</span><span class="n">blocks</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">blocks</span><span class="p">().</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)).</span><span class="na">body</span><span class="p">())).</span><span class="na">structs</span><span class="p">();</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">sdnaStructs</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">Header</span> <span class="n">hdr</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">FileBlock</span><span class="o">&gt;</span> <span class="n">blocks</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">BlenderBlend</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">Header</span> <span class="nf">hdr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hdr</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">FileBlock</span><span class="o">&gt;</span> <span class="nf">blocks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">blocks</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">BlenderBlend</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -757,8 +754,8 @@ public class BlenderBlend extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

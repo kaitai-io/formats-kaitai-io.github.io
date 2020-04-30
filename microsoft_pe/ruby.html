@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -280,577 +277,577 @@ data = MicrosoftPe.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# @see http://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx Source
-class MicrosoftPe &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># @see http://www.microsoft.com/whdc/system/platform/firmware/PECOFF.mspx Source</span>
+<span class="k">class</span> <span class="nc">MicrosoftPe</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  PE_FORMAT = {
-    263 =&gt; :pe_format_rom_image,
-    267 =&gt; :pe_format_pe32,
-    523 =&gt; :pe_format_pe32_plus,
-  }
-  I__PE_FORMAT = PE_FORMAT.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">PE_FORMAT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">263</span> <span class="o">=&gt;</span> <span class="ss">:pe_format_rom_image</span><span class="p">,</span>
+    <span class="mi">267</span> <span class="o">=&gt;</span> <span class="ss">:pe_format_pe32</span><span class="p">,</span>
+    <span class="mi">523</span> <span class="o">=&gt;</span> <span class="ss">:pe_format_pe32_plus</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__PE_FORMAT</span> <span class="o">=</span> <span class="no">PE_FORMAT</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @mz = MzPlaceholder.new(@_io, self, @_root)
-    self
-  end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@mz</span> <span class="o">=</span> <span class="no">MzPlaceholder</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only Source
-  class CertificateEntry &lt; Kaitai::Struct::Struct
+  <span class="c1">##</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#the-attribute-certificate-table-image-only Source</span>
+  <span class="k">class</span> <span class="nc">CertificateEntry</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-    CERTIFICATE_REVISION = {
-      256 =&gt; :certificate_revision_revision_1_0,
-      512 =&gt; :certificate_revision_revision_2_0,
-    }
-    I__CERTIFICATE_REVISION = CERTIFICATE_REVISION.invert
+    <span class="no">CERTIFICATE_REVISION</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">256</span> <span class="o">=&gt;</span> <span class="ss">:certificate_revision_revision_1_0</span><span class="p">,</span>
+      <span class="mi">512</span> <span class="o">=&gt;</span> <span class="ss">:certificate_revision_revision_2_0</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="no">I__CERTIFICATE_REVISION</span> <span class="o">=</span> <span class="no">CERTIFICATE_REVISION</span><span class="o">.</span><span class="n">invert</span>
 
-    CERTIFICATE_TYPE = {
-      1 =&gt; :certificate_type_x509,
-      2 =&gt; :certificate_type_pkcs_signed_data,
-      3 =&gt; :certificate_type_reserved_1,
-      4 =&gt; :certificate_type_ts_stack_signed,
-    }
-    I__CERTIFICATE_TYPE = CERTIFICATE_TYPE.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="no">CERTIFICATE_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:certificate_type_x509</span><span class="p">,</span>
+      <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:certificate_type_pkcs_signed_data</span><span class="p">,</span>
+      <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:certificate_type_reserved_1</span><span class="p">,</span>
+      <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:certificate_type_ts_stack_signed</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="no">I__CERTIFICATE_TYPE</span> <span class="o">=</span> <span class="no">CERTIFICATE_TYPE</span><span class="o">.</span><span class="n">invert</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @length = @_io.read_u4le
-      @revision = Kaitai::Struct::Stream::resolve_enum(CERTIFICATE_REVISION, @_io.read_u2le)
-      @certificate_type = Kaitai::Struct::Stream::resolve_enum(CERTIFICATE_TYPE, @_io.read_u2le)
-      @certificate_bytes = @_io.read_bytes((length - 8))
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@revision</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">CERTIFICATE_REVISION</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="vi">@certificate_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">CERTIFICATE_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="vi">@certificate_bytes</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Specifies the length of the attribute certificate entry.
-    attr_reader :length
+    <span class="c1">##</span>
+    <span class="c1"># Specifies the length of the attribute certificate entry.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:length</span>
 
-    ##
-    # Contains the certificate version number.
-    attr_reader :revision
+    <span class="c1">##</span>
+    <span class="c1"># Contains the certificate version number.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:revision</span>
 
-    ##
-    # Specifies the type of content in bCertificate
-    attr_reader :certificate_type
+    <span class="c1">##</span>
+    <span class="c1"># Specifies the type of content in bCertificate</span>
+    <span class="kp">attr_reader</span> <span class="ss">:certificate_type</span>
 
-    ##
-    # Contains a certificate, such as an Authenticode signature.
-    attr_reader :certificate_bytes
-  end
-  class OptionalHeaderWindows &lt; Kaitai::Struct::Struct
+    <span class="c1">##</span>
+    <span class="c1"># Contains a certificate, such as an Authenticode signature.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:certificate_bytes</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">OptionalHeaderWindows</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-    SUBSYSTEM_ENUM = {
-      0 =&gt; :subsystem_enum_unknown,
-      1 =&gt; :subsystem_enum_native,
-      2 =&gt; :subsystem_enum_windows_gui,
-      3 =&gt; :subsystem_enum_windows_cui,
-      7 =&gt; :subsystem_enum_posix_cui,
-      9 =&gt; :subsystem_enum_windows_ce_gui,
-      10 =&gt; :subsystem_enum_efi_application,
-      11 =&gt; :subsystem_enum_efi_boot_service_driver,
-      12 =&gt; :subsystem_enum_efi_runtime_driver,
-      13 =&gt; :subsystem_enum_efi_rom,
-      14 =&gt; :subsystem_enum_xbox,
-      16 =&gt; :subsystem_enum_windows_boot_application,
-    }
-    I__SUBSYSTEM_ENUM = SUBSYSTEM_ENUM.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="no">SUBSYSTEM_ENUM</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:subsystem_enum_unknown</span><span class="p">,</span>
+      <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:subsystem_enum_native</span><span class="p">,</span>
+      <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:subsystem_enum_windows_gui</span><span class="p">,</span>
+      <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:subsystem_enum_windows_cui</span><span class="p">,</span>
+      <span class="mi">7</span> <span class="o">=&gt;</span> <span class="ss">:subsystem_enum_posix_cui</span><span class="p">,</span>
+      <span class="mi">9</span> <span class="o">=&gt;</span> <span class="ss">:subsystem_enum_windows_ce_gui</span><span class="p">,</span>
+      <span class="mi">10</span> <span class="o">=&gt;</span> <span class="ss">:subsystem_enum_efi_application</span><span class="p">,</span>
+      <span class="mi">11</span> <span class="o">=&gt;</span> <span class="ss">:subsystem_enum_efi_boot_service_driver</span><span class="p">,</span>
+      <span class="mi">12</span> <span class="o">=&gt;</span> <span class="ss">:subsystem_enum_efi_runtime_driver</span><span class="p">,</span>
+      <span class="mi">13</span> <span class="o">=&gt;</span> <span class="ss">:subsystem_enum_efi_rom</span><span class="p">,</span>
+      <span class="mi">14</span> <span class="o">=&gt;</span> <span class="ss">:subsystem_enum_xbox</span><span class="p">,</span>
+      <span class="mi">16</span> <span class="o">=&gt;</span> <span class="ss">:subsystem_enum_windows_boot_application</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="no">I__SUBSYSTEM_ENUM</span> <span class="o">=</span> <span class="no">SUBSYSTEM_ENUM</span><span class="o">.</span><span class="n">invert</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      if _parent.std.format == :pe_format_pe32
-        @image_base_32 = @_io.read_u4le
-      end
-      if _parent.std.format == :pe_format_pe32_plus
-        @image_base_64 = @_io.read_u8le
-      end
-      @section_alignment = @_io.read_u4le
-      @file_alignment = @_io.read_u4le
-      @major_operating_system_version = @_io.read_u2le
-      @minor_operating_system_version = @_io.read_u2le
-      @major_image_version = @_io.read_u2le
-      @minor_image_version = @_io.read_u2le
-      @major_subsystem_version = @_io.read_u2le
-      @minor_subsystem_version = @_io.read_u2le
-      @win32_version_value = @_io.read_u4le
-      @size_of_image = @_io.read_u4le
-      @size_of_headers = @_io.read_u4le
-      @check_sum = @_io.read_u4le
-      @subsystem = Kaitai::Struct::Stream::resolve_enum(SUBSYSTEM_ENUM, @_io.read_u2le)
-      @dll_characteristics = @_io.read_u2le
-      if _parent.std.format == :pe_format_pe32
-        @size_of_stack_reserve_32 = @_io.read_u4le
-      end
-      if _parent.std.format == :pe_format_pe32_plus
-        @size_of_stack_reserve_64 = @_io.read_u8le
-      end
-      if _parent.std.format == :pe_format_pe32
-        @size_of_stack_commit_32 = @_io.read_u4le
-      end
-      if _parent.std.format == :pe_format_pe32_plus
-        @size_of_stack_commit_64 = @_io.read_u8le
-      end
-      if _parent.std.format == :pe_format_pe32
-        @size_of_heap_reserve_32 = @_io.read_u4le
-      end
-      if _parent.std.format == :pe_format_pe32_plus
-        @size_of_heap_reserve_64 = @_io.read_u8le
-      end
-      if _parent.std.format == :pe_format_pe32
-        @size_of_heap_commit_32 = @_io.read_u4le
-      end
-      if _parent.std.format == :pe_format_pe32_plus
-        @size_of_heap_commit_64 = @_io.read_u8le
-      end
-      @loader_flags = @_io.read_u4le
-      @number_of_rva_and_sizes = @_io.read_u4le
-      self
-    end
-    attr_reader :image_base_32
-    attr_reader :image_base_64
-    attr_reader :section_alignment
-    attr_reader :file_alignment
-    attr_reader :major_operating_system_version
-    attr_reader :minor_operating_system_version
-    attr_reader :major_image_version
-    attr_reader :minor_image_version
-    attr_reader :major_subsystem_version
-    attr_reader :minor_subsystem_version
-    attr_reader :win32_version_value
-    attr_reader :size_of_image
-    attr_reader :size_of_headers
-    attr_reader :check_sum
-    attr_reader :subsystem
-    attr_reader :dll_characteristics
-    attr_reader :size_of_stack_reserve_32
-    attr_reader :size_of_stack_reserve_64
-    attr_reader :size_of_stack_commit_32
-    attr_reader :size_of_stack_commit_64
-    attr_reader :size_of_heap_reserve_32
-    attr_reader :size_of_heap_reserve_64
-    attr_reader :size_of_heap_commit_32
-    attr_reader :size_of_heap_commit_64
-    attr_reader :loader_flags
-    attr_reader :number_of_rva_and_sizes
-  end
-  class OptionalHeaderDataDirs &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">if</span> <span class="n">_parent</span><span class="o">.</span><span class="n">std</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="ss">:pe_format_pe32</span>
+        <span class="vi">@image_base_32</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">_parent</span><span class="o">.</span><span class="n">std</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="ss">:pe_format_pe32_plus</span>
+        <span class="vi">@image_base_64</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="k">end</span>
+      <span class="vi">@section_alignment</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@file_alignment</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@major_operating_system_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@minor_operating_system_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@major_image_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@minor_image_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@major_subsystem_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@minor_subsystem_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@win32_version_value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@size_of_image</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@size_of_headers</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@check_sum</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@subsystem</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">SUBSYSTEM_ENUM</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="vi">@dll_characteristics</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">if</span> <span class="n">_parent</span><span class="o">.</span><span class="n">std</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="ss">:pe_format_pe32</span>
+        <span class="vi">@size_of_stack_reserve_32</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">_parent</span><span class="o">.</span><span class="n">std</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="ss">:pe_format_pe32_plus</span>
+        <span class="vi">@size_of_stack_reserve_64</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">_parent</span><span class="o">.</span><span class="n">std</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="ss">:pe_format_pe32</span>
+        <span class="vi">@size_of_stack_commit_32</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">_parent</span><span class="o">.</span><span class="n">std</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="ss">:pe_format_pe32_plus</span>
+        <span class="vi">@size_of_stack_commit_64</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">_parent</span><span class="o">.</span><span class="n">std</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="ss">:pe_format_pe32</span>
+        <span class="vi">@size_of_heap_reserve_32</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">_parent</span><span class="o">.</span><span class="n">std</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="ss">:pe_format_pe32_plus</span>
+        <span class="vi">@size_of_heap_reserve_64</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">_parent</span><span class="o">.</span><span class="n">std</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="ss">:pe_format_pe32</span>
+        <span class="vi">@size_of_heap_commit_32</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">_parent</span><span class="o">.</span><span class="n">std</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="ss">:pe_format_pe32_plus</span>
+        <span class="vi">@size_of_heap_commit_64</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="k">end</span>
+      <span class="vi">@loader_flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@number_of_rva_and_sizes</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:image_base_32</span>
+    <span class="kp">attr_reader</span> <span class="ss">:image_base_64</span>
+    <span class="kp">attr_reader</span> <span class="ss">:section_alignment</span>
+    <span class="kp">attr_reader</span> <span class="ss">:file_alignment</span>
+    <span class="kp">attr_reader</span> <span class="ss">:major_operating_system_version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:minor_operating_system_version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:major_image_version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:minor_image_version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:major_subsystem_version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:minor_subsystem_version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:win32_version_value</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size_of_image</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size_of_headers</span>
+    <span class="kp">attr_reader</span> <span class="ss">:check_sum</span>
+    <span class="kp">attr_reader</span> <span class="ss">:subsystem</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dll_characteristics</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size_of_stack_reserve_32</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size_of_stack_reserve_64</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size_of_stack_commit_32</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size_of_stack_commit_64</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size_of_heap_reserve_32</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size_of_heap_reserve_64</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size_of_heap_commit_32</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size_of_heap_commit_64</span>
+    <span class="kp">attr_reader</span> <span class="ss">:loader_flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:number_of_rva_and_sizes</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">OptionalHeaderDataDirs</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @export_table = DataDir.new(@_io, self, @_root)
-      @import_table = DataDir.new(@_io, self, @_root)
-      @resource_table = DataDir.new(@_io, self, @_root)
-      @exception_table = DataDir.new(@_io, self, @_root)
-      @certificate_table = DataDir.new(@_io, self, @_root)
-      @base_relocation_table = DataDir.new(@_io, self, @_root)
-      @debug = DataDir.new(@_io, self, @_root)
-      @architecture = DataDir.new(@_io, self, @_root)
-      @global_ptr = DataDir.new(@_io, self, @_root)
-      @tls_table = DataDir.new(@_io, self, @_root)
-      @load_config_table = DataDir.new(@_io, self, @_root)
-      @bound_import = DataDir.new(@_io, self, @_root)
-      @iat = DataDir.new(@_io, self, @_root)
-      @delay_import_descriptor = DataDir.new(@_io, self, @_root)
-      @clr_runtime_header = DataDir.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :export_table
-    attr_reader :import_table
-    attr_reader :resource_table
-    attr_reader :exception_table
-    attr_reader :certificate_table
-    attr_reader :base_relocation_table
-    attr_reader :debug
-    attr_reader :architecture
-    attr_reader :global_ptr
-    attr_reader :tls_table
-    attr_reader :load_config_table
-    attr_reader :bound_import
-    attr_reader :iat
-    attr_reader :delay_import_descriptor
-    attr_reader :clr_runtime_header
-  end
-  class DataDir &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@export_table</span> <span class="o">=</span> <span class="no">DataDir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@import_table</span> <span class="o">=</span> <span class="no">DataDir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@resource_table</span> <span class="o">=</span> <span class="no">DataDir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@exception_table</span> <span class="o">=</span> <span class="no">DataDir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@certificate_table</span> <span class="o">=</span> <span class="no">DataDir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@base_relocation_table</span> <span class="o">=</span> <span class="no">DataDir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@debug</span> <span class="o">=</span> <span class="no">DataDir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@architecture</span> <span class="o">=</span> <span class="no">DataDir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@global_ptr</span> <span class="o">=</span> <span class="no">DataDir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@tls_table</span> <span class="o">=</span> <span class="no">DataDir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@load_config_table</span> <span class="o">=</span> <span class="no">DataDir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@bound_import</span> <span class="o">=</span> <span class="no">DataDir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@iat</span> <span class="o">=</span> <span class="no">DataDir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@delay_import_descriptor</span> <span class="o">=</span> <span class="no">DataDir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@clr_runtime_header</span> <span class="o">=</span> <span class="no">DataDir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:export_table</span>
+    <span class="kp">attr_reader</span> <span class="ss">:import_table</span>
+    <span class="kp">attr_reader</span> <span class="ss">:resource_table</span>
+    <span class="kp">attr_reader</span> <span class="ss">:exception_table</span>
+    <span class="kp">attr_reader</span> <span class="ss">:certificate_table</span>
+    <span class="kp">attr_reader</span> <span class="ss">:base_relocation_table</span>
+    <span class="kp">attr_reader</span> <span class="ss">:debug</span>
+    <span class="kp">attr_reader</span> <span class="ss">:architecture</span>
+    <span class="kp">attr_reader</span> <span class="ss">:global_ptr</span>
+    <span class="kp">attr_reader</span> <span class="ss">:tls_table</span>
+    <span class="kp">attr_reader</span> <span class="ss">:load_config_table</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bound_import</span>
+    <span class="kp">attr_reader</span> <span class="ss">:iat</span>
+    <span class="kp">attr_reader</span> <span class="ss">:delay_import_descriptor</span>
+    <span class="kp">attr_reader</span> <span class="ss">:clr_runtime_header</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">DataDir</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @virtual_address = @_io.read_u4le
-      @size = @_io.read_u4le
-      self
-    end
-    attr_reader :virtual_address
-    attr_reader :size
-  end
-  class CoffSymbol &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@virtual_address</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:virtual_address</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">CoffSymbol</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @_raw_name_annoying = @_io.read_bytes(8)
-      io = Kaitai::Struct::Stream.new(@_raw_name_annoying)
-      @name_annoying = Annoyingstring.new(io, self, @_root)
-      @value = @_io.read_u4le
-      @section_number = @_io.read_u2le
-      @type = @_io.read_u2le
-      @storage_class = @_io.read_u1
-      @number_of_aux_symbols = @_io.read_u1
-      self
-    end
-    def section
-      return @section unless @section.nil?
-      @section = _root.pe.sections[(section_number - 1)]
-      @section
-    end
-    def data
-      return @data unless @data.nil?
-      _pos = @_io.pos
-      @_io.seek((section.pointer_to_raw_data + value))
-      @data = @_io.read_bytes(1)
-      @_io.seek(_pos)
-      @data
-    end
-    attr_reader :name_annoying
-    attr_reader :value
-    attr_reader :section_number
-    attr_reader :type
-    attr_reader :storage_class
-    attr_reader :number_of_aux_symbols
-    attr_reader :_raw_name_annoying
-  end
-  class PeHeader &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@_raw_name_annoying</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+      <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_name_annoying</span><span class="p">)</span>
+      <span class="vi">@name_annoying</span> <span class="o">=</span> <span class="no">Annoyingstring</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@section_number</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@type</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@storage_class</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@number_of_aux_symbols</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">section</span>
+      <span class="k">return</span> <span class="vi">@section</span> <span class="k">unless</span> <span class="vi">@section</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@section</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">pe</span><span class="o">.</span><span class="n">sections</span><span class="o">[</span><span class="p">(</span><span class="n">section_number</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">]</span>
+      <span class="vi">@section</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">data</span>
+      <span class="k">return</span> <span class="vi">@data</span> <span class="k">unless</span> <span class="vi">@data</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="n">section</span><span class="o">.</span><span class="n">pointer_to_raw_data</span> <span class="o">+</span> <span class="n">value</span><span class="p">))</span>
+      <span class="vi">@data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@data</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:name_annoying</span>
+    <span class="kp">attr_reader</span> <span class="ss">:value</span>
+    <span class="kp">attr_reader</span> <span class="ss">:section_number</span>
+    <span class="kp">attr_reader</span> <span class="ss">:type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:storage_class</span>
+    <span class="kp">attr_reader</span> <span class="ss">:number_of_aux_symbols</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_name_annoying</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">PeHeader</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @pe_signature = @_io.ensure_fixed_contents([80, 69, 0, 0].pack(&#39;C*&#39;))
-      @coff_hdr = CoffHeader.new(@_io, self, @_root)
-      @_raw_optional_hdr = @_io.read_bytes(coff_hdr.size_of_optional_header)
-      io = Kaitai::Struct::Stream.new(@_raw_optional_hdr)
-      @optional_hdr = OptionalHeader.new(io, self, @_root)
-      @sections = Array.new(coff_hdr.number_of_sections)
-      (coff_hdr.number_of_sections).times { |i|
-        @sections[i] = Section.new(@_io, self, @_root)
-      }
-      self
-    end
-    def certificate_table
-      return @certificate_table unless @certificate_table.nil?
-      if optional_hdr.data_dirs.certificate_table.virtual_address != 0
-        _pos = @_io.pos
-        @_io.seek(optional_hdr.data_dirs.certificate_table.virtual_address)
-        @_raw_certificate_table = @_io.read_bytes(optional_hdr.data_dirs.certificate_table.size)
-        io = Kaitai::Struct::Stream.new(@_raw_certificate_table)
-        @certificate_table = CertificateTable.new(io, self, @_root)
-        @_io.seek(_pos)
-      end
-      @certificate_table
-    end
-    attr_reader :pe_signature
-    attr_reader :coff_hdr
-    attr_reader :optional_hdr
-    attr_reader :sections
-    attr_reader :_raw_optional_hdr
-    attr_reader :_raw_certificate_table
-  end
-  class OptionalHeader &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@pe_signature</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@coff_hdr</span> <span class="o">=</span> <span class="no">CoffHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@_raw_optional_hdr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">coff_hdr</span><span class="o">.</span><span class="n">size_of_optional_header</span><span class="p">)</span>
+      <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_optional_hdr</span><span class="p">)</span>
+      <span class="vi">@optional_hdr</span> <span class="o">=</span> <span class="no">OptionalHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@sections</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">coff_hdr</span><span class="o">.</span><span class="n">number_of_sections</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">coff_hdr</span><span class="o">.</span><span class="n">number_of_sections</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@sections</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Section</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">certificate_table</span>
+      <span class="k">return</span> <span class="vi">@certificate_table</span> <span class="k">unless</span> <span class="vi">@certificate_table</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">optional_hdr</span><span class="o">.</span><span class="n">data_dirs</span><span class="o">.</span><span class="n">certificate_table</span><span class="o">.</span><span class="n">virtual_address</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">optional_hdr</span><span class="o">.</span><span class="n">data_dirs</span><span class="o">.</span><span class="n">certificate_table</span><span class="o">.</span><span class="n">virtual_address</span><span class="p">)</span>
+        <span class="vi">@_raw_certificate_table</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">optional_hdr</span><span class="o">.</span><span class="n">data_dirs</span><span class="o">.</span><span class="n">certificate_table</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_certificate_table</span><span class="p">)</span>
+        <span class="vi">@certificate_table</span> <span class="o">=</span> <span class="no">CertificateTable</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@certificate_table</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pe_signature</span>
+    <span class="kp">attr_reader</span> <span class="ss">:coff_hdr</span>
+    <span class="kp">attr_reader</span> <span class="ss">:optional_hdr</span>
+    <span class="kp">attr_reader</span> <span class="ss">:sections</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_optional_hdr</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_certificate_table</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">OptionalHeader</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @std = OptionalHeaderStd.new(@_io, self, @_root)
-      @windows = OptionalHeaderWindows.new(@_io, self, @_root)
-      @data_dirs = OptionalHeaderDataDirs.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :std
-    attr_reader :windows
-    attr_reader :data_dirs
-  end
-  class Section &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@std</span> <span class="o">=</span> <span class="no">OptionalHeaderStd</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@windows</span> <span class="o">=</span> <span class="no">OptionalHeaderWindows</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@data_dirs</span> <span class="o">=</span> <span class="no">OptionalHeaderDataDirs</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:std</span>
+    <span class="kp">attr_reader</span> <span class="ss">:windows</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data_dirs</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Section</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @name = (Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(8), 0)).force_encoding(&quot;UTF-8&quot;)
-      @virtual_size = @_io.read_u4le
-      @virtual_address = @_io.read_u4le
-      @size_of_raw_data = @_io.read_u4le
-      @pointer_to_raw_data = @_io.read_u4le
-      @pointer_to_relocations = @_io.read_u4le
-      @pointer_to_linenumbers = @_io.read_u4le
-      @number_of_relocations = @_io.read_u2le
-      @number_of_linenumbers = @_io.read_u2le
-      @characteristics = @_io.read_u4le
-      self
-    end
-    def body
-      return @body unless @body.nil?
-      _pos = @_io.pos
-      @_io.seek(pointer_to_raw_data)
-      @body = @_io.read_bytes(size_of_raw_data)
-      @_io.seek(_pos)
-      @body
-    end
-    attr_reader :name
-    attr_reader :virtual_size
-    attr_reader :virtual_address
-    attr_reader :size_of_raw_data
-    attr_reader :pointer_to_raw_data
-    attr_reader :pointer_to_relocations
-    attr_reader :pointer_to_linenumbers
-    attr_reader :number_of_relocations
-    attr_reader :number_of_linenumbers
-    attr_reader :characteristics
-  end
-  class CertificateTable &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@name</span> <span class="o">=</span> <span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+      <span class="vi">@virtual_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@virtual_address</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@size_of_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@pointer_to_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@pointer_to_relocations</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@pointer_to_linenumbers</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@number_of_relocations</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@number_of_linenumbers</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@characteristics</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">body</span>
+      <span class="k">return</span> <span class="vi">@body</span> <span class="k">unless</span> <span class="vi">@body</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pointer_to_raw_data</span><span class="p">)</span>
+      <span class="vi">@body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">size_of_raw_data</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@body</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:name</span>
+    <span class="kp">attr_reader</span> <span class="ss">:virtual_size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:virtual_address</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size_of_raw_data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pointer_to_raw_data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pointer_to_relocations</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pointer_to_linenumbers</span>
+    <span class="kp">attr_reader</span> <span class="ss">:number_of_relocations</span>
+    <span class="kp">attr_reader</span> <span class="ss">:number_of_linenumbers</span>
+    <span class="kp">attr_reader</span> <span class="ss">:characteristics</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">CertificateTable</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @items = []
-      i = 0
-      while not @_io.eof?
-        @items &lt;&lt; CertificateEntry.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :items
-  end
-  class MzPlaceholder &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@items</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+        <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="no">CertificateEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:items</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">MzPlaceholder</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @magic = @_io.ensure_fixed_contents([77, 90].pack(&#39;C*&#39;))
-      @data1 = @_io.read_bytes(58)
-      @ofs_pe = @_io.read_u4le
-      self
-    end
-    attr_reader :magic
-    attr_reader :data1
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">77</span><span class="p">,</span> <span class="mi">90</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@data1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">58</span><span class="p">)</span>
+      <span class="vi">@ofs_pe</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:magic</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data1</span>
 
-    ##
-    # In PE file, an offset to PE header
-    attr_reader :ofs_pe
-  end
-  class OptionalHeaderStd &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="c1">##</span>
+    <span class="c1"># In PE file, an offset to PE header</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_pe</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">OptionalHeaderStd</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @format = Kaitai::Struct::Stream::resolve_enum(PE_FORMAT, @_io.read_u2le)
-      @major_linker_version = @_io.read_u1
-      @minor_linker_version = @_io.read_u1
-      @size_of_code = @_io.read_u4le
-      @size_of_initialized_data = @_io.read_u4le
-      @size_of_uninitialized_data = @_io.read_u4le
-      @address_of_entry_point = @_io.read_u4le
-      @base_of_code = @_io.read_u4le
-      if format == :pe_format_pe32
-        @base_of_data = @_io.read_u4le
-      end
-      self
-    end
-    attr_reader :format
-    attr_reader :major_linker_version
-    attr_reader :minor_linker_version
-    attr_reader :size_of_code
-    attr_reader :size_of_initialized_data
-    attr_reader :size_of_uninitialized_data
-    attr_reader :address_of_entry_point
-    attr_reader :base_of_code
-    attr_reader :base_of_data
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@format</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">PE_FORMAT</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="vi">@major_linker_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@minor_linker_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@size_of_code</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@size_of_initialized_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@size_of_uninitialized_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@address_of_entry_point</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@base_of_code</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">if</span> <span class="nb">format</span> <span class="o">==</span> <span class="ss">:pe_format_pe32</span>
+        <span class="vi">@base_of_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:format</span>
+    <span class="kp">attr_reader</span> <span class="ss">:major_linker_version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:minor_linker_version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size_of_code</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size_of_initialized_data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size_of_uninitialized_data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:address_of_entry_point</span>
+    <span class="kp">attr_reader</span> <span class="ss">:base_of_code</span>
+    <span class="kp">attr_reader</span> <span class="ss">:base_of_data</span>
+  <span class="k">end</span>
 
-  ##
-  # @see &#39;&#39; 3.3. COFF File Header (Object and Image)
-  class CoffHeader &lt; Kaitai::Struct::Struct
+  <span class="c1">##</span>
+  <span class="c1"># @see &#39;&#39; 3.3. COFF File Header (Object and Image)</span>
+  <span class="k">class</span> <span class="nc">CoffHeader</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-    MACHINE_TYPE = {
-      0 =&gt; :machine_type_unknown,
-      332 =&gt; :machine_type_i386,
-      358 =&gt; :machine_type_r4000,
-      361 =&gt; :machine_type_wcemipsv2,
-      388 =&gt; :machine_type_alpha,
-      418 =&gt; :machine_type_sh3,
-      419 =&gt; :machine_type_sh3dsp,
-      422 =&gt; :machine_type_sh4,
-      424 =&gt; :machine_type_sh5,
-      448 =&gt; :machine_type_arm,
-      450 =&gt; :machine_type_thumb,
-      452 =&gt; :machine_type_armnt,
-      467 =&gt; :machine_type_am33,
-      496 =&gt; :machine_type_powerpc,
-      497 =&gt; :machine_type_powerpcfp,
-      512 =&gt; :machine_type_ia64,
-      614 =&gt; :machine_type_mips16,
-      870 =&gt; :machine_type_mipsfpu,
-      1126 =&gt; :machine_type_mipsfpu16,
-      3772 =&gt; :machine_type_ebc,
-      20530 =&gt; :machine_type_riscv32,
-      20580 =&gt; :machine_type_riscv64,
-      20776 =&gt; :machine_type_riscv128,
-      34404 =&gt; :machine_type_amd64,
-      36929 =&gt; :machine_type_m32r,
-      43620 =&gt; :machine_type_arm64,
-    }
-    I__MACHINE_TYPE = MACHINE_TYPE.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="no">MACHINE_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_unknown</span><span class="p">,</span>
+      <span class="mi">332</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_i386</span><span class="p">,</span>
+      <span class="mi">358</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_r4000</span><span class="p">,</span>
+      <span class="mi">361</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_wcemipsv2</span><span class="p">,</span>
+      <span class="mi">388</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_alpha</span><span class="p">,</span>
+      <span class="mi">418</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_sh3</span><span class="p">,</span>
+      <span class="mi">419</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_sh3dsp</span><span class="p">,</span>
+      <span class="mi">422</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_sh4</span><span class="p">,</span>
+      <span class="mi">424</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_sh5</span><span class="p">,</span>
+      <span class="mi">448</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_arm</span><span class="p">,</span>
+      <span class="mi">450</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_thumb</span><span class="p">,</span>
+      <span class="mi">452</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_armnt</span><span class="p">,</span>
+      <span class="mi">467</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_am33</span><span class="p">,</span>
+      <span class="mi">496</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_powerpc</span><span class="p">,</span>
+      <span class="mi">497</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_powerpcfp</span><span class="p">,</span>
+      <span class="mi">512</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_ia64</span><span class="p">,</span>
+      <span class="mi">614</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_mips16</span><span class="p">,</span>
+      <span class="mi">870</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_mipsfpu</span><span class="p">,</span>
+      <span class="mi">1126</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_mipsfpu16</span><span class="p">,</span>
+      <span class="mi">3772</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_ebc</span><span class="p">,</span>
+      <span class="mi">20530</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_riscv32</span><span class="p">,</span>
+      <span class="mi">20580</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_riscv64</span><span class="p">,</span>
+      <span class="mi">20776</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_riscv128</span><span class="p">,</span>
+      <span class="mi">34404</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_amd64</span><span class="p">,</span>
+      <span class="mi">36929</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_m32r</span><span class="p">,</span>
+      <span class="mi">43620</span> <span class="o">=&gt;</span> <span class="ss">:machine_type_arm64</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="no">I__MACHINE_TYPE</span> <span class="o">=</span> <span class="no">MACHINE_TYPE</span><span class="o">.</span><span class="n">invert</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @machine = Kaitai::Struct::Stream::resolve_enum(MACHINE_TYPE, @_io.read_u2le)
-      @number_of_sections = @_io.read_u2le
-      @time_date_stamp = @_io.read_u4le
-      @pointer_to_symbol_table = @_io.read_u4le
-      @number_of_symbols = @_io.read_u4le
-      @size_of_optional_header = @_io.read_u2le
-      @characteristics = @_io.read_u2le
-      self
-    end
-    def symbol_table_size
-      return @symbol_table_size unless @symbol_table_size.nil?
-      @symbol_table_size = (number_of_symbols * 18)
-      @symbol_table_size
-    end
-    def symbol_name_table_offset
-      return @symbol_name_table_offset unless @symbol_name_table_offset.nil?
-      @symbol_name_table_offset = (pointer_to_symbol_table + symbol_table_size)
-      @symbol_name_table_offset
-    end
-    def symbol_name_table_size
-      return @symbol_name_table_size unless @symbol_name_table_size.nil?
-      _pos = @_io.pos
-      @_io.seek(symbol_name_table_offset)
-      @symbol_name_table_size = @_io.read_u4le
-      @_io.seek(_pos)
-      @symbol_name_table_size
-    end
-    def symbol_table
-      return @symbol_table unless @symbol_table.nil?
-      _pos = @_io.pos
-      @_io.seek(pointer_to_symbol_table)
-      @symbol_table = Array.new(number_of_symbols)
-      (number_of_symbols).times { |i|
-        @symbol_table[i] = CoffSymbol.new(@_io, self, @_root)
-      }
-      @_io.seek(_pos)
-      @symbol_table
-    end
-    attr_reader :machine
-    attr_reader :number_of_sections
-    attr_reader :time_date_stamp
-    attr_reader :pointer_to_symbol_table
-    attr_reader :number_of_symbols
-    attr_reader :size_of_optional_header
-    attr_reader :characteristics
-  end
-  class Annoyingstring &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@machine</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MACHINE_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="vi">@number_of_sections</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@time_date_stamp</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@pointer_to_symbol_table</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@number_of_symbols</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@size_of_optional_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@characteristics</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">symbol_table_size</span>
+      <span class="k">return</span> <span class="vi">@symbol_table_size</span> <span class="k">unless</span> <span class="vi">@symbol_table_size</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@symbol_table_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">number_of_symbols</span> <span class="o">*</span> <span class="mi">18</span><span class="p">)</span>
+      <span class="vi">@symbol_table_size</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">symbol_name_table_offset</span>
+      <span class="k">return</span> <span class="vi">@symbol_name_table_offset</span> <span class="k">unless</span> <span class="vi">@symbol_name_table_offset</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@symbol_name_table_offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">pointer_to_symbol_table</span> <span class="o">+</span> <span class="n">symbol_table_size</span><span class="p">)</span>
+      <span class="vi">@symbol_name_table_offset</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">symbol_name_table_size</span>
+      <span class="k">return</span> <span class="vi">@symbol_name_table_size</span> <span class="k">unless</span> <span class="vi">@symbol_name_table_size</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">symbol_name_table_offset</span><span class="p">)</span>
+      <span class="vi">@symbol_name_table_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@symbol_name_table_size</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">symbol_table</span>
+      <span class="k">return</span> <span class="vi">@symbol_table</span> <span class="k">unless</span> <span class="vi">@symbol_table</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pointer_to_symbol_table</span><span class="p">)</span>
+      <span class="vi">@symbol_table</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">number_of_symbols</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">number_of_symbols</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@symbol_table</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">CoffSymbol</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@symbol_table</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:machine</span>
+    <span class="kp">attr_reader</span> <span class="ss">:number_of_sections</span>
+    <span class="kp">attr_reader</span> <span class="ss">:time_date_stamp</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pointer_to_symbol_table</span>
+    <span class="kp">attr_reader</span> <span class="ss">:number_of_symbols</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size_of_optional_header</span>
+    <span class="kp">attr_reader</span> <span class="ss">:characteristics</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Annoyingstring</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      self
-    end
-    def name_from_offset
-      return @name_from_offset unless @name_from_offset.nil?
-      if name_zeroes == 0
-        io = _root._io
-        _pos = io.pos
-        io.seek((name_zeroes == 0 ? (_parent._parent.symbol_name_table_offset + name_offset) : 0))
-        @name_from_offset = (io.read_bytes_term(0, false, true, false)).force_encoding(&quot;ascii&quot;)
-        io.seek(_pos)
-      end
-      @name_from_offset
-    end
-    def name_offset
-      return @name_offset unless @name_offset.nil?
-      _pos = @_io.pos
-      @_io.seek(4)
-      @name_offset = @_io.read_u4le
-      @_io.seek(_pos)
-      @name_offset
-    end
-    def name
-      return @name unless @name.nil?
-      @name = (name_zeroes == 0 ? name_from_offset : name_from_short)
-      @name
-    end
-    def name_zeroes
-      return @name_zeroes unless @name_zeroes.nil?
-      _pos = @_io.pos
-      @_io.seek(0)
-      @name_zeroes = @_io.read_u4le
-      @_io.seek(_pos)
-      @name_zeroes
-    end
-    def name_from_short
-      return @name_from_short unless @name_from_short.nil?
-      if name_zeroes != 0
-        _pos = @_io.pos
-        @_io.seek(0)
-        @name_from_short = (@_io.read_bytes_term(0, false, true, false)).force_encoding(&quot;ascii&quot;)
-        @_io.seek(_pos)
-      end
-      @name_from_short
-    end
-  end
-  def pe
-    return @pe unless @pe.nil?
-    _pos = @_io.pos
-    @_io.seek(mz.ofs_pe)
-    @pe = PeHeader.new(@_io, self, @_root)
-    @_io.seek(_pos)
-    @pe
-  end
-  attr_reader :mz
-end
-</code></pre>
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">name_from_offset</span>
+      <span class="k">return</span> <span class="vi">@name_from_offset</span> <span class="k">unless</span> <span class="vi">@name_from_offset</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">name_zeroes</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+        <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">((</span><span class="n">name_zeroes</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">symbol_name_table_offset</span> <span class="o">+</span> <span class="n">name_offset</span><span class="p">)</span> <span class="p">:</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="vi">@name_from_offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">false</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@name_from_offset</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">name_offset</span>
+      <span class="k">return</span> <span class="vi">@name_offset</span> <span class="k">unless</span> <span class="vi">@name_offset</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="vi">@name_offset</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@name_offset</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">name</span>
+      <span class="k">return</span> <span class="vi">@name</span> <span class="k">unless</span> <span class="vi">@name</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@name</span> <span class="o">=</span> <span class="p">(</span><span class="n">name_zeroes</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">name_from_offset</span> <span class="p">:</span> <span class="n">name_from_short</span><span class="p">)</span>
+      <span class="vi">@name</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">name_zeroes</span>
+      <span class="k">return</span> <span class="vi">@name_zeroes</span> <span class="k">unless</span> <span class="vi">@name_zeroes</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="vi">@name_zeroes</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@name_zeroes</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">name_from_short</span>
+      <span class="k">return</span> <span class="vi">@name_from_short</span> <span class="k">unless</span> <span class="vi">@name_from_short</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">name_zeroes</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="vi">@name_from_short</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">false</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+        <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@name_from_short</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">pe</span>
+    <span class="k">return</span> <span class="vi">@pe</span> <span class="k">unless</span> <span class="vi">@pe</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">mz</span><span class="o">.</span><span class="n">ofs_pe</span><span class="p">)</span>
+    <span class="vi">@pe</span> <span class="o">=</span> <span class="no">PeHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+    <span class="vi">@pe</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:mz</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -877,8 +874,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

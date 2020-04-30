@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -253,273 +250,273 @@ prior to declaration of header.
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# systemd, a popular user-space system/service management suite on Linux,
-# offers logging functionality, storing incoming logs in a binary journal
-# format.
-# 
-# On live Linux system running systemd, these journals are typically located at:
-# 
-# * /run/log/journal/machine-id/*.journal (volatile, lost after reboot)
-# * /var/log/journal/machine-id/*.journal (persistent, but disabled by default on Debian / Ubuntu)
-# @see https://www.freedesktop.org/wiki/Software/systemd/journal-files/ Source
-class SystemdJournal &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># systemd, a popular user-space system/service management suite on Linux,</span>
+<span class="c1"># offers logging functionality, storing incoming logs in a binary journal</span>
+<span class="c1"># format.</span>
+<span class="c1"># </span>
+<span class="c1"># On live Linux system running systemd, these journals are typically located at:</span>
+<span class="c1"># </span>
+<span class="c1"># * /run/log/journal/machine-id/*.journal (volatile, lost after reboot)</span>
+<span class="c1"># * /var/log/journal/machine-id/*.journal (persistent, but disabled by default on Debian / Ubuntu)</span>
+<span class="c1"># @see https://www.freedesktop.org/wiki/Software/systemd/journal-files/ Source</span>
+<span class="k">class</span> <span class="nc">SystemdJournal</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  STATE = {
-    0 =&gt; :state_offline,
-    1 =&gt; :state_online,
-    2 =&gt; :state_archived,
-  }
-  I__STATE = STATE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">STATE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:state_offline</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:state_online</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:state_archived</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__STATE</span> <span class="o">=</span> <span class="no">STATE</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @_raw_header = @_io.read_bytes(len_header)
-    io = Kaitai::Struct::Stream.new(@_raw_header)
-    @header = Header.new(io, self, @_root)
-    @objects = Array.new(header.num_objects)
-    (header.num_objects).times { |i|
-      @objects[i] = JournalObject.new(@_io, self, @_root)
-    }
-    self
-  end
-  class Header &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@_raw_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_header</span><span class="p">)</span>
+    <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_header</span><span class="p">)</span>
+    <span class="vi">@header</span> <span class="o">=</span> <span class="no">Header</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@objects</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_objects</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_objects</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@objects</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">JournalObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Header</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @signature = @_io.ensure_fixed_contents([76, 80, 75, 83, 72, 72, 82, 72].pack(&#39;C*&#39;))
-      @compatible_flags = @_io.read_u4le
-      @incompatible_flags = @_io.read_u4le
-      @state = Kaitai::Struct::Stream::resolve_enum(STATE, @_io.read_u1)
-      @reserved = @_io.read_bytes(7)
-      @file_id = @_io.read_bytes(16)
-      @machine_id = @_io.read_bytes(16)
-      @boot_id = @_io.read_bytes(16)
-      @seqnum_id = @_io.read_bytes(16)
-      @len_header = @_io.read_u8le
-      @len_arena = @_io.read_u8le
-      @ofs_data_hash_table = @_io.read_u8le
-      @len_data_hash_table = @_io.read_u8le
-      @ofs_field_hash_table = @_io.read_u8le
-      @len_field_hash_table = @_io.read_u8le
-      @ofs_tail_object = @_io.read_u8le
-      @num_objects = @_io.read_u8le
-      @num_entries = @_io.read_u8le
-      @tail_entry_seqnum = @_io.read_u8le
-      @head_entry_seqnum = @_io.read_u8le
-      @ofs_entry_array = @_io.read_u8le
-      @head_entry_realtime = @_io.read_u8le
-      @tail_entry_realtime = @_io.read_u8le
-      @tail_entry_monotonic = @_io.read_u8le
-      if !(_io.eof?)
-        @num_data = @_io.read_u8le
-      end
-      if !(_io.eof?)
-        @num_fields = @_io.read_u8le
-      end
-      if !(_io.eof?)
-        @num_tags = @_io.read_u8le
-      end
-      if !(_io.eof?)
-        @num_entry_arrays = @_io.read_u8le
-      end
-      self
-    end
-    attr_reader :signature
-    attr_reader :compatible_flags
-    attr_reader :incompatible_flags
-    attr_reader :state
-    attr_reader :reserved
-    attr_reader :file_id
-    attr_reader :machine_id
-    attr_reader :boot_id
-    attr_reader :seqnum_id
-    attr_reader :len_header
-    attr_reader :len_arena
-    attr_reader :ofs_data_hash_table
-    attr_reader :len_data_hash_table
-    attr_reader :ofs_field_hash_table
-    attr_reader :len_field_hash_table
-    attr_reader :ofs_tail_object
-    attr_reader :num_objects
-    attr_reader :num_entries
-    attr_reader :tail_entry_seqnum
-    attr_reader :head_entry_seqnum
-    attr_reader :ofs_entry_array
-    attr_reader :head_entry_realtime
-    attr_reader :tail_entry_realtime
-    attr_reader :tail_entry_monotonic
-    attr_reader :num_data
-    attr_reader :num_fields
-    attr_reader :num_tags
-    attr_reader :num_entry_arrays
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@signature</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">76</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">72</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">72</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@compatible_flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@incompatible_flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@state</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">STATE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+      <span class="vi">@file_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+      <span class="vi">@machine_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+      <span class="vi">@boot_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+      <span class="vi">@seqnum_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+      <span class="vi">@len_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@len_arena</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@ofs_data_hash_table</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@len_data_hash_table</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@ofs_field_hash_table</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@len_field_hash_table</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@ofs_tail_object</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@num_objects</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@num_entries</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@tail_entry_seqnum</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@head_entry_seqnum</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@ofs_entry_array</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@head_entry_realtime</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@tail_entry_realtime</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@tail_entry_monotonic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="k">if</span> <span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="o">.</span><span class="n">eof?</span><span class="p">)</span>
+        <span class="vi">@num_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="o">.</span><span class="n">eof?</span><span class="p">)</span>
+        <span class="vi">@num_fields</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="o">.</span><span class="n">eof?</span><span class="p">)</span>
+        <span class="vi">@num_tags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="o">.</span><span class="n">eof?</span><span class="p">)</span>
+        <span class="vi">@num_entry_arrays</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:signature</span>
+    <span class="kp">attr_reader</span> <span class="ss">:compatible_flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:incompatible_flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:state</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
+    <span class="kp">attr_reader</span> <span class="ss">:file_id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:machine_id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:boot_id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:seqnum_id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_header</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_arena</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_data_hash_table</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_data_hash_table</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_field_hash_table</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_field_hash_table</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_tail_object</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_objects</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_entries</span>
+    <span class="kp">attr_reader</span> <span class="ss">:tail_entry_seqnum</span>
+    <span class="kp">attr_reader</span> <span class="ss">:head_entry_seqnum</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_entry_array</span>
+    <span class="kp">attr_reader</span> <span class="ss">:head_entry_realtime</span>
+    <span class="kp">attr_reader</span> <span class="ss">:tail_entry_realtime</span>
+    <span class="kp">attr_reader</span> <span class="ss">:tail_entry_monotonic</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_fields</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_tags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_entry_arrays</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://www.freedesktop.org/wiki/Software/systemd/journal-files/#objects Source
-  class JournalObject &lt; Kaitai::Struct::Struct
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.freedesktop.org/wiki/Software/systemd/journal-files/#objects Source</span>
+  <span class="k">class</span> <span class="nc">JournalObject</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-    OBJECT_TYPES = {
-      0 =&gt; :object_types_unused,
-      1 =&gt; :object_types_data,
-      2 =&gt; :object_types_field,
-      3 =&gt; :object_types_entry,
-      4 =&gt; :object_types_data_hash_table,
-      5 =&gt; :object_types_field_hash_table,
-      6 =&gt; :object_types_entry_array,
-      7 =&gt; :object_types_tag,
-    }
-    I__OBJECT_TYPES = OBJECT_TYPES.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="no">OBJECT_TYPES</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:object_types_unused</span><span class="p">,</span>
+      <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:object_types_data</span><span class="p">,</span>
+      <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:object_types_field</span><span class="p">,</span>
+      <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:object_types_entry</span><span class="p">,</span>
+      <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:object_types_data_hash_table</span><span class="p">,</span>
+      <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:object_types_field_hash_table</span><span class="p">,</span>
+      <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:object_types_entry_array</span><span class="p">,</span>
+      <span class="mi">7</span> <span class="o">=&gt;</span> <span class="ss">:object_types_tag</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="no">I__OBJECT_TYPES</span> <span class="o">=</span> <span class="no">OBJECT_TYPES</span><span class="o">.</span><span class="n">invert</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @padding = @_io.read_bytes(((8 - _io.pos) % 8))
-      @object_type = Kaitai::Struct::Stream::resolve_enum(OBJECT_TYPES, @_io.read_u1)
-      @flags = @_io.read_u1
-      @reserved = @_io.read_bytes(6)
-      @len_object = @_io.read_u8le
-      case object_type
-      when :object_types_data
-        @_raw_payload = @_io.read_bytes((len_object - 16))
-        io = Kaitai::Struct::Stream.new(@_raw_payload)
-        @payload = DataObject.new(io, self, @_root)
-      else
-        @payload = @_io.read_bytes((len_object - 16))
-      end
-      self
-    end
-    attr_reader :padding
-    attr_reader :object_type
-    attr_reader :flags
-    attr_reader :reserved
-    attr_reader :len_object
-    attr_reader :payload
-    attr_reader :_raw_payload
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@padding</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="mi">8</span> <span class="o">-</span> <span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span> <span class="o">%</span> <span class="mi">8</span><span class="p">))</span>
+      <span class="vi">@object_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">OBJECT_TYPES</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+      <span class="vi">@len_object</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="k">case</span> <span class="n">object_type</span>
+      <span class="k">when</span> <span class="ss">:object_types_data</span>
+        <span class="vi">@_raw_payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_object</span> <span class="o">-</span> <span class="mi">16</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_payload</span><span class="p">)</span>
+        <span class="vi">@payload</span> <span class="o">=</span> <span class="no">DataObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_object</span> <span class="o">-</span> <span class="mi">16</span><span class="p">))</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:padding</span>
+    <span class="kp">attr_reader</span> <span class="ss">:object_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_object</span>
+    <span class="kp">attr_reader</span> <span class="ss">:payload</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_payload</span>
+  <span class="k">end</span>
 
-  ##
-  # Data objects are designed to carry log payload, typically in
-  # form of a &quot;key=value&quot; string in `payload` attribute.
-  # @see https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects Source
-  class DataObject &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Data objects are designed to carry log payload, typically in</span>
+  <span class="c1"># form of a &quot;key=value&quot; string in `payload` attribute.</span>
+  <span class="c1"># @see https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects Source</span>
+  <span class="k">class</span> <span class="nc">DataObject</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @hash = @_io.read_u8le
-      @ofs_next_hash = @_io.read_u8le
-      @ofs_head_field = @_io.read_u8le
-      @ofs_entry = @_io.read_u8le
-      @ofs_entry_array = @_io.read_u8le
-      @num_entries = @_io.read_u8le
-      @payload = @_io.read_bytes_full
-      self
-    end
-    def next_hash
-      return @next_hash unless @next_hash.nil?
-      if ofs_next_hash != 0
-        io = _root._io
-        _pos = io.pos
-        io.seek(ofs_next_hash)
-        @next_hash = JournalObject.new(io, self, @_root)
-        io.seek(_pos)
-      end
-      @next_hash
-    end
-    def head_field
-      return @head_field unless @head_field.nil?
-      if ofs_head_field != 0
-        io = _root._io
-        _pos = io.pos
-        io.seek(ofs_head_field)
-        @head_field = JournalObject.new(io, self, @_root)
-        io.seek(_pos)
-      end
-      @head_field
-    end
-    def entry
-      return @entry unless @entry.nil?
-      if ofs_entry != 0
-        io = _root._io
-        _pos = io.pos
-        io.seek(ofs_entry)
-        @entry = JournalObject.new(io, self, @_root)
-        io.seek(_pos)
-      end
-      @entry
-    end
-    def entry_array
-      return @entry_array unless @entry_array.nil?
-      if ofs_entry_array != 0
-        io = _root._io
-        _pos = io.pos
-        io.seek(ofs_entry_array)
-        @entry_array = JournalObject.new(io, self, @_root)
-        io.seek(_pos)
-      end
-      @entry_array
-    end
-    attr_reader :hash
-    attr_reader :ofs_next_hash
-    attr_reader :ofs_head_field
-    attr_reader :ofs_entry
-    attr_reader :ofs_entry_array
-    attr_reader :num_entries
-    attr_reader :payload
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@hash</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@ofs_next_hash</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@ofs_head_field</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@ofs_entry</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@ofs_entry_array</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@num_entries</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">next_hash</span>
+      <span class="k">return</span> <span class="vi">@next_hash</span> <span class="k">unless</span> <span class="vi">@next_hash</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">ofs_next_hash</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+        <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_next_hash</span><span class="p">)</span>
+        <span class="vi">@next_hash</span> <span class="o">=</span> <span class="no">JournalObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@next_hash</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">head_field</span>
+      <span class="k">return</span> <span class="vi">@head_field</span> <span class="k">unless</span> <span class="vi">@head_field</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">ofs_head_field</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+        <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_head_field</span><span class="p">)</span>
+        <span class="vi">@head_field</span> <span class="o">=</span> <span class="no">JournalObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@head_field</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">entry</span>
+      <span class="k">return</span> <span class="vi">@entry</span> <span class="k">unless</span> <span class="vi">@entry</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">ofs_entry</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+        <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_entry</span><span class="p">)</span>
+        <span class="vi">@entry</span> <span class="o">=</span> <span class="no">JournalObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@entry</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">entry_array</span>
+      <span class="k">return</span> <span class="vi">@entry_array</span> <span class="k">unless</span> <span class="vi">@entry_array</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">ofs_entry_array</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+        <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_entry_array</span><span class="p">)</span>
+        <span class="vi">@entry_array</span> <span class="o">=</span> <span class="no">JournalObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@entry_array</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:hash</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_next_hash</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_head_field</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_entry</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_entry_array</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_entries</span>
+    <span class="kp">attr_reader</span> <span class="ss">:payload</span>
+  <span class="k">end</span>
 
-  ##
-  # Header length is used to set substream size, as it thus required
-  # prior to declaration of header.
-  def len_header
-    return @len_header unless @len_header.nil?
-    _pos = @_io.pos
-    @_io.seek(88)
-    @len_header = @_io.read_u8le
-    @_io.seek(_pos)
-    @len_header
-  end
-  def data_hash_table
-    return @data_hash_table unless @data_hash_table.nil?
-    _pos = @_io.pos
-    @_io.seek(header.ofs_data_hash_table)
-    @data_hash_table = @_io.read_bytes(header.len_data_hash_table)
-    @_io.seek(_pos)
-    @data_hash_table
-  end
-  def field_hash_table
-    return @field_hash_table unless @field_hash_table.nil?
-    _pos = @_io.pos
-    @_io.seek(header.ofs_field_hash_table)
-    @field_hash_table = @_io.read_bytes(header.len_field_hash_table)
-    @_io.seek(_pos)
-    @field_hash_table
-  end
-  attr_reader :header
-  attr_reader :objects
-  attr_reader :_raw_header
-end
-</code></pre>
+  <span class="c1">##</span>
+  <span class="c1"># Header length is used to set substream size, as it thus required</span>
+  <span class="c1"># prior to declaration of header.</span>
+  <span class="k">def</span> <span class="nf">len_header</span>
+    <span class="k">return</span> <span class="vi">@len_header</span> <span class="k">unless</span> <span class="vi">@len_header</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">88</span><span class="p">)</span>
+    <span class="vi">@len_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+    <span class="vi">@len_header</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">data_hash_table</span>
+    <span class="k">return</span> <span class="vi">@data_hash_table</span> <span class="k">unless</span> <span class="vi">@data_hash_table</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">ofs_data_hash_table</span><span class="p">)</span>
+    <span class="vi">@data_hash_table</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">len_data_hash_table</span><span class="p">)</span>
+    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+    <span class="vi">@data_hash_table</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">field_hash_table</span>
+    <span class="k">return</span> <span class="vi">@field_hash_table</span> <span class="k">unless</span> <span class="vi">@field_hash_table</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">ofs_field_hash_table</span><span class="p">)</span>
+    <span class="vi">@field_hash_table</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">len_field_hash_table</span><span class="p">)</span>
+    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+    <span class="vi">@field_hash_table</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:header</span>
+  <span class="kp">attr_reader</span> <span class="ss">:objects</span>
+  <span class="kp">attr_reader</span> <span class="ss">:_raw_header</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -546,8 +543,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

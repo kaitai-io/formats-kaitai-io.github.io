@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -287,312 +284,312 @@ data = Rar.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# RAR is a archive format used by popular proprietary RAR archiver,
-# created by Eugene Roshal. There are two major versions of format
-# (v1.5-4.0 and RAR v5+).
-# 
-# File format essentially consists of a linear sequence of
-# blocks. Each block has fixed header and custom body (that depends on
-# block type), so it&#39;s possible to skip block even if one doesn&#39;t know
-# how to process a certain block type.
-# @see http://acritum.com/winrar/rar-format 
-class Rar &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># RAR is a archive format used by popular proprietary RAR archiver,</span>
+<span class="c1"># created by Eugene Roshal. There are two major versions of format</span>
+<span class="c1"># (v1.5-4.0 and RAR v5+).</span>
+<span class="c1"># </span>
+<span class="c1"># File format essentially consists of a linear sequence of</span>
+<span class="c1"># blocks. Each block has fixed header and custom body (that depends on</span>
+<span class="c1"># block type), so it&#39;s possible to skip block even if one doesn&#39;t know</span>
+<span class="c1"># how to process a certain block type.</span>
+<span class="c1"># @see http://acritum.com/winrar/rar-format </span>
+<span class="k">class</span> <span class="nc">Rar</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  BLOCK_TYPES = {
-    114 =&gt; :block_types_marker,
-    115 =&gt; :block_types_archive_header,
-    116 =&gt; :block_types_file_header,
-    117 =&gt; :block_types_old_style_comment_header,
-    118 =&gt; :block_types_old_style_authenticity_info_76,
-    119 =&gt; :block_types_old_style_subblock,
-    120 =&gt; :block_types_old_style_recovery_record,
-    121 =&gt; :block_types_old_style_authenticity_info_79,
-    122 =&gt; :block_types_subblock,
-    123 =&gt; :block_types_terminator,
-  }
-  I__BLOCK_TYPES = BLOCK_TYPES.invert
+  <span class="no">BLOCK_TYPES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">114</span> <span class="o">=&gt;</span> <span class="ss">:block_types_marker</span><span class="p">,</span>
+    <span class="mi">115</span> <span class="o">=&gt;</span> <span class="ss">:block_types_archive_header</span><span class="p">,</span>
+    <span class="mi">116</span> <span class="o">=&gt;</span> <span class="ss">:block_types_file_header</span><span class="p">,</span>
+    <span class="mi">117</span> <span class="o">=&gt;</span> <span class="ss">:block_types_old_style_comment_header</span><span class="p">,</span>
+    <span class="mi">118</span> <span class="o">=&gt;</span> <span class="ss">:block_types_old_style_authenticity_info_76</span><span class="p">,</span>
+    <span class="mi">119</span> <span class="o">=&gt;</span> <span class="ss">:block_types_old_style_subblock</span><span class="p">,</span>
+    <span class="mi">120</span> <span class="o">=&gt;</span> <span class="ss">:block_types_old_style_recovery_record</span><span class="p">,</span>
+    <span class="mi">121</span> <span class="o">=&gt;</span> <span class="ss">:block_types_old_style_authenticity_info_79</span><span class="p">,</span>
+    <span class="mi">122</span> <span class="o">=&gt;</span> <span class="ss">:block_types_subblock</span><span class="p">,</span>
+    <span class="mi">123</span> <span class="o">=&gt;</span> <span class="ss">:block_types_terminator</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__BLOCK_TYPES</span> <span class="o">=</span> <span class="no">BLOCK_TYPES</span><span class="o">.</span><span class="n">invert</span>
 
-  OSES = {
-    0 =&gt; :oses_ms_dos,
-    1 =&gt; :oses_os_2,
-    2 =&gt; :oses_windows,
-    3 =&gt; :oses_unix,
-    4 =&gt; :oses_mac_os,
-    5 =&gt; :oses_beos,
-  }
-  I__OSES = OSES.invert
+  <span class="no">OSES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:oses_ms_dos</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:oses_os_2</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:oses_windows</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:oses_unix</span><span class="p">,</span>
+    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:oses_mac_os</span><span class="p">,</span>
+    <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:oses_beos</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__OSES</span> <span class="o">=</span> <span class="no">OSES</span><span class="o">.</span><span class="n">invert</span>
 
-  METHODS = {
-    48 =&gt; :methods_store,
-    49 =&gt; :methods_fastest,
-    50 =&gt; :methods_fast,
-    51 =&gt; :methods_normal,
-    52 =&gt; :methods_good,
-    53 =&gt; :methods_best,
-  }
-  I__METHODS = METHODS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">METHODS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">48</span> <span class="o">=&gt;</span> <span class="ss">:methods_store</span><span class="p">,</span>
+    <span class="mi">49</span> <span class="o">=&gt;</span> <span class="ss">:methods_fastest</span><span class="p">,</span>
+    <span class="mi">50</span> <span class="o">=&gt;</span> <span class="ss">:methods_fast</span><span class="p">,</span>
+    <span class="mi">51</span> <span class="o">=&gt;</span> <span class="ss">:methods_normal</span><span class="p">,</span>
+    <span class="mi">52</span> <span class="o">=&gt;</span> <span class="ss">:methods_good</span><span class="p">,</span>
+    <span class="mi">53</span> <span class="o">=&gt;</span> <span class="ss">:methods_best</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__METHODS</span> <span class="o">=</span> <span class="no">METHODS</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @magic = MagicSignature.new(@_io, self, @_root)
-    @blocks = []
-    i = 0
-    while not @_io.eof?
-      case magic.version
-      when 0
-        @blocks &lt;&lt; Block.new(@_io, self, @_root)
-      when 1
-        @blocks &lt;&lt; BlockV5.new(@_io, self, @_root)
-      end
-      i += 1
-    end
-    self
-  end
-  class BlockV5 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@magic</span> <span class="o">=</span> <span class="no">MagicSignature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@blocks</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+      <span class="k">case</span> <span class="n">magic</span><span class="o">.</span><span class="n">version</span>
+      <span class="k">when</span> <span class="mi">0</span>
+        <span class="vi">@blocks</span> <span class="o">&lt;&lt;</span> <span class="no">Block</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="mi">1</span>
+        <span class="vi">@blocks</span> <span class="o">&lt;&lt;</span> <span class="no">BlockV5</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">BlockV5</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      self
-    end
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
 
-  ##
-  # Basic block that RAR files consist of. There are several block
-  # types (see `block_type`), which have different `body` and
-  # `add_body`.
-  class Block &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Basic block that RAR files consist of. There are several block</span>
+  <span class="c1"># types (see `block_type`), which have different `body` and</span>
+  <span class="c1"># `add_body`.</span>
+  <span class="k">class</span> <span class="nc">Block</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @crc16 = @_io.read_u2le
-      @block_type = Kaitai::Struct::Stream::resolve_enum(BLOCK_TYPES, @_io.read_u1)
-      @flags = @_io.read_u2le
-      @block_size = @_io.read_u2le
-      if has_add
-        @add_size = @_io.read_u4le
-      end
-      case block_type
-      when :block_types_file_header
-        @_raw_body = @_io.read_bytes(body_size)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = BlockFileHeader.new(io, self, @_root)
-      else
-        @body = @_io.read_bytes(body_size)
-      end
-      if has_add
-        @add_body = @_io.read_bytes(add_size)
-      end
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@crc16</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@block_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">BLOCK_TYPES</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@block_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">if</span> <span class="n">has_add</span>
+        <span class="vi">@add_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">end</span>
+      <span class="k">case</span> <span class="n">block_type</span>
+      <span class="k">when</span> <span class="ss">:block_types_file_header</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">body_size</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">BlockFileHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">body_size</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">has_add</span>
+        <span class="vi">@add_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">add_size</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # True if block has additional content attached to it
-    def has_add
-      return @has_add unless @has_add.nil?
-      @has_add = (flags &amp; 32768) != 0
-      @has_add
-    end
-    def header_size
-      return @header_size unless @header_size.nil?
-      @header_size = (has_add ? 11 : 7)
-      @header_size
-    end
-    def body_size
-      return @body_size unless @body_size.nil?
-      @body_size = (block_size - header_size)
-      @body_size
-    end
+    <span class="c1">##</span>
+    <span class="c1"># True if block has additional content attached to it</span>
+    <span class="k">def</span> <span class="nf">has_add</span>
+      <span class="k">return</span> <span class="vi">@has_add</span> <span class="k">unless</span> <span class="vi">@has_add</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@has_add</span> <span class="o">=</span> <span class="p">(</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@has_add</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">header_size</span>
+      <span class="k">return</span> <span class="vi">@header_size</span> <span class="k">unless</span> <span class="vi">@header_size</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@header_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">has_add</span> <span class="p">?</span> <span class="mi">11</span> <span class="p">:</span> <span class="mi">7</span><span class="p">)</span>
+      <span class="vi">@header_size</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">body_size</span>
+      <span class="k">return</span> <span class="vi">@body_size</span> <span class="k">unless</span> <span class="vi">@body_size</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@body_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">block_size</span> <span class="o">-</span> <span class="n">header_size</span><span class="p">)</span>
+      <span class="vi">@body_size</span>
+    <span class="k">end</span>
 
-    ##
-    # CRC16 of whole block or some part of it (depends on block type)
-    attr_reader :crc16
-    attr_reader :block_type
-    attr_reader :flags
+    <span class="c1">##</span>
+    <span class="c1"># CRC16 of whole block or some part of it (depends on block type)</span>
+    <span class="kp">attr_reader</span> <span class="ss">:crc16</span>
+    <span class="kp">attr_reader</span> <span class="ss">:block_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
 
-    ##
-    # Size of block (header + body, but without additional content)
-    attr_reader :block_size
+    <span class="c1">##</span>
+    <span class="c1"># Size of block (header + body, but without additional content)</span>
+    <span class="kp">attr_reader</span> <span class="ss">:block_size</span>
 
-    ##
-    # Size of additional content in this block
-    attr_reader :add_size
-    attr_reader :body
+    <span class="c1">##</span>
+    <span class="c1"># Size of additional content in this block</span>
+    <span class="kp">attr_reader</span> <span class="ss">:add_size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body</span>
 
-    ##
-    # Additional content in this block
-    attr_reader :add_body
-    attr_reader :_raw_body
-  end
-  class BlockFileHeader &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="c1">##</span>
+    <span class="c1"># Additional content in this block</span>
+    <span class="kp">attr_reader</span> <span class="ss">:add_body</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_body</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">BlockFileHeader</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @low_unp_size = @_io.read_u4le
-      @host_os = Kaitai::Struct::Stream::resolve_enum(OSES, @_io.read_u1)
-      @file_crc32 = @_io.read_u4le
-      @file_time = DosTime.new(@_io, self, @_root)
-      @rar_version = @_io.read_u1
-      @method = Kaitai::Struct::Stream::resolve_enum(METHODS, @_io.read_u1)
-      @name_size = @_io.read_u2le
-      @attr = @_io.read_u4le
-      if (_parent.flags &amp; 256) != 0
-        @high_pack_size = @_io.read_u4le
-      end
-      @file_name = @_io.read_bytes(name_size)
-      if (_parent.flags &amp; 1024) != 0
-        @salt = @_io.read_u8le
-      end
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@low_unp_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@host_os</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">OSES</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@file_crc32</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@file_time</span> <span class="o">=</span> <span class="no">DosTime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@rar_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@method</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">METHODS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@name_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@attr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@high_pack_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">end</span>
+      <span class="vi">@file_name</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">name_size</span><span class="p">)</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@salt</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Uncompressed file size (lower 32 bits, if 64-bit header flag is present)
-    attr_reader :low_unp_size
+    <span class="c1">##</span>
+    <span class="c1"># Uncompressed file size (lower 32 bits, if 64-bit header flag is present)</span>
+    <span class="kp">attr_reader</span> <span class="ss">:low_unp_size</span>
 
-    ##
-    # Operating system used for archiving
-    attr_reader :host_os
-    attr_reader :file_crc32
+    <span class="c1">##</span>
+    <span class="c1"># Operating system used for archiving</span>
+    <span class="kp">attr_reader</span> <span class="ss">:host_os</span>
+    <span class="kp">attr_reader</span> <span class="ss">:file_crc32</span>
 
-    ##
-    # Date and time in standard MS DOS format
-    attr_reader :file_time
+    <span class="c1">##</span>
+    <span class="c1"># Date and time in standard MS DOS format</span>
+    <span class="kp">attr_reader</span> <span class="ss">:file_time</span>
 
-    ##
-    # RAR version needed to extract file (Version number is encoded as 10 * Major version + minor version.)
-    attr_reader :rar_version
+    <span class="c1">##</span>
+    <span class="c1"># RAR version needed to extract file (Version number is encoded as 10 * Major version + minor version.)</span>
+    <span class="kp">attr_reader</span> <span class="ss">:rar_version</span>
 
-    ##
-    # Compression method
-    attr_reader :method
+    <span class="c1">##</span>
+    <span class="c1"># Compression method</span>
+    <span class="kp">attr_reader</span> <span class="ss">:method</span>
 
-    ##
-    # File name size
-    attr_reader :name_size
+    <span class="c1">##</span>
+    <span class="c1"># File name size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:name_size</span>
 
-    ##
-    # File attributes
-    attr_reader :attr
+    <span class="c1">##</span>
+    <span class="c1"># File attributes</span>
+    <span class="kp">attr_reader</span> <span class="ss">:attr</span>
 
-    ##
-    # Compressed file size, high 32 bits, only if 64-bit header flag is present
-    attr_reader :high_pack_size
-    attr_reader :file_name
-    attr_reader :salt
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Compressed file size, high 32 bits, only if 64-bit header flag is present</span>
+    <span class="kp">attr_reader</span> <span class="ss">:high_pack_size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:file_name</span>
+    <span class="kp">attr_reader</span> <span class="ss">:salt</span>
+  <span class="k">end</span>
 
-  ##
-  # RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
-  # 8-byte magic (and pretty different block format) for v5+. This
-  # type would parse and validate both versions of signature. Note
-  # that actually this signature is a valid RAR &quot;block&quot;: in theory,
-  # one can omit signature reading at all, and read this normally,
-  # as a block, if exact RAR version is known (and thus it&#39;s
-  # possible to choose correct block format).
-  class MagicSignature &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and</span>
+  <span class="c1"># 8-byte magic (and pretty different block format) for v5+. This</span>
+  <span class="c1"># type would parse and validate both versions of signature. Note</span>
+  <span class="c1"># that actually this signature is a valid RAR &quot;block&quot;: in theory,</span>
+  <span class="c1"># one can omit signature reading at all, and read this normally,</span>
+  <span class="c1"># as a block, if exact RAR version is known (and thus it&#39;s</span>
+  <span class="c1"># possible to choose correct block format).</span>
+  <span class="k">class</span> <span class="nc">MagicSignature</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @magic1 = @_io.ensure_fixed_contents([82, 97, 114, 33, 26, 7].pack(&#39;C*&#39;))
-      @version = @_io.read_u1
-      if version == 1
-        @magic3 = @_io.ensure_fixed_contents([0].pack(&#39;C*&#39;))
-      end
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@magic1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">82</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">7</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">if</span> <span class="n">version</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="vi">@magic3</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version
-    attr_reader :magic1
+    <span class="c1">##</span>
+    <span class="c1"># Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:magic1</span>
 
-    ##
-    # Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-    # format, 1 means new (RAR 5+) format
-    attr_reader :version
+    <span class="c1">##</span>
+    <span class="c1"># Variable part of magic signature: 0 means old (RAR 1.5-4.0)</span>
+    <span class="c1"># format, 1 means new (RAR 5+) format</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version</span>
 
-    ##
-    # New format (RAR 5+) magic contains extra byte
-    attr_reader :magic3
-  end
-  class DosTime &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="c1">##</span>
+    <span class="c1"># New format (RAR 5+) magic contains extra byte</span>
+    <span class="kp">attr_reader</span> <span class="ss">:magic3</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">DosTime</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @time = @_io.read_u2le
-      @date = @_io.read_u2le
-      self
-    end
-    def month
-      return @month unless @month.nil?
-      @month = ((date &amp; 480) &gt;&gt; 5)
-      @month
-    end
-    def seconds
-      return @seconds unless @seconds.nil?
-      @seconds = ((time &amp; 31) * 2)
-      @seconds
-    end
-    def year
-      return @year unless @year.nil?
-      @year = (((date &amp; 65024) &gt;&gt; 9) + 1980)
-      @year
-    end
-    def minutes
-      return @minutes unless @minutes.nil?
-      @minutes = ((time &amp; 2016) &gt;&gt; 5)
-      @minutes
-    end
-    def day
-      return @day unless @day.nil?
-      @day = (date &amp; 31)
-      @day
-    end
-    def hours
-      return @hours unless @hours.nil?
-      @hours = ((time &amp; 63488) &gt;&gt; 11)
-      @hours
-    end
-    attr_reader :time
-    attr_reader :date
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@date</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">month</span>
+      <span class="k">return</span> <span class="vi">@month</span> <span class="k">unless</span> <span class="vi">@month</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@month</span> <span class="o">=</span> <span class="p">((</span><span class="n">date</span> <span class="o">&amp;</span> <span class="mi">480</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">)</span>
+      <span class="vi">@month</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">seconds</span>
+      <span class="k">return</span> <span class="vi">@seconds</span> <span class="k">unless</span> <span class="vi">@seconds</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@seconds</span> <span class="o">=</span> <span class="p">((</span><span class="n">time</span> <span class="o">&amp;</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+      <span class="vi">@seconds</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">year</span>
+      <span class="k">return</span> <span class="vi">@year</span> <span class="k">unless</span> <span class="vi">@year</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@year</span> <span class="o">=</span> <span class="p">(((</span><span class="n">date</span> <span class="o">&amp;</span> <span class="mi">65024</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">9</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1980</span><span class="p">)</span>
+      <span class="vi">@year</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">minutes</span>
+      <span class="k">return</span> <span class="vi">@minutes</span> <span class="k">unless</span> <span class="vi">@minutes</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@minutes</span> <span class="o">=</span> <span class="p">((</span><span class="n">time</span> <span class="o">&amp;</span> <span class="mi">2016</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">)</span>
+      <span class="vi">@minutes</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">day</span>
+      <span class="k">return</span> <span class="vi">@day</span> <span class="k">unless</span> <span class="vi">@day</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@day</span> <span class="o">=</span> <span class="p">(</span><span class="n">date</span> <span class="o">&amp;</span> <span class="mi">31</span><span class="p">)</span>
+      <span class="vi">@day</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">hours</span>
+      <span class="k">return</span> <span class="vi">@hours</span> <span class="k">unless</span> <span class="vi">@hours</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@hours</span> <span class="o">=</span> <span class="p">((</span><span class="n">time</span> <span class="o">&amp;</span> <span class="mi">63488</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">11</span><span class="p">)</span>
+      <span class="vi">@hours</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:time</span>
+    <span class="kp">attr_reader</span> <span class="ss">:date</span>
+  <span class="k">end</span>
 
-  ##
-  # File format signature to validate that it is indeed a RAR archive
-  attr_reader :magic
+  <span class="c1">##</span>
+  <span class="c1"># File format signature to validate that it is indeed a RAR archive</span>
+  <span class="kp">attr_reader</span> <span class="ss">:magic</span>
 
-  ##
-  # Sequence of blocks that constitute the RAR file
-  attr_reader :blocks
-end
-</code></pre>
+  <span class="c1">##</span>
+  <span class="c1"># Sequence of blocks that constitute the RAR file</span>
+  <span class="kp">attr_reader</span> <span class="ss">:blocks</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -619,8 +616,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

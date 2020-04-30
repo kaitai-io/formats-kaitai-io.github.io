@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -252,341 +249,341 @@ compression algorithms, so it's typically raw DEFLATE stream
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * Gzip is a popular and standard single-file archiving format. It
- * essentially provides a container that stores original file name,
- * timestamp and a few other things (like optional comment), basic
- * CRCs, etc, and a file compressed by a chosen compression algorithm.
- * 
- * As of 2019, there is actually only one working solution for
- * compression algorithms, so it&#39;s typically raw DEFLATE stream
- * (without zlib header) in all gzipped files.
- */
+<span class="sd">/**</span>
+<span class="sd"> * Gzip is a popular and standard single-file archiving format. It</span>
+<span class="sd"> * essentially provides a container that stores original file name,</span>
+<span class="sd"> * timestamp and a few other things (like optional comment), basic</span>
+<span class="sd"> * CRCs, etc, and a file compressed by a chosen compression algorithm.</span>
+<span class="sd"> * </span>
+<span class="sd"> * As of 2019, there is actually only one working solution for</span>
+<span class="sd"> * compression algorithms, so it&#39;s typically raw DEFLATE stream</span>
+<span class="sd"> * (without zlib header) in all gzipped files.</span>
+<span class="sd"> */</span>
 
-class Gzip extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Gzip $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Gzip</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gzip</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_magic = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x1F\x8B&quot;);
-        $this-&gt;_m_compressionMethod = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_flags = new \Gzip\Flags($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_modTime = $this-&gt;_io-&gt;readU4le();
-        switch ($this-&gt;compressionMethod()) {
-            case \Gzip\CompressionMethods::DEFLATE:
-                $this-&gt;_m_extraFlags = new \Gzip\ExtraFlagsDeflate($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-        }
-        $this-&gt;_m_os = $this-&gt;_io-&gt;readU1();
-        if ($this-&gt;flags()-&gt;hasExtra()) {
-            $this-&gt;_m_extras = new \Gzip\Extras($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        if ($this-&gt;flags()-&gt;hasName()) {
-            $this-&gt;_m_name = $this-&gt;_io-&gt;readBytesTerm(0, false, true, true);
-        }
-        if ($this-&gt;flags()-&gt;hasComment()) {
-            $this-&gt;_m_comment = $this-&gt;_io-&gt;readBytesTerm(0, false, true, true);
-        }
-        if ($this-&gt;flags()-&gt;hasHeaderCrc()) {
-            $this-&gt;_m_headerCrc16 = $this-&gt;_io-&gt;readU2le();
-        }
-        $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes((($this-&gt;_io()-&gt;size() - $this-&gt;_io()-&gt;pos()) - 8));
-        $this-&gt;_m_bodyCrc32 = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_lenUncompressed = $this-&gt;_io-&gt;readU4le();
-    }
-    protected $_m_magic;
-    protected $_m_compressionMethod;
-    protected $_m_flags;
-    protected $_m_modTime;
-    protected $_m_extraFlags;
-    protected $_m_os;
-    protected $_m_extras;
-    protected $_m_name;
-    protected $_m_comment;
-    protected $_m_headerCrc16;
-    protected $_m_body;
-    protected $_m_bodyCrc32;
-    protected $_m_lenUncompressed;
-    public function magic() { return $this-&gt;_m_magic; }
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x1F\x8B</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionMethod</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gzip\Flags</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_modTime</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">compressionMethod</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="nx">\Gzip\CompressionMethods</span><span class="o">::</span><span class="na">DEFLATE</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extraFlags</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gzip\ExtraFlagsDeflate</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_os</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">hasExtra</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extras</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gzip\Extras</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">hasName</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">hasComment</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_comment</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">hasHeaderCrc</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headerCrc16</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">())</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bodyCrc32</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenUncompressed</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_magic</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_compressionMethod</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_flags</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_modTime</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_extraFlags</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_os</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_extras</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_name</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_comment</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_headerCrc16</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_bodyCrc32</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenUncompressed</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Compression method used to compress file body. In practice, only
-     * one method is widely used: 8 = deflate.
-     */
-    public function compressionMethod() { return $this-&gt;_m_compressionMethod; }
-    public function flags() { return $this-&gt;_m_flags; }
+    <span class="sd">/**</span>
+<span class="sd">     * Compression method used to compress file body. In practice, only</span>
+<span class="sd">     * one method is widely used: 8 = deflate.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">compressionMethod</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionMethod</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Last modification time of a file archived in UNIX timestamp format.
-     */
-    public function modTime() { return $this-&gt;_m_modTime; }
+    <span class="sd">/**</span>
+<span class="sd">     * Last modification time of a file archived in UNIX timestamp format.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">modTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_modTime</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Extra flags, specific to compression method chosen.
-     */
-    public function extraFlags() { return $this-&gt;_m_extraFlags; }
+    <span class="sd">/**</span>
+<span class="sd">     * Extra flags, specific to compression method chosen.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">extraFlags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extraFlags</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * OS used to compress this file.
-     */
-    public function os() { return $this-&gt;_m_os; }
-    public function extras() { return $this-&gt;_m_extras; }
-    public function name() { return $this-&gt;_m_name; }
-    public function comment() { return $this-&gt;_m_comment; }
-    public function headerCrc16() { return $this-&gt;_m_headerCrc16; }
+    <span class="sd">/**</span>
+<span class="sd">     * OS used to compress this file.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">os</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_os</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">extras</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extras</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">comment</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_comment</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">headerCrc16</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_headerCrc16</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Compressed body of a file archived. Note that we don&#39;t make an
-     * attempt to decompress it here.
-     */
-    public function body() { return $this-&gt;_m_body; }
+    <span class="sd">/**</span>
+<span class="sd">     * Compressed body of a file archived. Note that we don&#39;t make an</span>
+<span class="sd">     * attempt to decompress it here.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * CRC32 checksum of an uncompressed file body
-     */
-    public function bodyCrc32() { return $this-&gt;_m_bodyCrc32; }
+    <span class="sd">/**</span>
+<span class="sd">     * CRC32 checksum of an uncompressed file body</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">bodyCrc32</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bodyCrc32</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Size of original uncompressed data in bytes (truncated to 32
-     * bits).
-     */
-    public function lenUncompressed() { return $this-&gt;_m_lenUncompressed; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * Size of original uncompressed data in bytes (truncated to 32</span>
+<span class="sd">     * bits).</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenUncompressed</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenUncompressed</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gzip;
+<span class="k">namespace</span> <span class="nx">\Gzip</span><span class="p">;</span>
 
-class Flags extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Gzip $_parent = null, \Gzip $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Flags</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Gzip</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gzip</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_reserved1 = $this-&gt;_io-&gt;readBitsInt(3);
-        $this-&gt;_m_hasComment = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_hasName = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_hasExtra = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_hasHeaderCrc = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_isText = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-    }
-    protected $_m_reserved1;
-    protected $_m_hasComment;
-    protected $_m_hasName;
-    protected $_m_hasExtra;
-    protected $_m_hasHeaderCrc;
-    protected $_m_isText;
-    public function reserved1() { return $this-&gt;_m_reserved1; }
-    public function hasComment() { return $this-&gt;_m_hasComment; }
-    public function hasName() { return $this-&gt;_m_hasName; }
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasComment</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasName</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasExtra</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasHeaderCrc</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isText</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_reserved1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasComment</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasName</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasExtra</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_hasHeaderCrc</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_isText</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasComment</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasComment</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasName</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * If true, optional extra fields are present in the archive.
-     */
-    public function hasExtra() { return $this-&gt;_m_hasExtra; }
+    <span class="sd">/**</span>
+<span class="sd">     * If true, optional extra fields are present in the archive.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasExtra</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasExtra</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * If true, this archive includes a CRC16 checksum for the header.
-     */
-    public function hasHeaderCrc() { return $this-&gt;_m_hasHeaderCrc; }
+    <span class="sd">/**</span>
+<span class="sd">     * If true, this archive includes a CRC16 checksum for the header.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hasHeaderCrc</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hasHeaderCrc</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * If true, file inside this archive is a text file from
-     * compressor&#39;s point of view.
-     */
-    public function isText() { return $this-&gt;_m_isText; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * If true, file inside this archive is a text file from</span>
+<span class="sd">     * compressor&#39;s point of view.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isText</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isText</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gzip;
+<span class="k">namespace</span> <span class="nx">\Gzip</span><span class="p">;</span>
 
-class ExtraFlagsDeflate extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Gzip $_parent = null, \Gzip $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ExtraFlagsDeflate</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Gzip</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gzip</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_compressionStrength = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_compressionStrength;
-    public function compressionStrength() { return $this-&gt;_m_compressionStrength; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionStrength</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_compressionStrength</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">compressionStrength</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_compressionStrength</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gzip\ExtraFlagsDeflate;
+<span class="k">namespace</span> <span class="nx">\Gzip\ExtraFlagsDeflate</span><span class="p">;</span>
 
-class CompressionStrengths {
-    const BEST = 2;
-    const FAST = 4;
-}
+<span class="k">class</span> <span class="nc">CompressionStrengths</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">BEST</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">FAST</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
 
-/**
- * Container for many subfields, constrained by size of stream.
- */
+<span class="sd">/**</span>
+<span class="sd"> * Container for many subfields, constrained by size of stream.</span>
+<span class="sd"> */</span>
 
-namespace \Gzip;
+<span class="k">namespace</span> <span class="nx">\Gzip</span><span class="p">;</span>
 
-class Subfields extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Gzip\Extras $_parent = null, \Gzip $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Subfields</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Gzip\Extras</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gzip</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_entries = [];
-        $i = 0;
-        while (!$this-&gt;_io-&gt;isEof()) {
-            $this-&gt;_m_entries[] = new \Gzip\Subfield($this-&gt;_io, $this, $this-&gt;_root);
-            $i++;
-        }
-    }
-    protected $_m_entries;
-    public function entries() { return $this-&gt;_m_entries; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gzip\Subfield</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_entries</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-/**
- * Every subfield follows typical [TLV scheme](https://en.wikipedia.org/wiki/Type-length-value):
- * 
- * * `id` serves role of &quot;T&quot;ype
- * * `len_data` serves role of &quot;L&quot;ength
- * * `data` serves role of &quot;V&quot;alue
- * 
- * This way it&#39;s possible to for arbitrary parser to skip over
- * subfields it does not support.
- */
+<span class="sd">/**</span>
+<span class="sd"> * Every subfield follows typical [TLV scheme](https://en.wikipedia.org/wiki/Type-length-value):</span>
+<span class="sd"> * </span>
+<span class="sd"> * * `id` serves role of &quot;T&quot;ype</span>
+<span class="sd"> * * `len_data` serves role of &quot;L&quot;ength</span>
+<span class="sd"> * * `data` serves role of &quot;V&quot;alue</span>
+<span class="sd"> * </span>
+<span class="sd"> * This way it&#39;s possible to for arbitrary parser to skip over</span>
+<span class="sd"> * subfields it does not support.</span>
+<span class="sd"> */</span>
 
-namespace \Gzip;
+<span class="k">namespace</span> <span class="nx">\Gzip</span><span class="p">;</span>
 
-class Subfield extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Gzip\Subfields $_parent = null, \Gzip $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Subfield</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Gzip\Subfields</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gzip</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_id = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_lenData = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_data = $this-&gt;_io-&gt;readBytes($this-&gt;lenData());
-    }
-    protected $_m_id;
-    protected $_m_lenData;
-    protected $_m_data;
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_id</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenData</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenData</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_id</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenData</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
 
-    /**
-     * Subfield ID, typically two ASCII letters.
-     */
-    public function id() { return $this-&gt;_m_id; }
-    public function lenData() { return $this-&gt;_m_lenData; }
-    public function data() { return $this-&gt;_m_data; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * Subfield ID, typically two ASCII letters.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_id</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenData</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gzip;
+<span class="k">namespace</span> <span class="nx">\Gzip</span><span class="p">;</span>
 
-class Extras extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Gzip $_parent = null, \Gzip $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Extras</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Gzip</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Gzip</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_lenSubfields = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m__raw_subfields = $this-&gt;_io-&gt;readBytes($this-&gt;lenSubfields());
-        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_subfields);
-        $this-&gt;_m_subfields = new \Gzip\Subfields($io, $this, $this-&gt;_root);
-    }
-    protected $_m_lenSubfields;
-    protected $_m_subfields;
-    protected $_m__raw_subfields;
-    public function lenSubfields() { return $this-&gt;_m_lenSubfields; }
-    public function subfields() { return $this-&gt;_m_subfields; }
-    public function _raw_subfields() { return $this-&gt;_m__raw_subfields; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenSubfields</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_subfields</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenSubfields</span><span class="p">());</span>
+        <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_subfields</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_subfields</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Gzip\Subfields</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenSubfields</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_subfields</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_subfields</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenSubfields</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenSubfields</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">subfields</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_subfields</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_subfields</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_subfields</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Gzip;
+<span class="k">namespace</span> <span class="nx">\Gzip</span><span class="p">;</span>
 
-class CompressionMethods {
-    const DEFLATE = 8;
-}
+<span class="k">class</span> <span class="nc">CompressionMethods</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">DEFLATE</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+<span class="p">}</span>
 
-namespace \Gzip;
+<span class="k">namespace</span> <span class="nx">\Gzip</span><span class="p">;</span>
 
-class Oses {
+<span class="k">class</span> <span class="nc">Oses</span> <span class="p">{</span>
 
-    /**
-     * FAT filesystem (MS-DOS, OS/2, NT/Win32)
-     */
-    const FAT = 0;
+    <span class="sd">/**</span>
+<span class="sd">     * FAT filesystem (MS-DOS, OS/2, NT/Win32)</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">FAT</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    /**
-     * Amiga
-     */
-    const AMIGA = 1;
+    <span class="sd">/**</span>
+<span class="sd">     * Amiga</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">AMIGA</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 
-    /**
-     * VMS (or OpenVMS)
-     */
-    const VMS = 2;
+    <span class="sd">/**</span>
+<span class="sd">     * VMS (or OpenVMS)</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">VMS</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
 
-    /**
-     * Unix
-     */
-    const UNIX = 3;
+    <span class="sd">/**</span>
+<span class="sd">     * Unix</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">UNIX</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
 
-    /**
-     * VM/CMS
-     */
-    const VM_CMS = 4;
+    <span class="sd">/**</span>
+<span class="sd">     * VM/CMS</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">VM_CMS</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
 
-    /**
-     * Atari TOS
-     */
-    const ATARI_TOS = 5;
+    <span class="sd">/**</span>
+<span class="sd">     * Atari TOS</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">ATARI_TOS</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
 
-    /**
-     * HPFS filesystem (OS/2, NT)
-     */
-    const HPFS = 6;
+    <span class="sd">/**</span>
+<span class="sd">     * HPFS filesystem (OS/2, NT)</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">HPFS</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
 
-    /**
-     * Macintosh
-     */
-    const MACINTOSH = 7;
+    <span class="sd">/**</span>
+<span class="sd">     * Macintosh</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">MACINTOSH</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
 
-    /**
-     * Z-System
-     */
-    const Z_SYSTEM = 8;
+    <span class="sd">/**</span>
+<span class="sd">     * Z-System</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">Z_SYSTEM</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
 
-    /**
-     * CP/M
-     */
-    const CP_M = 9;
+    <span class="sd">/**</span>
+<span class="sd">     * CP/M</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">CP_M</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
 
-    /**
-     * TOPS-20
-     */
-    const TOPS_20 = 10;
+    <span class="sd">/**</span>
+<span class="sd">     * TOPS-20</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">TOPS_20</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
 
-    /**
-     * NTFS filesystem (NT)
-     */
-    const NTFS = 11;
+    <span class="sd">/**</span>
+<span class="sd">     * NTFS filesystem (NT)</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">NTFS</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
 
-    /**
-     * QDOS
-     */
-    const QDOS = 12;
+    <span class="sd">/**</span>
+<span class="sd">     * QDOS</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">QDOS</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
 
-    /**
-     * Acorn RISCOS
-     */
-    const ACORN_RISCOS = 13;
-    const UNKNOWN = 255;
-}
-</code></pre>
+    <span class="sd">/**</span>
+<span class="sd">     * Acorn RISCOS</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">ACORN_RISCOS</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNKNOWN</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -613,8 +610,8 @@ class Oses {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

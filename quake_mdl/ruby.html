@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -254,255 +251,255 @@ data = QuakeMdl.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
-class QuakeMdl &lt; Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+<span class="k">class</span> <span class="nc">QuakeMdl</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @header = MdlHeader.new(@_io, self, @_root)
-    @skins = Array.new(header.num_skins)
-    (header.num_skins).times { |i|
-      @skins[i] = MdlSkin.new(@_io, self, @_root)
-    }
-    @texture_coordinates = Array.new(header.num_verts)
-    (header.num_verts).times { |i|
-      @texture_coordinates[i] = MdlTexcoord.new(@_io, self, @_root)
-    }
-    @triangles = Array.new(header.num_tris)
-    (header.num_tris).times { |i|
-      @triangles[i] = MdlTriangle.new(@_io, self, @_root)
-    }
-    @frames = Array.new(header.num_frames)
-    (header.num_frames).times { |i|
-      @frames[i] = MdlFrame.new(@_io, self, @_root)
-    }
-    self
-  end
-  class MdlVertex &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@header</span> <span class="o">=</span> <span class="no">MdlHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@skins</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_skins</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_skins</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@skins</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MdlSkin</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="vi">@texture_coordinates</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_verts</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_verts</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@texture_coordinates</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MdlTexcoord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="vi">@triangles</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_tris</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_tris</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@triangles</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MdlTriangle</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="vi">@frames</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_frames</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_frames</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@frames</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MdlFrame</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">MdlVertex</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @values = Array.new(3)
-      (3).times { |i|
-        @values[i] = @_io.read_u1
-      }
-      @normal_index = @_io.read_u1
-      self
-    end
-    attr_reader :values
-    attr_reader :normal_index
-  end
-  class MdlTexcoord &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@values</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+      <span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@values</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="p">}</span>
+      <span class="vi">@normal_index</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:values</span>
+    <span class="kp">attr_reader</span> <span class="ss">:normal_index</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">MdlTexcoord</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @on_seam = @_io.read_s4le
-      @s = @_io.read_s4le
-      @t = @_io.read_s4le
-      self
-    end
-    attr_reader :on_seam
-    attr_reader :s
-    attr_reader :t
-  end
-  class MdlHeader &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@on_seam</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="vi">@s</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="vi">@t</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:on_seam</span>
+    <span class="kp">attr_reader</span> <span class="ss">:s</span>
+    <span class="kp">attr_reader</span> <span class="ss">:t</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">MdlHeader</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @ident = @_io.ensure_fixed_contents([73, 68, 80, 79].pack(&#39;C*&#39;))
-      @version_must_be_6 = @_io.ensure_fixed_contents([6, 0, 0, 0].pack(&#39;C*&#39;))
-      @scale = Vec3.new(@_io, self, @_root)
-      @origin = Vec3.new(@_io, self, @_root)
-      @radius = @_io.read_f4le
-      @eye_position = Vec3.new(@_io, self, @_root)
-      @num_skins = @_io.read_s4le
-      @skin_width = @_io.read_s4le
-      @skin_height = @_io.read_s4le
-      @num_verts = @_io.read_s4le
-      @num_tris = @_io.read_s4le
-      @num_frames = @_io.read_s4le
-      @synctype = @_io.read_s4le
-      @flags = @_io.read_s4le
-      @size = @_io.read_f4le
-      self
-    end
-    def version
-      return @version unless @version.nil?
-      @version = 6
-      @version
-    end
-    def skin_size
-      return @skin_size unless @skin_size.nil?
-      @skin_size = (skin_width * skin_height)
-      @skin_size
-    end
-    attr_reader :ident
-    attr_reader :version_must_be_6
-    attr_reader :scale
-    attr_reader :origin
-    attr_reader :radius
-    attr_reader :eye_position
-    attr_reader :num_skins
-    attr_reader :skin_width
-    attr_reader :skin_height
-    attr_reader :num_verts
-    attr_reader :num_tris
-    attr_reader :num_frames
-    attr_reader :synctype
-    attr_reader :flags
-    attr_reader :size
-  end
-  class MdlSkin &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@ident</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">73</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">79</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@version_must_be_6</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@scale</span> <span class="o">=</span> <span class="no">Vec3</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@origin</span> <span class="o">=</span> <span class="no">Vec3</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@radius</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+      <span class="vi">@eye_position</span> <span class="o">=</span> <span class="no">Vec3</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@num_skins</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="vi">@skin_width</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="vi">@skin_height</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="vi">@num_verts</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="vi">@num_tris</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="vi">@num_frames</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="vi">@synctype</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="vi">@size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">version</span>
+      <span class="k">return</span> <span class="vi">@version</span> <span class="k">unless</span> <span class="vi">@version</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@version</span> <span class="o">=</span> <span class="mi">6</span>
+      <span class="vi">@version</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">skin_size</span>
+      <span class="k">return</span> <span class="vi">@skin_size</span> <span class="k">unless</span> <span class="vi">@skin_size</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@skin_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">skin_width</span> <span class="o">*</span> <span class="n">skin_height</span><span class="p">)</span>
+      <span class="vi">@skin_size</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ident</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version_must_be_6</span>
+    <span class="kp">attr_reader</span> <span class="ss">:scale</span>
+    <span class="kp">attr_reader</span> <span class="ss">:origin</span>
+    <span class="kp">attr_reader</span> <span class="ss">:radius</span>
+    <span class="kp">attr_reader</span> <span class="ss">:eye_position</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_skins</span>
+    <span class="kp">attr_reader</span> <span class="ss">:skin_width</span>
+    <span class="kp">attr_reader</span> <span class="ss">:skin_height</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_verts</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_tris</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_frames</span>
+    <span class="kp">attr_reader</span> <span class="ss">:synctype</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">MdlSkin</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @group = @_io.read_s4le
-      if group == 0
-        @single_texture_data = @_io.read_bytes(_root.header.skin_size)
-      end
-      if group != 0
-        @num_frames = @_io.read_u4le
-      end
-      if group != 0
-        @frame_times = Array.new(num_frames)
-        (num_frames).times { |i|
-          @frame_times[i] = @_io.read_f4le
-        }
-      end
-      if group != 0
-        @group_texture_data = Array.new(num_frames)
-        (num_frames).times { |i|
-          @group_texture_data[i] = @_io.read_bytes(_root.header.skin_size)
-        }
-      end
-      self
-    end
-    attr_reader :group
-    attr_reader :single_texture_data
-    attr_reader :num_frames
-    attr_reader :frame_times
-    attr_reader :group_texture_data
-  end
-  class MdlFrame &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@group</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="k">if</span> <span class="n">group</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="vi">@single_texture_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">skin_size</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">group</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@num_frames</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">group</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@frame_times</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_frames</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">num_frames</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+          <span class="vi">@frame_times</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+        <span class="p">}</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">group</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@group_texture_data</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_frames</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">num_frames</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+          <span class="vi">@group_texture_data</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">skin_size</span><span class="p">)</span>
+        <span class="p">}</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:group</span>
+    <span class="kp">attr_reader</span> <span class="ss">:single_texture_data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_frames</span>
+    <span class="kp">attr_reader</span> <span class="ss">:frame_times</span>
+    <span class="kp">attr_reader</span> <span class="ss">:group_texture_data</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">MdlFrame</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @type = @_io.read_s4le
-      if type != 0
-        @min = MdlVertex.new(@_io, self, @_root)
-      end
-      if type != 0
-        @max = MdlVertex.new(@_io, self, @_root)
-      end
-      if type != 0
-        @time = Array.new(type)
-        (type).times { |i|
-          @time[i] = @_io.read_f4le
-        }
-      end
-      @frames = Array.new(num_simple_frames)
-      (num_simple_frames).times { |i|
-        @frames[i] = MdlSimpleFrame.new(@_io, self, @_root)
-      }
-      self
-    end
-    def num_simple_frames
-      return @num_simple_frames unless @num_simple_frames.nil?
-      @num_simple_frames = (type == 0 ? 1 : type)
-      @num_simple_frames
-    end
-    attr_reader :type
-    attr_reader :min
-    attr_reader :max
-    attr_reader :time
-    attr_reader :frames
-  end
-  class MdlSimpleFrame &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@type</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="k">if</span> <span class="n">type</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@min</span> <span class="o">=</span> <span class="no">MdlVertex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">type</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@max</span> <span class="o">=</span> <span class="no">MdlVertex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">type</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@time</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">type</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">type</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+          <span class="vi">@time</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+        <span class="p">}</span>
+      <span class="k">end</span>
+      <span class="vi">@frames</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_simple_frames</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">num_simple_frames</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@frames</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MdlSimpleFrame</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">num_simple_frames</span>
+      <span class="k">return</span> <span class="vi">@num_simple_frames</span> <span class="k">unless</span> <span class="vi">@num_simple_frames</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@num_simple_frames</span> <span class="o">=</span> <span class="p">(</span><span class="n">type</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">type</span><span class="p">)</span>
+      <span class="vi">@num_simple_frames</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:min</span>
+    <span class="kp">attr_reader</span> <span class="ss">:max</span>
+    <span class="kp">attr_reader</span> <span class="ss">:time</span>
+    <span class="kp">attr_reader</span> <span class="ss">:frames</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">MdlSimpleFrame</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @bbox_min = MdlVertex.new(@_io, self, @_root)
-      @bbox_max = MdlVertex.new(@_io, self, @_root)
-      @name = (Kaitai::Struct::Stream::bytes_terminate(Kaitai::Struct::Stream::bytes_strip_right(@_io.read_bytes(16), 0), 0, false)).force_encoding(&quot;ASCII&quot;)
-      @vertices = Array.new(_root.header.num_verts)
-      (_root.header.num_verts).times { |i|
-        @vertices[i] = MdlVertex.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :bbox_min
-    attr_reader :bbox_max
-    attr_reader :name
-    attr_reader :vertices
-  end
-  class MdlTriangle &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@bbox_min</span> <span class="o">=</span> <span class="no">MdlVertex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@bbox_max</span> <span class="o">=</span> <span class="no">MdlVertex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@name</span> <span class="o">=</span> <span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+      <span class="vi">@vertices</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">num_verts</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">num_verts</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@vertices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MdlVertex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bbox_min</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bbox_max</span>
+    <span class="kp">attr_reader</span> <span class="ss">:name</span>
+    <span class="kp">attr_reader</span> <span class="ss">:vertices</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">MdlTriangle</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @faces_front = @_io.read_s4le
-      @vertices = Array.new(3)
-      (3).times { |i|
-        @vertices[i] = @_io.read_s4le
-      }
-      self
-    end
-    attr_reader :faces_front
-    attr_reader :vertices
-  end
-  class Vec3 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@faces_front</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="vi">@vertices</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+      <span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@vertices</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:faces_front</span>
+    <span class="kp">attr_reader</span> <span class="ss">:vertices</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Vec3</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @x = @_io.read_f4le
-      @y = @_io.read_f4le
-      @z = @_io.read_f4le
-      self
-    end
-    attr_reader :x
-    attr_reader :y
-    attr_reader :z
-  end
-  attr_reader :header
-  attr_reader :skins
-  attr_reader :texture_coordinates
-  attr_reader :triangles
-  attr_reader :frames
-end
-</code></pre>
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@x</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+      <span class="vi">@y</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+      <span class="vi">@z</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:x</span>
+    <span class="kp">attr_reader</span> <span class="ss">:y</span>
+    <span class="kp">attr_reader</span> <span class="ss">:z</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:header</span>
+  <span class="kp">attr_reader</span> <span class="ss">:skins</span>
+  <span class="kp">attr_reader</span> <span class="ss">:texture_coordinates</span>
+  <span class="kp">attr_reader</span> <span class="ss">:triangles</span>
+  <span class="kp">attr_reader</span> <span class="ss">:frames</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -529,8 +526,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

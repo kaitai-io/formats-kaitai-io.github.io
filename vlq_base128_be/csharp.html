@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -251,159 +248,159 @@ var data = new VlqBase128Be(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
 
-    /// &lt;summary&gt;
-    /// A variable-length unsigned integer using base128 encoding. 1-byte groups
-    /// consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
-    /// &amp;quot;most significant group first&amp;quot;, i.e. in &amp;quot;big-endian&amp;quot; manner.
-    /// 
-    /// This particular encoding is specified and used in:
-    /// 
-    /// * Standard MIDI file format
-    /// * ASN.1 BER encoding
-    /// 
-    /// More information on this encoding is available at
-    /// https://en.wikipedia.org/wiki/Variable-length_quantity
-    /// 
-    /// This particular implementation supports serialized values to up 8 bytes long.
-    /// &lt;/summary&gt;
-    public partial class VlqBase128Be : KaitaiStruct
-    {
-        public static VlqBase128Be FromFile(string fileName)
-        {
-            return new VlqBase128Be(new KaitaiStream(fileName));
-        }
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// A variable-length unsigned integer using base128 encoding. 1-byte groups</span>
+    <span class="c1">/// consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered</span>
+    <span class="c1">/// &amp;quot;most significant group first&amp;quot;, i.e. in &amp;quot;big-endian&amp;quot; manner.</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// This particular encoding is specified and used in:</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// * Standard MIDI file format</span>
+    <span class="c1">/// * ASN.1 BER encoding</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// More information on this encoding is available at</span>
+    <span class="c1">/// https://en.wikipedia.org/wiki/Variable-length_quantity</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// This particular implementation supports serialized values to up 8 bytes long.</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">VlqBase128Be</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">VlqBase128Be</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">VlqBase128Be</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public VlqBase128Be(KaitaiStream p__io, KaitaiStruct p__parent = null, VlqBase128Be p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            f_last = false;
-            f_value = false;
-            _read();
-        }
-        private void _read()
-        {
-            _groups = new List&lt;Group&gt;();
-            {
-                var i = 0;
-                Group M_;
-                do {
-                    M_ = new Group(m_io, this, m_root);
-                    _groups.Add(M_);
-                    i++;
-                } while (!(!(M_.HasNext)));
-            }
-        }
+        <span class="k">public</span> <span class="nf">VlqBase128Be</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">VlqBase128Be</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">f_last</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_value</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_groups</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Group</span><span class="p">&gt;();</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">Group</span> <span class="n">M_</span><span class="p">;</span>
+                <span class="k">do</span> <span class="p">{</span>
+                    <span class="n">M_</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Group</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_groups</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">M_</span><span class="p">);</span>
+                    <span class="n">i</span><span class="p">++;</span>
+                <span class="p">}</span> <span class="k">while</span> <span class="p">(!(!(</span><span class="n">M_</span><span class="p">.</span><span class="n">HasNext</span><span class="p">)));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// One byte group, clearly divided into 7-bit &amp;quot;value&amp;quot; chunk and 1-bit &amp;quot;continuation&amp;quot; flag.
-        /// &lt;/summary&gt;
-        public partial class Group : KaitaiStruct
-        {
-            public static Group FromFile(string fileName)
-            {
-                return new Group(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// One byte group, clearly divided into 7-bit &amp;quot;value&amp;quot; chunk and 1-bit &amp;quot;continuation&amp;quot; flag.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Group</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Group</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Group</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Group(KaitaiStream p__io, VlqBase128Be p__parent = null, VlqBase128Be p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_hasNext = false;
-                f_value = false;
-                _read();
-            }
-            private void _read()
-            {
-                _b = m_io.ReadU1();
-            }
-            private bool f_hasNext;
-            private bool _hasNext;
+            <span class="k">public</span> <span class="nf">Group</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">VlqBase128Be</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">VlqBase128Be</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_hasNext</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_value</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_b</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_hasNext</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_hasNext</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// If true, then we have more bytes to read
-            /// &lt;/summary&gt;
-            public bool HasNext
-            {
-                get
-                {
-                    if (f_hasNext)
-                        return _hasNext;
-                    _hasNext = (bool) ((B &amp; 128) != 0);
-                    f_hasNext = true;
-                    return _hasNext;
-                }
-            }
-            private bool f_value;
-            private int _value;
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// If true, then we have more bytes to read</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">HasNext</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_hasNext</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_hasNext</span><span class="p">;</span>
+                    <span class="n">_hasNext</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">B</span> <span class="p">&amp;</span> <span class="m">128</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_hasNext</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_hasNext</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_value</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_value</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// The 7-bit (base128) numeric value chunk of this group
-            /// &lt;/summary&gt;
-            public int Value
-            {
-                get
-                {
-                    if (f_value)
-                        return _value;
-                    _value = (int) ((B &amp; 127));
-                    f_value = true;
-                    return _value;
-                }
-            }
-            private byte _b;
-            private VlqBase128Be m_root;
-            private VlqBase128Be m_parent;
-            public byte B { get { return _b; } }
-            public VlqBase128Be M_Root { get { return m_root; } }
-            public VlqBase128Be M_Parent { get { return m_parent; } }
-        }
-        private bool f_last;
-        private int _last;
-        public int Last
-        {
-            get
-            {
-                if (f_last)
-                    return _last;
-                _last = (int) ((Groups.Count - 1));
-                f_last = true;
-                return _last;
-            }
-        }
-        private bool f_value;
-        private int _value;
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The 7-bit (base128) numeric value chunk of this group</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Value</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_value</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_value</span><span class="p">;</span>
+                    <span class="n">_value</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">B</span> <span class="p">&amp;</span> <span class="m">127</span><span class="p">));</span>
+                    <span class="n">f_value</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_value</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_b</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">VlqBase128Be</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">VlqBase128Be</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">B</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_b</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">VlqBase128Be</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">VlqBase128Be</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_last</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_last</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Last</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_last</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_last</span><span class="p">;</span>
+                <span class="n">_last</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">Groups</span><span class="p">.</span><span class="n">Count</span> <span class="p">-</span> <span class="m">1</span><span class="p">));</span>
+                <span class="n">f_last</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_last</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_value</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_value</span><span class="p">;</span>
 
-        /// &lt;summary&gt;
-        /// Resulting value as normal integer
-        /// &lt;/summary&gt;
-        public int Value
-        {
-            get
-            {
-                if (f_value)
-                    return _value;
-                _value = (int) ((((((((Groups[Last].Value + (Last &gt;= 1 ? (Groups[(Last - 1)].Value &lt;&lt; 7) : 0)) + (Last &gt;= 2 ? (Groups[(Last - 2)].Value &lt;&lt; 14) : 0)) + (Last &gt;= 3 ? (Groups[(Last - 3)].Value &lt;&lt; 21) : 0)) + (Last &gt;= 4 ? (Groups[(Last - 4)].Value &lt;&lt; 28) : 0)) + (Last &gt;= 5 ? (Groups[(Last - 5)].Value &lt;&lt; 35) : 0)) + (Last &gt;= 6 ? (Groups[(Last - 6)].Value &lt;&lt; 42) : 0)) + (Last &gt;= 7 ? (Groups[(Last - 7)].Value &lt;&lt; 49) : 0)));
-                f_value = true;
-                return _value;
-            }
-        }
-        private List&lt;Group&gt; _groups;
-        private VlqBase128Be m_root;
-        private KaitaiStruct m_parent;
-        public List&lt;Group&gt; Groups { get { return _groups; } }
-        public VlqBase128Be M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-    }
-}
-</code></pre>
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Resulting value as normal integer</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Value</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_value</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_value</span><span class="p">;</span>
+                <span class="n">_value</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((((((((</span><span class="n">Groups</span><span class="p">[</span><span class="n">Last</span><span class="p">].</span><span class="n">Value</span> <span class="p">+</span> <span class="p">(</span><span class="n">Last</span> <span class="p">&gt;=</span> <span class="m">1</span> <span class="p">?</span> <span class="p">(</span><span class="n">Groups</span><span class="p">[(</span><span class="n">Last</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">Value</span> <span class="p">&lt;&lt;</span> <span class="m">7</span><span class="p">)</span> <span class="p">:</span> <span class="m">0</span><span class="p">))</span> <span class="p">+</span> <span class="p">(</span><span class="n">Last</span> <span class="p">&gt;=</span> <span class="m">2</span> <span class="p">?</span> <span class="p">(</span><span class="n">Groups</span><span class="p">[(</span><span class="n">Last</span> <span class="p">-</span> <span class="m">2</span><span class="p">)].</span><span class="n">Value</span> <span class="p">&lt;&lt;</span> <span class="m">14</span><span class="p">)</span> <span class="p">:</span> <span class="m">0</span><span class="p">))</span> <span class="p">+</span> <span class="p">(</span><span class="n">Last</span> <span class="p">&gt;=</span> <span class="m">3</span> <span class="p">?</span> <span class="p">(</span><span class="n">Groups</span><span class="p">[(</span><span class="n">Last</span> <span class="p">-</span> <span class="m">3</span><span class="p">)].</span><span class="n">Value</span> <span class="p">&lt;&lt;</span> <span class="m">21</span><span class="p">)</span> <span class="p">:</span> <span class="m">0</span><span class="p">))</span> <span class="p">+</span> <span class="p">(</span><span class="n">Last</span> <span class="p">&gt;=</span> <span class="m">4</span> <span class="p">?</span> <span class="p">(</span><span class="n">Groups</span><span class="p">[(</span><span class="n">Last</span> <span class="p">-</span> <span class="m">4</span><span class="p">)].</span><span class="n">Value</span> <span class="p">&lt;&lt;</span> <span class="m">28</span><span class="p">)</span> <span class="p">:</span> <span class="m">0</span><span class="p">))</span> <span class="p">+</span> <span class="p">(</span><span class="n">Last</span> <span class="p">&gt;=</span> <span class="m">5</span> <span class="p">?</span> <span class="p">(</span><span class="n">Groups</span><span class="p">[(</span><span class="n">Last</span> <span class="p">-</span> <span class="m">5</span><span class="p">)].</span><span class="n">Value</span> <span class="p">&lt;&lt;</span> <span class="m">35</span><span class="p">)</span> <span class="p">:</span> <span class="m">0</span><span class="p">))</span> <span class="p">+</span> <span class="p">(</span><span class="n">Last</span> <span class="p">&gt;=</span> <span class="m">6</span> <span class="p">?</span> <span class="p">(</span><span class="n">Groups</span><span class="p">[(</span><span class="n">Last</span> <span class="p">-</span> <span class="m">6</span><span class="p">)].</span><span class="n">Value</span> <span class="p">&lt;&lt;</span> <span class="m">42</span><span class="p">)</span> <span class="p">:</span> <span class="m">0</span><span class="p">))</span> <span class="p">+</span> <span class="p">(</span><span class="n">Last</span> <span class="p">&gt;=</span> <span class="m">7</span> <span class="p">?</span> <span class="p">(</span><span class="n">Groups</span><span class="p">[(</span><span class="n">Last</span> <span class="p">-</span> <span class="m">7</span><span class="p">)].</span><span class="n">Value</span> <span class="p">&lt;&lt;</span> <span class="m">49</span><span class="p">)</span> <span class="p">:</span> <span class="m">0</span><span class="p">)));</span>
+                <span class="n">f_value</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_value</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Group</span><span class="p">&gt;</span> <span class="n">_groups</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">VlqBase128Be</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Group</span><span class="p">&gt;</span> <span class="n">Groups</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_groups</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">VlqBase128Be</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -430,8 +427,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

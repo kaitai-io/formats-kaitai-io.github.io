@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -243,137 +240,137 @@ data = ShapefileIndex.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
-class ShapefileIndex &lt; Kaitai::Struct::Struct
+<span class="k">class</span> <span class="nc">ShapefileIndex</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  SHAPE_TYPE = {
-    0 =&gt; :shape_type_null_shape,
-    1 =&gt; :shape_type_point,
-    3 =&gt; :shape_type_poly_line,
-    5 =&gt; :shape_type_polygon,
-    8 =&gt; :shape_type_multi_point,
-    11 =&gt; :shape_type_point_z,
-    13 =&gt; :shape_type_poly_line_z,
-    15 =&gt; :shape_type_polygon_z,
-    18 =&gt; :shape_type_multi_point_z,
-    21 =&gt; :shape_type_point_m,
-    23 =&gt; :shape_type_poly_line_m,
-    25 =&gt; :shape_type_polygon_m,
-    28 =&gt; :shape_type_multi_point_m,
-    31 =&gt; :shape_type_multi_patch,
-  }
-  I__SHAPE_TYPE = SHAPE_TYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">SHAPE_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:shape_type_null_shape</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:shape_type_point</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:shape_type_poly_line</span><span class="p">,</span>
+    <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:shape_type_polygon</span><span class="p">,</span>
+    <span class="mi">8</span> <span class="o">=&gt;</span> <span class="ss">:shape_type_multi_point</span><span class="p">,</span>
+    <span class="mi">11</span> <span class="o">=&gt;</span> <span class="ss">:shape_type_point_z</span><span class="p">,</span>
+    <span class="mi">13</span> <span class="o">=&gt;</span> <span class="ss">:shape_type_poly_line_z</span><span class="p">,</span>
+    <span class="mi">15</span> <span class="o">=&gt;</span> <span class="ss">:shape_type_polygon_z</span><span class="p">,</span>
+    <span class="mi">18</span> <span class="o">=&gt;</span> <span class="ss">:shape_type_multi_point_z</span><span class="p">,</span>
+    <span class="mi">21</span> <span class="o">=&gt;</span> <span class="ss">:shape_type_point_m</span><span class="p">,</span>
+    <span class="mi">23</span> <span class="o">=&gt;</span> <span class="ss">:shape_type_poly_line_m</span><span class="p">,</span>
+    <span class="mi">25</span> <span class="o">=&gt;</span> <span class="ss">:shape_type_polygon_m</span><span class="p">,</span>
+    <span class="mi">28</span> <span class="o">=&gt;</span> <span class="ss">:shape_type_multi_point_m</span><span class="p">,</span>
+    <span class="mi">31</span> <span class="o">=&gt;</span> <span class="ss">:shape_type_multi_patch</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__SHAPE_TYPE</span> <span class="o">=</span> <span class="no">SHAPE_TYPE</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @header = FileHeader.new(@_io, self, @_root)
-    @records = []
-    i = 0
-    while not @_io.eof?
-      @records &lt;&lt; Record.new(@_io, self, @_root)
-      i += 1
-    end
-    self
-  end
-  class FileHeader &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@header</span> <span class="o">=</span> <span class="no">FileHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@records</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+      <span class="vi">@records</span> <span class="o">&lt;&lt;</span> <span class="no">Record</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">FileHeader</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @file_code = @_io.ensure_fixed_contents([0, 0, 39, 10].pack(&#39;C*&#39;))
-      @unused_field_1 = @_io.ensure_fixed_contents([0, 0, 0, 0].pack(&#39;C*&#39;))
-      @unused_field_2 = @_io.ensure_fixed_contents([0, 0, 0, 0].pack(&#39;C*&#39;))
-      @unused_field_3 = @_io.ensure_fixed_contents([0, 0, 0, 0].pack(&#39;C*&#39;))
-      @unused_field_4 = @_io.ensure_fixed_contents([0, 0, 0, 0].pack(&#39;C*&#39;))
-      @unused_field_5 = @_io.ensure_fixed_contents([0, 0, 0, 0].pack(&#39;C*&#39;))
-      @file_length = @_io.read_s4be
-      @version = @_io.ensure_fixed_contents([232, 3, 0, 0].pack(&#39;C*&#39;))
-      @shape_type = Kaitai::Struct::Stream::resolve_enum(SHAPE_TYPE, @_io.read_s4le)
-      @bounding_box = BoundingBoxXYZM.new(@_io, self, @_root)
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@file_code</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="mi">10</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@unused_field_1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@unused_field_2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@unused_field_3</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@unused_field_4</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@unused_field_5</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@file_length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
+      <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">232</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@shape_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">SHAPE_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span><span class="p">)</span>
+      <span class="vi">@bounding_box</span> <span class="o">=</span> <span class="no">BoundingBoxXYZM</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # corresponds to s4be value of 9994
-    attr_reader :file_code
-    attr_reader :unused_field_1
-    attr_reader :unused_field_2
-    attr_reader :unused_field_3
-    attr_reader :unused_field_4
-    attr_reader :unused_field_5
-    attr_reader :file_length
+    <span class="c1">##</span>
+    <span class="c1"># corresponds to s4be value of 9994</span>
+    <span class="kp">attr_reader</span> <span class="ss">:file_code</span>
+    <span class="kp">attr_reader</span> <span class="ss">:unused_field_1</span>
+    <span class="kp">attr_reader</span> <span class="ss">:unused_field_2</span>
+    <span class="kp">attr_reader</span> <span class="ss">:unused_field_3</span>
+    <span class="kp">attr_reader</span> <span class="ss">:unused_field_4</span>
+    <span class="kp">attr_reader</span> <span class="ss">:unused_field_5</span>
+    <span class="kp">attr_reader</span> <span class="ss">:file_length</span>
 
-    ##
-    # corresponds to s4le value of 1000
-    attr_reader :version
-    attr_reader :shape_type
-    attr_reader :bounding_box
-  end
-  class Record &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="c1">##</span>
+    <span class="c1"># corresponds to s4le value of 1000</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:shape_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bounding_box</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Record</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @offset = @_io.read_s4be
-      @content_length = @_io.read_s4be
-      self
-    end
-    attr_reader :offset
-    attr_reader :content_length
-  end
-  class BoundingBoxXYZM &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@offset</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
+      <span class="vi">@content_length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:offset</span>
+    <span class="kp">attr_reader</span> <span class="ss">:content_length</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">BoundingBoxXYZM</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @x = BoundsMinMax.new(@_io, self, @_root)
-      @y = BoundsMinMax.new(@_io, self, @_root)
-      @z = BoundsMinMax.new(@_io, self, @_root)
-      @m = BoundsMinMax.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :x
-    attr_reader :y
-    attr_reader :z
-    attr_reader :m
-  end
-  class BoundsMinMax &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@x</span> <span class="o">=</span> <span class="no">BoundsMinMax</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@y</span> <span class="o">=</span> <span class="no">BoundsMinMax</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@z</span> <span class="o">=</span> <span class="no">BoundsMinMax</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@m</span> <span class="o">=</span> <span class="no">BoundsMinMax</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:x</span>
+    <span class="kp">attr_reader</span> <span class="ss">:y</span>
+    <span class="kp">attr_reader</span> <span class="ss">:z</span>
+    <span class="kp">attr_reader</span> <span class="ss">:m</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">BoundsMinMax</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @min = @_io.read_f8be
-      @max = @_io.read_f8be
-      self
-    end
-    attr_reader :min
-    attr_reader :max
-  end
-  attr_reader :header
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@min</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f8be</span>
+      <span class="vi">@max</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f8be</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:min</span>
+    <span class="kp">attr_reader</span> <span class="ss">:max</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:header</span>
 
-  ##
-  # the size of this section of the file in bytes must equal (header.file_length * 2) - 100
-  attr_reader :records
-end
-</code></pre>
+  <span class="c1">##</span>
+  <span class="c1"># the size of this section of the file in bytes must equal (header.file_length * 2) - 100</span>
+  <span class="kp">attr_reader</span> <span class="ss">:records</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -400,8 +397,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

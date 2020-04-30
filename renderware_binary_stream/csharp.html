@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -233,974 +230,974 @@ var data = new RenderwareBinaryStream(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
 
-    /// &lt;remarks&gt;
-    /// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/RenderWare_binary_stream_file&quot;&gt;Source&lt;/a&gt;
-    /// &lt;/remarks&gt;
-    public partial class RenderwareBinaryStream : KaitaiStruct
-    {
-        public static RenderwareBinaryStream FromFile(string fileName)
-        {
-            return new RenderwareBinaryStream(new KaitaiStream(fileName));
-        }
+    <span class="c1">/// &lt;remarks&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/RenderWare_binary_stream_file&quot;&gt;Source&lt;/a&gt;</span>
+    <span class="c1">/// &lt;/remarks&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">RenderwareBinaryStream</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">RenderwareBinaryStream</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">RenderwareBinaryStream</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
 
-        public enum Sections
-        {
-            Struct = 1,
-            String = 2,
-            Extension = 3,
-            Camera = 5,
-            Texture = 6,
-            Material = 7,
-            MaterialList = 8,
-            AtomicSection = 9,
-            PlaneSection = 10,
-            World = 11,
-            Spline = 12,
-            Matrix = 13,
-            FrameList = 14,
-            Geometry = 15,
-            Clump = 16,
-            Light = 18,
-            UnicodeString = 19,
-            Atomic = 20,
-            TextureNative = 21,
-            TextureDictionary = 22,
-            AnimationDatabase = 23,
-            Image = 24,
-            SkinAnimation = 25,
-            GeometryList = 26,
-            AnimAnimation = 27,
-            Team = 28,
-            Crowd = 29,
-            DeltaMorphAnimation = 30,
-            RightToRender = 31,
-            MultitextureEffectNative = 32,
-            MultitextureEffectDictionary = 33,
-            TeamDictionary = 34,
-            PlatformIndependentTextureDictionary = 35,
-            TableOfContents = 36,
-            ParticleStandardGlobalData = 37,
-            Altpipe = 38,
-            PlatformIndependentPeds = 39,
-            PatchMesh = 40,
-            ChunkGroupStart = 41,
-            ChunkGroupEnd = 42,
-            UvAnimationDictionary = 43,
-            CollTree = 44,
-            MetricsPlg = 257,
-            SplinePlg = 258,
-            StereoPlg = 259,
-            VrmlPlg = 260,
-            MorphPlg = 261,
-            PvsPlg = 262,
-            MemoryLeakPlg = 263,
-            AnimationPlg = 264,
-            GlossPlg = 265,
-            LogoPlg = 266,
-            MemoryInfoPlg = 267,
-            RandomPlg = 268,
-            PngImagePlg = 269,
-            BonePlg = 270,
-            VrmlAnimPlg = 271,
-            SkyMipmapVal = 272,
-            MrmPlg = 273,
-            LodAtomicPlg = 274,
-            MePlg = 275,
-            LightmapPlg = 276,
-            RefinePlg = 277,
-            SkinPlg = 278,
-            LabelPlg = 279,
-            ParticlesPlg = 280,
-            GeomtxPlg = 281,
-            SynthCorePlg = 282,
-            StqppPlg = 283,
-            PartPpPlg = 284,
-            CollisionPlg = 285,
-            HanimPlg = 286,
-            UserDataPlg = 287,
-            MaterialEffectsPlg = 288,
-            ParticleSystemPlg = 289,
-            DeltaMorphPlg = 290,
-            PatchPlg = 291,
-            TeamPlg = 292,
-            CrowdPpPlg = 293,
-            MipSplitPlg = 294,
-            AnisotropyPlg = 295,
-            GcnMaterialPlg = 297,
-            GeometricPvsPlg = 298,
-            XboxMaterialPlg = 299,
-            MultiTexturePlg = 300,
-            ChainPlg = 301,
-            ToonPlg = 302,
-            PtankPlg = 303,
-            ParticleStandardPlg = 304,
-            PdsPlg = 305,
-            PrtadvPlg = 306,
-            NormalMapPlg = 307,
-            AdcPlg = 308,
-            UvAnimationPlg = 309,
-            CharacterSetPlg = 384,
-            NohsWorldPlg = 385,
-            ImportUtilPlg = 386,
-            SlerpPlg = 387,
-            OptimPlg = 388,
-            TlWorldPlg = 389,
-            DatabasePlg = 390,
-            RaytracePlg = 391,
-            RayPlg = 392,
-            LibraryPlg = 393,
-            Plg2d = 400,
-            TileRenderPlg = 401,
-            JpegImagePlg = 402,
-            TgaImagePlg = 403,
-            GifImagePlg = 404,
-            QuatPlg = 405,
-            SplinePvsPlg = 406,
-            MipmapPlg = 407,
-            MipmapkPlg = 408,
-            Font2d = 409,
-            IntersectionPlg = 410,
-            TiffImagePlg = 411,
-            PickPlg = 412,
-            BmpImagePlg = 413,
-            RasImagePlg = 414,
-            SkinFxPlg = 415,
-            VcatPlg = 416,
-            Path2d = 417,
-            Brush2d = 418,
-            Object2d = 419,
-            Shape2d = 420,
-            Scene2d = 421,
-            PickRegion2d = 422,
-            ObjectString2d = 423,
-            AnimationPlg2d = 424,
-            Animation2d = 425,
-            Keyframe2d = 432,
-            Maestro2d = 433,
-            Barycentric = 434,
-            PlatformIndependentTextureDictionaryTk = 435,
-            TocTk = 436,
-            TplTk = 437,
-            AltpipeTk = 438,
-            AnimationTk = 439,
-            SkinSplitTookit = 440,
-            CompressedKeyTk = 441,
-            GeometryConditioningPlg = 442,
-            WingPlg = 443,
-            GenericPipelineTk = 444,
-            LightmapConversionTk = 445,
-            FilesystemPlg = 446,
-            DictionaryTk = 447,
-            UvAnimationLinear = 448,
-            UvAnimationParameter = 449,
-            BinMeshPlg = 1294,
-            NativeDataPlg = 1296,
-            ZmodelerLock = 61982,
-            AtomicVisibilityDistance = 39055872,
-            ClumpVisibilityDistance = 39055873,
-            FrameVisibilityDistance = 39055874,
-            PipelineSet = 39056115,
-            Unused5 = 39056116,
-            TexdictionaryLink = 39056117,
-            SpecularMaterial = 39056118,
-            Unused8 = 39056119,
-            Effect2d = 39056120,
-            ExtraVertColour = 39056121,
-            CollisionModel = 39056122,
-            GtaHanim = 39056123,
-            ReflectionMaterial = 39056124,
-            Breakable = 39056125,
-            Frame = 39056126,
-            Unused16 = 39056127,
-        }
-        public RenderwareBinaryStream(KaitaiStream p__io, KaitaiStruct p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            f_version = false;
-            _read();
-        }
-        private void _read()
-        {
-            _code = ((Sections) m_io.ReadU4le());
-            _size = m_io.ReadU4le();
-            _libraryIdStamp = m_io.ReadU4le();
-            switch (Code) {
-            case Sections.TextureDictionary: {
-                __raw_body = m_io.ReadBytes(Size);
-                var io___raw_body = new KaitaiStream(__raw_body);
-                _body = new ListWithHeader(io___raw_body, this, m_root);
-                break;
-            }
-            case Sections.GeometryList: {
-                __raw_body = m_io.ReadBytes(Size);
-                var io___raw_body = new KaitaiStream(__raw_body);
-                _body = new ListWithHeader(io___raw_body, this, m_root);
-                break;
-            }
-            case Sections.Clump: {
-                __raw_body = m_io.ReadBytes(Size);
-                var io___raw_body = new KaitaiStream(__raw_body);
-                _body = new ListWithHeader(io___raw_body, this, m_root);
-                break;
-            }
-            case Sections.TextureNative: {
-                __raw_body = m_io.ReadBytes(Size);
-                var io___raw_body = new KaitaiStream(__raw_body);
-                _body = new ListWithHeader(io___raw_body, this, m_root);
-                break;
-            }
-            case Sections.FrameList: {
-                __raw_body = m_io.ReadBytes(Size);
-                var io___raw_body = new KaitaiStream(__raw_body);
-                _body = new ListWithHeader(io___raw_body, this, m_root);
-                break;
-            }
-            case Sections.Geometry: {
-                __raw_body = m_io.ReadBytes(Size);
-                var io___raw_body = new KaitaiStream(__raw_body);
-                _body = new ListWithHeader(io___raw_body, this, m_root);
-                break;
-            }
-            default: {
-                _body = m_io.ReadBytes(Size);
-                break;
-            }
-            }
-        }
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">Sections</span>
+        <span class="p">{</span>
+            <span class="n">Struct</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="n">String</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+            <span class="n">Extension</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+            <span class="n">Camera</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+            <span class="n">Texture</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
+            <span class="n">Material</span> <span class="p">=</span> <span class="m">7</span><span class="p">,</span>
+            <span class="n">MaterialList</span> <span class="p">=</span> <span class="m">8</span><span class="p">,</span>
+            <span class="n">AtomicSection</span> <span class="p">=</span> <span class="m">9</span><span class="p">,</span>
+            <span class="n">PlaneSection</span> <span class="p">=</span> <span class="m">10</span><span class="p">,</span>
+            <span class="n">World</span> <span class="p">=</span> <span class="m">11</span><span class="p">,</span>
+            <span class="n">Spline</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
+            <span class="n">Matrix</span> <span class="p">=</span> <span class="m">13</span><span class="p">,</span>
+            <span class="n">FrameList</span> <span class="p">=</span> <span class="m">14</span><span class="p">,</span>
+            <span class="n">Geometry</span> <span class="p">=</span> <span class="m">15</span><span class="p">,</span>
+            <span class="n">Clump</span> <span class="p">=</span> <span class="m">16</span><span class="p">,</span>
+            <span class="n">Light</span> <span class="p">=</span> <span class="m">18</span><span class="p">,</span>
+            <span class="n">UnicodeString</span> <span class="p">=</span> <span class="m">19</span><span class="p">,</span>
+            <span class="n">Atomic</span> <span class="p">=</span> <span class="m">20</span><span class="p">,</span>
+            <span class="n">TextureNative</span> <span class="p">=</span> <span class="m">21</span><span class="p">,</span>
+            <span class="n">TextureDictionary</span> <span class="p">=</span> <span class="m">22</span><span class="p">,</span>
+            <span class="n">AnimationDatabase</span> <span class="p">=</span> <span class="m">23</span><span class="p">,</span>
+            <span class="n">Image</span> <span class="p">=</span> <span class="m">24</span><span class="p">,</span>
+            <span class="n">SkinAnimation</span> <span class="p">=</span> <span class="m">25</span><span class="p">,</span>
+            <span class="n">GeometryList</span> <span class="p">=</span> <span class="m">26</span><span class="p">,</span>
+            <span class="n">AnimAnimation</span> <span class="p">=</span> <span class="m">27</span><span class="p">,</span>
+            <span class="n">Team</span> <span class="p">=</span> <span class="m">28</span><span class="p">,</span>
+            <span class="n">Crowd</span> <span class="p">=</span> <span class="m">29</span><span class="p">,</span>
+            <span class="n">DeltaMorphAnimation</span> <span class="p">=</span> <span class="m">30</span><span class="p">,</span>
+            <span class="n">RightToRender</span> <span class="p">=</span> <span class="m">31</span><span class="p">,</span>
+            <span class="n">MultitextureEffectNative</span> <span class="p">=</span> <span class="m">32</span><span class="p">,</span>
+            <span class="n">MultitextureEffectDictionary</span> <span class="p">=</span> <span class="m">33</span><span class="p">,</span>
+            <span class="n">TeamDictionary</span> <span class="p">=</span> <span class="m">34</span><span class="p">,</span>
+            <span class="n">PlatformIndependentTextureDictionary</span> <span class="p">=</span> <span class="m">35</span><span class="p">,</span>
+            <span class="n">TableOfContents</span> <span class="p">=</span> <span class="m">36</span><span class="p">,</span>
+            <span class="n">ParticleStandardGlobalData</span> <span class="p">=</span> <span class="m">37</span><span class="p">,</span>
+            <span class="n">Altpipe</span> <span class="p">=</span> <span class="m">38</span><span class="p">,</span>
+            <span class="n">PlatformIndependentPeds</span> <span class="p">=</span> <span class="m">39</span><span class="p">,</span>
+            <span class="n">PatchMesh</span> <span class="p">=</span> <span class="m">40</span><span class="p">,</span>
+            <span class="n">ChunkGroupStart</span> <span class="p">=</span> <span class="m">41</span><span class="p">,</span>
+            <span class="n">ChunkGroupEnd</span> <span class="p">=</span> <span class="m">42</span><span class="p">,</span>
+            <span class="n">UvAnimationDictionary</span> <span class="p">=</span> <span class="m">43</span><span class="p">,</span>
+            <span class="n">CollTree</span> <span class="p">=</span> <span class="m">44</span><span class="p">,</span>
+            <span class="n">MetricsPlg</span> <span class="p">=</span> <span class="m">257</span><span class="p">,</span>
+            <span class="n">SplinePlg</span> <span class="p">=</span> <span class="m">258</span><span class="p">,</span>
+            <span class="n">StereoPlg</span> <span class="p">=</span> <span class="m">259</span><span class="p">,</span>
+            <span class="n">VrmlPlg</span> <span class="p">=</span> <span class="m">260</span><span class="p">,</span>
+            <span class="n">MorphPlg</span> <span class="p">=</span> <span class="m">261</span><span class="p">,</span>
+            <span class="n">PvsPlg</span> <span class="p">=</span> <span class="m">262</span><span class="p">,</span>
+            <span class="n">MemoryLeakPlg</span> <span class="p">=</span> <span class="m">263</span><span class="p">,</span>
+            <span class="n">AnimationPlg</span> <span class="p">=</span> <span class="m">264</span><span class="p">,</span>
+            <span class="n">GlossPlg</span> <span class="p">=</span> <span class="m">265</span><span class="p">,</span>
+            <span class="n">LogoPlg</span> <span class="p">=</span> <span class="m">266</span><span class="p">,</span>
+            <span class="n">MemoryInfoPlg</span> <span class="p">=</span> <span class="m">267</span><span class="p">,</span>
+            <span class="n">RandomPlg</span> <span class="p">=</span> <span class="m">268</span><span class="p">,</span>
+            <span class="n">PngImagePlg</span> <span class="p">=</span> <span class="m">269</span><span class="p">,</span>
+            <span class="n">BonePlg</span> <span class="p">=</span> <span class="m">270</span><span class="p">,</span>
+            <span class="n">VrmlAnimPlg</span> <span class="p">=</span> <span class="m">271</span><span class="p">,</span>
+            <span class="n">SkyMipmapVal</span> <span class="p">=</span> <span class="m">272</span><span class="p">,</span>
+            <span class="n">MrmPlg</span> <span class="p">=</span> <span class="m">273</span><span class="p">,</span>
+            <span class="n">LodAtomicPlg</span> <span class="p">=</span> <span class="m">274</span><span class="p">,</span>
+            <span class="n">MePlg</span> <span class="p">=</span> <span class="m">275</span><span class="p">,</span>
+            <span class="n">LightmapPlg</span> <span class="p">=</span> <span class="m">276</span><span class="p">,</span>
+            <span class="n">RefinePlg</span> <span class="p">=</span> <span class="m">277</span><span class="p">,</span>
+            <span class="n">SkinPlg</span> <span class="p">=</span> <span class="m">278</span><span class="p">,</span>
+            <span class="n">LabelPlg</span> <span class="p">=</span> <span class="m">279</span><span class="p">,</span>
+            <span class="n">ParticlesPlg</span> <span class="p">=</span> <span class="m">280</span><span class="p">,</span>
+            <span class="n">GeomtxPlg</span> <span class="p">=</span> <span class="m">281</span><span class="p">,</span>
+            <span class="n">SynthCorePlg</span> <span class="p">=</span> <span class="m">282</span><span class="p">,</span>
+            <span class="n">StqppPlg</span> <span class="p">=</span> <span class="m">283</span><span class="p">,</span>
+            <span class="n">PartPpPlg</span> <span class="p">=</span> <span class="m">284</span><span class="p">,</span>
+            <span class="n">CollisionPlg</span> <span class="p">=</span> <span class="m">285</span><span class="p">,</span>
+            <span class="n">HanimPlg</span> <span class="p">=</span> <span class="m">286</span><span class="p">,</span>
+            <span class="n">UserDataPlg</span> <span class="p">=</span> <span class="m">287</span><span class="p">,</span>
+            <span class="n">MaterialEffectsPlg</span> <span class="p">=</span> <span class="m">288</span><span class="p">,</span>
+            <span class="n">ParticleSystemPlg</span> <span class="p">=</span> <span class="m">289</span><span class="p">,</span>
+            <span class="n">DeltaMorphPlg</span> <span class="p">=</span> <span class="m">290</span><span class="p">,</span>
+            <span class="n">PatchPlg</span> <span class="p">=</span> <span class="m">291</span><span class="p">,</span>
+            <span class="n">TeamPlg</span> <span class="p">=</span> <span class="m">292</span><span class="p">,</span>
+            <span class="n">CrowdPpPlg</span> <span class="p">=</span> <span class="m">293</span><span class="p">,</span>
+            <span class="n">MipSplitPlg</span> <span class="p">=</span> <span class="m">294</span><span class="p">,</span>
+            <span class="n">AnisotropyPlg</span> <span class="p">=</span> <span class="m">295</span><span class="p">,</span>
+            <span class="n">GcnMaterialPlg</span> <span class="p">=</span> <span class="m">297</span><span class="p">,</span>
+            <span class="n">GeometricPvsPlg</span> <span class="p">=</span> <span class="m">298</span><span class="p">,</span>
+            <span class="n">XboxMaterialPlg</span> <span class="p">=</span> <span class="m">299</span><span class="p">,</span>
+            <span class="n">MultiTexturePlg</span> <span class="p">=</span> <span class="m">300</span><span class="p">,</span>
+            <span class="n">ChainPlg</span> <span class="p">=</span> <span class="m">301</span><span class="p">,</span>
+            <span class="n">ToonPlg</span> <span class="p">=</span> <span class="m">302</span><span class="p">,</span>
+            <span class="n">PtankPlg</span> <span class="p">=</span> <span class="m">303</span><span class="p">,</span>
+            <span class="n">ParticleStandardPlg</span> <span class="p">=</span> <span class="m">304</span><span class="p">,</span>
+            <span class="n">PdsPlg</span> <span class="p">=</span> <span class="m">305</span><span class="p">,</span>
+            <span class="n">PrtadvPlg</span> <span class="p">=</span> <span class="m">306</span><span class="p">,</span>
+            <span class="n">NormalMapPlg</span> <span class="p">=</span> <span class="m">307</span><span class="p">,</span>
+            <span class="n">AdcPlg</span> <span class="p">=</span> <span class="m">308</span><span class="p">,</span>
+            <span class="n">UvAnimationPlg</span> <span class="p">=</span> <span class="m">309</span><span class="p">,</span>
+            <span class="n">CharacterSetPlg</span> <span class="p">=</span> <span class="m">384</span><span class="p">,</span>
+            <span class="n">NohsWorldPlg</span> <span class="p">=</span> <span class="m">385</span><span class="p">,</span>
+            <span class="n">ImportUtilPlg</span> <span class="p">=</span> <span class="m">386</span><span class="p">,</span>
+            <span class="n">SlerpPlg</span> <span class="p">=</span> <span class="m">387</span><span class="p">,</span>
+            <span class="n">OptimPlg</span> <span class="p">=</span> <span class="m">388</span><span class="p">,</span>
+            <span class="n">TlWorldPlg</span> <span class="p">=</span> <span class="m">389</span><span class="p">,</span>
+            <span class="n">DatabasePlg</span> <span class="p">=</span> <span class="m">390</span><span class="p">,</span>
+            <span class="n">RaytracePlg</span> <span class="p">=</span> <span class="m">391</span><span class="p">,</span>
+            <span class="n">RayPlg</span> <span class="p">=</span> <span class="m">392</span><span class="p">,</span>
+            <span class="n">LibraryPlg</span> <span class="p">=</span> <span class="m">393</span><span class="p">,</span>
+            <span class="n">Plg2d</span> <span class="p">=</span> <span class="m">400</span><span class="p">,</span>
+            <span class="n">TileRenderPlg</span> <span class="p">=</span> <span class="m">401</span><span class="p">,</span>
+            <span class="n">JpegImagePlg</span> <span class="p">=</span> <span class="m">402</span><span class="p">,</span>
+            <span class="n">TgaImagePlg</span> <span class="p">=</span> <span class="m">403</span><span class="p">,</span>
+            <span class="n">GifImagePlg</span> <span class="p">=</span> <span class="m">404</span><span class="p">,</span>
+            <span class="n">QuatPlg</span> <span class="p">=</span> <span class="m">405</span><span class="p">,</span>
+            <span class="n">SplinePvsPlg</span> <span class="p">=</span> <span class="m">406</span><span class="p">,</span>
+            <span class="n">MipmapPlg</span> <span class="p">=</span> <span class="m">407</span><span class="p">,</span>
+            <span class="n">MipmapkPlg</span> <span class="p">=</span> <span class="m">408</span><span class="p">,</span>
+            <span class="n">Font2d</span> <span class="p">=</span> <span class="m">409</span><span class="p">,</span>
+            <span class="n">IntersectionPlg</span> <span class="p">=</span> <span class="m">410</span><span class="p">,</span>
+            <span class="n">TiffImagePlg</span> <span class="p">=</span> <span class="m">411</span><span class="p">,</span>
+            <span class="n">PickPlg</span> <span class="p">=</span> <span class="m">412</span><span class="p">,</span>
+            <span class="n">BmpImagePlg</span> <span class="p">=</span> <span class="m">413</span><span class="p">,</span>
+            <span class="n">RasImagePlg</span> <span class="p">=</span> <span class="m">414</span><span class="p">,</span>
+            <span class="n">SkinFxPlg</span> <span class="p">=</span> <span class="m">415</span><span class="p">,</span>
+            <span class="n">VcatPlg</span> <span class="p">=</span> <span class="m">416</span><span class="p">,</span>
+            <span class="n">Path2d</span> <span class="p">=</span> <span class="m">417</span><span class="p">,</span>
+            <span class="n">Brush2d</span> <span class="p">=</span> <span class="m">418</span><span class="p">,</span>
+            <span class="n">Object2d</span> <span class="p">=</span> <span class="m">419</span><span class="p">,</span>
+            <span class="n">Shape2d</span> <span class="p">=</span> <span class="m">420</span><span class="p">,</span>
+            <span class="n">Scene2d</span> <span class="p">=</span> <span class="m">421</span><span class="p">,</span>
+            <span class="n">PickRegion2d</span> <span class="p">=</span> <span class="m">422</span><span class="p">,</span>
+            <span class="n">ObjectString2d</span> <span class="p">=</span> <span class="m">423</span><span class="p">,</span>
+            <span class="n">AnimationPlg2d</span> <span class="p">=</span> <span class="m">424</span><span class="p">,</span>
+            <span class="n">Animation2d</span> <span class="p">=</span> <span class="m">425</span><span class="p">,</span>
+            <span class="n">Keyframe2d</span> <span class="p">=</span> <span class="m">432</span><span class="p">,</span>
+            <span class="n">Maestro2d</span> <span class="p">=</span> <span class="m">433</span><span class="p">,</span>
+            <span class="n">Barycentric</span> <span class="p">=</span> <span class="m">434</span><span class="p">,</span>
+            <span class="n">PlatformIndependentTextureDictionaryTk</span> <span class="p">=</span> <span class="m">435</span><span class="p">,</span>
+            <span class="n">TocTk</span> <span class="p">=</span> <span class="m">436</span><span class="p">,</span>
+            <span class="n">TplTk</span> <span class="p">=</span> <span class="m">437</span><span class="p">,</span>
+            <span class="n">AltpipeTk</span> <span class="p">=</span> <span class="m">438</span><span class="p">,</span>
+            <span class="n">AnimationTk</span> <span class="p">=</span> <span class="m">439</span><span class="p">,</span>
+            <span class="n">SkinSplitTookit</span> <span class="p">=</span> <span class="m">440</span><span class="p">,</span>
+            <span class="n">CompressedKeyTk</span> <span class="p">=</span> <span class="m">441</span><span class="p">,</span>
+            <span class="n">GeometryConditioningPlg</span> <span class="p">=</span> <span class="m">442</span><span class="p">,</span>
+            <span class="n">WingPlg</span> <span class="p">=</span> <span class="m">443</span><span class="p">,</span>
+            <span class="n">GenericPipelineTk</span> <span class="p">=</span> <span class="m">444</span><span class="p">,</span>
+            <span class="n">LightmapConversionTk</span> <span class="p">=</span> <span class="m">445</span><span class="p">,</span>
+            <span class="n">FilesystemPlg</span> <span class="p">=</span> <span class="m">446</span><span class="p">,</span>
+            <span class="n">DictionaryTk</span> <span class="p">=</span> <span class="m">447</span><span class="p">,</span>
+            <span class="n">UvAnimationLinear</span> <span class="p">=</span> <span class="m">448</span><span class="p">,</span>
+            <span class="n">UvAnimationParameter</span> <span class="p">=</span> <span class="m">449</span><span class="p">,</span>
+            <span class="n">BinMeshPlg</span> <span class="p">=</span> <span class="m">1294</span><span class="p">,</span>
+            <span class="n">NativeDataPlg</span> <span class="p">=</span> <span class="m">1296</span><span class="p">,</span>
+            <span class="n">ZmodelerLock</span> <span class="p">=</span> <span class="m">61982</span><span class="p">,</span>
+            <span class="n">AtomicVisibilityDistance</span> <span class="p">=</span> <span class="m">39055872</span><span class="p">,</span>
+            <span class="n">ClumpVisibilityDistance</span> <span class="p">=</span> <span class="m">39055873</span><span class="p">,</span>
+            <span class="n">FrameVisibilityDistance</span> <span class="p">=</span> <span class="m">39055874</span><span class="p">,</span>
+            <span class="n">PipelineSet</span> <span class="p">=</span> <span class="m">39056115</span><span class="p">,</span>
+            <span class="n">Unused5</span> <span class="p">=</span> <span class="m">39056116</span><span class="p">,</span>
+            <span class="n">TexdictionaryLink</span> <span class="p">=</span> <span class="m">39056117</span><span class="p">,</span>
+            <span class="n">SpecularMaterial</span> <span class="p">=</span> <span class="m">39056118</span><span class="p">,</span>
+            <span class="n">Unused8</span> <span class="p">=</span> <span class="m">39056119</span><span class="p">,</span>
+            <span class="n">Effect2d</span> <span class="p">=</span> <span class="m">39056120</span><span class="p">,</span>
+            <span class="n">ExtraVertColour</span> <span class="p">=</span> <span class="m">39056121</span><span class="p">,</span>
+            <span class="n">CollisionModel</span> <span class="p">=</span> <span class="m">39056122</span><span class="p">,</span>
+            <span class="n">GtaHanim</span> <span class="p">=</span> <span class="m">39056123</span><span class="p">,</span>
+            <span class="n">ReflectionMaterial</span> <span class="p">=</span> <span class="m">39056124</span><span class="p">,</span>
+            <span class="n">Breakable</span> <span class="p">=</span> <span class="m">39056125</span><span class="p">,</span>
+            <span class="n">Frame</span> <span class="p">=</span> <span class="m">39056126</span><span class="p">,</span>
+            <span class="n">Unused16</span> <span class="p">=</span> <span class="m">39056127</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="nf">RenderwareBinaryStream</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">f_version</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_code</span> <span class="p">=</span> <span class="p">((</span><span class="n">Sections</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">());</span>
+            <span class="n">_size</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+            <span class="n">_libraryIdStamp</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">Code</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">Sections</span><span class="p">.</span><span class="n">TextureDictionary</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Size</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">Sections</span><span class="p">.</span><span class="n">GeometryList</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Size</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">Sections</span><span class="p">.</span><span class="n">Clump</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Size</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">Sections</span><span class="p">.</span><span class="n">TextureNative</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Size</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">Sections</span><span class="p">.</span><span class="n">FrameList</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Size</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">Sections</span><span class="p">.</span><span class="n">Geometry</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Size</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Size</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/RpClump&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class StructClump : KaitaiStruct
-        {
-            public static StructClump FromFile(string fileName)
-            {
-                return new StructClump(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/RpClump&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">StructClump</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">StructClump</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">StructClump</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public StructClump(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _numAtomics = m_io.ReadU4le();
-                if (M_Parent.Version &gt;= 208896) {
-                    _numLights = m_io.ReadU4le();
-                }
-                if (M_Parent.Version &gt;= 208896) {
-                    _numCameras = m_io.ReadU4le();
-                }
-            }
-            private uint _numAtomics;
-            private uint? _numLights;
-            private uint? _numCameras;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.ListWithHeader m_parent;
-            public uint NumAtomics { get { return _numAtomics; } }
-            public uint? NumLights { get { return _numLights; } }
-            public uint? NumCameras { get { return _numCameras; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.ListWithHeader M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">StructClump</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">ListWithHeader</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_numAtomics</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Version</span> <span class="p">&gt;=</span> <span class="m">208896</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_numLights</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Version</span> <span class="p">&gt;=</span> <span class="m">208896</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_numCameras</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numAtomics</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint?</span> <span class="n">_numLights</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint?</span> <span class="n">_numCameras</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">ListWithHeader</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumAtomics</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numAtomics</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint?</span> <span class="n">NumLights</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numLights</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint?</span> <span class="n">NumCameras</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numCameras</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">ListWithHeader</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/RpGeometry&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class StructGeometry : KaitaiStruct
-        {
-            public static StructGeometry FromFile(string fileName)
-            {
-                return new StructGeometry(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/RpGeometry&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">StructGeometry</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">StructGeometry</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">StructGeometry</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public StructGeometry(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_isTextured = false;
-                f_isPrelit = false;
-                f_isTextured2 = false;
-                f_isNative = false;
-                _read();
-            }
-            private void _read()
-            {
-                _format = m_io.ReadU4le();
-                _numTriangles = m_io.ReadU4le();
-                _numVertices = m_io.ReadU4le();
-                _numMorphTargets = m_io.ReadU4le();
-                if (M_Parent.Version &lt; 212992) {
-                    _surfProp = new SurfaceProperties(m_io, this, m_root);
-                }
-                if (!(IsNative)) {
-                    _geometry = new GeometryNonNative(m_io, this, m_root);
-                }
-                _morphTargets = new List&lt;MorphTarget&gt;((int) (NumMorphTargets));
-                for (var i = 0; i &lt; NumMorphTargets; i++)
-                {
-                    _morphTargets.Add(new MorphTarget(m_io, this, m_root));
-                }
-            }
-            private bool f_isTextured;
-            private bool _isTextured;
-            public bool IsTextured
-            {
-                get
-                {
-                    if (f_isTextured)
-                        return _isTextured;
-                    _isTextured = (bool) ((Format &amp; 4) != 0);
-                    f_isTextured = true;
-                    return _isTextured;
-                }
-            }
-            private bool f_isPrelit;
-            private bool _isPrelit;
-            public bool IsPrelit
-            {
-                get
-                {
-                    if (f_isPrelit)
-                        return _isPrelit;
-                    _isPrelit = (bool) ((Format &amp; 8) != 0);
-                    f_isPrelit = true;
-                    return _isPrelit;
-                }
-            }
-            private bool f_isTextured2;
-            private bool _isTextured2;
-            public bool IsTextured2
-            {
-                get
-                {
-                    if (f_isTextured2)
-                        return _isTextured2;
-                    _isTextured2 = (bool) ((Format &amp; 128) != 0);
-                    f_isTextured2 = true;
-                    return _isTextured2;
-                }
-            }
-            private bool f_isNative;
-            private bool _isNative;
-            public bool IsNative
-            {
-                get
-                {
-                    if (f_isNative)
-                        return _isNative;
-                    _isNative = (bool) ((Format &amp; 16777216) != 0);
-                    f_isNative = true;
-                    return _isNative;
-                }
-            }
-            private uint _format;
-            private uint _numTriangles;
-            private uint _numVertices;
-            private uint _numMorphTargets;
-            private SurfaceProperties _surfProp;
-            private GeometryNonNative _geometry;
-            private List&lt;MorphTarget&gt; _morphTargets;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.ListWithHeader m_parent;
-            public uint Format { get { return _format; } }
-            public uint NumTriangles { get { return _numTriangles; } }
-            public uint NumVertices { get { return _numVertices; } }
-            public uint NumMorphTargets { get { return _numMorphTargets; } }
-            public SurfaceProperties SurfProp { get { return _surfProp; } }
-            public GeometryNonNative Geometry { get { return _geometry; } }
-            public List&lt;MorphTarget&gt; MorphTargets { get { return _morphTargets; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.ListWithHeader M_Parent { get { return m_parent; } }
-        }
-        public partial class GeometryNonNative : KaitaiStruct
-        {
-            public static GeometryNonNative FromFile(string fileName)
-            {
-                return new GeometryNonNative(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">StructGeometry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">ListWithHeader</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_isTextured</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_isPrelit</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_isTextured2</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_isNative</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_format</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_numTriangles</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_numVertices</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_numMorphTargets</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Version</span> <span class="p">&lt;</span> <span class="m">212992</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_surfProp</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SurfaceProperties</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(!(</span><span class="n">IsNative</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="n">_geometry</span> <span class="p">=</span> <span class="k">new</span> <span class="n">GeometryNonNative</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="n">_morphTargets</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">MorphTarget</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumMorphTargets</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumMorphTargets</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_morphTargets</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">MorphTarget</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isTextured</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isTextured</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsTextured</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isTextured</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_isTextured</span><span class="p">;</span>
+                    <span class="n">_isTextured</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Format</span> <span class="p">&amp;</span> <span class="m">4</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_isTextured</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_isTextured</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isPrelit</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isPrelit</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsPrelit</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isPrelit</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_isPrelit</span><span class="p">;</span>
+                    <span class="n">_isPrelit</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Format</span> <span class="p">&amp;</span> <span class="m">8</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_isPrelit</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_isPrelit</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isTextured2</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isTextured2</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsTextured2</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isTextured2</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_isTextured2</span><span class="p">;</span>
+                    <span class="n">_isTextured2</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Format</span> <span class="p">&amp;</span> <span class="m">128</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_isTextured2</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_isTextured2</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isNative</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isNative</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsNative</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isNative</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_isNative</span><span class="p">;</span>
+                    <span class="n">_isNative</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Format</span> <span class="p">&amp;</span> <span class="m">16777216</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_isNative</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_isNative</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_format</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numTriangles</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numVertices</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numMorphTargets</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">SurfaceProperties</span> <span class="n">_surfProp</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">GeometryNonNative</span> <span class="n">_geometry</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">MorphTarget</span><span class="p">&gt;</span> <span class="n">_morphTargets</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">ListWithHeader</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Format</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_format</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumTriangles</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numTriangles</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumVertices</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numVertices</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumMorphTargets</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numMorphTargets</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">SurfaceProperties</span> <span class="n">SurfProp</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_surfProp</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">GeometryNonNative</span> <span class="n">Geometry</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_geometry</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">MorphTarget</span><span class="p">&gt;</span> <span class="n">MorphTargets</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_morphTargets</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">ListWithHeader</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">GeometryNonNative</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">GeometryNonNative</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">GeometryNonNative</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public GeometryNonNative(KaitaiStream p__io, RenderwareBinaryStream.StructGeometry p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                if (M_Parent.IsPrelit) {
-                    _prelitColors = new List&lt;Rgba&gt;((int) (M_Parent.NumVertices));
-                    for (var i = 0; i &lt; M_Parent.NumVertices; i++)
-                    {
-                        _prelitColors.Add(new Rgba(m_io, this, m_root));
-                    }
-                }
-                if ( ((M_Parent.IsTextured) || (M_Parent.IsTextured2)) ) {
-                    _texCoords = new List&lt;TexCoord&gt;((int) (M_Parent.NumVertices));
-                    for (var i = 0; i &lt; M_Parent.NumVertices; i++)
-                    {
-                        _texCoords.Add(new TexCoord(m_io, this, m_root));
-                    }
-                }
-                _triangles = new List&lt;Triangle&gt;((int) (M_Parent.NumTriangles));
-                for (var i = 0; i &lt; M_Parent.NumTriangles; i++)
-                {
-                    _triangles.Add(new Triangle(m_io, this, m_root));
-                }
-            }
-            private List&lt;Rgba&gt; _prelitColors;
-            private List&lt;TexCoord&gt; _texCoords;
-            private List&lt;Triangle&gt; _triangles;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.StructGeometry m_parent;
-            public List&lt;Rgba&gt; PrelitColors { get { return _prelitColors; } }
-            public List&lt;TexCoord&gt; TexCoords { get { return _texCoords; } }
-            public List&lt;Triangle&gt; Triangles { get { return _triangles; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.StructGeometry M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">GeometryNonNative</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">IsPrelit</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_prelitColors</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Rgba</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">NumVertices</span><span class="p">));</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">M_Parent</span><span class="p">.</span><span class="n">NumVertices</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                    <span class="p">{</span>
+                        <span class="n">_prelitColors</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Rgba</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">IsTextured</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">IsTextured2</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_texCoords</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">TexCoord</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">NumVertices</span><span class="p">));</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">M_Parent</span><span class="p">.</span><span class="n">NumVertices</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                    <span class="p">{</span>
+                        <span class="n">_texCoords</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">TexCoord</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="n">_triangles</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Triangle</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">NumTriangles</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">M_Parent</span><span class="p">.</span><span class="n">NumTriangles</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_triangles</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Triangle</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Rgba</span><span class="p">&gt;</span> <span class="n">_prelitColors</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">TexCoord</span><span class="p">&gt;</span> <span class="n">_texCoords</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Triangle</span><span class="p">&gt;</span> <span class="n">_triangles</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Rgba</span><span class="p">&gt;</span> <span class="n">PrelitColors</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_prelitColors</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">TexCoord</span><span class="p">&gt;</span> <span class="n">TexCoords</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_texCoords</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Triangle</span><span class="p">&gt;</span> <span class="n">Triangles</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_triangles</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/Geometry_List_(RW_Section)#Structure&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class StructGeometryList : KaitaiStruct
-        {
-            public static StructGeometryList FromFile(string fileName)
-            {
-                return new StructGeometryList(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/Geometry_List_(RW_Section)#Structure&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">StructGeometryList</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">StructGeometryList</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">StructGeometryList</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public StructGeometryList(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _numGeometries = m_io.ReadU4le();
-            }
-            private uint _numGeometries;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.ListWithHeader m_parent;
-            public uint NumGeometries { get { return _numGeometries; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.ListWithHeader M_Parent { get { return m_parent; } }
-        }
-        public partial class Rgba : KaitaiStruct
-        {
-            public static Rgba FromFile(string fileName)
-            {
-                return new Rgba(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">StructGeometryList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">ListWithHeader</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_numGeometries</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numGeometries</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">ListWithHeader</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumGeometries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numGeometries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">ListWithHeader</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Rgba</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Rgba</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Rgba</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Rgba(KaitaiStream p__io, RenderwareBinaryStream.GeometryNonNative p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _r = m_io.ReadU1();
-                _g = m_io.ReadU1();
-                _b = m_io.ReadU1();
-                _a = m_io.ReadU1();
-            }
-            private byte _r;
-            private byte _g;
-            private byte _b;
-            private byte _a;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.GeometryNonNative m_parent;
-            public byte R { get { return _r; } }
-            public byte G { get { return _g; } }
-            public byte B { get { return _b; } }
-            public byte A { get { return _a; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.GeometryNonNative M_Parent { get { return m_parent; } }
-        }
-        public partial class Sphere : KaitaiStruct
-        {
-            public static Sphere FromFile(string fileName)
-            {
-                return new Sphere(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">Rgba</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">GeometryNonNative</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_r</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_g</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_b</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_a</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_r</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_g</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_b</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_a</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">GeometryNonNative</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">R</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_r</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">G</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_g</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">B</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_b</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">A</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_a</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">GeometryNonNative</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Sphere</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Sphere</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Sphere</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Sphere(KaitaiStream p__io, RenderwareBinaryStream.MorphTarget p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _x = m_io.ReadF4le();
-                _y = m_io.ReadF4le();
-                _z = m_io.ReadF4le();
-                _radius = m_io.ReadF4le();
-            }
-            private float _x;
-            private float _y;
-            private float _z;
-            private float _radius;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.MorphTarget m_parent;
-            public float X { get { return _x; } }
-            public float Y { get { return _y; } }
-            public float Z { get { return _z; } }
-            public float Radius { get { return _radius; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.MorphTarget M_Parent { get { return m_parent; } }
-        }
-        public partial class MorphTarget : KaitaiStruct
-        {
-            public static MorphTarget FromFile(string fileName)
-            {
-                return new MorphTarget(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">Sphere</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">MorphTarget</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_x</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+                <span class="n">_y</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+                <span class="n">_z</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+                <span class="n">_radius</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_x</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_y</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_z</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_radius</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">MorphTarget</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">X</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_x</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">Y</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_y</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">Z</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_z</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">Radius</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_radius</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">MorphTarget</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">MorphTarget</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">MorphTarget</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">MorphTarget</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public MorphTarget(KaitaiStream p__io, RenderwareBinaryStream.StructGeometry p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _boundingSphere = new Sphere(m_io, this, m_root);
-                _hasVertices = m_io.ReadU4le();
-                _hasNormals = m_io.ReadU4le();
-                if (HasVertices != 0) {
-                    _vertices = new List&lt;Vector3d&gt;((int) (M_Parent.NumVertices));
-                    for (var i = 0; i &lt; M_Parent.NumVertices; i++)
-                    {
-                        _vertices.Add(new Vector3d(m_io, this, m_root));
-                    }
-                }
-                if (HasNormals != 0) {
-                    _normals = new List&lt;Vector3d&gt;((int) (M_Parent.NumVertices));
-                    for (var i = 0; i &lt; M_Parent.NumVertices; i++)
-                    {
-                        _normals.Add(new Vector3d(m_io, this, m_root));
-                    }
-                }
-            }
-            private Sphere _boundingSphere;
-            private uint _hasVertices;
-            private uint _hasNormals;
-            private List&lt;Vector3d&gt; _vertices;
-            private List&lt;Vector3d&gt; _normals;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.StructGeometry m_parent;
-            public Sphere BoundingSphere { get { return _boundingSphere; } }
-            public uint HasVertices { get { return _hasVertices; } }
-            public uint HasNormals { get { return _hasNormals; } }
-            public List&lt;Vector3d&gt; Vertices { get { return _vertices; } }
-            public List&lt;Vector3d&gt; Normals { get { return _normals; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.StructGeometry M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">MorphTarget</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_boundingSphere</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Sphere</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_hasVertices</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_hasNormals</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">HasVertices</span> <span class="p">!=</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_vertices</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vector3d</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">NumVertices</span><span class="p">));</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">M_Parent</span><span class="p">.</span><span class="n">NumVertices</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                    <span class="p">{</span>
+                        <span class="n">_vertices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">HasNormals</span> <span class="p">!=</span> <span class="m">0</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_normals</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vector3d</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">NumVertices</span><span class="p">));</span>
+                    <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">M_Parent</span><span class="p">.</span><span class="n">NumVertices</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                    <span class="p">{</span>
+                        <span class="n">_normals</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Sphere</span> <span class="n">_boundingSphere</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_hasVertices</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_hasNormals</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vector3d</span><span class="p">&gt;</span> <span class="n">_vertices</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vector3d</span><span class="p">&gt;</span> <span class="n">_normals</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">Sphere</span> <span class="n">BoundingSphere</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_boundingSphere</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">HasVertices</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_hasVertices</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">HasNormals</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_hasNormals</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vector3d</span><span class="p">&gt;</span> <span class="n">Vertices</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_vertices</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vector3d</span><span class="p">&gt;</span> <span class="n">Normals</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_normals</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/RpGeometry&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class SurfaceProperties : KaitaiStruct
-        {
-            public static SurfaceProperties FromFile(string fileName)
-            {
-                return new SurfaceProperties(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/RpGeometry&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SurfaceProperties</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">SurfaceProperties</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">SurfaceProperties</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public SurfaceProperties(KaitaiStream p__io, RenderwareBinaryStream.StructGeometry p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _ambient = m_io.ReadF4le();
-                _specular = m_io.ReadF4le();
-                _diffuse = m_io.ReadF4le();
-            }
-            private float _ambient;
-            private float _specular;
-            private float _diffuse;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.StructGeometry m_parent;
-            public float Ambient { get { return _ambient; } }
-            public float Specular { get { return _specular; } }
-            public float Diffuse { get { return _diffuse; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.StructGeometry M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">SurfaceProperties</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_ambient</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+                <span class="n">_specular</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+                <span class="n">_diffuse</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_ambient</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_specular</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_diffuse</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">Ambient</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ambient</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">Specular</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_specular</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">Diffuse</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_diffuse</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructGeometry</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class StructFrameList : KaitaiStruct
-        {
-            public static StructFrameList FromFile(string fileName)
-            {
-                return new StructFrameList(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">StructFrameList</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">StructFrameList</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">StructFrameList</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public StructFrameList(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _numFrames = m_io.ReadU4le();
-                _frames = new List&lt;Frame&gt;((int) (NumFrames));
-                for (var i = 0; i &lt; NumFrames; i++)
-                {
-                    _frames.Add(new Frame(m_io, this, m_root));
-                }
-            }
-            private uint _numFrames;
-            private List&lt;Frame&gt; _frames;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.ListWithHeader m_parent;
-            public uint NumFrames { get { return _numFrames; } }
-            public List&lt;Frame&gt; Frames { get { return _frames; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.ListWithHeader M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">StructFrameList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">ListWithHeader</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_numFrames</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_frames</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Frame</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumFrames</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumFrames</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_frames</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Frame</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numFrames</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Frame</span><span class="p">&gt;</span> <span class="n">_frames</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">ListWithHeader</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumFrames</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numFrames</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Frame</span><span class="p">&gt;</span> <span class="n">Frames</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_frames</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">ListWithHeader</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class Matrix : KaitaiStruct
-        {
-            public static Matrix FromFile(string fileName)
-            {
-                return new Matrix(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Matrix</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Matrix</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Matrix</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Matrix(KaitaiStream p__io, RenderwareBinaryStream.Frame p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _entries = new List&lt;Vector3d&gt;((int) (3));
-                for (var i = 0; i &lt; 3; i++)
-                {
-                    _entries.Add(new Vector3d(m_io, this, m_root));
-                }
-            }
-            private List&lt;Vector3d&gt; _entries;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.Frame m_parent;
-            public List&lt;Vector3d&gt; Entries { get { return _entries; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.Frame M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">Matrix</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">Frame</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vector3d</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="m">3</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">3</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vector3d</span><span class="p">&gt;</span> <span class="n">_entries</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">Frame</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vector3d</span><span class="p">&gt;</span> <span class="n">Entries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_entries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">Frame</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class Vector3d : KaitaiStruct
-        {
-            public static Vector3d FromFile(string fileName)
-            {
-                return new Vector3d(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Vector3d</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Vector3d</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Vector3d</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Vector3d(KaitaiStream p__io, KaitaiStruct p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _x = m_io.ReadF4le();
-                _y = m_io.ReadF4le();
-                _z = m_io.ReadF4le();
-            }
-            private float _x;
-            private float _y;
-            private float _z;
-            private RenderwareBinaryStream m_root;
-            private KaitaiStruct m_parent;
-            public float X { get { return _x; } }
-            public float Y { get { return _y; } }
-            public float Z { get { return _z; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">Vector3d</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_x</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+                <span class="n">_y</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+                <span class="n">_z</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_x</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_y</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_z</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">X</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_x</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">Y</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_y</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">Z</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_z</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Typical structure used by many data types in RenderWare binary
-        /// stream. Substream contains a list of binary stream entries,
-        /// first entry always has type &amp;quot;struct&amp;quot; and carries some specific
-        /// binary data it in, determined by the type of parent. All other
-        /// entries, beside the first one, are normal, self-describing
-        /// records.
-        /// &lt;/summary&gt;
-        public partial class ListWithHeader : KaitaiStruct
-        {
-            public static ListWithHeader FromFile(string fileName)
-            {
-                return new ListWithHeader(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Typical structure used by many data types in RenderWare binary</span>
+        <span class="c1">/// stream. Substream contains a list of binary stream entries,</span>
+        <span class="c1">/// first entry always has type &amp;quot;struct&amp;quot; and carries some specific</span>
+        <span class="c1">/// binary data it in, determined by the type of parent. All other</span>
+        <span class="c1">/// entries, beside the first one, are normal, self-describing</span>
+        <span class="c1">/// records.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ListWithHeader</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">ListWithHeader</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">ListWithHeader</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public ListWithHeader(KaitaiStream p__io, RenderwareBinaryStream p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_version = false;
-                _read();
-            }
-            private void _read()
-            {
-                _code = m_io.EnsureFixedContents(new byte[] { 1, 0, 0, 0 });
-                _headerSize = m_io.ReadU4le();
-                _libraryIdStamp = m_io.ReadU4le();
-                switch (M_Parent.Code) {
-                case RenderwareBinaryStream.Sections.TextureDictionary: {
-                    __raw_header = m_io.ReadBytes(HeaderSize);
-                    var io___raw_header = new KaitaiStream(__raw_header);
-                    _header = new StructTextureDictionary(io___raw_header, this, m_root);
-                    break;
-                }
-                case RenderwareBinaryStream.Sections.GeometryList: {
-                    __raw_header = m_io.ReadBytes(HeaderSize);
-                    var io___raw_header = new KaitaiStream(__raw_header);
-                    _header = new StructGeometryList(io___raw_header, this, m_root);
-                    break;
-                }
-                case RenderwareBinaryStream.Sections.Clump: {
-                    __raw_header = m_io.ReadBytes(HeaderSize);
-                    var io___raw_header = new KaitaiStream(__raw_header);
-                    _header = new StructClump(io___raw_header, this, m_root);
-                    break;
-                }
-                case RenderwareBinaryStream.Sections.FrameList: {
-                    __raw_header = m_io.ReadBytes(HeaderSize);
-                    var io___raw_header = new KaitaiStream(__raw_header);
-                    _header = new StructFrameList(io___raw_header, this, m_root);
-                    break;
-                }
-                case RenderwareBinaryStream.Sections.Geometry: {
-                    __raw_header = m_io.ReadBytes(HeaderSize);
-                    var io___raw_header = new KaitaiStream(__raw_header);
-                    _header = new StructGeometry(io___raw_header, this, m_root);
-                    break;
-                }
-                default: {
-                    _header = m_io.ReadBytes(HeaderSize);
-                    break;
-                }
-                }
-                _entries = new List&lt;RenderwareBinaryStream&gt;();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _entries.Add(new RenderwareBinaryStream(m_io));
-                        i++;
-                    }
-                }
-            }
-            private bool f_version;
-            private int _version;
-            public int Version
-            {
-                get
-                {
-                    if (f_version)
-                        return _version;
-                    _version = (int) (((LibraryIdStamp &amp; 4294901760) != 0 ? ((((LibraryIdStamp &gt;&gt; 14) &amp; 261888) + 196608) | ((LibraryIdStamp &gt;&gt; 16) &amp; 63)) : (LibraryIdStamp &lt;&lt; 8)));
-                    f_version = true;
-                    return _version;
-                }
-            }
-            private byte[] _code;
-            private uint _headerSize;
-            private uint _libraryIdStamp;
-            private object _header;
-            private List&lt;RenderwareBinaryStream&gt; _entries;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream m_parent;
-            private byte[] __raw_header;
-            public byte[] Code { get { return _code; } }
-            public uint HeaderSize { get { return _headerSize; } }
-            public uint LibraryIdStamp { get { return _libraryIdStamp; } }
-            public object Header { get { return _header; } }
-            public List&lt;RenderwareBinaryStream&gt; Entries { get { return _entries; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream M_Parent { get { return m_parent; } }
-            public byte[] M_RawHeader { get { return __raw_header; } }
-        }
-        public partial class Triangle : KaitaiStruct
-        {
-            public static Triangle FromFile(string fileName)
-            {
-                return new Triangle(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">ListWithHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_version</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_code</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">1</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span> <span class="p">});</span>
+                <span class="n">_headerSize</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_libraryIdStamp</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Code</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">Sections</span><span class="p">.</span><span class="n">TextureDictionary</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_header</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">HeaderSize</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_header</span><span class="p">);</span>
+                    <span class="n">_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StructTextureDictionary</span><span class="p">(</span><span class="n">io___raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">Sections</span><span class="p">.</span><span class="n">GeometryList</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_header</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">HeaderSize</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_header</span><span class="p">);</span>
+                    <span class="n">_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StructGeometryList</span><span class="p">(</span><span class="n">io___raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">Sections</span><span class="p">.</span><span class="n">Clump</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_header</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">HeaderSize</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_header</span><span class="p">);</span>
+                    <span class="n">_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StructClump</span><span class="p">(</span><span class="n">io___raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">Sections</span><span class="p">.</span><span class="n">FrameList</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_header</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">HeaderSize</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_header</span><span class="p">);</span>
+                    <span class="n">_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StructFrameList</span><span class="p">(</span><span class="n">io___raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">Sections</span><span class="p">.</span><span class="n">Geometry</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_header</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">HeaderSize</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_header</span><span class="p">);</span>
+                    <span class="n">_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StructGeometry</span><span class="p">(</span><span class="n">io___raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_header</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">HeaderSize</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RenderwareBinaryStream</span><span class="p">&gt;();</span>
+                <span class="p">{</span>
+                    <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                    <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">RenderwareBinaryStream</span><span class="p">(</span><span class="n">m_io</span><span class="p">));</span>
+                        <span class="n">i</span><span class="p">++;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_version</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_version</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Version</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_version</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_version</span><span class="p">;</span>
+                    <span class="n">_version</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">LibraryIdStamp</span> <span class="p">&amp;</span> <span class="m">4294901760</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span> <span class="p">?</span> <span class="p">((((</span><span class="n">LibraryIdStamp</span> <span class="p">&gt;&gt;</span> <span class="m">14</span><span class="p">)</span> <span class="p">&amp;</span> <span class="m">261888</span><span class="p">)</span> <span class="p">+</span> <span class="m">196608</span><span class="p">)</span> <span class="p">|</span> <span class="p">((</span><span class="n">LibraryIdStamp</span> <span class="p">&gt;&gt;</span> <span class="m">16</span><span class="p">)</span> <span class="p">&amp;</span> <span class="m">63</span><span class="p">))</span> <span class="p">:</span> <span class="p">(</span><span class="n">LibraryIdStamp</span> <span class="p">&lt;&lt;</span> <span class="m">8</span><span class="p">)));</span>
+                    <span class="n">f_version</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_version</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_code</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_headerSize</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_libraryIdStamp</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">object</span> <span class="n">_header</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RenderwareBinaryStream</span><span class="p">&gt;</span> <span class="n">_entries</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_header</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Code</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_code</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">HeaderSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_headerSize</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LibraryIdStamp</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_libraryIdStamp</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">object</span> <span class="n">Header</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_header</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RenderwareBinaryStream</span><span class="p">&gt;</span> <span class="n">Entries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_entries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawHeader</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_header</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Triangle</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Triangle</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Triangle</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Triangle(KaitaiStream p__io, RenderwareBinaryStream.GeometryNonNative p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _vertex2 = m_io.ReadU2le();
-                _vertex1 = m_io.ReadU2le();
-                _materialId = m_io.ReadU2le();
-                _vertex3 = m_io.ReadU2le();
-            }
-            private ushort _vertex2;
-            private ushort _vertex1;
-            private ushort _materialId;
-            private ushort _vertex3;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.GeometryNonNative m_parent;
-            public ushort Vertex2 { get { return _vertex2; } }
-            public ushort Vertex1 { get { return _vertex1; } }
-            public ushort MaterialId { get { return _materialId; } }
-            public ushort Vertex3 { get { return _vertex3; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.GeometryNonNative M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">Triangle</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">GeometryNonNative</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_vertex2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_vertex1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_materialId</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="n">_vertex3</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_vertex2</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_vertex1</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_materialId</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_vertex3</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">GeometryNonNative</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Vertex2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_vertex2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Vertex1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_vertex1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">MaterialId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_materialId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Vertex3</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_vertex3</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">GeometryNonNative</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class Frame : KaitaiStruct
-        {
-            public static Frame FromFile(string fileName)
-            {
-                return new Frame(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Frame</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Frame</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Frame</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Frame(KaitaiStream p__io, RenderwareBinaryStream.StructFrameList p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _rotationMatrix = new Matrix(m_io, this, m_root);
-                _position = new Vector3d(m_io, this, m_root);
-                _curFrameIdx = m_io.ReadS4le();
-                _matrixCreationFlags = m_io.ReadU4le();
-            }
-            private Matrix _rotationMatrix;
-            private Vector3d _position;
-            private int _curFrameIdx;
-            private uint _matrixCreationFlags;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.StructFrameList m_parent;
-            public Matrix RotationMatrix { get { return _rotationMatrix; } }
-            public Vector3d Position { get { return _position; } }
-            public int CurFrameIdx { get { return _curFrameIdx; } }
-            public uint MatrixCreationFlags { get { return _matrixCreationFlags; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.StructFrameList M_Parent { get { return m_parent; } }
-        }
-        public partial class TexCoord : KaitaiStruct
-        {
-            public static TexCoord FromFile(string fileName)
-            {
-                return new TexCoord(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">Frame</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructFrameList</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_rotationMatrix</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_position</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vector3d</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_curFrameIdx</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4le</span><span class="p">();</span>
+                <span class="n">_matrixCreationFlags</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Matrix</span> <span class="n">_rotationMatrix</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Vector3d</span> <span class="n">_position</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_curFrameIdx</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_matrixCreationFlags</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructFrameList</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">Matrix</span> <span class="n">RotationMatrix</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_rotationMatrix</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Vector3d</span> <span class="n">Position</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_position</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">CurFrameIdx</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_curFrameIdx</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">MatrixCreationFlags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_matrixCreationFlags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">StructFrameList</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">TexCoord</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">TexCoord</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">TexCoord</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public TexCoord(KaitaiStream p__io, RenderwareBinaryStream.GeometryNonNative p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _u = m_io.ReadF4le();
-                _v = m_io.ReadF4le();
-            }
-            private float _u;
-            private float _v;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.GeometryNonNative m_parent;
-            public float U { get { return _u; } }
-            public float V { get { return _v; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.GeometryNonNative M_Parent { get { return m_parent; } }
-        }
-        public partial class StructTextureDictionary : KaitaiStruct
-        {
-            public static StructTextureDictionary FromFile(string fileName)
-            {
-                return new StructTextureDictionary(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">TexCoord</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">GeometryNonNative</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_u</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+                <span class="n">_v</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_u</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_v</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">GeometryNonNative</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">U</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_u</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">V</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_v</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">GeometryNonNative</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">StructTextureDictionary</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">StructTextureDictionary</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">StructTextureDictionary</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public StructTextureDictionary(KaitaiStream p__io, RenderwareBinaryStream.ListWithHeader p__parent = null, RenderwareBinaryStream p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _numTextures = m_io.ReadU4le();
-            }
-            private uint _numTextures;
-            private RenderwareBinaryStream m_root;
-            private RenderwareBinaryStream.ListWithHeader m_parent;
-            public uint NumTextures { get { return _numTextures; } }
-            public RenderwareBinaryStream M_Root { get { return m_root; } }
-            public RenderwareBinaryStream.ListWithHeader M_Parent { get { return m_parent; } }
-        }
-        private bool f_version;
-        private int _version;
-        public int Version
-        {
-            get
-            {
-                if (f_version)
-                    return _version;
-                _version = (int) (((LibraryIdStamp &amp; 4294901760) != 0 ? ((((LibraryIdStamp &gt;&gt; 14) &amp; 261888) + 196608) | ((LibraryIdStamp &gt;&gt; 16) &amp; 63)) : (LibraryIdStamp &lt;&lt; 8)));
-                f_version = true;
-                return _version;
-            }
-        }
-        private Sections _code;
-        private uint _size;
-        private uint _libraryIdStamp;
-        private object _body;
-        private RenderwareBinaryStream m_root;
-        private KaitaiStruct m_parent;
-        private byte[] __raw_body;
-        public Sections Code { get { return _code; } }
-        public uint Size { get { return _size; } }
-        public uint LibraryIdStamp { get { return _libraryIdStamp; } }
-        public object Body { get { return _body; } }
-        public RenderwareBinaryStream M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-        public byte[] M_RawBody { get { return __raw_body; } }
-    }
-}
-</code></pre>
+            <span class="k">public</span> <span class="nf">StructTextureDictionary</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">ListWithHeader</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RenderwareBinaryStream</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_numTextures</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numTextures</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">ListWithHeader</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumTextures</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numTextures</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RenderwareBinaryStream</span><span class="p">.</span><span class="n">ListWithHeader</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_version</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_version</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Version</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_version</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_version</span><span class="p">;</span>
+                <span class="n">_version</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">LibraryIdStamp</span> <span class="p">&amp;</span> <span class="m">4294901760</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span> <span class="p">?</span> <span class="p">((((</span><span class="n">LibraryIdStamp</span> <span class="p">&gt;&gt;</span> <span class="m">14</span><span class="p">)</span> <span class="p">&amp;</span> <span class="m">261888</span><span class="p">)</span> <span class="p">+</span> <span class="m">196608</span><span class="p">)</span> <span class="p">|</span> <span class="p">((</span><span class="n">LibraryIdStamp</span> <span class="p">&gt;&gt;</span> <span class="m">16</span><span class="p">)</span> <span class="p">&amp;</span> <span class="m">63</span><span class="p">))</span> <span class="p">:</span> <span class="p">(</span><span class="n">LibraryIdStamp</span> <span class="p">&lt;&lt;</span> <span class="m">8</span><span class="p">)));</span>
+                <span class="n">f_version</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_version</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="n">Sections</span> <span class="n">_code</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_size</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_libraryIdStamp</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">object</span> <span class="n">_body</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">RenderwareBinaryStream</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_body</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">Sections</span> <span class="n">Code</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_code</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">Size</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_size</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">LibraryIdStamp</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_libraryIdStamp</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">object</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">RenderwareBinaryStream</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1227,8 +1224,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

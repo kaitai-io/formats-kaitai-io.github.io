@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -282,359 +279,359 @@ data = Gif.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# GIF (Graphics Interchange Format) is an image file format, developed
-# in 1987. It became popular in 1990s as one of the main image formats
-# used in World Wide Web.
-# 
-# GIF format allows encoding of palette-based images up to 256 colors
-# (each of the colors can be chosen from a 24-bit RGB
-# colorspace). Image data stream uses LZW (Lempel–Ziv–Welch) lossless
-# compression.
-# 
-# Over the years, several version of the format were published and
-# several extensions to it were made, namely, a popular Netscape
-# extension that allows to store several images in one file, switching
-# between them, which produces crude form of animation.
-# 
-# Structurally, format consists of several mandatory headers and then
-# a stream of blocks follows. Blocks can carry additional
-# metainformation or image data.
-class Gif &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># GIF (Graphics Interchange Format) is an image file format, developed</span>
+<span class="c1"># in 1987. It became popular in 1990s as one of the main image formats</span>
+<span class="c1"># used in World Wide Web.</span>
+<span class="c1"># </span>
+<span class="c1"># GIF format allows encoding of palette-based images up to 256 colors</span>
+<span class="c1"># (each of the colors can be chosen from a 24-bit RGB</span>
+<span class="c1"># colorspace). Image data stream uses LZW (Lempel–Ziv–Welch) lossless</span>
+<span class="c1"># compression.</span>
+<span class="c1"># </span>
+<span class="c1"># Over the years, several version of the format were published and</span>
+<span class="c1"># several extensions to it were made, namely, a popular Netscape</span>
+<span class="c1"># extension that allows to store several images in one file, switching</span>
+<span class="c1"># between them, which produces crude form of animation.</span>
+<span class="c1"># </span>
+<span class="c1"># Structurally, format consists of several mandatory headers and then</span>
+<span class="c1"># a stream of blocks follows. Blocks can carry additional</span>
+<span class="c1"># metainformation or image data.</span>
+<span class="k">class</span> <span class="nc">Gif</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  BLOCK_TYPE = {
-    33 =&gt; :block_type_extension,
-    44 =&gt; :block_type_local_image_descriptor,
-    59 =&gt; :block_type_end_of_file,
-  }
-  I__BLOCK_TYPE = BLOCK_TYPE.invert
+  <span class="no">BLOCK_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">33</span> <span class="o">=&gt;</span> <span class="ss">:block_type_extension</span><span class="p">,</span>
+    <span class="mi">44</span> <span class="o">=&gt;</span> <span class="ss">:block_type_local_image_descriptor</span><span class="p">,</span>
+    <span class="mi">59</span> <span class="o">=&gt;</span> <span class="ss">:block_type_end_of_file</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__BLOCK_TYPE</span> <span class="o">=</span> <span class="no">BLOCK_TYPE</span><span class="o">.</span><span class="n">invert</span>
 
-  EXTENSION_LABEL = {
-    249 =&gt; :extension_label_graphic_control,
-    254 =&gt; :extension_label_comment,
-    255 =&gt; :extension_label_application,
-  }
-  I__EXTENSION_LABEL = EXTENSION_LABEL.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">EXTENSION_LABEL</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">249</span> <span class="o">=&gt;</span> <span class="ss">:extension_label_graphic_control</span><span class="p">,</span>
+    <span class="mi">254</span> <span class="o">=&gt;</span> <span class="ss">:extension_label_comment</span><span class="p">,</span>
+    <span class="mi">255</span> <span class="o">=&gt;</span> <span class="ss">:extension_label_application</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__EXTENSION_LABEL</span> <span class="o">=</span> <span class="no">EXTENSION_LABEL</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @hdr = Header.new(@_io, self, @_root)
-    @logical_screen_descriptor = LogicalScreenDescriptorStruct.new(@_io, self, @_root)
-    if logical_screen_descriptor.has_color_table
-      @_raw_global_color_table = @_io.read_bytes((logical_screen_descriptor.color_table_size * 3))
-      io = Kaitai::Struct::Stream.new(@_raw_global_color_table)
-      @global_color_table = ColorTable.new(io, self, @_root)
-    end
-    @blocks = []
-    i = 0
-    begin
-      _ = Block.new(@_io, self, @_root)
-      @blocks &lt;&lt; _
-      i += 1
-    end until  ((_io.eof?) || (_.block_type == :block_type_end_of_file)) 
-    self
-  end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@hdr</span> <span class="o">=</span> <span class="no">Header</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@logical_screen_descriptor</span> <span class="o">=</span> <span class="no">LogicalScreenDescriptorStruct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">logical_screen_descriptor</span><span class="o">.</span><span class="n">has_color_table</span>
+      <span class="vi">@_raw_global_color_table</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">logical_screen_descriptor</span><span class="o">.</span><span class="n">color_table_size</span> <span class="o">*</span> <span class="mi">3</span><span class="p">))</span>
+      <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_global_color_table</span><span class="p">)</span>
+      <span class="vi">@global_color_table</span> <span class="o">=</span> <span class="no">ColorTable</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="vi">@blocks</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">begin</span>
+      <span class="n">_</span> <span class="o">=</span> <span class="no">Block</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@blocks</span> <span class="o">&lt;&lt;</span> <span class="n">_</span>
+      <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span> <span class="k">until</span>  <span class="p">((</span><span class="n">_io</span><span class="o">.</span><span class="n">eof?</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">_</span><span class="o">.</span><span class="n">block_type</span> <span class="o">==</span> <span class="ss">:block_type_end_of_file</span><span class="p">))</span> 
+    <span class="nb">self</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 22
-  class ImageData &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 22</span>
+  <span class="k">class</span> <span class="nc">ImageData</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @lzw_min_code_size = @_io.read_u1
-      @subblocks = Subblocks.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :lzw_min_code_size
-    attr_reader :subblocks
-  end
-  class ColorTableEntry &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@lzw_min_code_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@subblocks</span> <span class="o">=</span> <span class="no">Subblocks</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:lzw_min_code_size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:subblocks</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ColorTableEntry</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @red = @_io.read_u1
-      @green = @_io.read_u1
-      @blue = @_io.read_u1
-      self
-    end
-    attr_reader :red
-    attr_reader :green
-    attr_reader :blue
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@red</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@green</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@blue</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:red</span>
+    <span class="kp">attr_reader</span> <span class="ss">:green</span>
+    <span class="kp">attr_reader</span> <span class="ss">:blue</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 18
-  class LogicalScreenDescriptorStruct &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 18</span>
+  <span class="k">class</span> <span class="nc">LogicalScreenDescriptorStruct</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @screen_width = @_io.read_u2le
-      @screen_height = @_io.read_u2le
-      @flags = @_io.read_u1
-      @bg_color_index = @_io.read_u1
-      @pixel_aspect_ratio = @_io.read_u1
-      self
-    end
-    def has_color_table
-      return @has_color_table unless @has_color_table.nil?
-      @has_color_table = (flags &amp; 128) != 0
-      @has_color_table
-    end
-    def color_table_size
-      return @color_table_size unless @color_table_size.nil?
-      @color_table_size = (2 &lt;&lt; (flags &amp; 7))
-      @color_table_size
-    end
-    attr_reader :screen_width
-    attr_reader :screen_height
-    attr_reader :flags
-    attr_reader :bg_color_index
-    attr_reader :pixel_aspect_ratio
-  end
-  class LocalImageDescriptor &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@screen_width</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@screen_height</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@bg_color_index</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@pixel_aspect_ratio</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">has_color_table</span>
+      <span class="k">return</span> <span class="vi">@has_color_table</span> <span class="k">unless</span> <span class="vi">@has_color_table</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@has_color_table</span> <span class="o">=</span> <span class="p">(</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@has_color_table</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">color_table_size</span>
+      <span class="k">return</span> <span class="vi">@color_table_size</span> <span class="k">unless</span> <span class="vi">@color_table_size</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@color_table_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">))</span>
+      <span class="vi">@color_table_size</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:screen_width</span>
+    <span class="kp">attr_reader</span> <span class="ss">:screen_height</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bg_color_index</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pixel_aspect_ratio</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">LocalImageDescriptor</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @left = @_io.read_u2le
-      @top = @_io.read_u2le
-      @width = @_io.read_u2le
-      @height = @_io.read_u2le
-      @flags = @_io.read_u1
-      if has_color_table
-        @_raw_local_color_table = @_io.read_bytes((color_table_size * 3))
-        io = Kaitai::Struct::Stream.new(@_raw_local_color_table)
-        @local_color_table = ColorTable.new(io, self, @_root)
-      end
-      @image_data = ImageData.new(@_io, self, @_root)
-      self
-    end
-    def has_color_table
-      return @has_color_table unless @has_color_table.nil?
-      @has_color_table = (flags &amp; 128) != 0
-      @has_color_table
-    end
-    def has_interlace
-      return @has_interlace unless @has_interlace.nil?
-      @has_interlace = (flags &amp; 64) != 0
-      @has_interlace
-    end
-    def has_sorted_color_table
-      return @has_sorted_color_table unless @has_sorted_color_table.nil?
-      @has_sorted_color_table = (flags &amp; 32) != 0
-      @has_sorted_color_table
-    end
-    def color_table_size
-      return @color_table_size unless @color_table_size.nil?
-      @color_table_size = (2 &lt;&lt; (flags &amp; 7))
-      @color_table_size
-    end
-    attr_reader :left
-    attr_reader :top
-    attr_reader :width
-    attr_reader :height
-    attr_reader :flags
-    attr_reader :local_color_table
-    attr_reader :image_data
-    attr_reader :_raw_local_color_table
-  end
-  class Block &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@left</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@top</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@width</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@height</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">if</span> <span class="n">has_color_table</span>
+        <span class="vi">@_raw_local_color_table</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">color_table_size</span> <span class="o">*</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_local_color_table</span><span class="p">)</span>
+        <span class="vi">@local_color_table</span> <span class="o">=</span> <span class="no">ColorTable</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@image_data</span> <span class="o">=</span> <span class="no">ImageData</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">has_color_table</span>
+      <span class="k">return</span> <span class="vi">@has_color_table</span> <span class="k">unless</span> <span class="vi">@has_color_table</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@has_color_table</span> <span class="o">=</span> <span class="p">(</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@has_color_table</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">has_interlace</span>
+      <span class="k">return</span> <span class="vi">@has_interlace</span> <span class="k">unless</span> <span class="vi">@has_interlace</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@has_interlace</span> <span class="o">=</span> <span class="p">(</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@has_interlace</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">has_sorted_color_table</span>
+      <span class="k">return</span> <span class="vi">@has_sorted_color_table</span> <span class="k">unless</span> <span class="vi">@has_sorted_color_table</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@has_sorted_color_table</span> <span class="o">=</span> <span class="p">(</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@has_sorted_color_table</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">color_table_size</span>
+      <span class="k">return</span> <span class="vi">@color_table_size</span> <span class="k">unless</span> <span class="vi">@color_table_size</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@color_table_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">))</span>
+      <span class="vi">@color_table_size</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:left</span>
+    <span class="kp">attr_reader</span> <span class="ss">:top</span>
+    <span class="kp">attr_reader</span> <span class="ss">:width</span>
+    <span class="kp">attr_reader</span> <span class="ss">:height</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:local_color_table</span>
+    <span class="kp">attr_reader</span> <span class="ss">:image_data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_local_color_table</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Block</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @block_type = Kaitai::Struct::Stream::resolve_enum(BLOCK_TYPE, @_io.read_u1)
-      case block_type
-      when :block_type_extension
-        @body = Extension.new(@_io, self, @_root)
-      when :block_type_local_image_descriptor
-        @body = LocalImageDescriptor.new(@_io, self, @_root)
-      end
-      self
-    end
-    attr_reader :block_type
-    attr_reader :body
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@block_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">BLOCK_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="k">case</span> <span class="n">block_type</span>
+      <span class="k">when</span> <span class="ss">:block_type_extension</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">Extension</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:block_type_local_image_descriptor</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">LocalImageDescriptor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:block_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 19
-  class ColorTable &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 19</span>
+  <span class="k">class</span> <span class="nc">ColorTable</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @entries = []
-      i = 0
-      while not @_io.eof?
-        @entries &lt;&lt; ColorTableEntry.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :entries
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+        <span class="vi">@entries</span> <span class="o">&lt;&lt;</span> <span class="no">ColorTableEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:entries</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 17
-  class Header &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 17</span>
+  <span class="k">class</span> <span class="nc">Header</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @magic = @_io.ensure_fixed_contents([71, 73, 70].pack(&#39;C*&#39;))
-      @version = (@_io.read_bytes(3)).force_encoding(&quot;ASCII&quot;)
-      self
-    end
-    attr_reader :magic
-    attr_reader :version
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">71</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">70</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@version</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:magic</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 23
-  class ExtGraphicControl &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 23</span>
+  <span class="k">class</span> <span class="nc">ExtGraphicControl</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @block_size = @_io.ensure_fixed_contents([4].pack(&#39;C*&#39;))
-      @flags = @_io.read_u1
-      @delay_time = @_io.read_u2le
-      @transparent_idx = @_io.read_u1
-      @terminator = @_io.ensure_fixed_contents([0].pack(&#39;C*&#39;))
-      self
-    end
-    def transparent_color_flag
-      return @transparent_color_flag unless @transparent_color_flag.nil?
-      @transparent_color_flag = (flags &amp; 1) != 0
-      @transparent_color_flag
-    end
-    def user_input_flag
-      return @user_input_flag unless @user_input_flag.nil?
-      @user_input_flag = (flags &amp; 2) != 0
-      @user_input_flag
-    end
-    attr_reader :block_size
-    attr_reader :flags
-    attr_reader :delay_time
-    attr_reader :transparent_idx
-    attr_reader :terminator
-  end
-  class Subblock &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@block_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">4</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@delay_time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@transparent_idx</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@terminator</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">transparent_color_flag</span>
+      <span class="k">return</span> <span class="vi">@transparent_color_flag</span> <span class="k">unless</span> <span class="vi">@transparent_color_flag</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@transparent_color_flag</span> <span class="o">=</span> <span class="p">(</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@transparent_color_flag</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">user_input_flag</span>
+      <span class="k">return</span> <span class="vi">@user_input_flag</span> <span class="k">unless</span> <span class="vi">@user_input_flag</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@user_input_flag</span> <span class="o">=</span> <span class="p">(</span><span class="n">flags</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@user_input_flag</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:block_size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:delay_time</span>
+    <span class="kp">attr_reader</span> <span class="ss">:transparent_idx</span>
+    <span class="kp">attr_reader</span> <span class="ss">:terminator</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Subblock</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len_bytes = @_io.read_u1
-      @bytes = @_io.read_bytes(len_bytes)
-      self
-    end
-    attr_reader :len_bytes
-    attr_reader :bytes
-  end
-  class ExtApplication &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len_bytes</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@bytes</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_bytes</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_bytes</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bytes</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ExtApplication</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @application_id = Subblock.new(@_io, self, @_root)
-      @subblocks = []
-      i = 0
-      begin
-        _ = Subblock.new(@_io, self, @_root)
-        @subblocks &lt;&lt; _
-        i += 1
-      end until _.len_bytes == 0
-      self
-    end
-    attr_reader :application_id
-    attr_reader :subblocks
-  end
-  class Subblocks &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@application_id</span> <span class="o">=</span> <span class="no">Subblock</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@subblocks</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">begin</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="no">Subblock</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@subblocks</span> <span class="o">&lt;&lt;</span> <span class="n">_</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span> <span class="k">until</span> <span class="n">_</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:application_id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:subblocks</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Subblocks</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @entries = []
-      i = 0
-      begin
-        _ = Subblock.new(@_io, self, @_root)
-        @entries &lt;&lt; _
-        i += 1
-      end until _.len_bytes == 0
-      self
-    end
-    attr_reader :entries
-  end
-  class Extension &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">begin</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="no">Subblock</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@entries</span> <span class="o">&lt;&lt;</span> <span class="n">_</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span> <span class="k">until</span> <span class="n">_</span><span class="o">.</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">0</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:entries</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Extension</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @label = Kaitai::Struct::Stream::resolve_enum(EXTENSION_LABEL, @_io.read_u1)
-      case label
-      when :extension_label_application
-        @body = ExtApplication.new(@_io, self, @_root)
-      when :extension_label_comment
-        @body = Subblocks.new(@_io, self, @_root)
-      when :extension_label_graphic_control
-        @body = ExtGraphicControl.new(@_io, self, @_root)
-      else
-        @body = Subblocks.new(@_io, self, @_root)
-      end
-      self
-    end
-    attr_reader :label
-    attr_reader :body
-  end
-  attr_reader :hdr
-  attr_reader :logical_screen_descriptor
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@label</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">EXTENSION_LABEL</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="k">case</span> <span class="n">label</span>
+      <span class="k">when</span> <span class="ss">:extension_label_application</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">ExtApplication</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:extension_label_comment</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">Subblocks</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:extension_label_graphic_control</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">ExtGraphicControl</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">Subblocks</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:label</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:hdr</span>
+  <span class="kp">attr_reader</span> <span class="ss">:logical_screen_descriptor</span>
 
-  ##
-  # @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 18
-  attr_reader :global_color_table
-  attr_reader :blocks
-  attr_reader :_raw_global_color_table
-end
-</code></pre>
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.w3.org/Graphics/GIF/spec-gif89a.txt - section 18</span>
+  <span class="kp">attr_reader</span> <span class="ss">:global_color_table</span>
+  <span class="kp">attr_reader</span> <span class="ss">:blocks</span>
+  <span class="kp">attr_reader</span> <span class="ss">:_raw_global_color_table</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -661,8 +658,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

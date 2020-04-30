@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -235,596 +232,594 @@ data = RenderwareBinaryStream(KaitaiStream(BytesIO(raw)))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
-
-
-if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
-    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
-
-class RenderwareBinaryStream(KaitaiStruct):
-    &quot;&quot;&quot;
-    .. seealso::
-       Source - https://www.gtamodding.com/wiki/RenderWare_binary_stream_file
-    &quot;&quot;&quot;
-
-    class Sections(Enum):
-        struct = 1
-        string = 2
-        extension = 3
-        camera = 5
-        texture = 6
-        material = 7
-        material_list = 8
-        atomic_section = 9
-        plane_section = 10
-        world = 11
-        spline = 12
-        matrix = 13
-        frame_list = 14
-        geometry = 15
-        clump = 16
-        light = 18
-        unicode_string = 19
-        atomic = 20
-        texture_native = 21
-        texture_dictionary = 22
-        animation_database = 23
-        image = 24
-        skin_animation = 25
-        geometry_list = 26
-        anim_animation = 27
-        team = 28
-        crowd = 29
-        delta_morph_animation = 30
-        right_to_render = 31
-        multitexture_effect_native = 32
-        multitexture_effect_dictionary = 33
-        team_dictionary = 34
-        platform_independent_texture_dictionary = 35
-        table_of_contents = 36
-        particle_standard_global_data = 37
-        altpipe = 38
-        platform_independent_peds = 39
-        patch_mesh = 40
-        chunk_group_start = 41
-        chunk_group_end = 42
-        uv_animation_dictionary = 43
-        coll_tree = 44
-        metrics_plg = 257
-        spline_plg = 258
-        stereo_plg = 259
-        vrml_plg = 260
-        morph_plg = 261
-        pvs_plg = 262
-        memory_leak_plg = 263
-        animation_plg = 264
-        gloss_plg = 265
-        logo_plg = 266
-        memory_info_plg = 267
-        random_plg = 268
-        png_image_plg = 269
-        bone_plg = 270
-        vrml_anim_plg = 271
-        sky_mipmap_val = 272
-        mrm_plg = 273
-        lod_atomic_plg = 274
-        me_plg = 275
-        lightmap_plg = 276
-        refine_plg = 277
-        skin_plg = 278
-        label_plg = 279
-        particles_plg = 280
-        geomtx_plg = 281
-        synth_core_plg = 282
-        stqpp_plg = 283
-        part_pp_plg = 284
-        collision_plg = 285
-        hanim_plg = 286
-        user_data_plg = 287
-        material_effects_plg = 288
-        particle_system_plg = 289
-        delta_morph_plg = 290
-        patch_plg = 291
-        team_plg = 292
-        crowd_pp_plg = 293
-        mip_split_plg = 294
-        anisotropy_plg = 295
-        gcn_material_plg = 297
-        geometric_pvs_plg = 298
-        xbox_material_plg = 299
-        multi_texture_plg = 300
-        chain_plg = 301
-        toon_plg = 302
-        ptank_plg = 303
-        particle_standard_plg = 304
-        pds_plg = 305
-        prtadv_plg = 306
-        normal_map_plg = 307
-        adc_plg = 308
-        uv_animation_plg = 309
-        character_set_plg = 384
-        nohs_world_plg = 385
-        import_util_plg = 386
-        slerp_plg = 387
-        optim_plg = 388
-        tl_world_plg = 389
-        database_plg = 390
-        raytrace_plg = 391
-        ray_plg = 392
-        library_plg = 393
-        plg_2d = 400
-        tile_render_plg = 401
-        jpeg_image_plg = 402
-        tga_image_plg = 403
-        gif_image_plg = 404
-        quat_plg = 405
-        spline_pvs_plg = 406
-        mipmap_plg = 407
-        mipmapk_plg = 408
-        font_2d = 409
-        intersection_plg = 410
-        tiff_image_plg = 411
-        pick_plg = 412
-        bmp_image_plg = 413
-        ras_image_plg = 414
-        skin_fx_plg = 415
-        vcat_plg = 416
-        path_2d = 417
-        brush_2d = 418
-        object_2d = 419
-        shape_2d = 420
-        scene_2d = 421
-        pick_region_2d = 422
-        object_string_2d = 423
-        animation_plg_2d = 424
-        animation_2d = 425
-        keyframe_2d = 432
-        maestro_2d = 433
-        barycentric = 434
-        platform_independent_texture_dictionary_tk = 435
-        toc_tk = 436
-        tpl_tk = 437
-        altpipe_tk = 438
-        animation_tk = 439
-        skin_split_tookit = 440
-        compressed_key_tk = 441
-        geometry_conditioning_plg = 442
-        wing_plg = 443
-        generic_pipeline_tk = 444
-        lightmap_conversion_tk = 445
-        filesystem_plg = 446
-        dictionary_tk = 447
-        uv_animation_linear = 448
-        uv_animation_parameter = 449
-        bin_mesh_plg = 1294
-        native_data_plg = 1296
-        zmodeler_lock = 61982
-        atomic_visibility_distance = 39055872
-        clump_visibility_distance = 39055873
-        frame_visibility_distance = 39055874
-        pipeline_set = 39056115
-        unused_5 = 39056116
-        texdictionary_link = 39056117
-        specular_material = 39056118
-        unused_8 = 39056119
-        effect_2d = 39056120
-        extra_vert_colour = 39056121
-        collision_model = 39056122
-        gta_hanim = 39056123
-        reflection_material = 39056124
-        breakable = 39056125
-        frame = 39056126
-        unused_16 = 39056127
-    def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
-        self._parent = _parent
-        self._root = _root if _root else self
-        self._read()
-
-    def _read(self):
-        self.code = self._root.Sections(self._io.read_u4le())
-        self.size = self._io.read_u4le()
-        self.library_id_stamp = self._io.read_u4le()
-        _on = self.code
-        if _on == self._root.Sections.texture_dictionary:
-            self._raw_body = self._io.read_bytes(self.size)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.ListWithHeader(io, self, self._root)
-        elif _on == self._root.Sections.geometry_list:
-            self._raw_body = self._io.read_bytes(self.size)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.ListWithHeader(io, self, self._root)
-        elif _on == self._root.Sections.clump:
-            self._raw_body = self._io.read_bytes(self.size)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.ListWithHeader(io, self, self._root)
-        elif _on == self._root.Sections.texture_native:
-            self._raw_body = self._io.read_bytes(self.size)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.ListWithHeader(io, self, self._root)
-        elif _on == self._root.Sections.frame_list:
-            self._raw_body = self._io.read_bytes(self.size)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.ListWithHeader(io, self, self._root)
-        elif _on == self._root.Sections.geometry:
-            self._raw_body = self._io.read_bytes(self.size)
-            io = KaitaiStream(BytesIO(self._raw_body))
-            self.body = self._root.ListWithHeader(io, self, self._root)
-        else:
-            self.body = self._io.read_bytes(self.size)
-
-    class StructClump(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           Source - https://www.gtamodding.com/wiki/RpClump
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.num_atomics = self._io.read_u4le()
-            if self._parent.version &gt;= 208896:
-                self.num_lights = self._io.read_u4le()
-
-            if self._parent.version &gt;= 208896:
-                self.num_cameras = self._io.read_u4le()
-
-
-
-    class StructGeometry(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           Source - https://www.gtamodding.com/wiki/RpGeometry
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.format = self._io.read_u4le()
-            self.num_triangles = self._io.read_u4le()
-            self.num_vertices = self._io.read_u4le()
-            self.num_morph_targets = self._io.read_u4le()
-            if self._parent.version &lt; 212992:
-                self.surf_prop = self._root.SurfaceProperties(self._io, self, self._root)
-
-            if not (self.is_native):
-                self.geometry = self._root.GeometryNonNative(self._io, self, self._root)
-
-            self.morph_targets = [None] * (self.num_morph_targets)
-            for i in range(self.num_morph_targets):
-                self.morph_targets[i] = self._root.MorphTarget(self._io, self, self._root)
-
-
-        @property
-        def is_textured(self):
-            if hasattr(self, &#39;_m_is_textured&#39;):
-                return self._m_is_textured if hasattr(self, &#39;_m_is_textured&#39;) else None
-
-            self._m_is_textured = (self.format &amp; 4) != 0
-            return self._m_is_textured if hasattr(self, &#39;_m_is_textured&#39;) else None
-
-        @property
-        def is_prelit(self):
-            if hasattr(self, &#39;_m_is_prelit&#39;):
-                return self._m_is_prelit if hasattr(self, &#39;_m_is_prelit&#39;) else None
-
-            self._m_is_prelit = (self.format &amp; 8) != 0
-            return self._m_is_prelit if hasattr(self, &#39;_m_is_prelit&#39;) else None
-
-        @property
-        def is_textured2(self):
-            if hasattr(self, &#39;_m_is_textured2&#39;):
-                return self._m_is_textured2 if hasattr(self, &#39;_m_is_textured2&#39;) else None
-
-            self._m_is_textured2 = (self.format &amp; 128) != 0
-            return self._m_is_textured2 if hasattr(self, &#39;_m_is_textured2&#39;) else None
-
-        @property
-        def is_native(self):
-            if hasattr(self, &#39;_m_is_native&#39;):
-                return self._m_is_native if hasattr(self, &#39;_m_is_native&#39;) else None
-
-            self._m_is_native = (self.format &amp; 16777216) != 0
-            return self._m_is_native if hasattr(self, &#39;_m_is_native&#39;) else None
-
-
-    class GeometryNonNative(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            if self._parent.is_prelit:
-                self.prelit_colors = [None] * (self._parent.num_vertices)
-                for i in range(self._parent.num_vertices):
-                    self.prelit_colors[i] = self._root.Rgba(self._io, self, self._root)
-
-
-            if  ((self._parent.is_textured) or (self._parent.is_textured2)) :
-                self.tex_coords = [None] * (self._parent.num_vertices)
-                for i in range(self._parent.num_vertices):
-                    self.tex_coords[i] = self._root.TexCoord(self._io, self, self._root)
-
-
-            self.triangles = [None] * (self._parent.num_triangles)
-            for i in range(self._parent.num_triangles):
-                self.triangles[i] = self._root.Triangle(self._io, self, self._root)
-
-
-
-    class StructGeometryList(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           Source - https://www.gtamodding.com/wiki/Geometry_List_(RW_Section)#Structure
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.num_geometries = self._io.read_u4le()
-
-
-    class Rgba(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.r = self._io.read_u1()
-            self.g = self._io.read_u1()
-            self.b = self._io.read_u1()
-            self.a = self._io.read_u1()
-
-
-    class Sphere(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.x = self._io.read_f4le()
-            self.y = self._io.read_f4le()
-            self.z = self._io.read_f4le()
-            self.radius = self._io.read_f4le()
-
-
-    class MorphTarget(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.bounding_sphere = self._root.Sphere(self._io, self, self._root)
-            self.has_vertices = self._io.read_u4le()
-            self.has_normals = self._io.read_u4le()
-            if self.has_vertices != 0:
-                self.vertices = [None] * (self._parent.num_vertices)
-                for i in range(self._parent.num_vertices):
-                    self.vertices[i] = self._root.Vector3d(self._io, self, self._root)
-
-
-            if self.has_normals != 0:
-                self.normals = [None] * (self._parent.num_vertices)
-                for i in range(self._parent.num_vertices):
-                    self.normals[i] = self._root.Vector3d(self._io, self, self._root)
-
-
-
-
-    class SurfaceProperties(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           Source - https://www.gtamodding.com/wiki/RpGeometry
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.ambient = self._io.read_f4le()
-            self.specular = self._io.read_f4le()
-            self.diffuse = self._io.read_f4le()
-
-
-    class StructFrameList(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           Source - https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.num_frames = self._io.read_u4le()
-            self.frames = [None] * (self.num_frames)
-            for i in range(self.num_frames):
-                self.frames[i] = self._root.Frame(self._io, self, self._root)
-
-
-
-    class Matrix(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           Source - https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.entries = [None] * (3)
-            for i in range(3):
-                self.entries[i] = self._root.Vector3d(self._io, self, self._root)
-
-
-
-    class Vector3d(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           Source - https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.x = self._io.read_f4le()
-            self.y = self._io.read_f4le()
-            self.z = self._io.read_f4le()
-
-
-    class ListWithHeader(KaitaiStruct):
-        &quot;&quot;&quot;Typical structure used by many data types in RenderWare binary
-        stream. Substream contains a list of binary stream entries,
-        first entry always has type &quot;struct&quot; and carries some specific
-        binary data it in, determined by the type of parent. All other
-        entries, beside the first one, are normal, self-describing
-        records.
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.code = self._io.ensure_fixed_contents(b&quot;\x01\x00\x00\x00&quot;)
-            self.header_size = self._io.read_u4le()
-            self.library_id_stamp = self._io.read_u4le()
-            _on = self._parent.code
-            if _on == self._root.Sections.texture_dictionary:
-                self._raw_header = self._io.read_bytes(self.header_size)
-                io = KaitaiStream(BytesIO(self._raw_header))
-                self.header = self._root.StructTextureDictionary(io, self, self._root)
-            elif _on == self._root.Sections.geometry_list:
-                self._raw_header = self._io.read_bytes(self.header_size)
-                io = KaitaiStream(BytesIO(self._raw_header))
-                self.header = self._root.StructGeometryList(io, self, self._root)
-            elif _on == self._root.Sections.clump:
-                self._raw_header = self._io.read_bytes(self.header_size)
-                io = KaitaiStream(BytesIO(self._raw_header))
-                self.header = self._root.StructClump(io, self, self._root)
-            elif _on == self._root.Sections.frame_list:
-                self._raw_header = self._io.read_bytes(self.header_size)
-                io = KaitaiStream(BytesIO(self._raw_header))
-                self.header = self._root.StructFrameList(io, self, self._root)
-            elif _on == self._root.Sections.geometry:
-                self._raw_header = self._io.read_bytes(self.header_size)
-                io = KaitaiStream(BytesIO(self._raw_header))
-                self.header = self._root.StructGeometry(io, self, self._root)
-            else:
-                self.header = self._io.read_bytes(self.header_size)
-            self.entries = []
-            i = 0
-            while not self._io.is_eof():
-                self.entries.append(RenderwareBinaryStream(self._io))
-                i += 1
-
-
-        @property
-        def version(self):
-            if hasattr(self, &#39;_m_version&#39;):
-                return self._m_version if hasattr(self, &#39;_m_version&#39;) else None
-
-            self._m_version = (((((self.library_id_stamp &gt;&gt; 14) &amp; 261888) + 196608) | ((self.library_id_stamp &gt;&gt; 16) &amp; 63)) if (self.library_id_stamp &amp; 4294901760) != 0 else (self.library_id_stamp &lt;&lt; 8))
-            return self._m_version if hasattr(self, &#39;_m_version&#39;) else None
-
-
-    class Triangle(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.vertex2 = self._io.read_u2le()
-            self.vertex1 = self._io.read_u2le()
-            self.material_id = self._io.read_u2le()
-            self.vertex3 = self._io.read_u2le()
-
-
-    class Frame(KaitaiStruct):
-        &quot;&quot;&quot;
-        .. seealso::
-           Source - https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure
-        &quot;&quot;&quot;
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.rotation_matrix = self._root.Matrix(self._io, self, self._root)
-            self.position = self._root.Vector3d(self._io, self, self._root)
-            self.cur_frame_idx = self._io.read_s4le()
-            self.matrix_creation_flags = self._io.read_u4le()
-
-
-    class TexCoord(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.u = self._io.read_f4le()
-            self.v = self._io.read_f4le()
-
-
-    class StructTextureDictionary(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.num_textures = self._io.read_u4le()
-
-
-    @property
-    def version(self):
-        if hasattr(self, &#39;_m_version&#39;):
-            return self._m_version if hasattr(self, &#39;_m_version&#39;) else None
-
-        self._m_version = (((((self.library_id_stamp &gt;&gt; 14) &amp; 261888) + 196608) | ((self.library_id_stamp &gt;&gt; 16) &amp; 63)) if (self.library_id_stamp &amp; 4294901760) != 0 else (self.library_id_stamp &lt;&lt; 8))
-        return self._m_version if hasattr(self, &#39;_m_version&#39;) else None
-
-
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">parse_version</span>
+<span class="kn">from</span> <span class="nn">kaitaistruct</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">ks_version</span><span class="p">,</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+
+
+<span class="k">if</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">ks_version</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">parse_version</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ks_version</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">RenderwareBinaryStream</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    .. seealso::</span>
+<span class="sd">       Source - https://www.gtamodding.com/wiki/RenderWare_binary_stream_file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">class</span> <span class="nc">Sections</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="n">struct</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">camera</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">texture</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="n">material</span> <span class="o">=</span> <span class="mi">7</span>
+        <span class="n">material_list</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="n">atomic_section</span> <span class="o">=</span> <span class="mi">9</span>
+        <span class="n">plane_section</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">world</span> <span class="o">=</span> <span class="mi">11</span>
+        <span class="n">spline</span> <span class="o">=</span> <span class="mi">12</span>
+        <span class="n">matrix</span> <span class="o">=</span> <span class="mi">13</span>
+        <span class="n">frame_list</span> <span class="o">=</span> <span class="mi">14</span>
+        <span class="n">geometry</span> <span class="o">=</span> <span class="mi">15</span>
+        <span class="n">clump</span> <span class="o">=</span> <span class="mi">16</span>
+        <span class="n">light</span> <span class="o">=</span> <span class="mi">18</span>
+        <span class="n">unicode_string</span> <span class="o">=</span> <span class="mi">19</span>
+        <span class="n">atomic</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="n">texture_native</span> <span class="o">=</span> <span class="mi">21</span>
+        <span class="n">texture_dictionary</span> <span class="o">=</span> <span class="mi">22</span>
+        <span class="n">animation_database</span> <span class="o">=</span> <span class="mi">23</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="mi">24</span>
+        <span class="n">skin_animation</span> <span class="o">=</span> <span class="mi">25</span>
+        <span class="n">geometry_list</span> <span class="o">=</span> <span class="mi">26</span>
+        <span class="n">anim_animation</span> <span class="o">=</span> <span class="mi">27</span>
+        <span class="n">team</span> <span class="o">=</span> <span class="mi">28</span>
+        <span class="n">crowd</span> <span class="o">=</span> <span class="mi">29</span>
+        <span class="n">delta_morph_animation</span> <span class="o">=</span> <span class="mi">30</span>
+        <span class="n">right_to_render</span> <span class="o">=</span> <span class="mi">31</span>
+        <span class="n">multitexture_effect_native</span> <span class="o">=</span> <span class="mi">32</span>
+        <span class="n">multitexture_effect_dictionary</span> <span class="o">=</span> <span class="mi">33</span>
+        <span class="n">team_dictionary</span> <span class="o">=</span> <span class="mi">34</span>
+        <span class="n">platform_independent_texture_dictionary</span> <span class="o">=</span> <span class="mi">35</span>
+        <span class="n">table_of_contents</span> <span class="o">=</span> <span class="mi">36</span>
+        <span class="n">particle_standard_global_data</span> <span class="o">=</span> <span class="mi">37</span>
+        <span class="n">altpipe</span> <span class="o">=</span> <span class="mi">38</span>
+        <span class="n">platform_independent_peds</span> <span class="o">=</span> <span class="mi">39</span>
+        <span class="n">patch_mesh</span> <span class="o">=</span> <span class="mi">40</span>
+        <span class="n">chunk_group_start</span> <span class="o">=</span> <span class="mi">41</span>
+        <span class="n">chunk_group_end</span> <span class="o">=</span> <span class="mi">42</span>
+        <span class="n">uv_animation_dictionary</span> <span class="o">=</span> <span class="mi">43</span>
+        <span class="n">coll_tree</span> <span class="o">=</span> <span class="mi">44</span>
+        <span class="n">metrics_plg</span> <span class="o">=</span> <span class="mi">257</span>
+        <span class="n">spline_plg</span> <span class="o">=</span> <span class="mi">258</span>
+        <span class="n">stereo_plg</span> <span class="o">=</span> <span class="mi">259</span>
+        <span class="n">vrml_plg</span> <span class="o">=</span> <span class="mi">260</span>
+        <span class="n">morph_plg</span> <span class="o">=</span> <span class="mi">261</span>
+        <span class="n">pvs_plg</span> <span class="o">=</span> <span class="mi">262</span>
+        <span class="n">memory_leak_plg</span> <span class="o">=</span> <span class="mi">263</span>
+        <span class="n">animation_plg</span> <span class="o">=</span> <span class="mi">264</span>
+        <span class="n">gloss_plg</span> <span class="o">=</span> <span class="mi">265</span>
+        <span class="n">logo_plg</span> <span class="o">=</span> <span class="mi">266</span>
+        <span class="n">memory_info_plg</span> <span class="o">=</span> <span class="mi">267</span>
+        <span class="n">random_plg</span> <span class="o">=</span> <span class="mi">268</span>
+        <span class="n">png_image_plg</span> <span class="o">=</span> <span class="mi">269</span>
+        <span class="n">bone_plg</span> <span class="o">=</span> <span class="mi">270</span>
+        <span class="n">vrml_anim_plg</span> <span class="o">=</span> <span class="mi">271</span>
+        <span class="n">sky_mipmap_val</span> <span class="o">=</span> <span class="mi">272</span>
+        <span class="n">mrm_plg</span> <span class="o">=</span> <span class="mi">273</span>
+        <span class="n">lod_atomic_plg</span> <span class="o">=</span> <span class="mi">274</span>
+        <span class="n">me_plg</span> <span class="o">=</span> <span class="mi">275</span>
+        <span class="n">lightmap_plg</span> <span class="o">=</span> <span class="mi">276</span>
+        <span class="n">refine_plg</span> <span class="o">=</span> <span class="mi">277</span>
+        <span class="n">skin_plg</span> <span class="o">=</span> <span class="mi">278</span>
+        <span class="n">label_plg</span> <span class="o">=</span> <span class="mi">279</span>
+        <span class="n">particles_plg</span> <span class="o">=</span> <span class="mi">280</span>
+        <span class="n">geomtx_plg</span> <span class="o">=</span> <span class="mi">281</span>
+        <span class="n">synth_core_plg</span> <span class="o">=</span> <span class="mi">282</span>
+        <span class="n">stqpp_plg</span> <span class="o">=</span> <span class="mi">283</span>
+        <span class="n">part_pp_plg</span> <span class="o">=</span> <span class="mi">284</span>
+        <span class="n">collision_plg</span> <span class="o">=</span> <span class="mi">285</span>
+        <span class="n">hanim_plg</span> <span class="o">=</span> <span class="mi">286</span>
+        <span class="n">user_data_plg</span> <span class="o">=</span> <span class="mi">287</span>
+        <span class="n">material_effects_plg</span> <span class="o">=</span> <span class="mi">288</span>
+        <span class="n">particle_system_plg</span> <span class="o">=</span> <span class="mi">289</span>
+        <span class="n">delta_morph_plg</span> <span class="o">=</span> <span class="mi">290</span>
+        <span class="n">patch_plg</span> <span class="o">=</span> <span class="mi">291</span>
+        <span class="n">team_plg</span> <span class="o">=</span> <span class="mi">292</span>
+        <span class="n">crowd_pp_plg</span> <span class="o">=</span> <span class="mi">293</span>
+        <span class="n">mip_split_plg</span> <span class="o">=</span> <span class="mi">294</span>
+        <span class="n">anisotropy_plg</span> <span class="o">=</span> <span class="mi">295</span>
+        <span class="n">gcn_material_plg</span> <span class="o">=</span> <span class="mi">297</span>
+        <span class="n">geometric_pvs_plg</span> <span class="o">=</span> <span class="mi">298</span>
+        <span class="n">xbox_material_plg</span> <span class="o">=</span> <span class="mi">299</span>
+        <span class="n">multi_texture_plg</span> <span class="o">=</span> <span class="mi">300</span>
+        <span class="n">chain_plg</span> <span class="o">=</span> <span class="mi">301</span>
+        <span class="n">toon_plg</span> <span class="o">=</span> <span class="mi">302</span>
+        <span class="n">ptank_plg</span> <span class="o">=</span> <span class="mi">303</span>
+        <span class="n">particle_standard_plg</span> <span class="o">=</span> <span class="mi">304</span>
+        <span class="n">pds_plg</span> <span class="o">=</span> <span class="mi">305</span>
+        <span class="n">prtadv_plg</span> <span class="o">=</span> <span class="mi">306</span>
+        <span class="n">normal_map_plg</span> <span class="o">=</span> <span class="mi">307</span>
+        <span class="n">adc_plg</span> <span class="o">=</span> <span class="mi">308</span>
+        <span class="n">uv_animation_plg</span> <span class="o">=</span> <span class="mi">309</span>
+        <span class="n">character_set_plg</span> <span class="o">=</span> <span class="mi">384</span>
+        <span class="n">nohs_world_plg</span> <span class="o">=</span> <span class="mi">385</span>
+        <span class="n">import_util_plg</span> <span class="o">=</span> <span class="mi">386</span>
+        <span class="n">slerp_plg</span> <span class="o">=</span> <span class="mi">387</span>
+        <span class="n">optim_plg</span> <span class="o">=</span> <span class="mi">388</span>
+        <span class="n">tl_world_plg</span> <span class="o">=</span> <span class="mi">389</span>
+        <span class="n">database_plg</span> <span class="o">=</span> <span class="mi">390</span>
+        <span class="n">raytrace_plg</span> <span class="o">=</span> <span class="mi">391</span>
+        <span class="n">ray_plg</span> <span class="o">=</span> <span class="mi">392</span>
+        <span class="n">library_plg</span> <span class="o">=</span> <span class="mi">393</span>
+        <span class="n">plg_2d</span> <span class="o">=</span> <span class="mi">400</span>
+        <span class="n">tile_render_plg</span> <span class="o">=</span> <span class="mi">401</span>
+        <span class="n">jpeg_image_plg</span> <span class="o">=</span> <span class="mi">402</span>
+        <span class="n">tga_image_plg</span> <span class="o">=</span> <span class="mi">403</span>
+        <span class="n">gif_image_plg</span> <span class="o">=</span> <span class="mi">404</span>
+        <span class="n">quat_plg</span> <span class="o">=</span> <span class="mi">405</span>
+        <span class="n">spline_pvs_plg</span> <span class="o">=</span> <span class="mi">406</span>
+        <span class="n">mipmap_plg</span> <span class="o">=</span> <span class="mi">407</span>
+        <span class="n">mipmapk_plg</span> <span class="o">=</span> <span class="mi">408</span>
+        <span class="n">font_2d</span> <span class="o">=</span> <span class="mi">409</span>
+        <span class="n">intersection_plg</span> <span class="o">=</span> <span class="mi">410</span>
+        <span class="n">tiff_image_plg</span> <span class="o">=</span> <span class="mi">411</span>
+        <span class="n">pick_plg</span> <span class="o">=</span> <span class="mi">412</span>
+        <span class="n">bmp_image_plg</span> <span class="o">=</span> <span class="mi">413</span>
+        <span class="n">ras_image_plg</span> <span class="o">=</span> <span class="mi">414</span>
+        <span class="n">skin_fx_plg</span> <span class="o">=</span> <span class="mi">415</span>
+        <span class="n">vcat_plg</span> <span class="o">=</span> <span class="mi">416</span>
+        <span class="n">path_2d</span> <span class="o">=</span> <span class="mi">417</span>
+        <span class="n">brush_2d</span> <span class="o">=</span> <span class="mi">418</span>
+        <span class="n">object_2d</span> <span class="o">=</span> <span class="mi">419</span>
+        <span class="n">shape_2d</span> <span class="o">=</span> <span class="mi">420</span>
+        <span class="n">scene_2d</span> <span class="o">=</span> <span class="mi">421</span>
+        <span class="n">pick_region_2d</span> <span class="o">=</span> <span class="mi">422</span>
+        <span class="n">object_string_2d</span> <span class="o">=</span> <span class="mi">423</span>
+        <span class="n">animation_plg_2d</span> <span class="o">=</span> <span class="mi">424</span>
+        <span class="n">animation_2d</span> <span class="o">=</span> <span class="mi">425</span>
+        <span class="n">keyframe_2d</span> <span class="o">=</span> <span class="mi">432</span>
+        <span class="n">maestro_2d</span> <span class="o">=</span> <span class="mi">433</span>
+        <span class="n">barycentric</span> <span class="o">=</span> <span class="mi">434</span>
+        <span class="n">platform_independent_texture_dictionary_tk</span> <span class="o">=</span> <span class="mi">435</span>
+        <span class="n">toc_tk</span> <span class="o">=</span> <span class="mi">436</span>
+        <span class="n">tpl_tk</span> <span class="o">=</span> <span class="mi">437</span>
+        <span class="n">altpipe_tk</span> <span class="o">=</span> <span class="mi">438</span>
+        <span class="n">animation_tk</span> <span class="o">=</span> <span class="mi">439</span>
+        <span class="n">skin_split_tookit</span> <span class="o">=</span> <span class="mi">440</span>
+        <span class="n">compressed_key_tk</span> <span class="o">=</span> <span class="mi">441</span>
+        <span class="n">geometry_conditioning_plg</span> <span class="o">=</span> <span class="mi">442</span>
+        <span class="n">wing_plg</span> <span class="o">=</span> <span class="mi">443</span>
+        <span class="n">generic_pipeline_tk</span> <span class="o">=</span> <span class="mi">444</span>
+        <span class="n">lightmap_conversion_tk</span> <span class="o">=</span> <span class="mi">445</span>
+        <span class="n">filesystem_plg</span> <span class="o">=</span> <span class="mi">446</span>
+        <span class="n">dictionary_tk</span> <span class="o">=</span> <span class="mi">447</span>
+        <span class="n">uv_animation_linear</span> <span class="o">=</span> <span class="mi">448</span>
+        <span class="n">uv_animation_parameter</span> <span class="o">=</span> <span class="mi">449</span>
+        <span class="n">bin_mesh_plg</span> <span class="o">=</span> <span class="mi">1294</span>
+        <span class="n">native_data_plg</span> <span class="o">=</span> <span class="mi">1296</span>
+        <span class="n">zmodeler_lock</span> <span class="o">=</span> <span class="mi">61982</span>
+        <span class="n">atomic_visibility_distance</span> <span class="o">=</span> <span class="mi">39055872</span>
+        <span class="n">clump_visibility_distance</span> <span class="o">=</span> <span class="mi">39055873</span>
+        <span class="n">frame_visibility_distance</span> <span class="o">=</span> <span class="mi">39055874</span>
+        <span class="n">pipeline_set</span> <span class="o">=</span> <span class="mi">39056115</span>
+        <span class="n">unused_5</span> <span class="o">=</span> <span class="mi">39056116</span>
+        <span class="n">texdictionary_link</span> <span class="o">=</span> <span class="mi">39056117</span>
+        <span class="n">specular_material</span> <span class="o">=</span> <span class="mi">39056118</span>
+        <span class="n">unused_8</span> <span class="o">=</span> <span class="mi">39056119</span>
+        <span class="n">effect_2d</span> <span class="o">=</span> <span class="mi">39056120</span>
+        <span class="n">extra_vert_colour</span> <span class="o">=</span> <span class="mi">39056121</span>
+        <span class="n">collision_model</span> <span class="o">=</span> <span class="mi">39056122</span>
+        <span class="n">gta_hanim</span> <span class="o">=</span> <span class="mi">39056123</span>
+        <span class="n">reflection_material</span> <span class="o">=</span> <span class="mi">39056124</span>
+        <span class="n">breakable</span> <span class="o">=</span> <span class="mi">39056125</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="mi">39056126</span>
+        <span class="n">unused_16</span> <span class="o">=</span> <span class="mi">39056127</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Sections</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">library_id_stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+        <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">code</span>
+        <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Sections</span><span class="o">.</span><span class="n">texture_dictionary</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Sections</span><span class="o">.</span><span class="n">geometry_list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Sections</span><span class="o">.</span><span class="n">clump</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Sections</span><span class="o">.</span><span class="n">texture_native</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Sections</span><span class="o">.</span><span class="n">frame_list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Sections</span><span class="o">.</span><span class="n">geometry</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_body</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">ListWithHeader</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">StructClump</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.gtamodding.com/wiki/RpClump</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_atomics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">version</span> <span class="o">&gt;=</span> <span class="mi">208896</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_lights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">version</span> <span class="o">&gt;=</span> <span class="mi">208896</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_cameras</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+
+
+    <span class="k">class</span> <span class="nc">StructGeometry</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.gtamodding.com/wiki/RpGeometry</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_triangles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_vertices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_morph_targets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">version</span> <span class="o">&lt;</span> <span class="mi">212992</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">surf_prop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">SurfaceProperties</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_native</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">geometry</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">GeometryNonNative</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">morph_targets</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_morph_targets</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_morph_targets</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">morph_targets</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">MorphTarget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">is_textured</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_textured&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_textured</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_textured&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_textured</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_textured</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_textured&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">is_prelit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_prelit&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_prelit</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_prelit&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_prelit</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_prelit</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_prelit&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">is_textured2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_textured2&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_textured2</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_textured2&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_textured2</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_textured2</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_textured2&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">is_native</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_native&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_native</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_native&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_native</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_native</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_native&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+
+    <span class="k">class</span> <span class="nc">GeometryNonNative</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">is_prelit</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">prelit_colors</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">prelit_colors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Rgba</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+            <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">is_textured</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">is_textured2</span><span class="p">))</span> <span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tex_coords</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tex_coords</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">TexCoord</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">triangles</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_triangles</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_triangles</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">triangles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Triangle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+
+    <span class="k">class</span> <span class="nc">StructGeometryList</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.gtamodding.com/wiki/Geometry_List_(RW_Section)#Structure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_geometries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+
+    <span class="k">class</span> <span class="nc">Rgba</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+
+
+    <span class="k">class</span> <span class="nc">Sphere</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_f4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_f4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_f4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_f4le</span><span class="p">()</span>
+
+
+    <span class="k">class</span> <span class="nc">MorphTarget</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bounding_sphere</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">has_vertices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">has_normals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_vertices</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Vector3d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_normals</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">normals</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">num_vertices</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">normals</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Vector3d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+
+
+    <span class="k">class</span> <span class="nc">SurfaceProperties</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.gtamodding.com/wiki/RpGeometry</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ambient</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_f4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">specular</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_f4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">diffuse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_f4le</span><span class="p">()</span>
+
+
+    <span class="k">class</span> <span class="nc">StructFrameList</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_frames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_frames</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_frames</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+
+    <span class="k">class</span> <span class="nc">Matrix</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Vector3d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+
+
+    <span class="k">class</span> <span class="nc">Vector3d</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_f4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_f4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_f4le</span><span class="p">()</span>
+
+
+    <span class="k">class</span> <span class="nc">ListWithHeader</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Typical structure used by many data types in RenderWare binary</span>
+<span class="sd">        stream. Substream contains a list of binary stream entries,</span>
+<span class="sd">        first entry always has type &quot;struct&quot; and carries some specific</span>
+<span class="sd">        binary data it in, determined by the type of parent. All other</span>
+<span class="sd">        entries, beside the first one, are normal, self-describing</span>
+<span class="sd">        records.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x01\x00\x00\x00</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">header_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">library_id_stamp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">code</span>
+            <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Sections</span><span class="o">.</span><span class="n">texture_dictionary</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header_size</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">StructTextureDictionary</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Sections</span><span class="o">.</span><span class="n">geometry_list</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header_size</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">StructGeometryList</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Sections</span><span class="o">.</span><span class="n">clump</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header_size</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">StructClump</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Sections</span><span class="o">.</span><span class="n">frame_list</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header_size</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">StructFrameList</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Sections</span><span class="o">.</span><span class="n">geometry</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header_size</span><span class="p">)</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_header</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">StructGeometry</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">header_size</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">RenderwareBinaryStream</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">))</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_version&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_version</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_version&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_version</span> <span class="o">=</span> <span class="p">(((((</span><span class="bp">self</span><span class="o">.</span><span class="n">library_id_stamp</span> <span class="o">&gt;&gt;</span> <span class="mi">14</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">261888</span><span class="p">)</span> <span class="o">+</span> <span class="mi">196608</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">library_id_stamp</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">library_id_stamp</span> <span class="o">&amp;</span> <span class="mi">4294901760</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">library_id_stamp</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">))</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_version</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_version&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+
+    <span class="k">class</span> <span class="nc">Triangle</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vertex2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vertex1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">material_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vertex3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+
+
+    <span class="k">class</span> <span class="nc">Frame</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rotation_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Vector3d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cur_frame_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_s4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matrix_creation_flags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+
+    <span class="k">class</span> <span class="nc">TexCoord</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_f4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_f4le</span><span class="p">()</span>
+
+
+    <span class="k">class</span> <span class="nc">StructTextureDictionary</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_textures</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_version&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_version</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_version&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_version</span> <span class="o">=</span> <span class="p">(((((</span><span class="bp">self</span><span class="o">.</span><span class="n">library_id_stamp</span> <span class="o">&gt;&gt;</span> <span class="mi">14</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">261888</span><span class="p">)</span> <span class="o">+</span> <span class="mi">196608</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">library_id_stamp</span> <span class="o">&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">))</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">library_id_stamp</span> <span class="o">&amp;</span> <span class="mi">4294901760</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">library_id_stamp</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_version</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_version&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+</pre></div>
 
         </div>
         
@@ -851,8 +846,8 @@ class RenderwareBinaryStream(KaitaiStruct):
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

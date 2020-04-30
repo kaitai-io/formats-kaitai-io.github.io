@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -235,505 +232,505 @@ of the B-tree from the block addresses.
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.DsStore = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-/**
- * Apple macOS &#39;.DS_Store&#39; file format.
- * @see {@link https://en.wikipedia.org/wiki/.DS_Store
- * https://metacpan.org/pod/distribution/Mac-Finder-DSStore/DSStoreFormat.pod
- * https://0day.work/parsing-the-ds_store-file-format
- * |Source}
- */
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">DsStore</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * Apple macOS &#39;.DS_Store&#39; file format.</span>
+<span class="cm"> * @see {@link https://en.wikipedia.org/wiki/.DS_Store</span>
+<span class="cm"> * https://metacpan.org/pod/distribution/Mac-Finder-DSStore/DSStoreFormat.pod</span>
+<span class="cm"> * https://0day.work/parsing-the-ds_store-file-format</span>
+<span class="cm"> * |Source}</span>
+<span class="cm"> */</span>
 
-var DsStore = (function() {
-  function DsStore(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
+<span class="kd">var</span> <span class="nx">DsStore</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">DsStore</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-    this._read();
-  }
-  DsStore.prototype._read = function() {
-    this.alignmentHeader = this._io.ensureFixedContents([0, 0, 0, 1]);
-    this.buddyAllocatorHeader = new BuddyAllocatorHeader(this._io, this, this._root);
-  }
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">DsStore</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">alignmentHeader</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">buddyAllocatorHeader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BuddyAllocatorHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+  <span class="p">}</span>
 
-  var BuddyAllocatorHeader = DsStore.BuddyAllocatorHeader = (function() {
-    function BuddyAllocatorHeader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">BuddyAllocatorHeader</span> <span class="o">=</span> <span class="nx">DsStore</span><span class="p">.</span><span class="nx">BuddyAllocatorHeader</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">BuddyAllocatorHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    BuddyAllocatorHeader.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([66, 117, 100, 49]);
-      this.ofsBookkeepingInfoBlock = this._io.readU4be();
-      this.lenBookkeepingInfoBlock = this._io.readU4be();
-      this.copyOfsBookkeepingInfoBlock = this._io.readU4be();
-      this._unnamed4 = this._io.readBytes(16);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">BuddyAllocatorHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">66</span><span class="p">,</span> <span class="mi">117</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">49</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">ofsBookkeepingInfoBlock</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lenBookkeepingInfoBlock</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">copyOfsBookkeepingInfoBlock</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_unnamed4</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    /**
-     * Magic number &#39;Bud1&#39;.
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Magic number &#39;Bud1&#39;.</span>
+<span class="cm">     */</span>
 
-    /**
-     * Needs to match &#39;offset_bookkeeping_info_block&#39;.
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Needs to match &#39;offset_bookkeeping_info_block&#39;.</span>
+<span class="cm">     */</span>
 
-    /**
-     * Unused field which might simply be the unused space at the end of the block,
-     * since the minimum allocation size is 32 bytes.
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Unused field which might simply be the unused space at the end of the block,</span>
+<span class="cm">     * since the minimum allocation size is 32 bytes.</span>
+<span class="cm">     */</span>
 
-    return BuddyAllocatorHeader;
-  })();
+    <span class="k">return</span> <span class="nx">BuddyAllocatorHeader</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var BuddyAllocatorBody = DsStore.BuddyAllocatorBody = (function() {
-    function BuddyAllocatorBody(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">BuddyAllocatorBody</span> <span class="o">=</span> <span class="nx">DsStore</span><span class="p">.</span><span class="nx">BuddyAllocatorBody</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">BuddyAllocatorBody</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    BuddyAllocatorBody.prototype._read = function() {
-      this.numBlocks = this._io.readU4be();
-      this._unnamed1 = this._io.readBytes(4);
-      this.blockAddresses = new Array(this.numBlockAddresses);
-      for (var i = 0; i &lt; this.numBlockAddresses; i++) {
-        this.blockAddresses[i] = new BlockDescriptor(this._io, this, this._root);
-      }
-      this.numDirectories = this._io.readU4be();
-      this.directoryEntries = new Array(this.numDirectories);
-      for (var i = 0; i &lt; this.numDirectories; i++) {
-        this.directoryEntries[i] = new DirectoryEntry(this._io, this, this._root);
-      }
-      this.freeLists = new Array(this.numFreeLists);
-      for (var i = 0; i &lt; this.numFreeLists; i++) {
-        this.freeLists[i] = new FreeList(this._io, this, this._root);
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">BuddyAllocatorBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numBlocks</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_unnamed1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">blockAddresses</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numBlockAddresses</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numBlockAddresses</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">blockAddresses</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BlockDescriptor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numDirectories</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">directoryEntries</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numDirectories</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numDirectories</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">directoryEntries</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DirectoryEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">freeLists</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numFreeLists</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numFreeLists</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">freeLists</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FreeList</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    var BlockDescriptor = BuddyAllocatorBody.BlockDescriptor = (function() {
-      function BlockDescriptor(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">BlockDescriptor</span> <span class="o">=</span> <span class="nx">BuddyAllocatorBody</span><span class="p">.</span><span class="nx">BlockDescriptor</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">BlockDescriptor</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      BlockDescriptor.prototype._read = function() {
-        this.addressRaw = this._io.readU4be();
-      }
-      Object.defineProperty(BlockDescriptor.prototype, &#39;offset&#39;, {
-        get: function() {
-          if (this._m_offset !== undefined)
-            return this._m_offset;
-          this._m_offset = ((this.addressRaw &amp; ~(this._root.blockAddressMask)) + 4);
-          return this._m_offset;
-        }
-      });
-      Object.defineProperty(BlockDescriptor.prototype, &#39;size&#39;, {
-        get: function() {
-          if (this._m_size !== undefined)
-            return this._m_size;
-          this._m_size = ((1 &lt;&lt; this.addressRaw) &amp; this._root.blockAddressMask);
-          return this._m_size;
-        }
-      });
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">BlockDescriptor</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">addressRaw</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BlockDescriptor</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;offset&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_offset</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_offset</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_offset</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">addressRaw</span> <span class="o">&amp;</span> <span class="o">~</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">blockAddressMask</span><span class="p">))</span> <span class="o">+</span> <span class="mi">4</span><span class="p">);</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_offset</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BlockDescriptor</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_size</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_size</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_size</span> <span class="o">=</span> <span class="p">((</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">addressRaw</span><span class="p">)</span> <span class="o">&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">blockAddressMask</span><span class="p">);</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_size</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
 
-      return BlockDescriptor;
-    })();
+      <span class="k">return</span> <span class="nx">BlockDescriptor</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    var DirectoryEntry = BuddyAllocatorBody.DirectoryEntry = (function() {
-      function DirectoryEntry(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">DirectoryEntry</span> <span class="o">=</span> <span class="nx">BuddyAllocatorBody</span><span class="p">.</span><span class="nx">DirectoryEntry</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">DirectoryEntry</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      DirectoryEntry.prototype._read = function() {
-        this.lenName = this._io.readU1();
-        this.name = KaitaiStream.bytesToStr(this._io.readBytes(this.lenName), &quot;UTF-8&quot;);
-        this.blockId = this._io.readU4be();
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">DirectoryEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">lenName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenName</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">blockId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="p">}</span>
 
-      return DirectoryEntry;
-    })();
+      <span class="k">return</span> <span class="nx">DirectoryEntry</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    var FreeList = BuddyAllocatorBody.FreeList = (function() {
-      function FreeList(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">FreeList</span> <span class="o">=</span> <span class="nx">BuddyAllocatorBody</span><span class="p">.</span><span class="nx">FreeList</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">FreeList</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      FreeList.prototype._read = function() {
-        this.counter = this._io.readU4be();
-        this.offsets = new Array(this.counter);
-        for (var i = 0; i &lt; this.counter; i++) {
-          this.offsets[i] = this._io.readU4be();
-        }
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">FreeList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">counter</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">offsets</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">offsets</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
 
-      return FreeList;
-    })();
-    Object.defineProperty(BuddyAllocatorBody.prototype, &#39;numBlockAddresses&#39;, {
-      get: function() {
-        if (this._m_numBlockAddresses !== undefined)
-          return this._m_numBlockAddresses;
-        this._m_numBlockAddresses = 256;
-        return this._m_numBlockAddresses;
-      }
-    });
-    Object.defineProperty(BuddyAllocatorBody.prototype, &#39;numFreeLists&#39;, {
-      get: function() {
-        if (this._m_numFreeLists !== undefined)
-          return this._m_numFreeLists;
-        this._m_numFreeLists = 32;
-        return this._m_numFreeLists;
-      }
-    });
+      <span class="k">return</span> <span class="nx">FreeList</span><span class="p">;</span>
+    <span class="p">})();</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BuddyAllocatorBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;numBlockAddresses&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_numBlockAddresses</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numBlockAddresses</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_numBlockAddresses</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numBlockAddresses</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BuddyAllocatorBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;numFreeLists&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_numFreeLists</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numFreeLists</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_numFreeLists</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_numFreeLists</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    /**
-     * Master blocks of the different B-trees.
-     */
-    Object.defineProperty(BuddyAllocatorBody.prototype, &#39;directories&#39;, {
-      get: function() {
-        if (this._m_directories !== undefined)
-          return this._m_directories;
-        var io = this._root._io;
-        this._m_directories = new Array(this.numDirectories);
-        for (var i = 0; i &lt; this.numDirectories; i++) {
-          this._m_directories[i] = new MasterBlockRef(io, this, this._root, i);
-        }
-        return this._m_directories;
-      }
-    });
+    <span class="cm">/**</span>
+<span class="cm">     * Master blocks of the different B-trees.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BuddyAllocatorBody</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;directories&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_directories</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_directories</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_directories</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numDirectories</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numDirectories</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_directories</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MasterBlockRef</span><span class="p">(</span><span class="nx">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="nx">i</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_directories</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    /**
-     * Number of blocks in the allocated-blocks list.
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Number of blocks in the allocated-blocks list.</span>
+<span class="cm">     */</span>
 
-    /**
-     * Unknown field which appears to always be 0.
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Unknown field which appears to always be 0.</span>
+<span class="cm">     */</span>
 
-    /**
-     * Addresses of the different blocks.
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Addresses of the different blocks.</span>
+<span class="cm">     */</span>
 
-    /**
-     * Indicates the number of directory entries.
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Indicates the number of directory entries.</span>
+<span class="cm">     */</span>
 
-    /**
-     * Each directory is an independent B-tree.
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Each directory is an independent B-tree.</span>
+<span class="cm">     */</span>
 
-    return BuddyAllocatorBody;
-  })();
+    <span class="k">return</span> <span class="nx">BuddyAllocatorBody</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var MasterBlockRef = DsStore.MasterBlockRef = (function() {
-    function MasterBlockRef(_io, _parent, _root, idx) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-      this.idx = idx;
+  <span class="kd">var</span> <span class="nx">MasterBlockRef</span> <span class="o">=</span> <span class="nx">DsStore</span><span class="p">.</span><span class="nx">MasterBlockRef</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">MasterBlockRef</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">idx</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">idx</span> <span class="o">=</span> <span class="nx">idx</span><span class="p">;</span>
 
-      this._read();
-    }
-    MasterBlockRef.prototype._read = function() {
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">MasterBlockRef</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
 
-    var MasterBlock = MasterBlockRef.MasterBlock = (function() {
-      function MasterBlock(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">MasterBlock</span> <span class="o">=</span> <span class="nx">MasterBlockRef</span><span class="p">.</span><span class="nx">MasterBlock</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">MasterBlock</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      MasterBlock.prototype._read = function() {
-        this.blockId = this._io.readU4be();
-        this.numInternalNodes = this._io.readU4be();
-        this.numRecords = this._io.readU4be();
-        this.numNodes = this._io.readU4be();
-        this._unnamed4 = this._io.readU4be();
-      }
-      Object.defineProperty(MasterBlock.prototype, &#39;rootBlock&#39;, {
-        get: function() {
-          if (this._m_rootBlock !== undefined)
-            return this._m_rootBlock;
-          var io = this._root._io;
-          var _pos = io.pos;
-          io.seek(this._root.buddyAllocatorBody.blockAddresses[this.blockId].offset);
-          this._m_rootBlock = new Block(io, this, this._root);
-          io.seek(_pos);
-          return this._m_rootBlock;
-        }
-      });
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">MasterBlock</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">blockId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">numInternalNodes</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">numRecords</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">numNodes</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_unnamed4</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">MasterBlock</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;rootBlock&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_rootBlock</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_rootBlock</span><span class="p">;</span>
+          <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
+          <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">buddyAllocatorBody</span><span class="p">.</span><span class="nx">blockAddresses</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">blockId</span><span class="p">].</span><span class="nx">offset</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_rootBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Block</span><span class="p">(</span><span class="nx">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_rootBlock</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
 
-      /**
-       * Block number of the B-tree&#39;s root node.
-       */
+      <span class="cm">/**</span>
+<span class="cm">       * Block number of the B-tree&#39;s root node.</span>
+<span class="cm">       */</span>
 
-      /**
-       * Number of internal node levels.
-       */
+      <span class="cm">/**</span>
+<span class="cm">       * Number of internal node levels.</span>
+<span class="cm">       */</span>
 
-      /**
-       * Number of records in the tree.
-       */
+      <span class="cm">/**</span>
+<span class="cm">       * Number of records in the tree.</span>
+<span class="cm">       */</span>
 
-      /**
-       * Number of nodes in the tree.
-       */
+      <span class="cm">/**</span>
+<span class="cm">       * Number of nodes in the tree.</span>
+<span class="cm">       */</span>
 
-      /**
-       * Always 0x1000, probably the B-tree node page size.
-       */
+      <span class="cm">/**</span>
+<span class="cm">       * Always 0x1000, probably the B-tree node page size.</span>
+<span class="cm">       */</span>
 
-      return MasterBlock;
-    })();
-    Object.defineProperty(MasterBlockRef.prototype, &#39;masterBlock&#39;, {
-      get: function() {
-        if (this._m_masterBlock !== undefined)
-          return this._m_masterBlock;
-        var _pos = this._io.pos;
-        this._io.seek(this._parent.blockAddresses[this._parent.directoryEntries[this.idx].blockId].offset);
-        this._raw__m_masterBlock = this._io.readBytes(this._parent.blockAddresses[this._parent.directoryEntries[this.idx].blockId].size);
-        var _io__raw__m_masterBlock = new KaitaiStream(this._raw__m_masterBlock);
-        this._m_masterBlock = new MasterBlock(_io__raw__m_masterBlock, this, this._root);
-        this._io.seek(_pos);
-        return this._m_masterBlock;
-      }
-    });
+      <span class="k">return</span> <span class="nx">MasterBlock</span><span class="p">;</span>
+    <span class="p">})();</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">MasterBlockRef</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;masterBlock&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_masterBlock</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_masterBlock</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">blockAddresses</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">directoryEntries</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">idx</span><span class="p">].</span><span class="nx">blockId</span><span class="p">].</span><span class="nx">offset</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_masterBlock</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">blockAddresses</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">directoryEntries</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">idx</span><span class="p">].</span><span class="nx">blockId</span><span class="p">].</span><span class="nx">size</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw__m_masterBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_masterBlock</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_masterBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MasterBlock</span><span class="p">(</span><span class="nx">_io__raw__m_masterBlock</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_masterBlock</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    return MasterBlockRef;
-  })();
+    <span class="k">return</span> <span class="nx">MasterBlockRef</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var Block = DsStore.Block = (function() {
-    function Block(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Block</span> <span class="o">=</span> <span class="nx">DsStore</span><span class="p">.</span><span class="nx">Block</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Block</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Block.prototype._read = function() {
-      this.mode = this._io.readU4be();
-      this.counter = this._io.readU4be();
-      this.data = new Array(this.counter);
-      for (var i = 0; i &lt; this.counter; i++) {
-        this.data[i] = new BlockData(this._io, this, this._root, this.mode);
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Block</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">mode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">counter</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">counter</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BlockData</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">mode</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    var BlockData = Block.BlockData = (function() {
-      function BlockData(_io, _parent, _root, mode) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-        this.mode = mode;
+    <span class="kd">var</span> <span class="nx">BlockData</span> <span class="o">=</span> <span class="nx">Block</span><span class="p">.</span><span class="nx">BlockData</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">BlockData</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">mode</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">mode</span> <span class="o">=</span> <span class="nx">mode</span><span class="p">;</span>
 
-        this._read();
-      }
-      BlockData.prototype._read = function() {
-        if (this.mode &gt; 0) {
-          this.blockId = this._io.readU4be();
-        }
-        this.record = new Record(this._io, this, this._root);
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">BlockData</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">mode</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">blockId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">record</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Record</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
 
-      var Record = BlockData.Record = (function() {
-        function Record(_io, _parent, _root) {
-          this._io = _io;
-          this._parent = _parent;
-          this._root = _root || this;
+      <span class="kd">var</span> <span class="nx">Record</span> <span class="o">=</span> <span class="nx">BlockData</span><span class="p">.</span><span class="nx">Record</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">function</span> <span class="nx">Record</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-          this._read();
-        }
-        Record.prototype._read = function() {
-          this.filename = new Ustr(this._io, this, this._root);
-          this.structureType = new FourCharCode(this._io, this, this._root);
-          this.dataType = KaitaiStream.bytesToStr(this._io.readBytes(4), &quot;UTF-8&quot;);
-          switch (this.dataType) {
-          case &quot;long&quot;:
-            this.value = this._io.readU4be();
-            break;
-          case &quot;shor&quot;:
-            this.value = this._io.readU4be();
-            break;
-          case &quot;comp&quot;:
-            this.value = this._io.readU8be();
-            break;
-          case &quot;bool&quot;:
-            this.value = this._io.readU1();
-            break;
-          case &quot;ustr&quot;:
-            this.value = new Ustr(this._io, this, this._root);
-            break;
-          case &quot;dutc&quot;:
-            this.value = this._io.readU8be();
-            break;
-          case &quot;type&quot;:
-            this.value = new FourCharCode(this._io, this, this._root);
-            break;
-          case &quot;blob&quot;:
-            this.value = new RecordBlob(this._io, this, this._root);
-            break;
-          }
-        }
+          <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nx">Record</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">filename</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Ustr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">structureType</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FourCharCode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">dataType</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+          <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">dataType</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">case</span> <span class="s2">&quot;long&quot;</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="k">case</span> <span class="s2">&quot;shor&quot;</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="k">case</span> <span class="s2">&quot;comp&quot;</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8be</span><span class="p">();</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="k">case</span> <span class="s2">&quot;bool&quot;</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="k">case</span> <span class="s2">&quot;ustr&quot;</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Ustr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="k">case</span> <span class="s2">&quot;dutc&quot;</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8be</span><span class="p">();</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="k">case</span> <span class="s2">&quot;type&quot;</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FourCharCode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="k">case</span> <span class="s2">&quot;blob&quot;</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RecordBlob</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
 
-        var RecordBlob = Record.RecordBlob = (function() {
-          function RecordBlob(_io, _parent, _root) {
-            this._io = _io;
-            this._parent = _parent;
-            this._root = _root || this;
+        <span class="kd">var</span> <span class="nx">RecordBlob</span> <span class="o">=</span> <span class="nx">Record</span><span class="p">.</span><span class="nx">RecordBlob</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="kd">function</span> <span class="nx">RecordBlob</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-            this._read();
-          }
-          RecordBlob.prototype._read = function() {
-            this.length = this._io.readU4be();
-            this.value = this._io.readBytes(this.length);
-          }
+            <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+          <span class="p">}</span>
+          <span class="nx">RecordBlob</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+          <span class="p">}</span>
 
-          return RecordBlob;
-        })();
+          <span class="k">return</span> <span class="nx">RecordBlob</span><span class="p">;</span>
+        <span class="p">})();</span>
 
-        var Ustr = Record.Ustr = (function() {
-          function Ustr(_io, _parent, _root) {
-            this._io = _io;
-            this._parent = _parent;
-            this._root = _root || this;
+        <span class="kd">var</span> <span class="nx">Ustr</span> <span class="o">=</span> <span class="nx">Record</span><span class="p">.</span><span class="nx">Ustr</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="kd">function</span> <span class="nx">Ustr</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-            this._read();
-          }
-          Ustr.prototype._read = function() {
-            this.length = this._io.readU4be();
-            this.value = KaitaiStream.bytesToStr(this._io.readBytes((2 * this.length)), &quot;UTF-16BE&quot;);
-          }
+            <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+          <span class="p">}</span>
+          <span class="nx">Ustr</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">)),</span> <span class="s2">&quot;UTF-16BE&quot;</span><span class="p">);</span>
+          <span class="p">}</span>
 
-          return Ustr;
-        })();
+          <span class="k">return</span> <span class="nx">Ustr</span><span class="p">;</span>
+        <span class="p">})();</span>
 
-        var FourCharCode = Record.FourCharCode = (function() {
-          function FourCharCode(_io, _parent, _root) {
-            this._io = _io;
-            this._parent = _parent;
-            this._root = _root || this;
+        <span class="kd">var</span> <span class="nx">FourCharCode</span> <span class="o">=</span> <span class="nx">Record</span><span class="p">.</span><span class="nx">FourCharCode</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="kd">function</span> <span class="nx">FourCharCode</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-            this._read();
-          }
-          FourCharCode.prototype._read = function() {
-            this.value = KaitaiStream.bytesToStr(this._io.readBytes(4), &quot;UTF-8&quot;);
-          }
+            <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+          <span class="p">}</span>
+          <span class="nx">FourCharCode</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+          <span class="p">}</span>
 
-          return FourCharCode;
-        })();
+          <span class="k">return</span> <span class="nx">FourCharCode</span><span class="p">;</span>
+        <span class="p">})();</span>
 
-        /**
-         * Description of the entry&#39;s property.
-         */
+        <span class="cm">/**</span>
+<span class="cm">         * Description of the entry&#39;s property.</span>
+<span class="cm">         */</span>
 
-        /**
-         * Data type of the value.
-         */
+        <span class="cm">/**</span>
+<span class="cm">         * Data type of the value.</span>
+<span class="cm">         */</span>
 
-        return Record;
-      })();
-      Object.defineProperty(BlockData.prototype, &#39;block&#39;, {
-        get: function() {
-          if (this._m_block !== undefined)
-            return this._m_block;
-          if (this.mode &gt; 0) {
-            var io = this._root._io;
-            var _pos = io.pos;
-            io.seek(this._root.buddyAllocatorBody.blockAddresses[this.blockId].offset);
-            this._m_block = new Block(io, this, this._root);
-            io.seek(_pos);
-          }
-          return this._m_block;
-        }
-      });
+        <span class="k">return</span> <span class="nx">Record</span><span class="p">;</span>
+      <span class="p">})();</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">BlockData</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;block&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_block</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_block</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">mode</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+            <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">buddyAllocatorBody</span><span class="p">.</span><span class="nx">blockAddresses</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">blockId</span><span class="p">].</span><span class="nx">offset</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_block</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Block</span><span class="p">(</span><span class="nx">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+            <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_block</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
 
-      return BlockData;
-    })();
+      <span class="k">return</span> <span class="nx">BlockData</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    /**
-     * Rightmost child block pointer.
-     */
-    Object.defineProperty(Block.prototype, &#39;rightmostBlock&#39;, {
-      get: function() {
-        if (this._m_rightmostBlock !== undefined)
-          return this._m_rightmostBlock;
-        if (this.mode &gt; 0) {
-          var io = this._root._io;
-          var _pos = io.pos;
-          io.seek(this._root.buddyAllocatorBody.blockAddresses[this.mode].offset);
-          this._m_rightmostBlock = new Block(io, this, this._root);
-          io.seek(_pos);
-        }
-        return this._m_rightmostBlock;
-      }
-    });
+    <span class="cm">/**</span>
+<span class="cm">     * Rightmost child block pointer.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Block</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;rightmostBlock&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_rightmostBlock</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_rightmostBlock</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">mode</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
+          <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">buddyAllocatorBody</span><span class="p">.</span><span class="nx">blockAddresses</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">mode</span><span class="p">].</span><span class="nx">offset</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_rightmostBlock</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Block</span><span class="p">(</span><span class="nx">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+          <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_rightmostBlock</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    /**
-     * If mode is 0, this is a leaf node, otherwise it is an internal node.
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * If mode is 0, this is a leaf node, otherwise it is an internal node.</span>
+<span class="cm">     */</span>
 
-    /**
-     * Number of records or number of block id + record pairs.
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Number of records or number of block id + record pairs.</span>
+<span class="cm">     */</span>
 
-    return Block;
-  })();
-  Object.defineProperty(DsStore.prototype, &#39;buddyAllocatorBody&#39;, {
-    get: function() {
-      if (this._m_buddyAllocatorBody !== undefined)
-        return this._m_buddyAllocatorBody;
-      var _pos = this._io.pos;
-      this._io.seek((this.buddyAllocatorHeader.ofsBookkeepingInfoBlock + 4));
-      this._raw__m_buddyAllocatorBody = this._io.readBytes(this.buddyAllocatorHeader.lenBookkeepingInfoBlock);
-      var _io__raw__m_buddyAllocatorBody = new KaitaiStream(this._raw__m_buddyAllocatorBody);
-      this._m_buddyAllocatorBody = new BuddyAllocatorBody(_io__raw__m_buddyAllocatorBody, this, this._root);
-      this._io.seek(_pos);
-      return this._m_buddyAllocatorBody;
-    }
-  });
+    <span class="k">return</span> <span class="nx">Block</span><span class="p">;</span>
+  <span class="p">})();</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DsStore</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;buddyAllocatorBody&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_buddyAllocatorBody</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_buddyAllocatorBody</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">buddyAllocatorHeader</span><span class="p">.</span><span class="nx">ofsBookkeepingInfoBlock</span> <span class="o">+</span> <span class="mi">4</span><span class="p">));</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_buddyAllocatorBody</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">buddyAllocatorHeader</span><span class="p">.</span><span class="nx">lenBookkeepingInfoBlock</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw__m_buddyAllocatorBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_buddyAllocatorBody</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_buddyAllocatorBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BuddyAllocatorBody</span><span class="p">(</span><span class="nx">_io__raw__m_buddyAllocatorBody</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_buddyAllocatorBody</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
 
-  /**
-   * Bitmask used to calculate the position and the size of each block
-   * of the B-tree from the block addresses.
-   */
-  Object.defineProperty(DsStore.prototype, &#39;blockAddressMask&#39;, {
-    get: function() {
-      if (this._m_blockAddressMask !== undefined)
-        return this._m_blockAddressMask;
-      this._m_blockAddressMask = 31;
-      return this._m_blockAddressMask;
-    }
-  });
+  <span class="cm">/**</span>
+<span class="cm">   * Bitmask used to calculate the position and the size of each block</span>
+<span class="cm">   * of the B-tree from the block addresses.</span>
+<span class="cm">   */</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DsStore</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;blockAddressMask&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_blockAddressMask</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_blockAddressMask</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_blockAddressMask</span> <span class="o">=</span> <span class="mi">31</span><span class="p">;</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_blockAddressMask</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
 
-  return DsStore;
-})();
-return DsStore;
-}));
-</code></pre>
+  <span class="k">return</span> <span class="nx">DsStore</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">DsStore</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -760,8 +757,8 @@ return DsStore;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

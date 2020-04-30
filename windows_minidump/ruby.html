@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -243,428 +240,428 @@ data = WindowsMinidump.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# Windows MiniDump (MDMP) file provides a concise way to store process
-# core dumps, which is useful for debugging. Given its small size,
-# modularity, some cross-platform features and native support in some
-# debuggers, it is particularly useful for crash reporting, and is
-# used for that purpose in Windows and Google Chrome projects.
-# 
-# The file itself is a container, which contains a number of typed
-# &quot;streams&quot;, which contain some data according to its type attribute.
-# @see https://msdn.microsoft.com/en-us/library/ms680378(VS.85).aspx Source
-class WindowsMinidump &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># Windows MiniDump (MDMP) file provides a concise way to store process</span>
+<span class="c1"># core dumps, which is useful for debugging. Given its small size,</span>
+<span class="c1"># modularity, some cross-platform features and native support in some</span>
+<span class="c1"># debuggers, it is particularly useful for crash reporting, and is</span>
+<span class="c1"># used for that purpose in Windows and Google Chrome projects.</span>
+<span class="c1"># </span>
+<span class="c1"># The file itself is a container, which contains a number of typed</span>
+<span class="c1"># &quot;streams&quot;, which contain some data according to its type attribute.</span>
+<span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680378(VS.85).aspx Source</span>
+<span class="k">class</span> <span class="nc">WindowsMinidump</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  STREAM_TYPES = {
-    0 =&gt; :stream_types_unused,
-    1 =&gt; :stream_types_reserved_0,
-    2 =&gt; :stream_types_reserved_1,
-    3 =&gt; :stream_types_thread_list,
-    4 =&gt; :stream_types_module_list,
-    5 =&gt; :stream_types_memory_list,
-    6 =&gt; :stream_types_exception,
-    7 =&gt; :stream_types_system_info,
-    8 =&gt; :stream_types_thread_ex_list,
-    9 =&gt; :stream_types_memory_64_list,
-    10 =&gt; :stream_types_comment_a,
-    11 =&gt; :stream_types_comment_w,
-    12 =&gt; :stream_types_handle_data,
-    13 =&gt; :stream_types_function_table,
-    14 =&gt; :stream_types_unloaded_module_list,
-    15 =&gt; :stream_types_misc_info,
-    16 =&gt; :stream_types_memory_info_list,
-    17 =&gt; :stream_types_thread_info_list,
-    18 =&gt; :stream_types_handle_operation_list,
-  }
-  I__STREAM_TYPES = STREAM_TYPES.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">STREAM_TYPES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_unused</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_reserved_0</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_reserved_1</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_thread_list</span><span class="p">,</span>
+    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_module_list</span><span class="p">,</span>
+    <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_memory_list</span><span class="p">,</span>
+    <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_exception</span><span class="p">,</span>
+    <span class="mi">7</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_system_info</span><span class="p">,</span>
+    <span class="mi">8</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_thread_ex_list</span><span class="p">,</span>
+    <span class="mi">9</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_memory_64_list</span><span class="p">,</span>
+    <span class="mi">10</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_comment_a</span><span class="p">,</span>
+    <span class="mi">11</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_comment_w</span><span class="p">,</span>
+    <span class="mi">12</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_handle_data</span><span class="p">,</span>
+    <span class="mi">13</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_function_table</span><span class="p">,</span>
+    <span class="mi">14</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_unloaded_module_list</span><span class="p">,</span>
+    <span class="mi">15</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_misc_info</span><span class="p">,</span>
+    <span class="mi">16</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_memory_info_list</span><span class="p">,</span>
+    <span class="mi">17</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_thread_info_list</span><span class="p">,</span>
+    <span class="mi">18</span> <span class="o">=&gt;</span> <span class="ss">:stream_types_handle_operation_list</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__STREAM_TYPES</span> <span class="o">=</span> <span class="no">STREAM_TYPES</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @magic1 = @_io.ensure_fixed_contents([77, 68, 77, 80].pack(&#39;C*&#39;))
-    @magic2 = @_io.ensure_fixed_contents([147, 167].pack(&#39;C*&#39;))
-    @version = @_io.read_u2le
-    @num_streams = @_io.read_u4le
-    @ofs_streams = @_io.read_u4le
-    @checksum = @_io.read_u4le
-    @timestamp = @_io.read_u4le
-    @flags = @_io.read_u8le
-    self
-  end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@magic1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">77</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">80</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+    <span class="vi">@magic2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">147</span><span class="p">,</span> <span class="mi">167</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+    <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+    <span class="vi">@num_streams</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+    <span class="vi">@ofs_streams</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+    <span class="vi">@checksum</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+    <span class="vi">@timestamp</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+    <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://msdn.microsoft.com/en-us/library/ms680515(v=vs.85).aspx Source
-  class ThreadList &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680515(v=vs.85).aspx Source</span>
+  <span class="k">class</span> <span class="nc">ThreadList</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @num_threads = @_io.read_u4le
-      @threads = Array.new(num_threads)
-      (num_threads).times { |i|
-        @threads[i] = Thread.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :num_threads
-    attr_reader :threads
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@num_threads</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@threads</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_threads</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">num_threads</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@threads</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Thread</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_threads</span>
+    <span class="kp">attr_reader</span> <span class="ss">:threads</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx Source
-  class LocationDescriptor &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx Source</span>
+  <span class="k">class</span> <span class="nc">LocationDescriptor</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len_data = @_io.read_u4le
-      @ofs_data = @_io.read_u4le
-      self
-    end
-    def data
-      return @data unless @data.nil?
-      io = _root._io
-      _pos = io.pos
-      io.seek(ofs_data)
-      @data = io.read_bytes(len_data)
-      io.seek(_pos)
-      @data
-    end
-    attr_reader :len_data
-    attr_reader :ofs_data
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@ofs_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">data</span>
+      <span class="k">return</span> <span class="vi">@data</span> <span class="k">unless</span> <span class="vi">@data</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_data</span><span class="p">)</span>
+      <span class="vi">@data</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">)</span>
+      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@data</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_data</span>
+  <span class="k">end</span>
 
-  ##
-  # Specific string serialization scheme used in MiniDump format is
-  # actually a simple 32-bit length-prefixed UTF-16 string.
-  # @see https://msdn.microsoft.com/en-us/library/ms680395(v=vs.85).aspx Source
-  class MinidumpString &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Specific string serialization scheme used in MiniDump format is</span>
+  <span class="c1"># actually a simple 32-bit length-prefixed UTF-16 string.</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680395(v=vs.85).aspx Source</span>
+  <span class="k">class</span> <span class="nc">MinidumpString</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len_str = @_io.read_u4le
-      @str = (@_io.read_bytes(len_str)).force_encoding(&quot;UTF-16LE&quot;)
-      self
-    end
-    attr_reader :len_str
-    attr_reader :str
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len_str</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@str</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_str</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-16LE&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_str</span>
+    <span class="kp">attr_reader</span> <span class="ss">:str</span>
+  <span class="k">end</span>
 
-  ##
-  # &quot;System info&quot; stream provides basic information about the
-  # hardware and operating system which produces this dump.
-  # @see https://msdn.microsoft.com/en-us/library/ms680396(v=vs.85).aspx Source
-  class SystemInfo &lt; Kaitai::Struct::Struct
+  <span class="c1">##</span>
+  <span class="c1"># &quot;System info&quot; stream provides basic information about the</span>
+  <span class="c1"># hardware and operating system which produces this dump.</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680396(v=vs.85).aspx Source</span>
+  <span class="k">class</span> <span class="nc">SystemInfo</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-    CPU_ARCHS = {
-      0 =&gt; :cpu_archs_intel,
-      5 =&gt; :cpu_archs_arm,
-      6 =&gt; :cpu_archs_ia64,
-      9 =&gt; :cpu_archs_amd64,
-      65535 =&gt; :cpu_archs_unknown,
-    }
-    I__CPU_ARCHS = CPU_ARCHS.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="no">CPU_ARCHS</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:cpu_archs_intel</span><span class="p">,</span>
+      <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:cpu_archs_arm</span><span class="p">,</span>
+      <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:cpu_archs_ia64</span><span class="p">,</span>
+      <span class="mi">9</span> <span class="o">=&gt;</span> <span class="ss">:cpu_archs_amd64</span><span class="p">,</span>
+      <span class="mi">65535</span> <span class="o">=&gt;</span> <span class="ss">:cpu_archs_unknown</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="no">I__CPU_ARCHS</span> <span class="o">=</span> <span class="no">CPU_ARCHS</span><span class="o">.</span><span class="n">invert</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @cpu_arch = Kaitai::Struct::Stream::resolve_enum(CPU_ARCHS, @_io.read_u2le)
-      @cpu_level = @_io.read_u2le
-      @cpu_revision = @_io.read_u2le
-      @num_cpus = @_io.read_u1
-      @os_type = @_io.read_u1
-      @os_ver_major = @_io.read_u4le
-      @os_ver_minor = @_io.read_u4le
-      @os_build = @_io.read_u4le
-      @os_platform = @_io.read_u4le
-      @ofs_service_pack = @_io.read_u4le
-      @os_suite_mask = @_io.read_u2le
-      @reserved2 = @_io.read_u2le
-      self
-    end
-    def service_pack
-      return @service_pack unless @service_pack.nil?
-      if ofs_service_pack &gt; 0
-        io = _root._io
-        _pos = io.pos
-        io.seek(ofs_service_pack)
-        @service_pack = MinidumpString.new(io, self, @_root)
-        io.seek(_pos)
-      end
-      @service_pack
-    end
-    attr_reader :cpu_arch
-    attr_reader :cpu_level
-    attr_reader :cpu_revision
-    attr_reader :num_cpus
-    attr_reader :os_type
-    attr_reader :os_ver_major
-    attr_reader :os_ver_minor
-    attr_reader :os_build
-    attr_reader :os_platform
-    attr_reader :ofs_service_pack
-    attr_reader :os_suite_mask
-    attr_reader :reserved2
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@cpu_arch</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">CPU_ARCHS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="vi">@cpu_level</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@cpu_revision</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@num_cpus</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@os_type</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@os_ver_major</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@os_ver_minor</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@os_build</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@os_platform</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@ofs_service_pack</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@os_suite_mask</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@reserved2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">service_pack</span>
+      <span class="k">return</span> <span class="vi">@service_pack</span> <span class="k">unless</span> <span class="vi">@service_pack</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">ofs_service_pack</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+        <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_service_pack</span><span class="p">)</span>
+        <span class="vi">@service_pack</span> <span class="o">=</span> <span class="no">MinidumpString</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@service_pack</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:cpu_arch</span>
+    <span class="kp">attr_reader</span> <span class="ss">:cpu_level</span>
+    <span class="kp">attr_reader</span> <span class="ss">:cpu_revision</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_cpus</span>
+    <span class="kp">attr_reader</span> <span class="ss">:os_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:os_ver_major</span>
+    <span class="kp">attr_reader</span> <span class="ss">:os_ver_minor</span>
+    <span class="kp">attr_reader</span> <span class="ss">:os_build</span>
+    <span class="kp">attr_reader</span> <span class="ss">:os_platform</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_service_pack</span>
+    <span class="kp">attr_reader</span> <span class="ss">:os_suite_mask</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved2</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://msdn.microsoft.com/en-us/library/ms680367(v=vs.85).aspx Source
-  class ExceptionRecord &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680367(v=vs.85).aspx Source</span>
+  <span class="k">class</span> <span class="nc">ExceptionRecord</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @code = @_io.read_u4le
-      @flags = @_io.read_u4le
-      @inner_exception = @_io.read_u8le
-      @addr = @_io.read_u8le
-      @num_params = @_io.read_u4le
-      @reserved = @_io.read_u4le
-      @params = Array.new(15)
-      (15).times { |i|
-        @params[i] = @_io.read_u8le
-      }
-      self
-    end
-    attr_reader :code
-    attr_reader :flags
-    attr_reader :inner_exception
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@code</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@inner_exception</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@addr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@num_params</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@params</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+      <span class="p">(</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@params</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:code</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:inner_exception</span>
 
-    ##
-    # Memory address where exception has occurred
-    attr_reader :addr
-    attr_reader :num_params
-    attr_reader :reserved
+    <span class="c1">##</span>
+    <span class="c1"># Memory address where exception has occurred</span>
+    <span class="kp">attr_reader</span> <span class="ss">:addr</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_params</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
 
-    ##
-    # Additional parameters passed along with exception raise
-    # function (for WinAPI, that is `RaiseException`). Meaning is
-    # exception-specific. Given that this type is originally
-    # defined by a C structure, it is described there as array of
-    # fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =
-    # 15), but in reality only first `num_params` would be used.
-    attr_reader :params
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Additional parameters passed along with exception raise</span>
+    <span class="c1"># function (for WinAPI, that is `RaiseException`). Meaning is</span>
+    <span class="c1"># exception-specific. Given that this type is originally</span>
+    <span class="c1"># defined by a C structure, it is described there as array of</span>
+    <span class="c1"># fixed number of elements (`EXCEPTION_MAXIMUM_PARAMETERS` =</span>
+    <span class="c1"># 15), but in reality only first `num_params` would be used.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:params</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://msdn.microsoft.com/en-us/library/ms680389(v=vs.85).aspx Source
-  class MiscInfo &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680389(v=vs.85).aspx Source</span>
+  <span class="k">class</span> <span class="nc">MiscInfo</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len_info = @_io.read_u4le
-      @flags1 = @_io.read_u4le
-      @process_id = @_io.read_u4le
-      @process_create_time = @_io.read_u4le
-      @process_user_time = @_io.read_u4le
-      @process_kernel_time = @_io.read_u4le
-      @cpu_max_mhz = @_io.read_u4le
-      @cpu_cur_mhz = @_io.read_u4le
-      @cpu_limit_mhz = @_io.read_u4le
-      @cpu_max_idle_state = @_io.read_u4le
-      @cpu_cur_idle_state = @_io.read_u4le
-      self
-    end
-    attr_reader :len_info
-    attr_reader :flags1
-    attr_reader :process_id
-    attr_reader :process_create_time
-    attr_reader :process_user_time
-    attr_reader :process_kernel_time
-    attr_reader :cpu_max_mhz
-    attr_reader :cpu_cur_mhz
-    attr_reader :cpu_limit_mhz
-    attr_reader :cpu_max_idle_state
-    attr_reader :cpu_cur_idle_state
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len_info</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@flags1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@process_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@process_create_time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@process_user_time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@process_kernel_time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@cpu_max_mhz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@cpu_cur_mhz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@cpu_limit_mhz</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@cpu_max_idle_state</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@cpu_cur_idle_state</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_info</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags1</span>
+    <span class="kp">attr_reader</span> <span class="ss">:process_id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:process_create_time</span>
+    <span class="kp">attr_reader</span> <span class="ss">:process_user_time</span>
+    <span class="kp">attr_reader</span> <span class="ss">:process_kernel_time</span>
+    <span class="kp">attr_reader</span> <span class="ss">:cpu_max_mhz</span>
+    <span class="kp">attr_reader</span> <span class="ss">:cpu_cur_mhz</span>
+    <span class="kp">attr_reader</span> <span class="ss">:cpu_limit_mhz</span>
+    <span class="kp">attr_reader</span> <span class="ss">:cpu_max_idle_state</span>
+    <span class="kp">attr_reader</span> <span class="ss">:cpu_cur_idle_state</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://msdn.microsoft.com/en-us/library/ms680365(v=vs.85).aspx Source
-  class Dir &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680365(v=vs.85).aspx Source</span>
+  <span class="k">class</span> <span class="nc">Dir</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @stream_type = Kaitai::Struct::Stream::resolve_enum(STREAM_TYPES, @_io.read_u4le)
-      @len_data = @_io.read_u4le
-      @ofs_data = @_io.read_u4le
-      self
-    end
-    def data
-      return @data unless @data.nil?
-      _pos = @_io.pos
-      @_io.seek(ofs_data)
-      case stream_type
-      when :stream_types_misc_info
-        @_raw_data = @_io.read_bytes(len_data)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = MiscInfo.new(io, self, @_root)
-      when :stream_types_exception
-        @_raw_data = @_io.read_bytes(len_data)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = ExceptionStream.new(io, self, @_root)
-      when :stream_types_memory_list
-        @_raw_data = @_io.read_bytes(len_data)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = MemoryList.new(io, self, @_root)
-      when :stream_types_system_info
-        @_raw_data = @_io.read_bytes(len_data)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = SystemInfo.new(io, self, @_root)
-      when :stream_types_thread_list
-        @_raw_data = @_io.read_bytes(len_data)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = ThreadList.new(io, self, @_root)
-      else
-        @data = @_io.read_bytes(len_data)
-      end
-      @_io.seek(_pos)
-      @data
-    end
-    attr_reader :stream_type
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@stream_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">STREAM_TYPES</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
+      <span class="vi">@len_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@ofs_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">data</span>
+      <span class="k">return</span> <span class="vi">@data</span> <span class="k">unless</span> <span class="vi">@data</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_data</span><span class="p">)</span>
+      <span class="k">case</span> <span class="n">stream_type</span>
+      <span class="k">when</span> <span class="ss">:stream_types_misc_info</span>
+        <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="no">MiscInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:stream_types_exception</span>
+        <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="no">ExceptionStream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:stream_types_memory_list</span>
+        <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="no">MemoryList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:stream_types_system_info</span>
+        <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="no">SystemInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:stream_types_thread_list</span>
+        <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="no">ThreadList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@data</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:stream_type</span>
 
-    ##
-    # @see https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx Source
-    attr_reader :len_data
-    attr_reader :ofs_data
-    attr_reader :_raw_data
-  end
+    <span class="c1">##</span>
+    <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx Source</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_data</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://msdn.microsoft.com/en-us/library/ms680517(v=vs.85).aspx Source
-  class Thread &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680517(v=vs.85).aspx Source</span>
+  <span class="k">class</span> <span class="nc">Thread</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @thread_id = @_io.read_u4le
-      @suspend_count = @_io.read_u4le
-      @priority_class = @_io.read_u4le
-      @priority = @_io.read_u4le
-      @teb = @_io.read_u8le
-      @stack = MemoryDescriptor.new(@_io, self, @_root)
-      @thread_context = LocationDescriptor.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :thread_id
-    attr_reader :suspend_count
-    attr_reader :priority_class
-    attr_reader :priority
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@thread_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@suspend_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@priority_class</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@priority</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@teb</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@stack</span> <span class="o">=</span> <span class="no">MemoryDescriptor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@thread_context</span> <span class="o">=</span> <span class="no">LocationDescriptor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:thread_id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:suspend_count</span>
+    <span class="kp">attr_reader</span> <span class="ss">:priority_class</span>
+    <span class="kp">attr_reader</span> <span class="ss">:priority</span>
 
-    ##
-    # Thread Environment Block
-    attr_reader :teb
-    attr_reader :stack
-    attr_reader :thread_context
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Thread Environment Block</span>
+    <span class="kp">attr_reader</span> <span class="ss">:teb</span>
+    <span class="kp">attr_reader</span> <span class="ss">:stack</span>
+    <span class="kp">attr_reader</span> <span class="ss">:thread_context</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://msdn.microsoft.com/en-us/library/ms680387(v=vs.85).aspx Source
-  class MemoryList &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680387(v=vs.85).aspx Source</span>
+  <span class="k">class</span> <span class="nc">MemoryList</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @num_mem_ranges = @_io.read_u4le
-      @mem_ranges = Array.new(num_mem_ranges)
-      (num_mem_ranges).times { |i|
-        @mem_ranges[i] = MemoryDescriptor.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :num_mem_ranges
-    attr_reader :mem_ranges
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@num_mem_ranges</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@mem_ranges</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_mem_ranges</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">num_mem_ranges</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@mem_ranges</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">MemoryDescriptor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_mem_ranges</span>
+    <span class="kp">attr_reader</span> <span class="ss">:mem_ranges</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://msdn.microsoft.com/en-us/library/ms680384(v=vs.85).aspx Source
-  class MemoryDescriptor &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680384(v=vs.85).aspx Source</span>
+  <span class="k">class</span> <span class="nc">MemoryDescriptor</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @addr_memory_range = @_io.read_u8le
-      @memory = LocationDescriptor.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :addr_memory_range
-    attr_reader :memory
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@addr_memory_range</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@memory</span> <span class="o">=</span> <span class="no">LocationDescriptor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:addr_memory_range</span>
+    <span class="kp">attr_reader</span> <span class="ss">:memory</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://msdn.microsoft.com/en-us/library/ms680368(v=vs.85).aspx Source
-  class ExceptionStream &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680368(v=vs.85).aspx Source</span>
+  <span class="k">class</span> <span class="nc">ExceptionStream</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @thread_id = @_io.read_u4le
-      @reserved = @_io.read_u4le
-      @exception_rec = ExceptionRecord.new(@_io, self, @_root)
-      @thread_context = LocationDescriptor.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :thread_id
-    attr_reader :reserved
-    attr_reader :exception_rec
-    attr_reader :thread_context
-  end
-  def streams
-    return @streams unless @streams.nil?
-    _pos = @_io.pos
-    @_io.seek(ofs_streams)
-    @streams = Array.new(num_streams)
-    (num_streams).times { |i|
-      @streams[i] = Dir.new(@_io, self, @_root)
-    }
-    @_io.seek(_pos)
-    @streams
-  end
-  attr_reader :magic1
-  attr_reader :magic2
-  attr_reader :version
-  attr_reader :num_streams
-  attr_reader :ofs_streams
-  attr_reader :checksum
-  attr_reader :timestamp
-  attr_reader :flags
-end
-</code></pre>
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@thread_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@exception_rec</span> <span class="o">=</span> <span class="no">ExceptionRecord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@thread_context</span> <span class="o">=</span> <span class="no">LocationDescriptor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:thread_id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
+    <span class="kp">attr_reader</span> <span class="ss">:exception_rec</span>
+    <span class="kp">attr_reader</span> <span class="ss">:thread_context</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">streams</span>
+    <span class="k">return</span> <span class="vi">@streams</span> <span class="k">unless</span> <span class="vi">@streams</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_streams</span><span class="p">)</span>
+    <span class="vi">@streams</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_streams</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">num_streams</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@streams</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Dir</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+    <span class="vi">@streams</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:magic1</span>
+  <span class="kp">attr_reader</span> <span class="ss">:magic2</span>
+  <span class="kp">attr_reader</span> <span class="ss">:version</span>
+  <span class="kp">attr_reader</span> <span class="ss">:num_streams</span>
+  <span class="kp">attr_reader</span> <span class="ss">:ofs_streams</span>
+  <span class="kp">attr_reader</span> <span class="ss">:checksum</span>
+  <span class="kp">attr_reader</span> <span class="ss">:timestamp</span>
+  <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -691,8 +688,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

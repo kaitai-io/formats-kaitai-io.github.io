@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -265,114 +262,114 @@ describes binary version.</p>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * STL files are used to represent simple 3D models, defined using
- * triangular 3D faces.
- * 
- * Initially it was introduced as native format for 3D Systems
- * Stereolithography CAD system, but due to its extreme simplicity, it
- * was adopted by a wide range of 3D modelling, CAD, rapid prototyping
- * and 3D printing applications as the simplest 3D model exchange
- * format.
- * 
- * STL is extremely bare-bones format: there are no complex headers, no
- * texture / color support, no units specifications, no distinct vertex
- * arrays. Whole model is specified as a collection of triangular
- * faces.
- * 
- * There are two versions of the format (text and binary), this spec
- * describes binary version.
- */
+<span class="sd">/**</span>
+<span class="sd"> * STL files are used to represent simple 3D models, defined using</span>
+<span class="sd"> * triangular 3D faces.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Initially it was introduced as native format for 3D Systems</span>
+<span class="sd"> * Stereolithography CAD system, but due to its extreme simplicity, it</span>
+<span class="sd"> * was adopted by a wide range of 3D modelling, CAD, rapid prototyping</span>
+<span class="sd"> * and 3D printing applications as the simplest 3D model exchange</span>
+<span class="sd"> * format.</span>
+<span class="sd"> * </span>
+<span class="sd"> * STL is extremely bare-bones format: there are no complex headers, no</span>
+<span class="sd"> * texture / color support, no units specifications, no distinct vertex</span>
+<span class="sd"> * arrays. Whole model is specified as a collection of triangular</span>
+<span class="sd"> * faces.</span>
+<span class="sd"> * </span>
+<span class="sd"> * There are two versions of the format (text and binary), this spec</span>
+<span class="sd"> * describes binary version.</span>
+<span class="sd"> */</span>
 
-class Stl extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Stl $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Stl</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Stl</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_header = $this-&gt;_io-&gt;readBytes(80);
-        $this-&gt;_m_numTriangles = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_triangles = [];
-        $n = $this-&gt;numTriangles();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_triangles[] = new \Stl\Triangle($this-&gt;_io, $this, $this-&gt;_root);
-        }
-    }
-    protected $_m_header;
-    protected $_m_numTriangles;
-    protected $_m_triangles;
-    public function header() { return $this-&gt;_m_header; }
-    public function numTriangles() { return $this-&gt;_m_numTriangles; }
-    public function triangles() { return $this-&gt;_m_triangles; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">80</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTriangles</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_triangles</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numTriangles</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_triangles</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Stl\Triangle</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_header</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numTriangles</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_triangles</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numTriangles</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTriangles</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">triangles</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_triangles</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-/**
- * Each STL triangle is defined by its 3 points in 3D space and a
- * normal vector, which is generally used to determine where is
- * &quot;inside&quot; and &quot;outside&quot; of the model.
- */
+<span class="sd">/**</span>
+<span class="sd"> * Each STL triangle is defined by its 3 points in 3D space and a</span>
+<span class="sd"> * normal vector, which is generally used to determine where is</span>
+<span class="sd"> * &quot;inside&quot; and &quot;outside&quot; of the model.</span>
+<span class="sd"> */</span>
 
-namespace \Stl;
+<span class="k">namespace</span> <span class="nx">\Stl</span><span class="p">;</span>
 
-class Triangle extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Stl $_parent = null, \Stl $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Triangle</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Stl</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Stl</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_normal = new \Stl\Vec3d($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_vertices = [];
-        $n = 3;
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_vertices[] = new \Stl\Vec3d($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        $this-&gt;_m_abr = $this-&gt;_io-&gt;readU2le();
-    }
-    protected $_m_normal;
-    protected $_m_vertices;
-    protected $_m_abr;
-    public function normal() { return $this-&gt;_m_normal; }
-    public function vertices() { return $this-&gt;_m_vertices; }
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_normal</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Stl\Vec3d</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_vertices</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_vertices</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Stl\Vec3d</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_abr</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_normal</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_vertices</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_abr</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">normal</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_normal</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">vertices</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_vertices</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * In theory (per standard), it&#39;s &quot;attribute byte count&quot; with
-     * no other details given on what &quot;attribute&quot; is and what
-     * should be stored in this field.
-     * 
-     * In practice, software dealing with STL either expected to
-     * see 0 here, or uses this 16-bit field per se to store
-     * additional attributes (such as RGB color of a vertex or
-     * color index).
-     */
-    public function abr() { return $this-&gt;_m_abr; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * In theory (per standard), it&#39;s &quot;attribute byte count&quot; with</span>
+<span class="sd">     * no other details given on what &quot;attribute&quot; is and what</span>
+<span class="sd">     * should be stored in this field.</span>
+<span class="sd">     * </span>
+<span class="sd">     * In practice, software dealing with STL either expected to</span>
+<span class="sd">     * see 0 here, or uses this 16-bit field per se to store</span>
+<span class="sd">     * additional attributes (such as RGB color of a vertex or</span>
+<span class="sd">     * color index).</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">abr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_abr</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Stl;
+<span class="k">namespace</span> <span class="nx">\Stl</span><span class="p">;</span>
 
-class Vec3d extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Stl\Triangle $_parent = null, \Stl $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Vec3d</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Stl\Triangle</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Stl</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_x = $this-&gt;_io-&gt;readF4le();
-        $this-&gt;_m_y = $this-&gt;_io-&gt;readF4le();
-        $this-&gt;_m_z = $this-&gt;_io-&gt;readF4le();
-    }
-    protected $_m_x;
-    protected $_m_y;
-    protected $_m_z;
-    public function x() { return $this-&gt;_m_x; }
-    public function y() { return $this-&gt;_m_y; }
-    public function z() { return $this-&gt;_m_z; }
-}
-</code></pre>
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_z</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF4le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_x</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_y</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_z</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">z</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_z</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -399,8 +396,8 @@ class Vec3d extends \Kaitai\Struct\Struct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -251,727 +248,727 @@ var data = new Specpr(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
 
-    /// &lt;summary&gt;
-    /// Specpr records are fixed format, 1536 bytes/record. Record number
-    /// counting starts at 0. Binary data are in IEEE format real numbers
-    /// and non-byte swapped integers (compatiible with all Sun
-    /// Microsystems, and Hewlett Packard workstations (Intel and some DEC
-    /// machines are byte swapped relative to Suns and HPs). Each record may
-    /// contain different information according to the following scheme.
-    /// 
-    /// You can get some library of spectra from
-    /// ftp://ftpext.cr.usgs.gov/pub/cr/co/denver/speclab/pub/spectral.library/splib06.library/
-    /// &lt;/summary&gt;
-    public partial class Specpr : KaitaiStruct
-    {
-        public static Specpr FromFile(string fileName)
-        {
-            return new Specpr(new KaitaiStream(fileName));
-        }
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// Specpr records are fixed format, 1536 bytes/record. Record number</span>
+    <span class="c1">/// counting starts at 0. Binary data are in IEEE format real numbers</span>
+    <span class="c1">/// and non-byte swapped integers (compatiible with all Sun</span>
+    <span class="c1">/// Microsystems, and Hewlett Packard workstations (Intel and some DEC</span>
+    <span class="c1">/// machines are byte swapped relative to Suns and HPs). Each record may</span>
+    <span class="c1">/// contain different information according to the following scheme.</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// You can get some library of spectra from</span>
+    <span class="c1">/// ftp://ftpext.cr.usgs.gov/pub/cr/co/denver/speclab/pub/spectral.library/splib06.library/</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Specpr</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">Specpr</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Specpr</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
 
-        public enum RecordType
-        {
-            DataInitial = 0,
-            TextInitial = 1,
-            DataContinuation = 2,
-            TextContinuation = 3,
-        }
-        public Specpr(KaitaiStream p__io, KaitaiStruct p__parent = null, Specpr p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            _read();
-        }
-        private void _read()
-        {
-            _records = new List&lt;Record&gt;();
-            {
-                var i = 0;
-                while (!m_io.IsEof) {
-                    _records.Add(new Record(m_io, this, m_root));
-                    i++;
-                }
-            }
-        }
-        public partial class DataInitial : KaitaiStruct
-        {
-            public static DataInitial FromFile(string fileName)
-            {
-                return new DataInitial(new KaitaiStream(fileName));
-            }
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">RecordType</span>
+        <span class="p">{</span>
+            <span class="n">DataInitial</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">TextInitial</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="n">DataContinuation</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+            <span class="n">TextContinuation</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="nf">Specpr</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Specpr</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_records</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Record</span><span class="p">&gt;();</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_records</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                    <span class="n">i</span><span class="p">++;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DataInitial</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">DataInitial</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">DataInitial</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public DataInitial(KaitaiStream p__io, Specpr.Record p__parent = null, Specpr p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_phaseAngleArcsec = false;
-                _read();
-            }
-            private void _read()
-            {
-                _ids = new Identifiers(m_io, this, m_root);
-                _iscta = new CoarseTimestamp(m_io, this, m_root);
-                _isctb = new CoarseTimestamp(m_io, this, m_root);
-                _jdatea = m_io.ReadS4be();
-                _jdateb = m_io.ReadS4be();
-                _istb = new CoarseTimestamp(m_io, this, m_root);
-                _isra = m_io.ReadS4be();
-                _isdec = m_io.ReadS4be();
-                _itchan = m_io.ReadS4be();
-                _irmas = m_io.ReadS4be();
-                _revs = m_io.ReadS4be();
-                _iband = new List&lt;int&gt;((int) (2));
-                for (var i = 0; i &lt; 2; i++)
-                {
-                    _iband.Add(m_io.ReadS4be());
-                }
-                _irwav = m_io.ReadS4be();
-                _irespt = m_io.ReadS4be();
-                _irecno = m_io.ReadS4be();
-                _itpntr = m_io.ReadS4be();
-                _ihist = System.Text.Encoding.GetEncoding(&quot;ascii&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(60), 32));
-                _mhist = new List&lt;string&gt;((int) (4));
-                for (var i = 0; i &lt; 4; i++)
-                {
-                    _mhist.Add(System.Text.Encoding.GetEncoding(&quot;ascii&quot;).GetString(m_io.ReadBytes(74)));
-                }
-                _nruns = m_io.ReadS4be();
-                _siangl = new IllumAngle(m_io, this, m_root);
-                _seangl = new IllumAngle(m_io, this, m_root);
-                _sphase = m_io.ReadS4be();
-                _iwtrns = m_io.ReadS4be();
-                _itimch = m_io.ReadS4be();
-                _xnrm = m_io.ReadF4be();
-                _scatim = m_io.ReadF4be();
-                _timint = m_io.ReadF4be();
-                _tempd = m_io.ReadF4be();
-                _data = new List&lt;float&gt;((int) (256));
-                for (var i = 0; i &lt; 256; i++)
-                {
-                    _data.Add(m_io.ReadF4be());
-                }
-            }
-            private bool f_phaseAngleArcsec;
-            private double _phaseAngleArcsec;
+            <span class="k">public</span> <span class="nf">DataInitial</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">Record</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Specpr</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_phaseAngleArcsec</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_ids</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Identifiers</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_iscta</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CoarseTimestamp</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_isctb</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CoarseTimestamp</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_jdatea</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_jdateb</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_istb</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CoarseTimestamp</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_isra</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_isdec</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_itchan</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_irmas</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_revs</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_iband</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="m">2</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">2</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_iband</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">());</span>
+                <span class="p">}</span>
+                <span class="n">_irwav</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_irespt</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_irecno</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_itpntr</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_ihist</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesStripRight</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">60</span><span class="p">),</span> <span class="m">32</span><span class="p">));</span>
+                <span class="n">_mhist</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="m">4</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">4</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_mhist</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">74</span><span class="p">)));</span>
+                <span class="p">}</span>
+                <span class="n">_nruns</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_siangl</span> <span class="p">=</span> <span class="k">new</span> <span class="n">IllumAngle</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_seangl</span> <span class="p">=</span> <span class="k">new</span> <span class="n">IllumAngle</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_sphase</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_iwtrns</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_itimch</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_xnrm</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4be</span><span class="p">();</span>
+                <span class="n">_scatim</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4be</span><span class="p">();</span>
+                <span class="n">_timint</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4be</span><span class="p">();</span>
+                <span class="n">_tempd</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4be</span><span class="p">();</span>
+                <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="m">256</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">256</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_data</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4be</span><span class="p">());</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_phaseAngleArcsec</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">double</span> <span class="n">_phaseAngleArcsec</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// The phase angle between iangl and eangl in seconds
-            /// &lt;/summary&gt;
-            public double PhaseAngleArcsec
-            {
-                get
-                {
-                    if (f_phaseAngleArcsec)
-                        return _phaseAngleArcsec;
-                    _phaseAngleArcsec = (double) ((Sphase / 1500));
-                    f_phaseAngleArcsec = true;
-                    return _phaseAngleArcsec;
-                }
-            }
-            private Identifiers _ids;
-            private CoarseTimestamp _iscta;
-            private CoarseTimestamp _isctb;
-            private int _jdatea;
-            private int _jdateb;
-            private CoarseTimestamp _istb;
-            private int _isra;
-            private int _isdec;
-            private int _itchan;
-            private int _irmas;
-            private int _revs;
-            private List&lt;int&gt; _iband;
-            private int _irwav;
-            private int _irespt;
-            private int _irecno;
-            private int _itpntr;
-            private string _ihist;
-            private List&lt;string&gt; _mhist;
-            private int _nruns;
-            private IllumAngle _siangl;
-            private IllumAngle _seangl;
-            private int _sphase;
-            private int _iwtrns;
-            private int _itimch;
-            private float _xnrm;
-            private float _scatim;
-            private float _timint;
-            private float _tempd;
-            private List&lt;float&gt; _data;
-            private Specpr m_root;
-            private Specpr.Record m_parent;
-            public Identifiers Ids { get { return _ids; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The phase angle between iangl and eangl in seconds</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">double</span> <span class="n">PhaseAngleArcsec</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_phaseAngleArcsec</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_phaseAngleArcsec</span><span class="p">;</span>
+                    <span class="n">_phaseAngleArcsec</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">((</span><span class="n">Sphase</span> <span class="p">/</span> <span class="m">1500</span><span class="p">));</span>
+                    <span class="n">f_phaseAngleArcsec</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_phaseAngleArcsec</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Identifiers</span> <span class="n">_ids</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">CoarseTimestamp</span> <span class="n">_iscta</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">CoarseTimestamp</span> <span class="n">_isctb</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_jdatea</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_jdateb</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">CoarseTimestamp</span> <span class="n">_istb</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_isra</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_isdec</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_itchan</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_irmas</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_revs</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">_iband</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_irwav</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_irespt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_irecno</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_itpntr</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_ihist</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">_mhist</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_nruns</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">IllumAngle</span> <span class="n">_siangl</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">IllumAngle</span> <span class="n">_seangl</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_sphase</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_iwtrns</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_itimch</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_xnrm</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_scatim</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_timint</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_tempd</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="n">_data</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">Record</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">Identifiers</span> <span class="n">Ids</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ids</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Civil or Universal time when data was last processed
-            /// &lt;/summary&gt;
-            public CoarseTimestamp Iscta { get { return _iscta; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Civil or Universal time when data was last processed</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">CoarseTimestamp</span> <span class="n">Iscta</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_iscta</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Civil or Universal time at the start of the spectral run
-            /// &lt;/summary&gt;
-            public CoarseTimestamp Isctb { get { return _isctb; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Civil or Universal time at the start of the spectral run</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">CoarseTimestamp</span> <span class="n">Isctb</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isctb</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Date when data was last processed. Stored as integer*4 Julian Day number *10
-            /// &lt;/summary&gt;
-            public int Jdatea { get { return _jdatea; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Date when data was last processed. Stored as integer*4 Julian Day number *10</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Jdatea</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_jdatea</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Date when the spectral run began. Stored as integer*4 Julian Day number *10
-            /// &lt;/summary&gt;
-            public int Jdateb { get { return _jdateb; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Date when the spectral run began. Stored as integer*4 Julian Day number *10</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Jdateb</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_jdateb</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Siderial time when the spectral run started. See flag #05.
-            /// &lt;/summary&gt;
-            public CoarseTimestamp Istb { get { return _istb; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Siderial time when the spectral run started. See flag #05.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">CoarseTimestamp</span> <span class="n">Istb</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_istb</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Right ascension coordinates of an astronomical  object, or longitude on a planetary surface (integer*4 numbers in seconds *1000) (RA in RA seconds, Longitude in arc-seconds) See flag #06.
-            /// &lt;/summary&gt;
-            public int Isra { get { return _isra; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Right ascension coordinates of an astronomical  object, or longitude on a planetary surface (integer*4 numbers in seconds *1000) (RA in RA seconds, Longitude in arc-seconds) See flag #06.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Isra</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isra</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Declination coordinates of an astronomical object, or latitude on a planetary surface (integer*4 number in arc-seconds *1000). See flag #06.
-            /// &lt;/summary&gt;
-            public int Isdec { get { return _isdec; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Declination coordinates of an astronomical object, or latitude on a planetary surface (integer*4 number in arc-seconds *1000). See flag #06.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Isdec</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isdec</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Total number of channels in the spectrum (integer*4 value from 1 to 4852)
-            /// &lt;/summary&gt;
-            public int Itchan { get { return _itchan; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Total number of channels in the spectrum (integer*4 value from 1 to 4852)</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Itchan</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_itchan</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The equivalent atmospheric thickness through which the observation was obtained (=1.0 overhead scaled: airmass*1000; integer*4).
-            /// &lt;/summary&gt;
-            public int Irmas { get { return _irmas; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The equivalent atmospheric thickness through which the observation was obtained (=1.0 overhead scaled: airmass*1000; integer*4).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Irmas</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_irmas</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The number of independent spectral scans which were added to make the spectrum (integer*4 number).
-            /// &lt;/summary&gt;
-            public int Revs { get { return _revs; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The number of independent spectral scans which were added to make the spectrum (integer*4 number).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Revs</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_revs</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The channel numbers which define the band normalization (scaling to unity). (integers*4).
-            /// &lt;/summary&gt;
-            public List&lt;int&gt; Iband { get { return _iband; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The channel numbers which define the band normalization (scaling to unity). (integers*4).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">Iband</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_iband</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The record number within the file where the wavelengths are found (integer*4).
-            /// &lt;/summary&gt;
-            public int Irwav { get { return _irwav; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The record number within the file where the wavelengths are found (integer*4).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Irwav</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_irwav</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The record pointer to where the resolution can be found (or horizontal error bar) (integer*4).
-            /// &lt;/summary&gt;
-            public int Irespt { get { return _irespt; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The record pointer to where the resolution can be found (or horizontal error bar) (integer*4).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Irespt</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_irespt</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The record number within the file where the data is located (integer*4 number).
-            /// &lt;/summary&gt;
-            public int Irecno { get { return _irecno; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The record number within the file where the data is located (integer*4 number).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Irecno</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_irecno</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Text data record pointer. This pointer points to a data record where additional text describing the data may be found.  (32 bit integer)
-            /// &lt;/summary&gt;
-            public int Itpntr { get { return _itpntr; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Text data record pointer. This pointer points to a data record where additional text describing the data may be found.  (32 bit integer)</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Itpntr</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_itpntr</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The program automatic 60 character history.
-            /// &lt;/summary&gt;
-            public string Ihist { get { return _ihist; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The program automatic 60 character history.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Ihist</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ihist</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Manual history. Program automatic for large history requirements.
-            /// &lt;/summary&gt;
-            public List&lt;string&gt; Mhist { get { return _mhist; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Manual history. Program automatic for large history requirements.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">Mhist</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_mhist</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The number of independent spectral runs which were summed or averaged to make this spectrum (integer*4).
-            /// &lt;/summary&gt;
-            public int Nruns { get { return _nruns; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The number of independent spectral runs which were summed or averaged to make this spectrum (integer*4).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Nruns</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_nruns</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The angle of incidence of illuminating radiation
-            ///       integrating sphere = 2000000000
-            ///       Geometric albedo   = 2000000001
-            /// &lt;/summary&gt;
-            public IllumAngle Siangl { get { return _siangl; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The angle of incidence of illuminating radiation</span>
+            <span class="c1">///       integrating sphere = 2000000000</span>
+            <span class="c1">///       Geometric albedo   = 2000000001</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">IllumAngle</span> <span class="n">Siangl</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_siangl</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The angle of emission of illuminating radiation
-            ///       integrating sphere = 2000000000
-            ///       Geometric albedo   = 2000000001
-            /// &lt;/summary&gt;
-            public IllumAngle Seangl { get { return _seangl; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The angle of emission of illuminating radiation</span>
+            <span class="c1">///       integrating sphere = 2000000000</span>
+            <span class="c1">///       Geometric albedo   = 2000000001</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">IllumAngle</span> <span class="n">Seangl</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_seangl</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The phase angle between iangl and eangl (Integer*4 number, in arc-seconds*1500). (180 degrees=972000000; -180 deg &amp;lt;= phase &amp;lt;= 180 deg)
-            ///       integrating sphere = 2000000000
-            /// &lt;/summary&gt;
-            public int Sphase { get { return _sphase; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The phase angle between iangl and eangl (Integer*4 number, in arc-seconds*1500). (180 degrees=972000000; -180 deg &amp;lt;= phase &amp;lt;= 180 deg)</span>
+            <span class="c1">///       integrating sphere = 2000000000</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Sphase</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sphase</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Weighted number of runs (the number of runs of the spectrum with the minimum runs which was used in processing this spectrum, integer*4).
-            /// &lt;/summary&gt;
-            public int Iwtrns { get { return _iwtrns; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Weighted number of runs (the number of runs of the spectrum with the minimum runs which was used in processing this spectrum, integer*4).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Iwtrns</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_iwtrns</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The time observed in the sample beam for each half chop in milliseconds (for chopping spectrometers only). (integer*4)
-            /// &lt;/summary&gt;
-            public int Itimch { get { return _itimch; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The time observed in the sample beam for each half chop in milliseconds (for chopping spectrometers only). (integer*4)</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Itimch</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_itimch</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The band normalization factor. For data scaled to 1.0, multiply by this number to recover photometric level (32 bit real number).
-            /// &lt;/summary&gt;
-            public float Xnrm { get { return _xnrm; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The band normalization factor. For data scaled to 1.0, multiply by this number to recover photometric level (32 bit real number).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">Xnrm</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_xnrm</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The time it takes to make one scan of the entire spectrum in seconds (32 bit real number).
-            /// &lt;/summary&gt;
-            public float Scatim { get { return _scatim; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The time it takes to make one scan of the entire spectrum in seconds (32 bit real number).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">Scatim</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_scatim</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Total integration time (usually=scatime * nruns) (32 bit real number).
-            /// &lt;/summary&gt;
-            public float Timint { get { return _timint; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Total integration time (usually=scatime * nruns) (32 bit real number).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">Timint</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_timint</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Temperature in degrees Kelvin (32 bit real number).
-            /// &lt;/summary&gt;
-            public float Tempd { get { return _tempd; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Temperature in degrees Kelvin (32 bit real number).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">Tempd</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tempd</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The spectral data (256 channels of 32 bit real data numbers).
-            /// &lt;/summary&gt;
-            public List&lt;float&gt; Data { get { return _data; } }
-            public Specpr M_Root { get { return m_root; } }
-            public Specpr.Record M_Parent { get { return m_parent; } }
-        }
-        public partial class CoarseTimestamp : KaitaiStruct
-        {
-            public static CoarseTimestamp FromFile(string fileName)
-            {
-                return new CoarseTimestamp(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The spectral data (256 channels of 32 bit real data numbers).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">Record</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">CoarseTimestamp</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">CoarseTimestamp</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">CoarseTimestamp</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public CoarseTimestamp(KaitaiStream p__io, Specpr.DataInitial p__parent = null, Specpr p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_seconds = false;
-                _read();
-            }
-            private void _read()
-            {
-                _scaledSeconds = m_io.ReadS4be();
-            }
-            private bool f_seconds;
-            private double _seconds;
-            public double Seconds
-            {
-                get
-                {
-                    if (f_seconds)
-                        return _seconds;
-                    _seconds = (double) ((ScaledSeconds * 24000));
-                    f_seconds = true;
-                    return _seconds;
-                }
-            }
-            private int _scaledSeconds;
-            private Specpr m_root;
-            private Specpr.DataInitial m_parent;
-            public int ScaledSeconds { get { return _scaledSeconds; } }
-            public Specpr M_Root { get { return m_root; } }
-            public Specpr.DataInitial M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">CoarseTimestamp</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">DataInitial</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Specpr</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_seconds</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_scaledSeconds</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_seconds</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">double</span> <span class="n">_seconds</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">double</span> <span class="n">Seconds</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_seconds</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_seconds</span><span class="p">;</span>
+                    <span class="n">_seconds</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">((</span><span class="n">ScaledSeconds</span> <span class="p">*</span> <span class="m">24000</span><span class="p">));</span>
+                    <span class="n">f_seconds</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_seconds</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_scaledSeconds</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">DataInitial</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">ScaledSeconds</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_scaledSeconds</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">DataInitial</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// it is big endian
-        /// &lt;/summary&gt;
-        public partial class Icflag : KaitaiStruct
-        {
-            public static Icflag FromFile(string fileName)
-            {
-                return new Icflag(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// it is big endian</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Icflag</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Icflag</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Icflag</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Icflag(KaitaiStream p__io, Specpr.Record p__parent = null, Specpr p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_type = false;
-                _read();
-            }
-            private void _read()
-            {
-                _reserved = m_io.ReadBitsInt(26);
-                _isctbType = m_io.ReadBitsInt(1) != 0;
-                _isctaType = m_io.ReadBitsInt(1) != 0;
-                _coordinateMode = m_io.ReadBitsInt(1) != 0;
-                _errors = m_io.ReadBitsInt(1) != 0;
-                _text = m_io.ReadBitsInt(1) != 0;
-                _continuation = m_io.ReadBitsInt(1) != 0;
-            }
-            private bool f_type;
-            private RecordType _type;
-            public RecordType Type
-            {
-                get
-                {
-                    if (f_type)
-                        return _type;
-                    _type = (RecordType) (((Specpr.RecordType) (((Text ? 1 : 0) * 1) + ((Continuation ? 1 : 0) * 2))));
-                    f_type = true;
-                    return _type;
-                }
-            }
-            private ulong _reserved;
-            private bool _isctbType;
-            private bool _isctaType;
-            private bool _coordinateMode;
-            private bool _errors;
-            private bool _text;
-            private bool _continuation;
-            private Specpr m_root;
-            private Specpr.Record m_parent;
-            public ulong Reserved { get { return _reserved; } }
+            <span class="k">public</span> <span class="nf">Icflag</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">Record</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Specpr</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_type</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_reserved</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">26</span><span class="p">);</span>
+                <span class="n">_isctbType</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_isctaType</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_coordinateMode</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_errors</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_text</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">_continuation</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_type</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RecordType</span> <span class="n">_type</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">RecordType</span> <span class="n">Type</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_type</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_type</span><span class="p">;</span>
+                    <span class="n">_type</span> <span class="p">=</span> <span class="p">(</span><span class="n">RecordType</span><span class="p">)</span> <span class="p">(((</span><span class="n">Specpr</span><span class="p">.</span><span class="n">RecordType</span><span class="p">)</span> <span class="p">(((</span><span class="n">Text</span> <span class="p">?</span> <span class="m">1</span> <span class="p">:</span> <span class="m">0</span><span class="p">)</span> <span class="p">*</span> <span class="m">1</span><span class="p">)</span> <span class="p">+</span> <span class="p">((</span><span class="n">Continuation</span> <span class="p">?</span> <span class="m">1</span> <span class="p">:</span> <span class="m">0</span><span class="p">)</span> <span class="p">*</span> <span class="m">2</span><span class="p">))));</span>
+                    <span class="n">f_type</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_type</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_reserved</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isctbType</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isctaType</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_coordinateMode</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_errors</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_text</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_continuation</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">Record</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Reserved</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_reserved</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// =0 ctb is civil time
-            /// =1 ctb is universal time
-            /// &lt;/summary&gt;
-            public bool IsctbType { get { return _isctbType; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// =0 ctb is civil time</span>
+            <span class="c1">/// =1 ctb is universal time</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsctbType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isctbType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// =0 cta is civil time
-            /// =1 cta is universal time
-            /// &lt;/summary&gt;
-            public bool IsctaType { get { return _isctaType; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// =0 cta is civil time</span>
+            <span class="c1">/// =1 cta is universal time</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsctaType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isctaType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// RA, Dec / Long., Lat flag
-            /// =0 the array &amp;quot;ira&amp;quot; and &amp;quot;idec&amp;quot; corresponds to the right ascension and declination of an astronomical object.
-            /// =1 the array &amp;quot;ira&amp;quot; and &amp;quot;idec&amp;quot; correspond to the longitude and latitude of a spot on a planetary surface.
-            /// &lt;/summary&gt;
-            public bool CoordinateMode { get { return _coordinateMode; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// RA, Dec / Long., Lat flag</span>
+            <span class="c1">/// =0 the array &amp;quot;ira&amp;quot; and &amp;quot;idec&amp;quot; corresponds to the right ascension and declination of an astronomical object.</span>
+            <span class="c1">/// =1 the array &amp;quot;ira&amp;quot; and &amp;quot;idec&amp;quot; correspond to the longitude and latitude of a spot on a planetary surface.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">CoordinateMode</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_coordinateMode</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// flag to indicate whether or not the data for the error bar (1 sigma standard deviation of the mean) is in the next record set. =0: no errors, =1: errors in next record set.
-            /// &lt;/summary&gt;
-            public bool Errors { get { return _errors; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// flag to indicate whether or not the data for the error bar (1 sigma standard deviation of the mean) is in the next record set. =0: no errors, =1: errors in next record set.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Errors</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_errors</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// =0 the data in the array &amp;quot;data&amp;quot; is data
-            /// =1 the data in the array &amp;quot;data&amp;quot; is ascii text as is most of the header info.
-            /// &lt;/summary&gt;
-            public bool Text { get { return _text; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// =0 the data in the array &amp;quot;data&amp;quot; is data</span>
+            <span class="c1">/// =1 the data in the array &amp;quot;data&amp;quot; is ascii text as is most of the header info.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Text</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_text</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// =0 first record of a spectrum consists of: header then 256 data channels
-            /// =1 continuation data record consisting of:
-            ///   # bit flags followed by 1532 bytes of
-            ///   # real data (bit 1=0) (383 channels)
-            ///   # or 1532 bytes of text (bit 1=1).
-            ///   # A maximum of 12 continuation records
-            ///   # are allowed for a total of 4852
-            ///   # channels (limited by arrays of 4864)
-            ///   # or 19860 characters of text (bit 1=1).
-            /// &lt;/summary&gt;
-            public bool Continuation { get { return _continuation; } }
-            public Specpr M_Root { get { return m_root; } }
-            public Specpr.Record M_Parent { get { return m_parent; } }
-        }
-        public partial class DataContinuation : KaitaiStruct
-        {
-            public static DataContinuation FromFile(string fileName)
-            {
-                return new DataContinuation(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// =0 first record of a spectrum consists of: header then 256 data channels</span>
+            <span class="c1">/// =1 continuation data record consisting of:</span>
+            <span class="c1">///   # bit flags followed by 1532 bytes of</span>
+            <span class="c1">///   # real data (bit 1=0) (383 channels)</span>
+            <span class="c1">///   # or 1532 bytes of text (bit 1=1).</span>
+            <span class="c1">///   # A maximum of 12 continuation records</span>
+            <span class="c1">///   # are allowed for a total of 4852</span>
+            <span class="c1">///   # channels (limited by arrays of 4864)</span>
+            <span class="c1">///   # or 19860 characters of text (bit 1=1).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Continuation</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_continuation</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">Record</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DataContinuation</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">DataContinuation</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">DataContinuation</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public DataContinuation(KaitaiStream p__io, Specpr.Record p__parent = null, Specpr p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _cdata = new List&lt;float&gt;((int) (383));
-                for (var i = 0; i &lt; 383; i++)
-                {
-                    _cdata.Add(m_io.ReadF4be());
-                }
-            }
-            private List&lt;float&gt; _cdata;
-            private Specpr m_root;
-            private Specpr.Record m_parent;
+            <span class="k">public</span> <span class="nf">DataContinuation</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">Record</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Specpr</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_cdata</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="m">383</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">383</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_cdata</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4be</span><span class="p">());</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="n">_cdata</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">Record</span> <span class="n">m_parent</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// The continuation of the data values (383 channels of 32 bit real numbers).
-            /// &lt;/summary&gt;
-            public List&lt;float&gt; Cdata { get { return _cdata; } }
-            public Specpr M_Root { get { return m_root; } }
-            public Specpr.Record M_Parent { get { return m_parent; } }
-        }
-        public partial class Identifiers : KaitaiStruct
-        {
-            public static Identifiers FromFile(string fileName)
-            {
-                return new Identifiers(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The continuation of the data values (383 channels of 32 bit real numbers).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">float</span><span class="p">&gt;</span> <span class="n">Cdata</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_cdata</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">Record</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Identifiers</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Identifiers</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Identifiers</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Identifiers(KaitaiStream p__io, KaitaiStruct p__parent = null, Specpr p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _ititle = System.Text.Encoding.GetEncoding(&quot;ascii&quot;).GetString(KaitaiStream.BytesStripRight(m_io.ReadBytes(40), 32));
-                _usernm = System.Text.Encoding.GetEncoding(&quot;ascii&quot;).GetString(m_io.ReadBytes(8));
-            }
-            private string _ititle;
-            private string _usernm;
-            private Specpr m_root;
-            private KaitaiStruct m_parent;
+            <span class="k">public</span> <span class="nf">Identifiers</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Specpr</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_ititle</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesStripRight</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">40</span><span class="p">),</span> <span class="m">32</span><span class="p">));</span>
+                <span class="n">_usernm</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">8</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_ititle</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_usernm</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Title which describes the data
-            /// &lt;/summary&gt;
-            public string Ititle { get { return _ititle; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Title which describes the data</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Ititle</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ititle</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The name of the user who created the data record
-            /// &lt;/summary&gt;
-            public string Usernm { get { return _usernm; } }
-            public Specpr M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        public partial class IllumAngle : KaitaiStruct
-        {
-            public static IllumAngle FromFile(string fileName)
-            {
-                return new IllumAngle(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The name of the user who created the data record</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Usernm</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_usernm</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">IllumAngle</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">IllumAngle</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">IllumAngle</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public IllumAngle(KaitaiStream p__io, Specpr.DataInitial p__parent = null, Specpr p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_secondsTotal = false;
-                f_minutesTotal = false;
-                f_degreesTotal = false;
-                _read();
-            }
-            private void _read()
-            {
-                _angl = m_io.ReadS4be();
-            }
-            private bool f_secondsTotal;
-            private int _secondsTotal;
-            public int SecondsTotal
-            {
-                get
-                {
-                    if (f_secondsTotal)
-                        return _secondsTotal;
-                    _secondsTotal = (int) ((Angl / 6000));
-                    f_secondsTotal = true;
-                    return _secondsTotal;
-                }
-            }
-            private bool f_minutesTotal;
-            private int _minutesTotal;
-            public int MinutesTotal
-            {
-                get
-                {
-                    if (f_minutesTotal)
-                        return _minutesTotal;
-                    _minutesTotal = (int) ((SecondsTotal / 60));
-                    f_minutesTotal = true;
-                    return _minutesTotal;
-                }
-            }
-            private bool f_degreesTotal;
-            private int _degreesTotal;
-            public int DegreesTotal
-            {
-                get
-                {
-                    if (f_degreesTotal)
-                        return _degreesTotal;
-                    _degreesTotal = (int) ((MinutesTotal / 60));
-                    f_degreesTotal = true;
-                    return _degreesTotal;
-                }
-            }
-            private int _angl;
-            private Specpr m_root;
-            private Specpr.DataInitial m_parent;
+            <span class="k">public</span> <span class="nf">IllumAngle</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">DataInitial</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Specpr</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_secondsTotal</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_minutesTotal</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_degreesTotal</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_angl</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_secondsTotal</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_secondsTotal</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">SecondsTotal</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_secondsTotal</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_secondsTotal</span><span class="p">;</span>
+                    <span class="n">_secondsTotal</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">Angl</span> <span class="p">/</span> <span class="m">6000</span><span class="p">));</span>
+                    <span class="n">f_secondsTotal</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_secondsTotal</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_minutesTotal</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_minutesTotal</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">MinutesTotal</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_minutesTotal</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_minutesTotal</span><span class="p">;</span>
+                    <span class="n">_minutesTotal</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">SecondsTotal</span> <span class="p">/</span> <span class="m">60</span><span class="p">));</span>
+                    <span class="n">f_minutesTotal</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_minutesTotal</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_degreesTotal</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_degreesTotal</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">DegreesTotal</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_degreesTotal</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_degreesTotal</span><span class="p">;</span>
+                    <span class="n">_degreesTotal</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">MinutesTotal</span> <span class="p">/</span> <span class="m">60</span><span class="p">));</span>
+                    <span class="n">f_degreesTotal</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_degreesTotal</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_angl</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">DataInitial</span> <span class="n">m_parent</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// (Integer*4 number, in arc-seconds*6000). (90 degrees=1944000000; -90 deg &amp;lt;= angle &amp;lt;= 90 deg)
-            /// &lt;/summary&gt;
-            public int Angl { get { return _angl; } }
-            public Specpr M_Root { get { return m_root; } }
-            public Specpr.DataInitial M_Parent { get { return m_parent; } }
-        }
-        public partial class TextInitial : KaitaiStruct
-        {
-            public static TextInitial FromFile(string fileName)
-            {
-                return new TextInitial(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// (Integer*4 number, in arc-seconds*6000). (90 degrees=1944000000; -90 deg &amp;lt;= angle &amp;lt;= 90 deg)</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Angl</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_angl</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">DataInitial</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">TextInitial</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">TextInitial</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">TextInitial</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public TextInitial(KaitaiStream p__io, Specpr.Record p__parent = null, Specpr p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _ids = new Identifiers(m_io, this, m_root);
-                _itxtpt = m_io.ReadU4be();
-                _itxtch = m_io.ReadS4be();
-                _itext = System.Text.Encoding.GetEncoding(&quot;ascii&quot;).GetString(m_io.ReadBytes(1476));
-            }
-            private Identifiers _ids;
-            private uint _itxtpt;
-            private int _itxtch;
-            private string _itext;
-            private Specpr m_root;
-            private Specpr.Record m_parent;
-            public Identifiers Ids { get { return _ids; } }
+            <span class="k">public</span> <span class="nf">TextInitial</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">Record</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Specpr</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_ids</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Identifiers</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_itxtpt</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="n">_itxtch</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="n">_itext</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">1476</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Identifiers</span> <span class="n">_ids</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_itxtpt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_itxtch</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_itext</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">Record</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">Identifiers</span> <span class="n">Ids</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ids</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Text data record pointer. This pointer points  to a data record where additional text may be may be found.
-            /// &lt;/summary&gt;
-            public uint Itxtpt { get { return _itxtpt; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Text data record pointer. This pointer points  to a data record where additional text may be may be found.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Itxtpt</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_itxtpt</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// The number of text characters (maximum= 19860).
-            /// &lt;/summary&gt;
-            public int Itxtch { get { return _itxtch; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The number of text characters (maximum= 19860).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Itxtch</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_itxtch</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// 1476 characters of text.  Text has embedded newlines so the number of lines available is limited only by the number of characters available.
-            /// &lt;/summary&gt;
-            public string Itext { get { return _itext; } }
-            public Specpr M_Root { get { return m_root; } }
-            public Specpr.Record M_Parent { get { return m_parent; } }
-        }
-        public partial class Record : KaitaiStruct
-        {
-            public static Record FromFile(string fileName)
-            {
-                return new Record(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// 1476 characters of text.  Text has embedded newlines so the number of lines available is limited only by the number of characters available.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Itext</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_itext</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">Record</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Record</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Record</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Record</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Record(KaitaiStream p__io, Specpr p__parent = null, Specpr p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _icflag = new Icflag(m_io, this, m_root);
-                switch (Icflag.Type) {
-                case Specpr.RecordType.DataInitial: {
-                    __raw_content = m_io.ReadBytes((1536 - 4));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new DataInitial(io___raw_content, this, m_root);
-                    break;
-                }
-                case Specpr.RecordType.DataContinuation: {
-                    __raw_content = m_io.ReadBytes((1536 - 4));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new DataContinuation(io___raw_content, this, m_root);
-                    break;
-                }
-                case Specpr.RecordType.TextContinuation: {
-                    __raw_content = m_io.ReadBytes((1536 - 4));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new TextContinuation(io___raw_content, this, m_root);
-                    break;
-                }
-                case Specpr.RecordType.TextInitial: {
-                    __raw_content = m_io.ReadBytes((1536 - 4));
-                    var io___raw_content = new KaitaiStream(__raw_content);
-                    _content = new TextInitial(io___raw_content, this, m_root);
-                    break;
-                }
-                default: {
-                    _content = m_io.ReadBytes((1536 - 4));
-                    break;
-                }
-                }
-            }
-            private Icflag _icflag;
-            private object _content;
-            private Specpr m_root;
-            private Specpr m_parent;
-            private byte[] __raw_content;
+            <span class="k">public</span> <span class="nf">Record</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Specpr</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Specpr</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_icflag</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Icflag</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">Icflag</span><span class="p">.</span><span class="n">Type</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">RecordType</span><span class="p">.</span><span class="n">DataInitial</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_content</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="m">1536</span> <span class="p">-</span> <span class="m">4</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_content</span><span class="p">);</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DataInitial</span><span class="p">(</span><span class="n">io___raw_content</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">RecordType</span><span class="p">.</span><span class="n">DataContinuation</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_content</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="m">1536</span> <span class="p">-</span> <span class="m">4</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_content</span><span class="p">);</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DataContinuation</span><span class="p">(</span><span class="n">io___raw_content</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">RecordType</span><span class="p">.</span><span class="n">TextContinuation</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_content</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="m">1536</span> <span class="p">-</span> <span class="m">4</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_content</span><span class="p">);</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TextContinuation</span><span class="p">(</span><span class="n">io___raw_content</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">RecordType</span><span class="p">.</span><span class="n">TextInitial</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_content</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="m">1536</span> <span class="p">-</span> <span class="m">4</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_content</span><span class="p">);</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TextInitial</span><span class="p">(</span><span class="n">io___raw_content</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_content</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="m">1536</span> <span class="p">-</span> <span class="m">4</span><span class="p">));</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Icflag</span> <span class="n">_icflag</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">object</span> <span class="n">_content</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_content</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Total number of bytes comprising the document.
-            /// &lt;/summary&gt;
-            public Icflag Icflag { get { return _icflag; } }
-            public object Content { get { return _content; } }
-            public Specpr M_Root { get { return m_root; } }
-            public Specpr M_Parent { get { return m_parent; } }
-            public byte[] M_RawContent { get { return __raw_content; } }
-        }
-        public partial class TextContinuation : KaitaiStruct
-        {
-            public static TextContinuation FromFile(string fileName)
-            {
-                return new TextContinuation(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Total number of bytes comprising the document.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">Icflag</span> <span class="n">Icflag</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_icflag</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">object</span> <span class="n">Content</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_content</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawContent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_content</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">TextContinuation</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">TextContinuation</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">TextContinuation</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public TextContinuation(KaitaiStream p__io, Specpr.Record p__parent = null, Specpr p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _tdata = System.Text.Encoding.GetEncoding(&quot;ascii&quot;).GetString(m_io.ReadBytes(1532));
-            }
-            private string _tdata;
-            private Specpr m_root;
-            private Specpr.Record m_parent;
+            <span class="k">public</span> <span class="nf">TextContinuation</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">Record</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Specpr</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_tdata</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ascii&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">1532</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_tdata</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">Record</span> <span class="n">m_parent</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// 1532 characters of text.
-            /// &lt;/summary&gt;
-            public string Tdata { get { return _tdata; } }
-            public Specpr M_Root { get { return m_root; } }
-            public Specpr.Record M_Parent { get { return m_parent; } }
-        }
-        private List&lt;Record&gt; _records;
-        private Specpr m_root;
-        private KaitaiStruct m_parent;
-        public List&lt;Record&gt; Records { get { return _records; } }
-        public Specpr M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-    }
-}
-</code></pre>
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// 1532 characters of text.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Tdata</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tdata</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Specpr</span><span class="p">.</span><span class="n">Record</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Record</span><span class="p">&gt;</span> <span class="n">_records</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Specpr</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Record</span><span class="p">&gt;</span> <span class="n">Records</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_records</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Specpr</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -998,8 +995,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

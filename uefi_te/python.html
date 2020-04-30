@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -267,172 +264,169 @@ data = UefiTe(KaitaiStream(BytesIO(raw)))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="python"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-from pkg_resources import parse_version
-from kaitaistruct import __version__ as ks_version, KaitaiStruct, KaitaiStream, BytesIO
-from enum import Enum
-
-
-if parse_version(ks_version) &lt; parse_version(&#39;0.7&#39;):
-    raise Exception(&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have %s&quot; % (ks_version))
-
-class UefiTe(KaitaiStruct):
-    &quot;&quot;&quot;This type of executables could be found inside the UEFI firmware. The UEFI 
-    firmware is stored in SPI flash memory, which is a chip soldered on a 
-    system’s motherboard. UEFI firmware is very modular: it usually contains 
-    dozens, if not hundreds, of executables. To store all these separates files, 
-    the firmware is laid out in volumes using the Firmware File System (FFS), a 
-    file system specifically designed to store firmware images. The volumes 
-    contain files that are identified by GUIDs and each of these files contain 
-    one or more sections holding the data. One of these sections contains the 
-    actual executable image. Most of the executable images follow the PE format. 
-    However, some of them follow the TE format.
-    
-    The Terse Executable (TE) image format was created as a mechanism to reduce
-    the overhead of the PE/COFF headers in PE32/PE32+ images, resulting in a 
-    corresponding reduction of image sizes for executables running in the PI 
-    (Platform Initialization) Architecture environment. Reducing image size 
-    provides an opportunity for use of a smaller system flash part.
-    
-    So the TE format is basically a stripped version of PE.
-    
-    .. seealso::
-       Source - https://uefi.org/sites/default/files/resources/PI_Spec_1_6.pdf
-    &quot;&quot;&quot;
-    def __init__(self, _io, _parent=None, _root=None):
-        self._io = _io
-        self._parent = _parent
-        self._root = _root if _root else self
-        self._read()
-
-    def _read(self):
-        self._raw_te_hdr = self._io.read_bytes(40)
-        io = KaitaiStream(BytesIO(self._raw_te_hdr))
-        self.te_hdr = self._root.TeHeader(io, self, self._root)
-        self.sections = [None] * (self.te_hdr.num_sections)
-        for i in range(self.te_hdr.num_sections):
-            self.sections[i] = self._root.Section(self._io, self, self._root)
+<span class="kn">from</span> <span class="nn">pkg_resources</span> <span class="kn">import</span> <span class="n">parse_version</span>
+<span class="kn">from</span> <span class="nn">kaitaistruct</span> <span class="kn">import</span> <span class="n">__version__</span> <span class="k">as</span> <span class="n">ks_version</span><span class="p">,</span> <span class="n">KaitaiStruct</span><span class="p">,</span> <span class="n">KaitaiStream</span><span class="p">,</span> <span class="n">BytesIO</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
 
-    class TeHeader(KaitaiStruct):
+<span class="k">if</span> <span class="n">parse_version</span><span class="p">(</span><span class="n">ks_version</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">parse_version</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Incompatible Kaitai Struct Python API: 0.7 or later is required, but you have </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ks_version</span><span class="p">))</span>
 
-        class MachineType(Enum):
-            unknown = 0
-            i386 = 332
-            r4000 = 358
-            wcemipsv2 = 361
-            alpha = 388
-            sh3 = 418
-            sh3dsp = 419
-            sh4 = 422
-            sh5 = 424
-            arm = 448
-            thumb = 450
-            armnt = 452
-            am33 = 467
-            powerpc = 496
-            powerpcfp = 497
-            ia64 = 512
-            mips16 = 614
-            mipsfpu = 870
-            mipsfpu16 = 1126
-            ebc = 3772
-            riscv32 = 20530
-            riscv64 = 20580
-            riscv128 = 20776
-            amd64 = 34404
-            m32r = 36929
-            arm64 = 43620
+<span class="k">class</span> <span class="nc">UefiTe</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This type of executables could be found inside the UEFI firmware. The UEFI </span>
+<span class="sd">    firmware is stored in SPI flash memory, which is a chip soldered on a </span>
+<span class="sd">    system’s motherboard. UEFI firmware is very modular: it usually contains </span>
+<span class="sd">    dozens, if not hundreds, of executables. To store all these separates files, </span>
+<span class="sd">    the firmware is laid out in volumes using the Firmware File System (FFS), a </span>
+<span class="sd">    file system specifically designed to store firmware images. The volumes </span>
+<span class="sd">    contain files that are identified by GUIDs and each of these files contain </span>
+<span class="sd">    one or more sections holding the data. One of these sections contains the </span>
+<span class="sd">    actual executable image. Most of the executable images follow the PE format. </span>
+<span class="sd">    However, some of them follow the TE format.</span>
+<span class="sd">    </span>
+<span class="sd">    The Terse Executable (TE) image format was created as a mechanism to reduce</span>
+<span class="sd">    the overhead of the PE/COFF headers in PE32/PE32+ images, resulting in a </span>
+<span class="sd">    corresponding reduction of image sizes for executables running in the PI </span>
+<span class="sd">    (Platform Initialization) Architecture environment. Reducing image size </span>
+<span class="sd">    provides an opportunity for use of a smaller system flash part.</span>
+<span class="sd">    </span>
+<span class="sd">    So the TE format is basically a stripped version of PE.</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso::</span>
+<span class="sd">       Source - https://uefi.org/sites/default/files/resources/PI_Spec_1_6.pdf</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-        class SubsystemEnum(Enum):
-            unknown = 0
-            native = 1
-            windows_gui = 2
-            windows_cui = 3
-            posix_cui = 7
-            windows_ce_gui = 9
-            efi_application = 10
-            efi_boot_service_driver = 11
-            efi_runtime_driver = 12
-            efi_rom = 13
-            xbox = 14
-            windows_boot_application = 16
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.magic = self._io.ensure_fixed_contents(b&quot;\x56\x5A&quot;)
-            self.machine = self._root.TeHeader.MachineType(self._io.read_u2le())
-            self.num_sections = self._io.read_u1()
-            self.subsystem = self._root.TeHeader.SubsystemEnum(self._io.read_u1())
-            self.stripped_size = self._io.read_u2le()
-            self.entry_point_addr = self._io.read_u4le()
-            self.base_of_code = self._io.read_u4le()
-            self.image_base = self._io.read_u8le()
-            self.data_dirs = self._root.HeaderDataDirs(self._io, self, self._root)
+    <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_te_hdr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_te_hdr</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">te_hdr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">TeHeader</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sections</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">te_hdr</span><span class="o">.</span><span class="n">num_sections</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">te_hdr</span><span class="o">.</span><span class="n">num_sections</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">Section</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
 
-    class HeaderDataDirs(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+    <span class="k">class</span> <span class="nc">TeHeader</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
 
-        def _read(self):
-            self.base_relocation_table = self._root.DataDir(self._io, self, self._root)
-            self.debug = self._root.DataDir(self._io, self, self._root)
+        <span class="k">class</span> <span class="nc">MachineType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+            <span class="n">unknown</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">i386</span> <span class="o">=</span> <span class="mi">332</span>
+            <span class="n">r4000</span> <span class="o">=</span> <span class="mi">358</span>
+            <span class="n">wcemipsv2</span> <span class="o">=</span> <span class="mi">361</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="mi">388</span>
+            <span class="n">sh3</span> <span class="o">=</span> <span class="mi">418</span>
+            <span class="n">sh3dsp</span> <span class="o">=</span> <span class="mi">419</span>
+            <span class="n">sh4</span> <span class="o">=</span> <span class="mi">422</span>
+            <span class="n">sh5</span> <span class="o">=</span> <span class="mi">424</span>
+            <span class="n">arm</span> <span class="o">=</span> <span class="mi">448</span>
+            <span class="n">thumb</span> <span class="o">=</span> <span class="mi">450</span>
+            <span class="n">armnt</span> <span class="o">=</span> <span class="mi">452</span>
+            <span class="n">am33</span> <span class="o">=</span> <span class="mi">467</span>
+            <span class="n">powerpc</span> <span class="o">=</span> <span class="mi">496</span>
+            <span class="n">powerpcfp</span> <span class="o">=</span> <span class="mi">497</span>
+            <span class="n">ia64</span> <span class="o">=</span> <span class="mi">512</span>
+            <span class="n">mips16</span> <span class="o">=</span> <span class="mi">614</span>
+            <span class="n">mipsfpu</span> <span class="o">=</span> <span class="mi">870</span>
+            <span class="n">mipsfpu16</span> <span class="o">=</span> <span class="mi">1126</span>
+            <span class="n">ebc</span> <span class="o">=</span> <span class="mi">3772</span>
+            <span class="n">riscv32</span> <span class="o">=</span> <span class="mi">20530</span>
+            <span class="n">riscv64</span> <span class="o">=</span> <span class="mi">20580</span>
+            <span class="n">riscv128</span> <span class="o">=</span> <span class="mi">20776</span>
+            <span class="n">amd64</span> <span class="o">=</span> <span class="mi">34404</span>
+            <span class="n">m32r</span> <span class="o">=</span> <span class="mi">36929</span>
+            <span class="n">arm64</span> <span class="o">=</span> <span class="mi">43620</span>
+
+        <span class="k">class</span> <span class="nc">SubsystemEnum</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+            <span class="n">unknown</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">native</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">windows_gui</span> <span class="o">=</span> <span class="mi">2</span>
+            <span class="n">windows_cui</span> <span class="o">=</span> <span class="mi">3</span>
+            <span class="n">posix_cui</span> <span class="o">=</span> <span class="mi">7</span>
+            <span class="n">windows_ce_gui</span> <span class="o">=</span> <span class="mi">9</span>
+            <span class="n">efi_application</span> <span class="o">=</span> <span class="mi">10</span>
+            <span class="n">efi_boot_service_driver</span> <span class="o">=</span> <span class="mi">11</span>
+            <span class="n">efi_runtime_driver</span> <span class="o">=</span> <span class="mi">12</span>
+            <span class="n">efi_rom</span> <span class="o">=</span> <span class="mi">13</span>
+            <span class="n">xbox</span> <span class="o">=</span> <span class="mi">14</span>
+            <span class="n">windows_boot_application</span> <span class="o">=</span> <span class="mi">16</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">magic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x56\x5A</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">machine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">TeHeader</span><span class="o">.</span><span class="n">MachineType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_sections</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subsystem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">TeHeader</span><span class="o">.</span><span class="n">SubsystemEnum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stripped_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">entry_point_addr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">base_of_code</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">image_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_dirs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">HeaderDataDirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
 
-    class DataDir(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
+    <span class="k">class</span> <span class="nc">HeaderDataDirs</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-        def _read(self):
-            self.virtual_address = self._io.read_u4le()
-            self.size = self._io.read_u4le()
-
-
-    class Section(KaitaiStruct):
-        def __init__(self, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self._read()
-
-        def _read(self):
-            self.name = (KaitaiStream.bytes_strip_right(self._io.read_bytes(8), 0)).decode(u&quot;UTF-8&quot;)
-            self.virtual_size = self._io.read_u4le()
-            self.virtual_address = self._io.read_u4le()
-            self.size_of_raw_data = self._io.read_u4le()
-            self.pointer_to_raw_data = self._io.read_u4le()
-            self.pointer_to_relocations = self._io.read_u4le()
-            self.pointer_to_linenumbers = self._io.read_u4le()
-            self.num_relocations = self._io.read_u2le()
-            self.num_linenumbers = self._io.read_u2le()
-            self.characteristics = self._io.read_u4le()
-
-        @property
-        def body(self):
-            if hasattr(self, &#39;_m_body&#39;):
-                return self._m_body if hasattr(self, &#39;_m_body&#39;) else None
-
-            _pos = self._io.pos()
-            self._io.seek(((self.pointer_to_raw_data - self._root.te_hdr.stripped_size) + self._root.te_hdr._io.size()))
-            self._m_body = self._io.read_bytes(self.size_of_raw_data)
-            self._io.seek(_pos)
-            return self._m_body if hasattr(self, &#39;_m_body&#39;) else None
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">base_relocation_table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">DataDir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">DataDir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
 
+    <span class="k">class</span> <span class="nc">DataDir</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
 
-</code></pre>
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">virtual_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+
+    <span class="k">class</span> <span class="nc">Section</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="o">.</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">virtual_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">virtual_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">size_of_raw_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pointer_to_raw_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pointer_to_relocations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pointer_to_linenumbers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_relocations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_linenumbers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">characteristics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">body</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_body&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_body&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(((</span><span class="bp">self</span><span class="o">.</span><span class="n">pointer_to_raw_data</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">te_hdr</span><span class="o">.</span><span class="n">stripped_size</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">te_hdr</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">size</span><span class="p">()))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size_of_raw_data</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_body&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+</pre></div>
 
         </div>
         
@@ -459,8 +453,8 @@ class UefiTe(KaitaiStruct):
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

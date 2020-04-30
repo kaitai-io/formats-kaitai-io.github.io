@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -241,313 +238,313 @@ section#format-index .row {
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: png
-  title: PNG (Portable Network Graphics) file
-  file-extension: png
-  xref:
-    forensicswiki: Portable_Network_Graphics_(PNG)
-    iso: 15948:2004
-    justsolve: PNG
-    loc: fdd000153
-    mime: image/png
-    pronom:
-      - fmt/13
-      - fmt/12
-      - fmt/11
-    rfc: 2083
-    wikidata: Q178051
-  license: CC0-1.0
-  ks-version: 0.8
-  endian: be
-seq:
-  # https://www.w3.org/TR/PNG/#5PNG-file-signature
-  - id: magic
-    contents: [137, 80, 78, 71, 13, 10, 26, 10]
-  # https://www.w3.org/TR/PNG/#11IHDR
-  # Always appears first, stores values referenced by other chunks
-  - id: ihdr_len
-    contents: [0, 0, 0, 13]
-  - id: ihdr_type
-    contents: &quot;IHDR&quot;
-  - id: ihdr
-    type: ihdr_chunk
-  - id: ihdr_crc
-    size: 4
-  # The rest of the chunks
-  - id: chunks
-    type: chunk
-    repeat: until
-    repeat-until: _.type == &quot;IEND&quot; or _io.eof
-types:
-  chunk:
-    seq:
-      - id: len
-        type: u4
-      - id: type
-        type: str
-        size: 4
-        encoding: UTF-8
-      - id: body
-        size: len
-        type:
-          switch-on: type
-          cases:
-            # Critical chunks
-            # &#39;&quot;IHDR&quot;&#39;: ihdr_chunk
-            &#39;&quot;PLTE&quot;&#39;: plte_chunk
-            # IDAT = raw
-            # IEND = empty, thus raw
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">png</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PNG (Portable Network Graphics) file</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">png</span>
+  <span class="nt">xref</span><span class="p">:</span>
+    <span class="nt">forensicswiki</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Portable_Network_Graphics_(PNG)</span>
+    <span class="nt">iso</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">15948:2004</span>
+    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PNG</span>
+    <span class="nt">loc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fdd000153</span>
+    <span class="nt">mime</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image/png</span>
+    <span class="nt">pronom</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">fmt/13</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">fmt/12</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">fmt/11</span>
+    <span class="nt">rfc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2083</span>
+    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q178051</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.8</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="c1"># https://www.w3.org/TR/PNG/#5PNG-file-signature</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+    <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">137</span><span class="p p-Indicator">,</span> <span class="nv">80</span><span class="p p-Indicator">,</span> <span class="nv">78</span><span class="p p-Indicator">,</span> <span class="nv">71</span><span class="p p-Indicator">,</span> <span class="nv">13</span><span class="p p-Indicator">,</span> <span class="nv">10</span><span class="p p-Indicator">,</span> <span class="nv">26</span><span class="p p-Indicator">,</span> <span class="nv">10</span><span class="p p-Indicator">]</span>
+  <span class="c1"># https://www.w3.org/TR/PNG/#11IHDR</span>
+  <span class="c1"># Always appears first, stores values referenced by other chunks</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ihdr_len</span>
+    <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">13</span><span class="p p-Indicator">]</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ihdr_type</span>
+    <span class="nt">contents</span><span class="p">:</span> <span class="s">&quot;IHDR&quot;</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ihdr</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ihdr_chunk</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ihdr_crc</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+  <span class="c1"># The rest of the chunks</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chunks</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chunk</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">until</span>
+    <span class="nt">repeat-until</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_.type == &quot;IEND&quot; or _io.eof</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">chunk</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="c1"># Critical chunks</span>
+            <span class="c1"># &#39;&quot;IHDR&quot;&#39;: ihdr_chunk</span>
+            <span class="s">&#39;&quot;PLTE&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">plte_chunk</span>
+            <span class="c1"># IDAT = raw</span>
+            <span class="c1"># IEND = empty, thus raw</span>
 
-            # Ancillary chunks
-            &#39;&quot;cHRM&quot;&#39;: chrm_chunk
-            &#39;&quot;gAMA&quot;&#39;: gama_chunk
-            # iCCP
-            # sBIT
-            &#39;&quot;sRGB&quot;&#39;: srgb_chunk
-            &#39;&quot;bKGD&quot;&#39;: bkgd_chunk
-            # hIST
-            # tRNS
-            &#39;&quot;pHYs&quot;&#39;: phys_chunk
-            # sPLT
-            &#39;&quot;tIME&quot;&#39;: time_chunk
-            &#39;&quot;iTXt&quot;&#39;: international_text_chunk
-            &#39;&quot;tEXt&quot;&#39;: text_chunk
-            &#39;&quot;zTXt&quot;&#39;: compressed_text_chunk
-      - id: crc
-        size: 4
-  ihdr_chunk:
-    doc-ref: https://www.w3.org/TR/PNG/#11IHDR
-    seq:
-      - id: width
-        type: u4
-      - id: height
-        type: u4
-      - id: bit_depth
-        type: u1
-      - id: color_type
-        type: u1
-        enum: color_type
-      - id: compression_method
-        type: u1
-      - id: filter_method
-        type: u1
-      - id: interlace_method
-        type: u1
-  plte_chunk:
-    doc-ref: https://www.w3.org/TR/PNG/#11PLTE
-    seq:
-      - id: entries
-        type: rgb
-        repeat: eos
-  rgb:
-    seq:
-      - id: r
-        type: u1
-      - id: g
-        type: u1
-      - id: b
-        type: u1
-  chrm_chunk:
-    doc-ref: https://www.w3.org/TR/PNG/#11cHRM
-    seq:
-      - id: white_point
-        type: point
-      - id: red
-        type: point
-      - id: green
-        type: point
-      - id: blue
-        type: point
-  point:
-    seq:
-      - id: x_int
-        type: u4
-      - id: y_int
-        type: u4
-    instances:
-      x:
-        value: x_int / 100000.0
-      y:
-        value: y_int / 100000.0
-  gama_chunk:
-    doc-ref: https://www.w3.org/TR/PNG/#11gAMA
-    seq:
-      - id: gamma_int
-        type: u4
-    instances:
-      gamma_ratio:
-        value: 100000.0 / gamma_int
-  srgb_chunk:
-    doc-ref: https://www.w3.org/TR/PNG/#11sRGB
-    seq:
-      - id: render_intent
-        type: u1
-        enum: intent
-    enums:
-      intent:
-        0: perceptual
-        1: relative_colorimetric
-        2: saturation
-        3: absolute_colorimetric
-  bkgd_chunk:
-    doc: |
-      Background chunk stores default background color to display this
-      image against. Contents depend on `color_type` of the image.
-    doc-ref: https://www.w3.org/TR/PNG/#11bKGD
-    seq:
-      - id: bkgd
-        type:
-          switch-on: _root.ihdr.color_type
-          cases:
-            color_type::greyscale: bkgd_greyscale
-            color_type::greyscale_alpha: bkgd_greyscale
-            color_type::truecolor: bkgd_truecolor
-            color_type::truecolor_alpha: bkgd_truecolor
-            color_type::indexed: bkgd_indexed
-  bkgd_greyscale:
-    doc: Background chunk for greyscale images.
-    seq:
-      - id: value
-        type: u2
-  bkgd_truecolor:
-    doc: Background chunk for truecolor images.
-    seq:
-      - id: red
-        type: u2
-      - id: green
-        type: u2
-      - id: blue
-        type: u2
-  bkgd_indexed:
-    doc: Background chunk for images with indexed palette.
-    seq:
-      - id: palette_index
-        type: u1
-  phys_chunk:
-    doc: |
-      &quot;Physical size&quot; chunk stores data that allows to translate
-      logical pixels into physical units (meters, etc) and vice-versa.
-    doc-ref: https://www.w3.org/TR/PNG/#11pHYs
-    seq:
-      - id: pixels_per_unit_x
-        type: u4
-        doc: |
-          Number of pixels per physical unit (typically, 1 meter) by X
-          axis.
-      - id: pixels_per_unit_y
-        type: u4
-        doc: |
-          Number of pixels per physical unit (typically, 1 meter) by Y
-          axis.
-      - id: unit
-        type: u1
-        enum: phys_unit
-  time_chunk:
-    doc: |
-      Time chunk stores time stamp of last modification of this image,
-      up to 1 second precision in UTC timezone.
-    doc-ref: https://www.w3.org/TR/PNG/#11tIME
-    seq:
-      - id: year
-        type: u2
-      - id: month
-        type: u1
-      - id: day
-        type: u1
-      - id: hour
-        type: u1
-      - id: minute
-        type: u1
-      - id: second
-        type: u1
-  international_text_chunk:
-    doc: |
-      International text chunk effectively allows to store key-value string pairs in
-      PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are
-      given in pre-defined subset of iso8859-1 without control
-      characters.
-    doc-ref: https://www.w3.org/TR/PNG/#11iTXt
-    seq:
-      - id: keyword
-        type: strz
-        encoding: UTF-8
-        doc: Indicates purpose of the following text data.
-      - id: compression_flag
-        type: u1
-        doc: |
-          0 = text is uncompressed, 1 = text is compressed with a
-          method specified in `compression_method`.
-      - id: compression_method
-        type: u1
-        enum: compression_methods
-      - id: language_tag
-        type: strz
-        encoding: ASCII
-        doc: |
-          Human language used in `translated_keyword` and `text`
-          attributes - should be a language code conforming to ISO
-          646.IRV:1991.
-      - id: translated_keyword
-        type: strz
-        encoding: UTF-8
-        doc: |
-          Keyword translated into language specified in
-          `language_tag`. Line breaks are not allowed.
-      - id: text
-        type: str
-        encoding: UTF-8
-        size-eos: true
-        doc: |
-          Text contents (&quot;value&quot; of this key-value pair), written in
-          language specified in `language_tag`. Linke breaks are
-          allowed.
-  text_chunk:
-    doc: |
-      Text chunk effectively allows to store key-value string pairs in
-      PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are
-      given in pre-defined subset of iso8859-1 without control
-      characters.
-    doc-ref: https://www.w3.org/TR/PNG/#11tEXt
-    seq:
-      - id: keyword
-        type: strz
-        encoding: iso8859-1
-        doc: Indicates purpose of the following text data.
-      - id: text
-        type: str
-        size-eos: true
-        encoding: iso8859-1
-  compressed_text_chunk:
-    doc: |
-      Compressed text chunk effectively allows to store key-value
-      string pairs in PNG container, compressing &quot;value&quot; part (which
-      can be quite lengthy) with zlib compression.
-    doc-ref: https://www.w3.org/TR/PNG/#11zTXt
-    seq:
-      - id: keyword
-        type: strz
-        encoding: UTF-8
-        doc: Indicates purpose of the following text data.
-      - id: compression_method
-        type: u1
-        enum: compression_methods
-      - id: text_datastream
-        process: zlib
-        size-eos: true
-enums:
-  color_type:
-    0: greyscale
-    2: truecolor
-    3: indexed
-    4: greyscale_alpha
-    6: truecolor_alpha
-  phys_unit:
-    0: unknown
-    1: meter
-  compression_methods:
-    0: zlib
-</code></pre>
+            <span class="c1"># Ancillary chunks</span>
+            <span class="s">&#39;&quot;cHRM&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">chrm_chunk</span>
+            <span class="s">&#39;&quot;gAMA&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">gama_chunk</span>
+            <span class="c1"># iCCP</span>
+            <span class="c1"># sBIT</span>
+            <span class="s">&#39;&quot;sRGB&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">srgb_chunk</span>
+            <span class="s">&#39;&quot;bKGD&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bkgd_chunk</span>
+            <span class="c1"># hIST</span>
+            <span class="c1"># tRNS</span>
+            <span class="s">&#39;&quot;pHYs&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">phys_chunk</span>
+            <span class="c1"># sPLT</span>
+            <span class="s">&#39;&quot;tIME&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">time_chunk</span>
+            <span class="s">&#39;&quot;iTXt&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">international_text_chunk</span>
+            <span class="s">&#39;&quot;tEXt&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">text_chunk</span>
+            <span class="s">&#39;&quot;zTXt&quot;&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">compressed_text_chunk</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">crc</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+  <span class="nt">ihdr_chunk</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/PNG/#11IHDR</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">width</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">height</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bit_depth</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">color_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">color_type</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression_method</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filter_method</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">interlace_method</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+  <span class="nt">plte_chunk</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/PNG/#11PLTE</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rgb</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+  <span class="nt">rgb</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">r</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">g</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+  <span class="nt">chrm_chunk</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/PNG/#11cHRM</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">white_point</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">point</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">red</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">point</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">green</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">point</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blue</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">point</span>
+  <span class="nt">point</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x_int</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y_int</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">x</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x_int / 100000.0</span>
+      <span class="nt">y</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">y_int / 100000.0</span>
+  <span class="nt">gama_chunk</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/PNG/#11gAMA</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gamma_int</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">gamma_ratio</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100000.0 / gamma_int</span>
+  <span class="nt">srgb_chunk</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/PNG/#11sRGB</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">render_intent</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">intent</span>
+    <span class="nt">enums</span><span class="p">:</span>
+      <span class="nt">intent</span><span class="p">:</span>
+        <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">perceptual</span>
+        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">relative_colorimetric</span>
+        <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">saturation</span>
+        <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">absolute_colorimetric</span>
+  <span class="nt">bkgd_chunk</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Background chunk stores default background color to display this</span>
+      <span class="no">image against. Contents depend on `color_type` of the image.</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/PNG/#11bKGD</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bkgd</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.ihdr.color_type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">color_type::greyscale</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bkgd_greyscale</span>
+            <span class="l l-Scalar l-Scalar-Plain">color_type::greyscale_alpha</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bkgd_greyscale</span>
+            <span class="l l-Scalar l-Scalar-Plain">color_type::truecolor</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bkgd_truecolor</span>
+            <span class="l l-Scalar l-Scalar-Plain">color_type::truecolor_alpha</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bkgd_truecolor</span>
+            <span class="l l-Scalar l-Scalar-Plain">color_type::indexed</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bkgd_indexed</span>
+  <span class="nt">bkgd_greyscale</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Background chunk for greyscale images.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+  <span class="nt">bkgd_truecolor</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Background chunk for truecolor images.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">red</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">green</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blue</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+  <span class="nt">bkgd_indexed</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Background chunk for images with indexed palette.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">palette_index</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+  <span class="nt">phys_chunk</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">&quot;Physical size&quot; chunk stores data that allows to translate</span>
+      <span class="no">logical pixels into physical units (meters, etc) and vice-versa.</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/PNG/#11pHYs</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pixels_per_unit_x</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Number of pixels per physical unit (typically, 1 meter) by X</span>
+          <span class="no">axis.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pixels_per_unit_y</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Number of pixels per physical unit (typically, 1 meter) by Y</span>
+          <span class="no">axis.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unit</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">phys_unit</span>
+  <span class="nt">time_chunk</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Time chunk stores time stamp of last modification of this image,</span>
+      <span class="no">up to 1 second precision in UTC timezone.</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/PNG/#11tIME</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">year</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">month</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">day</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hour</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minute</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">second</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+  <span class="nt">international_text_chunk</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">International text chunk effectively allows to store key-value string pairs in</span>
+      <span class="no">PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
+      <span class="no">given in pre-defined subset of iso8859-1 without control</span>
+      <span class="no">characters.</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/PNG/#11iTXt</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">keyword</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Indicates purpose of the following text data.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression_flag</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">0 = text is uncompressed, 1 = text is compressed with a</span>
+          <span class="no">method specified in `compression_method`.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression_method</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression_methods</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">language_tag</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Human language used in `translated_keyword` and `text`</span>
+          <span class="no">attributes - should be a language code conforming to ISO</span>
+          <span class="no">646.IRV:1991.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">translated_keyword</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Keyword translated into language specified in</span>
+          <span class="no">`language_tag`. Line breaks are not allowed.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">text</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+        <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Text contents (&quot;value&quot; of this key-value pair), written in</span>
+          <span class="no">language specified in `language_tag`. Linke breaks are</span>
+          <span class="no">allowed.</span>
+  <span class="nt">text_chunk</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Text chunk effectively allows to store key-value string pairs in</span>
+      <span class="no">PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
+      <span class="no">given in pre-defined subset of iso8859-1 without control</span>
+      <span class="no">characters.</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/PNG/#11tEXt</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">keyword</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iso8859-1</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Indicates purpose of the following text data.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">text</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iso8859-1</span>
+  <span class="nt">compressed_text_chunk</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Compressed text chunk effectively allows to store key-value</span>
+      <span class="no">string pairs in PNG container, compressing &quot;value&quot; part (which</span>
+      <span class="no">can be quite lengthy) with zlib compression.</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.w3.org/TR/PNG/#11zTXt</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">keyword</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Indicates purpose of the following text data.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression_method</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression_methods</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">text_datastream</span>
+        <span class="nt">process</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zlib</span>
+        <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">color_type</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">greyscale</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">truecolor</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">indexed</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">greyscale_alpha</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">truecolor_alpha</span>
+  <span class="nt">phys_unit</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">meter</span>
+  <span class="nt">compression_methods</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zlib</span>
+</pre></div>
     </div>
 </section>
 
@@ -571,8 +568,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

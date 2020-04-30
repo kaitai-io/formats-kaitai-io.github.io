@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -264,249 +261,249 @@ data = Avi.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# @see https://msdn.microsoft.com/en-us/library/ms779636.aspx Source
-class Avi &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms779636.aspx Source</span>
+<span class="k">class</span> <span class="nc">Avi</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  CHUNK_TYPE = {
-    829973609 =&gt; :chunk_type_idx1,
-    1263424842 =&gt; :chunk_type_junk,
-    1330007625 =&gt; :chunk_type_info,
-    1413894985 =&gt; :chunk_type_isft,
-    1414744396 =&gt; :chunk_type_list,
-    1718776947 =&gt; :chunk_type_strf,
-    1751742049 =&gt; :chunk_type_avih,
-    1752331379 =&gt; :chunk_type_strh,
-    1769369453 =&gt; :chunk_type_movi,
-    1819436136 =&gt; :chunk_type_hdrl,
-    1819440243 =&gt; :chunk_type_strl,
-  }
-  I__CHUNK_TYPE = CHUNK_TYPE.invert
+  <span class="no">CHUNK_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">829973609</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_idx1</span><span class="p">,</span>
+    <span class="mi">1263424842</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_junk</span><span class="p">,</span>
+    <span class="mi">1330007625</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_info</span><span class="p">,</span>
+    <span class="mi">1413894985</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_isft</span><span class="p">,</span>
+    <span class="mi">1414744396</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_list</span><span class="p">,</span>
+    <span class="mi">1718776947</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_strf</span><span class="p">,</span>
+    <span class="mi">1751742049</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_avih</span><span class="p">,</span>
+    <span class="mi">1752331379</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_strh</span><span class="p">,</span>
+    <span class="mi">1769369453</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_movi</span><span class="p">,</span>
+    <span class="mi">1819436136</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_hdrl</span><span class="p">,</span>
+    <span class="mi">1819440243</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_strl</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__CHUNK_TYPE</span> <span class="o">=</span> <span class="no">CHUNK_TYPE</span><span class="o">.</span><span class="n">invert</span>
 
-  STREAM_TYPE = {
-    1935960429 =&gt; :stream_type_mids,
-    1935960438 =&gt; :stream_type_vids,
-    1935963489 =&gt; :stream_type_auds,
-    1937012852 =&gt; :stream_type_txts,
-  }
-  I__STREAM_TYPE = STREAM_TYPE.invert
+  <span class="no">STREAM_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">1935960429</span> <span class="o">=&gt;</span> <span class="ss">:stream_type_mids</span><span class="p">,</span>
+    <span class="mi">1935960438</span> <span class="o">=&gt;</span> <span class="ss">:stream_type_vids</span><span class="p">,</span>
+    <span class="mi">1935963489</span> <span class="o">=&gt;</span> <span class="ss">:stream_type_auds</span><span class="p">,</span>
+    <span class="mi">1937012852</span> <span class="o">=&gt;</span> <span class="ss">:stream_type_txts</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__STREAM_TYPE</span> <span class="o">=</span> <span class="no">STREAM_TYPE</span><span class="o">.</span><span class="n">invert</span>
 
-  HANDLER_TYPE = {
-    85 =&gt; :handler_type_mp3,
-    8192 =&gt; :handler_type_ac3,
-    8193 =&gt; :handler_type_dts,
-    1684633187 =&gt; :handler_type_cvid,
-    1684633208 =&gt; :handler_type_xvid,
-  }
-  I__HANDLER_TYPE = HANDLER_TYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">HANDLER_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">85</span> <span class="o">=&gt;</span> <span class="ss">:handler_type_mp3</span><span class="p">,</span>
+    <span class="mi">8192</span> <span class="o">=&gt;</span> <span class="ss">:handler_type_ac3</span><span class="p">,</span>
+    <span class="mi">8193</span> <span class="o">=&gt;</span> <span class="ss">:handler_type_dts</span><span class="p">,</span>
+    <span class="mi">1684633187</span> <span class="o">=&gt;</span> <span class="ss">:handler_type_cvid</span><span class="p">,</span>
+    <span class="mi">1684633208</span> <span class="o">=&gt;</span> <span class="ss">:handler_type_xvid</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__HANDLER_TYPE</span> <span class="o">=</span> <span class="no">HANDLER_TYPE</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @magic1 = @_io.ensure_fixed_contents([82, 73, 70, 70].pack(&#39;C*&#39;))
-    @file_size = @_io.read_u4le
-    @magic2 = @_io.ensure_fixed_contents([65, 86, 73, 32].pack(&#39;C*&#39;))
-    @_raw_data = @_io.read_bytes((file_size - 4))
-    io = Kaitai::Struct::Stream.new(@_raw_data)
-    @data = Blocks.new(io, self, @_root)
-    self
-  end
-  class ListBody &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@magic1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">82</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">70</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+    <span class="vi">@file_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+    <span class="vi">@magic2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">65</span><span class="p">,</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">32</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+    <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">file_size</span> <span class="o">-</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+    <span class="vi">@data</span> <span class="o">=</span> <span class="no">Blocks</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ListBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @list_type = Kaitai::Struct::Stream::resolve_enum(CHUNK_TYPE, @_io.read_u4le)
-      @data = Blocks.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :list_type
-    attr_reader :data
-  end
-  class Rect &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@list_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">CHUNK_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
+      <span class="vi">@data</span> <span class="o">=</span> <span class="no">Blocks</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:list_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Rect</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @left = @_io.read_s2le
-      @top = @_io.read_s2le
-      @right = @_io.read_s2le
-      @bottom = @_io.read_s2le
-      self
-    end
-    attr_reader :left
-    attr_reader :top
-    attr_reader :right
-    attr_reader :bottom
-  end
-  class Blocks &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@left</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="vi">@top</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="vi">@right</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="vi">@bottom</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:left</span>
+    <span class="kp">attr_reader</span> <span class="ss">:top</span>
+    <span class="kp">attr_reader</span> <span class="ss">:right</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bottom</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Blocks</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @entries = []
-      i = 0
-      while not @_io.eof?
-        @entries &lt;&lt; Block.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :entries
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+        <span class="vi">@entries</span> <span class="o">&lt;&lt;</span> <span class="no">Block</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:entries</span>
+  <span class="k">end</span>
 
-  ##
-  # Main header of an AVI file, defined as AVIMAINHEADER structure
-  # @see https://msdn.microsoft.com/en-us/library/ms779632.aspx Source
-  class AvihBody &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Main header of an AVI file, defined as AVIMAINHEADER structure</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms779632.aspx Source</span>
+  <span class="k">class</span> <span class="nc">AvihBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @micro_sec_per_frame = @_io.read_u4le
-      @max_bytes_per_sec = @_io.read_u4le
-      @padding_granularity = @_io.read_u4le
-      @flags = @_io.read_u4le
-      @total_frames = @_io.read_u4le
-      @initial_frames = @_io.read_u4le
-      @streams = @_io.read_u4le
-      @suggested_buffer_size = @_io.read_u4le
-      @width = @_io.read_u4le
-      @height = @_io.read_u4le
-      @reserved = @_io.read_bytes(16)
-      self
-    end
-    attr_reader :micro_sec_per_frame
-    attr_reader :max_bytes_per_sec
-    attr_reader :padding_granularity
-    attr_reader :flags
-    attr_reader :total_frames
-    attr_reader :initial_frames
-    attr_reader :streams
-    attr_reader :suggested_buffer_size
-    attr_reader :width
-    attr_reader :height
-    attr_reader :reserved
-  end
-  class Block &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@micro_sec_per_frame</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@max_bytes_per_sec</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@padding_granularity</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@total_frames</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@initial_frames</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@streams</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@suggested_buffer_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@width</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@height</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:micro_sec_per_frame</span>
+    <span class="kp">attr_reader</span> <span class="ss">:max_bytes_per_sec</span>
+    <span class="kp">attr_reader</span> <span class="ss">:padding_granularity</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:total_frames</span>
+    <span class="kp">attr_reader</span> <span class="ss">:initial_frames</span>
+    <span class="kp">attr_reader</span> <span class="ss">:streams</span>
+    <span class="kp">attr_reader</span> <span class="ss">:suggested_buffer_size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:width</span>
+    <span class="kp">attr_reader</span> <span class="ss">:height</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Block</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @four_cc = Kaitai::Struct::Stream::resolve_enum(CHUNK_TYPE, @_io.read_u4le)
-      @block_size = @_io.read_u4le
-      case four_cc
-      when :chunk_type_list
-        @_raw_data = @_io.read_bytes(block_size)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = ListBody.new(io, self, @_root)
-      when :chunk_type_avih
-        @_raw_data = @_io.read_bytes(block_size)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = AvihBody.new(io, self, @_root)
-      when :chunk_type_strh
-        @_raw_data = @_io.read_bytes(block_size)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = StrhBody.new(io, self, @_root)
-      else
-        @data = @_io.read_bytes(block_size)
-      end
-      self
-    end
-    attr_reader :four_cc
-    attr_reader :block_size
-    attr_reader :data
-    attr_reader :_raw_data
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@four_cc</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">CHUNK_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
+      <span class="vi">@block_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">case</span> <span class="n">four_cc</span>
+      <span class="k">when</span> <span class="ss">:chunk_type_list</span>
+        <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">block_size</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="no">ListBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:chunk_type_avih</span>
+        <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">block_size</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="no">AvihBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:chunk_type_strh</span>
+        <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">block_size</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="no">StrhBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">block_size</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:four_cc</span>
+    <span class="kp">attr_reader</span> <span class="ss">:block_size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_data</span>
+  <span class="k">end</span>
 
-  ##
-  # Stream header (one header per stream), defined as AVISTREAMHEADER structure
-  # @see https://msdn.microsoft.com/en-us/library/ms779638.aspx Source
-  class StrhBody &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Stream header (one header per stream), defined as AVISTREAMHEADER structure</span>
+  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms779638.aspx Source</span>
+  <span class="k">class</span> <span class="nc">StrhBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @fcc_type = Kaitai::Struct::Stream::resolve_enum(STREAM_TYPE, @_io.read_u4le)
-      @fcc_handler = Kaitai::Struct::Stream::resolve_enum(HANDLER_TYPE, @_io.read_u4le)
-      @flags = @_io.read_u4le
-      @priority = @_io.read_u2le
-      @language = @_io.read_u2le
-      @initial_frames = @_io.read_u4le
-      @scale = @_io.read_u4le
-      @rate = @_io.read_u4le
-      @start = @_io.read_u4le
-      @length = @_io.read_u4le
-      @suggested_buffer_size = @_io.read_u4le
-      @quality = @_io.read_u4le
-      @sample_size = @_io.read_u4le
-      @frame = Rect.new(@_io, self, @_root)
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@fcc_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">STREAM_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
+      <span class="vi">@fcc_handler</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">HANDLER_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@priority</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@language</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@initial_frames</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@scale</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@rate</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@start</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@suggested_buffer_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@quality</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@sample_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@frame</span> <span class="o">=</span> <span class="no">Rect</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Type of the data contained in the stream
-    attr_reader :fcc_type
+    <span class="c1">##</span>
+    <span class="c1"># Type of the data contained in the stream</span>
+    <span class="kp">attr_reader</span> <span class="ss">:fcc_type</span>
 
-    ##
-    # Type of preferred data handler for the stream (specifies codec for audio / video streams)
-    attr_reader :fcc_handler
-    attr_reader :flags
-    attr_reader :priority
-    attr_reader :language
-    attr_reader :initial_frames
-    attr_reader :scale
-    attr_reader :rate
-    attr_reader :start
-    attr_reader :length
-    attr_reader :suggested_buffer_size
-    attr_reader :quality
-    attr_reader :sample_size
-    attr_reader :frame
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Type of preferred data handler for the stream (specifies codec for audio / video streams)</span>
+    <span class="kp">attr_reader</span> <span class="ss">:fcc_handler</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:priority</span>
+    <span class="kp">attr_reader</span> <span class="ss">:language</span>
+    <span class="kp">attr_reader</span> <span class="ss">:initial_frames</span>
+    <span class="kp">attr_reader</span> <span class="ss">:scale</span>
+    <span class="kp">attr_reader</span> <span class="ss">:rate</span>
+    <span class="kp">attr_reader</span> <span class="ss">:start</span>
+    <span class="kp">attr_reader</span> <span class="ss">:length</span>
+    <span class="kp">attr_reader</span> <span class="ss">:suggested_buffer_size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:quality</span>
+    <span class="kp">attr_reader</span> <span class="ss">:sample_size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:frame</span>
+  <span class="k">end</span>
 
-  ##
-  # Stream format description
-  class StrfBody &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Stream format description</span>
+  <span class="k">class</span> <span class="nc">StrfBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      self
-    end
-  end
-  attr_reader :magic1
-  attr_reader :file_size
-  attr_reader :magic2
-  attr_reader :data
-  attr_reader :_raw_data
-end
-</code></pre>
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:magic1</span>
+  <span class="kp">attr_reader</span> <span class="ss">:file_size</span>
+  <span class="kp">attr_reader</span> <span class="ss">:magic2</span>
+  <span class="kp">attr_reader</span> <span class="ss">:data</span>
+  <span class="kp">attr_reader</span> <span class="ss">:_raw_data</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -533,8 +530,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

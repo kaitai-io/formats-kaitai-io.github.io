@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -246,109 +243,109 @@ which are pointed to by original (&quot;primary&quot;) partitions in MBR.</p>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * MBR (Master Boot Record) partition table is a traditional way of
- * MS-DOS to partition larger hard disc drives into distinct
- * partitions.
- * 
- * This table is stored in the end of the boot sector (first sector) of
- * the drive, after the bootstrap code. Original DOS 2.0 specification
- * allowed only 4 partitions per disc, but DOS 3.2 introduced concept
- * of &quot;extended partitions&quot;, which work as nested extra &quot;boot records&quot;
- * which are pointed to by original (&quot;primary&quot;) partitions in MBR.
- */
+<span class="sd">/**</span>
+<span class="sd"> * MBR (Master Boot Record) partition table is a traditional way of</span>
+<span class="sd"> * MS-DOS to partition larger hard disc drives into distinct</span>
+<span class="sd"> * partitions.</span>
+<span class="sd"> * </span>
+<span class="sd"> * This table is stored in the end of the boot sector (first sector) of</span>
+<span class="sd"> * the drive, after the bootstrap code. Original DOS 2.0 specification</span>
+<span class="sd"> * allowed only 4 partitions per disc, but DOS 3.2 introduced concept</span>
+<span class="sd"> * of &quot;extended partitions&quot;, which work as nested extra &quot;boot records&quot;</span>
+<span class="sd"> * which are pointed to by original (&quot;primary&quot;) partitions in MBR.</span>
+<span class="sd"> */</span>
 
-class MbrPartitionTable extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MbrPartitionTable $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">MbrPartitionTable</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MbrPartitionTable</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_bootstrapCode = $this-&gt;_io-&gt;readBytes(446);
-        $this-&gt;_m_partitions = [];
-        $n = 4;
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_partitions[] = new \MbrPartitionTable\PartitionEntry($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        $this-&gt;_m_bootSignature = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x55\xAA&quot;);
-    }
-    protected $_m_bootstrapCode;
-    protected $_m_partitions;
-    protected $_m_bootSignature;
-    public function bootstrapCode() { return $this-&gt;_m_bootstrapCode; }
-    public function partitions() { return $this-&gt;_m_partitions; }
-    public function bootSignature() { return $this-&gt;_m_bootSignature; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bootstrapCode</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">446</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_partitions</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_partitions</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MbrPartitionTable\PartitionEntry</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bootSignature</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x55\xAA</span><span class="s2">&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_bootstrapCode</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_partitions</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_bootSignature</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">bootstrapCode</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bootstrapCode</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">partitions</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_partitions</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">bootSignature</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bootSignature</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \MbrPartitionTable;
+<span class="k">namespace</span> <span class="nx">\MbrPartitionTable</span><span class="p">;</span>
 
-class PartitionEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \MbrPartitionTable $_parent = null, \MbrPartitionTable $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">PartitionEntry</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MbrPartitionTable</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MbrPartitionTable</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_status = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_chsStart = new \MbrPartitionTable\Chs($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_partitionType = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_chsEnd = new \MbrPartitionTable\Chs($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_lbaStart = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_numSectors = $this-&gt;_io-&gt;readU4le();
-    }
-    protected $_m_status;
-    protected $_m_chsStart;
-    protected $_m_partitionType;
-    protected $_m_chsEnd;
-    protected $_m_lbaStart;
-    protected $_m_numSectors;
-    public function status() { return $this-&gt;_m_status; }
-    public function chsStart() { return $this-&gt;_m_chsStart; }
-    public function partitionType() { return $this-&gt;_m_partitionType; }
-    public function chsEnd() { return $this-&gt;_m_chsEnd; }
-    public function lbaStart() { return $this-&gt;_m_lbaStart; }
-    public function numSectors() { return $this-&gt;_m_numSectors; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_status</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chsStart</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MbrPartitionTable\Chs</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_partitionType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chsEnd</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MbrPartitionTable\Chs</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lbaStart</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numSectors</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_status</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_chsStart</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_partitionType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_chsEnd</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lbaStart</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numSectors</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">status</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_status</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">chsStart</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chsStart</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">partitionType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_partitionType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">chsEnd</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chsEnd</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lbaStart</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lbaStart</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numSectors</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numSectors</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \MbrPartitionTable;
+<span class="k">namespace</span> <span class="nx">\MbrPartitionTable</span><span class="p">;</span>
 
-class Chs extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \MbrPartitionTable\PartitionEntry $_parent = null, \MbrPartitionTable $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Chs</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MbrPartitionTable\PartitionEntry</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MbrPartitionTable</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_head = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_b2 = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_b3 = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_sector;
-    public function sector() {
-        if ($this-&gt;_m_sector !== null)
-            return $this-&gt;_m_sector;
-        $this-&gt;_m_sector = ($this-&gt;b2() &amp; 63);
-        return $this-&gt;_m_sector;
-    }
-    protected $_m_cylinder;
-    public function cylinder() {
-        if ($this-&gt;_m_cylinder !== null)
-            return $this-&gt;_m_cylinder;
-        $this-&gt;_m_cylinder = ($this-&gt;b3() + (($this-&gt;b2() &amp; 192) &lt;&lt; 2));
-        return $this-&gt;_m_cylinder;
-    }
-    protected $_m_head;
-    protected $_m_b2;
-    protected $_m_b3;
-    public function head() { return $this-&gt;_m_head; }
-    public function b2() { return $this-&gt;_m_b2; }
-    public function b3() { return $this-&gt;_m_b3; }
-}
-</code></pre>
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_head</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b2</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b3</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_sector</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sector</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sector</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sector</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sector</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">b2</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sector</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_cylinder</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">cylinder</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cylinder</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cylinder</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cylinder</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">b3</span><span class="p">()</span> <span class="o">+</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">b2</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">192</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">));</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cylinder</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_head</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_b2</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_b3</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">head</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_head</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">b2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b2</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">b3</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b3</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -375,8 +372,8 @@ class Chs extends \Kaitai\Struct\Struct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -271,1065 +268,1065 @@ https://www.python.org/dev/peps/pep-0574/</li>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-/**
- * Python Pickle format serializes Python objects to a byte stream, as a sequence
- * of operations to run on the Pickle Virtual Machine.
- * 
- * The format is mostly implementation defined, there is no formal specification.
- * Pickle data types are closely coupled to the Python object model.
- * Python singletons, and most builtin types (e.g. `None`, `int`,`dict`, `list`)
- * are serialised using dedicated Pickle opcodes.
- * Other builtin types, and all classes  (e.g. `set`, `datetime.datetime`) are
- * serialised by encoding the name of a constructor callable.
- * They are deserialised by importing that constructor, and calling it.
- * So, unpickling an arbitrary pickle, using the Python&#39;s stdlib pickle module
- * can cause arbitrary code execution.
- * 
- * Pickle format has evolved with Python, later protocols add opcodes &amp; types.
- * Later Python releases can pickle to or unpickle from any earlier protocol.
- * 
- * * Protocol 0: ASCII clean, no explicit version, fields are &#39;\n&#39; terminated.
- * * Protocol 1: Binary, no explicit version, first length prefixed types.
- * * Protocol 2: Python 2.3+. Explicit versioning, more length prefixed types.
- *   https://www.python.org/dev/peps/pep-0307/
- * * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.
- * * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.
- *   https://www.python.org/dev/peps/pep-3154/
- * * Protocol 5: Python 3.8+: Opcodes for `bytearray` and out of band data
- *   https://www.python.org/dev/peps/pep-0574/
- */
-
-class PythonPickle extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_ops = [];
-        $i = 0;
-        do {
-            $_ = new \PythonPickle\Op($this-&gt;_io, $this, $this-&gt;_root);
-            $this-&gt;_m_ops[] = $_;
-            $i++;
-        } while (!($_-&gt;code() == \PythonPickle\Opcode::STOP));
-    }
-    protected $_m_ops;
-    public function ops() { return $this-&gt;_m_ops; }
-}
-
-/**
- * Length prefixed string, between 0 and 2**64-1 bytes long.
- * 
- * Only a 64-bit build of Python would produce a pickle containing strings
- * large enough to need this type. Such a pickle could not be unpickled on
- * a 32-bit build of Python, because the string would be larger than
- * `sys.maxsize`.
- */
-
-namespace \PythonPickle;
-
-class Unicodestring8 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_len = $this-&gt;_io-&gt;readU8le();
-        $this-&gt;_m_val = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;len()), &quot;utf8&quot;);
-    }
-    protected $_m_len;
-    protected $_m_val;
-    public function len() { return $this-&gt;_m_len; }
-    public function val() { return $this-&gt;_m_val; }
-}
-
-/**
- * Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,
- * encoded as two&#39;s complement.
- */
-
-namespace \PythonPickle;
-
-class Long1 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_len = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_val = $this-&gt;_io-&gt;readBytes($this-&gt;len());
-    }
-    protected $_m_len;
-    protected $_m_val;
-    public function len() { return $this-&gt;_m_len; }
-    public function val() { return $this-&gt;_m_val; }
-}
-
-/**
- * Length prefixed string, between 0 and 2**64-1 bytes long.
- * 
- * Only a 64-bit build of Python would produce a pickle containing strings
- * large enough to need this type. Such a pickle could not be unpickled on
- * a 32-bit build of Python, because the string would be larger than
- * `sys.maxsize`.
- */
-
-namespace \PythonPickle;
-
-class Bytes8 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_len = $this-&gt;_io-&gt;readU8le();
-        $this-&gt;_m_val = $this-&gt;_io-&gt;readBytes($this-&gt;len());
-    }
-    protected $_m_len;
-    protected $_m_val;
-    public function len() { return $this-&gt;_m_len; }
-    public function val() { return $this-&gt;_m_val; }
-}
-
-/**
- * Length prefixed byte string, between 0 and 255 bytes long.
- */
-
-namespace \PythonPickle;
-
-class Bytes1 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_len = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_val = $this-&gt;_io-&gt;readBytes($this-&gt;len());
-    }
-    protected $_m_len;
-    protected $_m_val;
-    public function len() { return $this-&gt;_m_len; }
-    public function val() { return $this-&gt;_m_val; }
-}
-
-/**
- * Length prefixed string, between 0 and 2**32-1 bytes long
- */
-
-namespace \PythonPickle;
-
-class Bytes4 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_len = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_val = $this-&gt;_io-&gt;readBytes($this-&gt;len());
-    }
-    protected $_m_len;
-    protected $_m_val;
-    public function len() { return $this-&gt;_m_len; }
-    public function val() { return $this-&gt;_m_val; }
-}
-
-/**
- * Some opcodes take no argument, this empty type is used for them.
- */
-
-namespace \PythonPickle;
-
-class NoArg extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-    }
-}
-
-/**
- * Unquoted string, does not contain string escapes.
- */
-
-namespace \PythonPickle;
-
-class StringnlNoescape extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_val = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytesTerm(10, false, true, true), &quot;ascii&quot;);
-    }
-    protected $_m_val;
-    public function val() { return $this-&gt;_m_val; }
-}
-
-/**
- * Integer, encoded with the ASCII chracters [0-9-], followed by &#39;L&#39;.
- */
-
-namespace \PythonPickle;
-
-class DecimalnlLong extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_val = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytesTerm(10, false, true, true), &quot;ascii&quot;);
-    }
-    protected $_m_val;
-    public function val() { return $this-&gt;_m_val; }
-}
-
-/**
- * Length prefixed string, between 0 and 2**32-1 bytes long
- */
-
-namespace \PythonPickle;
-
-class Unicodestring4 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_len = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_val = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;len()), &quot;utf8&quot;);
-    }
-    protected $_m_len;
-    protected $_m_val;
-    public function len() { return $this-&gt;_m_len; }
-    public function val() { return $this-&gt;_m_val; }
-}
-
-/**
- * Unquoted string, containing Python Unicode escapes.
- */
-
-namespace \PythonPickle;
-
-class Unicodestringnl extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_val = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytesTerm(10, false, true, true), &quot;ascii&quot;);
-    }
-    protected $_m_val;
-    public function val() { return $this-&gt;_m_val; }
-}
-
-/**
- * Large signed integer, in the range -2**(8*2**32-1) to 2**(8*2**32-1)-1,
- * encoded as two&#39;s complement.
- */
-
-namespace \PythonPickle;
-
-class Long4 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_len = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_val = $this-&gt;_io-&gt;readBytes($this-&gt;len());
-    }
-    protected $_m_len;
-    protected $_m_val;
-    public function len() { return $this-&gt;_m_len; }
-    public function val() { return $this-&gt;_m_val; }
-}
-
-/**
- * Length prefixed string, between 0 and 255 bytes long. Encoding is
- * unspecified.
- * 
- * The default Python 2.x string type (`str`) is a sequence of bytes.
- * These are pickled as `string1` or `string4`, when protocol == 2.
- * The bytes are written directly, no explicit encoding is performed.
- * 
- * Python 3.x will not pickle an object as `string1` or `string4`.
- * Instead, opcodes and types with a known encoding are used.
- * When unpickling
- * 
- * - `pickle.Unpickler` objects default to ASCII, which can be overriden
- * - `pickletools.dis` uses latin1, and cannot be overriden
- */
-
-namespace \PythonPickle;
-
-class String1 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_len = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_val = $this-&gt;_io-&gt;readBytes($this-&gt;len());
-    }
-    protected $_m_len;
-    protected $_m_val;
-    public function len() { return $this-&gt;_m_len; }
-    public function val() { return $this-&gt;_m_val; }
-}
-
-/**
- * Length prefixed string, between 0 and 2**64-1 bytes long.
- * 
- * The contents are deserilised into a `bytearray` object.
- */
-
-namespace \PythonPickle;
-
-class Bytearray8 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_len = $this-&gt;_io-&gt;readU8le();
-        $this-&gt;_m_val = $this-&gt;_io-&gt;readBytes($this-&gt;len());
-    }
-    protected $_m_len;
-    protected $_m_val;
-    public function len() { return $this-&gt;_m_len; }
-    public function val() { return $this-&gt;_m_val; }
-}
-
-/**
- * Integer or boolean, encoded with the ASCII characters [0-9-].
- * 
- * The values &#39;00&#39; and &#39;01&#39; encode the Python values `False` and `True`.
- * Normally a value would not contain leading &#39;0&#39; characters.
- */
-
-namespace \PythonPickle;
-
-class DecimalnlShort extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_val = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytesTerm(10, false, true, true), &quot;ascii&quot;);
-    }
-    protected $_m_val;
-    public function val() { return $this-&gt;_m_val; }
-}
-
-/**
- * Length prefixed string, between 0 and 255 bytes long
- */
-
-namespace \PythonPickle;
-
-class Unicodestring1 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_len = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_val = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;len()), &quot;utf8&quot;);
-    }
-    protected $_m_len;
-    protected $_m_val;
-    public function len() { return $this-&gt;_m_len; }
-    public function val() { return $this-&gt;_m_val; }
-}
-
-/**
- * Quoted string, possibly containing Python string escapes.
- */
-
-namespace \PythonPickle;
-
-class Stringnl extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_val = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytesTerm(10, false, true, true), &quot;ascii&quot;);
-    }
-    protected $_m_val;
-    public function val() { return $this-&gt;_m_val; }
-}
-
-/**
- * Pair of unquoted, unescaped strings.
- */
-
-namespace \PythonPickle;
-
-class StringnlNoescapePair extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_val1 = new \PythonPickle\StringnlNoescape($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_val2 = new \PythonPickle\StringnlNoescape($this-&gt;_io, $this, $this-&gt;_root);
-    }
-    protected $_m_val1;
-    protected $_m_val2;
-    public function val1() { return $this-&gt;_m_val1; }
-    public function val2() { return $this-&gt;_m_val2; }
-}
-
-/**
- * Length prefixed string, between 0 and 2**31-1 bytes long. Encoding is
- * unspecified.
- * 
- * Although the len field is signed, any length &lt; 0 will raise an exception
- * during unpickling.
- * 
- * See the documentation for `string1` for further detail about encodings.
- */
-
-namespace \PythonPickle;
-
-class String4 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_len = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_val = $this-&gt;_io-&gt;readBytes($this-&gt;len());
-    }
-    protected $_m_len;
-    protected $_m_val;
-    public function len() { return $this-&gt;_m_len; }
-    public function val() { return $this-&gt;_m_val; }
-}
-
-namespace \PythonPickle;
-
-class Op extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_code = $this-&gt;_io-&gt;readU1();
-        switch ($this-&gt;code()) {
-            case \PythonPickle\Opcode::LIST:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::EXT2:
-                $this-&gt;_m_arg = $this-&gt;_io-&gt;readU2le();
-                break;
-            case \PythonPickle\Opcode::READONLY_BUFFER:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::STOP:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::BINUNICODE:
-                $this-&gt;_m_arg = new \PythonPickle\Unicodestring4($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::PUT:
-                $this-&gt;_m_arg = new \PythonPickle\DecimalnlShort($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::NEWFALSE:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::LONG1:
-                $this-&gt;_m_arg = new \PythonPickle\Long1($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::UNICODE:
-                $this-&gt;_m_arg = new \PythonPickle\Unicodestringnl($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::EMPTY_LIST:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::MARK:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::PERSID:
-                $this-&gt;_m_arg = new \PythonPickle\StringnlNoescape($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::STACK_GLOBAL:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::BININT:
-                $this-&gt;_m_arg = $this-&gt;_io-&gt;readS4le();
-                break;
-            case \PythonPickle\Opcode::BINPUT:
-                $this-&gt;_m_arg = $this-&gt;_io-&gt;readU1();
-                break;
-            case \PythonPickle\Opcode::BININT1:
-                $this-&gt;_m_arg = $this-&gt;_io-&gt;readU1();
-                break;
-            case \PythonPickle\Opcode::BININT2:
-                $this-&gt;_m_arg = $this-&gt;_io-&gt;readU2le();
-                break;
-            case \PythonPickle\Opcode::TUPLE:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::SHORT_BINSTRING:
-                $this-&gt;_m_arg = new \PythonPickle\String1($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::EMPTY_SET:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::STRING:
-                $this-&gt;_m_arg = new \PythonPickle\Stringnl($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::EMPTY_DICT:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::BINGET:
-                $this-&gt;_m_arg = $this-&gt;_io-&gt;readU1();
-                break;
-            case \PythonPickle\Opcode::APPEND:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::POP_MARK:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::GET:
-                $this-&gt;_m_arg = new \PythonPickle\DecimalnlShort($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::NEWOBJ:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::REDUCE:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::BINBYTES:
-                $this-&gt;_m_arg = new \PythonPickle\Bytes4($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::NEXT_BUFFER:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::BINBYTES8:
-                $this-&gt;_m_arg = new \PythonPickle\Bytes8($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::SETITEM:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::FRAME:
-                $this-&gt;_m_arg = $this-&gt;_io-&gt;readU8le();
-                break;
-            case \PythonPickle\Opcode::FLOAT:
-                $this-&gt;_m_arg = new \PythonPickle\Floatnl($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::BINUNICODE8:
-                $this-&gt;_m_arg = new \PythonPickle\Unicodestring8($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::INT:
-                $this-&gt;_m_arg = new \PythonPickle\DecimalnlShort($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::LONG_BINPUT:
-                $this-&gt;_m_arg = $this-&gt;_io-&gt;readU4le();
-                break;
-            case \PythonPickle\Opcode::EMPTY_TUPLE:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::LONG:
-                $this-&gt;_m_arg = new \PythonPickle\DecimalnlLong($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::FROZENSET:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::GLOBAL:
-                $this-&gt;_m_arg = new \PythonPickle\StringnlNoescapePair($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::OBJ:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::ADDITEMS:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::TUPLE1:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::SETITEMS:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::NONE:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::BUILD:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::EXT4:
-                $this-&gt;_m_arg = $this-&gt;_io-&gt;readU4le();
-                break;
-            case \PythonPickle\Opcode::NEWOBJ_EX:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::BINFLOAT:
-                $this-&gt;_m_arg = $this-&gt;_io-&gt;readF8be();
-                break;
-            case \PythonPickle\Opcode::DUP:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::BYTEARRAY8:
-                $this-&gt;_m_arg = new \PythonPickle\Bytearray8($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::LONG4:
-                $this-&gt;_m_arg = new \PythonPickle\Long4($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::SHORT_BINUNICODE:
-                $this-&gt;_m_arg = new \PythonPickle\Unicodestring1($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::TUPLE3:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::SHORT_BINBYTES:
-                $this-&gt;_m_arg = new \PythonPickle\Bytes1($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::EXT1:
-                $this-&gt;_m_arg = $this-&gt;_io-&gt;readU1();
-                break;
-            case \PythonPickle\Opcode::DICT:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::APPENDS:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::INST:
-                $this-&gt;_m_arg = new \PythonPickle\StringnlNoescapePair($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::BINPERSID:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::MEMOIZE:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::PROTO:
-                $this-&gt;_m_arg = $this-&gt;_io-&gt;readU1();
-                break;
-            case \PythonPickle\Opcode::NEWTRUE:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::BINSTRING:
-                $this-&gt;_m_arg = new \PythonPickle\String4($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::TUPLE2:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::POP:
-                $this-&gt;_m_arg = new \PythonPickle\NoArg($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case \PythonPickle\Opcode::LONG_BINGET:
-                $this-&gt;_m_arg = $this-&gt;_io-&gt;readU4le();
-                break;
-        }
-    }
-    protected $_m_code;
-    protected $_m_arg;
-
-    /**
-     * Operation code that determines which action should be
-     * performed next by the Pickle Virtual Machine. Some opcodes
-     * are only available in later versions of the Pickle protocol.
-     */
-    public function code() { return $this-&gt;_m_code; }
-
-    /**
-     * Optional argument for the operation. Data type and length
-     * are determined by the value of the opcode.
-     */
-    public function arg() { return $this-&gt;_m_arg; }
-}
-
-/**
- * Double float, encoded with the ASCII characters [0-9.e+-], &#39;-inf&#39;, &#39;inf&#39;,
- * or &#39;nan&#39;.
- */
-
-namespace \PythonPickle;
-
-class Floatnl extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \PythonPickle\Op $_parent = null, \PythonPickle $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_val = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytesTerm(10, false, true, true), &quot;ascii&quot;);
-    }
-    protected $_m_val;
-    public function val() { return $this-&gt;_m_val; }
-}
-
-namespace \PythonPickle;
-
-class Opcode {
-
-    /**
-     * push special markobject on stack
-     */
-    const MARK = 40;
-
-    /**
-     * push empty tuple
-     */
-    const EMPTY_TUPLE = 41;
-
-    /**
-     * every pickle ends with STOP
-     */
-    const STOP = 46;
-
-    /**
-     * discard topmost stack item
-     */
-    const POP = 48;
-
-    /**
-     * discard stack top through topmost markobject
-     */
-    const POP_MARK = 49;
-
-    /**
-     * duplicate top stack item
-     */
-    const DUP = 50;
-
-    /**
-     * push bytes; counted binary string argument
-     */
-    const BINBYTES = 66;
-
-    /**
-     * push bytes; counted binary string argument &lt; 256 bytes
-     */
-    const SHORT_BINBYTES = 67;
-
-    /**
-     * push float object; decimal string argument
-     */
-    const FLOAT = 70;
-
-    /**
-     * push float; arg is 8-byte float encoding
-     */
-    const BINFLOAT = 71;
-
-    /**
-     * push integer or bool; decimal string argument
-     */
-    const INT = 73;
-
-    /**
-     * push four-byte signed int
-     */
-    const BININT = 74;
-
-    /**
-     * push 1-byte unsigned int
-     */
-    const BININT1 = 75;
-
-    /**
-     * push long; decimal string argument
-     */
-    const LONG = 76;
-
-    /**
-     * push 2-byte unsigned int
-     */
-    const BININT2 = 77;
-
-    /**
-     * push None
-     */
-    const NONE = 78;
-
-    /**
-     * push persistent object; id is taken from string arg
-     */
-    const PERSID = 80;
-
-    /**
-     * push persistent object; id is taken from stack
-     */
-    const BINPERSID = 81;
-
-    /**
-     * apply callable to argtuple, both on stack
-     */
-    const REDUCE = 82;
-
-    /**
-     * push string; NL-terminated string argument
-     */
-    const STRING = 83;
-
-    /**
-     * push string; counted binary string argument
-     */
-    const BINSTRING = 84;
-
-    /**
-     * push string; counted binary string argument 256 bytes
-     */
-    const SHORT_BINSTRING = 85;
-
-    /**
-     * push Unicode string; raw-unicode-escaped argument
-     */
-    const UNICODE = 86;
-
-    /**
-     * push Unicode string; counted UTF-8 string argument
-     */
-    const BINUNICODE = 88;
-
-    /**
-     * push empty list
-     */
-    const EMPTY_LIST = 93;
-
-    /**
-     * append stack top to list below it
-     */
-    const APPEND = 97;
-
-    /**
-     * call __setstate__ or __dict__.update()
-     */
-    const BUILD = 98;
-
-    /**
-     * push self.find_class(modname, name); 2 string args
-     */
-    const GLOBAL = 99;
-
-    /**
-     * build a dict from stack items
-     */
-    const DICT = 100;
-
-    /**
-     * extend list on stack by topmost stack slice
-     */
-    const APPENDS = 101;
-
-    /**
-     * push item from memo on stack; index is string arg
-     */
-    const GET = 103;
-
-    /**
-     * push item from memo on stack; index is 1-byte arg
-     */
-    const BINGET = 104;
-
-    /**
-     * build &amp; push class instance
-     */
-    const INST = 105;
-
-    /**
-     * push item from memo on stack; index is 4-byte arg
-     */
-    const LONG_BINGET = 106;
-
-    /**
-     * build list from topmost stack items
-     */
-    const LIST = 108;
-
-    /**
-     * build &amp; push class instance
-     */
-    const OBJ = 111;
-
-    /**
-     * store stack top in memo; index is string arg
-     */
-    const PUT = 112;
-
-    /**
-     * store stack top in memo; index is 1-byte arg
-     */
-    const BINPUT = 113;
-
-    /**
-     * store stack top in memo; index is 4-byte arg
-     */
-    const LONG_BINPUT = 114;
-
-    /**
-     * add key+value pair to dict
-     */
-    const SETITEM = 115;
-
-    /**
-     * build tuple from topmost stack items
-     */
-    const TUPLE = 116;
-
-    /**
-     * modify dict by adding topmost key+value pairs
-     */
-    const SETITEMS = 117;
-
-    /**
-     * push empty dict
-     */
-    const EMPTY_DICT = 125;
-
-    /**
-     * identify pickle protocol
-     */
-    const PROTO = 128;
-
-    /**
-     * build object by applying cls.__new__ to argtuple
-     */
-    const NEWOBJ = 129;
-
-    /**
-     * push object from extension registry; 1-byte index
-     */
-    const EXT1 = 130;
-
-    /**
-     * ditto, but 2-byte index
-     */
-    const EXT2 = 131;
-
-    /**
-     * ditto, but 4-byte index
-     */
-    const EXT4 = 132;
-
-    /**
-     * build 1-tuple from stack top
-     */
-    const TUPLE1 = 133;
-
-    /**
-     * build 2-tuple from two topmost stack items
-     */
-    const TUPLE2 = 134;
-
-    /**
-     * build 3-tuple from three topmost stack items
-     */
-    const TUPLE3 = 135;
-
-    /**
-     * push True
-     */
-    const NEWTRUE = 136;
-
-    /**
-     * push False
-     */
-    const NEWFALSE = 137;
-
-    /**
-     * push long from &lt; 256 bytes
-     */
-    const LONG1 = 138;
-
-    /**
-     * push really big long
-     */
-    const LONG4 = 139;
-
-    /**
-     * push short string; UTF-8 length &lt; 256 bytes
-     */
-    const SHORT_BINUNICODE = 140;
-
-    /**
-     * push very long string
-     */
-    const BINUNICODE8 = 141;
-
-    /**
-     * push very long bytes string
-     */
-    const BINBYTES8 = 142;
-
-    /**
-     * push empty set on the stack
-     */
-    const EMPTY_SET = 143;
-
-    /**
-     * modify set by adding topmost stack items
-     */
-    const ADDITEMS = 144;
-
-    /**
-     * build frozenset from topmost stack items
-     */
-    const FROZENSET = 145;
-
-    /**
-     * like NEWOBJ but work with keyword only arguments
-     */
-    const NEWOBJ_EX = 146;
-
-    /**
-     * same as GLOBAL but using names on the stacks
-     */
-    const STACK_GLOBAL = 147;
-
-    /**
-     * store top of the stack in memo
-     */
-    const MEMOIZE = 148;
-
-    /**
-     * indicate the beginning of a new frame
-     */
-    const FRAME = 149;
-
-    /**
-     * push bytearray
-     */
-    const BYTEARRAY8 = 150;
-
-    /**
-     * push next out-of-band buffer
-     */
-    const NEXT_BUFFER = 151;
-
-    /**
-     * make top of stack readonly
-     */
-    const READ_BUFFER = 152;
-}
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Python Pickle format serializes Python objects to a byte stream, as a sequence</span>
+<span class="sd"> * of operations to run on the Pickle Virtual Machine.</span>
+<span class="sd"> * </span>
+<span class="sd"> * The format is mostly implementation defined, there is no formal specification.</span>
+<span class="sd"> * Pickle data types are closely coupled to the Python object model.</span>
+<span class="sd"> * Python singletons, and most builtin types (e.g. `None`, `int`,`dict`, `list`)</span>
+<span class="sd"> * are serialised using dedicated Pickle opcodes.</span>
+<span class="sd"> * Other builtin types, and all classes  (e.g. `set`, `datetime.datetime`) are</span>
+<span class="sd"> * serialised by encoding the name of a constructor callable.</span>
+<span class="sd"> * They are deserialised by importing that constructor, and calling it.</span>
+<span class="sd"> * So, unpickling an arbitrary pickle, using the Python&#39;s stdlib pickle module</span>
+<span class="sd"> * can cause arbitrary code execution.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Pickle format has evolved with Python, later protocols add opcodes &amp; types.</span>
+<span class="sd"> * Later Python releases can pickle to or unpickle from any earlier protocol.</span>
+<span class="sd"> * </span>
+<span class="sd"> * * Protocol 0: ASCII clean, no explicit version, fields are &#39;\n&#39; terminated.</span>
+<span class="sd"> * * Protocol 1: Binary, no explicit version, first length prefixed types.</span>
+<span class="sd"> * * Protocol 2: Python 2.3+. Explicit versioning, more length prefixed types.</span>
+<span class="sd"> *   https://www.python.org/dev/peps/pep-0307/</span>
+<span class="sd"> * * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.</span>
+<span class="sd"> * * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.</span>
+<span class="sd"> *   https://www.python.org/dev/peps/pep-3154/</span>
+<span class="sd"> * * Protocol 5: Python 3.8+: Opcodes for `bytearray` and out of band data</span>
+<span class="sd"> *   https://www.python.org/dev/peps/pep-0574/</span>
+<span class="sd"> */</span>
+
+<span class="k">class</span> <span class="nc">PythonPickle</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ops</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="nv">$_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\Op</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ops</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$_</span><span class="p">;</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$_</span><span class="o">-&gt;</span><span class="na">code</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">STOP</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_ops</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">ops</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ops</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Length prefixed string, between 0 and 2**64-1 bytes long.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Only a 64-bit build of Python would produce a pickle containing strings</span>
+<span class="sd"> * large enough to need this type. Such a pickle could not be unpickled on</span>
+<span class="sd"> * a 32-bit build of Python, because the string would be larger than</span>
+<span class="sd"> * `sys.maxsize`.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Unicodestring8</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()),</span> <span class="s2">&quot;utf8&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,</span>
+<span class="sd"> * encoded as two&#39;s complement.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Long1</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Length prefixed string, between 0 and 2**64-1 bytes long.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Only a 64-bit build of Python would produce a pickle containing strings</span>
+<span class="sd"> * large enough to need this type. Such a pickle could not be unpickled on</span>
+<span class="sd"> * a 32-bit build of Python, because the string would be larger than</span>
+<span class="sd"> * `sys.maxsize`.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Bytes8</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Length prefixed byte string, between 0 and 255 bytes long.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Bytes1</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Length prefixed string, between 0 and 2**32-1 bytes long</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Bytes4</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Some opcodes take no argument, this empty type is used for them.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">NoArg</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Unquoted string, does not contain string escapes.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">StringnlNoescape</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Integer, encoded with the ASCII chracters [0-9-], followed by &#39;L&#39;.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">DecimalnlLong</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Length prefixed string, between 0 and 2**32-1 bytes long</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Unicodestring4</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()),</span> <span class="s2">&quot;utf8&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Unquoted string, containing Python Unicode escapes.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Unicodestringnl</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Large signed integer, in the range -2**(8*2**32-1) to 2**(8*2**32-1)-1,</span>
+<span class="sd"> * encoded as two&#39;s complement.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Long4</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Length prefixed string, between 0 and 255 bytes long. Encoding is</span>
+<span class="sd"> * unspecified.</span>
+<span class="sd"> * </span>
+<span class="sd"> * The default Python 2.x string type (`str`) is a sequence of bytes.</span>
+<span class="sd"> * These are pickled as `string1` or `string4`, when protocol == 2.</span>
+<span class="sd"> * The bytes are written directly, no explicit encoding is performed.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Python 3.x will not pickle an object as `string1` or `string4`.</span>
+<span class="sd"> * Instead, opcodes and types with a known encoding are used.</span>
+<span class="sd"> * When unpickling</span>
+<span class="sd"> * </span>
+<span class="sd"> * - `pickle.Unpickler` objects default to ASCII, which can be overriden</span>
+<span class="sd"> * - `pickletools.dis` uses latin1, and cannot be overriden</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">String1</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Length prefixed string, between 0 and 2**64-1 bytes long.</span>
+<span class="sd"> * </span>
+<span class="sd"> * The contents are deserilised into a `bytearray` object.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Bytearray8</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Integer or boolean, encoded with the ASCII characters [0-9-].</span>
+<span class="sd"> * </span>
+<span class="sd"> * The values &#39;00&#39; and &#39;01&#39; encode the Python values `False` and `True`.</span>
+<span class="sd"> * Normally a value would not contain leading &#39;0&#39; characters.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">DecimalnlShort</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Length prefixed string, between 0 and 255 bytes long</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Unicodestring1</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()),</span> <span class="s2">&quot;utf8&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Quoted string, possibly containing Python string escapes.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Stringnl</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Pair of unquoted, unescaped strings.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">StringnlNoescapePair</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\StringnlNoescape</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\StringnlNoescape</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_val1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_val2</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val2</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Length prefixed string, between 0 and 2**31-1 bytes long. Encoding is</span>
+<span class="sd"> * unspecified.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Although the len field is signed, any length &lt; 0 will raise an exception</span>
+<span class="sd"> * during unpickling.</span>
+<span class="sd"> * </span>
+<span class="sd"> * See the documentation for `string1` for further detail about encodings.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">String4</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Op</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_code</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">code</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">LIST</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">EXT2</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">READONLY_BUFFER</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">STOP</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BINUNICODE</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\Unicodestring4</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">PUT</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\DecimalnlShort</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">NEWFALSE</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">LONG1</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\Long1</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">UNICODE</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\Unicodestringnl</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">EMPTY_LIST</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">MARK</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">PERSID</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\StringnlNoescape</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">STACK_GLOBAL</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BININT</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BINPUT</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BININT1</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BININT2</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">TUPLE</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">SHORT_BINSTRING</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\String1</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">EMPTY_SET</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">STRING</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\Stringnl</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">EMPTY_DICT</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BINGET</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">APPEND</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">POP_MARK</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">GET</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\DecimalnlShort</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">NEWOBJ</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">REDUCE</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BINBYTES</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\Bytes4</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">NEXT_BUFFER</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BINBYTES8</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\Bytes8</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">SETITEM</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">FRAME</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">FLOAT</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\Floatnl</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BINUNICODE8</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\Unicodestring8</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">INT</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\DecimalnlShort</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">LONG_BINPUT</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">EMPTY_TUPLE</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">LONG</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\DecimalnlLong</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">FROZENSET</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">GLOBAL</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\StringnlNoescapePair</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">OBJ</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">ADDITEMS</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">TUPLE1</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">SETITEMS</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">NONE</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BUILD</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">EXT4</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">NEWOBJ_EX</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BINFLOAT</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8be</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">DUP</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BYTEARRAY8</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\Bytearray8</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">LONG4</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\Long4</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">SHORT_BINUNICODE</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\Unicodestring1</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">TUPLE3</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">SHORT_BINBYTES</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\Bytes1</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">EXT1</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">DICT</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">APPENDS</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">INST</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\StringnlNoescapePair</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BINPERSID</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">MEMOIZE</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">PROTO</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">NEWTRUE</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BINSTRING</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\String4</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">TUPLE2</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">POP</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">LONG_BINGET</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_code</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_arg</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Operation code that determines which action should be</span>
+<span class="sd">     * performed next by the Pickle Virtual Machine. Some opcodes</span>
+<span class="sd">     * are only available in later versions of the Pickle protocol.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">code</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_code</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * Optional argument for the operation. Data type and length</span>
+<span class="sd">     * are determined by the value of the opcode.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">arg</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * Double float, encoded with the ASCII characters [0-9.e+-], &#39;-inf&#39;, &#39;inf&#39;,</span>
+<span class="sd"> * or &#39;nan&#39;.</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Floatnl</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\PythonPickle\Op</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\PythonPickle</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span> <span class="s2">&quot;ascii&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_val</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">val</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_val</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\PythonPickle</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Opcode</span> <span class="p">{</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push special markobject on stack</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">MARK</span> <span class="o">=</span> <span class="mi">40</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push empty tuple</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">EMPTY_TUPLE</span> <span class="o">=</span> <span class="mi">41</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * every pickle ends with STOP</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">STOP</span> <span class="o">=</span> <span class="mi">46</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * discard topmost stack item</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">POP</span> <span class="o">=</span> <span class="mi">48</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * discard stack top through topmost markobject</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">POP_MARK</span> <span class="o">=</span> <span class="mi">49</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * duplicate top stack item</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">DUP</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push bytes; counted binary string argument</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BINBYTES</span> <span class="o">=</span> <span class="mi">66</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push bytes; counted binary string argument &lt; 256 bytes</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">SHORT_BINBYTES</span> <span class="o">=</span> <span class="mi">67</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push float object; decimal string argument</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">FLOAT</span> <span class="o">=</span> <span class="mi">70</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push float; arg is 8-byte float encoding</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BINFLOAT</span> <span class="o">=</span> <span class="mi">71</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push integer or bool; decimal string argument</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">INT</span> <span class="o">=</span> <span class="mi">73</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push four-byte signed int</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BININT</span> <span class="o">=</span> <span class="mi">74</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push 1-byte unsigned int</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BININT1</span> <span class="o">=</span> <span class="mi">75</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push long; decimal string argument</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">LONG</span> <span class="o">=</span> <span class="mi">76</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push 2-byte unsigned int</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BININT2</span> <span class="o">=</span> <span class="mi">77</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push None</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">NONE</span> <span class="o">=</span> <span class="mi">78</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push persistent object; id is taken from string arg</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">PERSID</span> <span class="o">=</span> <span class="mi">80</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push persistent object; id is taken from stack</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BINPERSID</span> <span class="o">=</span> <span class="mi">81</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * apply callable to argtuple, both on stack</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">REDUCE</span> <span class="o">=</span> <span class="mi">82</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push string; NL-terminated string argument</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">STRING</span> <span class="o">=</span> <span class="mi">83</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push string; counted binary string argument</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BINSTRING</span> <span class="o">=</span> <span class="mi">84</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push string; counted binary string argument 256 bytes</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">SHORT_BINSTRING</span> <span class="o">=</span> <span class="mi">85</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push Unicode string; raw-unicode-escaped argument</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">UNICODE</span> <span class="o">=</span> <span class="mi">86</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push Unicode string; counted UTF-8 string argument</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BINUNICODE</span> <span class="o">=</span> <span class="mi">88</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push empty list</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">EMPTY_LIST</span> <span class="o">=</span> <span class="mi">93</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * append stack top to list below it</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">APPEND</span> <span class="o">=</span> <span class="mi">97</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * call __setstate__ or __dict__.update()</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BUILD</span> <span class="o">=</span> <span class="mi">98</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push self.find_class(modname, name); 2 string args</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">GLOBAL</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * build a dict from stack items</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">DICT</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * extend list on stack by topmost stack slice</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">APPENDS</span> <span class="o">=</span> <span class="mi">101</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push item from memo on stack; index is string arg</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">GET</span> <span class="o">=</span> <span class="mi">103</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push item from memo on stack; index is 1-byte arg</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BINGET</span> <span class="o">=</span> <span class="mi">104</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * build &amp; push class instance</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">INST</span> <span class="o">=</span> <span class="mi">105</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push item from memo on stack; index is 4-byte arg</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">LONG_BINGET</span> <span class="o">=</span> <span class="mi">106</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * build list from topmost stack items</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">LIST</span> <span class="o">=</span> <span class="mi">108</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * build &amp; push class instance</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">OBJ</span> <span class="o">=</span> <span class="mi">111</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * store stack top in memo; index is string arg</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">PUT</span> <span class="o">=</span> <span class="mi">112</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * store stack top in memo; index is 1-byte arg</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BINPUT</span> <span class="o">=</span> <span class="mi">113</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * store stack top in memo; index is 4-byte arg</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">LONG_BINPUT</span> <span class="o">=</span> <span class="mi">114</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * add key+value pair to dict</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">SETITEM</span> <span class="o">=</span> <span class="mi">115</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * build tuple from topmost stack items</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">TUPLE</span> <span class="o">=</span> <span class="mi">116</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * modify dict by adding topmost key+value pairs</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">SETITEMS</span> <span class="o">=</span> <span class="mi">117</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push empty dict</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">EMPTY_DICT</span> <span class="o">=</span> <span class="mi">125</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * identify pickle protocol</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">PROTO</span> <span class="o">=</span> <span class="mi">128</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * build object by applying cls.__new__ to argtuple</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">NEWOBJ</span> <span class="o">=</span> <span class="mi">129</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push object from extension registry; 1-byte index</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">EXT1</span> <span class="o">=</span> <span class="mi">130</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * ditto, but 2-byte index</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">EXT2</span> <span class="o">=</span> <span class="mi">131</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * ditto, but 4-byte index</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">EXT4</span> <span class="o">=</span> <span class="mi">132</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * build 1-tuple from stack top</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">TUPLE1</span> <span class="o">=</span> <span class="mi">133</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * build 2-tuple from two topmost stack items</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">TUPLE2</span> <span class="o">=</span> <span class="mi">134</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * build 3-tuple from three topmost stack items</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">TUPLE3</span> <span class="o">=</span> <span class="mi">135</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push True</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">NEWTRUE</span> <span class="o">=</span> <span class="mi">136</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push False</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">NEWFALSE</span> <span class="o">=</span> <span class="mi">137</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push long from &lt; 256 bytes</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">LONG1</span> <span class="o">=</span> <span class="mi">138</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push really big long</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">LONG4</span> <span class="o">=</span> <span class="mi">139</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push short string; UTF-8 length &lt; 256 bytes</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">SHORT_BINUNICODE</span> <span class="o">=</span> <span class="mi">140</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push very long string</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BINUNICODE8</span> <span class="o">=</span> <span class="mi">141</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push very long bytes string</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BINBYTES8</span> <span class="o">=</span> <span class="mi">142</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push empty set on the stack</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">EMPTY_SET</span> <span class="o">=</span> <span class="mi">143</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * modify set by adding topmost stack items</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">ADDITEMS</span> <span class="o">=</span> <span class="mi">144</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * build frozenset from topmost stack items</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">FROZENSET</span> <span class="o">=</span> <span class="mi">145</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * like NEWOBJ but work with keyword only arguments</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">NEWOBJ_EX</span> <span class="o">=</span> <span class="mi">146</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * same as GLOBAL but using names on the stacks</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">STACK_GLOBAL</span> <span class="o">=</span> <span class="mi">147</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * store top of the stack in memo</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">MEMOIZE</span> <span class="o">=</span> <span class="mi">148</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * indicate the beginning of a new frame</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">FRAME</span> <span class="o">=</span> <span class="mi">149</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push bytearray</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">BYTEARRAY8</span> <span class="o">=</span> <span class="mi">150</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * push next out-of-band buffer</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">NEXT_BUFFER</span> <span class="o">=</span> <span class="mi">151</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * make top of stack readonly</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">READ_BUFFER</span> <span class="o">=</span> <span class="mi">152</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1356,8 +1353,8 @@ class Opcode {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

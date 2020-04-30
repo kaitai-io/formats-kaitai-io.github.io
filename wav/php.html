@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -224,746 +221,746 @@ the actual sample data.</p>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * The WAVE file format is a subset of Microsoft&#39;s RIFF specification for the
- * storage of multimedia files. A RIFF file starts out with a file header
- * followed by a sequence of data chunks. A WAVE file is often just a RIFF
- * file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --
- * a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing
- * the actual sample data.
- * 
- * This Kaitai implementation was written by John Byrd of Gigantic Software
- * (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
- */
+<span class="sd">/**</span>
+<span class="sd"> * The WAVE file format is a subset of Microsoft&#39;s RIFF specification for the</span>
+<span class="sd"> * storage of multimedia files. A RIFF file starts out with a file header</span>
+<span class="sd"> * followed by a sequence of data chunks. A WAVE file is often just a RIFF</span>
+<span class="sd"> * file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --</span>
+<span class="sd"> * a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing</span>
+<span class="sd"> * the actual sample data.</span>
+<span class="sd"> * </span>
+<span class="sd"> * This Kaitai implementation was written by John Byrd of Gigantic Software</span>
+<span class="sd"> * (jbyrd@giganticsoftware.com), and it is likely to contain bugs.</span>
+<span class="sd"> */</span>
 
-class Wav extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Wav $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Wav</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_riffId = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x52\x49\x46\x46&quot;);
-        $this-&gt;_m_fileSize = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_waveId = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x57\x41\x56\x45&quot;);
-        $this-&gt;_m__raw_chunks = $this-&gt;_io-&gt;readBytes(($this-&gt;fileSize() - 5));
-        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_chunks);
-        $this-&gt;_m_chunks = new \Wav\ChunksType($io, $this, $this-&gt;_root);
-    }
-    protected $_m_formatChunk;
-    public function formatChunk() {
-        if ($this-&gt;_m_formatChunk !== null)
-            return $this-&gt;_m_formatChunk;
-        $this-&gt;_m_formatChunk = $this-&gt;chunks()-&gt;chunk()[0]-&gt;data();
-        return $this-&gt;_m_formatChunk;
-    }
-    protected $_m_riffId;
-    protected $_m_fileSize;
-    protected $_m_waveId;
-    protected $_m_chunks;
-    protected $_m__raw_chunks;
-    public function riffId() { return $this-&gt;_m_riffId; }
-    public function fileSize() { return $this-&gt;_m_fileSize; }
-    public function waveId() { return $this-&gt;_m_waveId; }
-    public function chunks() { return $this-&gt;_m_chunks; }
-    public function _raw_chunks() { return $this-&gt;_m__raw_chunks; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_riffId</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x52\x49\x46\x46</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileSize</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_waveId</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x57\x41\x56\x45</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_chunks</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fileSize</span><span class="p">()</span> <span class="o">-</span> <span class="mi">5</span><span class="p">));</span>
+        <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_chunks</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\ChunksType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_formatChunk</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">formatChunk</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_formatChunk</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_formatChunk</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_formatChunk</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunks</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">chunk</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">data</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_formatChunk</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_riffId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_fileSize</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_waveId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_chunks</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_chunks</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">riffId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_riffId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fileSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileSize</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">waveId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_waveId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">chunks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunks</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_chunks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_chunks</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Wav;
+<span class="k">namespace</span> <span class="nx">\Wav</span><span class="p">;</span>
 
-class SampleType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Wav $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">SampleType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_sample = $this-&gt;_io-&gt;readU2le();
-    }
-    protected $_m_sample;
-    public function sample() { return $this-&gt;_m_sample; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sample</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_sample</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sample</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sample</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Wav;
+<span class="k">namespace</span> <span class="nx">\Wav</span><span class="p">;</span>
 
-class FormatChunkType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">FormatChunkType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav\ChunkType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_wFormatTag = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_nChannels = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_nSamplesPerSec = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_nAvgBytesPerSec = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_nBlockAlign = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_wBitsPerSample = $this-&gt;_io-&gt;readU2le();
-        if (!($this-&gt;isBasicPcm())) {
-            $this-&gt;_m_cbSize = $this-&gt;_io-&gt;readU2le();
-        }
-        if ($this-&gt;isCbSizeMeaningful()) {
-            $this-&gt;_m_wValidBitsPerSample = $this-&gt;_io-&gt;readU2le();
-        }
-        if ($this-&gt;isExtensible()) {
-            $this-&gt;_m_channelMaskAndSubformat = new \Wav\ChannelMaskAndSubformatType($this-&gt;_io, $this, $this-&gt;_root);
-        }
-    }
-    protected $_m_isExtensible;
-    public function isExtensible() {
-        if ($this-&gt;_m_isExtensible !== null)
-            return $this-&gt;_m_isExtensible;
-        $this-&gt;_m_isExtensible = $this-&gt;wFormatTag() == \Wav\WFormatTagType::EXTENSIBLE;
-        return $this-&gt;_m_isExtensible;
-    }
-    protected $_m_isBasicPcm;
-    public function isBasicPcm() {
-        if ($this-&gt;_m_isBasicPcm !== null)
-            return $this-&gt;_m_isBasicPcm;
-        $this-&gt;_m_isBasicPcm = $this-&gt;wFormatTag() == \Wav\WFormatTagType::PCM;
-        return $this-&gt;_m_isBasicPcm;
-    }
-    protected $_m_isBasicFloat;
-    public function isBasicFloat() {
-        if ($this-&gt;_m_isBasicFloat !== null)
-            return $this-&gt;_m_isBasicFloat;
-        $this-&gt;_m_isBasicFloat = $this-&gt;wFormatTag() == \Wav\WFormatTagType::IEEE_FLOAT;
-        return $this-&gt;_m_isBasicFloat;
-    }
-    protected $_m_isCbSizeMeaningful;
-    public function isCbSizeMeaningful() {
-        if ($this-&gt;_m_isCbSizeMeaningful !== null)
-            return $this-&gt;_m_isCbSizeMeaningful;
-        $this-&gt;_m_isCbSizeMeaningful =  ((!($this-&gt;isBasicPcm())) &amp;&amp; ($this-&gt;cbSize() != 0)) ;
-        return $this-&gt;_m_isCbSizeMeaningful;
-    }
-    protected $_m_wFormatTag;
-    protected $_m_nChannels;
-    protected $_m_nSamplesPerSec;
-    protected $_m_nAvgBytesPerSec;
-    protected $_m_nBlockAlign;
-    protected $_m_wBitsPerSample;
-    protected $_m_cbSize;
-    protected $_m_wValidBitsPerSample;
-    protected $_m_channelMaskAndSubformat;
-    public function wFormatTag() { return $this-&gt;_m_wFormatTag; }
-    public function nChannels() { return $this-&gt;_m_nChannels; }
-    public function nSamplesPerSec() { return $this-&gt;_m_nSamplesPerSec; }
-    public function nAvgBytesPerSec() { return $this-&gt;_m_nAvgBytesPerSec; }
-    public function nBlockAlign() { return $this-&gt;_m_nBlockAlign; }
-    public function wBitsPerSample() { return $this-&gt;_m_wBitsPerSample; }
-    public function cbSize() { return $this-&gt;_m_cbSize; }
-    public function wValidBitsPerSample() { return $this-&gt;_m_wValidBitsPerSample; }
-    public function channelMaskAndSubformat() { return $this-&gt;_m_channelMaskAndSubformat; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_wFormatTag</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nChannels</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nSamplesPerSec</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nAvgBytesPerSec</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nBlockAlign</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_wBitsPerSample</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isBasicPcm</span><span class="p">()))</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cbSize</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isCbSizeMeaningful</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_wValidBitsPerSample</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isExtensible</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_channelMaskAndSubformat</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\ChannelMaskAndSubformatType</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_isExtensible</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isExtensible</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isExtensible</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isExtensible</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isExtensible</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">wFormatTag</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Wav\WFormatTagType</span><span class="o">::</span><span class="na">EXTENSIBLE</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isExtensible</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_isBasicPcm</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isBasicPcm</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isBasicPcm</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isBasicPcm</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isBasicPcm</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">wFormatTag</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Wav\WFormatTagType</span><span class="o">::</span><span class="na">PCM</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isBasicPcm</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_isBasicFloat</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isBasicFloat</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isBasicFloat</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isBasicFloat</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isBasicFloat</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">wFormatTag</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Wav\WFormatTagType</span><span class="o">::</span><span class="na">IEEE_FLOAT</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isBasicFloat</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_isCbSizeMeaningful</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isCbSizeMeaningful</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isCbSizeMeaningful</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isCbSizeMeaningful</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isCbSizeMeaningful</span> <span class="o">=</span>  <span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isBasicPcm</span><span class="p">()))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">cbSize</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">))</span> <span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isCbSizeMeaningful</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_wFormatTag</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_nChannels</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_nSamplesPerSec</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_nAvgBytesPerSec</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_nBlockAlign</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_wBitsPerSample</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_cbSize</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_wValidBitsPerSample</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_channelMaskAndSubformat</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">wFormatTag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_wFormatTag</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">nChannels</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nChannels</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">nSamplesPerSec</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nSamplesPerSec</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">nAvgBytesPerSec</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nAvgBytesPerSec</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">nBlockAlign</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nBlockAlign</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">wBitsPerSample</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_wBitsPerSample</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">cbSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cbSize</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">wValidBitsPerSample</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_wValidBitsPerSample</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">channelMaskAndSubformat</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_channelMaskAndSubformat</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Wav;
+<span class="k">namespace</span> <span class="nx">\Wav</span><span class="p">;</span>
 
-class GuidType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChannelMaskAndSubformatType $_parent = null, \Wav $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">GuidType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav\ChannelMaskAndSubformatType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_data1 = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_data2 = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_data3 = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_data4 = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_data4a = $this-&gt;_io-&gt;readU4be();
-    }
-    protected $_m_data1;
-    protected $_m_data2;
-    protected $_m_data3;
-    protected $_m_data4;
-    protected $_m_data4a;
-    public function data1() { return $this-&gt;_m_data1; }
-    public function data2() { return $this-&gt;_m_data2; }
-    public function data3() { return $this-&gt;_m_data3; }
-    public function data4() { return $this-&gt;_m_data4; }
-    public function data4a() { return $this-&gt;_m_data4a; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data2</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data3</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data4</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data4a</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_data1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_data2</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_data3</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_data4</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_data4a</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">data1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">data2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data2</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">data3</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data3</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">data4</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data4</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">data4a</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data4a</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Wav;
+<span class="k">namespace</span> <span class="nx">\Wav</span><span class="p">;</span>
 
-class CuePointType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Wav\CueChunkType $_parent = null, \Wav $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">CuePointType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav\CueChunkType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_dwName = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_dwPosition = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_fccChunk = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_dwChunkStart = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_dwBlockStart = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_dwSampleOffset = $this-&gt;_io-&gt;readU4le();
-    }
-    protected $_m_dwName;
-    protected $_m_dwPosition;
-    protected $_m_fccChunk;
-    protected $_m_dwChunkStart;
-    protected $_m_dwBlockStart;
-    protected $_m_dwSampleOffset;
-    public function dwName() { return $this-&gt;_m_dwName; }
-    public function dwPosition() { return $this-&gt;_m_dwPosition; }
-    public function fccChunk() { return $this-&gt;_m_fccChunk; }
-    public function dwChunkStart() { return $this-&gt;_m_dwChunkStart; }
-    public function dwBlockStart() { return $this-&gt;_m_dwBlockStart; }
-    public function dwSampleOffset() { return $this-&gt;_m_dwSampleOffset; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dwName</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dwPosition</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fccChunk</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dwChunkStart</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dwBlockStart</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dwSampleOffset</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_dwName</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_dwPosition</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_fccChunk</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_dwChunkStart</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_dwBlockStart</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_dwSampleOffset</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">dwName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dwName</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">dwPosition</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dwPosition</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fccChunk</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fccChunk</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">dwChunkStart</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dwChunkStart</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">dwBlockStart</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dwBlockStart</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">dwSampleOffset</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dwSampleOffset</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Wav;
+<span class="k">namespace</span> <span class="nx">\Wav</span><span class="p">;</span>
 
-class DataChunkType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">DataChunkType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav\ChunkType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_data = $this-&gt;_io-&gt;readBytesFull();
-    }
-    protected $_m_data;
-    public function data() { return $this-&gt;_m_data; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Wav;
+<span class="k">namespace</span> <span class="nx">\Wav</span><span class="p">;</span>
 
-class SamplesType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Wav $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">SamplesType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_samples = $this-&gt;_io-&gt;readU4le();
-    }
-    protected $_m_samples;
-    public function samples() { return $this-&gt;_m_samples; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_samples</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_samples</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">samples</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_samples</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Wav;
+<span class="k">namespace</span> <span class="nx">\Wav</span><span class="p">;</span>
 
-class ChannelMaskAndSubformatType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Wav\FormatChunkType $_parent = null, \Wav $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ChannelMaskAndSubformatType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav\FormatChunkType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_dwChannelMask = new \Wav\ChannelMaskType($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_subformat = new \Wav\GuidType($this-&gt;_io, $this, $this-&gt;_root);
-    }
-    protected $_m_dwChannelMask;
-    protected $_m_subformat;
-    public function dwChannelMask() { return $this-&gt;_m_dwChannelMask; }
-    public function subformat() { return $this-&gt;_m_subformat; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dwChannelMask</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\ChannelMaskType</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_subformat</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\GuidType</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_dwChannelMask</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_subformat</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">dwChannelMask</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dwChannelMask</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">subformat</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_subformat</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Wav;
+<span class="k">namespace</span> <span class="nx">\Wav</span><span class="p">;</span>
 
-class ChunksType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Wav $_parent = null, \Wav $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ChunksType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_chunk = [];
-        $i = 0;
-        while (!$this-&gt;_io-&gt;isEof()) {
-            $this-&gt;_m_chunk[] = new \Wav\ChunkType($this-&gt;_io, $this, $this-&gt;_root);
-            $i++;
-        }
-    }
-    protected $_m_chunk;
-    public function chunk() { return $this-&gt;_m_chunk; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunk</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunk</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\ChunkType</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_chunk</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">chunk</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunk</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Wav;
+<span class="k">namespace</span> <span class="nx">\Wav</span><span class="p">;</span>
 
-class CueChunkType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">CueChunkType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav\ChunkType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_dwCuePoints = $this-&gt;_io-&gt;readU4le();
-        if ($this-&gt;dwCuePoints() != 0) {
-            $this-&gt;_m_cuePoints = [];
-            $n = $this-&gt;dwCuePoints();
-            for ($i = 0; $i &lt; $n; $i++) {
-                $this-&gt;_m_cuePoints[] = new \Wav\CuePointType($this-&gt;_io, $this, $this-&gt;_root);
-            }
-        }
-    }
-    protected $_m_dwCuePoints;
-    protected $_m_cuePoints;
-    public function dwCuePoints() { return $this-&gt;_m_dwCuePoints; }
-    public function cuePoints() { return $this-&gt;_m_cuePoints; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dwCuePoints</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dwCuePoints</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cuePoints</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dwCuePoints</span><span class="p">();</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cuePoints</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\CuePointType</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_dwCuePoints</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_cuePoints</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">dwCuePoints</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dwCuePoints</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">cuePoints</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_cuePoints</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Wav;
+<span class="k">namespace</span> <span class="nx">\Wav</span><span class="p">;</span>
 
-class ChannelMaskType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChannelMaskAndSubformatType $_parent = null, \Wav $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ChannelMaskType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav\ChannelMaskAndSubformatType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_frontRightOfCenter = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_frontLeftOfCenter = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_backRight = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_backLeft = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_lowFrequency = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_frontCenter = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_frontRight = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_frontLeft = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_topCenter = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_sideRight = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_sideLeft = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_backCenter = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_topBackLeft = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_topFrontRight = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_topFrontCenter = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_topFrontLeft = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_unused1 = $this-&gt;_io-&gt;readBitsInt(6);
-        $this-&gt;_m_topBackRight = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_topBackCenter = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_unused2 = $this-&gt;_io-&gt;readBitsInt(8);
-    }
-    protected $_m_frontRightOfCenter;
-    protected $_m_frontLeftOfCenter;
-    protected $_m_backRight;
-    protected $_m_backLeft;
-    protected $_m_lowFrequency;
-    protected $_m_frontCenter;
-    protected $_m_frontRight;
-    protected $_m_frontLeft;
-    protected $_m_topCenter;
-    protected $_m_sideRight;
-    protected $_m_sideLeft;
-    protected $_m_backCenter;
-    protected $_m_topBackLeft;
-    protected $_m_topFrontRight;
-    protected $_m_topFrontCenter;
-    protected $_m_topFrontLeft;
-    protected $_m_unused1;
-    protected $_m_topBackRight;
-    protected $_m_topBackCenter;
-    protected $_m_unused2;
-    public function frontRightOfCenter() { return $this-&gt;_m_frontRightOfCenter; }
-    public function frontLeftOfCenter() { return $this-&gt;_m_frontLeftOfCenter; }
-    public function backRight() { return $this-&gt;_m_backRight; }
-    public function backLeft() { return $this-&gt;_m_backLeft; }
-    public function lowFrequency() { return $this-&gt;_m_lowFrequency; }
-    public function frontCenter() { return $this-&gt;_m_frontCenter; }
-    public function frontRight() { return $this-&gt;_m_frontRight; }
-    public function frontLeft() { return $this-&gt;_m_frontLeft; }
-    public function topCenter() { return $this-&gt;_m_topCenter; }
-    public function sideRight() { return $this-&gt;_m_sideRight; }
-    public function sideLeft() { return $this-&gt;_m_sideLeft; }
-    public function backCenter() { return $this-&gt;_m_backCenter; }
-    public function topBackLeft() { return $this-&gt;_m_topBackLeft; }
-    public function topFrontRight() { return $this-&gt;_m_topFrontRight; }
-    public function topFrontCenter() { return $this-&gt;_m_topFrontCenter; }
-    public function topFrontLeft() { return $this-&gt;_m_topFrontLeft; }
-    public function unused1() { return $this-&gt;_m_unused1; }
-    public function topBackRight() { return $this-&gt;_m_topBackRight; }
-    public function topBackCenter() { return $this-&gt;_m_topBackCenter; }
-    public function unused2() { return $this-&gt;_m_unused2; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_frontRightOfCenter</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_frontLeftOfCenter</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_backRight</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_backLeft</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lowFrequency</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_frontCenter</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_frontRight</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_frontLeft</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_topCenter</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sideRight</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sideLeft</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_backCenter</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_topBackLeft</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_topFrontRight</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_topFrontCenter</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_topFrontLeft</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_topBackRight</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_topBackCenter</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused2</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_frontRightOfCenter</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_frontLeftOfCenter</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_backRight</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_backLeft</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lowFrequency</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_frontCenter</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_frontRight</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_frontLeft</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_topCenter</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_sideRight</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_sideLeft</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_backCenter</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_topBackLeft</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_topFrontRight</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_topFrontCenter</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_topFrontLeft</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_unused1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_topBackRight</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_topBackCenter</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_unused2</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">frontRightOfCenter</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_frontRightOfCenter</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">frontLeftOfCenter</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_frontLeftOfCenter</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">backRight</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_backRight</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">backLeft</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_backLeft</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lowFrequency</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lowFrequency</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">frontCenter</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_frontCenter</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">frontRight</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_frontRight</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">frontLeft</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_frontLeft</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">topCenter</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_topCenter</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sideRight</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sideRight</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sideLeft</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sideLeft</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">backCenter</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_backCenter</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">topBackLeft</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_topBackLeft</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">topFrontRight</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_topFrontRight</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">topFrontCenter</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_topFrontCenter</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">topFrontLeft</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_topFrontLeft</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">unused1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">topBackRight</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_topBackRight</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">topBackCenter</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_topBackCenter</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">unused2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused2</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Wav;
+<span class="k">namespace</span> <span class="nx">\Wav</span><span class="p">;</span>
 
-class ChunkType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunksType $_parent = null, \Wav $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ChunkType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav\ChunksType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_chunkId = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_len = $this-&gt;_io-&gt;readU4le();
-        switch ($this-&gt;chunkId()) {
-            case 1684108385:
-                $this-&gt;_m__raw_data = $this-&gt;_io-&gt;readBytes($this-&gt;len());
-                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_data);
-                $this-&gt;_m_data = new \Wav\DataChunkType($io, $this, $this-&gt;_root);
-                break;
-            case 1668637984:
-                $this-&gt;_m__raw_data = $this-&gt;_io-&gt;readBytes($this-&gt;len());
-                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_data);
-                $this-&gt;_m_data = new \Wav\CueChunkType($io, $this, $this-&gt;_root);
-                break;
-            case 1650817140:
-                $this-&gt;_m__raw_data = $this-&gt;_io-&gt;readBytes($this-&gt;len());
-                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_data);
-                $this-&gt;_m_data = new \Wav\BextChunkType($io, $this, $this-&gt;_root);
-                break;
-            case 1718449184:
-                $this-&gt;_m__raw_data = $this-&gt;_io-&gt;readBytes($this-&gt;len());
-                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_data);
-                $this-&gt;_m_data = new \Wav\FormatChunkType($io, $this, $this-&gt;_root);
-                break;
-            default:
-                $this-&gt;_m_data = $this-&gt;_io-&gt;readBytes($this-&gt;len());
-                break;
-        }
-    }
-    protected $_m_chunkId;
-    protected $_m_len;
-    protected $_m_data;
-    protected $_m__raw_data;
-    public function chunkId() { return $this-&gt;_m_chunkId; }
-    public function len() { return $this-&gt;_m_len; }
-    public function data() { return $this-&gt;_m_data; }
-    public function _raw_data() { return $this-&gt;_m__raw_data; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkId</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunkId</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="mi">1684108385</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_data</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\DataChunkType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">1668637984</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_data</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\CueChunkType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">1650817140</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_data</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\BextChunkType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">1718449184</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_data</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\FormatChunkType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">default</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_chunkId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_data</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">chunkId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_data</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Wav;
+<span class="k">namespace</span> <span class="nx">\Wav</span><span class="p">;</span>
 
-class BextChunkType extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">BextChunkType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav\ChunkType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_description = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(256), &quot;ASCII&quot;);
-        $this-&gt;_m_originator = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(32), &quot;ASCII&quot;);
-        $this-&gt;_m_originatorReference = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(32), &quot;ASCII&quot;);
-        $this-&gt;_m_originationDate = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(10), &quot;ASCII&quot;);
-        $this-&gt;_m_originationTime = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(8), &quot;ASCII&quot;);
-        $this-&gt;_m_timeReferenceLow = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_timeReferenceHigh = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_version = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_umid = $this-&gt;_io-&gt;readBytes(64);
-        $this-&gt;_m_loudnessValue = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_loudnessRange = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_maxTruePeakLevel = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_maxMomentaryLoudness = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_maxShortTermLoudness = $this-&gt;_io-&gt;readU2le();
-    }
-    protected $_m_description;
-    protected $_m_originator;
-    protected $_m_originatorReference;
-    protected $_m_originationDate;
-    protected $_m_originationTime;
-    protected $_m_timeReferenceLow;
-    protected $_m_timeReferenceHigh;
-    protected $_m_version;
-    protected $_m_umid;
-    protected $_m_loudnessValue;
-    protected $_m_loudnessRange;
-    protected $_m_maxTruePeakLevel;
-    protected $_m_maxMomentaryLoudness;
-    protected $_m_maxShortTermLoudness;
-    public function description() { return $this-&gt;_m_description; }
-    public function originator() { return $this-&gt;_m_originator; }
-    public function originatorReference() { return $this-&gt;_m_originatorReference; }
-    public function originationDate() { return $this-&gt;_m_originationDate; }
-    public function originationTime() { return $this-&gt;_m_originationTime; }
-    public function timeReferenceLow() { return $this-&gt;_m_timeReferenceLow; }
-    public function timeReferenceHigh() { return $this-&gt;_m_timeReferenceHigh; }
-    public function version() { return $this-&gt;_m_version; }
-    public function umid() { return $this-&gt;_m_umid; }
-    public function loudnessValue() { return $this-&gt;_m_loudnessValue; }
-    public function loudnessRange() { return $this-&gt;_m_loudnessRange; }
-    public function maxTruePeakLevel() { return $this-&gt;_m_maxTruePeakLevel; }
-    public function maxMomentaryLoudness() { return $this-&gt;_m_maxMomentaryLoudness; }
-    public function maxShortTermLoudness() { return $this-&gt;_m_maxShortTermLoudness; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_description</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_originator</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_originatorReference</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_originationDate</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_originationTime</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timeReferenceLow</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timeReferenceHigh</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_umid</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">64</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loudnessValue</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loudnessRange</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxTruePeakLevel</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxMomentaryLoudness</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxShortTermLoudness</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_description</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_originator</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_originatorReference</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_originationDate</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_originationTime</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_timeReferenceLow</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_timeReferenceHigh</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_version</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_umid</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_loudnessValue</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_loudnessRange</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_maxTruePeakLevel</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_maxMomentaryLoudness</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_maxShortTermLoudness</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">description</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_description</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">originator</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_originator</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">originatorReference</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_originatorReference</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">originationDate</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_originationDate</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">originationTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_originationTime</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">timeReferenceLow</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timeReferenceLow</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">timeReferenceHigh</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timeReferenceHigh</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">umid</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_umid</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">loudnessValue</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loudnessValue</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">loudnessRange</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loudnessRange</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">maxTruePeakLevel</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxTruePeakLevel</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">maxMomentaryLoudness</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxMomentaryLoudness</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">maxShortTermLoudness</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxShortTermLoudness</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Wav;
+<span class="k">namespace</span> <span class="nx">\Wav</span><span class="p">;</span>
 
-class WFormatTagType {
-    const UNKNOWN = 0;
-    const PCM = 1;
-    const ADPCM = 2;
-    const IEEE_FLOAT = 3;
-    const VSELP = 4;
-    const IBM_CVSD = 5;
-    const ALAW = 6;
-    const MULAW = 7;
-    const DTS = 8;
-    const DRM = 9;
-    const WMAVOICE9 = 10;
-    const WMAVOICE10 = 11;
-    const OKI_ADPCM = 16;
-    const DVI_ADPCM = 17;
-    const MEDIASPACE_ADPCM = 18;
-    const SIERRA_ADPCM = 19;
-    const G723_ADPCM = 20;
-    const DIGISTD = 21;
-    const DIGIFIX = 22;
-    const DIALOGIC_OKI_ADPCM = 23;
-    const MEDIAVISION_ADPCM = 24;
-    const CU_CODEC = 25;
-    const HP_DYN_VOICE = 26;
-    const YAMAHA_ADPCM = 32;
-    const SONARC = 33;
-    const DSPGROUP_TRUESPEECH = 34;
-    const ECHOSC1 = 35;
-    const AUDIOFILE_AF36 = 36;
-    const APTX = 37;
-    const AUDIOFILE_AF10 = 38;
-    const PROSODY_1612 = 39;
-    const LRC = 40;
-    const DOLBY_AC2 = 48;
-    const GSM610 = 49;
-    const MSNAUDIO = 50;
-    const ANTEX_ADPCME = 51;
-    const CONTROL_RES_VQLPC = 52;
-    const DIGIREAL = 53;
-    const DIGIADPCM = 54;
-    const CONTROL_RES_CR10 = 55;
-    const NMS_VBXADPCM = 56;
-    const CS_IMAADPCM = 57;
-    const ECHOSC3 = 58;
-    const ROCKWELL_ADPCM = 59;
-    const ROCKWELL_DIGITALK = 60;
-    const XEBEC = 61;
-    const G721_ADPCM = 64;
-    const G728_CELP = 65;
-    const MSG723 = 66;
-    const INTEL_G723_1 = 67;
-    const INTEL_G729 = 68;
-    const SHARP_G726 = 69;
-    const MPEG = 80;
-    const RT24 = 82;
-    const PAC = 83;
-    const MPEGLAYER3 = 85;
-    const LUCENT_G723 = 89;
-    const CIRRUS = 96;
-    const ESPCM = 97;
-    const VOXWARE = 98;
-    const CANOPUS_ATRAC = 99;
-    const G726_ADPCM = 100;
-    const G722_ADPCM = 101;
-    const DSAT = 102;
-    const DSAT_DISPLAY = 103;
-    const VOXWARE_BYTE_ALIGNED = 105;
-    const VOXWARE_AC8 = 112;
-    const VOXWARE_AC10 = 113;
-    const VOXWARE_AC16 = 114;
-    const VOXWARE_AC20 = 115;
-    const VOXWARE_RT24 = 116;
-    const VOXWARE_RT29 = 117;
-    const VOXWARE_RT29HW = 118;
-    const VOXWARE_VR12 = 119;
-    const VOXWARE_VR18 = 120;
-    const VOXWARE_TQ40 = 121;
-    const VOXWARE_SC3 = 122;
-    const VOXWARE_SC3_1 = 123;
-    const SOFTSOUND = 128;
-    const VOXWARE_TQ60 = 129;
-    const MSRT24 = 130;
-    const G729A = 131;
-    const MVI_MVI2 = 132;
-    const DF_G726 = 133;
-    const DF_GSM610 = 134;
-    const ISIAUDIO = 136;
-    const ONLIVE = 137;
-    const MULTITUDE_FT_SX20 = 138;
-    const INFOCOM_ITS_G721_ADPCM = 139;
-    const CONVEDIA_G729 = 140;
-    const CONGRUENCY = 141;
-    const SBC24 = 145;
-    const DOLBY_AC3_SPDIF = 146;
-    const MEDIASONIC_G723 = 147;
-    const PROSODY_8KBPS = 148;
-    const ZYXEL_ADPCM = 151;
-    const PHILIPS_LPCBB = 152;
-    const PACKED = 153;
-    const MALDEN_PHONYTALK = 160;
-    const RACAL_RECORDER_GSM = 161;
-    const RACAL_RECORDER_G720_A = 162;
-    const RACAL_RECORDER_G723_1 = 163;
-    const RACAL_RECORDER_TETRA_ACELP = 164;
-    const NEC_AAC = 176;
-    const RAW_AAC1 = 255;
-    const RHETOREX_ADPCM = 256;
-    const IRAT = 257;
-    const VIVO_G723 = 273;
-    const VIVO_SIREN = 274;
-    const PHILIPS_CELP = 288;
-    const PHILIPS_GRUNDIG = 289;
-    const DIGITAL_G723 = 291;
-    const SANYO_LD_ADPCM = 293;
-    const SIPROLAB_ACEPLNET = 304;
-    const SIPROLAB_ACELP4800 = 305;
-    const SIPROLAB_ACELP8V3 = 306;
-    const SIPROLAB_G729 = 307;
-    const SIPROLAB_G729A = 308;
-    const SIPROLAB_KELVIN = 309;
-    const VOICEAGE_AMR = 310;
-    const G726ADPCM = 320;
-    const DICTAPHONE_CELP68 = 321;
-    const DICTAPHONE_CELP54 = 322;
-    const QUALCOMM_PUREVOICE = 336;
-    const QUALCOMM_HALFRATE = 337;
-    const TUBGSM = 341;
-    const MSAUDIO1 = 352;
-    const WMAUDIO2 = 353;
-    const WMAUDIO3 = 354;
-    const WMAUDIO_LOSSLESS = 355;
-    const WMASPDIF = 356;
-    const UNISYS_NAP_ADPCM = 368;
-    const UNISYS_NAP_ULAW = 369;
-    const UNISYS_NAP_ALAW = 370;
-    const UNISYS_NAP_16K = 371;
-    const SYCOM_ACM_SYC008 = 372;
-    const SYCOM_ACM_SYC701_G726L = 373;
-    const SYCOM_ACM_SYC701_CELP54 = 374;
-    const SYCOM_ACM_SYC701_CELP68 = 375;
-    const KNOWLEDGE_ADVENTURE_ADPCM = 376;
-    const FRAUNHOFER_IIS_MPEG2_AAC = 384;
-    const DTS_DS = 400;
-    const CREATIVE_ADPCM = 512;
-    const CREATIVE_FASTSPEECH8 = 514;
-    const CREATIVE_FASTSPEECH10 = 515;
-    const UHER_ADPCM = 528;
-    const ULEAD_DV_AUDIO = 533;
-    const ULEAD_DV_AUDIO_1 = 534;
-    const QUARTERDECK = 544;
-    const ILINK_VC = 560;
-    const RAW_SPORT = 576;
-    const ESST_AC3 = 577;
-    const GENERIC_PASSTHRU = 585;
-    const IPI_HSX = 592;
-    const IPI_RPELP = 593;
-    const CS2 = 608;
-    const SONY_SCX = 624;
-    const SONY_SCY = 625;
-    const SONY_ATRAC3 = 626;
-    const SONY_SPC = 627;
-    const TELUM_AUDIO = 640;
-    const TELUM_IA_AUDIO = 641;
-    const NORCOM_VOICE_SYSTEMS_ADPCM = 645;
-    const FM_TOWNS_SND = 768;
-    const MICRONAS = 848;
-    const MICRONAS_CELP833 = 849;
-    const BTV_DIGITAL = 1024;
-    const INTEL_MUSIC_CODER = 1025;
-    const INDEO_AUDIO = 1026;
-    const QDESIGN_MUSIC = 1104;
-    const ON2_VP7_AUDIO = 1280;
-    const ON2_VP6_AUDIO = 1281;
-    const VME_VMPCM = 1664;
-    const TPC = 1665;
-    const LIGHTWAVE_LOSSLESS = 2222;
-    const OLIGSM = 4096;
-    const OLIADPCM = 4097;
-    const OLICELP = 4098;
-    const OLISBC = 4099;
-    const OLIOPR = 4100;
-    const LH_CODEC = 4352;
-    const LH_CODEC_CELP = 4353;
-    const LH_CODEC_SBC8 = 4354;
-    const LH_CODEC_SBC12 = 4355;
-    const LH_CODEC_SBC16 = 4356;
-    const NORRIS = 5120;
-    const ISIAUDIO_2 = 5121;
-    const SOUNDSPACE_MUSICOMPRESS = 5376;
-    const MPEG_ADTS_AAC = 5632;
-    const MPEG_RAW_AAC = 5633;
-    const MPEG_LOAS = 5634;
-    const NOKIA_MPEG_ADTS_AAC = 5640;
-    const NOKIA_MPEG_RAW_AAC = 5641;
-    const VODAFONE_MPEG_ADTS_AAC = 5642;
-    const VODAFONE_MPEG_RAW_AAC = 5643;
-    const MPEG_HEAAC = 5648;
-    const VOXWARE_RT24_SPEECH = 6172;
-    const SONICFOUNDRY_LOSSLESS = 6513;
-    const INNINGS_TELECOM_ADPCM = 6521;
-    const LUCENT_SX8300P = 7175;
-    const LUCENT_SX5363S = 7180;
-    const CUSEEME = 7939;
-    const NTCSOFT_ALF2CM_ACM = 8132;
-    const DVM = 8192;
-    const DTS2 = 8193;
-    const MAKEAVIS = 13075;
-    const DIVIO_MPEG4_AAC = 16707;
-    const NOKIA_ADAPTIVE_MULTIRATE = 16897;
-    const DIVIO_G726 = 16963;
-    const LEAD_SPEECH = 17228;
-    const LEAD_VORBIS = 22092;
-    const WAVPACK_AUDIO = 22358;
-    const OGG_VORBIS_MODE_1 = 26447;
-    const OGG_VORBIS_MODE_2 = 26448;
-    const OGG_VORBIS_MODE_3 = 26449;
-    const OGG_VORBIS_MODE_1_PLUS = 26479;
-    const OGG_VORBIS_MODE_2_PLUS = 26480;
-    const OGG_VORBIS_MODE_3_PLUS = 26481;
-    const THREECOM_NBX = 28672;
-    const FAAD_AAC = 28781;
-    const AMR_NB = 29537;
-    const AMR_WB = 29538;
-    const AMR_WP = 29539;
-    const GSM_AMR_CBR = 31265;
-    const GSM_AMR_VBR_SID = 31266;
-    const COMVERSE_INFOSYS_G723_1 = 41216;
-    const COMVERSE_INFOSYS_AVQSBC = 41217;
-    const COMVERSE_INFOSYS_SBC = 41218;
-    const SYMBOL_G729_A = 41219;
-    const VOICEAGE_AMR_WB = 41220;
-    const INGENIENT_G726 = 41221;
-    const MPEG4_AAC = 41222;
-    const ENCORE_G726 = 41223;
-    const ZOLL_ASAO = 41224;
-    const SPEEX_VOICE = 41225;
-    const VIANIX_MASC = 41226;
-    const WM9_SPECTRUM_ANALYZER = 41227;
-    const WMF_SPECTRUM_ANAYZER = 41228;
-    const GSM_610 = 41229;
-    const GSM_620 = 41230;
-    const GSM_660 = 41231;
-    const GSM_690 = 41232;
-    const GSM_ADAPTIVE_MULTIRATE_WB = 41233;
-    const POLYCOM_G722 = 41234;
-    const POLYCOM_G728 = 41235;
-    const POLYCOM_G729_A = 41236;
-    const POLYCOM_SIREN = 41237;
-    const GLOBAL_IP_ILBC = 41238;
-    const RADIOTIME_TIME_SHIFT_RADIO = 41239;
-    const NICE_ACA = 41240;
-    const NICE_ADPCM = 41241;
-    const VOCORD_G721 = 41242;
-    const VOCORD_G726 = 41243;
-    const VOCORD_G722_1 = 41244;
-    const VOCORD_G728 = 41245;
-    const VOCORD_G729 = 41246;
-    const VOCORD_G729_A = 41247;
-    const VOCORD_G723_1 = 41248;
-    const VOCORD_LBC = 41249;
-    const NICE_G728 = 41250;
-    const FRACE_TELECOM_G729 = 41251;
-    const CODIAN = 41252;
-    const FLAC = 61868;
-    const EXTENSIBLE = 65534;
-    const DEVELOPMENT = 65535;
-}
+<span class="k">class</span> <span class="nc">WFormatTagType</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">UNKNOWN</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">PCM</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ADPCM</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">IEEE_FLOAT</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VSELP</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">IBM_CVSD</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ALAW</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MULAW</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DTS</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DRM</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">WMAVOICE9</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">WMAVOICE10</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">OKI_ADPCM</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DVI_ADPCM</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MEDIASPACE_ADPCM</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SIERRA_ADPCM</span> <span class="o">=</span> <span class="mi">19</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">G723_ADPCM</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DIGISTD</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DIGIFIX</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DIALOGIC_OKI_ADPCM</span> <span class="o">=</span> <span class="mi">23</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MEDIAVISION_ADPCM</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CU_CODEC</span> <span class="o">=</span> <span class="mi">25</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">HP_DYN_VOICE</span> <span class="o">=</span> <span class="mi">26</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">YAMAHA_ADPCM</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SONARC</span> <span class="o">=</span> <span class="mi">33</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DSPGROUP_TRUESPEECH</span> <span class="o">=</span> <span class="mi">34</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ECHOSC1</span> <span class="o">=</span> <span class="mi">35</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">AUDIOFILE_AF36</span> <span class="o">=</span> <span class="mi">36</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">APTX</span> <span class="o">=</span> <span class="mi">37</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">AUDIOFILE_AF10</span> <span class="o">=</span> <span class="mi">38</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">PROSODY_1612</span> <span class="o">=</span> <span class="mi">39</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LRC</span> <span class="o">=</span> <span class="mi">40</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DOLBY_AC2</span> <span class="o">=</span> <span class="mi">48</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">GSM610</span> <span class="o">=</span> <span class="mi">49</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MSNAUDIO</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ANTEX_ADPCME</span> <span class="o">=</span> <span class="mi">51</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CONTROL_RES_VQLPC</span> <span class="o">=</span> <span class="mi">52</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DIGIREAL</span> <span class="o">=</span> <span class="mi">53</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DIGIADPCM</span> <span class="o">=</span> <span class="mi">54</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CONTROL_RES_CR10</span> <span class="o">=</span> <span class="mi">55</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">NMS_VBXADPCM</span> <span class="o">=</span> <span class="mi">56</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CS_IMAADPCM</span> <span class="o">=</span> <span class="mi">57</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ECHOSC3</span> <span class="o">=</span> <span class="mi">58</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ROCKWELL_ADPCM</span> <span class="o">=</span> <span class="mi">59</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ROCKWELL_DIGITALK</span> <span class="o">=</span> <span class="mi">60</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">XEBEC</span> <span class="o">=</span> <span class="mi">61</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">G721_ADPCM</span> <span class="o">=</span> <span class="mi">64</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">G728_CELP</span> <span class="o">=</span> <span class="mi">65</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MSG723</span> <span class="o">=</span> <span class="mi">66</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">INTEL_G723_1</span> <span class="o">=</span> <span class="mi">67</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">INTEL_G729</span> <span class="o">=</span> <span class="mi">68</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SHARP_G726</span> <span class="o">=</span> <span class="mi">69</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MPEG</span> <span class="o">=</span> <span class="mi">80</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RT24</span> <span class="o">=</span> <span class="mi">82</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">PAC</span> <span class="o">=</span> <span class="mi">83</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MPEGLAYER3</span> <span class="o">=</span> <span class="mi">85</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LUCENT_G723</span> <span class="o">=</span> <span class="mi">89</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CIRRUS</span> <span class="o">=</span> <span class="mi">96</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ESPCM</span> <span class="o">=</span> <span class="mi">97</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE</span> <span class="o">=</span> <span class="mi">98</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CANOPUS_ATRAC</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">G726_ADPCM</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">G722_ADPCM</span> <span class="o">=</span> <span class="mi">101</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DSAT</span> <span class="o">=</span> <span class="mi">102</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DSAT_DISPLAY</span> <span class="o">=</span> <span class="mi">103</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE_BYTE_ALIGNED</span> <span class="o">=</span> <span class="mi">105</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE_AC8</span> <span class="o">=</span> <span class="mi">112</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE_AC10</span> <span class="o">=</span> <span class="mi">113</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE_AC16</span> <span class="o">=</span> <span class="mi">114</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE_AC20</span> <span class="o">=</span> <span class="mi">115</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE_RT24</span> <span class="o">=</span> <span class="mi">116</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE_RT29</span> <span class="o">=</span> <span class="mi">117</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE_RT29HW</span> <span class="o">=</span> <span class="mi">118</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE_VR12</span> <span class="o">=</span> <span class="mi">119</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE_VR18</span> <span class="o">=</span> <span class="mi">120</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE_TQ40</span> <span class="o">=</span> <span class="mi">121</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE_SC3</span> <span class="o">=</span> <span class="mi">122</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE_SC3_1</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SOFTSOUND</span> <span class="o">=</span> <span class="mi">128</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE_TQ60</span> <span class="o">=</span> <span class="mi">129</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MSRT24</span> <span class="o">=</span> <span class="mi">130</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">G729A</span> <span class="o">=</span> <span class="mi">131</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MVI_MVI2</span> <span class="o">=</span> <span class="mi">132</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DF_G726</span> <span class="o">=</span> <span class="mi">133</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DF_GSM610</span> <span class="o">=</span> <span class="mi">134</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ISIAUDIO</span> <span class="o">=</span> <span class="mi">136</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ONLIVE</span> <span class="o">=</span> <span class="mi">137</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MULTITUDE_FT_SX20</span> <span class="o">=</span> <span class="mi">138</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">INFOCOM_ITS_G721_ADPCM</span> <span class="o">=</span> <span class="mi">139</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CONVEDIA_G729</span> <span class="o">=</span> <span class="mi">140</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CONGRUENCY</span> <span class="o">=</span> <span class="mi">141</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SBC24</span> <span class="o">=</span> <span class="mi">145</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DOLBY_AC3_SPDIF</span> <span class="o">=</span> <span class="mi">146</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MEDIASONIC_G723</span> <span class="o">=</span> <span class="mi">147</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">PROSODY_8KBPS</span> <span class="o">=</span> <span class="mi">148</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ZYXEL_ADPCM</span> <span class="o">=</span> <span class="mi">151</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">PHILIPS_LPCBB</span> <span class="o">=</span> <span class="mi">152</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">PACKED</span> <span class="o">=</span> <span class="mi">153</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MALDEN_PHONYTALK</span> <span class="o">=</span> <span class="mi">160</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RACAL_RECORDER_GSM</span> <span class="o">=</span> <span class="mi">161</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RACAL_RECORDER_G720_A</span> <span class="o">=</span> <span class="mi">162</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RACAL_RECORDER_G723_1</span> <span class="o">=</span> <span class="mi">163</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RACAL_RECORDER_TETRA_ACELP</span> <span class="o">=</span> <span class="mi">164</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">NEC_AAC</span> <span class="o">=</span> <span class="mi">176</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RAW_AAC1</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RHETOREX_ADPCM</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">IRAT</span> <span class="o">=</span> <span class="mi">257</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VIVO_G723</span> <span class="o">=</span> <span class="mi">273</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VIVO_SIREN</span> <span class="o">=</span> <span class="mi">274</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">PHILIPS_CELP</span> <span class="o">=</span> <span class="mi">288</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">PHILIPS_GRUNDIG</span> <span class="o">=</span> <span class="mi">289</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DIGITAL_G723</span> <span class="o">=</span> <span class="mi">291</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SANYO_LD_ADPCM</span> <span class="o">=</span> <span class="mi">293</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SIPROLAB_ACEPLNET</span> <span class="o">=</span> <span class="mi">304</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SIPROLAB_ACELP4800</span> <span class="o">=</span> <span class="mi">305</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SIPROLAB_ACELP8V3</span> <span class="o">=</span> <span class="mi">306</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SIPROLAB_G729</span> <span class="o">=</span> <span class="mi">307</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SIPROLAB_G729A</span> <span class="o">=</span> <span class="mi">308</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SIPROLAB_KELVIN</span> <span class="o">=</span> <span class="mi">309</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOICEAGE_AMR</span> <span class="o">=</span> <span class="mi">310</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">G726ADPCM</span> <span class="o">=</span> <span class="mi">320</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DICTAPHONE_CELP68</span> <span class="o">=</span> <span class="mi">321</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DICTAPHONE_CELP54</span> <span class="o">=</span> <span class="mi">322</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">QUALCOMM_PUREVOICE</span> <span class="o">=</span> <span class="mi">336</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">QUALCOMM_HALFRATE</span> <span class="o">=</span> <span class="mi">337</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">TUBGSM</span> <span class="o">=</span> <span class="mi">341</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MSAUDIO1</span> <span class="o">=</span> <span class="mi">352</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">WMAUDIO2</span> <span class="o">=</span> <span class="mi">353</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">WMAUDIO3</span> <span class="o">=</span> <span class="mi">354</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">WMAUDIO_LOSSLESS</span> <span class="o">=</span> <span class="mi">355</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">WMASPDIF</span> <span class="o">=</span> <span class="mi">356</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNISYS_NAP_ADPCM</span> <span class="o">=</span> <span class="mi">368</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNISYS_NAP_ULAW</span> <span class="o">=</span> <span class="mi">369</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNISYS_NAP_ALAW</span> <span class="o">=</span> <span class="mi">370</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UNISYS_NAP_16K</span> <span class="o">=</span> <span class="mi">371</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SYCOM_ACM_SYC008</span> <span class="o">=</span> <span class="mi">372</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SYCOM_ACM_SYC701_G726L</span> <span class="o">=</span> <span class="mi">373</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SYCOM_ACM_SYC701_CELP54</span> <span class="o">=</span> <span class="mi">374</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SYCOM_ACM_SYC701_CELP68</span> <span class="o">=</span> <span class="mi">375</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">KNOWLEDGE_ADVENTURE_ADPCM</span> <span class="o">=</span> <span class="mi">376</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">FRAUNHOFER_IIS_MPEG2_AAC</span> <span class="o">=</span> <span class="mi">384</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DTS_DS</span> <span class="o">=</span> <span class="mi">400</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CREATIVE_ADPCM</span> <span class="o">=</span> <span class="mi">512</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CREATIVE_FASTSPEECH8</span> <span class="o">=</span> <span class="mi">514</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CREATIVE_FASTSPEECH10</span> <span class="o">=</span> <span class="mi">515</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UHER_ADPCM</span> <span class="o">=</span> <span class="mi">528</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ULEAD_DV_AUDIO</span> <span class="o">=</span> <span class="mi">533</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ULEAD_DV_AUDIO_1</span> <span class="o">=</span> <span class="mi">534</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">QUARTERDECK</span> <span class="o">=</span> <span class="mi">544</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ILINK_VC</span> <span class="o">=</span> <span class="mi">560</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RAW_SPORT</span> <span class="o">=</span> <span class="mi">576</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ESST_AC3</span> <span class="o">=</span> <span class="mi">577</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">GENERIC_PASSTHRU</span> <span class="o">=</span> <span class="mi">585</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">IPI_HSX</span> <span class="o">=</span> <span class="mi">592</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">IPI_RPELP</span> <span class="o">=</span> <span class="mi">593</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CS2</span> <span class="o">=</span> <span class="mi">608</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SONY_SCX</span> <span class="o">=</span> <span class="mi">624</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SONY_SCY</span> <span class="o">=</span> <span class="mi">625</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SONY_ATRAC3</span> <span class="o">=</span> <span class="mi">626</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SONY_SPC</span> <span class="o">=</span> <span class="mi">627</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">TELUM_AUDIO</span> <span class="o">=</span> <span class="mi">640</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">TELUM_IA_AUDIO</span> <span class="o">=</span> <span class="mi">641</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">NORCOM_VOICE_SYSTEMS_ADPCM</span> <span class="o">=</span> <span class="mi">645</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">FM_TOWNS_SND</span> <span class="o">=</span> <span class="mi">768</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MICRONAS</span> <span class="o">=</span> <span class="mi">848</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MICRONAS_CELP833</span> <span class="o">=</span> <span class="mi">849</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">BTV_DIGITAL</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">INTEL_MUSIC_CODER</span> <span class="o">=</span> <span class="mi">1025</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">INDEO_AUDIO</span> <span class="o">=</span> <span class="mi">1026</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">QDESIGN_MUSIC</span> <span class="o">=</span> <span class="mi">1104</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ON2_VP7_AUDIO</span> <span class="o">=</span> <span class="mi">1280</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ON2_VP6_AUDIO</span> <span class="o">=</span> <span class="mi">1281</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VME_VMPCM</span> <span class="o">=</span> <span class="mi">1664</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">TPC</span> <span class="o">=</span> <span class="mi">1665</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LIGHTWAVE_LOSSLESS</span> <span class="o">=</span> <span class="mi">2222</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">OLIGSM</span> <span class="o">=</span> <span class="mi">4096</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">OLIADPCM</span> <span class="o">=</span> <span class="mi">4097</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">OLICELP</span> <span class="o">=</span> <span class="mi">4098</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">OLISBC</span> <span class="o">=</span> <span class="mi">4099</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">OLIOPR</span> <span class="o">=</span> <span class="mi">4100</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LH_CODEC</span> <span class="o">=</span> <span class="mi">4352</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LH_CODEC_CELP</span> <span class="o">=</span> <span class="mi">4353</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LH_CODEC_SBC8</span> <span class="o">=</span> <span class="mi">4354</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LH_CODEC_SBC12</span> <span class="o">=</span> <span class="mi">4355</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LH_CODEC_SBC16</span> <span class="o">=</span> <span class="mi">4356</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">NORRIS</span> <span class="o">=</span> <span class="mi">5120</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ISIAUDIO_2</span> <span class="o">=</span> <span class="mi">5121</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SOUNDSPACE_MUSICOMPRESS</span> <span class="o">=</span> <span class="mi">5376</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MPEG_ADTS_AAC</span> <span class="o">=</span> <span class="mi">5632</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MPEG_RAW_AAC</span> <span class="o">=</span> <span class="mi">5633</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MPEG_LOAS</span> <span class="o">=</span> <span class="mi">5634</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">NOKIA_MPEG_ADTS_AAC</span> <span class="o">=</span> <span class="mi">5640</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">NOKIA_MPEG_RAW_AAC</span> <span class="o">=</span> <span class="mi">5641</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VODAFONE_MPEG_ADTS_AAC</span> <span class="o">=</span> <span class="mi">5642</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VODAFONE_MPEG_RAW_AAC</span> <span class="o">=</span> <span class="mi">5643</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MPEG_HEAAC</span> <span class="o">=</span> <span class="mi">5648</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOXWARE_RT24_SPEECH</span> <span class="o">=</span> <span class="mi">6172</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SONICFOUNDRY_LOSSLESS</span> <span class="o">=</span> <span class="mi">6513</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">INNINGS_TELECOM_ADPCM</span> <span class="o">=</span> <span class="mi">6521</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LUCENT_SX8300P</span> <span class="o">=</span> <span class="mi">7175</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LUCENT_SX5363S</span> <span class="o">=</span> <span class="mi">7180</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CUSEEME</span> <span class="o">=</span> <span class="mi">7939</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">NTCSOFT_ALF2CM_ACM</span> <span class="o">=</span> <span class="mi">8132</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DVM</span> <span class="o">=</span> <span class="mi">8192</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DTS2</span> <span class="o">=</span> <span class="mi">8193</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MAKEAVIS</span> <span class="o">=</span> <span class="mi">13075</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DIVIO_MPEG4_AAC</span> <span class="o">=</span> <span class="mi">16707</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">NOKIA_ADAPTIVE_MULTIRATE</span> <span class="o">=</span> <span class="mi">16897</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DIVIO_G726</span> <span class="o">=</span> <span class="mi">16963</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LEAD_SPEECH</span> <span class="o">=</span> <span class="mi">17228</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LEAD_VORBIS</span> <span class="o">=</span> <span class="mi">22092</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">WAVPACK_AUDIO</span> <span class="o">=</span> <span class="mi">22358</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">OGG_VORBIS_MODE_1</span> <span class="o">=</span> <span class="mi">26447</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">OGG_VORBIS_MODE_2</span> <span class="o">=</span> <span class="mi">26448</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">OGG_VORBIS_MODE_3</span> <span class="o">=</span> <span class="mi">26449</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">OGG_VORBIS_MODE_1_PLUS</span> <span class="o">=</span> <span class="mi">26479</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">OGG_VORBIS_MODE_2_PLUS</span> <span class="o">=</span> <span class="mi">26480</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">OGG_VORBIS_MODE_3_PLUS</span> <span class="o">=</span> <span class="mi">26481</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">THREECOM_NBX</span> <span class="o">=</span> <span class="mi">28672</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">FAAD_AAC</span> <span class="o">=</span> <span class="mi">28781</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">AMR_NB</span> <span class="o">=</span> <span class="mi">29537</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">AMR_WB</span> <span class="o">=</span> <span class="mi">29538</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">AMR_WP</span> <span class="o">=</span> <span class="mi">29539</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">GSM_AMR_CBR</span> <span class="o">=</span> <span class="mi">31265</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">GSM_AMR_VBR_SID</span> <span class="o">=</span> <span class="mi">31266</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">COMVERSE_INFOSYS_G723_1</span> <span class="o">=</span> <span class="mi">41216</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">COMVERSE_INFOSYS_AVQSBC</span> <span class="o">=</span> <span class="mi">41217</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">COMVERSE_INFOSYS_SBC</span> <span class="o">=</span> <span class="mi">41218</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SYMBOL_G729_A</span> <span class="o">=</span> <span class="mi">41219</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOICEAGE_AMR_WB</span> <span class="o">=</span> <span class="mi">41220</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">INGENIENT_G726</span> <span class="o">=</span> <span class="mi">41221</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MPEG4_AAC</span> <span class="o">=</span> <span class="mi">41222</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ENCORE_G726</span> <span class="o">=</span> <span class="mi">41223</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ZOLL_ASAO</span> <span class="o">=</span> <span class="mi">41224</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SPEEX_VOICE</span> <span class="o">=</span> <span class="mi">41225</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VIANIX_MASC</span> <span class="o">=</span> <span class="mi">41226</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">WM9_SPECTRUM_ANALYZER</span> <span class="o">=</span> <span class="mi">41227</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">WMF_SPECTRUM_ANAYZER</span> <span class="o">=</span> <span class="mi">41228</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">GSM_610</span> <span class="o">=</span> <span class="mi">41229</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">GSM_620</span> <span class="o">=</span> <span class="mi">41230</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">GSM_660</span> <span class="o">=</span> <span class="mi">41231</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">GSM_690</span> <span class="o">=</span> <span class="mi">41232</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">GSM_ADAPTIVE_MULTIRATE_WB</span> <span class="o">=</span> <span class="mi">41233</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">POLYCOM_G722</span> <span class="o">=</span> <span class="mi">41234</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">POLYCOM_G728</span> <span class="o">=</span> <span class="mi">41235</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">POLYCOM_G729_A</span> <span class="o">=</span> <span class="mi">41236</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">POLYCOM_SIREN</span> <span class="o">=</span> <span class="mi">41237</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">GLOBAL_IP_ILBC</span> <span class="o">=</span> <span class="mi">41238</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RADIOTIME_TIME_SHIFT_RADIO</span> <span class="o">=</span> <span class="mi">41239</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">NICE_ACA</span> <span class="o">=</span> <span class="mi">41240</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">NICE_ADPCM</span> <span class="o">=</span> <span class="mi">41241</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOCORD_G721</span> <span class="o">=</span> <span class="mi">41242</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOCORD_G726</span> <span class="o">=</span> <span class="mi">41243</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOCORD_G722_1</span> <span class="o">=</span> <span class="mi">41244</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOCORD_G728</span> <span class="o">=</span> <span class="mi">41245</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOCORD_G729</span> <span class="o">=</span> <span class="mi">41246</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOCORD_G729_A</span> <span class="o">=</span> <span class="mi">41247</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOCORD_G723_1</span> <span class="o">=</span> <span class="mi">41248</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">VOCORD_LBC</span> <span class="o">=</span> <span class="mi">41249</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">NICE_G728</span> <span class="o">=</span> <span class="mi">41250</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">FRACE_TELECOM_G729</span> <span class="o">=</span> <span class="mi">41251</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CODIAN</span> <span class="o">=</span> <span class="mi">41252</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">FLAC</span> <span class="o">=</span> <span class="mi">61868</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">EXTENSIBLE</span> <span class="o">=</span> <span class="mi">65534</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DEVELOPMENT</span> <span class="o">=</span> <span class="mi">65535</span><span class="p">;</span>
+<span class="p">}</span>
 
-namespace \Wav;
+<span class="k">namespace</span> <span class="nx">\Wav</span><span class="p">;</span>
 
-class ChunkType {
-    const FMT = 544501094;
-    const BEXT = 1650817140;
-    const CUE = 1668637984;
-    const DATA = 1684108385;
-    const MINF = 1835626086;
-    const REGN = 1919248238;
-    const UMID = 1970104676;
-}
-</code></pre>
+<span class="k">class</span> <span class="nc">ChunkType</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">FMT</span> <span class="o">=</span> <span class="mi">544501094</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">BEXT</span> <span class="o">=</span> <span class="mi">1650817140</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CUE</span> <span class="o">=</span> <span class="mi">1668637984</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">DATA</span> <span class="o">=</span> <span class="mi">1684108385</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MINF</span> <span class="o">=</span> <span class="mi">1835626086</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">REGN</span> <span class="o">=</span> <span class="mi">1919248238</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">UMID</span> <span class="o">=</span> <span class="mi">1970104676</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -990,8 +987,8 @@ class ChunkType {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

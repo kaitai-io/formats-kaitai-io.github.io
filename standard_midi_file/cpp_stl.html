@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -313,487 +310,487 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef STANDARD_MIDI_FILE_H_
-#define STANDARD_MIDI_FILE_H_
-
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef STANDARD_MIDI_FILE_H_</span>
+<span class="cp">#define STANDARD_MIDI_FILE_H_</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;kaitai/kaitaistruct.h&quot;
-
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
-class vlq_base128_be_t;
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
+<span class="k">class</span> <span class="nc">vlq_base128_be_t</span><span class="p">;</span>
 
-/**
- * Standard MIDI file, typically knows just as &quot;MID&quot;, is a standard way
- * to serialize series of MIDI events, which is a protocol used in many
- * music synthesizers to transfer music data: notes being played,
- * effects being applied, etc.
- * 
- * Internally, file consists of a header and series of tracks, every
- * track listing MIDI events with certain header designating time these
- * events are happening.
- * 
- * NOTE: Rarely, MIDI files employ certain stateful compression scheme
- * to avoid storing certain elements of further elements, instead
- * reusing them from events which happened earlier in the
- * stream. Kaitai Struct (as of v0.9) is currently unable to parse
- * these, but files employing this mechanism are relatively rare.
- */
+<span class="cm">/**</span>
+<span class="cm"> * Standard MIDI file, typically knows just as &quot;MID&quot;, is a standard way</span>
+<span class="cm"> * to serialize series of MIDI events, which is a protocol used in many</span>
+<span class="cm"> * music synthesizers to transfer music data: notes being played,</span>
+<span class="cm"> * effects being applied, etc.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Internally, file consists of a header and series of tracks, every</span>
+<span class="cm"> * track listing MIDI events with certain header designating time these</span>
+<span class="cm"> * events are happening.</span>
+<span class="cm"> * </span>
+<span class="cm"> * NOTE: Rarely, MIDI files employ certain stateful compression scheme</span>
+<span class="cm"> * to avoid storing certain elements of further elements, instead</span>
+<span class="cm"> * reusing them from events which happened earlier in the</span>
+<span class="cm"> * stream. Kaitai Struct (as of v0.9) is currently unable to parse</span>
+<span class="cm"> * these, but files employing this mechanism are relatively rare.</span>
+<span class="cm"> */</span>
 
-class standard_midi_file_t : public kaitai::kstruct {
+<span class="k">class</span> <span class="nc">standard_midi_file_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-public:
-    class track_events_t;
-    class track_event_t;
-    class pitch_bend_event_t;
-    class program_change_event_t;
-    class note_on_event_t;
-    class polyphonic_pressure_event_t;
-    class track_t;
-    class meta_event_body_t;
-    class controller_event_t;
-    class header_t;
-    class sysex_event_body_t;
-    class note_off_event_t;
-    class channel_pressure_event_t;
-
-    standard_midi_file_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, standard_midi_file_t* p__root = 0);
-
-private:
-    void _read();
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">track_events_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">track_event_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">pitch_bend_event_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">program_change_event_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">note_on_event_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">polyphonic_pressure_event_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">track_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">meta_event_body_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">controller_event_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">header_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">sysex_event_body_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">note_off_event_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">channel_pressure_event_t</span><span class="p">;</span>
+
+    <span class="n">standard_midi_file_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-public:
-    ~standard_midi_file_t();
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">standard_midi_file_t</span><span class="p">();</span>
 
-    class track_events_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">track_events_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        track_events_t(kaitai::kstream* p__io, standard_midi_file_t::track_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+        <span class="n">track_events_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~track_events_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">track_events_t</span><span class="p">();</span>
 
-    private:
-        std::vector&lt;track_event_t*&gt;* m_event;
-        standard_midi_file_t* m__root;
-        standard_midi_file_t::track_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">track_event_t</span><span class="o">*&gt;*</span> <span class="n">m_event</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        std::vector&lt;track_event_t*&gt;* event() const { return m_event; }
-        standard_midi_file_t* _root() const { return m__root; }
-        standard_midi_file_t::track_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">track_event_t</span><span class="o">*&gt;*</span> <span class="n">event</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_event</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class track_event_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">track_event_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        track_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_events_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+        <span class="n">track_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_events_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~track_event_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">track_event_t</span><span class="p">();</span>
 
-    private:
-        bool f_event_type;
-        int32_t m_event_type;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_event_type</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_event_type</span><span class="p">;</span>
 
-    public:
-        int32_t event_type();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">event_type</span><span class="p">();</span>
 
-    private:
-        bool f_channel;
-        int32_t m_channel;
-        bool n_channel;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_channel</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_channel</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_channel</span><span class="p">;</span>
 
-    public:
-        bool _is_null_channel() { channel(); return n_channel; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_channel</span><span class="p">()</span> <span class="p">{</span> <span class="n">channel</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_channel</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
+    <span class="k">private</span><span class="o">:</span>
 
-    public:
-        int32_t channel();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">channel</span><span class="p">();</span>
 
-    private:
-        vlq_base128_be_t* m_v_time;
-        uint8_t m_event_header;
-        meta_event_body_t* m_meta_event_body;
-        bool n_meta_event_body;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">vlq_base128_be_t</span><span class="o">*</span> <span class="n">m_v_time</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_event_header</span><span class="p">;</span>
+        <span class="n">meta_event_body_t</span><span class="o">*</span> <span class="n">m_meta_event_body</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_meta_event_body</span><span class="p">;</span>
 
-    public:
-        bool _is_null_meta_event_body() { meta_event_body(); return n_meta_event_body; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_meta_event_body</span><span class="p">()</span> <span class="p">{</span> <span class="n">meta_event_body</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_meta_event_body</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
-        sysex_event_body_t* m_sysex_body;
-        bool n_sysex_body;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">sysex_event_body_t</span><span class="o">*</span> <span class="n">m_sysex_body</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_sysex_body</span><span class="p">;</span>
 
-    public:
-        bool _is_null_sysex_body() { sysex_body(); return n_sysex_body; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_sysex_body</span><span class="p">()</span> <span class="p">{</span> <span class="n">sysex_body</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_sysex_body</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
-        kaitai::kstruct* m_event_body;
-        bool n_event_body;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m_event_body</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_event_body</span><span class="p">;</span>
 
-    public:
-        bool _is_null_event_body() { event_body(); return n_event_body; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_event_body</span><span class="p">()</span> <span class="p">{</span> <span class="n">event_body</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_event_body</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
-        standard_midi_file_t* m__root;
-        standard_midi_file_t::track_events_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_events_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        vlq_base128_be_t* v_time() const { return m_v_time; }
-        uint8_t event_header() const { return m_event_header; }
-        meta_event_body_t* meta_event_body() const { return m_meta_event_body; }
-        sysex_event_body_t* sysex_body() const { return m_sysex_body; }
-        kaitai::kstruct* event_body() const { return m_event_body; }
-        standard_midi_file_t* _root() const { return m__root; }
-        standard_midi_file_t::track_events_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">vlq_base128_be_t</span><span class="o">*</span> <span class="n">v_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_v_time</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">event_header</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_event_header</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">meta_event_body_t</span><span class="o">*</span> <span class="n">meta_event_body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_meta_event_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">sysex_event_body_t</span><span class="o">*</span> <span class="n">sysex_body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_sysex_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">event_body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_event_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_events_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class pitch_bend_event_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">pitch_bend_event_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        pitch_bend_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+        <span class="n">pitch_bend_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~pitch_bend_event_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">pitch_bend_event_t</span><span class="p">();</span>
 
-    private:
-        bool f_bend_value;
-        int32_t m_bend_value;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_bend_value</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_bend_value</span><span class="p">;</span>
 
-    public:
-        int32_t bend_value();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">bend_value</span><span class="p">();</span>
 
-    private:
-        bool f_adj_bend_value;
-        int32_t m_adj_bend_value;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_adj_bend_value</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_adj_bend_value</span><span class="p">;</span>
 
-    public:
-        int32_t adj_bend_value();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">adj_bend_value</span><span class="p">();</span>
 
-    private:
-        uint8_t m_b1;
-        uint8_t m_b2;
-        standard_midi_file_t* m__root;
-        standard_midi_file_t::track_event_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_b1</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_b2</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint8_t b1() const { return m_b1; }
-        uint8_t b2() const { return m_b2; }
-        standard_midi_file_t* _root() const { return m__root; }
-        standard_midi_file_t::track_event_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">b1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_b1</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">b2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_b2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class program_change_event_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">program_change_event_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        program_change_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+        <span class="n">program_change_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~program_change_event_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">program_change_event_t</span><span class="p">();</span>
 
-    private:
-        uint8_t m_program;
-        standard_midi_file_t* m__root;
-        standard_midi_file_t::track_event_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_program</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint8_t program() const { return m_program; }
-        standard_midi_file_t* _root() const { return m__root; }
-        standard_midi_file_t::track_event_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">program</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_program</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class note_on_event_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">note_on_event_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        note_on_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+        <span class="n">note_on_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~note_on_event_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">note_on_event_t</span><span class="p">();</span>
 
-    private:
-        uint8_t m_note;
-        uint8_t m_velocity;
-        standard_midi_file_t* m__root;
-        standard_midi_file_t::track_event_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_note</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_velocity</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint8_t note() const { return m_note; }
-        uint8_t velocity() const { return m_velocity; }
-        standard_midi_file_t* _root() const { return m__root; }
-        standard_midi_file_t::track_event_t* _parent() const { return m__parent; }
-    };
-
-    class polyphonic_pressure_event_t : public kaitai::kstruct {
-
-    public:
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">note</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_note</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">velocity</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_velocity</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">polyphonic_pressure_event_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
 
-        polyphonic_pressure_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+        <span class="n">polyphonic_pressure_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~polyphonic_pressure_event_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">polyphonic_pressure_event_t</span><span class="p">();</span>
 
-    private:
-        uint8_t m_note;
-        uint8_t m_pressure;
-        standard_midi_file_t* m__root;
-        standard_midi_file_t::track_event_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_note</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_pressure</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint8_t note() const { return m_note; }
-        uint8_t pressure() const { return m_pressure; }
-        standard_midi_file_t* _root() const { return m__root; }
-        standard_midi_file_t::track_event_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">note</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_note</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">pressure</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_pressure</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class track_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">track_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        track_t(kaitai::kstream* p__io, standard_midi_file_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+        <span class="n">track_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~track_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">track_t</span><span class="p">();</span>
 
-    private:
-        std::string m_magic;
-        uint32_t m_len_events;
-        track_events_t* m_events;
-        standard_midi_file_t* m__root;
-        standard_midi_file_t* m__parent;
-        std::string m__raw_events;
-        kaitai::kstream* m__io__raw_events;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_magic</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_len_events</span><span class="p">;</span>
+        <span class="n">track_events_t</span><span class="o">*</span> <span class="n">m_events</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_events</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_events</span><span class="p">;</span>
 
-    public:
-        std::string magic() const { return m_magic; }
-        uint32_t len_events() const { return m_len_events; }
-        track_events_t* events() const { return m_events; }
-        standard_midi_file_t* _root() const { return m__root; }
-        standard_midi_file_t* _parent() const { return m__parent; }
-        std::string _raw_events() const { return m__raw_events; }
-        kaitai::kstream* _io__raw_events() const { return m__io__raw_events; }
-    };
-
-    class meta_event_body_t : public kaitai::kstruct {
-
-    public:
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">magic</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_magic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">len_events</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_events</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">track_events_t</span><span class="o">*</span> <span class="n">events</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_events</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_events</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_events</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_events</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_events</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">meta_event_body_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
 
-        enum meta_type_enum_t {
-            META_TYPE_ENUM_SEQUENCE_NUMBER = 0,
-            META_TYPE_ENUM_TEXT_EVENT = 1,
-            META_TYPE_ENUM_COPYRIGHT = 2,
-            META_TYPE_ENUM_SEQUENCE_TRACK_NAME = 3,
-            META_TYPE_ENUM_INSTRUMENT_NAME = 4,
-            META_TYPE_ENUM_LYRIC_TEXT = 5,
-            META_TYPE_ENUM_MARKER_TEXT = 6,
-            META_TYPE_ENUM_CUE_POINT = 7,
-            META_TYPE_ENUM_MIDI_CHANNEL_PREFIX_ASSIGNMENT = 32,
-            META_TYPE_ENUM_END_OF_TRACK = 47,
-            META_TYPE_ENUM_TEMPO = 81,
-            META_TYPE_ENUM_SMPTE_OFFSET = 84,
-            META_TYPE_ENUM_TIME_SIGNATURE = 88,
-            META_TYPE_ENUM_KEY_SIGNATURE = 89,
-            META_TYPE_ENUM_SEQUENCER_SPECIFIC_EVENT = 127
-        };
+        <span class="k">enum</span> <span class="n">meta_type_enum_t</span> <span class="p">{</span>
+            <span class="n">META_TYPE_ENUM_SEQUENCE_NUMBER</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">META_TYPE_ENUM_TEXT_EVENT</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">META_TYPE_ENUM_COPYRIGHT</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">META_TYPE_ENUM_SEQUENCE_TRACK_NAME</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="n">META_TYPE_ENUM_INSTRUMENT_NAME</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="n">META_TYPE_ENUM_LYRIC_TEXT</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="n">META_TYPE_ENUM_MARKER_TEXT</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+            <span class="n">META_TYPE_ENUM_CUE_POINT</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+            <span class="n">META_TYPE_ENUM_MIDI_CHANNEL_PREFIX_ASSIGNMENT</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+            <span class="n">META_TYPE_ENUM_END_OF_TRACK</span> <span class="o">=</span> <span class="mi">47</span><span class="p">,</span>
+            <span class="n">META_TYPE_ENUM_TEMPO</span> <span class="o">=</span> <span class="mi">81</span><span class="p">,</span>
+            <span class="n">META_TYPE_ENUM_SMPTE_OFFSET</span> <span class="o">=</span> <span class="mi">84</span><span class="p">,</span>
+            <span class="n">META_TYPE_ENUM_TIME_SIGNATURE</span> <span class="o">=</span> <span class="mi">88</span><span class="p">,</span>
+            <span class="n">META_TYPE_ENUM_KEY_SIGNATURE</span> <span class="o">=</span> <span class="mi">89</span><span class="p">,</span>
+            <span class="n">META_TYPE_ENUM_SEQUENCER_SPECIFIC_EVENT</span> <span class="o">=</span> <span class="mi">127</span>
+        <span class="p">};</span>
 
-        meta_event_body_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+        <span class="n">meta_event_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~meta_event_body_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">meta_event_body_t</span><span class="p">();</span>
 
-    private:
-        meta_type_enum_t m_meta_type;
-        vlq_base128_be_t* m_len;
-        std::string m_body;
-        standard_midi_file_t* m__root;
-        standard_midi_file_t::track_event_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">meta_type_enum_t</span> <span class="n">m_meta_type</span><span class="p">;</span>
+        <span class="n">vlq_base128_be_t</span><span class="o">*</span> <span class="n">m_len</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_body</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        meta_type_enum_t meta_type() const { return m_meta_type; }
-        vlq_base128_be_t* len() const { return m_len; }
-        std::string body() const { return m_body; }
-        standard_midi_file_t* _root() const { return m__root; }
-        standard_midi_file_t::track_event_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">meta_type_enum_t</span> <span class="n">meta_type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_meta_type</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">vlq_base128_be_t</span><span class="o">*</span> <span class="n">len</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class controller_event_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">controller_event_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        controller_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+        <span class="n">controller_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~controller_event_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">controller_event_t</span><span class="p">();</span>
 
-    private:
-        uint8_t m_controller;
-        uint8_t m_value;
-        standard_midi_file_t* m__root;
-        standard_midi_file_t::track_event_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_controller</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_value</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint8_t controller() const { return m_controller; }
-        uint8_t value() const { return m_value; }
-        standard_midi_file_t* _root() const { return m__root; }
-        standard_midi_file_t::track_event_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">controller</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_controller</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">value</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_value</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class header_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">header_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        header_t(kaitai::kstream* p__io, standard_midi_file_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+        <span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~header_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">header_t</span><span class="p">();</span>
 
-    private:
-        std::string m_magic;
-        uint32_t m_len_header;
-        uint16_t m_format;
-        uint16_t m_num_tracks;
-        int16_t m_division;
-        standard_midi_file_t* m__root;
-        standard_midi_file_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_magic</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_len_header</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_format</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_num_tracks</span><span class="p">;</span>
+        <span class="kt">int16_t</span> <span class="n">m_division</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        std::string magic() const { return m_magic; }
-        uint32_t len_header() const { return m_len_header; }
-        uint16_t format() const { return m_format; }
-        uint16_t num_tracks() const { return m_num_tracks; }
-        int16_t division() const { return m_division; }
-        standard_midi_file_t* _root() const { return m__root; }
-        standard_midi_file_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">magic</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_magic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">len_header</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_header</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">format</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_format</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">num_tracks</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_tracks</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">int16_t</span> <span class="n">division</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_division</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class sysex_event_body_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">sysex_event_body_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        sysex_event_body_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+        <span class="n">sysex_event_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~sysex_event_body_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">sysex_event_body_t</span><span class="p">();</span>
 
-    private:
-        vlq_base128_be_t* m_len;
-        std::string m_data;
-        standard_midi_file_t* m__root;
-        standard_midi_file_t::track_event_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">vlq_base128_be_t</span><span class="o">*</span> <span class="n">m_len</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_data</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        vlq_base128_be_t* len() const { return m_len; }
-        std::string data() const { return m_data; }
-        standard_midi_file_t* _root() const { return m__root; }
-        standard_midi_file_t::track_event_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">vlq_base128_be_t</span><span class="o">*</span> <span class="n">len</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class note_off_event_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">note_off_event_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        note_off_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+        <span class="n">note_off_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~note_off_event_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">note_off_event_t</span><span class="p">();</span>
 
-    private:
-        uint8_t m_note;
-        uint8_t m_velocity;
-        standard_midi_file_t* m__root;
-        standard_midi_file_t::track_event_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_note</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_velocity</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint8_t note() const { return m_note; }
-        uint8_t velocity() const { return m_velocity; }
-        standard_midi_file_t* _root() const { return m__root; }
-        standard_midi_file_t::track_event_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">note</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_note</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">velocity</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_velocity</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class channel_pressure_event_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">channel_pressure_event_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        channel_pressure_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent = 0, standard_midi_file_t* p__root = 0);
+        <span class="n">channel_pressure_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~channel_pressure_event_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">channel_pressure_event_t</span><span class="p">();</span>
 
-    private:
-        uint8_t m_pressure;
-        standard_midi_file_t* m__root;
-        standard_midi_file_t::track_event_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_pressure</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint8_t pressure() const { return m_pressure; }
-        standard_midi_file_t* _root() const { return m__root; }
-        standard_midi_file_t::track_event_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">pressure</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_pressure</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-private:
-    header_t* m_hdr;
-    std::vector&lt;track_t*&gt;* m_tracks;
-    standard_midi_file_t* m__root;
-    kaitai::kstruct* m__parent;
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">header_t</span><span class="o">*</span> <span class="n">m_hdr</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">track_t</span><span class="o">*&gt;*</span> <span class="n">m_tracks</span><span class="p">;</span>
+    <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-public:
-    header_t* hdr() const { return m_hdr; }
-    std::vector&lt;track_t*&gt;* tracks() const { return m_tracks; }
-    standard_midi_file_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-};
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">header_t</span><span class="o">*</span> <span class="n">hdr</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_hdr</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">track_t</span><span class="o">*&gt;*</span> <span class="n">tracks</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_tracks</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
 
-#endif  // STANDARD_MIDI_FILE_H_
-</code></pre>
+<span class="cp">#endif  </span><span class="c1">// STANDARD_MIDI_FILE_H_</span>
+</pre></div>
 
         </div>
         
@@ -809,336 +806,336 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;standard_midi_file.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;standard_midi_file.h&quot;</span><span class="cp"></span>
 
 
-#include &quot;vlq_base128_be.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;vlq_base128_be.h&quot;</span><span class="cp"></span>
 
-standard_midi_file_t::standard_midi_file_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    _read();
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">standard_midi_file_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void standard_midi_file_t::_read() {
-    m_hdr = new header_t(m__io, this, m__root);
-    int l_tracks = hdr()-&gt;num_tracks();
-    m_tracks = new std::vector&lt;track_t*&gt;();
-    m_tracks-&gt;reserve(l_tracks);
-    for (int i = 0; i &lt; l_tracks; i++) {
-        m_tracks-&gt;push_back(new track_t(m__io, this, m__root));
-    }
-}
+<span class="kt">void</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_hdr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">header_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">l_tracks</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">num_tracks</span><span class="p">();</span>
+    <span class="n">m_tracks</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">track_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="n">m_tracks</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_tracks</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_tracks</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_tracks</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">track_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-standard_midi_file_t::~standard_midi_file_t() {
-    delete m_hdr;
-    for (std::vector&lt;track_t*&gt;::iterator it = m_tracks-&gt;begin(); it != m_tracks-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_tracks;
-}
+<span class="n">standard_midi_file_t</span><span class="o">::~</span><span class="n">standard_midi_file_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_hdr</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">track_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_tracks</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_tracks</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_tracks</span><span class="p">;</span>
+<span class="p">}</span>
 
-standard_midi_file_t::track_events_t::track_events_t(kaitai::kstream* p__io, standard_midi_file_t::track_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_events_t</span><span class="o">::</span><span class="n">track_events_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void standard_midi_file_t::track_events_t::_read() {
-    m_event = new std::vector&lt;track_event_t*&gt;();
-    {
-        int i = 0;
-        while (!m__io-&gt;is_eof()) {
-            m_event-&gt;push_back(new track_event_t(m__io, this, m__root));
-            i++;
-        }
-    }
-}
+<span class="kt">void</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_events_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_event</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">track_event_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">m_event</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">track_event_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-standard_midi_file_t::track_events_t::~track_events_t() {
-    for (std::vector&lt;track_event_t*&gt;::iterator it = m_event-&gt;begin(); it != m_event-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_event;
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_events_t</span><span class="o">::~</span><span class="n">track_events_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">track_event_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_event</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_event</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_event</span><span class="p">;</span>
+<span class="p">}</span>
 
-standard_midi_file_t::track_event_t::track_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_events_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_event_type = false;
-    f_channel = false;
-    _read();
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_events_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_event_type</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_channel</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void standard_midi_file_t::track_event_t::_read() {
-    m_v_time = new vlq_base128_be_t(m__io);
-    m_event_header = m__io-&gt;read_u1();
-    n_meta_event_body = true;
-    if (event_header() == 255) {
-        n_meta_event_body = false;
-        m_meta_event_body = new meta_event_body_t(m__io, this, m__root);
-    }
-    n_sysex_body = true;
-    if (event_header() == 240) {
-        n_sysex_body = false;
-        m_sysex_body = new sysex_event_body_t(m__io, this, m__root);
-    }
-    n_event_body = true;
-    switch (event_type()) {
-    case 224: {
-        n_event_body = false;
-        m_event_body = new pitch_bend_event_t(m__io, this, m__root);
-        break;
-    }
-    case 144: {
-        n_event_body = false;
-        m_event_body = new note_on_event_t(m__io, this, m__root);
-        break;
-    }
-    case 208: {
-        n_event_body = false;
-        m_event_body = new channel_pressure_event_t(m__io, this, m__root);
-        break;
-    }
-    case 192: {
-        n_event_body = false;
-        m_event_body = new program_change_event_t(m__io, this, m__root);
-        break;
-    }
-    case 160: {
-        n_event_body = false;
-        m_event_body = new polyphonic_pressure_event_t(m__io, this, m__root);
-        break;
-    }
-    case 176: {
-        n_event_body = false;
-        m_event_body = new controller_event_t(m__io, this, m__root);
-        break;
-    }
-    case 128: {
-        n_event_body = false;
-        m_event_body = new note_off_event_t(m__io, this, m__root);
-        break;
-    }
-    }
-}
+<span class="kt">void</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_v_time</span> <span class="o">=</span> <span class="k">new</span> <span class="n">vlq_base128_be_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">);</span>
+    <span class="n">m_event_header</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">n_meta_event_body</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">event_header</span><span class="p">()</span> <span class="o">==</span> <span class="mi">255</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_meta_event_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_meta_event_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">meta_event_body_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">n_sysex_body</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">event_header</span><span class="p">()</span> <span class="o">==</span> <span class="mi">240</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_sysex_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_sysex_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">sysex_event_body_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">n_event_body</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">event_type</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="mi">224</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_event_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_event_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">pitch_bend_event_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">144</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_event_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_event_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">note_on_event_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">208</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_event_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_event_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">channel_pressure_event_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">192</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_event_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_event_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">program_change_event_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">160</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_event_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_event_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">polyphonic_pressure_event_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">176</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_event_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_event_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">controller_event_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">128</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_event_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_event_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">note_off_event_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-standard_midi_file_t::track_event_t::~track_event_t() {
-    delete m_v_time;
-    if (!n_meta_event_body) {
-        delete m_meta_event_body;
-    }
-    if (!n_sysex_body) {
-        delete m_sysex_body;
-    }
-    if (!n_event_body) {
-        delete m_event_body;
-    }
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">::~</span><span class="n">track_event_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_v_time</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_meta_event_body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_meta_event_body</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_sysex_body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_sysex_body</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_event_body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_event_body</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-int32_t standard_midi_file_t::track_event_t::event_type() {
-    if (f_event_type)
-        return m_event_type;
-    m_event_type = (event_header() &amp; 240);
-    f_event_type = true;
-    return m_event_type;
-}
+<span class="kt">int32_t</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">::</span><span class="n">event_type</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_event_type</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_event_type</span><span class="p">;</span>
+    <span class="n">m_event_type</span> <span class="o">=</span> <span class="p">(</span><span class="n">event_header</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">);</span>
+    <span class="n">f_event_type</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_event_type</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t standard_midi_file_t::track_event_t::channel() {
-    if (f_channel)
-        return m_channel;
-    n_channel = true;
-    if (event_type() != 240) {
-        n_channel = false;
-        m_channel = (event_header() &amp; 15);
-    }
-    f_channel = true;
-    return m_channel;
-}
+<span class="kt">int32_t</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">::</span><span class="n">channel</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_channel</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_channel</span><span class="p">;</span>
+    <span class="n">n_channel</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">event_type</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">240</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_channel</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_channel</span> <span class="o">=</span> <span class="p">(</span><span class="n">event_header</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">f_channel</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_channel</span><span class="p">;</span>
+<span class="p">}</span>
 
-standard_midi_file_t::pitch_bend_event_t::pitch_bend_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_bend_value = false;
-    f_adj_bend_value = false;
-    _read();
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">pitch_bend_event_t</span><span class="o">::</span><span class="n">pitch_bend_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_bend_value</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_adj_bend_value</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void standard_midi_file_t::pitch_bend_event_t::_read() {
-    m_b1 = m__io-&gt;read_u1();
-    m_b2 = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">pitch_bend_event_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_b1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_b2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-standard_midi_file_t::pitch_bend_event_t::~pitch_bend_event_t() {
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">pitch_bend_event_t</span><span class="o">::~</span><span class="n">pitch_bend_event_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-int32_t standard_midi_file_t::pitch_bend_event_t::bend_value() {
-    if (f_bend_value)
-        return m_bend_value;
-    m_bend_value = (((b2() &lt;&lt; 7) + b1()) - 16384);
-    f_bend_value = true;
-    return m_bend_value;
-}
+<span class="kt">int32_t</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">pitch_bend_event_t</span><span class="o">::</span><span class="n">bend_value</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_bend_value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_bend_value</span><span class="p">;</span>
+    <span class="n">m_bend_value</span> <span class="o">=</span> <span class="p">(((</span><span class="n">b2</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span><span class="p">)</span> <span class="o">+</span> <span class="n">b1</span><span class="p">())</span> <span class="o">-</span> <span class="mi">16384</span><span class="p">);</span>
+    <span class="n">f_bend_value</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_bend_value</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t standard_midi_file_t::pitch_bend_event_t::adj_bend_value() {
-    if (f_adj_bend_value)
-        return m_adj_bend_value;
-    m_adj_bend_value = (bend_value() - 16384);
-    f_adj_bend_value = true;
-    return m_adj_bend_value;
-}
+<span class="kt">int32_t</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">pitch_bend_event_t</span><span class="o">::</span><span class="n">adj_bend_value</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_adj_bend_value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_adj_bend_value</span><span class="p">;</span>
+    <span class="n">m_adj_bend_value</span> <span class="o">=</span> <span class="p">(</span><span class="n">bend_value</span><span class="p">()</span> <span class="o">-</span> <span class="mi">16384</span><span class="p">);</span>
+    <span class="n">f_adj_bend_value</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_adj_bend_value</span><span class="p">;</span>
+<span class="p">}</span>
 
-standard_midi_file_t::program_change_event_t::program_change_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">program_change_event_t</span><span class="o">::</span><span class="n">program_change_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void standard_midi_file_t::program_change_event_t::_read() {
-    m_program = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">program_change_event_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_program</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-standard_midi_file_t::program_change_event_t::~program_change_event_t() {
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">program_change_event_t</span><span class="o">::~</span><span class="n">program_change_event_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-standard_midi_file_t::note_on_event_t::note_on_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">note_on_event_t</span><span class="o">::</span><span class="n">note_on_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void standard_midi_file_t::note_on_event_t::_read() {
-    m_note = m__io-&gt;read_u1();
-    m_velocity = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">note_on_event_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_note</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_velocity</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-standard_midi_file_t::note_on_event_t::~note_on_event_t() {
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">note_on_event_t</span><span class="o">::~</span><span class="n">note_on_event_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-standard_midi_file_t::polyphonic_pressure_event_t::polyphonic_pressure_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">polyphonic_pressure_event_t</span><span class="o">::</span><span class="n">polyphonic_pressure_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void standard_midi_file_t::polyphonic_pressure_event_t::_read() {
-    m_note = m__io-&gt;read_u1();
-    m_pressure = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">polyphonic_pressure_event_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_note</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_pressure</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-standard_midi_file_t::polyphonic_pressure_event_t::~polyphonic_pressure_event_t() {
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">polyphonic_pressure_event_t</span><span class="o">::~</span><span class="n">polyphonic_pressure_event_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-standard_midi_file_t::track_t::track_t(kaitai::kstream* p__io, standard_midi_file_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_t</span><span class="o">::</span><span class="n">track_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void standard_midi_file_t::track_t::_read() {
-    m_magic = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x4D\x54\x72\x6B&quot;, 4));
-    m_len_events = m__io-&gt;read_u4be();
-    m__raw_events = m__io-&gt;read_bytes(len_events());
-    m__io__raw_events = new kaitai::kstream(m__raw_events);
-    m_events = new track_events_t(m__io__raw_events, this, m__root);
-}
+<span class="kt">void</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_magic</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x4D\x54\x72\x6B</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">));</span>
+    <span class="n">m_len_events</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m__raw_events</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_events</span><span class="p">());</span>
+    <span class="n">m__io__raw_events</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_events</span><span class="p">);</span>
+    <span class="n">m_events</span> <span class="o">=</span> <span class="k">new</span> <span class="n">track_events_t</span><span class="p">(</span><span class="n">m__io__raw_events</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+<span class="p">}</span>
 
-standard_midi_file_t::track_t::~track_t() {
-    delete m__io__raw_events;
-    delete m_events;
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_t</span><span class="o">::~</span><span class="n">track_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m__io__raw_events</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_events</span><span class="p">;</span>
+<span class="p">}</span>
 
-standard_midi_file_t::meta_event_body_t::meta_event_body_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">meta_event_body_t</span><span class="o">::</span><span class="n">meta_event_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void standard_midi_file_t::meta_event_body_t::_read() {
-    m_meta_type = static_cast&lt;standard_midi_file_t::meta_event_body_t::meta_type_enum_t&gt;(m__io-&gt;read_u1());
-    m_len = new vlq_base128_be_t(m__io);
-    m_body = m__io-&gt;read_bytes(len()-&gt;value());
-}
+<span class="kt">void</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">meta_event_body_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_meta_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">meta_event_body_t</span><span class="o">::</span><span class="n">meta_type_enum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">m_len</span> <span class="o">=</span> <span class="k">new</span> <span class="n">vlq_base128_be_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">);</span>
+    <span class="n">m_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">());</span>
+<span class="p">}</span>
 
-standard_midi_file_t::meta_event_body_t::~meta_event_body_t() {
-    delete m_len;
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">meta_event_body_t</span><span class="o">::~</span><span class="n">meta_event_body_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_len</span><span class="p">;</span>
+<span class="p">}</span>
 
-standard_midi_file_t::controller_event_t::controller_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">controller_event_t</span><span class="o">::</span><span class="n">controller_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void standard_midi_file_t::controller_event_t::_read() {
-    m_controller = m__io-&gt;read_u1();
-    m_value = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">controller_event_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_controller</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_value</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-standard_midi_file_t::controller_event_t::~controller_event_t() {
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">controller_event_t</span><span class="o">::~</span><span class="n">controller_event_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-standard_midi_file_t::header_t::header_t(kaitai::kstream* p__io, standard_midi_file_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void standard_midi_file_t::header_t::_read() {
-    m_magic = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x4D\x54\x68\x64&quot;, 4));
-    m_len_header = m__io-&gt;read_u4be();
-    m_format = m__io-&gt;read_u2be();
-    m_num_tracks = m__io-&gt;read_u2be();
-    m_division = m__io-&gt;read_s2be();
-}
+<span class="kt">void</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_magic</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x4D\x54\x68\x64</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">));</span>
+    <span class="n">m_len_header</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_format</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">m_num_tracks</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">m_division</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s2be</span><span class="p">();</span>
+<span class="p">}</span>
 
-standard_midi_file_t::header_t::~header_t() {
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::~</span><span class="n">header_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-standard_midi_file_t::sysex_event_body_t::sysex_event_body_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">sysex_event_body_t</span><span class="o">::</span><span class="n">sysex_event_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void standard_midi_file_t::sysex_event_body_t::_read() {
-    m_len = new vlq_base128_be_t(m__io);
-    m_data = m__io-&gt;read_bytes(len()-&gt;value());
-}
+<span class="kt">void</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">sysex_event_body_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_len</span> <span class="o">=</span> <span class="k">new</span> <span class="n">vlq_base128_be_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">);</span>
+    <span class="n">m_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">());</span>
+<span class="p">}</span>
 
-standard_midi_file_t::sysex_event_body_t::~sysex_event_body_t() {
-    delete m_len;
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">sysex_event_body_t</span><span class="o">::~</span><span class="n">sysex_event_body_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_len</span><span class="p">;</span>
+<span class="p">}</span>
 
-standard_midi_file_t::note_off_event_t::note_off_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">note_off_event_t</span><span class="o">::</span><span class="n">note_off_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void standard_midi_file_t::note_off_event_t::_read() {
-    m_note = m__io-&gt;read_u1();
-    m_velocity = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">note_off_event_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_note</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_velocity</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-standard_midi_file_t::note_off_event_t::~note_off_event_t() {
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">note_off_event_t</span><span class="o">::~</span><span class="n">note_off_event_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-standard_midi_file_t::channel_pressure_event_t::channel_pressure_event_t(kaitai::kstream* p__io, standard_midi_file_t::track_event_t* p__parent, standard_midi_file_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">channel_pressure_event_t</span><span class="o">::</span><span class="n">channel_pressure_event_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">track_event_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">standard_midi_file_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void standard_midi_file_t::channel_pressure_event_t::_read() {
-    m_pressure = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">channel_pressure_event_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_pressure</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-standard_midi_file_t::channel_pressure_event_t::~channel_pressure_event_t() {
-}
-</code></pre>
+<span class="n">standard_midi_file_t</span><span class="o">::</span><span class="n">channel_pressure_event_t</span><span class="o">::~</span><span class="n">channel_pressure_event_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1165,8 +1162,8 @@ standard_midi_file_t::channel_pressure_event_t::~channel_pressure_event_t() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

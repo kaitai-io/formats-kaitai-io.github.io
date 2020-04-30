@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -230,225 +227,225 @@ records.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: windows_evt_log
-  title: Windows Event Log (EVT)
-  file-extension: evt
-  license: CC0-1.0
-  endian: le
-doc-ref: https://msdn.microsoft.com/en-us/library/bb309026(v=vs.85).aspx
-doc: |
-  EVT files are Windows Event Log files written by older Windows
-  operating systems (2000, XP, 2003). They are used as binary log
-  files by several major Windows subsystems and
-  applications. Typically, several of them can be found in
-  `%WINDIR%\system32\config` directory:
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">windows_evt_log</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Windows Event Log (EVT)</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">evt</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://msdn.microsoft.com/en-us/library/bb309026(v=vs.85).aspx</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">EVT files are Windows Event Log files written by older Windows</span>
+  <span class="no">operating systems (2000, XP, 2003). They are used as binary log</span>
+  <span class="no">files by several major Windows subsystems and</span>
+  <span class="no">applications. Typically, several of them can be found in</span>
+  <span class="no">`%WINDIR%\system32\config` directory:</span>
 
-  * Application = `AppEvent.evt`
-  * System = `SysEvent.evt`
-  * Security = `SecEvent.evt`
+  <span class="no">* Application = `AppEvent.evt`</span>
+  <span class="no">* System = `SysEvent.evt`</span>
+  <span class="no">* Security = `SecEvent.evt`</span>
 
-  Alternatively, one can export any system event log as distinct .evt
-  file using relevant option in Event Viewer application.
+  <span class="no">Alternatively, one can export any system event log as distinct .evt</span>
+  <span class="no">file using relevant option in Event Viewer application.</span>
 
-  A Windows application can submit an entry into these logs using
-  [ReportEvent](https://msdn.microsoft.com/en-us/library/aa363679(v=vs.85).aspx)
-  function of Windows API.
+  <span class="no">A Windows application can submit an entry into these logs using</span>
+  <span class="no">[ReportEvent](https://msdn.microsoft.com/en-us/library/aa363679(v=vs.85).aspx)</span>
+  <span class="no">function of Windows API.</span>
 
-  Internally, EVT files consist of a fixed-size header and event
-  records. There are several usage scenarios (non-wrapping vs wrapping
-  log files) which result in slightly different organization of
-  records.
-seq:
-  - id: header
-    type: header
-  - id: records
-    type: record
-    repeat: eos
-types:
-  header:
-    doc-ref: https://msdn.microsoft.com/en-us/library/bb309024(v=vs.85).aspx
-    seq:
-      - id: len_header
-        -orig-id: HeaderSize
-        type: u4
-        doc: Size of the header structure, must be 0x30.
-      - id: magic
-        -orig-id: Signature
-        contents: &quot;LfLe&quot;
-      - id: version_major
-        -orig-id: MajorVersion
-        type: u4
-      - id: version_minor
-        -orig-id: MinorVersion
-        type: u4
-      - id: ofs_start
-        -orig-id: StartOffset
-        type: u4
-        doc: Offset of oldest record kept in this log file.
-      - id: ofs_end
-        -orig-id: EndOffset
-        type: u4
-        doc: Offset of EOF log record, which is a placeholder for new record.
-      - id: cur_rec_idx
-        -orig-id: CurrentRecordNumber
-        type: u4
-        doc: |
-          Index of current record, where a new submission would be
-          written to (normally there should to EOF log record there).
-      - id: oldest_rec_idx
-        -orig-id: OldestRecordNumber
-        type: u4
-        doc: Index of oldest record in the log file
-      - id: len_file_max
-        -orig-id: MaxSize
-        type: u4
-        doc: Total maximum size of the log file
-      - id: flags
-        -orig-id: Flags
-        type: flags
-      - id: retention
-        -orig-id: Retention
-        type: u4
-      - id: len_header_2
-        -orig-id: EndHeaderSize
-        type: u4
-        doc: Size of the header structure repeated again, and again it must be 0x30.
-    types:
-      flags:
-        seq:
-          - id: reserved
-            type: b28
-          - id: archive
-            -orig-id: ELF_LOGFILE_ARCHIVE_SET
-            type: b1
-            doc: True if archive attribute has been set for this log file.
-          - id: log_full
-            -orig-id: ELF_LOGFILE_LOGFULL_WRITTEN
-            type: b1
-            doc: True if last write operation failed due to log being full.
-          - id: wrap
-            -orig-id: ELF_LOGFILE_HEADER_WRAP
-            type: b1
-            doc: True if wrapping of record has occured.
-          - id: dirty
-            -orig-id: ELF_LOGFILE_HEADER_DIRTY
-            type: b1
-            doc: |
-              True if write operation was in progress, but log file
-              wasn&#39;t properly closed.
-  record:
-    doc-ref: https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx
-    seq:
-      - id: len_record
-        -orig-id: Length
-        type: u4
-        doc: Size of whole record, including all headers, footers and data
-      - id: type
-        -orig-id: Reserved
-        type: u4
-        doc: |
-          Type of record. Normal log records specify &quot;LfLe&quot;
-          (0x654c664c) in this field, cursor records use 0x11111111.
-      - id: body
-        size: len_record - 12
-        type:
-          switch-on: type
-          cases:
-            0x654c664c: record_body
-            0x11111111: cursor_record_body
-        doc: |
-          Record body interpretation depends on type of record. Body
-          size is specified in a way that it won&#39;t include a 8-byte
-          &quot;header&quot; (`len_record` + `type`) and a &quot;footer&quot;
-          (`len_record2`).
-      - id: len_record2
-        type: u4
-        doc: Size of whole record again.
-  record_body:
-    doc-ref: https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx
-    seq:
-      - id: idx
-        -orig-id: RecordNumber
-        type: u4
-        doc: Index of record in the file.
-      - id: time_generated
-        -orig-id: TimeGenerated
-        type: u4
-        doc: Time when this record was generated, POSIX timestamp format.
-      - id: time_written
-        -orig-id: TimeWritten
-        type: u4
-        doc: Time when thsi record was written into the log file, POSIX timestamp format.
-      - id: event_id
-        -orig-id: EventID
-        type: u4
-        doc: |
-          Identifier of an event, meaning is specific to particular
-          source of events / event type.
-      - id: event_type
-        -orig-id: EventType
-        type: u2
-        enum: event_types
-        doc: Type of event.
-        doc-ref: https://msdn.microsoft.com/en-us/library/windows/desktop/aa363662(v=vs.85).aspx
-      - id: num_strings
-        -orig-id: NumStrings
-        type: u2
-        doc: Number of strings present in the log.
-      - id: event_category
-        -orig-id: EventCategory
-        type: u2
-        doc-ref: https://msdn.microsoft.com/en-us/library/windows/desktop/aa363649(v=vs.85).aspx
-      - id: reserved
-        -orig-id: ReservedFlags, ClosingRecordNumber
-        size: 6
-      - id: ofs_strings
-        -orig-id: StringOffset
-        type: u4
-        doc: Offset of strings present in the log
-      - id: len_user_sid
-        -orig-id: UserSidLength
-        type: u4
-      - id: ofs_user_sid
-        -orig-id: UserSidOffset
-        type: u4
-      - id: len_data
-        -orig-id: DataLength
-        type: u4
-      - id: ofs_data
-        -orig-id: DataOffset
-        type: u4
-    instances:
-#      strings:
-#        pos: ofs_strings - 8
-      user_sid:
-        pos: ofs_user_sid - 8
-        size: len_user_sid
-      data:
-        pos: ofs_data - 8
-        size: len_data
-    enums:
-      event_types:
-        1: error
-        2: audit_failure
-        3: audit_success
-        4: info
-        5: warning
-  cursor_record_body:
-    doc-ref: &#39;http://www.forensicswiki.xyz/page/Windows_Event_Log_(EVT)#Cursor_Record&#39;
-    seq:
-      - id: magic
-        contents: [0x22, 0x22, 0x22, 0x22, 0x33, 0x33, 0x33, 0x33, 0x44, 0x44, 0x44, 0x44]
-      - id: ofs_first_record
-        type: u4
-      - id: ofs_next_record
-        type: u4
-      - id: idx_next_record
-        type: u4
-      - id: idx_first_record
-        type: u4
-</code></pre>
+  <span class="no">Internally, EVT files consist of a fixed-size header and event</span>
+  <span class="no">records. There are several usage scenarios (non-wrapping vs wrapping</span>
+  <span class="no">log files) which result in slightly different organization of</span>
+  <span class="no">records.</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">records</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">header</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://msdn.microsoft.com/en-us/library/bb309024(v=vs.85).aspx</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_header</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HeaderSize</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Size of the header structure, must be 0x30.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Signature</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&quot;LfLe&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version_major</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MajorVersion</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version_minor</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MinorVersion</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_start</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">StartOffset</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Offset of oldest record kept in this log file.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_end</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EndOffset</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Offset of EOF log record, which is a placeholder for new record.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cur_rec_idx</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CurrentRecordNumber</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Index of current record, where a new submission would be</span>
+          <span class="no">written to (normally there should to EOF log record there).</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">oldest_rec_idx</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">OldestRecordNumber</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Index of oldest record in the log file</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_file_max</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MaxSize</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Total maximum size of the log file</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">retention</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Retention</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_header_2</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EndHeaderSize</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Size of the header structure repeated again, and again it must be 0x30.</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">flags</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b28</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">archive</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ELF_LOGFILE_ARCHIVE_SET</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">True if archive attribute has been set for this log file.</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">log_full</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ELF_LOGFILE_LOGFULL_WRITTEN</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">True if last write operation failed due to log being full.</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wrap</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ELF_LOGFILE_HEADER_WRAP</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">True if wrapping of record has occured.</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dirty</span>
+            <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ELF_LOGFILE_HEADER_DIRTY</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b1</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">True if write operation was in progress, but log file</span>
+              <span class="no">wasn&#39;t properly closed.</span>
+  <span class="nt">record</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_record</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Length</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Size of whole record, including all headers, footers and data</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Reserved</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Type of record. Normal log records specify &quot;LfLe&quot;</span>
+          <span class="no">(0x654c664c) in this field, cursor records use 0x11111111.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_record - 12</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="nt">0x654c664c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record_body</span>
+            <span class="nt">0x11111111</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cursor_record_body</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Record body interpretation depends on type of record. Body</span>
+          <span class="no">size is specified in a way that it won&#39;t include a 8-byte</span>
+          <span class="no">&quot;header&quot; (`len_record` + `type`) and a &quot;footer&quot;</span>
+          <span class="no">(`len_record2`).</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_record2</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Size of whole record again.</span>
+  <span class="nt">record_body</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">idx</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RecordNumber</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Index of record in the file.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time_generated</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">TimeGenerated</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Time when this record was generated, POSIX timestamp format.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">time_written</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">TimeWritten</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Time when thsi record was written into the log file, POSIX timestamp format.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">event_id</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EventID</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Identifier of an event, meaning is specific to particular</span>
+          <span class="no">source of events / event type.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">event_type</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EventType</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">event_types</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Type of event.</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://msdn.microsoft.com/en-us/library/windows/desktop/aa363662(v=vs.85).aspx</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_strings</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NumStrings</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Number of strings present in the log.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">event_category</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">EventCategory</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://msdn.microsoft.com/en-us/library/windows/desktop/aa363649(v=vs.85).aspx</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ReservedFlags, ClosingRecordNumber</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">6</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_strings</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">StringOffset</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Offset of strings present in the log</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_user_sid</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UserSidLength</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_user_sid</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UserSidOffset</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">DataLength</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_data</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">DataOffset</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">instances</span><span class="p">:</span>
+<span class="c1">#      strings:</span>
+<span class="c1">#        pos: ofs_strings - 8</span>
+      <span class="nt">user_sid</span><span class="p">:</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_user_sid - 8</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_user_sid</span>
+      <span class="nt">data</span><span class="p">:</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_data - 8</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
+    <span class="nt">enums</span><span class="p">:</span>
+      <span class="nt">event_types</span><span class="p">:</span>
+        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">error</span>
+        <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">audit_failure</span>
+        <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">audit_success</span>
+        <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">info</span>
+        <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">warning</span>
+  <span class="nt">cursor_record_body</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;http://www.forensicswiki.xyz/page/Windows_Event_Log_(EVT)#Cursor_Record&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0x22</span><span class="p p-Indicator">,</span> <span class="nv">0x22</span><span class="p p-Indicator">,</span> <span class="nv">0x22</span><span class="p p-Indicator">,</span> <span class="nv">0x22</span><span class="p p-Indicator">,</span> <span class="nv">0x33</span><span class="p p-Indicator">,</span> <span class="nv">0x33</span><span class="p p-Indicator">,</span> <span class="nv">0x33</span><span class="p p-Indicator">,</span> <span class="nv">0x33</span><span class="p p-Indicator">,</span> <span class="nv">0x44</span><span class="p p-Indicator">,</span> <span class="nv">0x44</span><span class="p p-Indicator">,</span> <span class="nv">0x44</span><span class="p p-Indicator">,</span> <span class="nv">0x44</span><span class="p p-Indicator">]</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_first_record</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_next_record</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">idx_next_record</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">idx_first_record</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+</pre></div>
     </div>
 </section>
 
@@ -472,8 +469,8 @@ types:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

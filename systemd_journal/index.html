@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -219,213 +216,213 @@ format.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: systemd_journal
-  title: systemd journal file
-  file-extension: journal
-  license: CC0-1.0
-  endian: le
-doc: |
-  systemd, a popular user-space system/service management suite on Linux,
-  offers logging functionality, storing incoming logs in a binary journal
-  format.
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">systemd_journal</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">systemd journal file</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">journal</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">systemd, a popular user-space system/service management suite on Linux,</span>
+  <span class="no">offers logging functionality, storing incoming logs in a binary journal</span>
+  <span class="no">format.</span>
 
-  On live Linux system running systemd, these journals are typically located at:
+  <span class="no">On live Linux system running systemd, these journals are typically located at:</span>
 
-  * /run/log/journal/machine-id/*.journal (volatile, lost after reboot)
-  * /var/log/journal/machine-id/*.journal (persistent, but disabled by default on Debian / Ubuntu)
-doc-ref: https://www.freedesktop.org/wiki/Software/systemd/journal-files/
-seq:
-  - id: header
-    type: header
-    size: len_header
-  - id: objects
-    type: journal_object
-    repeat: expr
-    repeat-expr: header.num_objects
-instances:
-  len_header:
-    pos: 0x58
-    type: u8
-    doc: |
-      Header length is used to set substream size, as it thus required
-      prior to declaration of header.
-  data_hash_table:
-    pos: header.ofs_data_hash_table
-    size: header.len_data_hash_table
-  field_hash_table:
-    pos: header.ofs_field_hash_table
-    size: header.len_field_hash_table
-enums:
-  state:
-    0:
-      id: offline
-      doc: File is closed and thus not being written into right now
-    1:
-      id: online
-      doc: File is open and thus might be undergoing update at the moment
-    2:
-      id: archived
-      doc: File has been rotated, no further updates to this file are to be expected
-types:
-  header:
-    seq:
-      - id: signature
-        contents: LPKSHHRH
-      - id: compatible_flags
-        type: u4
-      - id: incompatible_flags
-        type: u4
-      - id: state
-        type: u1
-        enum: state
-      - id: reserved
-        size: 7
-      - id: file_id
-        size: 16
-      - id: machine_id
-        size: 16
-      - id: boot_id
-        size: 16
-      - id: seqnum_id
-        size: 16
-      - id: len_header
-        -orig-id: header_size
-        type: u8
-      - id: len_arena
-        -orig-id: arena_size
-        type: u8
-      - id: ofs_data_hash_table
-        -orig-id: data_hash_table_offset
-        type: u8
-      - id: len_data_hash_table
-        -orig-id: data_hash_table_size
-        type: u8
-      - id: ofs_field_hash_table
-        -orig-id: field_hash_table_offset
-        type: u8
-      - id: len_field_hash_table
-        -orig-id: field_hash_table_size
-        type: u8
-      - id: ofs_tail_object
-        -orig-id: tail_object_offset
-        type: u8
-      - id: num_objects
-        -orig-id: n_objects
-        type: u8
-      - id: num_entries
-        -orig-id: n_entries
-        type: u8
-      - id: tail_entry_seqnum
-        type: u8
-      - id: head_entry_seqnum
-        type: u8
-      - id: ofs_entry_array
-        -orig-id: entry_array_offset
-        type: u8
-      - id: head_entry_realtime
-        type: u8
-      - id: tail_entry_realtime
-        type: u8
-      - id: tail_entry_monotonic
-        type: u8
+  <span class="no">* /run/log/journal/machine-id/*.journal (volatile, lost after reboot)</span>
+  <span class="no">* /var/log/journal/machine-id/*.journal (persistent, but disabled by default on Debian / Ubuntu)</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://www.freedesktop.org/wiki/Software/systemd/journal-files/</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_header</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">objects</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">journal_object</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.num_objects</span>
+<span class="nt">instances</span><span class="p">:</span>
+  <span class="nt">len_header</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x58</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Header length is used to set substream size, as it thus required</span>
+      <span class="no">prior to declaration of header.</span>
+  <span class="nt">data_hash_table</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.ofs_data_hash_table</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.len_data_hash_table</span>
+  <span class="nt">field_hash_table</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.ofs_field_hash_table</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.len_field_hash_table</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">state</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offline</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">File is closed and thus not being written into right now</span>
+    <span class="nt">1</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">online</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">File is open and thus might be undergoing update at the moment</span>
+    <span class="nt">2</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">archived</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">File has been rotated, no further updates to this file are to be expected</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">header</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LPKSHHRH</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compatible_flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">incompatible_flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">state</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">state</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">7</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_id</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">machine_id</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_id</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">seqnum_id</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_header</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_arena</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arena_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_data_hash_table</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_hash_table_offset</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data_hash_table</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_hash_table_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_field_hash_table</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">field_hash_table_offset</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_field_hash_table</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">field_hash_table_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_tail_object</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tail_object_offset</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_objects</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">n_objects</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_entries</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">n_entries</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tail_entry_seqnum</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">head_entry_seqnum</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_entry_array</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entry_array_offset</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">head_entry_realtime</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tail_entry_realtime</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tail_entry_monotonic</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
 
-      # Added in 187
-      - id: num_data
-        -orig-id: n_data
-        type: u8
-        if: not _io.eof
-      - id: num_fields
-        -orig-id: n_fields
-        type: u8
-        if: not _io.eof
+      <span class="c1"># Added in 187</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_data</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">n_data</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not _io.eof</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_fields</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">n_fields</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not _io.eof</span>
 
-      # Added in 189
-      - id: num_tags
-        -orig-id: n_tags
-        type: u8
-        if: not _io.eof
-      - id: num_entry_arrays
-        -orig-id: n_entry_arrays
-        type: u8
-        if: not _io.eof
-  journal_object:
-    doc-ref: &#39;https://www.freedesktop.org/wiki/Software/systemd/journal-files/#objects&#39;
-    seq:
-      - id: padding
-        size: (8 - _io.pos) % 8
-      - id: object_type
-        type: u1
-        enum: object_types
-      - id: flags
-        type: u1
-      - id: reserved
-        size: 6
-      - id: len_object
-        type: u8
-      - id: payload
-        size: len_object - 16
-        type:
-          switch-on: object_type
-          cases:
-            &#39;object_types::data&#39;: data_object
-    enums:
-      object_types:
-        0: unused
-        1: data
-        2: field
-        3: entry
-        4: data_hash_table
-        5: field_hash_table
-        6: entry_array
-        7: tag
-  data_object:
-    doc: |
-      Data objects are designed to carry log payload, typically in
-      form of a &quot;key=value&quot; string in `payload` attribute.
-    doc-ref: &#39;https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects&#39;
-    seq:
-      - id: hash
-        type: u8
-      - id: ofs_next_hash
-        -orig-id: next_hash_offset
-        type: u8
-      - id: ofs_head_field
-        -orig-id: head_field_offset
-        type: u8
-      - id: ofs_entry
-        -orig-id: entry_offset
-        type: u8
-      - id: ofs_entry_array
-        -orig-id: entry_array_offset
-        type: u8
-      - id: num_entries
-        -orig-id: n_entries
-        type: u8
-      - id: payload
-        size-eos: true
-    instances:
-      next_hash:
-        io: _root._io
-        pos: ofs_next_hash
-        type: journal_object
-        if: ofs_next_hash != 0
-      head_field:
-        io: _root._io
-        pos: ofs_head_field
-        type: journal_object
-        if: ofs_head_field != 0
-      entry:
-        io: _root._io
-        pos: ofs_entry
-        type: journal_object
-        if: ofs_entry != 0
-      entry_array:
-        io: _root._io
-        pos: ofs_entry_array
-        type: journal_object
-        if: ofs_entry_array != 0
-</code></pre>
+      <span class="c1"># Added in 189</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_tags</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">n_tags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not _io.eof</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_entry_arrays</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">n_entry_arrays</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not _io.eof</span>
+  <span class="nt">journal_object</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://www.freedesktop.org/wiki/Software/systemd/journal-files/#objects&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">padding</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(8 - _io.pos) % 8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">object_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">object_types</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">6</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_object</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_object - 16</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">object_type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;object_types::data&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">data_object</span>
+    <span class="nt">enums</span><span class="p">:</span>
+      <span class="nt">object_types</span><span class="p">:</span>
+        <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused</span>
+        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+        <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">field</span>
+        <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entry</span>
+        <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_hash_table</span>
+        <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">field_hash_table</span>
+        <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entry_array</span>
+        <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+  <span class="nt">data_object</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">Data objects are designed to carry log payload, typically in</span>
+      <span class="no">form of a &quot;key=value&quot; string in `payload` attribute.</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://www.freedesktop.org/wiki/Software/systemd/journal-files/#dataobjects&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hash</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_next_hash</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">next_hash_offset</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_head_field</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">head_field_offset</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_entry</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entry_offset</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_entry_array</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entry_array_offset</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_entries</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">n_entries</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload</span>
+        <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">next_hash</span><span class="p">:</span>
+        <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_next_hash</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">journal_object</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_next_hash != 0</span>
+      <span class="nt">head_field</span><span class="p">:</span>
+        <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_head_field</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">journal_object</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_head_field != 0</span>
+      <span class="nt">entry</span><span class="p">:</span>
+        <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_entry</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">journal_object</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_entry != 0</span>
+      <span class="nt">entry_array</span><span class="p">:</span>
+        <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_entry_array</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">journal_object</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_entry_array != 0</span>
+</pre></div>
     </div>
 </section>
 
@@ -449,8 +446,8 @@ types:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

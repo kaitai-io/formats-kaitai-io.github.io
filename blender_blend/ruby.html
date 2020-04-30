@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -286,270 +283,270 @@ data = BlenderBlend.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# Blender is an open source suite for 3D modelling, sculpting,
-# animation, compositing, rendering, preparation of assets for its own
-# game engine and exporting to others, etc. `.blend` is its own binary
-# format that saves whole state of suite: current scene, animations,
-# all software settings, extensions, etc.
-# 
-# Internally, .blend format is a hybrid semi-self-descriptive
-# format. On top level, it contains a simple header and a sequence of
-# file blocks, which more or less follow typical [TLV
-# pattern](https://en.wikipedia.org/wiki/Type-length-value). Pre-last
-# block would be a structure with code `DNA1`, which is a essentially
-# a machine-readable schema of all other structures used in this file.
-class BlenderBlend &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># Blender is an open source suite for 3D modelling, sculpting,</span>
+<span class="c1"># animation, compositing, rendering, preparation of assets for its own</span>
+<span class="c1"># game engine and exporting to others, etc. `.blend` is its own binary</span>
+<span class="c1"># format that saves whole state of suite: current scene, animations,</span>
+<span class="c1"># all software settings, extensions, etc.</span>
+<span class="c1"># </span>
+<span class="c1"># Internally, .blend format is a hybrid semi-self-descriptive</span>
+<span class="c1"># format. On top level, it contains a simple header and a sequence of</span>
+<span class="c1"># file blocks, which more or less follow typical [TLV</span>
+<span class="c1"># pattern](https://en.wikipedia.org/wiki/Type-length-value). Pre-last</span>
+<span class="c1"># block would be a structure with code `DNA1`, which is a essentially</span>
+<span class="c1"># a machine-readable schema of all other structures used in this file.</span>
+<span class="k">class</span> <span class="nc">BlenderBlend</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  PTR_SIZE = {
-    45 =&gt; :ptr_size_bits_64,
-    95 =&gt; :ptr_size_bits_32,
-  }
-  I__PTR_SIZE = PTR_SIZE.invert
+  <span class="no">PTR_SIZE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">45</span> <span class="o">=&gt;</span> <span class="ss">:ptr_size_bits_64</span><span class="p">,</span>
+    <span class="mi">95</span> <span class="o">=&gt;</span> <span class="ss">:ptr_size_bits_32</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__PTR_SIZE</span> <span class="o">=</span> <span class="no">PTR_SIZE</span><span class="o">.</span><span class="n">invert</span>
 
-  ENDIAN = {
-    86 =&gt; :endian_be,
-    118 =&gt; :endian_le,
-  }
-  I__ENDIAN = ENDIAN.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">ENDIAN</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">86</span> <span class="o">=&gt;</span> <span class="ss">:endian_be</span><span class="p">,</span>
+    <span class="mi">118</span> <span class="o">=&gt;</span> <span class="ss">:endian_le</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__ENDIAN</span> <span class="o">=</span> <span class="no">ENDIAN</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @hdr = Header.new(@_io, self, @_root)
-    @blocks = []
-    i = 0
-    while not @_io.eof?
-      @blocks &lt;&lt; FileBlock.new(@_io, self, @_root)
-      i += 1
-    end
-    self
-  end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@hdr</span> <span class="o">=</span> <span class="no">Header</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@blocks</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+      <span class="vi">@blocks</span> <span class="o">&lt;&lt;</span> <span class="no">FileBlock</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
 
-  ##
-  # DNA struct contains a `type` (type name), which is specified as
-  # an index in types table, and sequence of fields.
-  class DnaStruct &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># DNA struct contains a `type` (type name), which is specified as</span>
+  <span class="c1"># an index in types table, and sequence of fields.</span>
+  <span class="k">class</span> <span class="nc">DnaStruct</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @idx_type = @_io.read_u2le
-      @num_fields = @_io.read_u2le
-      @fields = Array.new(num_fields)
-      (num_fields).times { |i|
-        @fields[i] = DnaField.new(@_io, self, @_root)
-      }
-      self
-    end
-    def type
-      return @type unless @type.nil?
-      @type = _parent.types[idx_type]
-      @type
-    end
-    attr_reader :idx_type
-    attr_reader :num_fields
-    attr_reader :fields
-  end
-  class FileBlock &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@idx_type</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@num_fields</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@fields</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_fields</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">num_fields</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@fields</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">DnaField</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">type</span>
+      <span class="k">return</span> <span class="vi">@type</span> <span class="k">unless</span> <span class="vi">@type</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@type</span> <span class="o">=</span> <span class="n">_parent</span><span class="o">.</span><span class="n">types</span><span class="o">[</span><span class="n">idx_type</span><span class="o">]</span>
+      <span class="vi">@type</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:idx_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_fields</span>
+    <span class="kp">attr_reader</span> <span class="ss">:fields</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">FileBlock</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @code = (@_io.read_bytes(4)).force_encoding(&quot;ASCII&quot;)
-      @len_body = @_io.read_u4le
-      @mem_addr = @_io.read_bytes(_root.hdr.psize)
-      @sdna_index = @_io.read_u4le
-      @count = @_io.read_u4le
-      case code
-      when &quot;DNA1&quot;
-        @_raw_body = @_io.read_bytes(len_body)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Dna1Body.new(io, self, @_root)
-      else
-        @body = @_io.read_bytes(len_body)
-      end
-      self
-    end
-    def sdna_struct
-      return @sdna_struct unless @sdna_struct.nil?
-      if sdna_index != 0
-        @sdna_struct = _root.sdna_structs[sdna_index]
-      end
-      @sdna_struct
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@code</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+      <span class="vi">@len_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@mem_addr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">hdr</span><span class="o">.</span><span class="n">psize</span><span class="p">)</span>
+      <span class="vi">@sdna_index</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">case</span> <span class="n">code</span>
+      <span class="k">when</span> <span class="s2">&quot;DNA1&quot;</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_body</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">Dna1Body</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_body</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">sdna_struct</span>
+      <span class="k">return</span> <span class="vi">@sdna_struct</span> <span class="k">unless</span> <span class="vi">@sdna_struct</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">sdna_index</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@sdna_struct</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">sdna_structs</span><span class="o">[</span><span class="n">sdna_index</span><span class="o">]</span>
+      <span class="k">end</span>
+      <span class="vi">@sdna_struct</span>
+    <span class="k">end</span>
 
-    ##
-    # Identifier of the file block
-    attr_reader :code
+    <span class="c1">##</span>
+    <span class="c1"># Identifier of the file block</span>
+    <span class="kp">attr_reader</span> <span class="ss">:code</span>
 
-    ##
-    # Total length of the data after the header of file block
-    attr_reader :len_body
+    <span class="c1">##</span>
+    <span class="c1"># Total length of the data after the header of file block</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_body</span>
 
-    ##
-    # Memory address the structure was located when written to disk
-    attr_reader :mem_addr
+    <span class="c1">##</span>
+    <span class="c1"># Memory address the structure was located when written to disk</span>
+    <span class="kp">attr_reader</span> <span class="ss">:mem_addr</span>
 
-    ##
-    # Index of the SDNA structure
-    attr_reader :sdna_index
+    <span class="c1">##</span>
+    <span class="c1"># Index of the SDNA structure</span>
+    <span class="kp">attr_reader</span> <span class="ss">:sdna_index</span>
 
-    ##
-    # Number of structure located in this file-block
-    attr_reader :count
-    attr_reader :body
-    attr_reader :_raw_body
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Number of structure located in this file-block</span>
+    <span class="kp">attr_reader</span> <span class="ss">:count</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_body</span>
+  <span class="k">end</span>
 
-  ##
-  # DNA1, also known as &quot;Structure DNA&quot;, is a special block in
-  # .blend file, which contains machine-readable specifications of
-  # all other structures used in this .blend file.
-  # 
-  # Effectively, this block contains:
-  # 
-  # * a sequence of &quot;names&quot; (strings which represent field names)
-  # * a sequence of &quot;types&quot; (strings which represent type name)
-  # * a sequence of &quot;type lengths&quot;
-  # * a sequence of &quot;structs&quot; (which describe contents of every
-  #   structure, referring to types and names by index)
-  # @see https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA Source
-  class Dna1Body &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># DNA1, also known as &quot;Structure DNA&quot;, is a special block in</span>
+  <span class="c1"># .blend file, which contains machine-readable specifications of</span>
+  <span class="c1"># all other structures used in this .blend file.</span>
+  <span class="c1"># </span>
+  <span class="c1"># Effectively, this block contains:</span>
+  <span class="c1"># </span>
+  <span class="c1"># * a sequence of &quot;names&quot; (strings which represent field names)</span>
+  <span class="c1"># * a sequence of &quot;types&quot; (strings which represent type name)</span>
+  <span class="c1"># * a sequence of &quot;type lengths&quot;</span>
+  <span class="c1"># * a sequence of &quot;structs&quot; (which describe contents of every</span>
+  <span class="c1">#   structure, referring to types and names by index)</span>
+  <span class="c1"># @see https://en.blender.org/index.php/Dev:Source/Architecture/File_Format#Structure_DNA Source</span>
+  <span class="k">class</span> <span class="nc">Dna1Body</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @id = @_io.ensure_fixed_contents([83, 68, 78, 65].pack(&#39;C*&#39;))
-      @name_magic = @_io.ensure_fixed_contents([78, 65, 77, 69].pack(&#39;C*&#39;))
-      @num_names = @_io.read_u4le
-      @names = Array.new(num_names)
-      (num_names).times { |i|
-        @names[i] = (@_io.read_bytes_term(0, false, true, true)).force_encoding(&quot;UTF-8&quot;)
-      }
-      @padding_1 = @_io.read_bytes(((4 - _io.pos) % 4))
-      @type_magic = @_io.ensure_fixed_contents([84, 89, 80, 69].pack(&#39;C*&#39;))
-      @num_types = @_io.read_u4le
-      @types = Array.new(num_types)
-      (num_types).times { |i|
-        @types[i] = (@_io.read_bytes_term(0, false, true, true)).force_encoding(&quot;UTF-8&quot;)
-      }
-      @padding_2 = @_io.read_bytes(((4 - _io.pos) % 4))
-      @tlen_magic = @_io.ensure_fixed_contents([84, 76, 69, 78].pack(&#39;C*&#39;))
-      @lengths = Array.new(num_types)
-      (num_types).times { |i|
-        @lengths[i] = @_io.read_u2le
-      }
-      @padding_3 = @_io.read_bytes(((4 - _io.pos) % 4))
-      @strc_magic = @_io.ensure_fixed_contents([83, 84, 82, 67].pack(&#39;C*&#39;))
-      @num_structs = @_io.read_u4le
-      @structs = Array.new(num_structs)
-      (num_structs).times { |i|
-        @structs[i] = DnaStruct.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :id
-    attr_reader :name_magic
-    attr_reader :num_names
-    attr_reader :names
-    attr_reader :padding_1
-    attr_reader :type_magic
-    attr_reader :num_types
-    attr_reader :types
-    attr_reader :padding_2
-    attr_reader :tlen_magic
-    attr_reader :lengths
-    attr_reader :padding_3
-    attr_reader :strc_magic
-    attr_reader :num_structs
-    attr_reader :structs
-  end
-  class Header &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">83</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">65</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@name_magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">78</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">69</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@num_names</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@names</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_names</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">num_names</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@names</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="vi">@padding_1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="mi">4</span> <span class="o">-</span> <span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">))</span>
+      <span class="vi">@type_magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">84</span><span class="p">,</span> <span class="mi">89</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">69</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@num_types</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@types</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_types</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">num_types</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@types</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="vi">@padding_2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="mi">4</span> <span class="o">-</span> <span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">))</span>
+      <span class="vi">@tlen_magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">84</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">78</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@lengths</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_types</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">num_types</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@lengths</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="p">}</span>
+      <span class="vi">@padding_3</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="mi">4</span> <span class="o">-</span> <span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">))</span>
+      <span class="vi">@strc_magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">83</span><span class="p">,</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">67</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@num_structs</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@structs</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_structs</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">num_structs</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@structs</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">DnaStruct</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:name_magic</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_names</span>
+    <span class="kp">attr_reader</span> <span class="ss">:names</span>
+    <span class="kp">attr_reader</span> <span class="ss">:padding_1</span>
+    <span class="kp">attr_reader</span> <span class="ss">:type_magic</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_types</span>
+    <span class="kp">attr_reader</span> <span class="ss">:types</span>
+    <span class="kp">attr_reader</span> <span class="ss">:padding_2</span>
+    <span class="kp">attr_reader</span> <span class="ss">:tlen_magic</span>
+    <span class="kp">attr_reader</span> <span class="ss">:lengths</span>
+    <span class="kp">attr_reader</span> <span class="ss">:padding_3</span>
+    <span class="kp">attr_reader</span> <span class="ss">:strc_magic</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_structs</span>
+    <span class="kp">attr_reader</span> <span class="ss">:structs</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Header</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @magic = @_io.ensure_fixed_contents([66, 76, 69, 78, 68, 69, 82].pack(&#39;C*&#39;))
-      @ptr_size_id = Kaitai::Struct::Stream::resolve_enum(PTR_SIZE, @_io.read_u1)
-      @endian = Kaitai::Struct::Stream::resolve_enum(ENDIAN, @_io.read_u1)
-      @version = (@_io.read_bytes(3)).force_encoding(&quot;ASCII&quot;)
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">66</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">82</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@ptr_size_id</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">PTR_SIZE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@endian</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">ENDIAN</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@version</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Number of bytes that a pointer occupies
-    def psize
-      return @psize unless @psize.nil?
-      @psize = (ptr_size_id == :ptr_size_bits_64 ? 8 : 4)
-      @psize
-    end
-    attr_reader :magic
+    <span class="c1">##</span>
+    <span class="c1"># Number of bytes that a pointer occupies</span>
+    <span class="k">def</span> <span class="nf">psize</span>
+      <span class="k">return</span> <span class="vi">@psize</span> <span class="k">unless</span> <span class="vi">@psize</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@psize</span> <span class="o">=</span> <span class="p">(</span><span class="n">ptr_size_id</span> <span class="o">==</span> <span class="ss">:ptr_size_bits_64</span> <span class="p">?</span> <span class="mi">8</span> <span class="p">:</span> <span class="mi">4</span><span class="p">)</span>
+      <span class="vi">@psize</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:magic</span>
 
-    ##
-    # Size of a pointer; all pointers in the file are stored in this format
-    attr_reader :ptr_size_id
+    <span class="c1">##</span>
+    <span class="c1"># Size of a pointer; all pointers in the file are stored in this format</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ptr_size_id</span>
 
-    ##
-    # Type of byte ordering used
-    attr_reader :endian
+    <span class="c1">##</span>
+    <span class="c1"># Type of byte ordering used</span>
+    <span class="kp">attr_reader</span> <span class="ss">:endian</span>
 
-    ##
-    # Blender version used to save this file
-    attr_reader :version
-  end
-  class DnaField &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="c1">##</span>
+    <span class="c1"># Blender version used to save this file</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">DnaField</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @idx_type = @_io.read_u2le
-      @idx_name = @_io.read_u2le
-      self
-    end
-    def type
-      return @type unless @type.nil?
-      @type = _parent._parent.types[idx_type]
-      @type
-    end
-    def name
-      return @name unless @name.nil?
-      @name = _parent._parent.names[idx_name]
-      @name
-    end
-    attr_reader :idx_type
-    attr_reader :idx_name
-  end
-  def sdna_structs
-    return @sdna_structs unless @sdna_structs.nil?
-    @sdna_structs = blocks[(blocks.length - 2)].body.structs
-    @sdna_structs
-  end
-  attr_reader :hdr
-  attr_reader :blocks
-end
-</code></pre>
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@idx_type</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@idx_name</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">type</span>
+      <span class="k">return</span> <span class="vi">@type</span> <span class="k">unless</span> <span class="vi">@type</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@type</span> <span class="o">=</span> <span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">types</span><span class="o">[</span><span class="n">idx_type</span><span class="o">]</span>
+      <span class="vi">@type</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">name</span>
+      <span class="k">return</span> <span class="vi">@name</span> <span class="k">unless</span> <span class="vi">@name</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@name</span> <span class="o">=</span> <span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">names</span><span class="o">[</span><span class="n">idx_name</span><span class="o">]</span>
+      <span class="vi">@name</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:idx_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:idx_name</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">sdna_structs</span>
+    <span class="k">return</span> <span class="vi">@sdna_structs</span> <span class="k">unless</span> <span class="vi">@sdna_structs</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="vi">@sdna_structs</span> <span class="o">=</span> <span class="n">blocks</span><span class="o">[</span><span class="p">(</span><span class="n">blocks</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span><span class="o">].</span><span class="n">body</span><span class="o">.</span><span class="n">structs</span>
+    <span class="vi">@sdna_structs</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:hdr</span>
+  <span class="kp">attr_reader</span> <span class="ss">:blocks</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -576,8 +573,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

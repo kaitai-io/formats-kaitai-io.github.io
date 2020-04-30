@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -245,408 +242,408 @@ of 65536.
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# SQLite3 is a popular serverless SQL engine, implemented as a library
-# to be used within other applications. It keeps its databases as
-# regular disk files.
-# 
-# Every database file is segmented into pages. First page (starting at
-# the very beginning) is special: it contains a file-global header
-# which specifies some data relevant to proper parsing (i.e. format
-# versions, size of page, etc). After the header, normal contents of
-# the first page follow.
-# 
-# Each page would be of some type, and generally, they would be
-# reached via the links starting from the first page. First page type
-# (`root_page`) is always &quot;btree_page&quot;.
-# @see https://www.sqlite.org/fileformat.html Source
-class Sqlite3 &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># SQLite3 is a popular serverless SQL engine, implemented as a library</span>
+<span class="c1"># to be used within other applications. It keeps its databases as</span>
+<span class="c1"># regular disk files.</span>
+<span class="c1"># </span>
+<span class="c1"># Every database file is segmented into pages. First page (starting at</span>
+<span class="c1"># the very beginning) is special: it contains a file-global header</span>
+<span class="c1"># which specifies some data relevant to proper parsing (i.e. format</span>
+<span class="c1"># versions, size of page, etc). After the header, normal contents of</span>
+<span class="c1"># the first page follow.</span>
+<span class="c1"># </span>
+<span class="c1"># Each page would be of some type, and generally, they would be</span>
+<span class="c1"># reached via the links starting from the first page. First page type</span>
+<span class="c1"># (`root_page`) is always &quot;btree_page&quot;.</span>
+<span class="c1"># @see https://www.sqlite.org/fileformat.html Source</span>
+<span class="k">class</span> <span class="nc">Sqlite3</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  VERSIONS = {
-    1 =&gt; :versions_legacy,
-    2 =&gt; :versions_wal,
-  }
-  I__VERSIONS = VERSIONS.invert
+  <span class="no">VERSIONS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:versions_legacy</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:versions_wal</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__VERSIONS</span> <span class="o">=</span> <span class="no">VERSIONS</span><span class="o">.</span><span class="n">invert</span>
 
-  ENCODINGS = {
-    1 =&gt; :encodings_utf_8,
-    2 =&gt; :encodings_utf_16le,
-    3 =&gt; :encodings_utf_16be,
-  }
-  I__ENCODINGS = ENCODINGS.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">ENCODINGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:encodings_utf_8</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:encodings_utf_16le</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:encodings_utf_16be</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__ENCODINGS</span> <span class="o">=</span> <span class="no">ENCODINGS</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @magic = @_io.ensure_fixed_contents([83, 81, 76, 105, 116, 101, 32, 102, 111, 114, 109, 97, 116, 32, 51, 0].pack(&#39;C*&#39;))
-    @len_page_mod = @_io.read_u2be
-    @write_version = Kaitai::Struct::Stream::resolve_enum(VERSIONS, @_io.read_u1)
-    @read_version = Kaitai::Struct::Stream::resolve_enum(VERSIONS, @_io.read_u1)
-    @reserved_space = @_io.read_u1
-    @max_payload_frac = @_io.read_u1
-    @min_payload_frac = @_io.read_u1
-    @leaf_payload_frac = @_io.read_u1
-    @file_change_counter = @_io.read_u4be
-    @num_pages = @_io.read_u4be
-    @first_freelist_trunk_page = @_io.read_u4be
-    @num_freelist_pages = @_io.read_u4be
-    @schema_cookie = @_io.read_u4be
-    @schema_format = @_io.read_u4be
-    @def_page_cache_size = @_io.read_u4be
-    @largest_root_page = @_io.read_u4be
-    @text_encoding = Kaitai::Struct::Stream::resolve_enum(ENCODINGS, @_io.read_u4be)
-    @user_version = @_io.read_u4be
-    @is_incremental_vacuum = @_io.read_u4be
-    @application_id = @_io.read_u4be
-    @reserved = @_io.read_bytes(20)
-    @version_valid_for = @_io.read_u4be
-    @sqlite_version_number = @_io.read_u4be
-    @root_page = BtreePage.new(@_io, self, @_root)
-    self
-  end
-  class Serial &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">83</span><span class="p">,</span> <span class="mi">81</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">105</span><span class="p">,</span> <span class="mi">116</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">111</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">109</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">116</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">51</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+    <span class="vi">@len_page_mod</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+    <span class="vi">@write_version</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">VERSIONS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+    <span class="vi">@read_version</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">VERSIONS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+    <span class="vi">@reserved_space</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+    <span class="vi">@max_payload_frac</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+    <span class="vi">@min_payload_frac</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+    <span class="vi">@leaf_payload_frac</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+    <span class="vi">@file_change_counter</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+    <span class="vi">@num_pages</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+    <span class="vi">@first_freelist_trunk_page</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+    <span class="vi">@num_freelist_pages</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+    <span class="vi">@schema_cookie</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+    <span class="vi">@schema_format</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+    <span class="vi">@def_page_cache_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+    <span class="vi">@largest_root_page</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+    <span class="vi">@text_encoding</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">ENCODINGS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">)</span>
+    <span class="vi">@user_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+    <span class="vi">@is_incremental_vacuum</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+    <span class="vi">@application_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+    <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="vi">@version_valid_for</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+    <span class="vi">@sqlite_version_number</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+    <span class="vi">@root_page</span> <span class="o">=</span> <span class="no">BtreePage</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Serial</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @code = VlqBase128Be.new(@_io)
-      self
-    end
-    def is_blob
-      return @is_blob unless @is_blob.nil?
-      @is_blob =  ((code.value &gt;= 12) &amp;&amp; ((code.value % 2) == 0)) 
-      @is_blob
-    end
-    def is_string
-      return @is_string unless @is_string.nil?
-      @is_string =  ((code.value &gt;= 13) &amp;&amp; ((code.value % 2) == 1)) 
-      @is_string
-    end
-    def len_content
-      return @len_content unless @len_content.nil?
-      if code.value &gt;= 12
-        @len_content = ((code.value - 12) / 2)
-      end
-      @len_content
-    end
-    attr_reader :code
-  end
-  class BtreePage &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@code</span> <span class="o">=</span> <span class="no">VlqBase128Be</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">is_blob</span>
+      <span class="k">return</span> <span class="vi">@is_blob</span> <span class="k">unless</span> <span class="vi">@is_blob</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@is_blob</span> <span class="o">=</span>  <span class="p">((</span><span class="n">code</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">12</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="n">code</span><span class="o">.</span><span class="n">value</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> 
+      <span class="vi">@is_blob</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">is_string</span>
+      <span class="k">return</span> <span class="vi">@is_string</span> <span class="k">unless</span> <span class="vi">@is_string</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@is_string</span> <span class="o">=</span>  <span class="p">((</span><span class="n">code</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">13</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">((</span><span class="n">code</span><span class="o">.</span><span class="n">value</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span> 
+      <span class="vi">@is_string</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">len_content</span>
+      <span class="k">return</span> <span class="vi">@len_content</span> <span class="k">unless</span> <span class="vi">@len_content</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">code</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">12</span>
+        <span class="vi">@len_content</span> <span class="o">=</span> <span class="p">((</span><span class="n">code</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@len_content</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:code</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">BtreePage</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @page_type = @_io.read_u1
-      @first_freeblock = @_io.read_u2be
-      @num_cells = @_io.read_u2be
-      @ofs_cells = @_io.read_u2be
-      @num_frag_free_bytes = @_io.read_u1
-      if  ((page_type == 2) || (page_type == 5)) 
-        @right_ptr = @_io.read_u4be
-      end
-      @cells = Array.new(num_cells)
-      (num_cells).times { |i|
-        @cells[i] = RefCell.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :page_type
-    attr_reader :first_freeblock
-    attr_reader :num_cells
-    attr_reader :ofs_cells
-    attr_reader :num_frag_free_bytes
-    attr_reader :right_ptr
-    attr_reader :cells
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@page_type</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@first_freeblock</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@num_cells</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@ofs_cells</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@num_frag_free_bytes</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">if</span>  <span class="p">((</span><span class="n">page_type</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">page_type</span> <span class="o">==</span> <span class="mi">5</span><span class="p">))</span> 
+        <span class="vi">@right_ptr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="k">end</span>
+      <span class="vi">@cells</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_cells</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">num_cells</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@cells</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">RefCell</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:page_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:first_freeblock</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_cells</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_cells</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_frag_free_bytes</span>
+    <span class="kp">attr_reader</span> <span class="ss">:right_ptr</span>
+    <span class="kp">attr_reader</span> <span class="ss">:cells</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://www.sqlite.org/fileformat.html#b_tree_pages Source
-  class CellIndexLeaf &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.sqlite.org/fileformat.html#b_tree_pages Source</span>
+  <span class="k">class</span> <span class="nc">CellIndexLeaf</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len_payload = VlqBase128Be.new(@_io)
-      @_raw_payload = @_io.read_bytes(len_payload.value)
-      io = Kaitai::Struct::Stream.new(@_raw_payload)
-      @payload = CellPayload.new(io, self, @_root)
-      self
-    end
-    attr_reader :len_payload
-    attr_reader :payload
-    attr_reader :_raw_payload
-  end
-  class Serials &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len_payload</span> <span class="o">=</span> <span class="no">VlqBase128Be</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+      <span class="vi">@_raw_payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_payload</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_payload</span><span class="p">)</span>
+      <span class="vi">@payload</span> <span class="o">=</span> <span class="no">CellPayload</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_payload</span>
+    <span class="kp">attr_reader</span> <span class="ss">:payload</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_payload</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Serials</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @entries = []
-      i = 0
-      while not @_io.eof?
-        @entries &lt;&lt; VlqBase128Be.new(@_io)
-        i += 1
-      end
-      self
-    end
-    attr_reader :entries
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+        <span class="vi">@entries</span> <span class="o">&lt;&lt;</span> <span class="no">VlqBase128Be</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:entries</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://www.sqlite.org/fileformat.html#b_tree_pages Source
-  class CellTableLeaf &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.sqlite.org/fileformat.html#b_tree_pages Source</span>
+  <span class="k">class</span> <span class="nc">CellTableLeaf</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len_payload = VlqBase128Be.new(@_io)
-      @row_id = VlqBase128Be.new(@_io)
-      @_raw_payload = @_io.read_bytes(len_payload.value)
-      io = Kaitai::Struct::Stream.new(@_raw_payload)
-      @payload = CellPayload.new(io, self, @_root)
-      self
-    end
-    attr_reader :len_payload
-    attr_reader :row_id
-    attr_reader :payload
-    attr_reader :_raw_payload
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len_payload</span> <span class="o">=</span> <span class="no">VlqBase128Be</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+      <span class="vi">@row_id</span> <span class="o">=</span> <span class="no">VlqBase128Be</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+      <span class="vi">@_raw_payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_payload</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_payload</span><span class="p">)</span>
+      <span class="vi">@payload</span> <span class="o">=</span> <span class="no">CellPayload</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_payload</span>
+    <span class="kp">attr_reader</span> <span class="ss">:row_id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:payload</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_payload</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://sqlite.org/fileformat2.html#record_format Source
-  class CellPayload &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://sqlite.org/fileformat2.html#record_format Source</span>
+  <span class="k">class</span> <span class="nc">CellPayload</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len_header_and_len = VlqBase128Be.new(@_io)
-      @_raw_column_serials = @_io.read_bytes((len_header_and_len.value - 1))
-      io = Kaitai::Struct::Stream.new(@_raw_column_serials)
-      @column_serials = Serials.new(io, self, @_root)
-      @column_contents = Array.new(column_serials.entries.length)
-      (column_serials.entries.length).times { |i|
-        @column_contents[i] = ColumnContent.new(@_io, self, @_root, column_serials.entries[i])
-      }
-      self
-    end
-    attr_reader :len_header_and_len
-    attr_reader :column_serials
-    attr_reader :column_contents
-    attr_reader :_raw_column_serials
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len_header_and_len</span> <span class="o">=</span> <span class="no">VlqBase128Be</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+      <span class="vi">@_raw_column_serials</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_header_and_len</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+      <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_column_serials</span><span class="p">)</span>
+      <span class="vi">@column_serials</span> <span class="o">=</span> <span class="no">Serials</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@column_contents</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">column_serials</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">column_serials</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">length</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@column_contents</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ColumnContent</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">column_serials</span><span class="o">.</span><span class="n">entries</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_header_and_len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:column_serials</span>
+    <span class="kp">attr_reader</span> <span class="ss">:column_contents</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_column_serials</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://www.sqlite.org/fileformat.html#b_tree_pages Source
-  class CellTableInterior &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.sqlite.org/fileformat.html#b_tree_pages Source</span>
+  <span class="k">class</span> <span class="nc">CellTableInterior</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @left_child_page = @_io.read_u4be
-      @row_id = VlqBase128Be.new(@_io)
-      self
-    end
-    attr_reader :left_child_page
-    attr_reader :row_id
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@left_child_page</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@row_id</span> <span class="o">=</span> <span class="no">VlqBase128Be</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:left_child_page</span>
+    <span class="kp">attr_reader</span> <span class="ss">:row_id</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://www.sqlite.org/fileformat.html#b_tree_pages Source
-  class CellIndexInterior &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://www.sqlite.org/fileformat.html#b_tree_pages Source</span>
+  <span class="k">class</span> <span class="nc">CellIndexInterior</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @left_child_page = @_io.read_u4be
-      @len_payload = VlqBase128Be.new(@_io)
-      @_raw_payload = @_io.read_bytes(len_payload.value)
-      io = Kaitai::Struct::Stream.new(@_raw_payload)
-      @payload = CellPayload.new(io, self, @_root)
-      self
-    end
-    attr_reader :left_child_page
-    attr_reader :len_payload
-    attr_reader :payload
-    attr_reader :_raw_payload
-  end
-  class ColumnContent &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, ser)
-      super(_io, _parent, _root)
-      @ser = ser
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@left_child_page</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@len_payload</span> <span class="o">=</span> <span class="no">VlqBase128Be</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+      <span class="vi">@_raw_payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_payload</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_payload</span><span class="p">)</span>
+      <span class="vi">@payload</span> <span class="o">=</span> <span class="no">CellPayload</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:left_child_page</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_payload</span>
+    <span class="kp">attr_reader</span> <span class="ss">:payload</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_payload</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ColumnContent</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">ser</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="vi">@ser</span> <span class="o">=</span> <span class="n">ser</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      if  ((serial_type.code.value &gt;= 1) &amp;&amp; (serial_type.code.value &lt;= 6)) 
-        case serial_type.code.value
-        when 4
-          @as_int = @_io.read_u4be
-        when 6
-          @as_int = @_io.read_u8be
-        when 1
-          @as_int = @_io.read_u1
-        when 3
-          @as_int = @_io.read_bits_int(24)
-        when 5
-          @as_int = @_io.read_bits_int(48)
-        when 2
-          @as_int = @_io.read_u2be
-        end
-      end
-      if serial_type.code.value == 7
-        @as_float = @_io.read_f8be
-      end
-      if serial_type.is_blob
-        @as_blob = @_io.read_bytes(serial_type.len_content)
-      end
-      @as_str = (@_io.read_bytes(serial_type.len_content)).force_encoding(&quot;UTF-8&quot;)
-      self
-    end
-    def serial_type
-      return @serial_type unless @serial_type.nil?
-      @serial_type = ser
-      @serial_type
-    end
-    attr_reader :as_int
-    attr_reader :as_float
-    attr_reader :as_blob
-    attr_reader :as_str
-    attr_reader :ser
-  end
-  class RefCell &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">if</span>  <span class="p">((</span><span class="n">serial_type</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">serial_type</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">))</span> 
+        <span class="k">case</span> <span class="n">serial_type</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">value</span>
+        <span class="k">when</span> <span class="mi">4</span>
+          <span class="vi">@as_int</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+        <span class="k">when</span> <span class="mi">6</span>
+          <span class="vi">@as_int</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8be</span>
+        <span class="k">when</span> <span class="mi">1</span>
+          <span class="vi">@as_int</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+        <span class="k">when</span> <span class="mi">3</span>
+          <span class="vi">@as_int</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+        <span class="k">when</span> <span class="mi">5</span>
+          <span class="vi">@as_int</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
+        <span class="k">when</span> <span class="mi">2</span>
+          <span class="vi">@as_int</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">serial_type</span><span class="o">.</span><span class="n">code</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">7</span>
+        <span class="vi">@as_float</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f8be</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">serial_type</span><span class="o">.</span><span class="n">is_blob</span>
+        <span class="vi">@as_blob</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">serial_type</span><span class="o">.</span><span class="n">len_content</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@as_str</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">serial_type</span><span class="o">.</span><span class="n">len_content</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">serial_type</span>
+      <span class="k">return</span> <span class="vi">@serial_type</span> <span class="k">unless</span> <span class="vi">@serial_type</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@serial_type</span> <span class="o">=</span> <span class="n">ser</span>
+      <span class="vi">@serial_type</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:as_int</span>
+    <span class="kp">attr_reader</span> <span class="ss">:as_float</span>
+    <span class="kp">attr_reader</span> <span class="ss">:as_blob</span>
+    <span class="kp">attr_reader</span> <span class="ss">:as_str</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ser</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">RefCell</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @ofs_body = @_io.read_u2be
-      self
-    end
-    def body
-      return @body unless @body.nil?
-      _pos = @_io.pos
-      @_io.seek(ofs_body)
-      case _parent.page_type
-      when 13
-        @body = CellTableLeaf.new(@_io, self, @_root)
-      when 5
-        @body = CellTableInterior.new(@_io, self, @_root)
-      when 10
-        @body = CellIndexLeaf.new(@_io, self, @_root)
-      when 2
-        @body = CellIndexInterior.new(@_io, self, @_root)
-      end
-      @_io.seek(_pos)
-      @body
-    end
-    attr_reader :ofs_body
-  end
-  def len_page
-    return @len_page unless @len_page.nil?
-    @len_page = (len_page_mod == 1 ? 65536 : len_page_mod)
-    @len_page
-  end
-  attr_reader :magic
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@ofs_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">body</span>
+      <span class="k">return</span> <span class="vi">@body</span> <span class="k">unless</span> <span class="vi">@body</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_body</span><span class="p">)</span>
+      <span class="k">case</span> <span class="n">_parent</span><span class="o">.</span><span class="n">page_type</span>
+      <span class="k">when</span> <span class="mi">13</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">CellTableLeaf</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="mi">5</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">CellTableInterior</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="mi">10</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">CellIndexLeaf</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="mi">2</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">CellIndexInterior</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@body</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_body</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">len_page</span>
+    <span class="k">return</span> <span class="vi">@len_page</span> <span class="k">unless</span> <span class="vi">@len_page</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="vi">@len_page</span> <span class="o">=</span> <span class="p">(</span><span class="n">len_page_mod</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="mi">65536</span> <span class="p">:</span> <span class="n">len_page_mod</span><span class="p">)</span>
+    <span class="vi">@len_page</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:magic</span>
 
-  ##
-  # The database page size in bytes. Must be a power of two between
-  # 512 and 32768 inclusive, or the value 1 representing a page size
-  # of 65536.
-  attr_reader :len_page_mod
-  attr_reader :write_version
-  attr_reader :read_version
+  <span class="c1">##</span>
+  <span class="c1"># The database page size in bytes. Must be a power of two between</span>
+  <span class="c1"># 512 and 32768 inclusive, or the value 1 representing a page size</span>
+  <span class="c1"># of 65536.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:len_page_mod</span>
+  <span class="kp">attr_reader</span> <span class="ss">:write_version</span>
+  <span class="kp">attr_reader</span> <span class="ss">:read_version</span>
 
-  ##
-  # Bytes of unused &quot;reserved&quot; space at the end of each page. Usually 0.
-  attr_reader :reserved_space
+  <span class="c1">##</span>
+  <span class="c1"># Bytes of unused &quot;reserved&quot; space at the end of each page. Usually 0.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:reserved_space</span>
 
-  ##
-  # Maximum embedded payload fraction. Must be 64.
-  attr_reader :max_payload_frac
+  <span class="c1">##</span>
+  <span class="c1"># Maximum embedded payload fraction. Must be 64.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:max_payload_frac</span>
 
-  ##
-  # Minimum embedded payload fraction. Must be 32.
-  attr_reader :min_payload_frac
+  <span class="c1">##</span>
+  <span class="c1"># Minimum embedded payload fraction. Must be 32.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:min_payload_frac</span>
 
-  ##
-  # Leaf payload fraction. Must be 32.
-  attr_reader :leaf_payload_frac
-  attr_reader :file_change_counter
+  <span class="c1">##</span>
+  <span class="c1"># Leaf payload fraction. Must be 32.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:leaf_payload_frac</span>
+  <span class="kp">attr_reader</span> <span class="ss">:file_change_counter</span>
 
-  ##
-  # Size of the database file in pages. The &quot;in-header database size&quot;.
-  attr_reader :num_pages
+  <span class="c1">##</span>
+  <span class="c1"># Size of the database file in pages. The &quot;in-header database size&quot;.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:num_pages</span>
 
-  ##
-  # Page number of the first freelist trunk page.
-  attr_reader :first_freelist_trunk_page
+  <span class="c1">##</span>
+  <span class="c1"># Page number of the first freelist trunk page.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:first_freelist_trunk_page</span>
 
-  ##
-  # Total number of freelist pages.
-  attr_reader :num_freelist_pages
-  attr_reader :schema_cookie
+  <span class="c1">##</span>
+  <span class="c1"># Total number of freelist pages.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:num_freelist_pages</span>
+  <span class="kp">attr_reader</span> <span class="ss">:schema_cookie</span>
 
-  ##
-  # The schema format number. Supported schema formats are 1, 2, 3, and 4.
-  attr_reader :schema_format
+  <span class="c1">##</span>
+  <span class="c1"># The schema format number. Supported schema formats are 1, 2, 3, and 4.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:schema_format</span>
 
-  ##
-  # Default page cache size.
-  attr_reader :def_page_cache_size
+  <span class="c1">##</span>
+  <span class="c1"># Default page cache size.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:def_page_cache_size</span>
 
-  ##
-  # The page number of the largest root b-tree page when in auto-vacuum or incremental-vacuum modes, or zero otherwise.
-  attr_reader :largest_root_page
+  <span class="c1">##</span>
+  <span class="c1"># The page number of the largest root b-tree page when in auto-vacuum or incremental-vacuum modes, or zero otherwise.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:largest_root_page</span>
 
-  ##
-  # The database text encoding. A value of 1 means UTF-8. A value of 2 means UTF-16le. A value of 3 means UTF-16be.
-  attr_reader :text_encoding
+  <span class="c1">##</span>
+  <span class="c1"># The database text encoding. A value of 1 means UTF-8. A value of 2 means UTF-16le. A value of 3 means UTF-16be.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:text_encoding</span>
 
-  ##
-  # The &quot;user version&quot; as read and set by the user_version pragma.
-  attr_reader :user_version
+  <span class="c1">##</span>
+  <span class="c1"># The &quot;user version&quot; as read and set by the user_version pragma.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:user_version</span>
 
-  ##
-  # True (non-zero) for incremental-vacuum mode. False (zero) otherwise.
-  attr_reader :is_incremental_vacuum
+  <span class="c1">##</span>
+  <span class="c1"># True (non-zero) for incremental-vacuum mode. False (zero) otherwise.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:is_incremental_vacuum</span>
 
-  ##
-  # The &quot;Application ID&quot; set by PRAGMA application_id.
-  attr_reader :application_id
-  attr_reader :reserved
-  attr_reader :version_valid_for
-  attr_reader :sqlite_version_number
-  attr_reader :root_page
-end
-</code></pre>
+  <span class="c1">##</span>
+  <span class="c1"># The &quot;Application ID&quot; set by PRAGMA application_id.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:application_id</span>
+  <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
+  <span class="kp">attr_reader</span> <span class="ss">:version_valid_for</span>
+  <span class="kp">attr_reader</span> <span class="ss">:sqlite_version_number</span>
+  <span class="kp">attr_reader</span> <span class="ss">:root_page</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -673,8 +670,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

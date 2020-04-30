@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -255,574 +252,574 @@ var data = new RubyMarshal(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
 
-    /// &lt;summary&gt;
-    /// Ruby&#39;s Marshal module allows serialization and deserialization of
-    /// many standard and arbitrary Ruby objects in a compact binary
-    /// format. It is relatively fast, available in stdlibs standard and
-    /// allows conservation of language-specific properties (such as symbols
-    /// or encoding-aware strings).
-    /// 
-    /// Feature-wise, it is comparable to other language-specific
-    /// implementations, such as:
-    /// 
-    /// * Java&#39;s
-    ///   [Serializable](https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html)
-    /// * .NET
-    ///   [BinaryFormatter](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.serialization.formatters.binary.binaryformatter)
-    /// * Python&#39;s
-    ///   [marshal](https://docs.python.org/3/library/marshal.html),
-    ///   [pickle](https://docs.python.org/3/library/pickle.html) and
-    ///   [shelve](https://docs.python.org/3/library/shelve.html)
-    /// 
-    /// From internal perspective, serialized stream consists of a simple
-    /// magic header and a record.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;
-    /// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Stream+Format&quot;&gt;Source&lt;/a&gt;
-    /// &lt;/remarks&gt;
-    public partial class RubyMarshal : KaitaiStruct
-    {
-        public static RubyMarshal FromFile(string fileName)
-        {
-            return new RubyMarshal(new KaitaiStream(fileName));
-        }
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// Ruby&#39;s Marshal module allows serialization and deserialization of</span>
+    <span class="c1">/// many standard and arbitrary Ruby objects in a compact binary</span>
+    <span class="c1">/// format. It is relatively fast, available in stdlibs standard and</span>
+    <span class="c1">/// allows conservation of language-specific properties (such as symbols</span>
+    <span class="c1">/// or encoding-aware strings).</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// Feature-wise, it is comparable to other language-specific</span>
+    <span class="c1">/// implementations, such as:</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// * Java&#39;s</span>
+    <span class="c1">///   [Serializable](https://docs.oracle.com/javase/8/docs/api/java/io/Serializable.html)</span>
+    <span class="c1">/// * .NET</span>
+    <span class="c1">///   [BinaryFormatter](https://docs.microsoft.com/en-us/dotnet/api/system.runtime.serialization.formatters.binary.binaryformatter)</span>
+    <span class="c1">/// * Python&#39;s</span>
+    <span class="c1">///   [marshal](https://docs.python.org/3/library/marshal.html),</span>
+    <span class="c1">///   [pickle](https://docs.python.org/3/library/pickle.html) and</span>
+    <span class="c1">///   [shelve](https://docs.python.org/3/library/shelve.html)</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// From internal perspective, serialized stream consists of a simple</span>
+    <span class="c1">/// magic header and a record.</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="c1">/// &lt;remarks&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Stream+Format&quot;&gt;Source&lt;/a&gt;</span>
+    <span class="c1">/// &lt;/remarks&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">RubyMarshal</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">RubyMarshal</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">RubyMarshal</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
 
-        public enum Codes
-        {
-            RubyString = 34,
-            ConstNil = 48,
-            RubySymbol = 58,
-            RubySymbolLink = 59,
-            ConstFalse = 70,
-            InstanceVar = 73,
-            RubyStruct = 83,
-            ConstTrue = 84,
-            RubyArray = 91,
-            PackedInt = 105,
-            Bignum = 108,
-            RubyHash = 123,
-        }
-        public RubyMarshal(KaitaiStream p__io, KaitaiStruct p__parent = null, RubyMarshal p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            _read();
-        }
-        private void _read()
-        {
-            _version = m_io.EnsureFixedContents(new byte[] { 4, 8 });
-            _records = new Record(m_io, this, m_root);
-        }
-        public partial class RubyArray : KaitaiStruct
-        {
-            public static RubyArray FromFile(string fileName)
-            {
-                return new RubyArray(new KaitaiStream(fileName));
-            }
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">Codes</span>
+        <span class="p">{</span>
+            <span class="n">RubyString</span> <span class="p">=</span> <span class="m">34</span><span class="p">,</span>
+            <span class="n">ConstNil</span> <span class="p">=</span> <span class="m">48</span><span class="p">,</span>
+            <span class="n">RubySymbol</span> <span class="p">=</span> <span class="m">58</span><span class="p">,</span>
+            <span class="n">RubySymbolLink</span> <span class="p">=</span> <span class="m">59</span><span class="p">,</span>
+            <span class="n">ConstFalse</span> <span class="p">=</span> <span class="m">70</span><span class="p">,</span>
+            <span class="n">InstanceVar</span> <span class="p">=</span> <span class="m">73</span><span class="p">,</span>
+            <span class="n">RubyStruct</span> <span class="p">=</span> <span class="m">83</span><span class="p">,</span>
+            <span class="n">ConstTrue</span> <span class="p">=</span> <span class="m">84</span><span class="p">,</span>
+            <span class="n">RubyArray</span> <span class="p">=</span> <span class="m">91</span><span class="p">,</span>
+            <span class="n">PackedInt</span> <span class="p">=</span> <span class="m">105</span><span class="p">,</span>
+            <span class="n">Bignum</span> <span class="p">=</span> <span class="m">108</span><span class="p">,</span>
+            <span class="n">RubyHash</span> <span class="p">=</span> <span class="m">123</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="nf">RubyMarshal</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_version</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">4</span><span class="p">,</span> <span class="m">8</span> <span class="p">});</span>
+            <span class="n">_records</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">RubyArray</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">RubyArray</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">RubyArray</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public RubyArray(KaitaiStream p__io, RubyMarshal.Record p__parent = null, RubyMarshal p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _numElements = new PackedInt(m_io, this, m_root);
-                _elements = new List&lt;Record&gt;((int) (NumElements.Value));
-                for (var i = 0; i &lt; NumElements.Value; i++)
-                {
-                    _elements.Add(new Record(m_io, this, m_root));
-                }
-            }
-            private PackedInt _numElements;
-            private List&lt;Record&gt; _elements;
-            private RubyMarshal m_root;
-            private RubyMarshal.Record m_parent;
-            public PackedInt NumElements { get { return _numElements; } }
-            public List&lt;Record&gt; Elements { get { return _elements; } }
-            public RubyMarshal M_Root { get { return m_root; } }
-            public RubyMarshal.Record M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">RubyArray</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_numElements</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_elements</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Record</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumElements</span><span class="p">.</span><span class="n">Value</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumElements</span><span class="p">.</span><span class="n">Value</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_elements</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">PackedInt</span> <span class="n">_numElements</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Record</span><span class="p">&gt;</span> <span class="n">_elements</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">PackedInt</span> <span class="n">NumElements</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numElements</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Record</span><span class="p">&gt;</span> <span class="n">Elements</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_elements</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Bignum&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class Bignum : KaitaiStruct
-        {
-            public static Bignum FromFile(string fileName)
-            {
-                return new Bignum(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Bignum&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Bignum</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Bignum</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Bignum</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Bignum(KaitaiStream p__io, RubyMarshal.Record p__parent = null, RubyMarshal p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _sign = m_io.ReadU1();
-                _lenDiv2 = new PackedInt(m_io, this, m_root);
-                _body = m_io.ReadBytes((LenDiv2.Value * 2));
-            }
-            private byte _sign;
-            private PackedInt _lenDiv2;
-            private byte[] _body;
-            private RubyMarshal m_root;
-            private RubyMarshal.Record m_parent;
+            <span class="k">public</span> <span class="nf">Bignum</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_sign</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_lenDiv2</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">LenDiv2</span><span class="p">.</span><span class="n">Value</span> <span class="p">*</span> <span class="m">2</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_sign</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">PackedInt</span> <span class="n">_lenDiv2</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_body</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">m_parent</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// A single byte containing `+` for a positive value or `-` for a negative value.
-            /// &lt;/summary&gt;
-            public byte Sign { get { return _sign; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// A single byte containing `+` for a positive value or `-` for a negative value.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Sign</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sign</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Length of bignum body, divided by 2.
-            /// &lt;/summary&gt;
-            public PackedInt LenDiv2 { get { return _lenDiv2; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Length of bignum body, divided by 2.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">PackedInt</span> <span class="n">LenDiv2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenDiv2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Bytes that represent the number, see ruby-lang.org docs for reconstruction algorithm.
-            /// &lt;/summary&gt;
-            public byte[] Body { get { return _body; } }
-            public RubyMarshal M_Root { get { return m_root; } }
-            public RubyMarshal.Record M_Parent { get { return m_parent; } }
-        }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Bytes that represent the number, see ruby-lang.org docs for reconstruction algorithm.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class RubyStruct : KaitaiStruct
-        {
-            public static RubyStruct FromFile(string fileName)
-            {
-                return new RubyStruct(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Struct&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">RubyStruct</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">RubyStruct</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">RubyStruct</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public RubyStruct(KaitaiStream p__io, RubyMarshal.Record p__parent = null, RubyMarshal p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _name = new Record(m_io, this, m_root);
-                _numMembers = new PackedInt(m_io, this, m_root);
-                _members = new List&lt;Pair&gt;((int) (NumMembers.Value));
-                for (var i = 0; i &lt; NumMembers.Value; i++)
-                {
-                    _members.Add(new Pair(m_io, this, m_root));
-                }
-            }
-            private Record _name;
-            private PackedInt _numMembers;
-            private List&lt;Pair&gt; _members;
-            private RubyMarshal m_root;
-            private RubyMarshal.Record m_parent;
+            <span class="k">public</span> <span class="nf">RubyStruct</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_name</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_numMembers</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_members</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Pair</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumMembers</span><span class="p">.</span><span class="n">Value</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumMembers</span><span class="p">.</span><span class="n">Value</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_members</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Pair</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Record</span> <span class="n">_name</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">PackedInt</span> <span class="n">_numMembers</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Pair</span><span class="p">&gt;</span> <span class="n">_members</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">m_parent</span><span class="p">;</span>
 
-            /// &lt;summary&gt;
-            /// Symbol containing the name of the struct.
-            /// &lt;/summary&gt;
-            public Record Name { get { return _name; } }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Symbol containing the name of the struct.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">Record</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_name</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// Number of members in a struct
-            /// &lt;/summary&gt;
-            public PackedInt NumMembers { get { return _numMembers; } }
-            public List&lt;Pair&gt; Members { get { return _members; } }
-            public RubyMarshal M_Root { get { return m_root; } }
-            public RubyMarshal.Record M_Parent { get { return m_parent; } }
-        }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Number of members in a struct</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">PackedInt</span> <span class="n">NumMembers</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numMembers</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Pair</span><span class="p">&gt;</span> <span class="n">Members</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_members</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class RubySymbol : KaitaiStruct
-        {
-            public static RubySymbol FromFile(string fileName)
-            {
-                return new RubySymbol(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Symbols+and+Byte+Sequence&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">RubySymbol</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">RubySymbol</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">RubySymbol</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public RubySymbol(KaitaiStream p__io, RubyMarshal.Record p__parent = null, RubyMarshal p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _len = new PackedInt(m_io, this, m_root);
-                _name = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(Len.Value));
-            }
-            private PackedInt _len;
-            private string _name;
-            private RubyMarshal m_root;
-            private RubyMarshal.Record m_parent;
-            public PackedInt Len { get { return _len; } }
-            public string Name { get { return _name; } }
-            public RubyMarshal M_Root { get { return m_root; } }
-            public RubyMarshal.Record M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">RubySymbol</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_len</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_name</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">.</span><span class="n">Value</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">PackedInt</span> <span class="n">_len</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">string</span> <span class="n">_name</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">PackedInt</span> <span class="n">Len</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_len</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_name</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Ruby uses sophisticated system to pack integers: first `code`
-        /// byte either determines packing scheme or carries encoded
-        /// immediate value (thus allowing smaller values from -123 to 122
-        /// (inclusive) to take only one byte. There are 11 encoding schemes
-        /// in total:
-        /// 
-        /// * 0 is encoded specially (as 0)
-        /// * 1..122 are encoded as immediate value with a shift
-        /// * 123..255 are encoded with code of 0x01 and 1 extra byte
-        /// * 0x100..0xffff are encoded with code of 0x02 and 2 extra bytes
-        /// * 0x10000..0xffffff are encoded with code of 0x03 and 3 extra
-        ///   bytes
-        /// * 0x1000000..0xffffffff are encoded with code of 0x04 and 4
-        ///   extra bytes
-        /// * -123..-1 are encoded as immediate value with another shift
-        /// * -256..-124 are encoded with code of 0xff and 1 extra byte
-        /// * -0x10000..-257 are encoded with code of 0xfe and 2 extra bytes
-        /// * -0x1000000..0x10001 are encoded with code of 0xfd and 3 extra
-        ///    bytes
-        /// * -0x40000000..-0x1000001 are encoded with code of 0xfc and 4
-        ///    extra bytes
-        /// 
-        /// Values beyond that are serialized as bignum (even if they
-        /// technically might be not Bignum class in Ruby implementation,
-        /// i.e. if they fit into 64 bits on a 64-bit platform).
-        /// &lt;/summary&gt;
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Fixnum+and+long&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class PackedInt : KaitaiStruct
-        {
-            public static PackedInt FromFile(string fileName)
-            {
-                return new PackedInt(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Ruby uses sophisticated system to pack integers: first `code`</span>
+        <span class="c1">/// byte either determines packing scheme or carries encoded</span>
+        <span class="c1">/// immediate value (thus allowing smaller values from -123 to 122</span>
+        <span class="c1">/// (inclusive) to take only one byte. There are 11 encoding schemes</span>
+        <span class="c1">/// in total:</span>
+        <span class="c1">/// </span>
+        <span class="c1">/// * 0 is encoded specially (as 0)</span>
+        <span class="c1">/// * 1..122 are encoded as immediate value with a shift</span>
+        <span class="c1">/// * 123..255 are encoded with code of 0x01 and 1 extra byte</span>
+        <span class="c1">/// * 0x100..0xffff are encoded with code of 0x02 and 2 extra bytes</span>
+        <span class="c1">/// * 0x10000..0xffffff are encoded with code of 0x03 and 3 extra</span>
+        <span class="c1">///   bytes</span>
+        <span class="c1">/// * 0x1000000..0xffffffff are encoded with code of 0x04 and 4</span>
+        <span class="c1">///   extra bytes</span>
+        <span class="c1">/// * -123..-1 are encoded as immediate value with another shift</span>
+        <span class="c1">/// * -256..-124 are encoded with code of 0xff and 1 extra byte</span>
+        <span class="c1">/// * -0x10000..-257 are encoded with code of 0xfe and 2 extra bytes</span>
+        <span class="c1">/// * -0x1000000..0x10001 are encoded with code of 0xfd and 3 extra</span>
+        <span class="c1">///    bytes</span>
+        <span class="c1">/// * -0x40000000..-0x1000001 are encoded with code of 0xfc and 4</span>
+        <span class="c1">///    extra bytes</span>
+        <span class="c1">/// </span>
+        <span class="c1">/// Values beyond that are serialized as bignum (even if they</span>
+        <span class="c1">/// technically might be not Bignum class in Ruby implementation,</span>
+        <span class="c1">/// i.e. if they fit into 64 bits on a 64-bit platform).</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Fixnum+and+long&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">PackedInt</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">PackedInt</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">PackedInt</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public PackedInt(KaitaiStream p__io, KaitaiStruct p__parent = null, RubyMarshal p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_isImmediate = false;
-                f_value = false;
-                _read();
-            }
-            private void _read()
-            {
-                _code = m_io.ReadU1();
-                switch (Code) {
-                case 4: {
-                    _encoded = m_io.ReadU4le();
-                    break;
-                }
-                case 1: {
-                    _encoded = m_io.ReadU1();
-                    break;
-                }
-                case 252: {
-                    _encoded = m_io.ReadU4le();
-                    break;
-                }
-                case 253: {
-                    _encoded = m_io.ReadU2le();
-                    break;
-                }
-                case 3: {
-                    _encoded = m_io.ReadU2le();
-                    break;
-                }
-                case 2: {
-                    _encoded = m_io.ReadU2le();
-                    break;
-                }
-                case 255: {
-                    _encoded = m_io.ReadU1();
-                    break;
-                }
-                case 254: {
-                    _encoded = m_io.ReadU2le();
-                    break;
-                }
-                }
-                switch (Code) {
-                case 3: {
-                    _encoded2 = m_io.ReadU1();
-                    break;
-                }
-                case 253: {
-                    _encoded2 = m_io.ReadU1();
-                    break;
-                }
-                }
-            }
-            private bool f_isImmediate;
-            private bool _isImmediate;
-            public bool IsImmediate
-            {
-                get
-                {
-                    if (f_isImmediate)
-                        return _isImmediate;
-                    _isImmediate = (bool) ( ((Code &gt; 4) &amp;&amp; (Code &lt; 252)) );
-                    f_isImmediate = true;
-                    return _isImmediate;
-                }
-            }
-            private bool f_value;
-            private int _value;
-            public int Value
-            {
-                get
-                {
-                    if (f_value)
-                        return _value;
-                    _value = (int) ((IsImmediate ? (Code &lt; 128 ? (Code - 5) : (4 - (~(Code) &amp; 127))) : (Code == 0 ? 0 : (Code == 255 ? (Encoded - 256) : (Code == 254 ? (Encoded - 65536) : (Code == 253 ? (((Encoded2 &lt;&lt; 16) | Encoded) - 16777216) : (Code == 3 ? ((Encoded2 &lt;&lt; 16) | Encoded) : Encoded)))))));
-                    f_value = true;
-                    return _value;
-                }
-            }
-            private byte _code;
-            private uint _encoded;
-            private byte _encoded2;
-            private RubyMarshal m_root;
-            private KaitaiStruct m_parent;
-            public byte Code { get { return _code; } }
-            public uint Encoded { get { return _encoded; } }
+            <span class="k">public</span> <span class="nf">PackedInt</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_isImmediate</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_value</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_code</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">Code</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="m">4</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_encoded</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="m">1</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_encoded</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="m">252</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_encoded</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="m">253</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_encoded</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="m">3</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_encoded</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="m">2</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_encoded</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="m">255</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_encoded</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="m">254</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_encoded</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">Code</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="m">3</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_encoded2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="m">253</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_encoded2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isImmediate</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isImmediate</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsImmediate</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isImmediate</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_isImmediate</span><span class="p">;</span>
+                    <span class="n">_isImmediate</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">Code</span> <span class="p">&gt;</span> <span class="m">4</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">Code</span> <span class="p">&lt;</span> <span class="m">252</span><span class="p">))</span> <span class="p">);</span>
+                    <span class="n">f_isImmediate</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_isImmediate</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_value</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_value</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Value</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_value</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_value</span><span class="p">;</span>
+                    <span class="n">_value</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">IsImmediate</span> <span class="p">?</span> <span class="p">(</span><span class="n">Code</span> <span class="p">&lt;</span> <span class="m">128</span> <span class="p">?</span> <span class="p">(</span><span class="n">Code</span> <span class="p">-</span> <span class="m">5</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="m">4</span> <span class="p">-</span> <span class="p">(~(</span><span class="n">Code</span><span class="p">)</span> <span class="p">&amp;</span> <span class="m">127</span><span class="p">)))</span> <span class="p">:</span> <span class="p">(</span><span class="n">Code</span> <span class="p">==</span> <span class="m">0</span> <span class="p">?</span> <span class="m">0</span> <span class="p">:</span> <span class="p">(</span><span class="n">Code</span> <span class="p">==</span> <span class="m">255</span> <span class="p">?</span> <span class="p">(</span><span class="n">Encoded</span> <span class="p">-</span> <span class="m">256</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">Code</span> <span class="p">==</span> <span class="m">254</span> <span class="p">?</span> <span class="p">(</span><span class="n">Encoded</span> <span class="p">-</span> <span class="m">65536</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">Code</span> <span class="p">==</span> <span class="m">253</span> <span class="p">?</span> <span class="p">(((</span><span class="n">Encoded2</span> <span class="p">&lt;&lt;</span> <span class="m">16</span><span class="p">)</span> <span class="p">|</span> <span class="n">Encoded</span><span class="p">)</span> <span class="p">-</span> <span class="m">16777216</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">Code</span> <span class="p">==</span> <span class="m">3</span> <span class="p">?</span> <span class="p">((</span><span class="n">Encoded2</span> <span class="p">&lt;&lt;</span> <span class="m">16</span><span class="p">)</span> <span class="p">|</span> <span class="n">Encoded</span><span class="p">)</span> <span class="p">:</span> <span class="n">Encoded</span><span class="p">)))))));</span>
+                    <span class="n">f_value</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_value</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_code</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_encoded</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_encoded2</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Code</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_code</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Encoded</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_encoded</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// One extra byte for 3-byte integers (0x03 and 0xfd), as
-            /// there is no standard `u3` type in KS.
-            /// &lt;/summary&gt;
-            public byte Encoded2 { get { return _encoded2; } }
-            public RubyMarshal M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
-        public partial class Pair : KaitaiStruct
-        {
-            public static Pair FromFile(string fileName)
-            {
-                return new Pair(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// One extra byte for 3-byte integers (0x03 and 0xfd), as</span>
+            <span class="c1">/// there is no standard `u3` type in KS.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Encoded2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_encoded2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Pair</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Pair</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Pair</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Pair(KaitaiStream p__io, KaitaiStruct p__parent = null, RubyMarshal p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _key = new Record(m_io, this, m_root);
-                _value = new Record(m_io, this, m_root);
-            }
-            private Record _key;
-            private Record _value;
-            private RubyMarshal m_root;
-            private KaitaiStruct m_parent;
-            public Record Key { get { return _key; } }
-            public Record Value { get { return _value; } }
-            public RubyMarshal M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">Pair</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_key</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Record</span> <span class="n">_key</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Record</span> <span class="n">_value</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">Record</span> <span class="n">Key</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_key</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Record</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class InstanceVar : KaitaiStruct
-        {
-            public static InstanceVar FromFile(string fileName)
-            {
-                return new InstanceVar(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Instance+Variables&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">InstanceVar</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">InstanceVar</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">InstanceVar</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public InstanceVar(KaitaiStream p__io, RubyMarshal.Record p__parent = null, RubyMarshal p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _obj = new Record(m_io, this, m_root);
-                _numVars = new PackedInt(m_io, this, m_root);
-                _vars = new List&lt;Pair&gt;((int) (NumVars.Value));
-                for (var i = 0; i &lt; NumVars.Value; i++)
-                {
-                    _vars.Add(new Pair(m_io, this, m_root));
-                }
-            }
-            private Record _obj;
-            private PackedInt _numVars;
-            private List&lt;Pair&gt; _vars;
-            private RubyMarshal m_root;
-            private RubyMarshal.Record m_parent;
-            public Record Obj { get { return _obj; } }
-            public PackedInt NumVars { get { return _numVars; } }
-            public List&lt;Pair&gt; Vars { get { return _vars; } }
-            public RubyMarshal M_Root { get { return m_root; } }
-            public RubyMarshal.Record M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">InstanceVar</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_obj</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Record</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_numVars</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_vars</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Pair</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumVars</span><span class="p">.</span><span class="n">Value</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumVars</span><span class="p">.</span><span class="n">Value</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_vars</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Pair</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Record</span> <span class="n">_obj</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">PackedInt</span> <span class="n">_numVars</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Pair</span><span class="p">&gt;</span> <span class="n">_vars</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">Record</span> <span class="n">Obj</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_obj</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">PackedInt</span> <span class="n">NumVars</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numVars</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Pair</span><span class="p">&gt;</span> <span class="n">Vars</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_vars</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Each record starts with a single byte that determines its type
-        /// (`code`) and contents. If necessary, additional info as parsed
-        /// as `body`, to be determined by `code`.
-        /// &lt;/summary&gt;
-        public partial class Record : KaitaiStruct
-        {
-            public static Record FromFile(string fileName)
-            {
-                return new Record(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Each record starts with a single byte that determines its type</span>
+        <span class="c1">/// (`code`) and contents. If necessary, additional info as parsed</span>
+        <span class="c1">/// as `body`, to be determined by `code`.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Record</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Record</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Record</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Record(KaitaiStream p__io, KaitaiStruct p__parent = null, RubyMarshal p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _code = ((RubyMarshal.Codes) m_io.ReadU1());
-                switch (Code) {
-                case RubyMarshal.Codes.Bignum: {
-                    _body = new Bignum(m_io, this, m_root);
-                    break;
-                }
-                case RubyMarshal.Codes.RubyHash: {
-                    _body = new RubyHash(m_io, this, m_root);
-                    break;
-                }
-                case RubyMarshal.Codes.RubyArray: {
-                    _body = new RubyArray(m_io, this, m_root);
-                    break;
-                }
-                case RubyMarshal.Codes.RubySymbol: {
-                    _body = new RubySymbol(m_io, this, m_root);
-                    break;
-                }
-                case RubyMarshal.Codes.InstanceVar: {
-                    _body = new InstanceVar(m_io, this, m_root);
-                    break;
-                }
-                case RubyMarshal.Codes.RubyString: {
-                    _body = new RubyString(m_io, this, m_root);
-                    break;
-                }
-                case RubyMarshal.Codes.PackedInt: {
-                    _body = new PackedInt(m_io, this, m_root);
-                    break;
-                }
-                case RubyMarshal.Codes.RubyStruct: {
-                    _body = new RubyStruct(m_io, this, m_root);
-                    break;
-                }
-                case RubyMarshal.Codes.RubySymbolLink: {
-                    _body = new PackedInt(m_io, this, m_root);
-                    break;
-                }
-                }
-            }
-            private Codes _code;
-            private KaitaiStruct _body;
-            private RubyMarshal m_root;
-            private KaitaiStruct m_parent;
-            public Codes Code { get { return _code; } }
-            public KaitaiStruct Body { get { return _body; } }
-            public RubyMarshal M_Root { get { return m_root; } }
-            public KaitaiStruct M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">Record</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_code</span> <span class="p">=</span> <span class="p">((</span><span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Codes</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">Code</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Codes</span><span class="p">.</span><span class="n">Bignum</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Bignum</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Codes</span><span class="p">.</span><span class="n">RubyHash</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RubyHash</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Codes</span><span class="p">.</span><span class="n">RubyArray</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RubyArray</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Codes</span><span class="p">.</span><span class="n">RubySymbol</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RubySymbol</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Codes</span><span class="p">.</span><span class="n">InstanceVar</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">InstanceVar</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Codes</span><span class="p">.</span><span class="n">RubyString</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RubyString</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Codes</span><span class="p">.</span><span class="n">PackedInt</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Codes</span><span class="p">.</span><span class="n">RubyStruct</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RubyStruct</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Codes</span><span class="p">.</span><span class="n">RubySymbolLink</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Codes</span> <span class="n">_code</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">_body</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">Codes</span> <span class="n">Code</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_code</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Hash+and+Hash+with+Default+Value&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class RubyHash : KaitaiStruct
-        {
-            public static RubyHash FromFile(string fileName)
-            {
-                return new RubyHash(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-Hash+and+Hash+with+Default+Value&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">RubyHash</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">RubyHash</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">RubyHash</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public RubyHash(KaitaiStream p__io, RubyMarshal.Record p__parent = null, RubyMarshal p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _numPairs = new PackedInt(m_io, this, m_root);
-                _pairs = new List&lt;Pair&gt;((int) (NumPairs.Value));
-                for (var i = 0; i &lt; NumPairs.Value; i++)
-                {
-                    _pairs.Add(new Pair(m_io, this, m_root));
-                }
-            }
-            private PackedInt _numPairs;
-            private List&lt;Pair&gt; _pairs;
-            private RubyMarshal m_root;
-            private RubyMarshal.Record m_parent;
-            public PackedInt NumPairs { get { return _numPairs; } }
-            public List&lt;Pair&gt; Pairs { get { return _pairs; } }
-            public RubyMarshal M_Root { get { return m_root; } }
-            public RubyMarshal.Record M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">RubyHash</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_numPairs</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_pairs</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Pair</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumPairs</span><span class="p">.</span><span class="n">Value</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumPairs</span><span class="p">.</span><span class="n">Value</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_pairs</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Pair</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">PackedInt</span> <span class="n">_numPairs</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Pair</span><span class="p">&gt;</span> <span class="n">_pairs</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">PackedInt</span> <span class="n">NumPairs</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numPairs</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Pair</span><span class="p">&gt;</span> <span class="n">Pairs</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_pairs</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-String&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class RubyString : KaitaiStruct
-        {
-            public static RubyString FromFile(string fileName)
-            {
-                return new RubyString(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://docs.ruby-lang.org/en/2.4.0/marshal_rdoc.html#label-String&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">RubyString</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">RubyString</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">RubyString</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public RubyString(KaitaiStream p__io, RubyMarshal.Record p__parent = null, RubyMarshal p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _len = new PackedInt(m_io, this, m_root);
-                _body = m_io.ReadBytes(Len.Value);
-            }
-            private PackedInt _len;
-            private byte[] _body;
-            private RubyMarshal m_root;
-            private RubyMarshal.Record m_parent;
-            public PackedInt Len { get { return _len; } }
-            public byte[] Body { get { return _body; } }
-            public RubyMarshal M_Root { get { return m_root; } }
-            public RubyMarshal.Record M_Parent { get { return m_parent; } }
-        }
-        private byte[] _version;
-        private Record _records;
-        private RubyMarshal m_root;
-        private KaitaiStruct m_parent;
-        public byte[] Version { get { return _version; } }
-        public Record Records { get { return _records; } }
-        public RubyMarshal M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-    }
-}
-</code></pre>
+            <span class="k">public</span> <span class="nf">RubyString</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RubyMarshal</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_len</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">.</span><span class="n">Value</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">PackedInt</span> <span class="n">_len</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_body</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">PackedInt</span> <span class="n">Len</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_len</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Record</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_version</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Record</span> <span class="n">_records</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">RubyMarshal</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Version</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_version</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Record</span> <span class="n">Records</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_records</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">RubyMarshal</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -849,8 +846,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

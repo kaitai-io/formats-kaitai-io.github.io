@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -308,578 +305,578 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef ISO9660_H_
-#define ISO9660_H_
-
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-#include &quot;kaitai/kaitaistruct.h&quot;
-
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
-
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
-
-/**
- * ISO9660 is standard filesystem used on read-only optical discs
- * (mostly CD-ROM). The standard was based on earlier High Sierra
- * Format (HSF), proposed for CD-ROMs in 1985, and, after several
- * revisions, it was accepted as ISO9960:1998.
- * 
- * The format emphasizes portability (thus having pretty minimal
- * features and very conservative file names standards) and sequential
- * access (which favors disc devices with relatively slow rotation
- * speed).
- */
-
-class iso9660_t : public kaitai::kstruct {
-
-public:
-    class vol_desc_primary_t;
-    class vol_desc_boot_record_t;
-    class datetime_t;
-    class dir_entry_t;
-    class vol_desc_t;
-    class path_table_entry_le_t;
-    class dir_entries_t;
-    class u4bi_t;
-    class u2bi_t;
-    class path_table_le_t;
-    class dec_datetime_t;
-    class dir_entry_body_t;
-
-    iso9660_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, iso9660_t* p__root = 0);
-
-private:
-    void _read();
-
-public:
-    ~iso9660_t();
-
-    /**
-     * \sa Source
-     */
-
-    class vol_desc_primary_t : public kaitai::kstruct {
-
-    public:
-
-        vol_desc_primary_t(kaitai::kstream* p__io, iso9660_t::vol_desc_t* p__parent = 0, iso9660_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~vol_desc_primary_t();
-
-    private:
-        bool f_path_table;
-        path_table_le_t* m_path_table;
-
-    public:
-        path_table_le_t* path_table();
-
-    private:
-        std::string m_unused1;
-        std::string m_system_id;
-        std::string m_volume_id;
-        std::string m_unused2;
-        u4bi_t* m_vol_space_size;
-        std::string m_unused3;
-        u2bi_t* m_vol_set_size;
-        u2bi_t* m_vol_seq_num;
-        u2bi_t* m_logical_block_size;
-        u4bi_t* m_path_table_size;
-        uint32_t m_lba_path_table_le;
-        uint32_t m_lba_opt_path_table_le;
-        uint32_t m_lba_path_table_be;
-        uint32_t m_lba_opt_path_table_be;
-        dir_entry_t* m_root_dir;
-        std::string m_vol_set_id;
-        std::string m_publisher_id;
-        std::string m_data_preparer_id;
-        std::string m_application_id;
-        std::string m_copyright_file_id;
-        std::string m_abstract_file_id;
-        std::string m_bibliographic_file_id;
-        dec_datetime_t* m_vol_create_datetime;
-        dec_datetime_t* m_vol_mod_datetime;
-        dec_datetime_t* m_vol_expire_datetime;
-        dec_datetime_t* m_vol_effective_datetime;
-        uint8_t m_file_structure_version;
-        uint8_t m_unused4;
-        std::string m_application_area;
-        iso9660_t* m__root;
-        iso9660_t::vol_desc_t* m__parent;
-        std::string m__raw_root_dir;
-        kaitai::kstream* m__io__raw_root_dir;
-        std::string m__raw_path_table;
-        kaitai::kstream* m__io__raw_path_table;
-
-    public:
-        std::string unused1() const { return m_unused1; }
-        std::string system_id() const { return m_system_id; }
-        std::string volume_id() const { return m_volume_id; }
-        std::string unused2() const { return m_unused2; }
-        u4bi_t* vol_space_size() const { return m_vol_space_size; }
-        std::string unused3() const { return m_unused3; }
-        u2bi_t* vol_set_size() const { return m_vol_set_size; }
-        u2bi_t* vol_seq_num() const { return m_vol_seq_num; }
-        u2bi_t* logical_block_size() const { return m_logical_block_size; }
-        u4bi_t* path_table_size() const { return m_path_table_size; }
-        uint32_t lba_path_table_le() const { return m_lba_path_table_le; }
-        uint32_t lba_opt_path_table_le() const { return m_lba_opt_path_table_le; }
-        uint32_t lba_path_table_be() const { return m_lba_path_table_be; }
-        uint32_t lba_opt_path_table_be() const { return m_lba_opt_path_table_be; }
-        dir_entry_t* root_dir() const { return m_root_dir; }
-        std::string vol_set_id() const { return m_vol_set_id; }
-        std::string publisher_id() const { return m_publisher_id; }
-        std::string data_preparer_id() const { return m_data_preparer_id; }
-        std::string application_id() const { return m_application_id; }
-        std::string copyright_file_id() const { return m_copyright_file_id; }
-        std::string abstract_file_id() const { return m_abstract_file_id; }
-        std::string bibliographic_file_id() const { return m_bibliographic_file_id; }
-        dec_datetime_t* vol_create_datetime() const { return m_vol_create_datetime; }
-        dec_datetime_t* vol_mod_datetime() const { return m_vol_mod_datetime; }
-        dec_datetime_t* vol_expire_datetime() const { return m_vol_expire_datetime; }
-        dec_datetime_t* vol_effective_datetime() const { return m_vol_effective_datetime; }
-        uint8_t file_structure_version() const { return m_file_structure_version; }
-        uint8_t unused4() const { return m_unused4; }
-        std::string application_area() const { return m_application_area; }
-        iso9660_t* _root() const { return m__root; }
-        iso9660_t::vol_desc_t* _parent() const { return m__parent; }
-        std::string _raw_root_dir() const { return m__raw_root_dir; }
-        kaitai::kstream* _io__raw_root_dir() const { return m__io__raw_root_dir; }
-        std::string _raw_path_table() const { return m__raw_path_table; }
-        kaitai::kstream* _io__raw_path_table() const { return m__io__raw_path_table; }
-    };
-
-    class vol_desc_boot_record_t : public kaitai::kstruct {
-
-    public:
-
-        vol_desc_boot_record_t(kaitai::kstream* p__io, iso9660_t::vol_desc_t* p__parent = 0, iso9660_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~vol_desc_boot_record_t();
-
-    private:
-        std::string m_boot_system_id;
-        std::string m_boot_id;
-        iso9660_t* m__root;
-        iso9660_t::vol_desc_t* m__parent;
-
-    public:
-        std::string boot_system_id() const { return m_boot_system_id; }
-        std::string boot_id() const { return m_boot_id; }
-        iso9660_t* _root() const { return m__root; }
-        iso9660_t::vol_desc_t* _parent() const { return m__parent; }
-    };
-
-    class datetime_t : public kaitai::kstruct {
-
-    public:
-
-        datetime_t(kaitai::kstream* p__io, iso9660_t::dir_entry_body_t* p__parent = 0, iso9660_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~datetime_t();
-
-    private:
-        uint8_t m_year;
-        uint8_t m_month;
-        uint8_t m_day;
-        uint8_t m_hour;
-        uint8_t m_minute;
-        uint8_t m_sec;
-        uint8_t m_timezone;
-        iso9660_t* m__root;
-        iso9660_t::dir_entry_body_t* m__parent;
-
-    public:
-        uint8_t year() const { return m_year; }
-        uint8_t month() const { return m_month; }
-        uint8_t day() const { return m_day; }
-        uint8_t hour() const { return m_hour; }
-        uint8_t minute() const { return m_minute; }
-        uint8_t sec() const { return m_sec; }
-        uint8_t timezone() const { return m_timezone; }
-        iso9660_t* _root() const { return m__root; }
-        iso9660_t::dir_entry_body_t* _parent() const { return m__parent; }
-    };
-
-    class dir_entry_t : public kaitai::kstruct {
-
-    public:
-
-        dir_entry_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, iso9660_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~dir_entry_t();
-
-    private:
-        uint8_t m_len;
-        dir_entry_body_t* m_body;
-        bool n_body;
-
-    public:
-        bool _is_null_body() { body(); return n_body; };
-
-    private:
-        iso9660_t* m__root;
-        kaitai::kstruct* m__parent;
-        std::string m__raw_body;
-        kaitai::kstream* m__io__raw_body;
-
-    public:
-        uint8_t len() const { return m_len; }
-        dir_entry_body_t* body() const { return m_body; }
-        iso9660_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-        std::string _raw_body() const { return m__raw_body; }
-        kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
-    };
-
-    class vol_desc_t : public kaitai::kstruct {
-
-    public:
-
-        vol_desc_t(kaitai::kstream* p__io, iso9660_t* p__parent = 0, iso9660_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~vol_desc_t();
-
-    private:
-        uint8_t m_type;
-        std::string m_magic;
-        uint8_t m_version;
-        vol_desc_boot_record_t* m_vol_desc_boot_record;
-        bool n_vol_desc_boot_record;
-
-    public:
-        bool _is_null_vol_desc_boot_record() { vol_desc_boot_record(); return n_vol_desc_boot_record; };
-
-    private:
-        vol_desc_primary_t* m_vol_desc_primary;
-        bool n_vol_desc_primary;
-
-    public:
-        bool _is_null_vol_desc_primary() { vol_desc_primary(); return n_vol_desc_primary; };
-
-    private:
-        iso9660_t* m__root;
-        iso9660_t* m__parent;
-
-    public:
-        uint8_t type() const { return m_type; }
-        std::string magic() const { return m_magic; }
-        uint8_t version() const { return m_version; }
-        vol_desc_boot_record_t* vol_desc_boot_record() const { return m_vol_desc_boot_record; }
-        vol_desc_primary_t* vol_desc_primary() const { return m_vol_desc_primary; }
-        iso9660_t* _root() const { return m__root; }
-        iso9660_t* _parent() const { return m__parent; }
-    };
-
-    class path_table_entry_le_t : public kaitai::kstruct {
-
-    public:
-
-        path_table_entry_le_t(kaitai::kstream* p__io, iso9660_t::path_table_le_t* p__parent = 0, iso9660_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~path_table_entry_le_t();
-
-    private:
-        uint8_t m_len_dir_name;
-        uint8_t m_len_ext_attr_rec;
-        uint32_t m_lba_extent;
-        uint16_t m_parent_dir_idx;
-        std::string m_dir_name;
-        uint8_t m_padding;
-        bool n_padding;
-
-    public:
-        bool _is_null_padding() { padding(); return n_padding; };
-
-    private:
-        iso9660_t* m__root;
-        iso9660_t::path_table_le_t* m__parent;
-
-    public:
-        uint8_t len_dir_name() const { return m_len_dir_name; }
-        uint8_t len_ext_attr_rec() const { return m_len_ext_attr_rec; }
-        uint32_t lba_extent() const { return m_lba_extent; }
-        uint16_t parent_dir_idx() const { return m_parent_dir_idx; }
-        std::string dir_name() const { return m_dir_name; }
-        uint8_t padding() const { return m_padding; }
-        iso9660_t* _root() const { return m__root; }
-        iso9660_t::path_table_le_t* _parent() const { return m__parent; }
-    };
-
-    class dir_entries_t : public kaitai::kstruct {
-
-    public:
-
-        dir_entries_t(kaitai::kstream* p__io, iso9660_t::dir_entry_body_t* p__parent = 0, iso9660_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~dir_entries_t();
-
-    private:
-        std::vector&lt;dir_entry_t*&gt;* m_entries;
-        iso9660_t* m__root;
-        iso9660_t::dir_entry_body_t* m__parent;
-
-    public:
-        std::vector&lt;dir_entry_t*&gt;* entries() const { return m_entries; }
-        iso9660_t* _root() const { return m__root; }
-        iso9660_t::dir_entry_body_t* _parent() const { return m__parent; }
-    };
-
-    class u4bi_t : public kaitai::kstruct {
-
-    public:
-
-        u4bi_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, iso9660_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~u4bi_t();
-
-    private:
-        uint32_t m_le;
-        uint32_t m_be;
-        iso9660_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        uint32_t le() const { return m_le; }
-        uint32_t be() const { return m_be; }
-        iso9660_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    class u2bi_t : public kaitai::kstruct {
-
-    public:
-
-        u2bi_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, iso9660_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~u2bi_t();
-
-    private:
-        uint16_t m_le;
-        uint16_t m_be;
-        iso9660_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        uint16_t le() const { return m_le; }
-        uint16_t be() const { return m_be; }
-        iso9660_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa Source
-     */
-
-    class path_table_le_t : public kaitai::kstruct {
-
-    public:
-
-        path_table_le_t(kaitai::kstream* p__io, iso9660_t::vol_desc_primary_t* p__parent = 0, iso9660_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~path_table_le_t();
-
-    private:
-        std::vector&lt;path_table_entry_le_t*&gt;* m_entries;
-        iso9660_t* m__root;
-        iso9660_t::vol_desc_primary_t* m__parent;
-
-    public:
-        std::vector&lt;path_table_entry_le_t*&gt;* entries() const { return m_entries; }
-        iso9660_t* _root() const { return m__root; }
-        iso9660_t::vol_desc_primary_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa Source
-     */
-
-    class dec_datetime_t : public kaitai::kstruct {
-
-    public:
-
-        dec_datetime_t(kaitai::kstream* p__io, iso9660_t::vol_desc_primary_t* p__parent = 0, iso9660_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~dec_datetime_t();
-
-    private:
-        std::string m_year;
-        std::string m_month;
-        std::string m_day;
-        std::string m_hour;
-        std::string m_minute;
-        std::string m_sec;
-        std::string m_sec_hundreds;
-        uint8_t m_timezone;
-        iso9660_t* m__root;
-        iso9660_t::vol_desc_primary_t* m__parent;
-
-    public:
-        std::string year() const { return m_year; }
-        std::string month() const { return m_month; }
-        std::string day() const { return m_day; }
-        std::string hour() const { return m_hour; }
-        std::string minute() const { return m_minute; }
-        std::string sec() const { return m_sec; }
-        std::string sec_hundreds() const { return m_sec_hundreds; }
-        uint8_t timezone() const { return m_timezone; }
-        iso9660_t* _root() const { return m__root; }
-        iso9660_t::vol_desc_primary_t* _parent() const { return m__parent; }
-    };
-
-    class dir_entry_body_t : public kaitai::kstruct {
-
-    public:
-
-        dir_entry_body_t(kaitai::kstream* p__io, iso9660_t::dir_entry_t* p__parent = 0, iso9660_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~dir_entry_body_t();
-
-    private:
-        bool f_extent_as_dir;
-        dir_entries_t* m_extent_as_dir;
-        bool n_extent_as_dir;
-
-    public:
-        bool _is_null_extent_as_dir() { extent_as_dir(); return n_extent_as_dir; };
-
-    private:
-
-    public:
-        dir_entries_t* extent_as_dir();
-
-    private:
-        bool f_extent_as_file;
-        std::string m_extent_as_file;
-        bool n_extent_as_file;
-
-    public:
-        bool _is_null_extent_as_file() { extent_as_file(); return n_extent_as_file; };
-
-    private:
-
-    public:
-        std::string extent_as_file();
-
-    private:
-        uint8_t m_len_ext_attr_rec;
-        u4bi_t* m_lba_extent;
-        u4bi_t* m_size_extent;
-        datetime_t* m_datetime;
-        uint8_t m_file_flags;
-        uint8_t m_file_unit_size;
-        uint8_t m_interleave_gap_size;
-        u2bi_t* m_vol_seq_num;
-        uint8_t m_len_file_name;
-        std::string m_file_name;
-        uint8_t m_padding;
-        bool n_padding;
-
-    public:
-        bool _is_null_padding() { padding(); return n_padding; };
-
-    private:
-        std::string m_rest;
-        iso9660_t* m__root;
-        iso9660_t::dir_entry_t* m__parent;
-        std::string m__raw_extent_as_dir;
-        kaitai::kstream* m__io__raw_extent_as_dir;
-
-    public:
-        uint8_t len_ext_attr_rec() const { return m_len_ext_attr_rec; }
-        u4bi_t* lba_extent() const { return m_lba_extent; }
-        u4bi_t* size_extent() const { return m_size_extent; }
-        datetime_t* datetime() const { return m_datetime; }
-        uint8_t file_flags() const { return m_file_flags; }
-        uint8_t file_unit_size() const { return m_file_unit_size; }
-        uint8_t interleave_gap_size() const { return m_interleave_gap_size; }
-        u2bi_t* vol_seq_num() const { return m_vol_seq_num; }
-        uint8_t len_file_name() const { return m_len_file_name; }
-        std::string file_name() const { return m_file_name; }
-        uint8_t padding() const { return m_padding; }
-        std::string rest() const { return m_rest; }
-        iso9660_t* _root() const { return m__root; }
-        iso9660_t::dir_entry_t* _parent() const { return m__parent; }
-        std::string _raw_extent_as_dir() const { return m__raw_extent_as_dir; }
-        kaitai::kstream* _io__raw_extent_as_dir() const { return m__io__raw_extent_as_dir; }
-    };
-
-private:
-    bool f_sector_size;
-    int32_t m_sector_size;
-
-public:
-    int32_t sector_size();
-
-private:
-    bool f_primary_vol_desc;
-    vol_desc_t* m_primary_vol_desc;
-
-public:
-    vol_desc_t* primary_vol_desc();
-
-private:
-    iso9660_t* m__root;
-    kaitai::kstruct* m__parent;
-
-public:
-    iso9660_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-};
-
-#endif  // ISO9660_H_
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef ISO9660_H_</span>
+<span class="cp">#define ISO9660_H_</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * ISO9660 is standard filesystem used on read-only optical discs</span>
+<span class="cm"> * (mostly CD-ROM). The standard was based on earlier High Sierra</span>
+<span class="cm"> * Format (HSF), proposed for CD-ROMs in 1985, and, after several</span>
+<span class="cm"> * revisions, it was accepted as ISO9960:1998.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The format emphasizes portability (thus having pretty minimal</span>
+<span class="cm"> * features and very conservative file names standards) and sequential</span>
+<span class="cm"> * access (which favors disc devices with relatively slow rotation</span>
+<span class="cm"> * speed).</span>
+<span class="cm"> */</span>
+
+<span class="k">class</span> <span class="nc">iso9660_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">vol_desc_primary_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">vol_desc_boot_record_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">datetime_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">dir_entry_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">vol_desc_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">path_table_entry_le_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">dir_entries_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">u4bi_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">u2bi_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">path_table_le_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">dec_datetime_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">dir_entry_body_t</span><span class="p">;</span>
+
+    <span class="n">iso9660_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">iso9660_t</span><span class="p">();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">vol_desc_primary_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">vol_desc_primary_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">vol_desc_primary_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_path_table</span><span class="p">;</span>
+        <span class="n">path_table_le_t</span><span class="o">*</span> <span class="n">m_path_table</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">path_table_le_t</span><span class="o">*</span> <span class="n">path_table</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_unused1</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_system_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_volume_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_unused2</span><span class="p">;</span>
+        <span class="n">u4bi_t</span><span class="o">*</span> <span class="n">m_vol_space_size</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_unused3</span><span class="p">;</span>
+        <span class="n">u2bi_t</span><span class="o">*</span> <span class="n">m_vol_set_size</span><span class="p">;</span>
+        <span class="n">u2bi_t</span><span class="o">*</span> <span class="n">m_vol_seq_num</span><span class="p">;</span>
+        <span class="n">u2bi_t</span><span class="o">*</span> <span class="n">m_logical_block_size</span><span class="p">;</span>
+        <span class="n">u4bi_t</span><span class="o">*</span> <span class="n">m_path_table_size</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_lba_path_table_le</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_lba_opt_path_table_le</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_lba_path_table_be</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_lba_opt_path_table_be</span><span class="p">;</span>
+        <span class="n">dir_entry_t</span><span class="o">*</span> <span class="n">m_root_dir</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_vol_set_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_publisher_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_data_preparer_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_application_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_copyright_file_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_abstract_file_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_bibliographic_file_id</span><span class="p">;</span>
+        <span class="n">dec_datetime_t</span><span class="o">*</span> <span class="n">m_vol_create_datetime</span><span class="p">;</span>
+        <span class="n">dec_datetime_t</span><span class="o">*</span> <span class="n">m_vol_mod_datetime</span><span class="p">;</span>
+        <span class="n">dec_datetime_t</span><span class="o">*</span> <span class="n">m_vol_expire_datetime</span><span class="p">;</span>
+        <span class="n">dec_datetime_t</span><span class="o">*</span> <span class="n">m_vol_effective_datetime</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_file_structure_version</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_unused4</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_application_area</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_root_dir</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_root_dir</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_path_table</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_path_table</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">unused1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_unused1</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">system_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_system_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">volume_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_volume_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">unused2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_unused2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">u4bi_t</span><span class="o">*</span> <span class="n">vol_space_size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_vol_space_size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">unused3</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_unused3</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">u2bi_t</span><span class="o">*</span> <span class="n">vol_set_size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_vol_set_size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">u2bi_t</span><span class="o">*</span> <span class="n">vol_seq_num</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_vol_seq_num</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">u2bi_t</span><span class="o">*</span> <span class="n">logical_block_size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_logical_block_size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">u4bi_t</span><span class="o">*</span> <span class="n">path_table_size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_path_table_size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">lba_path_table_le</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_lba_path_table_le</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">lba_opt_path_table_le</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_lba_opt_path_table_le</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">lba_path_table_be</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_lba_path_table_be</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">lba_opt_path_table_be</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_lba_opt_path_table_be</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dir_entry_t</span><span class="o">*</span> <span class="n">root_dir</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root_dir</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">vol_set_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_vol_set_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">publisher_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_publisher_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">data_preparer_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_data_preparer_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">application_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_application_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">copyright_file_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_copyright_file_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">abstract_file_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_abstract_file_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">bibliographic_file_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_bibliographic_file_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dec_datetime_t</span><span class="o">*</span> <span class="n">vol_create_datetime</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_vol_create_datetime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dec_datetime_t</span><span class="o">*</span> <span class="n">vol_mod_datetime</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_vol_mod_datetime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dec_datetime_t</span><span class="o">*</span> <span class="n">vol_expire_datetime</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_vol_expire_datetime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dec_datetime_t</span><span class="o">*</span> <span class="n">vol_effective_datetime</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_vol_effective_datetime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">file_structure_version</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_file_structure_version</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">unused4</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_unused4</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">application_area</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_application_area</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_root_dir</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_root_dir</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_root_dir</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_root_dir</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_path_table</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_path_table</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_path_table</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_path_table</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">vol_desc_boot_record_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">vol_desc_boot_record_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">vol_desc_boot_record_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_boot_system_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_boot_id</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">boot_system_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_boot_system_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">boot_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_boot_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">datetime_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">datetime_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_body_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">datetime_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_year</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_month</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_day</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_hour</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_minute</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_sec</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_timezone</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_body_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">year</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_year</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">month</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_month</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">day</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_day</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">hour</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_hour</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">minute</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_minute</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">sec</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_sec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">timezone</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_timezone</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_body_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">dir_entry_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">dir_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">dir_entry_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_len</span><span class="p">;</span>
+        <span class="n">dir_entry_body_t</span><span class="o">*</span> <span class="n">m_body</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_body</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_body</span><span class="p">()</span> <span class="p">{</span> <span class="n">body</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_body</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_body</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_body</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">len</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">dir_entry_body_t</span><span class="o">*</span> <span class="n">body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">vol_desc_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">vol_desc_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">vol_desc_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_type</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_magic</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_version</span><span class="p">;</span>
+        <span class="n">vol_desc_boot_record_t</span><span class="o">*</span> <span class="n">m_vol_desc_boot_record</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_vol_desc_boot_record</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_vol_desc_boot_record</span><span class="p">()</span> <span class="p">{</span> <span class="n">vol_desc_boot_record</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_vol_desc_boot_record</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">vol_desc_primary_t</span><span class="o">*</span> <span class="n">m_vol_desc_primary</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_vol_desc_primary</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_vol_desc_primary</span><span class="p">()</span> <span class="p">{</span> <span class="n">vol_desc_primary</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_vol_desc_primary</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_type</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">magic</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_magic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">version</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_version</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">vol_desc_boot_record_t</span><span class="o">*</span> <span class="n">vol_desc_boot_record</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_vol_desc_boot_record</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">vol_desc_primary_t</span><span class="o">*</span> <span class="n">vol_desc_primary</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_vol_desc_primary</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">path_table_entry_le_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">path_table_entry_le_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">path_table_le_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">path_table_entry_le_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_len_dir_name</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_len_ext_attr_rec</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_lba_extent</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_parent_dir_idx</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_dir_name</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_padding</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_padding</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_padding</span><span class="p">()</span> <span class="p">{</span> <span class="n">padding</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_padding</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">path_table_le_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">len_dir_name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_dir_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">len_ext_attr_rec</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_ext_attr_rec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">lba_extent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_lba_extent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">parent_dir_idx</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent_dir_idx</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">dir_name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_dir_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">padding</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_padding</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">path_table_le_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">dir_entries_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">dir_entries_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_body_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">dir_entries_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">dir_entry_t</span><span class="o">*&gt;*</span> <span class="n">m_entries</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_body_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">dir_entry_t</span><span class="o">*&gt;*</span> <span class="n">entries</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_entries</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_body_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">u4bi_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">u4bi_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">u4bi_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">m_le</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_be</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">le</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_le</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">be</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_be</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">u2bi_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">u2bi_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">u2bi_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">m_le</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_be</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">le</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_le</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">be</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_be</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">path_table_le_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">path_table_le_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_primary_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">path_table_le_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">path_table_entry_le_t</span><span class="o">*&gt;*</span> <span class="n">m_entries</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_primary_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">path_table_entry_le_t</span><span class="o">*&gt;*</span> <span class="n">entries</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_entries</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_primary_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">dec_datetime_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">dec_datetime_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_primary_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">dec_datetime_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_year</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_month</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_day</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_hour</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_minute</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_sec</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_sec_hundreds</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_timezone</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_primary_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">year</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_year</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">month</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_month</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">day</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_day</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">hour</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_hour</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">minute</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_minute</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sec</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_sec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sec_hundreds</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_sec_hundreds</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">timezone</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_timezone</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_primary_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">dir_entry_body_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">dir_entry_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">dir_entry_body_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_extent_as_dir</span><span class="p">;</span>
+        <span class="n">dir_entries_t</span><span class="o">*</span> <span class="n">m_extent_as_dir</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_extent_as_dir</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_extent_as_dir</span><span class="p">()</span> <span class="p">{</span> <span class="n">extent_as_dir</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_extent_as_dir</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">dir_entries_t</span><span class="o">*</span> <span class="n">extent_as_dir</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_extent_as_file</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_extent_as_file</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_extent_as_file</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_extent_as_file</span><span class="p">()</span> <span class="p">{</span> <span class="n">extent_as_file</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_extent_as_file</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">extent_as_file</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_len_ext_attr_rec</span><span class="p">;</span>
+        <span class="n">u4bi_t</span><span class="o">*</span> <span class="n">m_lba_extent</span><span class="p">;</span>
+        <span class="n">u4bi_t</span><span class="o">*</span> <span class="n">m_size_extent</span><span class="p">;</span>
+        <span class="n">datetime_t</span><span class="o">*</span> <span class="n">m_datetime</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_file_flags</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_file_unit_size</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_interleave_gap_size</span><span class="p">;</span>
+        <span class="n">u2bi_t</span><span class="o">*</span> <span class="n">m_vol_seq_num</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_len_file_name</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_file_name</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_padding</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_padding</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_padding</span><span class="p">()</span> <span class="p">{</span> <span class="n">padding</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_padding</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_rest</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_extent_as_dir</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_extent_as_dir</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">len_ext_attr_rec</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_ext_attr_rec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">u4bi_t</span><span class="o">*</span> <span class="n">lba_extent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_lba_extent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">u4bi_t</span><span class="o">*</span> <span class="n">size_extent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_size_extent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">datetime_t</span><span class="o">*</span> <span class="n">datetime</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_datetime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">file_flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_file_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">file_unit_size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_file_unit_size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">interleave_gap_size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_interleave_gap_size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">u2bi_t</span><span class="o">*</span> <span class="n">vol_seq_num</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_vol_seq_num</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">len_file_name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_file_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">file_name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_file_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">padding</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_padding</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">rest</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_rest</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_extent_as_dir</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_extent_as_dir</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_extent_as_dir</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_extent_as_dir</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_sector_size</span><span class="p">;</span>
+    <span class="kt">int32_t</span> <span class="n">m_sector_size</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">int32_t</span> <span class="n">sector_size</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_primary_vol_desc</span><span class="p">;</span>
+    <span class="n">vol_desc_t</span><span class="o">*</span> <span class="n">m_primary_vol_desc</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">vol_desc_t</span><span class="o">*</span> <span class="n">primary_vol_desc</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cp">#endif  </span><span class="c1">// ISO9660_H_</span>
+</pre></div>
 
         </div>
         
@@ -895,406 +892,406 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;iso9660.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;iso9660.h&quot;</span><span class="cp"></span>
 
 
 
-iso9660_t::iso9660_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    f_sector_size = false;
-    f_primary_vol_desc = false;
-    _read();
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">iso9660_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">f_sector_size</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_primary_vol_desc</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void iso9660_t::_read() {
-}
+<span class="kt">void</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-iso9660_t::~iso9660_t() {
-    if (f_primary_vol_desc) {
-        delete m_primary_vol_desc;
-    }
-}
+<span class="n">iso9660_t</span><span class="o">::~</span><span class="n">iso9660_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_primary_vol_desc</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_primary_vol_desc</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-iso9660_t::vol_desc_primary_t::vol_desc_primary_t(kaitai::kstream* p__io, iso9660_t::vol_desc_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_path_table = false;
-    _read();
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_primary_t</span><span class="o">::</span><span class="n">vol_desc_primary_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_path_table</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void iso9660_t::vol_desc_primary_t::_read() {
-    m_unused1 = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x00&quot;, 1));
-    m_system_id = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(32), std::string(&quot;UTF-8&quot;));
-    m_volume_id = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(32), std::string(&quot;UTF-8&quot;));
-    m_unused2 = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x00\x00\x00\x00\x00\x00\x00\x00&quot;, 8));
-    m_vol_space_size = new u4bi_t(m__io, this, m__root);
-    m_unused3 = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00&quot;, 32));
-    m_vol_set_size = new u2bi_t(m__io, this, m__root);
-    m_vol_seq_num = new u2bi_t(m__io, this, m__root);
-    m_logical_block_size = new u2bi_t(m__io, this, m__root);
-    m_path_table_size = new u4bi_t(m__io, this, m__root);
-    m_lba_path_table_le = m__io-&gt;read_u4le();
-    m_lba_opt_path_table_le = m__io-&gt;read_u4le();
-    m_lba_path_table_be = m__io-&gt;read_u4be();
-    m_lba_opt_path_table_be = m__io-&gt;read_u4be();
-    m__raw_root_dir = m__io-&gt;read_bytes(34);
-    m__io__raw_root_dir = new kaitai::kstream(m__raw_root_dir);
-    m_root_dir = new dir_entry_t(m__io__raw_root_dir, this, m__root);
-    m_vol_set_id = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(128), std::string(&quot;UTF-8&quot;));
-    m_publisher_id = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(128), std::string(&quot;UTF-8&quot;));
-    m_data_preparer_id = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(128), std::string(&quot;UTF-8&quot;));
-    m_application_id = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(128), std::string(&quot;UTF-8&quot;));
-    m_copyright_file_id = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(38), std::string(&quot;UTF-8&quot;));
-    m_abstract_file_id = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(36), std::string(&quot;UTF-8&quot;));
-    m_bibliographic_file_id = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(37), std::string(&quot;UTF-8&quot;));
-    m_vol_create_datetime = new dec_datetime_t(m__io, this, m__root);
-    m_vol_mod_datetime = new dec_datetime_t(m__io, this, m__root);
-    m_vol_expire_datetime = new dec_datetime_t(m__io, this, m__root);
-    m_vol_effective_datetime = new dec_datetime_t(m__io, this, m__root);
-    m_file_structure_version = m__io-&gt;read_u1();
-    m_unused4 = m__io-&gt;read_u1();
-    m_application_area = m__io-&gt;read_bytes(512);
-}
+<span class="kt">void</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_primary_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_unused1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+    <span class="n">m_system_id</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+    <span class="n">m_volume_id</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+    <span class="n">m_unused2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00\x00\x00\x00\x00\x00\x00\x00</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">));</span>
+    <span class="n">m_vol_space_size</span> <span class="o">=</span> <span class="k">new</span> <span class="n">u4bi_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_unused3</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">32</span><span class="p">));</span>
+    <span class="n">m_vol_set_size</span> <span class="o">=</span> <span class="k">new</span> <span class="n">u2bi_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_vol_seq_num</span> <span class="o">=</span> <span class="k">new</span> <span class="n">u2bi_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_logical_block_size</span> <span class="o">=</span> <span class="k">new</span> <span class="n">u2bi_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_path_table_size</span> <span class="o">=</span> <span class="k">new</span> <span class="n">u4bi_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_lba_path_table_le</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_lba_opt_path_table_le</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_lba_path_table_be</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_lba_opt_path_table_be</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m__raw_root_dir</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">34</span><span class="p">);</span>
+    <span class="n">m__io__raw_root_dir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_root_dir</span><span class="p">);</span>
+    <span class="n">m_root_dir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">dir_entry_t</span><span class="p">(</span><span class="n">m__io__raw_root_dir</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_vol_set_id</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+    <span class="n">m_publisher_id</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+    <span class="n">m_data_preparer_id</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+    <span class="n">m_application_id</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+    <span class="n">m_copyright_file_id</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">38</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+    <span class="n">m_abstract_file_id</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">36</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+    <span class="n">m_bibliographic_file_id</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">37</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+    <span class="n">m_vol_create_datetime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">dec_datetime_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_vol_mod_datetime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">dec_datetime_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_vol_expire_datetime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">dec_datetime_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_vol_effective_datetime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">dec_datetime_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_file_structure_version</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_unused4</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_application_area</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">512</span><span class="p">);</span>
+<span class="p">}</span>
 
-iso9660_t::vol_desc_primary_t::~vol_desc_primary_t() {
-    delete m_vol_space_size;
-    delete m_vol_set_size;
-    delete m_vol_seq_num;
-    delete m_logical_block_size;
-    delete m_path_table_size;
-    delete m__io__raw_root_dir;
-    delete m_root_dir;
-    delete m_vol_create_datetime;
-    delete m_vol_mod_datetime;
-    delete m_vol_expire_datetime;
-    delete m_vol_effective_datetime;
-    if (f_path_table) {
-        delete m__io__raw_path_table;
-        delete m_path_table;
-    }
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_primary_t</span><span class="o">::~</span><span class="n">vol_desc_primary_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_vol_space_size</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_vol_set_size</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_vol_seq_num</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_logical_block_size</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_path_table_size</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m__io__raw_root_dir</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_root_dir</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_vol_create_datetime</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_vol_mod_datetime</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_vol_expire_datetime</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_vol_effective_datetime</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_path_table</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_path_table</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="n">m_path_table</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-iso9660_t::path_table_le_t* iso9660_t::vol_desc_primary_t::path_table() {
-    if (f_path_table)
-        return m_path_table;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek((lba_path_table_le() * _root()-&gt;sector_size()));
-    m__raw_path_table = m__io-&gt;read_bytes(path_table_size()-&gt;le());
-    m__io__raw_path_table = new kaitai::kstream(m__raw_path_table);
-    m_path_table = new path_table_le_t(m__io__raw_path_table, this, m__root);
-    m__io-&gt;seek(_pos);
-    f_path_table = true;
-    return m_path_table;
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">path_table_le_t</span><span class="o">*</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_primary_t</span><span class="o">::</span><span class="n">path_table</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_path_table</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_path_table</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">((</span><span class="n">lba_path_table_le</span><span class="p">()</span> <span class="o">*</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">sector_size</span><span class="p">()));</span>
+    <span class="n">m__raw_path_table</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">path_table_size</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">le</span><span class="p">());</span>
+    <span class="n">m__io__raw_path_table</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_path_table</span><span class="p">);</span>
+    <span class="n">m_path_table</span> <span class="o">=</span> <span class="k">new</span> <span class="n">path_table_le_t</span><span class="p">(</span><span class="n">m__io__raw_path_table</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_path_table</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_path_table</span><span class="p">;</span>
+<span class="p">}</span>
 
-iso9660_t::vol_desc_boot_record_t::vol_desc_boot_record_t(kaitai::kstream* p__io, iso9660_t::vol_desc_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_boot_record_t</span><span class="o">::</span><span class="n">vol_desc_boot_record_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void iso9660_t::vol_desc_boot_record_t::_read() {
-    m_boot_system_id = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(32), std::string(&quot;UTF-8&quot;));
-    m_boot_id = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(32), std::string(&quot;UTF-8&quot;));
-}
+<span class="kt">void</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_boot_record_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_boot_system_id</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+    <span class="n">m_boot_id</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+<span class="p">}</span>
 
-iso9660_t::vol_desc_boot_record_t::~vol_desc_boot_record_t() {
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_boot_record_t</span><span class="o">::~</span><span class="n">vol_desc_boot_record_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-iso9660_t::datetime_t::datetime_t(kaitai::kstream* p__io, iso9660_t::dir_entry_body_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">datetime_t</span><span class="o">::</span><span class="n">datetime_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_body_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void iso9660_t::datetime_t::_read() {
-    m_year = m__io-&gt;read_u1();
-    m_month = m__io-&gt;read_u1();
-    m_day = m__io-&gt;read_u1();
-    m_hour = m__io-&gt;read_u1();
-    m_minute = m__io-&gt;read_u1();
-    m_sec = m__io-&gt;read_u1();
-    m_timezone = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">datetime_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_year</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_month</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_day</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_hour</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_minute</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_sec</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_timezone</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-iso9660_t::datetime_t::~datetime_t() {
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">datetime_t</span><span class="o">::~</span><span class="n">datetime_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-iso9660_t::dir_entry_t::dir_entry_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_t</span><span class="o">::</span><span class="n">dir_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void iso9660_t::dir_entry_t::_read() {
-    m_len = m__io-&gt;read_u1();
-    n_body = true;
-    if (len() &gt; 0) {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes((len() - 1));
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new dir_entry_body_t(m__io__raw_body, this, m__root);
-    }
-}
+<span class="kt">void</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_len</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">n_body</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">len</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">dir_entry_body_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-iso9660_t::dir_entry_t::~dir_entry_t() {
-    if (!n_body) {
-        delete m__io__raw_body;
-        delete m_body;
-    }
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_t</span><span class="o">::~</span><span class="n">dir_entry_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_body</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="n">m_body</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-iso9660_t::vol_desc_t::vol_desc_t(kaitai::kstream* p__io, iso9660_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_t</span><span class="o">::</span><span class="n">vol_desc_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void iso9660_t::vol_desc_t::_read() {
-    m_type = m__io-&gt;read_u1();
-    m_magic = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x43\x44\x30\x30\x31&quot;, 5));
-    m_version = m__io-&gt;read_u1();
-    n_vol_desc_boot_record = true;
-    if (type() == 0) {
-        n_vol_desc_boot_record = false;
-        m_vol_desc_boot_record = new vol_desc_boot_record_t(m__io, this, m__root);
-    }
-    n_vol_desc_primary = true;
-    if (type() == 1) {
-        n_vol_desc_primary = false;
-        m_vol_desc_primary = new vol_desc_primary_t(m__io, this, m__root);
-    }
-}
+<span class="kt">void</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_type</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_magic</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x43\x44\x30\x30\x31</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">));</span>
+    <span class="n">m_version</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">n_vol_desc_boot_record</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_vol_desc_boot_record</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_vol_desc_boot_record</span> <span class="o">=</span> <span class="k">new</span> <span class="n">vol_desc_boot_record_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">n_vol_desc_primary</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_vol_desc_primary</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_vol_desc_primary</span> <span class="o">=</span> <span class="k">new</span> <span class="n">vol_desc_primary_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-iso9660_t::vol_desc_t::~vol_desc_t() {
-    if (!n_vol_desc_boot_record) {
-        delete m_vol_desc_boot_record;
-    }
-    if (!n_vol_desc_primary) {
-        delete m_vol_desc_primary;
-    }
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_t</span><span class="o">::~</span><span class="n">vol_desc_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_vol_desc_boot_record</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_vol_desc_boot_record</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_vol_desc_primary</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_vol_desc_primary</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-iso9660_t::path_table_entry_le_t::path_table_entry_le_t(kaitai::kstream* p__io, iso9660_t::path_table_le_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">path_table_entry_le_t</span><span class="o">::</span><span class="n">path_table_entry_le_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">path_table_le_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void iso9660_t::path_table_entry_le_t::_read() {
-    m_len_dir_name = m__io-&gt;read_u1();
-    m_len_ext_attr_rec = m__io-&gt;read_u1();
-    m_lba_extent = m__io-&gt;read_u4le();
-    m_parent_dir_idx = m__io-&gt;read_u2le();
-    m_dir_name = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(len_dir_name()), std::string(&quot;UTF-8&quot;));
-    n_padding = true;
-    if (kaitai::kstream::mod(len_dir_name(), 2) == 1) {
-        n_padding = false;
-        m_padding = m__io-&gt;read_u1();
-    }
-}
+<span class="kt">void</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">path_table_entry_le_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_len_dir_name</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_len_ext_attr_rec</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_lba_extent</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_parent_dir_idx</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_dir_name</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_dir_name</span><span class="p">()),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+    <span class="n">n_padding</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">mod</span><span class="p">(</span><span class="n">len_dir_name</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_padding</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_padding</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-iso9660_t::path_table_entry_le_t::~path_table_entry_le_t() {
-    if (!n_padding) {
-    }
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">path_table_entry_le_t</span><span class="o">::~</span><span class="n">path_table_entry_le_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_padding</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-iso9660_t::dir_entries_t::dir_entries_t(kaitai::kstream* p__io, iso9660_t::dir_entry_body_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entries_t</span><span class="o">::</span><span class="n">dir_entries_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_body_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void iso9660_t::dir_entries_t::_read() {
-    m_entries = new std::vector&lt;dir_entry_t*&gt;();
-    {
-        int i = 0;
-        dir_entry_t* _;
-        do {
-            _ = new dir_entry_t(m__io, this, m__root);
-            m_entries-&gt;push_back(_);
-            i++;
-        } while (!(_-&gt;len() == 0));
-    }
-}
+<span class="kt">void</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entries_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">dir_entry_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">dir_entry_t</span><span class="o">*</span> <span class="n">_</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="k">new</span> <span class="n">dir_entry_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+            <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">_</span><span class="p">);</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_</span><span class="o">-&gt;</span><span class="n">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-iso9660_t::dir_entries_t::~dir_entries_t() {
-    for (std::vector&lt;dir_entry_t*&gt;::iterator it = m_entries-&gt;begin(); it != m_entries-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_entries;
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entries_t</span><span class="o">::~</span><span class="n">dir_entries_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">dir_entry_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_entries</span><span class="p">;</span>
+<span class="p">}</span>
 
-iso9660_t::u4bi_t::u4bi_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">u4bi_t</span><span class="o">::</span><span class="n">u4bi_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void iso9660_t::u4bi_t::_read() {
-    m_le = m__io-&gt;read_u4le();
-    m_be = m__io-&gt;read_u4be();
-}
+<span class="kt">void</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">u4bi_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_le</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_be</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="p">}</span>
 
-iso9660_t::u4bi_t::~u4bi_t() {
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">u4bi_t</span><span class="o">::~</span><span class="n">u4bi_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-iso9660_t::u2bi_t::u2bi_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">u2bi_t</span><span class="o">::</span><span class="n">u2bi_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void iso9660_t::u2bi_t::_read() {
-    m_le = m__io-&gt;read_u2le();
-    m_be = m__io-&gt;read_u2be();
-}
+<span class="kt">void</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">u2bi_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_le</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_be</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="p">}</span>
 
-iso9660_t::u2bi_t::~u2bi_t() {
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">u2bi_t</span><span class="o">::~</span><span class="n">u2bi_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-iso9660_t::path_table_le_t::path_table_le_t(kaitai::kstream* p__io, iso9660_t::vol_desc_primary_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">path_table_le_t</span><span class="o">::</span><span class="n">path_table_le_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_primary_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void iso9660_t::path_table_le_t::_read() {
-    m_entries = new std::vector&lt;path_table_entry_le_t*&gt;();
-    {
-        int i = 0;
-        while (!m__io-&gt;is_eof()) {
-            m_entries-&gt;push_back(new path_table_entry_le_t(m__io, this, m__root));
-            i++;
-        }
-    }
-}
+<span class="kt">void</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">path_table_le_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">path_table_entry_le_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">path_table_entry_le_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-iso9660_t::path_table_le_t::~path_table_le_t() {
-    for (std::vector&lt;path_table_entry_le_t*&gt;::iterator it = m_entries-&gt;begin(); it != m_entries-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_entries;
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">path_table_le_t</span><span class="o">::~</span><span class="n">path_table_le_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">path_table_entry_le_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_entries</span><span class="p">;</span>
+<span class="p">}</span>
 
-iso9660_t::dec_datetime_t::dec_datetime_t(kaitai::kstream* p__io, iso9660_t::vol_desc_primary_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">dec_datetime_t</span><span class="o">::</span><span class="n">dec_datetime_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_primary_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void iso9660_t::dec_datetime_t::_read() {
-    m_year = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(4), std::string(&quot;ASCII&quot;));
-    m_month = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(2), std::string(&quot;ASCII&quot;));
-    m_day = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(2), std::string(&quot;ASCII&quot;));
-    m_hour = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(2), std::string(&quot;ASCII&quot;));
-    m_minute = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(2), std::string(&quot;ASCII&quot;));
-    m_sec = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(2), std::string(&quot;ASCII&quot;));
-    m_sec_hundreds = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(2), std::string(&quot;ASCII&quot;));
-    m_timezone = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dec_datetime_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_year</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_month</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_day</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_hour</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_minute</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_sec</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_sec_hundreds</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_timezone</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-iso9660_t::dec_datetime_t::~dec_datetime_t() {
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">dec_datetime_t</span><span class="o">::~</span><span class="n">dec_datetime_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-iso9660_t::dir_entry_body_t::dir_entry_body_t(kaitai::kstream* p__io, iso9660_t::dir_entry_t* p__parent, iso9660_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_extent_as_dir = false;
-    f_extent_as_file = false;
-    _read();
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_body_t</span><span class="o">::</span><span class="n">dir_entry_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">iso9660_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_extent_as_dir</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_extent_as_file</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void iso9660_t::dir_entry_body_t::_read() {
-    m_len_ext_attr_rec = m__io-&gt;read_u1();
-    m_lba_extent = new u4bi_t(m__io, this, m__root);
-    m_size_extent = new u4bi_t(m__io, this, m__root);
-    m_datetime = new datetime_t(m__io, this, m__root);
-    m_file_flags = m__io-&gt;read_u1();
-    m_file_unit_size = m__io-&gt;read_u1();
-    m_interleave_gap_size = m__io-&gt;read_u1();
-    m_vol_seq_num = new u2bi_t(m__io, this, m__root);
-    m_len_file_name = m__io-&gt;read_u1();
-    m_file_name = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(len_file_name()), std::string(&quot;UTF-8&quot;));
-    n_padding = true;
-    if (kaitai::kstream::mod(len_file_name(), 2) == 0) {
-        n_padding = false;
-        m_padding = m__io-&gt;read_u1();
-    }
-    m_rest = m__io-&gt;read_bytes_full();
-}
+<span class="kt">void</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_body_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_len_ext_attr_rec</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_lba_extent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">u4bi_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_size_extent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">u4bi_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_datetime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">datetime_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_file_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_file_unit_size</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_interleave_gap_size</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_vol_seq_num</span> <span class="o">=</span> <span class="k">new</span> <span class="n">u2bi_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_len_file_name</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_file_name</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_file_name</span><span class="p">()),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+    <span class="n">n_padding</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">mod</span><span class="p">(</span><span class="n">len_file_name</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_padding</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_padding</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">m_rest</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
+<span class="p">}</span>
 
-iso9660_t::dir_entry_body_t::~dir_entry_body_t() {
-    delete m_lba_extent;
-    delete m_size_extent;
-    delete m_datetime;
-    delete m_vol_seq_num;
-    if (!n_padding) {
-    }
-    if (f_extent_as_dir &amp;&amp; !n_extent_as_dir) {
-        delete m__io__raw_extent_as_dir;
-        delete m_extent_as_dir;
-    }
-    if (f_extent_as_file &amp;&amp; !n_extent_as_file) {
-    }
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_body_t</span><span class="o">::~</span><span class="n">dir_entry_body_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_lba_extent</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_size_extent</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_datetime</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_vol_seq_num</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_padding</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_extent_as_dir</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">n_extent_as_dir</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_extent_as_dir</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="n">m_extent_as_dir</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_extent_as_file</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">n_extent_as_file</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-iso9660_t::dir_entries_t* iso9660_t::dir_entry_body_t::extent_as_dir() {
-    if (f_extent_as_dir)
-        return m_extent_as_dir;
-    n_extent_as_dir = true;
-    if ((file_flags() &amp; 2) != 0) {
-        n_extent_as_dir = false;
-        kaitai::kstream *io = _root()-&gt;_io();
-        std::streampos _pos = io-&gt;pos();
-        io-&gt;seek((lba_extent()-&gt;le() * _root()-&gt;sector_size()));
-        m__raw_extent_as_dir = io-&gt;read_bytes(size_extent()-&gt;le());
-        m__io__raw_extent_as_dir = new kaitai::kstream(m__raw_extent_as_dir);
-        m_extent_as_dir = new dir_entries_t(m__io__raw_extent_as_dir, this, m__root);
-        io-&gt;seek(_pos);
-    }
-    f_extent_as_dir = true;
-    return m_extent_as_dir;
-}
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entries_t</span><span class="o">*</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_body_t</span><span class="o">::</span><span class="n">extent_as_dir</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_extent_as_dir</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_extent_as_dir</span><span class="p">;</span>
+    <span class="n">n_extent_as_dir</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">file_flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_extent_as_dir</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="o">*</span><span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">((</span><span class="n">lba_extent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">le</span><span class="p">()</span> <span class="o">*</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">sector_size</span><span class="p">()));</span>
+        <span class="n">m__raw_extent_as_dir</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">size_extent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">le</span><span class="p">());</span>
+        <span class="n">m__io__raw_extent_as_dir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_extent_as_dir</span><span class="p">);</span>
+        <span class="n">m_extent_as_dir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">dir_entries_t</span><span class="p">(</span><span class="n">m__io__raw_extent_as_dir</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">f_extent_as_dir</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_extent_as_dir</span><span class="p">;</span>
+<span class="p">}</span>
 
-std::string iso9660_t::dir_entry_body_t::extent_as_file() {
-    if (f_extent_as_file)
-        return m_extent_as_file;
-    n_extent_as_file = true;
-    if ((file_flags() &amp; 2) == 0) {
-        n_extent_as_file = false;
-        kaitai::kstream *io = _root()-&gt;_io();
-        std::streampos _pos = io-&gt;pos();
-        io-&gt;seek((lba_extent()-&gt;le() * _root()-&gt;sector_size()));
-        m_extent_as_file = io-&gt;read_bytes(size_extent()-&gt;le());
-        io-&gt;seek(_pos);
-    }
-    f_extent_as_file = true;
-    return m_extent_as_file;
-}
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">dir_entry_body_t</span><span class="o">::</span><span class="n">extent_as_file</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_extent_as_file</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_extent_as_file</span><span class="p">;</span>
+    <span class="n">n_extent_as_file</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">file_flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_extent_as_file</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="o">*</span><span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">((</span><span class="n">lba_extent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">le</span><span class="p">()</span> <span class="o">*</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">sector_size</span><span class="p">()));</span>
+        <span class="n">m_extent_as_file</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">size_extent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">le</span><span class="p">());</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">f_extent_as_file</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_extent_as_file</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t iso9660_t::sector_size() {
-    if (f_sector_size)
-        return m_sector_size;
-    m_sector_size = 2048;
-    f_sector_size = true;
-    return m_sector_size;
-}
+<span class="kt">int32_t</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">sector_size</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_sector_size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_sector_size</span><span class="p">;</span>
+    <span class="n">m_sector_size</span> <span class="o">=</span> <span class="mi">2048</span><span class="p">;</span>
+    <span class="n">f_sector_size</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_sector_size</span><span class="p">;</span>
+<span class="p">}</span>
 
-iso9660_t::vol_desc_t* iso9660_t::primary_vol_desc() {
-    if (f_primary_vol_desc)
-        return m_primary_vol_desc;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek((16 * sector_size()));
-    m_primary_vol_desc = new vol_desc_t(m__io, this, m__root);
-    m__io-&gt;seek(_pos);
-    f_primary_vol_desc = true;
-    return m_primary_vol_desc;
-}
-</code></pre>
+<span class="n">iso9660_t</span><span class="o">::</span><span class="n">vol_desc_t</span><span class="o">*</span> <span class="n">iso9660_t</span><span class="o">::</span><span class="n">primary_vol_desc</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_primary_vol_desc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_primary_vol_desc</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">((</span><span class="mi">16</span> <span class="o">*</span> <span class="n">sector_size</span><span class="p">()));</span>
+    <span class="n">m_primary_vol_desc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">vol_desc_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_primary_vol_desc</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_primary_vol_desc</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1321,8 +1318,8 @@ iso9660_t::vol_desc_t* iso9660_t::primary_vol_desc() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

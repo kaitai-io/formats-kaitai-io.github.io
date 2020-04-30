@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -266,432 +263,432 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef JPEG_H_
-#define JPEG_H_
-
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-#include &quot;kaitai/kaitaistruct.h&quot;
-
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
-
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
-class exif_t;
-
-class jpeg_t : public kaitai::kstruct {
-
-public:
-    class segment_t;
-    class segment_sos_t;
-    class segment_app1_t;
-    class segment_sof0_t;
-    class exif_in_jpeg_t;
-    class segment_app0_t;
-
-    enum component_id_t {
-        COMPONENT_ID_Y = 1,
-        COMPONENT_ID_CB = 2,
-        COMPONENT_ID_CR = 3,
-        COMPONENT_ID_I = 4,
-        COMPONENT_ID_Q = 5
-    };
-
-    jpeg_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, jpeg_t* p__root = 0);
-
-private:
-    void _read();
-
-public:
-    ~jpeg_t();
-
-    class segment_t : public kaitai::kstruct {
-
-    public:
-
-        enum marker_enum_t {
-            MARKER_ENUM_TEM = 1,
-            MARKER_ENUM_SOF0 = 192,
-            MARKER_ENUM_SOF1 = 193,
-            MARKER_ENUM_SOF2 = 194,
-            MARKER_ENUM_SOF3 = 195,
-            MARKER_ENUM_DHT = 196,
-            MARKER_ENUM_SOF5 = 197,
-            MARKER_ENUM_SOF6 = 198,
-            MARKER_ENUM_SOF7 = 199,
-            MARKER_ENUM_SOI = 216,
-            MARKER_ENUM_EOI = 217,
-            MARKER_ENUM_SOS = 218,
-            MARKER_ENUM_DQT = 219,
-            MARKER_ENUM_DNL = 220,
-            MARKER_ENUM_DRI = 221,
-            MARKER_ENUM_DHP = 222,
-            MARKER_ENUM_APP0 = 224,
-            MARKER_ENUM_APP1 = 225,
-            MARKER_ENUM_APP2 = 226,
-            MARKER_ENUM_APP3 = 227,
-            MARKER_ENUM_APP4 = 228,
-            MARKER_ENUM_APP5 = 229,
-            MARKER_ENUM_APP6 = 230,
-            MARKER_ENUM_APP7 = 231,
-            MARKER_ENUM_APP8 = 232,
-            MARKER_ENUM_APP9 = 233,
-            MARKER_ENUM_APP10 = 234,
-            MARKER_ENUM_APP11 = 235,
-            MARKER_ENUM_APP12 = 236,
-            MARKER_ENUM_APP13 = 237,
-            MARKER_ENUM_APP14 = 238,
-            MARKER_ENUM_APP15 = 239,
-            MARKER_ENUM_COM = 254
-        };
-
-        segment_t(kaitai::kstream* p__io, jpeg_t* p__parent = 0, jpeg_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~segment_t();
-
-    private:
-        std::string m_magic;
-        marker_enum_t m_marker;
-        uint16_t m_length;
-        bool n_length;
-
-    public:
-        bool _is_null_length() { length(); return n_length; };
-
-    private:
-        kaitai::kstruct* m_data;
-        bool n_data;
-
-    public:
-        bool _is_null_data() { data(); return n_data; };
-
-    private:
-        std::string m_image_data;
-        bool n_image_data;
-
-    public:
-        bool _is_null_image_data() { image_data(); return n_image_data; };
-
-    private:
-        jpeg_t* m__root;
-        jpeg_t* m__parent;
-        std::string m__raw_data;
-        kaitai::kstream* m__io__raw_data;
-
-    public:
-        std::string magic() const { return m_magic; }
-        marker_enum_t marker() const { return m_marker; }
-        uint16_t length() const { return m_length; }
-        kaitai::kstruct* data() const { return m_data; }
-        std::string image_data() const { return m_image_data; }
-        jpeg_t* _root() const { return m__root; }
-        jpeg_t* _parent() const { return m__parent; }
-        std::string _raw_data() const { return m__raw_data; }
-        kaitai::kstream* _io__raw_data() const { return m__io__raw_data; }
-    };
-
-    class segment_sos_t : public kaitai::kstruct {
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef JPEG_H_</span>
+<span class="cp">#define JPEG_H_</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
+<span class="k">class</span> <span class="nc">exif_t</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">jpeg_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">segment_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">segment_sos_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">segment_app1_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">segment_sof0_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">exif_in_jpeg_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">segment_app0_t</span><span class="p">;</span>
+
+    <span class="k">enum</span> <span class="n">component_id_t</span> <span class="p">{</span>
+        <span class="n">COMPONENT_ID_Y</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">COMPONENT_ID_CB</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">COMPONENT_ID_CR</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">COMPONENT_ID_I</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">COMPONENT_ID_Q</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="p">};</span>
+
+    <span class="n">jpeg_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">jpeg_t</span><span class="p">();</span>
+
+    <span class="k">class</span> <span class="nc">segment_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="k">enum</span> <span class="n">marker_enum_t</span> <span class="p">{</span>
+            <span class="n">MARKER_ENUM_TEM</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_SOF0</span> <span class="o">=</span> <span class="mi">192</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_SOF1</span> <span class="o">=</span> <span class="mi">193</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_SOF2</span> <span class="o">=</span> <span class="mi">194</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_SOF3</span> <span class="o">=</span> <span class="mi">195</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_DHT</span> <span class="o">=</span> <span class="mi">196</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_SOF5</span> <span class="o">=</span> <span class="mi">197</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_SOF6</span> <span class="o">=</span> <span class="mi">198</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_SOF7</span> <span class="o">=</span> <span class="mi">199</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_SOI</span> <span class="o">=</span> <span class="mi">216</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_EOI</span> <span class="o">=</span> <span class="mi">217</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_SOS</span> <span class="o">=</span> <span class="mi">218</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_DQT</span> <span class="o">=</span> <span class="mi">219</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_DNL</span> <span class="o">=</span> <span class="mi">220</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_DRI</span> <span class="o">=</span> <span class="mi">221</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_DHP</span> <span class="o">=</span> <span class="mi">222</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP0</span> <span class="o">=</span> <span class="mi">224</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP1</span> <span class="o">=</span> <span class="mi">225</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP2</span> <span class="o">=</span> <span class="mi">226</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP3</span> <span class="o">=</span> <span class="mi">227</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP4</span> <span class="o">=</span> <span class="mi">228</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP5</span> <span class="o">=</span> <span class="mi">229</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP6</span> <span class="o">=</span> <span class="mi">230</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP7</span> <span class="o">=</span> <span class="mi">231</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP8</span> <span class="o">=</span> <span class="mi">232</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP9</span> <span class="o">=</span> <span class="mi">233</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP10</span> <span class="o">=</span> <span class="mi">234</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP11</span> <span class="o">=</span> <span class="mi">235</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP12</span> <span class="o">=</span> <span class="mi">236</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP13</span> <span class="o">=</span> <span class="mi">237</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP14</span> <span class="o">=</span> <span class="mi">238</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_APP15</span> <span class="o">=</span> <span class="mi">239</span><span class="p">,</span>
+            <span class="n">MARKER_ENUM_COM</span> <span class="o">=</span> <span class="mi">254</span>
+        <span class="p">};</span>
+
+        <span class="n">segment_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">segment_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_magic</span><span class="p">;</span>
+        <span class="n">marker_enum_t</span> <span class="n">m_marker</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_length</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_length</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_length</span><span class="p">()</span> <span class="p">{</span> <span class="n">length</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_length</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m_data</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_data</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_data</span><span class="p">()</span> <span class="p">{</span> <span class="n">data</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_data</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_image_data</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_image_data</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_image_data</span><span class="p">()</span> <span class="p">{</span> <span class="n">image_data</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_image_data</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_data</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_data</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">magic</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_magic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">marker_enum_t</span> <span class="n">marker</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_marker</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">length</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_length</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">image_data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_image_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_data</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">segment_sos_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
-        class component_t;
-
-        segment_sos_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent = 0, jpeg_t* p__root = 0);
+    <span class="k">public</span><span class="o">:</span>
+        <span class="k">class</span> <span class="nc">component_t</span><span class="p">;</span>
+
+        <span class="n">segment_sos_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
-
-    public:
-        ~segment_sos_t();
-
-        class component_t : public kaitai::kstruct {
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">segment_sos_t</span><span class="p">();</span>
+
+        <span class="k">class</span> <span class="nc">component_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-        public:
-
-            component_t(kaitai::kstream* p__io, jpeg_t::segment_sos_t* p__parent = 0, jpeg_t* p__root = 0);
+        <span class="k">public</span><span class="o">:</span>
+
+            <span class="n">component_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sos_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-        private:
-            void _read();
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-        public:
-            ~component_t();
+        <span class="k">public</span><span class="o">:</span>
+            <span class="o">~</span><span class="n">component_t</span><span class="p">();</span>
 
-        private:
-            component_id_t m_id;
-            uint8_t m_huffman_table;
-            jpeg_t* m__root;
-            jpeg_t::segment_sos_t* m__parent;
+        <span class="k">private</span><span class="o">:</span>
+            <span class="n">component_id_t</span> <span class="n">m_id</span><span class="p">;</span>
+            <span class="kt">uint8_t</span> <span class="n">m_huffman_table</span><span class="p">;</span>
+            <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+            <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sos_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-        public:
+        <span class="k">public</span><span class="o">:</span>
 
-            /**
-             * Scan component selector
-             */
-            component_id_t id() const { return m_id; }
-            uint8_t huffman_table() const { return m_huffman_table; }
-            jpeg_t* _root() const { return m__root; }
-            jpeg_t::segment_sos_t* _parent() const { return m__parent; }
-        };
+            <span class="cm">/**</span>
+<span class="cm">             * Scan component selector</span>
+<span class="cm">             */</span>
+            <span class="n">component_id_t</span> <span class="n">id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">uint8_t</span> <span class="n">huffman_table</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_huffman_table</span><span class="p">;</span> <span class="p">}</span>
+            <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sos_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">};</span>
 
-    private:
-        uint8_t m_num_components;
-        std::vector&lt;component_t*&gt;* m_components;
-        uint8_t m_start_spectral_selection;
-        uint8_t m_end_spectral;
-        uint8_t m_appr_bit_pos;
-        jpeg_t* m__root;
-        jpeg_t::segment_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_num_components</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">component_t</span><span class="o">*&gt;*</span> <span class="n">m_components</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_start_spectral_selection</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_end_spectral</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_appr_bit_pos</span><span class="p">;</span>
+        <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        /**
-         * Number of components in scan
-         */
-        uint8_t num_components() const { return m_num_components; }
+        <span class="cm">/**</span>
+<span class="cm">         * Number of components in scan</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">num_components</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_components</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Scan components specification
-         */
-        std::vector&lt;component_t*&gt;* components() const { return m_components; }
+        <span class="cm">/**</span>
+<span class="cm">         * Scan components specification</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">component_t</span><span class="o">*&gt;*</span> <span class="n">components</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_components</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Start of spectral selection or predictor selection
-         */
-        uint8_t start_spectral_selection() const { return m_start_spectral_selection; }
+        <span class="cm">/**</span>
+<span class="cm">         * Start of spectral selection or predictor selection</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">start_spectral_selection</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_start_spectral_selection</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * End of spectral selection
-         */
-        uint8_t end_spectral() const { return m_end_spectral; }
+        <span class="cm">/**</span>
+<span class="cm">         * End of spectral selection</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">end_spectral</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_end_spectral</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Successive approximation bit position high + Successive approximation bit position low or point transform
-         */
-        uint8_t appr_bit_pos() const { return m_appr_bit_pos; }
-        jpeg_t* _root() const { return m__root; }
-        jpeg_t::segment_t* _parent() const { return m__parent; }
-    };
+        <span class="cm">/**</span>
+<span class="cm">         * Successive approximation bit position high + Successive approximation bit position low or point transform</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">appr_bit_pos</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_appr_bit_pos</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class segment_app1_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">segment_app1_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
-
-        segment_app1_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent = 0, jpeg_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~segment_app1_t();
-
-    private:
-        std::string m_magic;
-        exif_in_jpeg_t* m_body;
-        bool n_body;
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">segment_app1_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">segment_app1_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_magic</span><span class="p">;</span>
+        <span class="n">exif_in_jpeg_t</span><span class="o">*</span> <span class="n">m_body</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_body</span><span class="p">;</span>
 
-    public:
-        bool _is_null_body() { body(); return n_body; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_body</span><span class="p">()</span> <span class="p">{</span> <span class="n">body</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_body</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
-        jpeg_t* m__root;
-        jpeg_t::segment_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        std::string magic() const { return m_magic; }
-        exif_in_jpeg_t* body() const { return m_body; }
-        jpeg_t* _root() const { return m__root; }
-        jpeg_t::segment_t* _parent() const { return m__parent; }
-    };
-
-    class segment_sof0_t : public kaitai::kstruct {
-
-    public:
-        class component_t;
-
-        segment_sof0_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent = 0, jpeg_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~segment_sof0_t();
-
-        class component_t : public kaitai::kstruct {
-
-        public:
-
-            component_t(kaitai::kstream* p__io, jpeg_t::segment_sof0_t* p__parent = 0, jpeg_t* p__root = 0);
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">magic</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_magic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">exif_in_jpeg_t</span><span class="o">*</span> <span class="n">body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">segment_sof0_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="k">class</span> <span class="nc">component_t</span><span class="p">;</span>
+
+        <span class="n">segment_sof0_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">segment_sof0_t</span><span class="p">();</span>
+
+        <span class="k">class</span> <span class="nc">component_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+        <span class="k">public</span><span class="o">:</span>
+
+            <span class="n">component_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sof0_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-        private:
-            void _read();
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-        public:
-            ~component_t();
+        <span class="k">public</span><span class="o">:</span>
+            <span class="o">~</span><span class="n">component_t</span><span class="p">();</span>
 
-        private:
-            bool f_sampling_x;
-            int32_t m_sampling_x;
-
-        public:
-            int32_t sampling_x();
-
-        private:
-            bool f_sampling_y;
-            int32_t m_sampling_y;
-
-        public:
-            int32_t sampling_y();
-
-        private:
-            component_id_t m_id;
-            uint8_t m_sampling_factors;
-            uint8_t m_quantization_table_id;
-            jpeg_t* m__root;
-            jpeg_t::segment_sof0_t* m__parent;
-
-        public:
-
-            /**
-             * Component selector
-             */
-            component_id_t id() const { return m_id; }
-            uint8_t sampling_factors() const { return m_sampling_factors; }
-            uint8_t quantization_table_id() const { return m_quantization_table_id; }
-            jpeg_t* _root() const { return m__root; }
-            jpeg_t::segment_sof0_t* _parent() const { return m__parent; }
-        };
-
-    private:
-        uint8_t m_bits_per_sample;
-        uint16_t m_image_height;
-        uint16_t m_image_width;
-        uint8_t m_num_components;
-        std::vector&lt;component_t*&gt;* m_components;
-        jpeg_t* m__root;
-        jpeg_t::segment_t* m__parent;
-
-    public:
-        uint8_t bits_per_sample() const { return m_bits_per_sample; }
-        uint16_t image_height() const { return m_image_height; }
-        uint16_t image_width() const { return m_image_width; }
-        uint8_t num_components() const { return m_num_components; }
-        std::vector&lt;component_t*&gt;* components() const { return m_components; }
-        jpeg_t* _root() const { return m__root; }
-        jpeg_t::segment_t* _parent() const { return m__parent; }
-    };
-
-    class exif_in_jpeg_t : public kaitai::kstruct {
-
-    public:
-
-        exif_in_jpeg_t(kaitai::kstream* p__io, jpeg_t::segment_app1_t* p__parent = 0, jpeg_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~exif_in_jpeg_t();
-
-    private:
-        std::string m_extra_zero;
-        exif_t* m_data;
-        jpeg_t* m__root;
-        jpeg_t::segment_app1_t* m__parent;
-        std::string m__raw_data;
-        kaitai::kstream* m__io__raw_data;
-
-    public:
-        std::string extra_zero() const { return m_extra_zero; }
-        exif_t* data() const { return m_data; }
-        jpeg_t* _root() const { return m__root; }
-        jpeg_t::segment_app1_t* _parent() const { return m__parent; }
-        std::string _raw_data() const { return m__raw_data; }
-        kaitai::kstream* _io__raw_data() const { return m__io__raw_data; }
-    };
-
-    class segment_app0_t : public kaitai::kstruct {
-
-    public:
-
-        enum density_unit_t {
-            DENSITY_UNIT_NO_UNITS = 0,
-            DENSITY_UNIT_PIXELS_PER_INCH = 1,
-            DENSITY_UNIT_PIXELS_PER_CM = 2
-        };
-
-        segment_app0_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent = 0, jpeg_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~segment_app0_t();
-
-    private:
-        std::string m_magic;
-        uint8_t m_version_major;
-        uint8_t m_version_minor;
-        density_unit_t m_density_units;
-        uint16_t m_density_x;
-        uint16_t m_density_y;
-        uint8_t m_thumbnail_x;
-        uint8_t m_thumbnail_y;
-        std::string m_thumbnail;
-        jpeg_t* m__root;
-        jpeg_t::segment_t* m__parent;
-
-    public:
-        std::string magic() const { return m_magic; }
-        uint8_t version_major() const { return m_version_major; }
-        uint8_t version_minor() const { return m_version_minor; }
-        density_unit_t density_units() const { return m_density_units; }
-
-        /**
-         * Horizontal pixel density. Must not be zero.
-         */
-        uint16_t density_x() const { return m_density_x; }
-
-        /**
-         * Vertical pixel density. Must not be zero.
-         */
-        uint16_t density_y() const { return m_density_y; }
-
-        /**
-         * Horizontal pixel count of the following embedded RGB thumbnail. May be zero.
-         */
-        uint8_t thumbnail_x() const { return m_thumbnail_x; }
-
-        /**
-         * Vertical pixel count of the following embedded RGB thumbnail. May be zero.
-         */
-        uint8_t thumbnail_y() const { return m_thumbnail_y; }
-
-        /**
-         * Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn
-         */
-        std::string thumbnail() const { return m_thumbnail; }
-        jpeg_t* _root() const { return m__root; }
-        jpeg_t::segment_t* _parent() const { return m__parent; }
-    };
-
-private:
-    std::vector&lt;segment_t*&gt;* m_segments;
-    jpeg_t* m__root;
-    kaitai::kstruct* m__parent;
-
-public:
-    std::vector&lt;segment_t*&gt;* segments() const { return m_segments; }
-    jpeg_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-};
-
-#endif  // JPEG_H_
-</code></pre>
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">f_sampling_x</span><span class="p">;</span>
+            <span class="kt">int32_t</span> <span class="n">m_sampling_x</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">int32_t</span> <span class="n">sampling_x</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">f_sampling_y</span><span class="p">;</span>
+            <span class="kt">int32_t</span> <span class="n">m_sampling_y</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">int32_t</span> <span class="n">sampling_y</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="n">component_id_t</span> <span class="n">m_id</span><span class="p">;</span>
+            <span class="kt">uint8_t</span> <span class="n">m_sampling_factors</span><span class="p">;</span>
+            <span class="kt">uint8_t</span> <span class="n">m_quantization_table_id</span><span class="p">;</span>
+            <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+            <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sof0_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Component selector</span>
+<span class="cm">             */</span>
+            <span class="n">component_id_t</span> <span class="n">id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">uint8_t</span> <span class="n">sampling_factors</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_sampling_factors</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">uint8_t</span> <span class="n">quantization_table_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_quantization_table_id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sof0_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_bits_per_sample</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_image_height</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_image_width</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_num_components</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">component_t</span><span class="o">*&gt;*</span> <span class="n">m_components</span><span class="p">;</span>
+        <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">bits_per_sample</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_bits_per_sample</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">image_height</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_image_height</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">image_width</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_image_width</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">num_components</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_components</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">component_t</span><span class="o">*&gt;*</span> <span class="n">components</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_components</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">exif_in_jpeg_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">exif_in_jpeg_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_app1_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">exif_in_jpeg_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_extra_zero</span><span class="p">;</span>
+        <span class="n">exif_t</span><span class="o">*</span> <span class="n">m_data</span><span class="p">;</span>
+        <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_app1_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_data</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_data</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">extra_zero</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_extra_zero</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">exif_t</span><span class="o">*</span> <span class="n">data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_app1_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_data</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">segment_app0_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="k">enum</span> <span class="n">density_unit_t</span> <span class="p">{</span>
+            <span class="n">DENSITY_UNIT_NO_UNITS</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="n">DENSITY_UNIT_PIXELS_PER_INCH</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">DENSITY_UNIT_PIXELS_PER_CM</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="p">};</span>
+
+        <span class="n">segment_app0_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">segment_app0_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_magic</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_version_major</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_version_minor</span><span class="p">;</span>
+        <span class="n">density_unit_t</span> <span class="n">m_density_units</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_density_x</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_density_y</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_thumbnail_x</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_thumbnail_y</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_thumbnail</span><span class="p">;</span>
+        <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">magic</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_magic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">version_major</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_version_major</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">version_minor</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_version_minor</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">density_unit_t</span> <span class="n">density_units</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_density_units</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Horizontal pixel density. Must not be zero.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">density_x</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_density_x</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Vertical pixel density. Must not be zero.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">density_y</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_density_y</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Horizontal pixel count of the following embedded RGB thumbnail. May be zero.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">thumbnail_x</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_thumbnail_x</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Vertical pixel count of the following embedded RGB thumbnail. May be zero.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">thumbnail_y</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_thumbnail_y</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Uncompressed 24 bit RGB (8 bits per color channel) raster thumbnail data in the order R0, G0, B0, ... Rn, Gn, Bn</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">thumbnail</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_thumbnail</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">segment_t</span><span class="o">*&gt;*</span> <span class="n">m_segments</span><span class="p">;</span>
+    <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">segment_t</span><span class="o">*&gt;*</span> <span class="n">segments</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_segments</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cp">#endif  </span><span class="c1">// JPEG_H_</span>
+</pre></div>
 
         </div>
         
@@ -707,270 +704,270 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;jpeg.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;jpeg.h&quot;</span><span class="cp"></span>
 
 
-#include &quot;exif.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;exif.h&quot;</span><span class="cp"></span>
 
-jpeg_t::jpeg_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    _read();
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">jpeg_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void jpeg_t::_read() {
-    m_segments = new std::vector&lt;segment_t*&gt;();
-    {
-        int i = 0;
-        while (!m__io-&gt;is_eof()) {
-            m_segments-&gt;push_back(new segment_t(m__io, this, m__root));
-            i++;
-        }
-    }
-}
+<span class="kt">void</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_segments</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">segment_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">m_segments</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">segment_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-jpeg_t::~jpeg_t() {
-    for (std::vector&lt;segment_t*&gt;::iterator it = m_segments-&gt;begin(); it != m_segments-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_segments;
-}
+<span class="n">jpeg_t</span><span class="o">::~</span><span class="n">jpeg_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">segment_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_segments</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_segments</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_segments</span><span class="p">;</span>
+<span class="p">}</span>
 
-jpeg_t::segment_t::segment_t(kaitai::kstream* p__io, jpeg_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">::</span><span class="n">segment_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void jpeg_t::segment_t::_read() {
-    m_magic = m__io-&gt;ensure_fixed_contents(std::string(&quot;\xFF&quot;, 1));
-    m_marker = static_cast&lt;jpeg_t::segment_t::marker_enum_t&gt;(m__io-&gt;read_u1());
-    n_length = true;
-    if ( ((marker() != MARKER_ENUM_SOI) &amp;&amp; (marker() != MARKER_ENUM_EOI)) ) {
-        n_length = false;
-        m_length = m__io-&gt;read_u2be();
-    }
-    n_data = true;
-    if ( ((marker() != MARKER_ENUM_SOI) &amp;&amp; (marker() != MARKER_ENUM_EOI)) ) {
-        n_data = false;
-        n_data = true;
-        switch (marker()) {
-        case MARKER_ENUM_SOS: {
-            n_data = false;
-            m__raw_data = m__io-&gt;read_bytes((length() - 2));
-            m__io__raw_data = new kaitai::kstream(m__raw_data);
-            m_data = new segment_sos_t(m__io__raw_data, this, m__root);
-            break;
-        }
-        case MARKER_ENUM_APP1: {
-            n_data = false;
-            m__raw_data = m__io-&gt;read_bytes((length() - 2));
-            m__io__raw_data = new kaitai::kstream(m__raw_data);
-            m_data = new segment_app1_t(m__io__raw_data, this, m__root);
-            break;
-        }
-        case MARKER_ENUM_SOF0: {
-            n_data = false;
-            m__raw_data = m__io-&gt;read_bytes((length() - 2));
-            m__io__raw_data = new kaitai::kstream(m__raw_data);
-            m_data = new segment_sof0_t(m__io__raw_data, this, m__root);
-            break;
-        }
-        case MARKER_ENUM_APP0: {
-            n_data = false;
-            m__raw_data = m__io-&gt;read_bytes((length() - 2));
-            m__io__raw_data = new kaitai::kstream(m__raw_data);
-            m_data = new segment_app0_t(m__io__raw_data, this, m__root);
-            break;
-        }
-        default: {
-            m__raw_data = m__io-&gt;read_bytes((length() - 2));
-            break;
-        }
-        }
-    }
-    n_image_data = true;
-    if (marker() == MARKER_ENUM_SOS) {
-        n_image_data = false;
-        m_image_data = m__io-&gt;read_bytes_full();
-    }
-}
+<span class="kt">void</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_magic</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\xFF</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+    <span class="n">m_marker</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">::</span><span class="n">marker_enum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">n_length</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">marker</span><span class="p">()</span> <span class="o">!=</span> <span class="n">MARKER_ENUM_SOI</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">marker</span><span class="p">()</span> <span class="o">!=</span> <span class="n">MARKER_ENUM_EOI</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_length</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_length</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">n_data</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">marker</span><span class="p">()</span> <span class="o">!=</span> <span class="n">MARKER_ENUM_SOI</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">marker</span><span class="p">()</span> <span class="o">!=</span> <span class="n">MARKER_ENUM_EOI</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_data</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">n_data</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="n">marker</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="nl">MARKER_ENUM_SOS</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">n_data</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="n">m__raw_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">));</span>
+            <span class="n">m__io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_data</span><span class="p">);</span>
+            <span class="n">m_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">segment_sos_t</span><span class="p">(</span><span class="n">m__io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">case</span> <span class="nl">MARKER_ENUM_APP1</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">n_data</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="n">m__raw_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">));</span>
+            <span class="n">m__io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_data</span><span class="p">);</span>
+            <span class="n">m_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">segment_app1_t</span><span class="p">(</span><span class="n">m__io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">case</span> <span class="nl">MARKER_ENUM_SOF0</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">n_data</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="n">m__raw_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">));</span>
+            <span class="n">m__io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_data</span><span class="p">);</span>
+            <span class="n">m_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">segment_sof0_t</span><span class="p">(</span><span class="n">m__io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">case</span> <span class="nl">MARKER_ENUM_APP0</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">n_data</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="n">m__raw_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">));</span>
+            <span class="n">m__io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_data</span><span class="p">);</span>
+            <span class="n">m_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">segment_app0_t</span><span class="p">(</span><span class="n">m__io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">default</span><span class="o">:</span> <span class="p">{</span>
+            <span class="n">m__raw_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">));</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">n_image_data</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">marker</span><span class="p">()</span> <span class="o">==</span> <span class="n">MARKER_ENUM_SOS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_image_data</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_image_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-jpeg_t::segment_t::~segment_t() {
-    if (!n_length) {
-    }
-    if (!n_data) {
-        delete m__io__raw_data;
-        delete m_data;
-    }
-    if (!n_image_data) {
-    }
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">::~</span><span class="n">segment_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_data</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="n">m_data</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_image_data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-jpeg_t::segment_sos_t::segment_sos_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sos_t</span><span class="o">::</span><span class="n">segment_sos_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void jpeg_t::segment_sos_t::_read() {
-    m_num_components = m__io-&gt;read_u1();
-    int l_components = num_components();
-    m_components = new std::vector&lt;component_t*&gt;();
-    m_components-&gt;reserve(l_components);
-    for (int i = 0; i &lt; l_components; i++) {
-        m_components-&gt;push_back(new component_t(m__io, this, m__root));
-    }
-    m_start_spectral_selection = m__io-&gt;read_u1();
-    m_end_spectral = m__io-&gt;read_u1();
-    m_appr_bit_pos = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sos_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_num_components</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="kt">int</span> <span class="n">l_components</span> <span class="o">=</span> <span class="n">num_components</span><span class="p">();</span>
+    <span class="n">m_components</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">component_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="n">m_components</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_components</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_components</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_components</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">component_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">m_start_spectral_selection</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_end_spectral</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_appr_bit_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-jpeg_t::segment_sos_t::~segment_sos_t() {
-    for (std::vector&lt;component_t*&gt;::iterator it = m_components-&gt;begin(); it != m_components-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_components;
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sos_t</span><span class="o">::~</span><span class="n">segment_sos_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">component_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_components</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_components</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_components</span><span class="p">;</span>
+<span class="p">}</span>
 
-jpeg_t::segment_sos_t::component_t::component_t(kaitai::kstream* p__io, jpeg_t::segment_sos_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sos_t</span><span class="o">::</span><span class="n">component_t</span><span class="o">::</span><span class="n">component_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sos_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void jpeg_t::segment_sos_t::component_t::_read() {
-    m_id = static_cast&lt;jpeg_t::component_id_t&gt;(m__io-&gt;read_u1());
-    m_huffman_table = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sos_t</span><span class="o">::</span><span class="n">component_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_id</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">jpeg_t</span><span class="o">::</span><span class="n">component_id_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">m_huffman_table</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-jpeg_t::segment_sos_t::component_t::~component_t() {
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sos_t</span><span class="o">::</span><span class="n">component_t</span><span class="o">::~</span><span class="n">component_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-jpeg_t::segment_app1_t::segment_app1_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_app1_t</span><span class="o">::</span><span class="n">segment_app1_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void jpeg_t::segment_app1_t::_read() {
-    m_magic = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes_term(0, false, true, true), std::string(&quot;ASCII&quot;));
-    n_body = true;
-    {
-        std::string on = magic();
-        if (on == std::string(&quot;Exif&quot;)) {
-            n_body = false;
-            m_body = new exif_in_jpeg_t(m__io, this, m__root);
-        }
-    }
-}
+<span class="kt">void</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_app1_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_magic</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">true</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">n_body</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">on</span> <span class="o">=</span> <span class="n">magic</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;Exif&quot;</span><span class="p">))</span> <span class="p">{</span>
+            <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">exif_in_jpeg_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-jpeg_t::segment_app1_t::~segment_app1_t() {
-    if (!n_body) {
-        delete m_body;
-    }
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_app1_t</span><span class="o">::~</span><span class="n">segment_app1_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_body</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-jpeg_t::segment_sof0_t::segment_sof0_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sof0_t</span><span class="o">::</span><span class="n">segment_sof0_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void jpeg_t::segment_sof0_t::_read() {
-    m_bits_per_sample = m__io-&gt;read_u1();
-    m_image_height = m__io-&gt;read_u2be();
-    m_image_width = m__io-&gt;read_u2be();
-    m_num_components = m__io-&gt;read_u1();
-    int l_components = num_components();
-    m_components = new std::vector&lt;component_t*&gt;();
-    m_components-&gt;reserve(l_components);
-    for (int i = 0; i &lt; l_components; i++) {
-        m_components-&gt;push_back(new component_t(m__io, this, m__root));
-    }
-}
+<span class="kt">void</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sof0_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_bits_per_sample</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_image_height</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">m_image_width</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">m_num_components</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="kt">int</span> <span class="n">l_components</span> <span class="o">=</span> <span class="n">num_components</span><span class="p">();</span>
+    <span class="n">m_components</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">component_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="n">m_components</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_components</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_components</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m_components</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">component_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-jpeg_t::segment_sof0_t::~segment_sof0_t() {
-    for (std::vector&lt;component_t*&gt;::iterator it = m_components-&gt;begin(); it != m_components-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_components;
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sof0_t</span><span class="o">::~</span><span class="n">segment_sof0_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">component_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_components</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_components</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_components</span><span class="p">;</span>
+<span class="p">}</span>
 
-jpeg_t::segment_sof0_t::component_t::component_t(kaitai::kstream* p__io, jpeg_t::segment_sof0_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_sampling_x = false;
-    f_sampling_y = false;
-    _read();
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sof0_t</span><span class="o">::</span><span class="n">component_t</span><span class="o">::</span><span class="n">component_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sof0_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_sampling_x</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_sampling_y</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void jpeg_t::segment_sof0_t::component_t::_read() {
-    m_id = static_cast&lt;jpeg_t::component_id_t&gt;(m__io-&gt;read_u1());
-    m_sampling_factors = m__io-&gt;read_u1();
-    m_quantization_table_id = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sof0_t</span><span class="o">::</span><span class="n">component_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_id</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">jpeg_t</span><span class="o">::</span><span class="n">component_id_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">m_sampling_factors</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_quantization_table_id</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-jpeg_t::segment_sof0_t::component_t::~component_t() {
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sof0_t</span><span class="o">::</span><span class="n">component_t</span><span class="o">::~</span><span class="n">component_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-int32_t jpeg_t::segment_sof0_t::component_t::sampling_x() {
-    if (f_sampling_x)
-        return m_sampling_x;
-    m_sampling_x = ((sampling_factors() &amp; 240) &gt;&gt; 4);
-    f_sampling_x = true;
-    return m_sampling_x;
-}
+<span class="kt">int32_t</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sof0_t</span><span class="o">::</span><span class="n">component_t</span><span class="o">::</span><span class="n">sampling_x</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_sampling_x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_sampling_x</span><span class="p">;</span>
+    <span class="n">m_sampling_x</span> <span class="o">=</span> <span class="p">((</span><span class="n">sampling_factors</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">4</span><span class="p">);</span>
+    <span class="n">f_sampling_x</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_sampling_x</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t jpeg_t::segment_sof0_t::component_t::sampling_y() {
-    if (f_sampling_y)
-        return m_sampling_y;
-    m_sampling_y = (sampling_factors() &amp; 15);
-    f_sampling_y = true;
-    return m_sampling_y;
-}
+<span class="kt">int32_t</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_sof0_t</span><span class="o">::</span><span class="n">component_t</span><span class="o">::</span><span class="n">sampling_y</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_sampling_y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_sampling_y</span><span class="p">;</span>
+    <span class="n">m_sampling_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">sampling_factors</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">);</span>
+    <span class="n">f_sampling_y</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_sampling_y</span><span class="p">;</span>
+<span class="p">}</span>
 
-jpeg_t::exif_in_jpeg_t::exif_in_jpeg_t(kaitai::kstream* p__io, jpeg_t::segment_app1_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">exif_in_jpeg_t</span><span class="o">::</span><span class="n">exif_in_jpeg_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_app1_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void jpeg_t::exif_in_jpeg_t::_read() {
-    m_extra_zero = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x00&quot;, 1));
-    m__raw_data = m__io-&gt;read_bytes_full();
-    m__io__raw_data = new kaitai::kstream(m__raw_data);
-    m_data = new exif_t(m__io__raw_data);
-}
+<span class="kt">void</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">exif_in_jpeg_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_extra_zero</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+    <span class="n">m__raw_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
+    <span class="n">m__io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_data</span><span class="p">);</span>
+    <span class="n">m_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">exif_t</span><span class="p">(</span><span class="n">m__io__raw_data</span><span class="p">);</span>
+<span class="p">}</span>
 
-jpeg_t::exif_in_jpeg_t::~exif_in_jpeg_t() {
-    delete m__io__raw_data;
-    delete m_data;
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">exif_in_jpeg_t</span><span class="o">::~</span><span class="n">exif_in_jpeg_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m__io__raw_data</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_data</span><span class="p">;</span>
+<span class="p">}</span>
 
-jpeg_t::segment_app0_t::segment_app0_t(kaitai::kstream* p__io, jpeg_t::segment_t* p__parent, jpeg_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_app0_t</span><span class="o">::</span><span class="n">segment_app0_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">jpeg_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void jpeg_t::segment_app0_t::_read() {
-    m_magic = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(5), std::string(&quot;ASCII&quot;));
-    m_version_major = m__io-&gt;read_u1();
-    m_version_minor = m__io-&gt;read_u1();
-    m_density_units = static_cast&lt;jpeg_t::segment_app0_t::density_unit_t&gt;(m__io-&gt;read_u1());
-    m_density_x = m__io-&gt;read_u2be();
-    m_density_y = m__io-&gt;read_u2be();
-    m_thumbnail_x = m__io-&gt;read_u1();
-    m_thumbnail_y = m__io-&gt;read_u1();
-    m_thumbnail = m__io-&gt;read_bytes(((thumbnail_x() * thumbnail_y()) * 3));
-}
+<span class="kt">void</span> <span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_app0_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_magic</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+    <span class="n">m_version_major</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_version_minor</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_density_units</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_app0_t</span><span class="o">::</span><span class="n">density_unit_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">m_density_x</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">m_density_y</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">m_thumbnail_x</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_thumbnail_y</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_thumbnail</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">thumbnail_x</span><span class="p">()</span> <span class="o">*</span> <span class="n">thumbnail_y</span><span class="p">())</span> <span class="o">*</span> <span class="mi">3</span><span class="p">));</span>
+<span class="p">}</span>
 
-jpeg_t::segment_app0_t::~segment_app0_t() {
-}
-</code></pre>
+<span class="n">jpeg_t</span><span class="o">::</span><span class="n">segment_app0_t</span><span class="o">::~</span><span class="n">segment_app0_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -997,8 +994,8 @@ jpeg_t::segment_app0_t::~segment_app0_t() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

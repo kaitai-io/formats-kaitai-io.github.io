@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -241,452 +238,452 @@ data = RtcpPayload.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# RTCP is the Real-Time Control Protocol
-# @see https://tools.ietf.org/html/rfc3550 Source
-class RtcpPayload &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># RTCP is the Real-Time Control Protocol</span>
+<span class="c1"># @see https://tools.ietf.org/html/rfc3550 Source</span>
+<span class="k">class</span> <span class="nc">RtcpPayload</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  PAYLOAD_TYPE = {
-    192 =&gt; :payload_type_fir,
-    193 =&gt; :payload_type_nack,
-    195 =&gt; :payload_type_ij,
-    200 =&gt; :payload_type_sr,
-    201 =&gt; :payload_type_rr,
-    202 =&gt; :payload_type_sdes,
-    203 =&gt; :payload_type_bye,
-    204 =&gt; :payload_type_app,
-    205 =&gt; :payload_type_rtpfb,
-    206 =&gt; :payload_type_psfb,
-    207 =&gt; :payload_type_xr,
-    208 =&gt; :payload_type_avb,
-    209 =&gt; :payload_type_rsi,
-  }
-  I__PAYLOAD_TYPE = PAYLOAD_TYPE.invert
+  <span class="no">PAYLOAD_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">192</span> <span class="o">=&gt;</span> <span class="ss">:payload_type_fir</span><span class="p">,</span>
+    <span class="mi">193</span> <span class="o">=&gt;</span> <span class="ss">:payload_type_nack</span><span class="p">,</span>
+    <span class="mi">195</span> <span class="o">=&gt;</span> <span class="ss">:payload_type_ij</span><span class="p">,</span>
+    <span class="mi">200</span> <span class="o">=&gt;</span> <span class="ss">:payload_type_sr</span><span class="p">,</span>
+    <span class="mi">201</span> <span class="o">=&gt;</span> <span class="ss">:payload_type_rr</span><span class="p">,</span>
+    <span class="mi">202</span> <span class="o">=&gt;</span> <span class="ss">:payload_type_sdes</span><span class="p">,</span>
+    <span class="mi">203</span> <span class="o">=&gt;</span> <span class="ss">:payload_type_bye</span><span class="p">,</span>
+    <span class="mi">204</span> <span class="o">=&gt;</span> <span class="ss">:payload_type_app</span><span class="p">,</span>
+    <span class="mi">205</span> <span class="o">=&gt;</span> <span class="ss">:payload_type_rtpfb</span><span class="p">,</span>
+    <span class="mi">206</span> <span class="o">=&gt;</span> <span class="ss">:payload_type_psfb</span><span class="p">,</span>
+    <span class="mi">207</span> <span class="o">=&gt;</span> <span class="ss">:payload_type_xr</span><span class="p">,</span>
+    <span class="mi">208</span> <span class="o">=&gt;</span> <span class="ss">:payload_type_avb</span><span class="p">,</span>
+    <span class="mi">209</span> <span class="o">=&gt;</span> <span class="ss">:payload_type_rsi</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__PAYLOAD_TYPE</span> <span class="o">=</span> <span class="no">PAYLOAD_TYPE</span><span class="o">.</span><span class="n">invert</span>
 
-  SDES_SUBTYPE = {
-    0 =&gt; :sdes_subtype_pad,
-    1 =&gt; :sdes_subtype_cname,
-    2 =&gt; :sdes_subtype_name,
-    3 =&gt; :sdes_subtype_email,
-    4 =&gt; :sdes_subtype_phone,
-    5 =&gt; :sdes_subtype_loc,
-    6 =&gt; :sdes_subtype_tool,
-    7 =&gt; :sdes_subtype_note,
-    8 =&gt; :sdes_subtype_priv,
-  }
-  I__SDES_SUBTYPE = SDES_SUBTYPE.invert
+  <span class="no">SDES_SUBTYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:sdes_subtype_pad</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:sdes_subtype_cname</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:sdes_subtype_name</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:sdes_subtype_email</span><span class="p">,</span>
+    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:sdes_subtype_phone</span><span class="p">,</span>
+    <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:sdes_subtype_loc</span><span class="p">,</span>
+    <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:sdes_subtype_tool</span><span class="p">,</span>
+    <span class="mi">7</span> <span class="o">=&gt;</span> <span class="ss">:sdes_subtype_note</span><span class="p">,</span>
+    <span class="mi">8</span> <span class="o">=&gt;</span> <span class="ss">:sdes_subtype_priv</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__SDES_SUBTYPE</span> <span class="o">=</span> <span class="no">SDES_SUBTYPE</span><span class="o">.</span><span class="n">invert</span>
 
-  PSFB_SUBTYPE = {
-    1 =&gt; :psfb_subtype_pli,
-    2 =&gt; :psfb_subtype_sli,
-    3 =&gt; :psfb_subtype_rpsi,
-    4 =&gt; :psfb_subtype_fir,
-    5 =&gt; :psfb_subtype_tstr,
-    6 =&gt; :psfb_subtype_tstn,
-    7 =&gt; :psfb_subtype_vbcm,
-    15 =&gt; :psfb_subtype_afb,
-  }
-  I__PSFB_SUBTYPE = PSFB_SUBTYPE.invert
+  <span class="no">PSFB_SUBTYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:psfb_subtype_pli</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:psfb_subtype_sli</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:psfb_subtype_rpsi</span><span class="p">,</span>
+    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:psfb_subtype_fir</span><span class="p">,</span>
+    <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:psfb_subtype_tstr</span><span class="p">,</span>
+    <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:psfb_subtype_tstn</span><span class="p">,</span>
+    <span class="mi">7</span> <span class="o">=&gt;</span> <span class="ss">:psfb_subtype_vbcm</span><span class="p">,</span>
+    <span class="mi">15</span> <span class="o">=&gt;</span> <span class="ss">:psfb_subtype_afb</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__PSFB_SUBTYPE</span> <span class="o">=</span> <span class="no">PSFB_SUBTYPE</span><span class="o">.</span><span class="n">invert</span>
 
-  RTPFB_SUBTYPE = {
-    1 =&gt; :rtpfb_subtype_nack,
-    3 =&gt; :rtpfb_subtype_tmmbr,
-    4 =&gt; :rtpfb_subtype_tmmbn,
-    5 =&gt; :rtpfb_subtype_rrr,
-    15 =&gt; :rtpfb_subtype_transport_feedback,
-  }
-  I__RTPFB_SUBTYPE = RTPFB_SUBTYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">RTPFB_SUBTYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:rtpfb_subtype_nack</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:rtpfb_subtype_tmmbr</span><span class="p">,</span>
+    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:rtpfb_subtype_tmmbn</span><span class="p">,</span>
+    <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:rtpfb_subtype_rrr</span><span class="p">,</span>
+    <span class="mi">15</span> <span class="o">=&gt;</span> <span class="ss">:rtpfb_subtype_transport_feedback</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__RTPFB_SUBTYPE</span> <span class="o">=</span> <span class="no">RTPFB_SUBTYPE</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @rtcp_packets = []
-    i = 0
-    while not @_io.eof?
-      @rtcp_packets &lt;&lt; RtcpPacket.new(@_io, self, @_root)
-      i += 1
-    end
-    self
-  end
-  class PsfbAfbRembPacket &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@rtcp_packets</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+      <span class="vi">@rtcp_packets</span> <span class="o">&lt;&lt;</span> <span class="no">RtcpPacket</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">PsfbAfbRembPacket</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @num_ssrc = @_io.read_u1
-      @br_exp = @_io.read_bits_int(6)
-      @br_mantissa = @_io.read_bits_int(18)
-      @_io.align_to_byte
-      @ssrc_list = Array.new(num_ssrc)
-      (num_ssrc).times { |i|
-        @ssrc_list[i] = @_io.read_u4be
-      }
-      self
-    end
-    def max_total_bitrate
-      return @max_total_bitrate unless @max_total_bitrate.nil?
-      @max_total_bitrate = (br_mantissa * (1 &lt;&lt; br_exp))
-      @max_total_bitrate
-    end
-    attr_reader :num_ssrc
-    attr_reader :br_exp
-    attr_reader :br_mantissa
-    attr_reader :ssrc_list
-  end
-  class SrPacket &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@num_ssrc</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@br_exp</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+      <span class="vi">@br_mantissa</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">18</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">align_to_byte</span>
+      <span class="vi">@ssrc_list</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_ssrc</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">num_ssrc</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@ssrc_list</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">max_total_bitrate</span>
+      <span class="k">return</span> <span class="vi">@max_total_bitrate</span> <span class="k">unless</span> <span class="vi">@max_total_bitrate</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@max_total_bitrate</span> <span class="o">=</span> <span class="p">(</span><span class="n">br_mantissa</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">br_exp</span><span class="p">))</span>
+      <span class="vi">@max_total_bitrate</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_ssrc</span>
+    <span class="kp">attr_reader</span> <span class="ss">:br_exp</span>
+    <span class="kp">attr_reader</span> <span class="ss">:br_mantissa</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ssrc_list</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">SrPacket</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @ssrc = @_io.read_u4be
-      @ntp_msw = @_io.read_u4be
-      @ntp_lsw = @_io.read_u4be
-      @rtp_timestamp = @_io.read_u4be
-      @sender_packet_count = @_io.read_u4be
-      @sender_octet_count = @_io.read_u4be
-      @report_block = Array.new(_parent.subtype)
-      (_parent.subtype).times { |i|
-        @report_block[i] = ReportBlock.new(@_io, self, @_root)
-      }
-      self
-    end
-    def ntp
-      return @ntp unless @ntp.nil?
-      @ntp = ((ntp_msw &lt;&lt; 32) &amp; ntp_lsw)
-      @ntp
-    end
-    attr_reader :ssrc
-    attr_reader :ntp_msw
-    attr_reader :ntp_lsw
-    attr_reader :rtp_timestamp
-    attr_reader :sender_packet_count
-    attr_reader :sender_octet_count
-    attr_reader :report_block
-  end
-  class RrPacket &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@ssrc</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@ntp_msw</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@ntp_lsw</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@rtp_timestamp</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@sender_packet_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@sender_octet_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@report_block</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">subtype</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">subtype</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@report_block</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ReportBlock</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">ntp</span>
+      <span class="k">return</span> <span class="vi">@ntp</span> <span class="k">unless</span> <span class="vi">@ntp</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@ntp</span> <span class="o">=</span> <span class="p">((</span><span class="n">ntp_msw</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">ntp_lsw</span><span class="p">)</span>
+      <span class="vi">@ntp</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ssrc</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ntp_msw</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ntp_lsw</span>
+    <span class="kp">attr_reader</span> <span class="ss">:rtp_timestamp</span>
+    <span class="kp">attr_reader</span> <span class="ss">:sender_packet_count</span>
+    <span class="kp">attr_reader</span> <span class="ss">:sender_octet_count</span>
+    <span class="kp">attr_reader</span> <span class="ss">:report_block</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">RrPacket</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @ssrc = @_io.read_u4be
-      @report_block = Array.new(_parent.subtype)
-      (_parent.subtype).times { |i|
-        @report_block[i] = ReportBlock.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :ssrc
-    attr_reader :report_block
-  end
-  class RtcpPacket &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@ssrc</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@report_block</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">subtype</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">subtype</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@report_block</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ReportBlock</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ssrc</span>
+    <span class="kp">attr_reader</span> <span class="ss">:report_block</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">RtcpPacket</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @version = @_io.read_bits_int(2)
-      @padding = @_io.read_bits_int(1) != 0
-      @subtype = @_io.read_bits_int(5)
-      @_io.align_to_byte
-      @payload_type = Kaitai::Struct::Stream::resolve_enum(PAYLOAD_TYPE, @_io.read_u1)
-      @length = @_io.read_u2be
-      case payload_type
-      when :payload_type_sdes
-        @_raw_body = @_io.read_bytes((4 * length))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SdesPacket.new(io, self, @_root)
-      when :payload_type_rr
-        @_raw_body = @_io.read_bytes((4 * length))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = RrPacket.new(io, self, @_root)
-      when :payload_type_rtpfb
-        @_raw_body = @_io.read_bytes((4 * length))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = RtpfbPacket.new(io, self, @_root)
-      when :payload_type_psfb
-        @_raw_body = @_io.read_bytes((4 * length))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = PsfbPacket.new(io, self, @_root)
-      when :payload_type_sr
-        @_raw_body = @_io.read_bytes((4 * length))
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = SrPacket.new(io, self, @_root)
-      else
-        @body = @_io.read_bytes((4 * length))
-      end
-      self
-    end
-    attr_reader :version
-    attr_reader :padding
-    attr_reader :subtype
-    attr_reader :payload_type
-    attr_reader :length
-    attr_reader :body
-    attr_reader :_raw_body
-  end
-  class SdesTlv &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+      <span class="vi">@padding</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@subtype</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">align_to_byte</span>
+      <span class="vi">@payload_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">PAYLOAD_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="k">case</span> <span class="n">payload_type</span>
+      <span class="k">when</span> <span class="ss">:payload_type_sdes</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">4</span> <span class="o">*</span> <span class="n">length</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">SdesPacket</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:payload_type_rr</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">4</span> <span class="o">*</span> <span class="n">length</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">RrPacket</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:payload_type_rtpfb</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">4</span> <span class="o">*</span> <span class="n">length</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">RtpfbPacket</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:payload_type_psfb</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">4</span> <span class="o">*</span> <span class="n">length</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">PsfbPacket</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:payload_type_sr</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">4</span> <span class="o">*</span> <span class="n">length</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">SrPacket</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="mi">4</span> <span class="o">*</span> <span class="n">length</span><span class="p">))</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:padding</span>
+    <span class="kp">attr_reader</span> <span class="ss">:subtype</span>
+    <span class="kp">attr_reader</span> <span class="ss">:payload_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:length</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_body</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">SdesTlv</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @type = Kaitai::Struct::Stream::resolve_enum(SDES_SUBTYPE, @_io.read_u1)
-      if type != :sdes_subtype_pad
-        @length = @_io.read_u1
-      end
-      if type != :sdes_subtype_pad
-        @value = @_io.read_bytes(length)
-      end
-      self
-    end
-    attr_reader :type
-    attr_reader :length
-    attr_reader :value
-  end
-  class ReportBlock &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">SDES_SUBTYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">type</span> <span class="o">!=</span> <span class="ss">:sdes_subtype_pad</span>
+        <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">type</span> <span class="o">!=</span> <span class="ss">:sdes_subtype_pad</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:length</span>
+    <span class="kp">attr_reader</span> <span class="ss">:value</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ReportBlock</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @ssrc_source = @_io.read_u4be
-      @lost_val = @_io.read_u1
-      @highest_seq_num_received = @_io.read_u4be
-      @interarrival_jitter = @_io.read_u4be
-      @lsr = @_io.read_u4be
-      @dlsr = @_io.read_u4be
-      self
-    end
-    def fraction_lost
-      return @fraction_lost unless @fraction_lost.nil?
-      @fraction_lost = (lost_val &gt;&gt; 24)
-      @fraction_lost
-    end
-    def cumulative_packets_lost
-      return @cumulative_packets_lost unless @cumulative_packets_lost.nil?
-      @cumulative_packets_lost = (lost_val &amp; 16777215)
-      @cumulative_packets_lost
-    end
-    attr_reader :ssrc_source
-    attr_reader :lost_val
-    attr_reader :highest_seq_num_received
-    attr_reader :interarrival_jitter
-    attr_reader :lsr
-    attr_reader :dlsr
-  end
-  class RtpfbTransportFeedbackPacket &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@ssrc_source</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@lost_val</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@highest_seq_num_received</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@interarrival_jitter</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@lsr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@dlsr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">fraction_lost</span>
+      <span class="k">return</span> <span class="vi">@fraction_lost</span> <span class="k">unless</span> <span class="vi">@fraction_lost</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@fraction_lost</span> <span class="o">=</span> <span class="p">(</span><span class="n">lost_val</span> <span class="o">&gt;&gt;</span> <span class="mi">24</span><span class="p">)</span>
+      <span class="vi">@fraction_lost</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">cumulative_packets_lost</span>
+      <span class="k">return</span> <span class="vi">@cumulative_packets_lost</span> <span class="k">unless</span> <span class="vi">@cumulative_packets_lost</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@cumulative_packets_lost</span> <span class="o">=</span> <span class="p">(</span><span class="n">lost_val</span> <span class="o">&amp;</span> <span class="mi">16777215</span><span class="p">)</span>
+      <span class="vi">@cumulative_packets_lost</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ssrc_source</span>
+    <span class="kp">attr_reader</span> <span class="ss">:lost_val</span>
+    <span class="kp">attr_reader</span> <span class="ss">:highest_seq_num_received</span>
+    <span class="kp">attr_reader</span> <span class="ss">:interarrival_jitter</span>
+    <span class="kp">attr_reader</span> <span class="ss">:lsr</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dlsr</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">RtpfbTransportFeedbackPacket</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @base_sequence_number = @_io.read_u2be
-      @packet_status_count = @_io.read_u2be
-      @b4 = @_io.read_u4be
-      @remaining = @_io.read_bytes_full
-      self
-    end
-    def reference_time
-      return @reference_time unless @reference_time.nil?
-      @reference_time = (b4 &gt;&gt; 8)
-      @reference_time
-    end
-    def fb_pkt_count
-      return @fb_pkt_count unless @fb_pkt_count.nil?
-      @fb_pkt_count = (b4 &amp; 255)
-      @fb_pkt_count
-    end
-    def packet_status
-      return @packet_status unless @packet_status.nil?
-      @packet_status = @_io.read_bytes(0)
-      @packet_status
-    end
-    def recv_delta
-      return @recv_delta unless @recv_delta.nil?
-      @recv_delta = @_io.read_bytes(0)
-      @recv_delta
-    end
-    attr_reader :base_sequence_number
-    attr_reader :packet_status_count
-    attr_reader :b4
-    attr_reader :remaining
-  end
-  class PsfbPacket &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@base_sequence_number</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@packet_status_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@b4</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@remaining</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">reference_time</span>
+      <span class="k">return</span> <span class="vi">@reference_time</span> <span class="k">unless</span> <span class="vi">@reference_time</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@reference_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">b4</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">)</span>
+      <span class="vi">@reference_time</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">fb_pkt_count</span>
+      <span class="k">return</span> <span class="vi">@fb_pkt_count</span> <span class="k">unless</span> <span class="vi">@fb_pkt_count</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@fb_pkt_count</span> <span class="o">=</span> <span class="p">(</span><span class="n">b4</span> <span class="o">&amp;</span> <span class="mi">255</span><span class="p">)</span>
+      <span class="vi">@fb_pkt_count</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">packet_status</span>
+      <span class="k">return</span> <span class="vi">@packet_status</span> <span class="k">unless</span> <span class="vi">@packet_status</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@packet_status</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="vi">@packet_status</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">recv_delta</span>
+      <span class="k">return</span> <span class="vi">@recv_delta</span> <span class="k">unless</span> <span class="vi">@recv_delta</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@recv_delta</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="vi">@recv_delta</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:base_sequence_number</span>
+    <span class="kp">attr_reader</span> <span class="ss">:packet_status_count</span>
+    <span class="kp">attr_reader</span> <span class="ss">:b4</span>
+    <span class="kp">attr_reader</span> <span class="ss">:remaining</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">PsfbPacket</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @ssrc = @_io.read_u4be
-      @ssrc_media_source = @_io.read_u4be
-      case fmt
-      when :psfb_subtype_afb
-        @_raw_fci_block = @_io.read_bytes_full
-        io = Kaitai::Struct::Stream.new(@_raw_fci_block)
-        @fci_block = PsfbAfbPacket.new(io, self, @_root)
-      else
-        @fci_block = @_io.read_bytes_full
-      end
-      self
-    end
-    def fmt
-      return @fmt unless @fmt.nil?
-      @fmt = Kaitai::Struct::Stream::resolve_enum(PSFB_SUBTYPE, _parent.subtype)
-      @fmt
-    end
-    attr_reader :ssrc
-    attr_reader :ssrc_media_source
-    attr_reader :fci_block
-    attr_reader :_raw_fci_block
-  end
-  class SourceChunk &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@ssrc</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@ssrc_media_source</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="k">case</span> <span class="n">fmt</span>
+      <span class="k">when</span> <span class="ss">:psfb_subtype_afb</span>
+        <span class="vi">@_raw_fci_block</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_fci_block</span><span class="p">)</span>
+        <span class="vi">@fci_block</span> <span class="o">=</span> <span class="no">PsfbAfbPacket</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@fci_block</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">fmt</span>
+      <span class="k">return</span> <span class="vi">@fmt</span> <span class="k">unless</span> <span class="vi">@fmt</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@fmt</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">PSFB_SUBTYPE</span><span class="p">,</span> <span class="n">_parent</span><span class="o">.</span><span class="n">subtype</span><span class="p">)</span>
+      <span class="vi">@fmt</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ssrc</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ssrc_media_source</span>
+    <span class="kp">attr_reader</span> <span class="ss">:fci_block</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_fci_block</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">SourceChunk</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @ssrc = @_io.read_u4be
-      @sdes_tlv = []
-      i = 0
-      while not @_io.eof?
-        @sdes_tlv &lt;&lt; SdesTlv.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :ssrc
-    attr_reader :sdes_tlv
-  end
-  class SdesPacket &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@ssrc</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@sdes_tlv</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+        <span class="vi">@sdes_tlv</span> <span class="o">&lt;&lt;</span> <span class="no">SdesTlv</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ssrc</span>
+    <span class="kp">attr_reader</span> <span class="ss">:sdes_tlv</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">SdesPacket</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @source_chunk = Array.new(source_count)
-      (source_count).times { |i|
-        @source_chunk[i] = SourceChunk.new(@_io, self, @_root)
-      }
-      self
-    end
-    def source_count
-      return @source_count unless @source_count.nil?
-      @source_count = _parent.subtype
-      @source_count
-    end
-    attr_reader :source_chunk
-  end
-  class RtpfbPacket &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@source_chunk</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">source_count</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">source_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@source_chunk</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">SourceChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">source_count</span>
+      <span class="k">return</span> <span class="vi">@source_count</span> <span class="k">unless</span> <span class="vi">@source_count</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@source_count</span> <span class="o">=</span> <span class="n">_parent</span><span class="o">.</span><span class="n">subtype</span>
+      <span class="vi">@source_count</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:source_chunk</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">RtpfbPacket</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @ssrc = @_io.read_u4be
-      @ssrc_media_source = @_io.read_u4be
-      case fmt
-      when :rtpfb_subtype_transport_feedback
-        @_raw_fci_block = @_io.read_bytes_full
-        io = Kaitai::Struct::Stream.new(@_raw_fci_block)
-        @fci_block = RtpfbTransportFeedbackPacket.new(io, self, @_root)
-      else
-        @fci_block = @_io.read_bytes_full
-      end
-      self
-    end
-    def fmt
-      return @fmt unless @fmt.nil?
-      @fmt = Kaitai::Struct::Stream::resolve_enum(RTPFB_SUBTYPE, _parent.subtype)
-      @fmt
-    end
-    attr_reader :ssrc
-    attr_reader :ssrc_media_source
-    attr_reader :fci_block
-    attr_reader :_raw_fci_block
-  end
-  class PacketStatusChunk &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@ssrc</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@ssrc_media_source</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="k">case</span> <span class="n">fmt</span>
+      <span class="k">when</span> <span class="ss">:rtpfb_subtype_transport_feedback</span>
+        <span class="vi">@_raw_fci_block</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_fci_block</span><span class="p">)</span>
+        <span class="vi">@fci_block</span> <span class="o">=</span> <span class="no">RtpfbTransportFeedbackPacket</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@fci_block</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">fmt</span>
+      <span class="k">return</span> <span class="vi">@fmt</span> <span class="k">unless</span> <span class="vi">@fmt</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@fmt</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">RTPFB_SUBTYPE</span><span class="p">,</span> <span class="n">_parent</span><span class="o">.</span><span class="n">subtype</span><span class="p">)</span>
+      <span class="vi">@fmt</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ssrc</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ssrc_media_source</span>
+    <span class="kp">attr_reader</span> <span class="ss">:fci_block</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_fci_block</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">PacketStatusChunk</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @t = @_io.read_bits_int(1) != 0
-      if (t ? 1 : 0) == 0
-        @s2 = @_io.read_bits_int(2)
-      end
-      if (t ? 1 : 0) == 1
-        @s1 = @_io.read_bits_int(1) != 0
-      end
-      if (t ? 1 : 0) == 0
-        @rle = @_io.read_bits_int(13)
-      end
-      if (t ? 1 : 0) == 1
-        @symbol_list = @_io.read_bits_int(14)
-      end
-      self
-    end
-    def s
-      return @s unless @s.nil?
-      @s = ((t ? 1 : 0) == 0 ? s2 : ((s1 ? 1 : 0) == 0 ? 1 : 0))
-      @s
-    end
-    attr_reader :t
-    attr_reader :s2
-    attr_reader :s1
-    attr_reader :rle
-    attr_reader :symbol_list
-  end
-  class PsfbAfbPacket &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@t</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="vi">@s2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="vi">@s1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="vi">@rle</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="vi">@symbol_list</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">s</span>
+      <span class="k">return</span> <span class="vi">@s</span> <span class="k">unless</span> <span class="vi">@s</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@s</span> <span class="o">=</span> <span class="p">((</span><span class="n">t</span> <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">s2</span> <span class="p">:</span> <span class="p">((</span><span class="n">s1</span> <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="vi">@s</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:t</span>
+    <span class="kp">attr_reader</span> <span class="ss">:s2</span>
+    <span class="kp">attr_reader</span> <span class="ss">:s1</span>
+    <span class="kp">attr_reader</span> <span class="ss">:rle</span>
+    <span class="kp">attr_reader</span> <span class="ss">:symbol_list</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">PsfbAfbPacket</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @uid = @_io.read_u4be
-      case uid
-      when 1380273474
-        @_raw_contents = @_io.read_bytes_full
-        io = Kaitai::Struct::Stream.new(@_raw_contents)
-        @contents = PsfbAfbRembPacket.new(io, self, @_root)
-      else
-        @contents = @_io.read_bytes_full
-      end
-      self
-    end
-    attr_reader :uid
-    attr_reader :contents
-    attr_reader :_raw_contents
-  end
-  attr_reader :rtcp_packets
-end
-</code></pre>
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@uid</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="k">case</span> <span class="n">uid</span>
+      <span class="k">when</span> <span class="mi">1380273474</span>
+        <span class="vi">@_raw_contents</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_contents</span><span class="p">)</span>
+        <span class="vi">@contents</span> <span class="o">=</span> <span class="no">PsfbAfbRembPacket</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@contents</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:uid</span>
+    <span class="kp">attr_reader</span> <span class="ss">:contents</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_contents</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:rtcp_packets</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -713,8 +710,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

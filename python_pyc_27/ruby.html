@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -251,439 +248,439 @@ data = PythonPyc27.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# Python interpreter runs .py files in 2 step process: first, it
-# produces bytecode, which it then executes. Translation of .py source
-# into bytecode is time-consuming, so Python dumps compiled bytecode
-# into .pyc files, to be reused from cache at later time if possible.
-# 
-# .pyc file is essentially a raw dump of `py_object` (see `body`) with
-# a simple header prepended.
-class PythonPyc27 &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># Python interpreter runs .py files in 2 step process: first, it</span>
+<span class="c1"># produces bytecode, which it then executes. Translation of .py source</span>
+<span class="c1"># into bytecode is time-consuming, so Python dumps compiled bytecode</span>
+<span class="c1"># into .pyc files, to be reused from cache at later time if possible.</span>
+<span class="c1"># </span>
+<span class="c1"># .pyc file is essentially a raw dump of `py_object` (see `body`) with</span>
+<span class="c1"># a simple header prepended.</span>
+<span class="k">class</span> <span class="nc">PythonPyc27</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  VERSION = {
-    20121 =&gt; :version_v15,
-    50428 =&gt; :version_v16,
-    50823 =&gt; :version_v20,
-    60202 =&gt; :version_v21,
-    60717 =&gt; :version_v22,
-    62011 =&gt; :version_v23_a0,
-    62021 =&gt; :version_v23_a0b,
-    62041 =&gt; :version_v24_a0,
-    62051 =&gt; :version_v24_a3,
-    62061 =&gt; :version_v24_b1,
-    62071 =&gt; :version_v25_a0,
-    62081 =&gt; :version_v25_a0b,
-    62091 =&gt; :version_v25_a0c,
-    62092 =&gt; :version_v25_a0d,
-    62101 =&gt; :version_v25_b3,
-    62111 =&gt; :version_v25_b3b,
-    62121 =&gt; :version_v25_c1,
-    62131 =&gt; :version_v25_c2,
-    62151 =&gt; :version_v26_a0,
-    62161 =&gt; :version_v26_a1,
-    62171 =&gt; :version_v27_a0,
-    62181 =&gt; :version_v27_a0b,
-    62191 =&gt; :version_v27_a0c,
-    62201 =&gt; :version_v27_a0d,
-    62211 =&gt; :version_v27_a0e,
-  }
-  I__VERSION = VERSION.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">VERSION</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">20121</span> <span class="o">=&gt;</span> <span class="ss">:version_v15</span><span class="p">,</span>
+    <span class="mi">50428</span> <span class="o">=&gt;</span> <span class="ss">:version_v16</span><span class="p">,</span>
+    <span class="mi">50823</span> <span class="o">=&gt;</span> <span class="ss">:version_v20</span><span class="p">,</span>
+    <span class="mi">60202</span> <span class="o">=&gt;</span> <span class="ss">:version_v21</span><span class="p">,</span>
+    <span class="mi">60717</span> <span class="o">=&gt;</span> <span class="ss">:version_v22</span><span class="p">,</span>
+    <span class="mi">62011</span> <span class="o">=&gt;</span> <span class="ss">:version_v23_a0</span><span class="p">,</span>
+    <span class="mi">62021</span> <span class="o">=&gt;</span> <span class="ss">:version_v23_a0b</span><span class="p">,</span>
+    <span class="mi">62041</span> <span class="o">=&gt;</span> <span class="ss">:version_v24_a0</span><span class="p">,</span>
+    <span class="mi">62051</span> <span class="o">=&gt;</span> <span class="ss">:version_v24_a3</span><span class="p">,</span>
+    <span class="mi">62061</span> <span class="o">=&gt;</span> <span class="ss">:version_v24_b1</span><span class="p">,</span>
+    <span class="mi">62071</span> <span class="o">=&gt;</span> <span class="ss">:version_v25_a0</span><span class="p">,</span>
+    <span class="mi">62081</span> <span class="o">=&gt;</span> <span class="ss">:version_v25_a0b</span><span class="p">,</span>
+    <span class="mi">62091</span> <span class="o">=&gt;</span> <span class="ss">:version_v25_a0c</span><span class="p">,</span>
+    <span class="mi">62092</span> <span class="o">=&gt;</span> <span class="ss">:version_v25_a0d</span><span class="p">,</span>
+    <span class="mi">62101</span> <span class="o">=&gt;</span> <span class="ss">:version_v25_b3</span><span class="p">,</span>
+    <span class="mi">62111</span> <span class="o">=&gt;</span> <span class="ss">:version_v25_b3b</span><span class="p">,</span>
+    <span class="mi">62121</span> <span class="o">=&gt;</span> <span class="ss">:version_v25_c1</span><span class="p">,</span>
+    <span class="mi">62131</span> <span class="o">=&gt;</span> <span class="ss">:version_v25_c2</span><span class="p">,</span>
+    <span class="mi">62151</span> <span class="o">=&gt;</span> <span class="ss">:version_v26_a0</span><span class="p">,</span>
+    <span class="mi">62161</span> <span class="o">=&gt;</span> <span class="ss">:version_v26_a1</span><span class="p">,</span>
+    <span class="mi">62171</span> <span class="o">=&gt;</span> <span class="ss">:version_v27_a0</span><span class="p">,</span>
+    <span class="mi">62181</span> <span class="o">=&gt;</span> <span class="ss">:version_v27_a0b</span><span class="p">,</span>
+    <span class="mi">62191</span> <span class="o">=&gt;</span> <span class="ss">:version_v27_a0c</span><span class="p">,</span>
+    <span class="mi">62201</span> <span class="o">=&gt;</span> <span class="ss">:version_v27_a0d</span><span class="p">,</span>
+    <span class="mi">62211</span> <span class="o">=&gt;</span> <span class="ss">:version_v27_a0e</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__VERSION</span> <span class="o">=</span> <span class="no">VERSION</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @version_magic = Kaitai::Struct::Stream::resolve_enum(VERSION, @_io.read_u2le)
-    @crlf = @_io.read_u2le
-    @modification_timestamp = @_io.read_u4le
-    @body = PyObject.new(@_io, self, @_root)
-    self
-  end
-  class CodeObject &lt; Kaitai::Struct::Struct
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@version_magic</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">VERSION</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+    <span class="vi">@crlf</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+    <span class="vi">@modification_timestamp</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+    <span class="vi">@body</span> <span class="o">=</span> <span class="no">PyObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">CodeObject</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-    FLAGS_ENUM = {
-      4 =&gt; :flags_enum_has_args,
-      8 =&gt; :flags_enum_has_kwargs,
-      32 =&gt; :flags_enum_generator,
-    }
-    I__FLAGS_ENUM = FLAGS_ENUM.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="no">FLAGS_ENUM</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:flags_enum_has_args</span><span class="p">,</span>
+      <span class="mi">8</span> <span class="o">=&gt;</span> <span class="ss">:flags_enum_has_kwargs</span><span class="p">,</span>
+      <span class="mi">32</span> <span class="o">=&gt;</span> <span class="ss">:flags_enum_generator</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="no">I__FLAGS_ENUM</span> <span class="o">=</span> <span class="no">FLAGS_ENUM</span><span class="o">.</span><span class="n">invert</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @arg_count = @_io.read_u4le
-      @local_count = @_io.read_u4le
-      @stack_size = @_io.read_u4le
-      @flags = Kaitai::Struct::Stream::resolve_enum(FLAGS_ENUM, @_io.read_u4le)
-      @code = Assembly.new(@_io, self, @_root)
-      @consts = PyObject.new(@_io, self, @_root)
-      @names = PyObject.new(@_io, self, @_root)
-      @var_names = PyObject.new(@_io, self, @_root)
-      @free_vars = PyObject.new(@_io, self, @_root)
-      @cell_vars = PyObject.new(@_io, self, @_root)
-      @filename = PyObject.new(@_io, self, @_root)
-      @name = PyObject.new(@_io, self, @_root)
-      @first_line_no = @_io.read_u4le
-      @lnotab = PyObject.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :arg_count
-    attr_reader :local_count
-    attr_reader :stack_size
-    attr_reader :flags
-    attr_reader :code
-    attr_reader :consts
-    attr_reader :names
-    attr_reader :var_names
-    attr_reader :free_vars
-    attr_reader :cell_vars
-    attr_reader :filename
-    attr_reader :name
-    attr_reader :first_line_no
-    attr_reader :lnotab
-  end
-  class Assembly &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@arg_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@local_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@stack_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">FLAGS_ENUM</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
+      <span class="vi">@code</span> <span class="o">=</span> <span class="no">Assembly</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@consts</span> <span class="o">=</span> <span class="no">PyObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@names</span> <span class="o">=</span> <span class="no">PyObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@var_names</span> <span class="o">=</span> <span class="no">PyObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@free_vars</span> <span class="o">=</span> <span class="no">PyObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@cell_vars</span> <span class="o">=</span> <span class="no">PyObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@filename</span> <span class="o">=</span> <span class="no">PyObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@name</span> <span class="o">=</span> <span class="no">PyObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@first_line_no</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@lnotab</span> <span class="o">=</span> <span class="no">PyObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:arg_count</span>
+    <span class="kp">attr_reader</span> <span class="ss">:local_count</span>
+    <span class="kp">attr_reader</span> <span class="ss">:stack_size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:code</span>
+    <span class="kp">attr_reader</span> <span class="ss">:consts</span>
+    <span class="kp">attr_reader</span> <span class="ss">:names</span>
+    <span class="kp">attr_reader</span> <span class="ss">:var_names</span>
+    <span class="kp">attr_reader</span> <span class="ss">:free_vars</span>
+    <span class="kp">attr_reader</span> <span class="ss">:cell_vars</span>
+    <span class="kp">attr_reader</span> <span class="ss">:filename</span>
+    <span class="kp">attr_reader</span> <span class="ss">:name</span>
+    <span class="kp">attr_reader</span> <span class="ss">:first_line_no</span>
+    <span class="kp">attr_reader</span> <span class="ss">:lnotab</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Assembly</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @string_magic = @_io.ensure_fixed_contents([115].pack(&#39;C*&#39;))
-      @length = @_io.read_u4le
-      @_raw_items = @_io.read_bytes(length)
-      io = Kaitai::Struct::Stream.new(@_raw_items)
-      @items = OpArgs.new(io, self, @_root)
-      self
-    end
-    attr_reader :string_magic
-    attr_reader :length
-    attr_reader :items
-    attr_reader :_raw_items
-  end
-  class OpArg &lt; Kaitai::Struct::Struct
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@string_magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">115</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@_raw_items</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
+      <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_items</span><span class="p">)</span>
+      <span class="vi">@items</span> <span class="o">=</span> <span class="no">OpArgs</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:string_magic</span>
+    <span class="kp">attr_reader</span> <span class="ss">:length</span>
+    <span class="kp">attr_reader</span> <span class="ss">:items</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_items</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">OpArg</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-    OP_CODE_ENUM = {
-      0 =&gt; :op_code_enum_stop_code,
-      1 =&gt; :op_code_enum_pop_top,
-      2 =&gt; :op_code_enum_rot_two,
-      3 =&gt; :op_code_enum_rot_three,
-      4 =&gt; :op_code_enum_dup_top,
-      5 =&gt; :op_code_enum_rot_four,
-      9 =&gt; :op_code_enum_nop,
-      10 =&gt; :op_code_enum_unary_positive,
-      11 =&gt; :op_code_enum_unary_negative,
-      12 =&gt; :op_code_enum_unary_not,
-      13 =&gt; :op_code_enum_unary_convert,
-      15 =&gt; :op_code_enum_unary_invert,
-      19 =&gt; :op_code_enum_binary_power,
-      20 =&gt; :op_code_enum_binary_multiply,
-      21 =&gt; :op_code_enum_binary_divide,
-      22 =&gt; :op_code_enum_binary_modulo,
-      23 =&gt; :op_code_enum_binary_add,
-      24 =&gt; :op_code_enum_binary_subtract,
-      25 =&gt; :op_code_enum_binary_subscr,
-      26 =&gt; :op_code_enum_binary_floor_divide,
-      27 =&gt; :op_code_enum_binary_true_divide,
-      28 =&gt; :op_code_enum_inplace_floor_divide,
-      29 =&gt; :op_code_enum_inplace_true_divide,
-      30 =&gt; :op_code_enum_slice_0,
-      31 =&gt; :op_code_enum_slice_1,
-      32 =&gt; :op_code_enum_slice_2,
-      33 =&gt; :op_code_enum_slice_3,
-      40 =&gt; :op_code_enum_store_slice_0,
-      41 =&gt; :op_code_enum_store_slice_1,
-      42 =&gt; :op_code_enum_store_slice_2,
-      43 =&gt; :op_code_enum_store_slice_3,
-      50 =&gt; :op_code_enum_delete_slice_0,
-      51 =&gt; :op_code_enum_delete_slice_1,
-      52 =&gt; :op_code_enum_delete_slice_2,
-      53 =&gt; :op_code_enum_delete_slice_3,
-      54 =&gt; :op_code_enum_store_map,
-      55 =&gt; :op_code_enum_inplace_add,
-      56 =&gt; :op_code_enum_inplace_subtract,
-      57 =&gt; :op_code_enum_inplace_multiply,
-      58 =&gt; :op_code_enum_inplace_divide,
-      59 =&gt; :op_code_enum_inplace_modulo,
-      60 =&gt; :op_code_enum_store_subscr,
-      61 =&gt; :op_code_enum_delete_subscr,
-      62 =&gt; :op_code_enum_binary_lshift,
-      63 =&gt; :op_code_enum_binary_rshift,
-      64 =&gt; :op_code_enum_binary_and,
-      65 =&gt; :op_code_enum_binary_xor,
-      66 =&gt; :op_code_enum_binary_or,
-      67 =&gt; :op_code_enum_inplace_power,
-      68 =&gt; :op_code_enum_get_iter,
-      70 =&gt; :op_code_enum_print_expr,
-      71 =&gt; :op_code_enum_print_item,
-      72 =&gt; :op_code_enum_print_newline,
-      73 =&gt; :op_code_enum_print_item_to,
-      74 =&gt; :op_code_enum_print_newline_to,
-      75 =&gt; :op_code_enum_inplace_lshift,
-      76 =&gt; :op_code_enum_inplace_rshift,
-      77 =&gt; :op_code_enum_inplace_and,
-      78 =&gt; :op_code_enum_inplace_xor,
-      79 =&gt; :op_code_enum_inplace_or,
-      80 =&gt; :op_code_enum_break_loop,
-      81 =&gt; :op_code_enum_with_cleanup,
-      82 =&gt; :op_code_enum_load_locals,
-      83 =&gt; :op_code_enum_return_value,
-      84 =&gt; :op_code_enum_import_star,
-      85 =&gt; :op_code_enum_exec_stmt,
-      86 =&gt; :op_code_enum_yield_value,
-      87 =&gt; :op_code_enum_pop_block,
-      88 =&gt; :op_code_enum_end_finally,
-      89 =&gt; :op_code_enum_build_class,
-      90 =&gt; :op_code_enum_store_name,
-      91 =&gt; :op_code_enum_delete_name,
-      92 =&gt; :op_code_enum_unpack_sequence,
-      93 =&gt; :op_code_enum_for_iter,
-      94 =&gt; :op_code_enum_list_append,
-      95 =&gt; :op_code_enum_store_attr,
-      96 =&gt; :op_code_enum_delete_attr,
-      97 =&gt; :op_code_enum_store_global,
-      98 =&gt; :op_code_enum_delete_global,
-      99 =&gt; :op_code_enum_dup_topx,
-      100 =&gt; :op_code_enum_load_const,
-      101 =&gt; :op_code_enum_load_name,
-      102 =&gt; :op_code_enum_build_tuple,
-      103 =&gt; :op_code_enum_build_list,
-      104 =&gt; :op_code_enum_build_set,
-      105 =&gt; :op_code_enum_build_map,
-      106 =&gt; :op_code_enum_load_attr,
-      107 =&gt; :op_code_enum_compare_op,
-      108 =&gt; :op_code_enum_import_name,
-      109 =&gt; :op_code_enum_import_from,
-      110 =&gt; :op_code_enum_jump_forward,
-      111 =&gt; :op_code_enum_jump_if_false_or_pop,
-      112 =&gt; :op_code_enum_jump_if_true_or_pop,
-      113 =&gt; :op_code_enum_jump_absolute,
-      114 =&gt; :op_code_enum_pop_jump_if_false,
-      115 =&gt; :op_code_enum_pop_jump_if_true,
-      116 =&gt; :op_code_enum_load_global,
-      119 =&gt; :op_code_enum_continue_loop,
-      120 =&gt; :op_code_enum_setup_loop,
-      121 =&gt; :op_code_enum_setup_except,
-      122 =&gt; :op_code_enum_setup_finally,
-      124 =&gt; :op_code_enum_load_fast,
-      125 =&gt; :op_code_enum_store_fast,
-      126 =&gt; :op_code_enum_delete_fast,
-      130 =&gt; :op_code_enum_raise_varargs,
-      131 =&gt; :op_code_enum_call_function,
-      132 =&gt; :op_code_enum_make_function,
-      133 =&gt; :op_code_enum_build_slice,
-      134 =&gt; :op_code_enum_make_closure,
-      135 =&gt; :op_code_enum_load_closure,
-      136 =&gt; :op_code_enum_load_deref,
-      137 =&gt; :op_code_enum_store_deref,
-      140 =&gt; :op_code_enum_call_function_var,
-      141 =&gt; :op_code_enum_call_function_kw,
-      142 =&gt; :op_code_enum_call_function_var_kw,
-      143 =&gt; :op_code_enum_setup_with,
-      145 =&gt; :op_code_enum_extended_arg,
-      146 =&gt; :op_code_enum_set_add,
-      147 =&gt; :op_code_enum_map_add,
-    }
-    I__OP_CODE_ENUM = OP_CODE_ENUM.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="no">OP_CODE_ENUM</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_stop_code</span><span class="p">,</span>
+      <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_pop_top</span><span class="p">,</span>
+      <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_rot_two</span><span class="p">,</span>
+      <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_rot_three</span><span class="p">,</span>
+      <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_dup_top</span><span class="p">,</span>
+      <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_rot_four</span><span class="p">,</span>
+      <span class="mi">9</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_nop</span><span class="p">,</span>
+      <span class="mi">10</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_unary_positive</span><span class="p">,</span>
+      <span class="mi">11</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_unary_negative</span><span class="p">,</span>
+      <span class="mi">12</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_unary_not</span><span class="p">,</span>
+      <span class="mi">13</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_unary_convert</span><span class="p">,</span>
+      <span class="mi">15</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_unary_invert</span><span class="p">,</span>
+      <span class="mi">19</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_binary_power</span><span class="p">,</span>
+      <span class="mi">20</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_binary_multiply</span><span class="p">,</span>
+      <span class="mi">21</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_binary_divide</span><span class="p">,</span>
+      <span class="mi">22</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_binary_modulo</span><span class="p">,</span>
+      <span class="mi">23</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_binary_add</span><span class="p">,</span>
+      <span class="mi">24</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_binary_subtract</span><span class="p">,</span>
+      <span class="mi">25</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_binary_subscr</span><span class="p">,</span>
+      <span class="mi">26</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_binary_floor_divide</span><span class="p">,</span>
+      <span class="mi">27</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_binary_true_divide</span><span class="p">,</span>
+      <span class="mi">28</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_inplace_floor_divide</span><span class="p">,</span>
+      <span class="mi">29</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_inplace_true_divide</span><span class="p">,</span>
+      <span class="mi">30</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_slice_0</span><span class="p">,</span>
+      <span class="mi">31</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_slice_1</span><span class="p">,</span>
+      <span class="mi">32</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_slice_2</span><span class="p">,</span>
+      <span class="mi">33</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_slice_3</span><span class="p">,</span>
+      <span class="mi">40</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_store_slice_0</span><span class="p">,</span>
+      <span class="mi">41</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_store_slice_1</span><span class="p">,</span>
+      <span class="mi">42</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_store_slice_2</span><span class="p">,</span>
+      <span class="mi">43</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_store_slice_3</span><span class="p">,</span>
+      <span class="mi">50</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_delete_slice_0</span><span class="p">,</span>
+      <span class="mi">51</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_delete_slice_1</span><span class="p">,</span>
+      <span class="mi">52</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_delete_slice_2</span><span class="p">,</span>
+      <span class="mi">53</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_delete_slice_3</span><span class="p">,</span>
+      <span class="mi">54</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_store_map</span><span class="p">,</span>
+      <span class="mi">55</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_inplace_add</span><span class="p">,</span>
+      <span class="mi">56</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_inplace_subtract</span><span class="p">,</span>
+      <span class="mi">57</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_inplace_multiply</span><span class="p">,</span>
+      <span class="mi">58</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_inplace_divide</span><span class="p">,</span>
+      <span class="mi">59</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_inplace_modulo</span><span class="p">,</span>
+      <span class="mi">60</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_store_subscr</span><span class="p">,</span>
+      <span class="mi">61</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_delete_subscr</span><span class="p">,</span>
+      <span class="mi">62</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_binary_lshift</span><span class="p">,</span>
+      <span class="mi">63</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_binary_rshift</span><span class="p">,</span>
+      <span class="mi">64</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_binary_and</span><span class="p">,</span>
+      <span class="mi">65</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_binary_xor</span><span class="p">,</span>
+      <span class="mi">66</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_binary_or</span><span class="p">,</span>
+      <span class="mi">67</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_inplace_power</span><span class="p">,</span>
+      <span class="mi">68</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_get_iter</span><span class="p">,</span>
+      <span class="mi">70</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_print_expr</span><span class="p">,</span>
+      <span class="mi">71</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_print_item</span><span class="p">,</span>
+      <span class="mi">72</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_print_newline</span><span class="p">,</span>
+      <span class="mi">73</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_print_item_to</span><span class="p">,</span>
+      <span class="mi">74</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_print_newline_to</span><span class="p">,</span>
+      <span class="mi">75</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_inplace_lshift</span><span class="p">,</span>
+      <span class="mi">76</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_inplace_rshift</span><span class="p">,</span>
+      <span class="mi">77</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_inplace_and</span><span class="p">,</span>
+      <span class="mi">78</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_inplace_xor</span><span class="p">,</span>
+      <span class="mi">79</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_inplace_or</span><span class="p">,</span>
+      <span class="mi">80</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_break_loop</span><span class="p">,</span>
+      <span class="mi">81</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_with_cleanup</span><span class="p">,</span>
+      <span class="mi">82</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_load_locals</span><span class="p">,</span>
+      <span class="mi">83</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_return_value</span><span class="p">,</span>
+      <span class="mi">84</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_import_star</span><span class="p">,</span>
+      <span class="mi">85</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_exec_stmt</span><span class="p">,</span>
+      <span class="mi">86</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_yield_value</span><span class="p">,</span>
+      <span class="mi">87</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_pop_block</span><span class="p">,</span>
+      <span class="mi">88</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_end_finally</span><span class="p">,</span>
+      <span class="mi">89</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_build_class</span><span class="p">,</span>
+      <span class="mi">90</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_store_name</span><span class="p">,</span>
+      <span class="mi">91</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_delete_name</span><span class="p">,</span>
+      <span class="mi">92</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_unpack_sequence</span><span class="p">,</span>
+      <span class="mi">93</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_for_iter</span><span class="p">,</span>
+      <span class="mi">94</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_list_append</span><span class="p">,</span>
+      <span class="mi">95</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_store_attr</span><span class="p">,</span>
+      <span class="mi">96</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_delete_attr</span><span class="p">,</span>
+      <span class="mi">97</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_store_global</span><span class="p">,</span>
+      <span class="mi">98</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_delete_global</span><span class="p">,</span>
+      <span class="mi">99</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_dup_topx</span><span class="p">,</span>
+      <span class="mi">100</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_load_const</span><span class="p">,</span>
+      <span class="mi">101</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_load_name</span><span class="p">,</span>
+      <span class="mi">102</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_build_tuple</span><span class="p">,</span>
+      <span class="mi">103</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_build_list</span><span class="p">,</span>
+      <span class="mi">104</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_build_set</span><span class="p">,</span>
+      <span class="mi">105</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_build_map</span><span class="p">,</span>
+      <span class="mi">106</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_load_attr</span><span class="p">,</span>
+      <span class="mi">107</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_compare_op</span><span class="p">,</span>
+      <span class="mi">108</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_import_name</span><span class="p">,</span>
+      <span class="mi">109</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_import_from</span><span class="p">,</span>
+      <span class="mi">110</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_jump_forward</span><span class="p">,</span>
+      <span class="mi">111</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_jump_if_false_or_pop</span><span class="p">,</span>
+      <span class="mi">112</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_jump_if_true_or_pop</span><span class="p">,</span>
+      <span class="mi">113</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_jump_absolute</span><span class="p">,</span>
+      <span class="mi">114</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_pop_jump_if_false</span><span class="p">,</span>
+      <span class="mi">115</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_pop_jump_if_true</span><span class="p">,</span>
+      <span class="mi">116</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_load_global</span><span class="p">,</span>
+      <span class="mi">119</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_continue_loop</span><span class="p">,</span>
+      <span class="mi">120</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_setup_loop</span><span class="p">,</span>
+      <span class="mi">121</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_setup_except</span><span class="p">,</span>
+      <span class="mi">122</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_setup_finally</span><span class="p">,</span>
+      <span class="mi">124</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_load_fast</span><span class="p">,</span>
+      <span class="mi">125</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_store_fast</span><span class="p">,</span>
+      <span class="mi">126</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_delete_fast</span><span class="p">,</span>
+      <span class="mi">130</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_raise_varargs</span><span class="p">,</span>
+      <span class="mi">131</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_call_function</span><span class="p">,</span>
+      <span class="mi">132</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_make_function</span><span class="p">,</span>
+      <span class="mi">133</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_build_slice</span><span class="p">,</span>
+      <span class="mi">134</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_make_closure</span><span class="p">,</span>
+      <span class="mi">135</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_load_closure</span><span class="p">,</span>
+      <span class="mi">136</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_load_deref</span><span class="p">,</span>
+      <span class="mi">137</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_store_deref</span><span class="p">,</span>
+      <span class="mi">140</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_call_function_var</span><span class="p">,</span>
+      <span class="mi">141</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_call_function_kw</span><span class="p">,</span>
+      <span class="mi">142</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_call_function_var_kw</span><span class="p">,</span>
+      <span class="mi">143</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_setup_with</span><span class="p">,</span>
+      <span class="mi">145</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_extended_arg</span><span class="p">,</span>
+      <span class="mi">146</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_set_add</span><span class="p">,</span>
+      <span class="mi">147</span> <span class="o">=&gt;</span> <span class="ss">:op_code_enum_map_add</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="no">I__OP_CODE_ENUM</span> <span class="o">=</span> <span class="no">OP_CODE_ENUM</span><span class="o">.</span><span class="n">invert</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @op_code = Kaitai::Struct::Stream::resolve_enum(OP_CODE_ENUM, @_io.read_u1)
-      if I__OP_CODE_ENUM[op_code] &gt;= I__OP_CODE_ENUM[:op_code_enum_store_name]
-        @arg = @_io.read_u2le
-      end
-      self
-    end
-    attr_reader :op_code
-    attr_reader :arg
-  end
-  class PyObject &lt; Kaitai::Struct::Struct
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@op_code</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">OP_CODE_ENUM</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="k">if</span> <span class="no">I__OP_CODE_ENUM</span><span class="o">[</span><span class="n">op_code</span><span class="o">]</span> <span class="o">&gt;=</span> <span class="no">I__OP_CODE_ENUM</span><span class="o">[</span><span class="ss">:op_code_enum_store_name</span><span class="o">]</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:op_code</span>
+    <span class="kp">attr_reader</span> <span class="ss">:arg</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">PyObject</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-    OBJECT_TYPE = {
-      40 =&gt; :object_type_tuple,
-      70 =&gt; :object_type_py_false,
-      78 =&gt; :object_type_none,
-      82 =&gt; :object_type_string_ref,
-      84 =&gt; :object_type_py_true,
-      99 =&gt; :object_type_code_object,
-      105 =&gt; :object_type_int,
-      115 =&gt; :object_type_string,
-      116 =&gt; :object_type_interned,
-      117 =&gt; :object_type_unicode_string,
-    }
-    I__OBJECT_TYPE = OBJECT_TYPE.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="no">OBJECT_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">40</span> <span class="o">=&gt;</span> <span class="ss">:object_type_tuple</span><span class="p">,</span>
+      <span class="mi">70</span> <span class="o">=&gt;</span> <span class="ss">:object_type_py_false</span><span class="p">,</span>
+      <span class="mi">78</span> <span class="o">=&gt;</span> <span class="ss">:object_type_none</span><span class="p">,</span>
+      <span class="mi">82</span> <span class="o">=&gt;</span> <span class="ss">:object_type_string_ref</span><span class="p">,</span>
+      <span class="mi">84</span> <span class="o">=&gt;</span> <span class="ss">:object_type_py_true</span><span class="p">,</span>
+      <span class="mi">99</span> <span class="o">=&gt;</span> <span class="ss">:object_type_code_object</span><span class="p">,</span>
+      <span class="mi">105</span> <span class="o">=&gt;</span> <span class="ss">:object_type_int</span><span class="p">,</span>
+      <span class="mi">115</span> <span class="o">=&gt;</span> <span class="ss">:object_type_string</span><span class="p">,</span>
+      <span class="mi">116</span> <span class="o">=&gt;</span> <span class="ss">:object_type_interned</span><span class="p">,</span>
+      <span class="mi">117</span> <span class="o">=&gt;</span> <span class="ss">:object_type_unicode_string</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="no">I__OBJECT_TYPE</span> <span class="o">=</span> <span class="no">OBJECT_TYPE</span><span class="o">.</span><span class="n">invert</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @type = Kaitai::Struct::Stream::resolve_enum(OBJECT_TYPE, @_io.read_u1)
-      case type
-      when :object_type_none
-        @value = PyNone.new(@_io, self, @_root)
-      when :object_type_code_object
-        @value = CodeObject.new(@_io, self, @_root)
-      when :object_type_int
-        @value = @_io.read_u4le
-      when :object_type_string_ref
-        @value = StringRef.new(@_io, self, @_root)
-      when :object_type_string
-        @value = PyString.new(@_io, self, @_root)
-      when :object_type_py_false
-        @value = PyFalse.new(@_io, self, @_root)
-      when :object_type_interned
-        @value = InternedString.new(@_io, self, @_root)
-      when :object_type_tuple
-        @value = Tuple.new(@_io, self, @_root)
-      when :object_type_py_true
-        @value = PyTrue.new(@_io, self, @_root)
-      end
-      self
-    end
-    class PyNone &lt; Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">OBJECT_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="k">case</span> <span class="n">type</span>
+      <span class="k">when</span> <span class="ss">:object_type_none</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="no">PyNone</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:object_type_code_object</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="no">CodeObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:object_type_int</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">when</span> <span class="ss">:object_type_string_ref</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="no">StringRef</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:object_type_string</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="no">PyString</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:object_type_py_false</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="no">PyFalse</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:object_type_interned</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="no">InternedString</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:object_type_tuple</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="no">Tuple</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:object_type_py_true</span>
+        <span class="vi">@value</span> <span class="o">=</span> <span class="no">PyTrue</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">PyNone</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
 
-      def _read
-        self
-      end
-    end
-    class PyFalse &lt; Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
+      <span class="k">def</span> <span class="nf">_read</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">PyFalse</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
 
-      def _read
-        self
-      end
-    end
-    class StringRef &lt; Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
+      <span class="k">def</span> <span class="nf">_read</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">StringRef</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
 
-      def _read
-        @interned_list_index = @_io.read_u4le
-        self
-      end
-      attr_reader :interned_list_index
-    end
-    class PyTrue &lt; Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
+      <span class="k">def</span> <span class="nf">_read</span>
+        <span class="vi">@interned_list_index</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
+      <span class="kp">attr_reader</span> <span class="ss">:interned_list_index</span>
+    <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">PyTrue</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
 
-      def _read
-        self
-      end
-    end
-    class Tuple &lt; Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
+      <span class="k">def</span> <span class="nf">_read</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">Tuple</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
 
-      def _read
-        @count = @_io.read_u4le
-        @items = Array.new(count)
-        (count).times { |i|
-          @items[i] = PyObject.new(@_io, self, @_root)
-        }
-        self
-      end
-      attr_reader :count
-      attr_reader :items
-    end
-    class UnicodeString &lt; Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
+      <span class="k">def</span> <span class="nf">_read</span>
+        <span class="vi">@count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+        <span class="vi">@items</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+          <span class="vi">@items</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">PyObject</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
+      <span class="kp">attr_reader</span> <span class="ss">:count</span>
+      <span class="kp">attr_reader</span> <span class="ss">:items</span>
+    <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">UnicodeString</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
 
-      def _read
-        @length = @_io.read_u4le
-        @data = (@_io.read_bytes(length)).force_encoding(&quot;utf-8&quot;)
-        self
-      end
-      attr_reader :length
-      attr_reader :data
-    end
-    class InternedString &lt; Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
+      <span class="k">def</span> <span class="nf">_read</span>
+        <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">length</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
+      <span class="kp">attr_reader</span> <span class="ss">:length</span>
+      <span class="kp">attr_reader</span> <span class="ss">:data</span>
+    <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">InternedString</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
 
-      def _read
-        @length = @_io.read_u4le
-        @data = (@_io.read_bytes(length)).force_encoding(&quot;utf-8&quot;)
-        self
-      end
-      attr_reader :length
-      attr_reader :data
-    end
-    class PyString &lt; Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
+      <span class="k">def</span> <span class="nf">_read</span>
+        <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">length</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
+      <span class="kp">attr_reader</span> <span class="ss">:length</span>
+      <span class="kp">attr_reader</span> <span class="ss">:data</span>
+    <span class="k">end</span>
+    <span class="k">class</span> <span class="nc">PyString</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+      <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+        <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+        <span class="n">_read</span>
+      <span class="k">end</span>
 
-      def _read
-        @length = @_io.read_u4le
-        @data = @_io.read_bytes(length)
-        self
-      end
-      attr_reader :length
-      attr_reader :data
-    end
-    attr_reader :type
-    attr_reader :value
-  end
-  class OpArgs &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+      <span class="k">def</span> <span class="nf">_read</span>
+        <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
+        <span class="nb">self</span>
+      <span class="k">end</span>
+      <span class="kp">attr_reader</span> <span class="ss">:length</span>
+      <span class="kp">attr_reader</span> <span class="ss">:data</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:value</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">OpArgs</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @items = []
-      i = 0
-      while not @_io.eof?
-        @items &lt;&lt; OpArg.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :items
-  end
-  attr_reader :version_magic
-  attr_reader :crlf
-  attr_reader :modification_timestamp
-  attr_reader :body
-end
-</code></pre>
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@items</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+        <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="no">OpArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:items</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:version_magic</span>
+  <span class="kp">attr_reader</span> <span class="ss">:crlf</span>
+  <span class="kp">attr_reader</span> <span class="ss">:modification_timestamp</span>
+  <span class="kp">attr_reader</span> <span class="ss">:body</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -710,8 +707,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

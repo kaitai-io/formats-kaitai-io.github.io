@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -248,630 +245,630 @@ var data = new PythonPyc27(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.PythonPyc27 = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-/**
- * Python interpreter runs .py files in 2 step process: first, it
- * produces bytecode, which it then executes. Translation of .py source
- * into bytecode is time-consuming, so Python dumps compiled bytecode
- * into .pyc files, to be reused from cache at later time if possible.
- * 
- * .pyc file is essentially a raw dump of `py_object` (see `body`) with
- * a simple header prepended.
- */
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">PythonPyc27</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * Python interpreter runs .py files in 2 step process: first, it</span>
+<span class="cm"> * produces bytecode, which it then executes. Translation of .py source</span>
+<span class="cm"> * into bytecode is time-consuming, so Python dumps compiled bytecode</span>
+<span class="cm"> * into .pyc files, to be reused from cache at later time if possible.</span>
+<span class="cm"> * </span>
+<span class="cm"> * .pyc file is essentially a raw dump of `py_object` (see `body`) with</span>
+<span class="cm"> * a simple header prepended.</span>
+<span class="cm"> */</span>
 
-var PythonPyc27 = (function() {
-  PythonPyc27.Version = Object.freeze({
-    V15: 20121,
-    V16: 50428,
-    V20: 50823,
-    V21: 60202,
-    V22: 60717,
-    V23_A0: 62011,
-    V23_A0B: 62021,
-    V24_A0: 62041,
-    V24_A3: 62051,
-    V24_B1: 62061,
-    V25_A0: 62071,
-    V25_A0B: 62081,
-    V25_A0C: 62091,
-    V25_A0D: 62092,
-    V25_B3: 62101,
-    V25_B3B: 62111,
-    V25_C1: 62121,
-    V25_C2: 62131,
-    V26_A0: 62151,
-    V26_A1: 62161,
-    V27_A0: 62171,
-    V27_A0B: 62181,
-    V27_A0C: 62191,
-    V27_A0D: 62201,
-    V27_A0E: 62211,
+<span class="kd">var</span> <span class="nx">PythonPyc27</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">Version</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">V15</span><span class="o">:</span> <span class="mi">20121</span><span class="p">,</span>
+    <span class="nx">V16</span><span class="o">:</span> <span class="mi">50428</span><span class="p">,</span>
+    <span class="nx">V20</span><span class="o">:</span> <span class="mi">50823</span><span class="p">,</span>
+    <span class="nx">V21</span><span class="o">:</span> <span class="mi">60202</span><span class="p">,</span>
+    <span class="nx">V22</span><span class="o">:</span> <span class="mi">60717</span><span class="p">,</span>
+    <span class="nx">V23_A0</span><span class="o">:</span> <span class="mi">62011</span><span class="p">,</span>
+    <span class="nx">V23_A0B</span><span class="o">:</span> <span class="mi">62021</span><span class="p">,</span>
+    <span class="nx">V24_A0</span><span class="o">:</span> <span class="mi">62041</span><span class="p">,</span>
+    <span class="nx">V24_A3</span><span class="o">:</span> <span class="mi">62051</span><span class="p">,</span>
+    <span class="nx">V24_B1</span><span class="o">:</span> <span class="mi">62061</span><span class="p">,</span>
+    <span class="nx">V25_A0</span><span class="o">:</span> <span class="mi">62071</span><span class="p">,</span>
+    <span class="nx">V25_A0B</span><span class="o">:</span> <span class="mi">62081</span><span class="p">,</span>
+    <span class="nx">V25_A0C</span><span class="o">:</span> <span class="mi">62091</span><span class="p">,</span>
+    <span class="nx">V25_A0D</span><span class="o">:</span> <span class="mi">62092</span><span class="p">,</span>
+    <span class="nx">V25_B3</span><span class="o">:</span> <span class="mi">62101</span><span class="p">,</span>
+    <span class="nx">V25_B3B</span><span class="o">:</span> <span class="mi">62111</span><span class="p">,</span>
+    <span class="nx">V25_C1</span><span class="o">:</span> <span class="mi">62121</span><span class="p">,</span>
+    <span class="nx">V25_C2</span><span class="o">:</span> <span class="mi">62131</span><span class="p">,</span>
+    <span class="nx">V26_A0</span><span class="o">:</span> <span class="mi">62151</span><span class="p">,</span>
+    <span class="nx">V26_A1</span><span class="o">:</span> <span class="mi">62161</span><span class="p">,</span>
+    <span class="nx">V27_A0</span><span class="o">:</span> <span class="mi">62171</span><span class="p">,</span>
+    <span class="nx">V27_A0B</span><span class="o">:</span> <span class="mi">62181</span><span class="p">,</span>
+    <span class="nx">V27_A0C</span><span class="o">:</span> <span class="mi">62191</span><span class="p">,</span>
+    <span class="nx">V27_A0D</span><span class="o">:</span> <span class="mi">62201</span><span class="p">,</span>
+    <span class="nx">V27_A0E</span><span class="o">:</span> <span class="mi">62211</span><span class="p">,</span>
 
-    20121: &quot;V15&quot;,
-    50428: &quot;V16&quot;,
-    50823: &quot;V20&quot;,
-    60202: &quot;V21&quot;,
-    60717: &quot;V22&quot;,
-    62011: &quot;V23_A0&quot;,
-    62021: &quot;V23_A0B&quot;,
-    62041: &quot;V24_A0&quot;,
-    62051: &quot;V24_A3&quot;,
-    62061: &quot;V24_B1&quot;,
-    62071: &quot;V25_A0&quot;,
-    62081: &quot;V25_A0B&quot;,
-    62091: &quot;V25_A0C&quot;,
-    62092: &quot;V25_A0D&quot;,
-    62101: &quot;V25_B3&quot;,
-    62111: &quot;V25_B3B&quot;,
-    62121: &quot;V25_C1&quot;,
-    62131: &quot;V25_C2&quot;,
-    62151: &quot;V26_A0&quot;,
-    62161: &quot;V26_A1&quot;,
-    62171: &quot;V27_A0&quot;,
-    62181: &quot;V27_A0B&quot;,
-    62191: &quot;V27_A0C&quot;,
-    62201: &quot;V27_A0D&quot;,
-    62211: &quot;V27_A0E&quot;,
-  });
+    <span class="mi">20121</span><span class="o">:</span> <span class="s2">&quot;V15&quot;</span><span class="p">,</span>
+    <span class="mi">50428</span><span class="o">:</span> <span class="s2">&quot;V16&quot;</span><span class="p">,</span>
+    <span class="mi">50823</span><span class="o">:</span> <span class="s2">&quot;V20&quot;</span><span class="p">,</span>
+    <span class="mi">60202</span><span class="o">:</span> <span class="s2">&quot;V21&quot;</span><span class="p">,</span>
+    <span class="mi">60717</span><span class="o">:</span> <span class="s2">&quot;V22&quot;</span><span class="p">,</span>
+    <span class="mi">62011</span><span class="o">:</span> <span class="s2">&quot;V23_A0&quot;</span><span class="p">,</span>
+    <span class="mi">62021</span><span class="o">:</span> <span class="s2">&quot;V23_A0B&quot;</span><span class="p">,</span>
+    <span class="mi">62041</span><span class="o">:</span> <span class="s2">&quot;V24_A0&quot;</span><span class="p">,</span>
+    <span class="mi">62051</span><span class="o">:</span> <span class="s2">&quot;V24_A3&quot;</span><span class="p">,</span>
+    <span class="mi">62061</span><span class="o">:</span> <span class="s2">&quot;V24_B1&quot;</span><span class="p">,</span>
+    <span class="mi">62071</span><span class="o">:</span> <span class="s2">&quot;V25_A0&quot;</span><span class="p">,</span>
+    <span class="mi">62081</span><span class="o">:</span> <span class="s2">&quot;V25_A0B&quot;</span><span class="p">,</span>
+    <span class="mi">62091</span><span class="o">:</span> <span class="s2">&quot;V25_A0C&quot;</span><span class="p">,</span>
+    <span class="mi">62092</span><span class="o">:</span> <span class="s2">&quot;V25_A0D&quot;</span><span class="p">,</span>
+    <span class="mi">62101</span><span class="o">:</span> <span class="s2">&quot;V25_B3&quot;</span><span class="p">,</span>
+    <span class="mi">62111</span><span class="o">:</span> <span class="s2">&quot;V25_B3B&quot;</span><span class="p">,</span>
+    <span class="mi">62121</span><span class="o">:</span> <span class="s2">&quot;V25_C1&quot;</span><span class="p">,</span>
+    <span class="mi">62131</span><span class="o">:</span> <span class="s2">&quot;V25_C2&quot;</span><span class="p">,</span>
+    <span class="mi">62151</span><span class="o">:</span> <span class="s2">&quot;V26_A0&quot;</span><span class="p">,</span>
+    <span class="mi">62161</span><span class="o">:</span> <span class="s2">&quot;V26_A1&quot;</span><span class="p">,</span>
+    <span class="mi">62171</span><span class="o">:</span> <span class="s2">&quot;V27_A0&quot;</span><span class="p">,</span>
+    <span class="mi">62181</span><span class="o">:</span> <span class="s2">&quot;V27_A0B&quot;</span><span class="p">,</span>
+    <span class="mi">62191</span><span class="o">:</span> <span class="s2">&quot;V27_A0C&quot;</span><span class="p">,</span>
+    <span class="mi">62201</span><span class="o">:</span> <span class="s2">&quot;V27_A0D&quot;</span><span class="p">,</span>
+    <span class="mi">62211</span><span class="o">:</span> <span class="s2">&quot;V27_A0E&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
 
-  function PythonPyc27(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
+  <span class="kd">function</span> <span class="nx">PythonPyc27</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-    this._read();
-  }
-  PythonPyc27.prototype._read = function() {
-    this.versionMagic = this._io.readU2le();
-    this.crlf = this._io.readU2le();
-    this.modificationTimestamp = this._io.readU4le();
-    this.body = new PyObject(this._io, this, this._root);
-  }
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">versionMagic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">crlf</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">modificationTimestamp</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+  <span class="p">}</span>
 
-  var CodeObject = PythonPyc27.CodeObject = (function() {
-    CodeObject.FlagsEnum = Object.freeze({
-      HAS_ARGS: 4,
-      HAS_KWARGS: 8,
-      GENERATOR: 32,
+  <span class="kd">var</span> <span class="nx">CodeObject</span> <span class="o">=</span> <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">CodeObject</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">CodeObject</span><span class="p">.</span><span class="nx">FlagsEnum</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+      <span class="nx">HAS_ARGS</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+      <span class="nx">HAS_KWARGS</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+      <span class="nx">GENERATOR</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span>
 
-      4: &quot;HAS_ARGS&quot;,
-      8: &quot;HAS_KWARGS&quot;,
-      32: &quot;GENERATOR&quot;,
-    });
+      <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;HAS_ARGS&quot;</span><span class="p">,</span>
+      <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;HAS_KWARGS&quot;</span><span class="p">,</span>
+      <span class="mi">32</span><span class="o">:</span> <span class="s2">&quot;GENERATOR&quot;</span><span class="p">,</span>
+    <span class="p">});</span>
 
-    function CodeObject(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+    <span class="kd">function</span> <span class="nx">CodeObject</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    CodeObject.prototype._read = function() {
-      this.argCount = this._io.readU4le();
-      this.localCount = this._io.readU4le();
-      this.stackSize = this._io.readU4le();
-      this.flags = this._io.readU4le();
-      this.code = new Assembly(this._io, this, this._root);
-      this.consts = new PyObject(this._io, this, this._root);
-      this.names = new PyObject(this._io, this, this._root);
-      this.varNames = new PyObject(this._io, this, this._root);
-      this.freeVars = new PyObject(this._io, this, this._root);
-      this.cellVars = new PyObject(this._io, this, this._root);
-      this.filename = new PyObject(this._io, this, this._root);
-      this.name = new PyObject(this._io, this, this._root);
-      this.firstLineNo = this._io.readU4le();
-      this.lnotab = new PyObject(this._io, this, this._root);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">CodeObject</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">argCount</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">localCount</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">stackSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">code</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Assembly</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">consts</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">names</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">varNames</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">freeVars</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">cellVars</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">filename</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">firstLineNo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lnotab</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return CodeObject;
-  })();
+    <span class="k">return</span> <span class="nx">CodeObject</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var Assembly = PythonPyc27.Assembly = (function() {
-    function Assembly(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Assembly</span> <span class="o">=</span> <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">Assembly</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Assembly</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Assembly.prototype._read = function() {
-      this.stringMagic = this._io.ensureFixedContents([115]);
-      this.length = this._io.readU4le();
-      this._raw_items = this._io.readBytes(this.length);
-      var _io__raw_items = new KaitaiStream(this._raw_items);
-      this.items = new OpArgs(_io__raw_items, this, this._root);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Assembly</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">stringMagic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">115</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_items</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_items</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_items</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">OpArgs</span><span class="p">(</span><span class="nx">_io__raw_items</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return Assembly;
-  })();
+    <span class="k">return</span> <span class="nx">Assembly</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var OpArg = PythonPyc27.OpArg = (function() {
-    OpArg.OpCodeEnum = Object.freeze({
-      STOP_CODE: 0,
-      POP_TOP: 1,
-      ROT_TWO: 2,
-      ROT_THREE: 3,
-      DUP_TOP: 4,
-      ROT_FOUR: 5,
-      NOP: 9,
-      UNARY_POSITIVE: 10,
-      UNARY_NEGATIVE: 11,
-      UNARY_NOT: 12,
-      UNARY_CONVERT: 13,
-      UNARY_INVERT: 15,
-      BINARY_POWER: 19,
-      BINARY_MULTIPLY: 20,
-      BINARY_DIVIDE: 21,
-      BINARY_MODULO: 22,
-      BINARY_ADD: 23,
-      BINARY_SUBTRACT: 24,
-      BINARY_SUBSCR: 25,
-      BINARY_FLOOR_DIVIDE: 26,
-      BINARY_TRUE_DIVIDE: 27,
-      INPLACE_FLOOR_DIVIDE: 28,
-      INPLACE_TRUE_DIVIDE: 29,
-      SLICE_0: 30,
-      SLICE_1: 31,
-      SLICE_2: 32,
-      SLICE_3: 33,
-      STORE_SLICE_0: 40,
-      STORE_SLICE_1: 41,
-      STORE_SLICE_2: 42,
-      STORE_SLICE_3: 43,
-      DELETE_SLICE_0: 50,
-      DELETE_SLICE_1: 51,
-      DELETE_SLICE_2: 52,
-      DELETE_SLICE_3: 53,
-      STORE_MAP: 54,
-      INPLACE_ADD: 55,
-      INPLACE_SUBTRACT: 56,
-      INPLACE_MULTIPLY: 57,
-      INPLACE_DIVIDE: 58,
-      INPLACE_MODULO: 59,
-      STORE_SUBSCR: 60,
-      DELETE_SUBSCR: 61,
-      BINARY_LSHIFT: 62,
-      BINARY_RSHIFT: 63,
-      BINARY_AND: 64,
-      BINARY_XOR: 65,
-      BINARY_OR: 66,
-      INPLACE_POWER: 67,
-      GET_ITER: 68,
-      PRINT_EXPR: 70,
-      PRINT_ITEM: 71,
-      PRINT_NEWLINE: 72,
-      PRINT_ITEM_TO: 73,
-      PRINT_NEWLINE_TO: 74,
-      INPLACE_LSHIFT: 75,
-      INPLACE_RSHIFT: 76,
-      INPLACE_AND: 77,
-      INPLACE_XOR: 78,
-      INPLACE_OR: 79,
-      BREAK_LOOP: 80,
-      WITH_CLEANUP: 81,
-      LOAD_LOCALS: 82,
-      RETURN_VALUE: 83,
-      IMPORT_STAR: 84,
-      EXEC_STMT: 85,
-      YIELD_VALUE: 86,
-      POP_BLOCK: 87,
-      END_FINALLY: 88,
-      BUILD_CLASS: 89,
-      STORE_NAME: 90,
-      DELETE_NAME: 91,
-      UNPACK_SEQUENCE: 92,
-      FOR_ITER: 93,
-      LIST_APPEND: 94,
-      STORE_ATTR: 95,
-      DELETE_ATTR: 96,
-      STORE_GLOBAL: 97,
-      DELETE_GLOBAL: 98,
-      DUP_TOPX: 99,
-      LOAD_CONST: 100,
-      LOAD_NAME: 101,
-      BUILD_TUPLE: 102,
-      BUILD_LIST: 103,
-      BUILD_SET: 104,
-      BUILD_MAP: 105,
-      LOAD_ATTR: 106,
-      COMPARE_OP: 107,
-      IMPORT_NAME: 108,
-      IMPORT_FROM: 109,
-      JUMP_FORWARD: 110,
-      JUMP_IF_FALSE_OR_POP: 111,
-      JUMP_IF_TRUE_OR_POP: 112,
-      JUMP_ABSOLUTE: 113,
-      POP_JUMP_IF_FALSE: 114,
-      POP_JUMP_IF_TRUE: 115,
-      LOAD_GLOBAL: 116,
-      CONTINUE_LOOP: 119,
-      SETUP_LOOP: 120,
-      SETUP_EXCEPT: 121,
-      SETUP_FINALLY: 122,
-      LOAD_FAST: 124,
-      STORE_FAST: 125,
-      DELETE_FAST: 126,
-      RAISE_VARARGS: 130,
-      CALL_FUNCTION: 131,
-      MAKE_FUNCTION: 132,
-      BUILD_SLICE: 133,
-      MAKE_CLOSURE: 134,
-      LOAD_CLOSURE: 135,
-      LOAD_DEREF: 136,
-      STORE_DEREF: 137,
-      CALL_FUNCTION_VAR: 140,
-      CALL_FUNCTION_KW: 141,
-      CALL_FUNCTION_VAR_KW: 142,
-      SETUP_WITH: 143,
-      EXTENDED_ARG: 145,
-      SET_ADD: 146,
-      MAP_ADD: 147,
+  <span class="kd">var</span> <span class="nx">OpArg</span> <span class="o">=</span> <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">OpArg</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">OpArg</span><span class="p">.</span><span class="nx">OpCodeEnum</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+      <span class="nx">STOP_CODE</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">POP_TOP</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">ROT_TWO</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="nx">ROT_THREE</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+      <span class="nx">DUP_TOP</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+      <span class="nx">ROT_FOUR</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+      <span class="nx">NOP</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
+      <span class="nx">UNARY_POSITIVE</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+      <span class="nx">UNARY_NEGATIVE</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
+      <span class="nx">UNARY_NOT</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
+      <span class="nx">UNARY_CONVERT</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
+      <span class="nx">UNARY_INVERT</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
+      <span class="nx">BINARY_POWER</span><span class="o">:</span> <span class="mi">19</span><span class="p">,</span>
+      <span class="nx">BINARY_MULTIPLY</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
+      <span class="nx">BINARY_DIVIDE</span><span class="o">:</span> <span class="mi">21</span><span class="p">,</span>
+      <span class="nx">BINARY_MODULO</span><span class="o">:</span> <span class="mi">22</span><span class="p">,</span>
+      <span class="nx">BINARY_ADD</span><span class="o">:</span> <span class="mi">23</span><span class="p">,</span>
+      <span class="nx">BINARY_SUBTRACT</span><span class="o">:</span> <span class="mi">24</span><span class="p">,</span>
+      <span class="nx">BINARY_SUBSCR</span><span class="o">:</span> <span class="mi">25</span><span class="p">,</span>
+      <span class="nx">BINARY_FLOOR_DIVIDE</span><span class="o">:</span> <span class="mi">26</span><span class="p">,</span>
+      <span class="nx">BINARY_TRUE_DIVIDE</span><span class="o">:</span> <span class="mi">27</span><span class="p">,</span>
+      <span class="nx">INPLACE_FLOOR_DIVIDE</span><span class="o">:</span> <span class="mi">28</span><span class="p">,</span>
+      <span class="nx">INPLACE_TRUE_DIVIDE</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span>
+      <span class="nx">SLICE_0</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span>
+      <span class="nx">SLICE_1</span><span class="o">:</span> <span class="mi">31</span><span class="p">,</span>
+      <span class="nx">SLICE_2</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span>
+      <span class="nx">SLICE_3</span><span class="o">:</span> <span class="mi">33</span><span class="p">,</span>
+      <span class="nx">STORE_SLICE_0</span><span class="o">:</span> <span class="mi">40</span><span class="p">,</span>
+      <span class="nx">STORE_SLICE_1</span><span class="o">:</span> <span class="mi">41</span><span class="p">,</span>
+      <span class="nx">STORE_SLICE_2</span><span class="o">:</span> <span class="mi">42</span><span class="p">,</span>
+      <span class="nx">STORE_SLICE_3</span><span class="o">:</span> <span class="mi">43</span><span class="p">,</span>
+      <span class="nx">DELETE_SLICE_0</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
+      <span class="nx">DELETE_SLICE_1</span><span class="o">:</span> <span class="mi">51</span><span class="p">,</span>
+      <span class="nx">DELETE_SLICE_2</span><span class="o">:</span> <span class="mi">52</span><span class="p">,</span>
+      <span class="nx">DELETE_SLICE_3</span><span class="o">:</span> <span class="mi">53</span><span class="p">,</span>
+      <span class="nx">STORE_MAP</span><span class="o">:</span> <span class="mi">54</span><span class="p">,</span>
+      <span class="nx">INPLACE_ADD</span><span class="o">:</span> <span class="mi">55</span><span class="p">,</span>
+      <span class="nx">INPLACE_SUBTRACT</span><span class="o">:</span> <span class="mi">56</span><span class="p">,</span>
+      <span class="nx">INPLACE_MULTIPLY</span><span class="o">:</span> <span class="mi">57</span><span class="p">,</span>
+      <span class="nx">INPLACE_DIVIDE</span><span class="o">:</span> <span class="mi">58</span><span class="p">,</span>
+      <span class="nx">INPLACE_MODULO</span><span class="o">:</span> <span class="mi">59</span><span class="p">,</span>
+      <span class="nx">STORE_SUBSCR</span><span class="o">:</span> <span class="mi">60</span><span class="p">,</span>
+      <span class="nx">DELETE_SUBSCR</span><span class="o">:</span> <span class="mi">61</span><span class="p">,</span>
+      <span class="nx">BINARY_LSHIFT</span><span class="o">:</span> <span class="mi">62</span><span class="p">,</span>
+      <span class="nx">BINARY_RSHIFT</span><span class="o">:</span> <span class="mi">63</span><span class="p">,</span>
+      <span class="nx">BINARY_AND</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
+      <span class="nx">BINARY_XOR</span><span class="o">:</span> <span class="mi">65</span><span class="p">,</span>
+      <span class="nx">BINARY_OR</span><span class="o">:</span> <span class="mi">66</span><span class="p">,</span>
+      <span class="nx">INPLACE_POWER</span><span class="o">:</span> <span class="mi">67</span><span class="p">,</span>
+      <span class="nx">GET_ITER</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
+      <span class="nx">PRINT_EXPR</span><span class="o">:</span> <span class="mi">70</span><span class="p">,</span>
+      <span class="nx">PRINT_ITEM</span><span class="o">:</span> <span class="mi">71</span><span class="p">,</span>
+      <span class="nx">PRINT_NEWLINE</span><span class="o">:</span> <span class="mi">72</span><span class="p">,</span>
+      <span class="nx">PRINT_ITEM_TO</span><span class="o">:</span> <span class="mi">73</span><span class="p">,</span>
+      <span class="nx">PRINT_NEWLINE_TO</span><span class="o">:</span> <span class="mi">74</span><span class="p">,</span>
+      <span class="nx">INPLACE_LSHIFT</span><span class="o">:</span> <span class="mi">75</span><span class="p">,</span>
+      <span class="nx">INPLACE_RSHIFT</span><span class="o">:</span> <span class="mi">76</span><span class="p">,</span>
+      <span class="nx">INPLACE_AND</span><span class="o">:</span> <span class="mi">77</span><span class="p">,</span>
+      <span class="nx">INPLACE_XOR</span><span class="o">:</span> <span class="mi">78</span><span class="p">,</span>
+      <span class="nx">INPLACE_OR</span><span class="o">:</span> <span class="mi">79</span><span class="p">,</span>
+      <span class="nx">BREAK_LOOP</span><span class="o">:</span> <span class="mi">80</span><span class="p">,</span>
+      <span class="nx">WITH_CLEANUP</span><span class="o">:</span> <span class="mi">81</span><span class="p">,</span>
+      <span class="nx">LOAD_LOCALS</span><span class="o">:</span> <span class="mi">82</span><span class="p">,</span>
+      <span class="nx">RETURN_VALUE</span><span class="o">:</span> <span class="mi">83</span><span class="p">,</span>
+      <span class="nx">IMPORT_STAR</span><span class="o">:</span> <span class="mi">84</span><span class="p">,</span>
+      <span class="nx">EXEC_STMT</span><span class="o">:</span> <span class="mi">85</span><span class="p">,</span>
+      <span class="nx">YIELD_VALUE</span><span class="o">:</span> <span class="mi">86</span><span class="p">,</span>
+      <span class="nx">POP_BLOCK</span><span class="o">:</span> <span class="mi">87</span><span class="p">,</span>
+      <span class="nx">END_FINALLY</span><span class="o">:</span> <span class="mi">88</span><span class="p">,</span>
+      <span class="nx">BUILD_CLASS</span><span class="o">:</span> <span class="mi">89</span><span class="p">,</span>
+      <span class="nx">STORE_NAME</span><span class="o">:</span> <span class="mi">90</span><span class="p">,</span>
+      <span class="nx">DELETE_NAME</span><span class="o">:</span> <span class="mi">91</span><span class="p">,</span>
+      <span class="nx">UNPACK_SEQUENCE</span><span class="o">:</span> <span class="mi">92</span><span class="p">,</span>
+      <span class="nx">FOR_ITER</span><span class="o">:</span> <span class="mi">93</span><span class="p">,</span>
+      <span class="nx">LIST_APPEND</span><span class="o">:</span> <span class="mi">94</span><span class="p">,</span>
+      <span class="nx">STORE_ATTR</span><span class="o">:</span> <span class="mi">95</span><span class="p">,</span>
+      <span class="nx">DELETE_ATTR</span><span class="o">:</span> <span class="mi">96</span><span class="p">,</span>
+      <span class="nx">STORE_GLOBAL</span><span class="o">:</span> <span class="mi">97</span><span class="p">,</span>
+      <span class="nx">DELETE_GLOBAL</span><span class="o">:</span> <span class="mi">98</span><span class="p">,</span>
+      <span class="nx">DUP_TOPX</span><span class="o">:</span> <span class="mi">99</span><span class="p">,</span>
+      <span class="nx">LOAD_CONST</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+      <span class="nx">LOAD_NAME</span><span class="o">:</span> <span class="mi">101</span><span class="p">,</span>
+      <span class="nx">BUILD_TUPLE</span><span class="o">:</span> <span class="mi">102</span><span class="p">,</span>
+      <span class="nx">BUILD_LIST</span><span class="o">:</span> <span class="mi">103</span><span class="p">,</span>
+      <span class="nx">BUILD_SET</span><span class="o">:</span> <span class="mi">104</span><span class="p">,</span>
+      <span class="nx">BUILD_MAP</span><span class="o">:</span> <span class="mi">105</span><span class="p">,</span>
+      <span class="nx">LOAD_ATTR</span><span class="o">:</span> <span class="mi">106</span><span class="p">,</span>
+      <span class="nx">COMPARE_OP</span><span class="o">:</span> <span class="mi">107</span><span class="p">,</span>
+      <span class="nx">IMPORT_NAME</span><span class="o">:</span> <span class="mi">108</span><span class="p">,</span>
+      <span class="nx">IMPORT_FROM</span><span class="o">:</span> <span class="mi">109</span><span class="p">,</span>
+      <span class="nx">JUMP_FORWARD</span><span class="o">:</span> <span class="mi">110</span><span class="p">,</span>
+      <span class="nx">JUMP_IF_FALSE_OR_POP</span><span class="o">:</span> <span class="mi">111</span><span class="p">,</span>
+      <span class="nx">JUMP_IF_TRUE_OR_POP</span><span class="o">:</span> <span class="mi">112</span><span class="p">,</span>
+      <span class="nx">JUMP_ABSOLUTE</span><span class="o">:</span> <span class="mi">113</span><span class="p">,</span>
+      <span class="nx">POP_JUMP_IF_FALSE</span><span class="o">:</span> <span class="mi">114</span><span class="p">,</span>
+      <span class="nx">POP_JUMP_IF_TRUE</span><span class="o">:</span> <span class="mi">115</span><span class="p">,</span>
+      <span class="nx">LOAD_GLOBAL</span><span class="o">:</span> <span class="mi">116</span><span class="p">,</span>
+      <span class="nx">CONTINUE_LOOP</span><span class="o">:</span> <span class="mi">119</span><span class="p">,</span>
+      <span class="nx">SETUP_LOOP</span><span class="o">:</span> <span class="mi">120</span><span class="p">,</span>
+      <span class="nx">SETUP_EXCEPT</span><span class="o">:</span> <span class="mi">121</span><span class="p">,</span>
+      <span class="nx">SETUP_FINALLY</span><span class="o">:</span> <span class="mi">122</span><span class="p">,</span>
+      <span class="nx">LOAD_FAST</span><span class="o">:</span> <span class="mi">124</span><span class="p">,</span>
+      <span class="nx">STORE_FAST</span><span class="o">:</span> <span class="mi">125</span><span class="p">,</span>
+      <span class="nx">DELETE_FAST</span><span class="o">:</span> <span class="mi">126</span><span class="p">,</span>
+      <span class="nx">RAISE_VARARGS</span><span class="o">:</span> <span class="mi">130</span><span class="p">,</span>
+      <span class="nx">CALL_FUNCTION</span><span class="o">:</span> <span class="mi">131</span><span class="p">,</span>
+      <span class="nx">MAKE_FUNCTION</span><span class="o">:</span> <span class="mi">132</span><span class="p">,</span>
+      <span class="nx">BUILD_SLICE</span><span class="o">:</span> <span class="mi">133</span><span class="p">,</span>
+      <span class="nx">MAKE_CLOSURE</span><span class="o">:</span> <span class="mi">134</span><span class="p">,</span>
+      <span class="nx">LOAD_CLOSURE</span><span class="o">:</span> <span class="mi">135</span><span class="p">,</span>
+      <span class="nx">LOAD_DEREF</span><span class="o">:</span> <span class="mi">136</span><span class="p">,</span>
+      <span class="nx">STORE_DEREF</span><span class="o">:</span> <span class="mi">137</span><span class="p">,</span>
+      <span class="nx">CALL_FUNCTION_VAR</span><span class="o">:</span> <span class="mi">140</span><span class="p">,</span>
+      <span class="nx">CALL_FUNCTION_KW</span><span class="o">:</span> <span class="mi">141</span><span class="p">,</span>
+      <span class="nx">CALL_FUNCTION_VAR_KW</span><span class="o">:</span> <span class="mi">142</span><span class="p">,</span>
+      <span class="nx">SETUP_WITH</span><span class="o">:</span> <span class="mi">143</span><span class="p">,</span>
+      <span class="nx">EXTENDED_ARG</span><span class="o">:</span> <span class="mi">145</span><span class="p">,</span>
+      <span class="nx">SET_ADD</span><span class="o">:</span> <span class="mi">146</span><span class="p">,</span>
+      <span class="nx">MAP_ADD</span><span class="o">:</span> <span class="mi">147</span><span class="p">,</span>
 
-      0: &quot;STOP_CODE&quot;,
-      1: &quot;POP_TOP&quot;,
-      2: &quot;ROT_TWO&quot;,
-      3: &quot;ROT_THREE&quot;,
-      4: &quot;DUP_TOP&quot;,
-      5: &quot;ROT_FOUR&quot;,
-      9: &quot;NOP&quot;,
-      10: &quot;UNARY_POSITIVE&quot;,
-      11: &quot;UNARY_NEGATIVE&quot;,
-      12: &quot;UNARY_NOT&quot;,
-      13: &quot;UNARY_CONVERT&quot;,
-      15: &quot;UNARY_INVERT&quot;,
-      19: &quot;BINARY_POWER&quot;,
-      20: &quot;BINARY_MULTIPLY&quot;,
-      21: &quot;BINARY_DIVIDE&quot;,
-      22: &quot;BINARY_MODULO&quot;,
-      23: &quot;BINARY_ADD&quot;,
-      24: &quot;BINARY_SUBTRACT&quot;,
-      25: &quot;BINARY_SUBSCR&quot;,
-      26: &quot;BINARY_FLOOR_DIVIDE&quot;,
-      27: &quot;BINARY_TRUE_DIVIDE&quot;,
-      28: &quot;INPLACE_FLOOR_DIVIDE&quot;,
-      29: &quot;INPLACE_TRUE_DIVIDE&quot;,
-      30: &quot;SLICE_0&quot;,
-      31: &quot;SLICE_1&quot;,
-      32: &quot;SLICE_2&quot;,
-      33: &quot;SLICE_3&quot;,
-      40: &quot;STORE_SLICE_0&quot;,
-      41: &quot;STORE_SLICE_1&quot;,
-      42: &quot;STORE_SLICE_2&quot;,
-      43: &quot;STORE_SLICE_3&quot;,
-      50: &quot;DELETE_SLICE_0&quot;,
-      51: &quot;DELETE_SLICE_1&quot;,
-      52: &quot;DELETE_SLICE_2&quot;,
-      53: &quot;DELETE_SLICE_3&quot;,
-      54: &quot;STORE_MAP&quot;,
-      55: &quot;INPLACE_ADD&quot;,
-      56: &quot;INPLACE_SUBTRACT&quot;,
-      57: &quot;INPLACE_MULTIPLY&quot;,
-      58: &quot;INPLACE_DIVIDE&quot;,
-      59: &quot;INPLACE_MODULO&quot;,
-      60: &quot;STORE_SUBSCR&quot;,
-      61: &quot;DELETE_SUBSCR&quot;,
-      62: &quot;BINARY_LSHIFT&quot;,
-      63: &quot;BINARY_RSHIFT&quot;,
-      64: &quot;BINARY_AND&quot;,
-      65: &quot;BINARY_XOR&quot;,
-      66: &quot;BINARY_OR&quot;,
-      67: &quot;INPLACE_POWER&quot;,
-      68: &quot;GET_ITER&quot;,
-      70: &quot;PRINT_EXPR&quot;,
-      71: &quot;PRINT_ITEM&quot;,
-      72: &quot;PRINT_NEWLINE&quot;,
-      73: &quot;PRINT_ITEM_TO&quot;,
-      74: &quot;PRINT_NEWLINE_TO&quot;,
-      75: &quot;INPLACE_LSHIFT&quot;,
-      76: &quot;INPLACE_RSHIFT&quot;,
-      77: &quot;INPLACE_AND&quot;,
-      78: &quot;INPLACE_XOR&quot;,
-      79: &quot;INPLACE_OR&quot;,
-      80: &quot;BREAK_LOOP&quot;,
-      81: &quot;WITH_CLEANUP&quot;,
-      82: &quot;LOAD_LOCALS&quot;,
-      83: &quot;RETURN_VALUE&quot;,
-      84: &quot;IMPORT_STAR&quot;,
-      85: &quot;EXEC_STMT&quot;,
-      86: &quot;YIELD_VALUE&quot;,
-      87: &quot;POP_BLOCK&quot;,
-      88: &quot;END_FINALLY&quot;,
-      89: &quot;BUILD_CLASS&quot;,
-      90: &quot;STORE_NAME&quot;,
-      91: &quot;DELETE_NAME&quot;,
-      92: &quot;UNPACK_SEQUENCE&quot;,
-      93: &quot;FOR_ITER&quot;,
-      94: &quot;LIST_APPEND&quot;,
-      95: &quot;STORE_ATTR&quot;,
-      96: &quot;DELETE_ATTR&quot;,
-      97: &quot;STORE_GLOBAL&quot;,
-      98: &quot;DELETE_GLOBAL&quot;,
-      99: &quot;DUP_TOPX&quot;,
-      100: &quot;LOAD_CONST&quot;,
-      101: &quot;LOAD_NAME&quot;,
-      102: &quot;BUILD_TUPLE&quot;,
-      103: &quot;BUILD_LIST&quot;,
-      104: &quot;BUILD_SET&quot;,
-      105: &quot;BUILD_MAP&quot;,
-      106: &quot;LOAD_ATTR&quot;,
-      107: &quot;COMPARE_OP&quot;,
-      108: &quot;IMPORT_NAME&quot;,
-      109: &quot;IMPORT_FROM&quot;,
-      110: &quot;JUMP_FORWARD&quot;,
-      111: &quot;JUMP_IF_FALSE_OR_POP&quot;,
-      112: &quot;JUMP_IF_TRUE_OR_POP&quot;,
-      113: &quot;JUMP_ABSOLUTE&quot;,
-      114: &quot;POP_JUMP_IF_FALSE&quot;,
-      115: &quot;POP_JUMP_IF_TRUE&quot;,
-      116: &quot;LOAD_GLOBAL&quot;,
-      119: &quot;CONTINUE_LOOP&quot;,
-      120: &quot;SETUP_LOOP&quot;,
-      121: &quot;SETUP_EXCEPT&quot;,
-      122: &quot;SETUP_FINALLY&quot;,
-      124: &quot;LOAD_FAST&quot;,
-      125: &quot;STORE_FAST&quot;,
-      126: &quot;DELETE_FAST&quot;,
-      130: &quot;RAISE_VARARGS&quot;,
-      131: &quot;CALL_FUNCTION&quot;,
-      132: &quot;MAKE_FUNCTION&quot;,
-      133: &quot;BUILD_SLICE&quot;,
-      134: &quot;MAKE_CLOSURE&quot;,
-      135: &quot;LOAD_CLOSURE&quot;,
-      136: &quot;LOAD_DEREF&quot;,
-      137: &quot;STORE_DEREF&quot;,
-      140: &quot;CALL_FUNCTION_VAR&quot;,
-      141: &quot;CALL_FUNCTION_KW&quot;,
-      142: &quot;CALL_FUNCTION_VAR_KW&quot;,
-      143: &quot;SETUP_WITH&quot;,
-      145: &quot;EXTENDED_ARG&quot;,
-      146: &quot;SET_ADD&quot;,
-      147: &quot;MAP_ADD&quot;,
-    });
+      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;STOP_CODE&quot;</span><span class="p">,</span>
+      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;POP_TOP&quot;</span><span class="p">,</span>
+      <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;ROT_TWO&quot;</span><span class="p">,</span>
+      <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;ROT_THREE&quot;</span><span class="p">,</span>
+      <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;DUP_TOP&quot;</span><span class="p">,</span>
+      <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;ROT_FOUR&quot;</span><span class="p">,</span>
+      <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;NOP&quot;</span><span class="p">,</span>
+      <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;UNARY_POSITIVE&quot;</span><span class="p">,</span>
+      <span class="mi">11</span><span class="o">:</span> <span class="s2">&quot;UNARY_NEGATIVE&quot;</span><span class="p">,</span>
+      <span class="mi">12</span><span class="o">:</span> <span class="s2">&quot;UNARY_NOT&quot;</span><span class="p">,</span>
+      <span class="mi">13</span><span class="o">:</span> <span class="s2">&quot;UNARY_CONVERT&quot;</span><span class="p">,</span>
+      <span class="mi">15</span><span class="o">:</span> <span class="s2">&quot;UNARY_INVERT&quot;</span><span class="p">,</span>
+      <span class="mi">19</span><span class="o">:</span> <span class="s2">&quot;BINARY_POWER&quot;</span><span class="p">,</span>
+      <span class="mi">20</span><span class="o">:</span> <span class="s2">&quot;BINARY_MULTIPLY&quot;</span><span class="p">,</span>
+      <span class="mi">21</span><span class="o">:</span> <span class="s2">&quot;BINARY_DIVIDE&quot;</span><span class="p">,</span>
+      <span class="mi">22</span><span class="o">:</span> <span class="s2">&quot;BINARY_MODULO&quot;</span><span class="p">,</span>
+      <span class="mi">23</span><span class="o">:</span> <span class="s2">&quot;BINARY_ADD&quot;</span><span class="p">,</span>
+      <span class="mi">24</span><span class="o">:</span> <span class="s2">&quot;BINARY_SUBTRACT&quot;</span><span class="p">,</span>
+      <span class="mi">25</span><span class="o">:</span> <span class="s2">&quot;BINARY_SUBSCR&quot;</span><span class="p">,</span>
+      <span class="mi">26</span><span class="o">:</span> <span class="s2">&quot;BINARY_FLOOR_DIVIDE&quot;</span><span class="p">,</span>
+      <span class="mi">27</span><span class="o">:</span> <span class="s2">&quot;BINARY_TRUE_DIVIDE&quot;</span><span class="p">,</span>
+      <span class="mi">28</span><span class="o">:</span> <span class="s2">&quot;INPLACE_FLOOR_DIVIDE&quot;</span><span class="p">,</span>
+      <span class="mi">29</span><span class="o">:</span> <span class="s2">&quot;INPLACE_TRUE_DIVIDE&quot;</span><span class="p">,</span>
+      <span class="mi">30</span><span class="o">:</span> <span class="s2">&quot;SLICE_0&quot;</span><span class="p">,</span>
+      <span class="mi">31</span><span class="o">:</span> <span class="s2">&quot;SLICE_1&quot;</span><span class="p">,</span>
+      <span class="mi">32</span><span class="o">:</span> <span class="s2">&quot;SLICE_2&quot;</span><span class="p">,</span>
+      <span class="mi">33</span><span class="o">:</span> <span class="s2">&quot;SLICE_3&quot;</span><span class="p">,</span>
+      <span class="mi">40</span><span class="o">:</span> <span class="s2">&quot;STORE_SLICE_0&quot;</span><span class="p">,</span>
+      <span class="mi">41</span><span class="o">:</span> <span class="s2">&quot;STORE_SLICE_1&quot;</span><span class="p">,</span>
+      <span class="mi">42</span><span class="o">:</span> <span class="s2">&quot;STORE_SLICE_2&quot;</span><span class="p">,</span>
+      <span class="mi">43</span><span class="o">:</span> <span class="s2">&quot;STORE_SLICE_3&quot;</span><span class="p">,</span>
+      <span class="mi">50</span><span class="o">:</span> <span class="s2">&quot;DELETE_SLICE_0&quot;</span><span class="p">,</span>
+      <span class="mi">51</span><span class="o">:</span> <span class="s2">&quot;DELETE_SLICE_1&quot;</span><span class="p">,</span>
+      <span class="mi">52</span><span class="o">:</span> <span class="s2">&quot;DELETE_SLICE_2&quot;</span><span class="p">,</span>
+      <span class="mi">53</span><span class="o">:</span> <span class="s2">&quot;DELETE_SLICE_3&quot;</span><span class="p">,</span>
+      <span class="mi">54</span><span class="o">:</span> <span class="s2">&quot;STORE_MAP&quot;</span><span class="p">,</span>
+      <span class="mi">55</span><span class="o">:</span> <span class="s2">&quot;INPLACE_ADD&quot;</span><span class="p">,</span>
+      <span class="mi">56</span><span class="o">:</span> <span class="s2">&quot;INPLACE_SUBTRACT&quot;</span><span class="p">,</span>
+      <span class="mi">57</span><span class="o">:</span> <span class="s2">&quot;INPLACE_MULTIPLY&quot;</span><span class="p">,</span>
+      <span class="mi">58</span><span class="o">:</span> <span class="s2">&quot;INPLACE_DIVIDE&quot;</span><span class="p">,</span>
+      <span class="mi">59</span><span class="o">:</span> <span class="s2">&quot;INPLACE_MODULO&quot;</span><span class="p">,</span>
+      <span class="mi">60</span><span class="o">:</span> <span class="s2">&quot;STORE_SUBSCR&quot;</span><span class="p">,</span>
+      <span class="mi">61</span><span class="o">:</span> <span class="s2">&quot;DELETE_SUBSCR&quot;</span><span class="p">,</span>
+      <span class="mi">62</span><span class="o">:</span> <span class="s2">&quot;BINARY_LSHIFT&quot;</span><span class="p">,</span>
+      <span class="mi">63</span><span class="o">:</span> <span class="s2">&quot;BINARY_RSHIFT&quot;</span><span class="p">,</span>
+      <span class="mi">64</span><span class="o">:</span> <span class="s2">&quot;BINARY_AND&quot;</span><span class="p">,</span>
+      <span class="mi">65</span><span class="o">:</span> <span class="s2">&quot;BINARY_XOR&quot;</span><span class="p">,</span>
+      <span class="mi">66</span><span class="o">:</span> <span class="s2">&quot;BINARY_OR&quot;</span><span class="p">,</span>
+      <span class="mi">67</span><span class="o">:</span> <span class="s2">&quot;INPLACE_POWER&quot;</span><span class="p">,</span>
+      <span class="mi">68</span><span class="o">:</span> <span class="s2">&quot;GET_ITER&quot;</span><span class="p">,</span>
+      <span class="mi">70</span><span class="o">:</span> <span class="s2">&quot;PRINT_EXPR&quot;</span><span class="p">,</span>
+      <span class="mi">71</span><span class="o">:</span> <span class="s2">&quot;PRINT_ITEM&quot;</span><span class="p">,</span>
+      <span class="mi">72</span><span class="o">:</span> <span class="s2">&quot;PRINT_NEWLINE&quot;</span><span class="p">,</span>
+      <span class="mi">73</span><span class="o">:</span> <span class="s2">&quot;PRINT_ITEM_TO&quot;</span><span class="p">,</span>
+      <span class="mi">74</span><span class="o">:</span> <span class="s2">&quot;PRINT_NEWLINE_TO&quot;</span><span class="p">,</span>
+      <span class="mi">75</span><span class="o">:</span> <span class="s2">&quot;INPLACE_LSHIFT&quot;</span><span class="p">,</span>
+      <span class="mi">76</span><span class="o">:</span> <span class="s2">&quot;INPLACE_RSHIFT&quot;</span><span class="p">,</span>
+      <span class="mi">77</span><span class="o">:</span> <span class="s2">&quot;INPLACE_AND&quot;</span><span class="p">,</span>
+      <span class="mi">78</span><span class="o">:</span> <span class="s2">&quot;INPLACE_XOR&quot;</span><span class="p">,</span>
+      <span class="mi">79</span><span class="o">:</span> <span class="s2">&quot;INPLACE_OR&quot;</span><span class="p">,</span>
+      <span class="mi">80</span><span class="o">:</span> <span class="s2">&quot;BREAK_LOOP&quot;</span><span class="p">,</span>
+      <span class="mi">81</span><span class="o">:</span> <span class="s2">&quot;WITH_CLEANUP&quot;</span><span class="p">,</span>
+      <span class="mi">82</span><span class="o">:</span> <span class="s2">&quot;LOAD_LOCALS&quot;</span><span class="p">,</span>
+      <span class="mi">83</span><span class="o">:</span> <span class="s2">&quot;RETURN_VALUE&quot;</span><span class="p">,</span>
+      <span class="mi">84</span><span class="o">:</span> <span class="s2">&quot;IMPORT_STAR&quot;</span><span class="p">,</span>
+      <span class="mi">85</span><span class="o">:</span> <span class="s2">&quot;EXEC_STMT&quot;</span><span class="p">,</span>
+      <span class="mi">86</span><span class="o">:</span> <span class="s2">&quot;YIELD_VALUE&quot;</span><span class="p">,</span>
+      <span class="mi">87</span><span class="o">:</span> <span class="s2">&quot;POP_BLOCK&quot;</span><span class="p">,</span>
+      <span class="mi">88</span><span class="o">:</span> <span class="s2">&quot;END_FINALLY&quot;</span><span class="p">,</span>
+      <span class="mi">89</span><span class="o">:</span> <span class="s2">&quot;BUILD_CLASS&quot;</span><span class="p">,</span>
+      <span class="mi">90</span><span class="o">:</span> <span class="s2">&quot;STORE_NAME&quot;</span><span class="p">,</span>
+      <span class="mi">91</span><span class="o">:</span> <span class="s2">&quot;DELETE_NAME&quot;</span><span class="p">,</span>
+      <span class="mi">92</span><span class="o">:</span> <span class="s2">&quot;UNPACK_SEQUENCE&quot;</span><span class="p">,</span>
+      <span class="mi">93</span><span class="o">:</span> <span class="s2">&quot;FOR_ITER&quot;</span><span class="p">,</span>
+      <span class="mi">94</span><span class="o">:</span> <span class="s2">&quot;LIST_APPEND&quot;</span><span class="p">,</span>
+      <span class="mi">95</span><span class="o">:</span> <span class="s2">&quot;STORE_ATTR&quot;</span><span class="p">,</span>
+      <span class="mi">96</span><span class="o">:</span> <span class="s2">&quot;DELETE_ATTR&quot;</span><span class="p">,</span>
+      <span class="mi">97</span><span class="o">:</span> <span class="s2">&quot;STORE_GLOBAL&quot;</span><span class="p">,</span>
+      <span class="mi">98</span><span class="o">:</span> <span class="s2">&quot;DELETE_GLOBAL&quot;</span><span class="p">,</span>
+      <span class="mi">99</span><span class="o">:</span> <span class="s2">&quot;DUP_TOPX&quot;</span><span class="p">,</span>
+      <span class="mi">100</span><span class="o">:</span> <span class="s2">&quot;LOAD_CONST&quot;</span><span class="p">,</span>
+      <span class="mi">101</span><span class="o">:</span> <span class="s2">&quot;LOAD_NAME&quot;</span><span class="p">,</span>
+      <span class="mi">102</span><span class="o">:</span> <span class="s2">&quot;BUILD_TUPLE&quot;</span><span class="p">,</span>
+      <span class="mi">103</span><span class="o">:</span> <span class="s2">&quot;BUILD_LIST&quot;</span><span class="p">,</span>
+      <span class="mi">104</span><span class="o">:</span> <span class="s2">&quot;BUILD_SET&quot;</span><span class="p">,</span>
+      <span class="mi">105</span><span class="o">:</span> <span class="s2">&quot;BUILD_MAP&quot;</span><span class="p">,</span>
+      <span class="mi">106</span><span class="o">:</span> <span class="s2">&quot;LOAD_ATTR&quot;</span><span class="p">,</span>
+      <span class="mi">107</span><span class="o">:</span> <span class="s2">&quot;COMPARE_OP&quot;</span><span class="p">,</span>
+      <span class="mi">108</span><span class="o">:</span> <span class="s2">&quot;IMPORT_NAME&quot;</span><span class="p">,</span>
+      <span class="mi">109</span><span class="o">:</span> <span class="s2">&quot;IMPORT_FROM&quot;</span><span class="p">,</span>
+      <span class="mi">110</span><span class="o">:</span> <span class="s2">&quot;JUMP_FORWARD&quot;</span><span class="p">,</span>
+      <span class="mi">111</span><span class="o">:</span> <span class="s2">&quot;JUMP_IF_FALSE_OR_POP&quot;</span><span class="p">,</span>
+      <span class="mi">112</span><span class="o">:</span> <span class="s2">&quot;JUMP_IF_TRUE_OR_POP&quot;</span><span class="p">,</span>
+      <span class="mi">113</span><span class="o">:</span> <span class="s2">&quot;JUMP_ABSOLUTE&quot;</span><span class="p">,</span>
+      <span class="mi">114</span><span class="o">:</span> <span class="s2">&quot;POP_JUMP_IF_FALSE&quot;</span><span class="p">,</span>
+      <span class="mi">115</span><span class="o">:</span> <span class="s2">&quot;POP_JUMP_IF_TRUE&quot;</span><span class="p">,</span>
+      <span class="mi">116</span><span class="o">:</span> <span class="s2">&quot;LOAD_GLOBAL&quot;</span><span class="p">,</span>
+      <span class="mi">119</span><span class="o">:</span> <span class="s2">&quot;CONTINUE_LOOP&quot;</span><span class="p">,</span>
+      <span class="mi">120</span><span class="o">:</span> <span class="s2">&quot;SETUP_LOOP&quot;</span><span class="p">,</span>
+      <span class="mi">121</span><span class="o">:</span> <span class="s2">&quot;SETUP_EXCEPT&quot;</span><span class="p">,</span>
+      <span class="mi">122</span><span class="o">:</span> <span class="s2">&quot;SETUP_FINALLY&quot;</span><span class="p">,</span>
+      <span class="mi">124</span><span class="o">:</span> <span class="s2">&quot;LOAD_FAST&quot;</span><span class="p">,</span>
+      <span class="mi">125</span><span class="o">:</span> <span class="s2">&quot;STORE_FAST&quot;</span><span class="p">,</span>
+      <span class="mi">126</span><span class="o">:</span> <span class="s2">&quot;DELETE_FAST&quot;</span><span class="p">,</span>
+      <span class="mi">130</span><span class="o">:</span> <span class="s2">&quot;RAISE_VARARGS&quot;</span><span class="p">,</span>
+      <span class="mi">131</span><span class="o">:</span> <span class="s2">&quot;CALL_FUNCTION&quot;</span><span class="p">,</span>
+      <span class="mi">132</span><span class="o">:</span> <span class="s2">&quot;MAKE_FUNCTION&quot;</span><span class="p">,</span>
+      <span class="mi">133</span><span class="o">:</span> <span class="s2">&quot;BUILD_SLICE&quot;</span><span class="p">,</span>
+      <span class="mi">134</span><span class="o">:</span> <span class="s2">&quot;MAKE_CLOSURE&quot;</span><span class="p">,</span>
+      <span class="mi">135</span><span class="o">:</span> <span class="s2">&quot;LOAD_CLOSURE&quot;</span><span class="p">,</span>
+      <span class="mi">136</span><span class="o">:</span> <span class="s2">&quot;LOAD_DEREF&quot;</span><span class="p">,</span>
+      <span class="mi">137</span><span class="o">:</span> <span class="s2">&quot;STORE_DEREF&quot;</span><span class="p">,</span>
+      <span class="mi">140</span><span class="o">:</span> <span class="s2">&quot;CALL_FUNCTION_VAR&quot;</span><span class="p">,</span>
+      <span class="mi">141</span><span class="o">:</span> <span class="s2">&quot;CALL_FUNCTION_KW&quot;</span><span class="p">,</span>
+      <span class="mi">142</span><span class="o">:</span> <span class="s2">&quot;CALL_FUNCTION_VAR_KW&quot;</span><span class="p">,</span>
+      <span class="mi">143</span><span class="o">:</span> <span class="s2">&quot;SETUP_WITH&quot;</span><span class="p">,</span>
+      <span class="mi">145</span><span class="o">:</span> <span class="s2">&quot;EXTENDED_ARG&quot;</span><span class="p">,</span>
+      <span class="mi">146</span><span class="o">:</span> <span class="s2">&quot;SET_ADD&quot;</span><span class="p">,</span>
+      <span class="mi">147</span><span class="o">:</span> <span class="s2">&quot;MAP_ADD&quot;</span><span class="p">,</span>
+    <span class="p">});</span>
 
-    function OpArg(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+    <span class="kd">function</span> <span class="nx">OpArg</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    OpArg.prototype._read = function() {
-      this.opCode = this._io.readU1();
-      if (this.opCode &gt;= PythonPyc27.OpArg.OpCodeEnum.STORE_NAME) {
-        this.arg = this._io.readU2le();
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">OpArg</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">opCode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">opCode</span> <span class="o">&gt;=</span> <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">OpArg</span><span class="p">.</span><span class="nx">OpCodeEnum</span><span class="p">.</span><span class="nx">STORE_NAME</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return OpArg;
-  })();
+    <span class="k">return</span> <span class="nx">OpArg</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var PyObject = PythonPyc27.PyObject = (function() {
-    PyObject.ObjectType = Object.freeze({
-      TUPLE: 40,
-      PY_FALSE: 70,
-      NONE: 78,
-      STRING_REF: 82,
-      PY_TRUE: 84,
-      CODE_OBJECT: 99,
-      INT: 105,
-      STRING: 115,
-      INTERNED: 116,
-      UNICODE_STRING: 117,
+  <span class="kd">var</span> <span class="nx">PyObject</span> <span class="o">=</span> <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">PyObject</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">PyObject</span><span class="p">.</span><span class="nx">ObjectType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+      <span class="nx">TUPLE</span><span class="o">:</span> <span class="mi">40</span><span class="p">,</span>
+      <span class="nx">PY_FALSE</span><span class="o">:</span> <span class="mi">70</span><span class="p">,</span>
+      <span class="nx">NONE</span><span class="o">:</span> <span class="mi">78</span><span class="p">,</span>
+      <span class="nx">STRING_REF</span><span class="o">:</span> <span class="mi">82</span><span class="p">,</span>
+      <span class="nx">PY_TRUE</span><span class="o">:</span> <span class="mi">84</span><span class="p">,</span>
+      <span class="nx">CODE_OBJECT</span><span class="o">:</span> <span class="mi">99</span><span class="p">,</span>
+      <span class="nx">INT</span><span class="o">:</span> <span class="mi">105</span><span class="p">,</span>
+      <span class="nx">STRING</span><span class="o">:</span> <span class="mi">115</span><span class="p">,</span>
+      <span class="nx">INTERNED</span><span class="o">:</span> <span class="mi">116</span><span class="p">,</span>
+      <span class="nx">UNICODE_STRING</span><span class="o">:</span> <span class="mi">117</span><span class="p">,</span>
 
-      40: &quot;TUPLE&quot;,
-      70: &quot;PY_FALSE&quot;,
-      78: &quot;NONE&quot;,
-      82: &quot;STRING_REF&quot;,
-      84: &quot;PY_TRUE&quot;,
-      99: &quot;CODE_OBJECT&quot;,
-      105: &quot;INT&quot;,
-      115: &quot;STRING&quot;,
-      116: &quot;INTERNED&quot;,
-      117: &quot;UNICODE_STRING&quot;,
-    });
+      <span class="mi">40</span><span class="o">:</span> <span class="s2">&quot;TUPLE&quot;</span><span class="p">,</span>
+      <span class="mi">70</span><span class="o">:</span> <span class="s2">&quot;PY_FALSE&quot;</span><span class="p">,</span>
+      <span class="mi">78</span><span class="o">:</span> <span class="s2">&quot;NONE&quot;</span><span class="p">,</span>
+      <span class="mi">82</span><span class="o">:</span> <span class="s2">&quot;STRING_REF&quot;</span><span class="p">,</span>
+      <span class="mi">84</span><span class="o">:</span> <span class="s2">&quot;PY_TRUE&quot;</span><span class="p">,</span>
+      <span class="mi">99</span><span class="o">:</span> <span class="s2">&quot;CODE_OBJECT&quot;</span><span class="p">,</span>
+      <span class="mi">105</span><span class="o">:</span> <span class="s2">&quot;INT&quot;</span><span class="p">,</span>
+      <span class="mi">115</span><span class="o">:</span> <span class="s2">&quot;STRING&quot;</span><span class="p">,</span>
+      <span class="mi">116</span><span class="o">:</span> <span class="s2">&quot;INTERNED&quot;</span><span class="p">,</span>
+      <span class="mi">117</span><span class="o">:</span> <span class="s2">&quot;UNICODE_STRING&quot;</span><span class="p">,</span>
+    <span class="p">});</span>
 
-    function PyObject(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+    <span class="kd">function</span> <span class="nx">PyObject</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    PyObject.prototype._read = function() {
-      this.type = this._io.readU1();
-      switch (this.type) {
-      case PythonPyc27.PyObject.ObjectType.NONE:
-        this.value = new PyNone(this._io, this, this._root);
-        break;
-      case PythonPyc27.PyObject.ObjectType.CODE_OBJECT:
-        this.value = new CodeObject(this._io, this, this._root);
-        break;
-      case PythonPyc27.PyObject.ObjectType.INT:
-        this.value = this._io.readU4le();
-        break;
-      case PythonPyc27.PyObject.ObjectType.STRING_REF:
-        this.value = new StringRef(this._io, this, this._root);
-        break;
-      case PythonPyc27.PyObject.ObjectType.STRING:
-        this.value = new PyString(this._io, this, this._root);
-        break;
-      case PythonPyc27.PyObject.ObjectType.PY_FALSE:
-        this.value = new PyFalse(this._io, this, this._root);
-        break;
-      case PythonPyc27.PyObject.ObjectType.INTERNED:
-        this.value = new InternedString(this._io, this, this._root);
-        break;
-      case PythonPyc27.PyObject.ObjectType.TUPLE:
-        this.value = new Tuple(this._io, this, this._root);
-        break;
-      case PythonPyc27.PyObject.ObjectType.PY_TRUE:
-        this.value = new PyTrue(this._io, this, this._root);
-        break;
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">PyObject</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">PyObject</span><span class="p">.</span><span class="nx">ObjectType</span><span class="p">.</span><span class="nx">NONE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PyNone</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">PyObject</span><span class="p">.</span><span class="nx">ObjectType</span><span class="p">.</span><span class="nx">CODE_OBJECT</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CodeObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">PyObject</span><span class="p">.</span><span class="nx">ObjectType</span><span class="p">.</span><span class="nx">INT</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">PyObject</span><span class="p">.</span><span class="nx">ObjectType</span><span class="p">.</span><span class="nx">STRING_REF</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StringRef</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">PyObject</span><span class="p">.</span><span class="nx">ObjectType</span><span class="p">.</span><span class="nx">STRING</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PyString</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">PyObject</span><span class="p">.</span><span class="nx">ObjectType</span><span class="p">.</span><span class="nx">PY_FALSE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PyFalse</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">PyObject</span><span class="p">.</span><span class="nx">ObjectType</span><span class="p">.</span><span class="nx">INTERNED</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">InternedString</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">PyObject</span><span class="p">.</span><span class="nx">ObjectType</span><span class="p">.</span><span class="nx">TUPLE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Tuple</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">PyObject</span><span class="p">.</span><span class="nx">ObjectType</span><span class="p">.</span><span class="nx">PY_TRUE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PyTrue</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    var PyNone = PyObject.PyNone = (function() {
-      function PyNone(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">PyNone</span> <span class="o">=</span> <span class="nx">PyObject</span><span class="p">.</span><span class="nx">PyNone</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">PyNone</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      PyNone.prototype._read = function() {
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">PyNone</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="p">}</span>
 
-      return PyNone;
-    })();
+      <span class="k">return</span> <span class="nx">PyNone</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    var PyFalse = PyObject.PyFalse = (function() {
-      function PyFalse(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">PyFalse</span> <span class="o">=</span> <span class="nx">PyObject</span><span class="p">.</span><span class="nx">PyFalse</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">PyFalse</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      PyFalse.prototype._read = function() {
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">PyFalse</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="p">}</span>
 
-      return PyFalse;
-    })();
+      <span class="k">return</span> <span class="nx">PyFalse</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    var StringRef = PyObject.StringRef = (function() {
-      function StringRef(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">StringRef</span> <span class="o">=</span> <span class="nx">PyObject</span><span class="p">.</span><span class="nx">StringRef</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">StringRef</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      StringRef.prototype._read = function() {
-        this.internedListIndex = this._io.readU4le();
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">StringRef</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">internedListIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="p">}</span>
 
-      return StringRef;
-    })();
+      <span class="k">return</span> <span class="nx">StringRef</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    var PyTrue = PyObject.PyTrue = (function() {
-      function PyTrue(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">PyTrue</span> <span class="o">=</span> <span class="nx">PyObject</span><span class="p">.</span><span class="nx">PyTrue</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">PyTrue</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      PyTrue.prototype._read = function() {
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">PyTrue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="p">}</span>
 
-      return PyTrue;
-    })();
+      <span class="k">return</span> <span class="nx">PyTrue</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    var Tuple = PyObject.Tuple = (function() {
-      function Tuple(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">Tuple</span> <span class="o">=</span> <span class="nx">PyObject</span><span class="p">.</span><span class="nx">Tuple</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">Tuple</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      Tuple.prototype._read = function() {
-        this.count = this._io.readU4le();
-        this.items = new Array(this.count);
-        for (var i = 0; i &lt; this.count; i++) {
-          this.items[i] = new PyObject(this._io, this, this._root);
-        }
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">Tuple</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">count</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">items</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PyObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
 
-      return Tuple;
-    })();
+      <span class="k">return</span> <span class="nx">Tuple</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    var UnicodeString = PyObject.UnicodeString = (function() {
-      function UnicodeString(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">UnicodeString</span> <span class="o">=</span> <span class="nx">PyObject</span><span class="p">.</span><span class="nx">UnicodeString</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">UnicodeString</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      UnicodeString.prototype._read = function() {
-        this.length = this._io.readU4le();
-        this.data = KaitaiStream.bytesToStr(this._io.readBytes(this.length), &quot;utf-8&quot;);
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">UnicodeString</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">),</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
 
-      return UnicodeString;
-    })();
+      <span class="k">return</span> <span class="nx">UnicodeString</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    var InternedString = PyObject.InternedString = (function() {
-      function InternedString(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">InternedString</span> <span class="o">=</span> <span class="nx">PyObject</span><span class="p">.</span><span class="nx">InternedString</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">InternedString</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      InternedString.prototype._read = function() {
-        this.length = this._io.readU4le();
-        this.data = KaitaiStream.bytesToStr(this._io.readBytes(this.length), &quot;utf-8&quot;);
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">InternedString</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">),</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">);</span>
+      <span class="p">}</span>
 
-      return InternedString;
-    })();
+      <span class="k">return</span> <span class="nx">InternedString</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    var PyString = PyObject.PyString = (function() {
-      function PyString(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
+    <span class="kd">var</span> <span class="nx">PyString</span> <span class="o">=</span> <span class="nx">PyObject</span><span class="p">.</span><span class="nx">PyString</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">PyString</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-        this._read();
-      }
-      PyString.prototype._read = function() {
-        this.length = this._io.readU4le();
-        this.data = this._io.readBytes(this.length);
-      }
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">PyString</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+      <span class="p">}</span>
 
-      return PyString;
-    })();
+      <span class="k">return</span> <span class="nx">PyString</span><span class="p">;</span>
+    <span class="p">})();</span>
 
-    return PyObject;
-  })();
+    <span class="k">return</span> <span class="nx">PyObject</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var OpArgs = PythonPyc27.OpArgs = (function() {
-    function OpArgs(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">OpArgs</span> <span class="o">=</span> <span class="nx">PythonPyc27</span><span class="p">.</span><span class="nx">OpArgs</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">OpArgs</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    OpArgs.prototype._read = function() {
-      this.items = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.items.push(new OpArg(this._io, this, this._root));
-        i++;
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">OpArgs</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">items</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">items</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">OpArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return OpArgs;
-  })();
+    <span class="k">return</span> <span class="nx">OpArgs</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  return PythonPyc27;
-})();
-return PythonPyc27;
-}));
-</code></pre>
+  <span class="k">return</span> <span class="nx">PythonPyc27</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">PythonPyc27</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -898,8 +895,8 @@ return PythonPyc27;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

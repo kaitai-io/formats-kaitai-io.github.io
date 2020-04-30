@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -280,549 +277,549 @@ var data = new StandardMidiFile(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
 
-    /// &lt;summary&gt;
-    /// Standard MIDI file, typically knows just as &amp;quot;MID&amp;quot;, is a standard way
-    /// to serialize series of MIDI events, which is a protocol used in many
-    /// music synthesizers to transfer music data: notes being played,
-    /// effects being applied, etc.
-    /// 
-    /// Internally, file consists of a header and series of tracks, every
-    /// track listing MIDI events with certain header designating time these
-    /// events are happening.
-    /// 
-    /// NOTE: Rarely, MIDI files employ certain stateful compression scheme
-    /// to avoid storing certain elements of further elements, instead
-    /// reusing them from events which happened earlier in the
-    /// stream. Kaitai Struct (as of v0.9) is currently unable to parse
-    /// these, but files employing this mechanism are relatively rare.
-    /// &lt;/summary&gt;
-    public partial class StandardMidiFile : KaitaiStruct
-    {
-        public static StandardMidiFile FromFile(string fileName)
-        {
-            return new StandardMidiFile(new KaitaiStream(fileName));
-        }
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// Standard MIDI file, typically knows just as &amp;quot;MID&amp;quot;, is a standard way</span>
+    <span class="c1">/// to serialize series of MIDI events, which is a protocol used in many</span>
+    <span class="c1">/// music synthesizers to transfer music data: notes being played,</span>
+    <span class="c1">/// effects being applied, etc.</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// Internally, file consists of a header and series of tracks, every</span>
+    <span class="c1">/// track listing MIDI events with certain header designating time these</span>
+    <span class="c1">/// events are happening.</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// NOTE: Rarely, MIDI files employ certain stateful compression scheme</span>
+    <span class="c1">/// to avoid storing certain elements of further elements, instead</span>
+    <span class="c1">/// reusing them from events which happened earlier in the</span>
+    <span class="c1">/// stream. Kaitai Struct (as of v0.9) is currently unable to parse</span>
+    <span class="c1">/// these, but files employing this mechanism are relatively rare.</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">StandardMidiFile</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">StandardMidiFile</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">StandardMidiFile</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public StandardMidiFile(KaitaiStream p__io, KaitaiStruct p__parent = null, StandardMidiFile p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            _read();
-        }
-        private void _read()
-        {
-            _hdr = new Header(m_io, this, m_root);
-            _tracks = new List&lt;Track&gt;((int) (Hdr.NumTracks));
-            for (var i = 0; i &lt; Hdr.NumTracks; i++)
-            {
-                _tracks.Add(new Track(m_io, this, m_root));
-            }
-        }
-        public partial class TrackEvents : KaitaiStruct
-        {
-            public static TrackEvents FromFile(string fileName)
-            {
-                return new TrackEvents(new KaitaiStream(fileName));
-            }
+        <span class="k">public</span> <span class="nf">StandardMidiFile</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_hdr</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Header</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="n">_tracks</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Track</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">Hdr</span><span class="p">.</span><span class="n">NumTracks</span><span class="p">));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">Hdr</span><span class="p">.</span><span class="n">NumTracks</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+            <span class="p">{</span>
+                <span class="n">_tracks</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Track</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">TrackEvents</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">TrackEvents</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">TrackEvents</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public TrackEvents(KaitaiStream p__io, StandardMidiFile.Track p__parent = null, StandardMidiFile p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _event = new List&lt;TrackEvent&gt;();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _event.Add(new TrackEvent(m_io, this, m_root));
-                        i++;
-                    }
-                }
-            }
-            private List&lt;TrackEvent&gt; _event;
-            private StandardMidiFile m_root;
-            private StandardMidiFile.Track m_parent;
-            public List&lt;TrackEvent&gt; Event { get { return _event; } }
-            public StandardMidiFile M_Root { get { return m_root; } }
-            public StandardMidiFile.Track M_Parent { get { return m_parent; } }
-        }
-        public partial class TrackEvent : KaitaiStruct
-        {
-            public static TrackEvent FromFile(string fileName)
-            {
-                return new TrackEvent(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">TrackEvents</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">Track</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_event</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">TrackEvent</span><span class="p">&gt;();</span>
+                <span class="p">{</span>
+                    <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                    <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_event</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">TrackEvent</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                        <span class="n">i</span><span class="p">++;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">TrackEvent</span><span class="p">&gt;</span> <span class="n">_event</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">Track</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">TrackEvent</span><span class="p">&gt;</span> <span class="n">Event</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_event</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">Track</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">TrackEvent</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">TrackEvent</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">TrackEvent</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public TrackEvent(KaitaiStream p__io, StandardMidiFile.TrackEvents p__parent = null, StandardMidiFile p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_eventType = false;
-                f_channel = false;
-                _read();
-            }
-            private void _read()
-            {
-                _vTime = new VlqBase128Be(m_io);
-                _eventHeader = m_io.ReadU1();
-                if (EventHeader == 255) {
-                    _metaEventBody = new MetaEventBody(m_io, this, m_root);
-                }
-                if (EventHeader == 240) {
-                    _sysexBody = new SysexEventBody(m_io, this, m_root);
-                }
-                switch (EventType) {
-                case 224: {
-                    _eventBody = new PitchBendEvent(m_io, this, m_root);
-                    break;
-                }
-                case 144: {
-                    _eventBody = new NoteOnEvent(m_io, this, m_root);
-                    break;
-                }
-                case 208: {
-                    _eventBody = new ChannelPressureEvent(m_io, this, m_root);
-                    break;
-                }
-                case 192: {
-                    _eventBody = new ProgramChangeEvent(m_io, this, m_root);
-                    break;
-                }
-                case 160: {
-                    _eventBody = new PolyphonicPressureEvent(m_io, this, m_root);
-                    break;
-                }
-                case 176: {
-                    _eventBody = new ControllerEvent(m_io, this, m_root);
-                    break;
-                }
-                case 128: {
-                    _eventBody = new NoteOffEvent(m_io, this, m_root);
-                    break;
-                }
-                }
-            }
-            private bool f_eventType;
-            private int _eventType;
-            public int EventType
-            {
-                get
-                {
-                    if (f_eventType)
-                        return _eventType;
-                    _eventType = (int) ((EventHeader &amp; 240));
-                    f_eventType = true;
-                    return _eventType;
-                }
-            }
-            private bool f_channel;
-            private int? _channel;
-            public int? Channel
-            {
-                get
-                {
-                    if (f_channel)
-                        return _channel;
-                    if (EventType != 240) {
-                        _channel = (int) ((EventHeader &amp; 15));
-                    }
-                    f_channel = true;
-                    return _channel;
-                }
-            }
-            private VlqBase128Be _vTime;
-            private byte _eventHeader;
-            private MetaEventBody _metaEventBody;
-            private SysexEventBody _sysexBody;
-            private KaitaiStruct _eventBody;
-            private StandardMidiFile m_root;
-            private StandardMidiFile.TrackEvents m_parent;
-            public VlqBase128Be VTime { get { return _vTime; } }
-            public byte EventHeader { get { return _eventHeader; } }
-            public MetaEventBody MetaEventBody { get { return _metaEventBody; } }
-            public SysexEventBody SysexBody { get { return _sysexBody; } }
-            public KaitaiStruct EventBody { get { return _eventBody; } }
-            public StandardMidiFile M_Root { get { return m_root; } }
-            public StandardMidiFile.TrackEvents M_Parent { get { return m_parent; } }
-        }
-        public partial class PitchBendEvent : KaitaiStruct
-        {
-            public static PitchBendEvent FromFile(string fileName)
-            {
-                return new PitchBendEvent(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">TrackEvent</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvents</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_eventType</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_channel</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_vTime</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VlqBase128Be</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+                <span class="n">_eventHeader</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">EventHeader</span> <span class="p">==</span> <span class="m">255</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_metaEventBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MetaEventBody</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">EventHeader</span> <span class="p">==</span> <span class="m">240</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_sysexBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SysexEventBody</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">EventType</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="m">224</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_eventBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PitchBendEvent</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="m">144</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_eventBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoteOnEvent</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="m">208</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_eventBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ChannelPressureEvent</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="m">192</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_eventBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ProgramChangeEvent</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="m">160</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_eventBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PolyphonicPressureEvent</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="m">176</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_eventBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ControllerEvent</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="m">128</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_eventBody</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoteOffEvent</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_eventType</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_eventType</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">EventType</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_eventType</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_eventType</span><span class="p">;</span>
+                    <span class="n">_eventType</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">EventHeader</span> <span class="p">&amp;</span> <span class="m">240</span><span class="p">));</span>
+                    <span class="n">f_eventType</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_eventType</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_channel</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int?</span> <span class="n">_channel</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int?</span> <span class="n">Channel</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_channel</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_channel</span><span class="p">;</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">EventType</span> <span class="p">!=</span> <span class="m">240</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_channel</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">EventHeader</span> <span class="p">&amp;</span> <span class="m">15</span><span class="p">));</span>
+                    <span class="p">}</span>
+                    <span class="n">f_channel</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_channel</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">VlqBase128Be</span> <span class="n">_vTime</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_eventHeader</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">MetaEventBody</span> <span class="n">_metaEventBody</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">SysexEventBody</span> <span class="n">_sysexBody</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">_eventBody</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvents</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">VlqBase128Be</span> <span class="n">VTime</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_vTime</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">EventHeader</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_eventHeader</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">MetaEventBody</span> <span class="n">MetaEventBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_metaEventBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">SysexEventBody</span> <span class="n">SysexBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sysexBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">EventBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_eventBody</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvents</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">PitchBendEvent</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">PitchBendEvent</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">PitchBendEvent</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public PitchBendEvent(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_bendValue = false;
-                f_adjBendValue = false;
-                _read();
-            }
-            private void _read()
-            {
-                _b1 = m_io.ReadU1();
-                _b2 = m_io.ReadU1();
-            }
-            private bool f_bendValue;
-            private int _bendValue;
-            public int BendValue
-            {
-                get
-                {
-                    if (f_bendValue)
-                        return _bendValue;
-                    _bendValue = (int) ((((B2 &lt;&lt; 7) + B1) - 16384));
-                    f_bendValue = true;
-                    return _bendValue;
-                }
-            }
-            private bool f_adjBendValue;
-            private int _adjBendValue;
-            public int AdjBendValue
-            {
-                get
-                {
-                    if (f_adjBendValue)
-                        return _adjBendValue;
-                    _adjBendValue = (int) ((BendValue - 16384));
-                    f_adjBendValue = true;
-                    return _adjBendValue;
-                }
-            }
-            private byte _b1;
-            private byte _b2;
-            private StandardMidiFile m_root;
-            private StandardMidiFile.TrackEvent m_parent;
-            public byte B1 { get { return _b1; } }
-            public byte B2 { get { return _b2; } }
-            public StandardMidiFile M_Root { get { return m_root; } }
-            public StandardMidiFile.TrackEvent M_Parent { get { return m_parent; } }
-        }
-        public partial class ProgramChangeEvent : KaitaiStruct
-        {
-            public static ProgramChangeEvent FromFile(string fileName)
-            {
-                return new ProgramChangeEvent(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">PitchBendEvent</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_bendValue</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_adjBendValue</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_b1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_b2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_bendValue</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_bendValue</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">BendValue</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_bendValue</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_bendValue</span><span class="p">;</span>
+                    <span class="n">_bendValue</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((((</span><span class="n">B2</span> <span class="p">&lt;&lt;</span> <span class="m">7</span><span class="p">)</span> <span class="p">+</span> <span class="n">B1</span><span class="p">)</span> <span class="p">-</span> <span class="m">16384</span><span class="p">));</span>
+                    <span class="n">f_bendValue</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_bendValue</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_adjBendValue</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_adjBendValue</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">AdjBendValue</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_adjBendValue</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_adjBendValue</span><span class="p">;</span>
+                    <span class="n">_adjBendValue</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">BendValue</span> <span class="p">-</span> <span class="m">16384</span><span class="p">));</span>
+                    <span class="n">f_adjBendValue</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_adjBendValue</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_b1</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_b2</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">B1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_b1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">B2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_b2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ProgramChangeEvent</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">ProgramChangeEvent</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">ProgramChangeEvent</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public ProgramChangeEvent(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _program = m_io.ReadU1();
-            }
-            private byte _program;
-            private StandardMidiFile m_root;
-            private StandardMidiFile.TrackEvent m_parent;
-            public byte Program { get { return _program; } }
-            public StandardMidiFile M_Root { get { return m_root; } }
-            public StandardMidiFile.TrackEvent M_Parent { get { return m_parent; } }
-        }
-        public partial class NoteOnEvent : KaitaiStruct
-        {
-            public static NoteOnEvent FromFile(string fileName)
-            {
-                return new NoteOnEvent(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">ProgramChangeEvent</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_program</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_program</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Program</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_program</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">NoteOnEvent</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">NoteOnEvent</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">NoteOnEvent</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public NoteOnEvent(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _note = m_io.ReadU1();
-                _velocity = m_io.ReadU1();
-            }
-            private byte _note;
-            private byte _velocity;
-            private StandardMidiFile m_root;
-            private StandardMidiFile.TrackEvent m_parent;
-            public byte Note { get { return _note; } }
-            public byte Velocity { get { return _velocity; } }
-            public StandardMidiFile M_Root { get { return m_root; } }
-            public StandardMidiFile.TrackEvent M_Parent { get { return m_parent; } }
-        }
-        public partial class PolyphonicPressureEvent : KaitaiStruct
-        {
-            public static PolyphonicPressureEvent FromFile(string fileName)
-            {
-                return new PolyphonicPressureEvent(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">NoteOnEvent</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_note</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_velocity</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_note</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_velocity</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Note</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_note</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Velocity</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_velocity</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">PolyphonicPressureEvent</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">PolyphonicPressureEvent</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">PolyphonicPressureEvent</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public PolyphonicPressureEvent(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _note = m_io.ReadU1();
-                _pressure = m_io.ReadU1();
-            }
-            private byte _note;
-            private byte _pressure;
-            private StandardMidiFile m_root;
-            private StandardMidiFile.TrackEvent m_parent;
-            public byte Note { get { return _note; } }
-            public byte Pressure { get { return _pressure; } }
-            public StandardMidiFile M_Root { get { return m_root; } }
-            public StandardMidiFile.TrackEvent M_Parent { get { return m_parent; } }
-        }
-        public partial class Track : KaitaiStruct
-        {
-            public static Track FromFile(string fileName)
-            {
-                return new Track(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">PolyphonicPressureEvent</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_note</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_pressure</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_note</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_pressure</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Note</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_note</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Pressure</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_pressure</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Track</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Track</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Track</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Track(KaitaiStream p__io, StandardMidiFile p__parent = null, StandardMidiFile p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _magic = m_io.EnsureFixedContents(new byte[] { 77, 84, 114, 107 });
-                _lenEvents = m_io.ReadU4be();
-                __raw_events = m_io.ReadBytes(LenEvents);
-                var io___raw_events = new KaitaiStream(__raw_events);
-                _events = new TrackEvents(io___raw_events, this, m_root);
-            }
-            private byte[] _magic;
-            private uint _lenEvents;
-            private TrackEvents _events;
-            private StandardMidiFile m_root;
-            private StandardMidiFile m_parent;
-            private byte[] __raw_events;
-            public byte[] Magic { get { return _magic; } }
-            public uint LenEvents { get { return _lenEvents; } }
-            public TrackEvents Events { get { return _events; } }
-            public StandardMidiFile M_Root { get { return m_root; } }
-            public StandardMidiFile M_Parent { get { return m_parent; } }
-            public byte[] M_RawEvents { get { return __raw_events; } }
-        }
-        public partial class MetaEventBody : KaitaiStruct
-        {
-            public static MetaEventBody FromFile(string fileName)
-            {
-                return new MetaEventBody(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">Track</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">77</span><span class="p">,</span> <span class="m">84</span><span class="p">,</span> <span class="m">114</span><span class="p">,</span> <span class="m">107</span> <span class="p">});</span>
+                <span class="n">_lenEvents</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="n">__raw_events</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenEvents</span><span class="p">);</span>
+                <span class="kt">var</span> <span class="n">io___raw_events</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_events</span><span class="p">);</span>
+                <span class="n">_events</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TrackEvents</span><span class="p">(</span><span class="n">io___raw_events</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lenEvents</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">TrackEvents</span> <span class="n">_events</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_events</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenEvents</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenEvents</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">TrackEvents</span> <span class="n">Events</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_events</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawEvents</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_events</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">MetaEventBody</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">MetaEventBody</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">MetaEventBody</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
 
-            public enum MetaTypeEnum
-            {
-                SequenceNumber = 0,
-                TextEvent = 1,
-                Copyright = 2,
-                SequenceTrackName = 3,
-                InstrumentName = 4,
-                LyricText = 5,
-                MarkerText = 6,
-                CuePoint = 7,
-                MidiChannelPrefixAssignment = 32,
-                EndOfTrack = 47,
-                Tempo = 81,
-                SmpteOffset = 84,
-                TimeSignature = 88,
-                KeySignature = 89,
-                SequencerSpecificEvent = 127,
-            }
-            public MetaEventBody(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _metaType = ((MetaTypeEnum) m_io.ReadU1());
-                _len = new VlqBase128Be(m_io);
-                _body = m_io.ReadBytes(Len.Value);
-            }
-            private MetaTypeEnum _metaType;
-            private VlqBase128Be _len;
-            private byte[] _body;
-            private StandardMidiFile m_root;
-            private StandardMidiFile.TrackEvent m_parent;
-            public MetaTypeEnum MetaType { get { return _metaType; } }
-            public VlqBase128Be Len { get { return _len; } }
-            public byte[] Body { get { return _body; } }
-            public StandardMidiFile M_Root { get { return m_root; } }
-            public StandardMidiFile.TrackEvent M_Parent { get { return m_parent; } }
-        }
-        public partial class ControllerEvent : KaitaiStruct
-        {
-            public static ControllerEvent FromFile(string fileName)
-            {
-                return new ControllerEvent(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="k">enum</span> <span class="n">MetaTypeEnum</span>
+            <span class="p">{</span>
+                <span class="n">SequenceNumber</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+                <span class="n">TextEvent</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+                <span class="n">Copyright</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+                <span class="n">SequenceTrackName</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+                <span class="n">InstrumentName</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
+                <span class="n">LyricText</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+                <span class="n">MarkerText</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
+                <span class="n">CuePoint</span> <span class="p">=</span> <span class="m">7</span><span class="p">,</span>
+                <span class="n">MidiChannelPrefixAssignment</span> <span class="p">=</span> <span class="m">32</span><span class="p">,</span>
+                <span class="n">EndOfTrack</span> <span class="p">=</span> <span class="m">47</span><span class="p">,</span>
+                <span class="n">Tempo</span> <span class="p">=</span> <span class="m">81</span><span class="p">,</span>
+                <span class="n">SmpteOffset</span> <span class="p">=</span> <span class="m">84</span><span class="p">,</span>
+                <span class="n">TimeSignature</span> <span class="p">=</span> <span class="m">88</span><span class="p">,</span>
+                <span class="n">KeySignature</span> <span class="p">=</span> <span class="m">89</span><span class="p">,</span>
+                <span class="n">SequencerSpecificEvent</span> <span class="p">=</span> <span class="m">127</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="nf">MetaEventBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_metaType</span> <span class="p">=</span> <span class="p">((</span><span class="n">MetaTypeEnum</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+                <span class="n">_len</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VlqBase128Be</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">.</span><span class="n">Value</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">MetaTypeEnum</span> <span class="n">_metaType</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">VlqBase128Be</span> <span class="n">_len</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_body</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">MetaTypeEnum</span> <span class="n">MetaType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_metaType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">VlqBase128Be</span> <span class="n">Len</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_len</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ControllerEvent</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">ControllerEvent</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">ControllerEvent</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public ControllerEvent(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _controller = m_io.ReadU1();
-                _value = m_io.ReadU1();
-            }
-            private byte _controller;
-            private byte _value;
-            private StandardMidiFile m_root;
-            private StandardMidiFile.TrackEvent m_parent;
-            public byte Controller { get { return _controller; } }
-            public byte Value { get { return _value; } }
-            public StandardMidiFile M_Root { get { return m_root; } }
-            public StandardMidiFile.TrackEvent M_Parent { get { return m_parent; } }
-        }
-        public partial class Header : KaitaiStruct
-        {
-            public static Header FromFile(string fileName)
-            {
-                return new Header(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">ControllerEvent</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_controller</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_controller</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_value</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Controller</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_controller</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Header</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Header</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Header</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Header(KaitaiStream p__io, StandardMidiFile p__parent = null, StandardMidiFile p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _magic = m_io.EnsureFixedContents(new byte[] { 77, 84, 104, 100 });
-                _lenHeader = m_io.ReadU4be();
-                _format = m_io.ReadU2be();
-                _numTracks = m_io.ReadU2be();
-                _division = m_io.ReadS2be();
-            }
-            private byte[] _magic;
-            private uint _lenHeader;
-            private ushort _format;
-            private ushort _numTracks;
-            private short _division;
-            private StandardMidiFile m_root;
-            private StandardMidiFile m_parent;
-            public byte[] Magic { get { return _magic; } }
-            public uint LenHeader { get { return _lenHeader; } }
-            public ushort Format { get { return _format; } }
-            public ushort NumTracks { get { return _numTracks; } }
-            public short Division { get { return _division; } }
-            public StandardMidiFile M_Root { get { return m_root; } }
-            public StandardMidiFile M_Parent { get { return m_parent; } }
-        }
-        public partial class SysexEventBody : KaitaiStruct
-        {
-            public static SysexEventBody FromFile(string fileName)
-            {
-                return new SysexEventBody(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_magic</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">EnsureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">77</span><span class="p">,</span> <span class="m">84</span><span class="p">,</span> <span class="m">104</span><span class="p">,</span> <span class="m">100</span> <span class="p">});</span>
+                <span class="n">_lenHeader</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="n">_format</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_numTracks</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_division</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS2be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lenHeader</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_format</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_numTracks</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">short</span> <span class="n">_division</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenHeader</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenHeader</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Format</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_format</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">NumTracks</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numTracks</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">short</span> <span class="n">Division</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_division</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SysexEventBody</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">SysexEventBody</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">SysexEventBody</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public SysexEventBody(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _len = new VlqBase128Be(m_io);
-                _data = m_io.ReadBytes(Len.Value);
-            }
-            private VlqBase128Be _len;
-            private byte[] _data;
-            private StandardMidiFile m_root;
-            private StandardMidiFile.TrackEvent m_parent;
-            public VlqBase128Be Len { get { return _len; } }
-            public byte[] Data { get { return _data; } }
-            public StandardMidiFile M_Root { get { return m_root; } }
-            public StandardMidiFile.TrackEvent M_Parent { get { return m_parent; } }
-        }
-        public partial class NoteOffEvent : KaitaiStruct
-        {
-            public static NoteOffEvent FromFile(string fileName)
-            {
-                return new NoteOffEvent(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">SysexEventBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_len</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VlqBase128Be</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+                <span class="n">_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">.</span><span class="n">Value</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">VlqBase128Be</span> <span class="n">_len</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_data</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">VlqBase128Be</span> <span class="n">Len</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_len</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">NoteOffEvent</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">NoteOffEvent</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">NoteOffEvent</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public NoteOffEvent(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _note = m_io.ReadU1();
-                _velocity = m_io.ReadU1();
-            }
-            private byte _note;
-            private byte _velocity;
-            private StandardMidiFile m_root;
-            private StandardMidiFile.TrackEvent m_parent;
-            public byte Note { get { return _note; } }
-            public byte Velocity { get { return _velocity; } }
-            public StandardMidiFile M_Root { get { return m_root; } }
-            public StandardMidiFile.TrackEvent M_Parent { get { return m_parent; } }
-        }
-        public partial class ChannelPressureEvent : KaitaiStruct
-        {
-            public static ChannelPressureEvent FromFile(string fileName)
-            {
-                return new ChannelPressureEvent(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">NoteOffEvent</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_note</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_velocity</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_note</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_velocity</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Note</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_note</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Velocity</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_velocity</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ChannelPressureEvent</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">ChannelPressureEvent</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">ChannelPressureEvent</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public ChannelPressureEvent(KaitaiStream p__io, StandardMidiFile.TrackEvent p__parent = null, StandardMidiFile p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _pressure = m_io.ReadU1();
-            }
-            private byte _pressure;
-            private StandardMidiFile m_root;
-            private StandardMidiFile.TrackEvent m_parent;
-            public byte Pressure { get { return _pressure; } }
-            public StandardMidiFile M_Root { get { return m_root; } }
-            public StandardMidiFile.TrackEvent M_Parent { get { return m_parent; } }
-        }
-        private Header _hdr;
-        private List&lt;Track&gt; _tracks;
-        private StandardMidiFile m_root;
-        private KaitaiStruct m_parent;
-        public Header Hdr { get { return _hdr; } }
-        public List&lt;Track&gt; Tracks { get { return _tracks; } }
-        public StandardMidiFile M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-    }
-}
-</code></pre>
+            <span class="k">public</span> <span class="nf">ChannelPressureEvent</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">StandardMidiFile</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_pressure</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_pressure</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Pressure</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_pressure</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">StandardMidiFile</span><span class="p">.</span><span class="n">TrackEvent</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="n">Header</span> <span class="n">_hdr</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Track</span><span class="p">&gt;</span> <span class="n">_tracks</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">StandardMidiFile</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">public</span> <span class="n">Header</span> <span class="n">Hdr</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_hdr</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Track</span><span class="p">&gt;</span> <span class="n">Tracks</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tracks</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">StandardMidiFile</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -849,8 +846,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -241,677 +238,677 @@ structures.
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
 
-    /// &lt;summary&gt;
-    /// MessagePack (msgpack) is a system to serialize arbitrary structured
-    /// data into a compact binary stream.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;
-    /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md&quot;&gt;Source&lt;/a&gt;
-    /// &lt;/remarks&gt;
-    public partial class Msgpack : KaitaiStruct
-    {
-        public static Msgpack FromFile(string fileName)
-        {
-            return new Msgpack(new KaitaiStream(fileName));
-        }
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// MessagePack (msgpack) is a system to serialize arbitrary structured</span>
+    <span class="c1">/// data into a compact binary stream.</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="c1">/// &lt;remarks&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md&quot;&gt;Source&lt;/a&gt;</span>
+    <span class="c1">/// &lt;/remarks&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Msgpack</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">Msgpack</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Msgpack</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Msgpack(KaitaiStream p__io, KaitaiStruct p__parent = null, Msgpack p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            f_isArray32 = false;
-            f_intValue = false;
-            f_strLen = false;
-            f_isFixArray = false;
-            f_isMap = false;
-            f_isArray = false;
-            f_isFloat = false;
-            f_isStr8 = false;
-            f_isFixMap = false;
-            f_isInt = false;
-            f_isBool = false;
-            f_isStr16 = false;
-            f_isFloat64 = false;
-            f_isMap16 = false;
-            f_isNegInt5 = false;
-            f_posInt7Value = false;
-            f_isNil = false;
-            f_floatValue = false;
-            f_numArrayElements = false;
-            f_negInt5Value = false;
-            f_boolValue = false;
-            f_isPosInt7 = false;
-            f_isArray16 = false;
-            f_isStr = false;
-            f_isFixStr = false;
-            f_isStr32 = false;
-            f_numMapElements = false;
-            f_isFloat32 = false;
-            f_isMap32 = false;
-            _read();
-        }
-        private void _read()
-        {
-            _b1 = m_io.ReadU1();
-            switch (B1) {
-            case 211: {
-                _intExtra = m_io.ReadS8be();
-                break;
-            }
-            case 209: {
-                _intExtra = m_io.ReadS2be();
-                break;
-            }
-            case 210: {
-                _intExtra = m_io.ReadS4be();
-                break;
-            }
-            case 208: {
-                _intExtra = m_io.ReadS1();
-                break;
-            }
-            case 205: {
-                _intExtra = m_io.ReadU2be();
-                break;
-            }
-            case 207: {
-                _intExtra = m_io.ReadU8be();
-                break;
-            }
-            case 204: {
-                _intExtra = m_io.ReadU1();
-                break;
-            }
-            case 206: {
-                _intExtra = m_io.ReadU4be();
-                break;
-            }
-            }
-            if (IsFloat32) {
-                _float32Value = m_io.ReadF4be();
-            }
-            if (IsFloat64) {
-                _float64Value = m_io.ReadF8be();
-            }
-            if (IsStr8) {
-                _strLen8 = m_io.ReadU1();
-            }
-            if (IsStr16) {
-                _strLen16 = m_io.ReadU2be();
-            }
-            if (IsStr32) {
-                _strLen32 = m_io.ReadU4be();
-            }
-            if (IsStr) {
-                _strValue = System.Text.Encoding.GetEncoding(&quot;UTF-8&quot;).GetString(m_io.ReadBytes(StrLen));
-            }
-            if (IsArray16) {
-                _numArrayElements16 = m_io.ReadU2be();
-            }
-            if (IsArray32) {
-                _numArrayElements32 = m_io.ReadU4be();
-            }
-            if (IsArray) {
-                _arrayElements = new List&lt;Msgpack&gt;((int) (NumArrayElements));
-                for (var i = 0; i &lt; NumArrayElements; i++)
-                {
-                    _arrayElements.Add(new Msgpack(m_io));
-                }
-            }
-            if (IsMap16) {
-                _numMapElements16 = m_io.ReadU2be();
-            }
-            if (IsMap32) {
-                _numMapElements32 = m_io.ReadU4be();
-            }
-            if (IsMap) {
-                _mapElements = new List&lt;MapTuple&gt;((int) (NumMapElements));
-                for (var i = 0; i &lt; NumMapElements; i++)
-                {
-                    _mapElements.Add(new MapTuple(m_io, this, m_root));
-                }
-            }
-        }
-        public partial class MapTuple : KaitaiStruct
-        {
-            public static MapTuple FromFile(string fileName)
-            {
-                return new MapTuple(new KaitaiStream(fileName));
-            }
+        <span class="k">public</span> <span class="nf">Msgpack</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Msgpack</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">f_isArray32</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_intValue</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_strLen</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isFixArray</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isMap</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isArray</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isFloat</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isStr8</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isFixMap</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isInt</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isBool</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isStr16</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isFloat64</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isMap16</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isNegInt5</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_posInt7Value</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isNil</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_floatValue</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_numArrayElements</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_negInt5Value</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_boolValue</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isPosInt7</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isArray16</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isStr</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isFixStr</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isStr32</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_numMapElements</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isFloat32</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_isMap32</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_b1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">B1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="m">211</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">_intExtra</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS8be</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="m">209</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">_intExtra</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS2be</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="m">210</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">_intExtra</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="m">208</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">_intExtra</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS1</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="m">205</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">_intExtra</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="m">207</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">_intExtra</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8be</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="m">204</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">_intExtra</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="m">206</span><span class="p">:</span> <span class="p">{</span>
+                <span class="n">_intExtra</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">IsFloat32</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">_float32Value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">IsFloat64</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">_float64Value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF8be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">IsStr8</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">_strLen8</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">IsStr16</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">_strLen16</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">IsStr32</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">_strLen32</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">IsStr</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">_strValue</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">StrLen</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">IsArray16</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">_numArrayElements16</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">IsArray32</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">_numArrayElements32</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">IsArray</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">_arrayElements</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Msgpack</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumArrayElements</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumArrayElements</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_arrayElements</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Msgpack</span><span class="p">(</span><span class="n">m_io</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">IsMap16</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">_numMapElements16</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">IsMap32</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">_numMapElements32</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">IsMap</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">_mapElements</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">MapTuple</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumMapElements</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumMapElements</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_mapElements</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">MapTuple</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">MapTuple</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">MapTuple</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">MapTuple</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public MapTuple(KaitaiStream p__io, Msgpack p__parent = null, Msgpack p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _key = new Msgpack(m_io);
-                _value = new Msgpack(m_io);
-            }
-            private Msgpack _key;
-            private Msgpack _value;
-            private Msgpack m_root;
-            private Msgpack m_parent;
-            public Msgpack Key { get { return _key; } }
-            public Msgpack Value { get { return _value; } }
-            public Msgpack M_Root { get { return m_root; } }
-            public Msgpack M_Parent { get { return m_parent; } }
-        }
-        private bool f_isArray32;
-        private bool _isArray32;
+            <span class="k">public</span> <span class="nf">MapTuple</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Msgpack</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Msgpack</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_key</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Msgpack</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+                <span class="n">_value</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Msgpack</span><span class="p">(</span><span class="n">m_io</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Msgpack</span> <span class="n">_key</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Msgpack</span> <span class="n">_value</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Msgpack</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Msgpack</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">Msgpack</span> <span class="n">Key</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_key</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Msgpack</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Msgpack</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Msgpack</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isArray32</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isArray32</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool IsArray32
-        {
-            get
-            {
-                if (f_isArray32)
-                    return _isArray32;
-                _isArray32 = (bool) (B1 == 221);
-                f_isArray32 = true;
-                return _isArray32;
-            }
-        }
-        private bool f_intValue;
-        private int? _intValue;
-        public int? IntValue
-        {
-            get
-            {
-                if (f_intValue)
-                    return _intValue;
-                if (IsInt) {
-                    _intValue = (int) ((IsPosInt7 ? PosInt7Value : (IsNegInt5 ? NegInt5Value : 4919)));
-                }
-                f_intValue = true;
-                return _intValue;
-            }
-        }
-        private bool f_strLen;
-        private int? _strLen;
-        public int? StrLen
-        {
-            get
-            {
-                if (f_strLen)
-                    return _strLen;
-                if (IsStr) {
-                    _strLen = (int) ((IsFixStr ? (B1 &amp; 31) : (IsStr8 ? StrLen8 : (IsStr16 ? StrLen16 : StrLen32))));
-                }
-                f_strLen = true;
-                return _strLen;
-            }
-        }
-        private bool f_isFixArray;
-        private bool _isFixArray;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsArray32</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isArray32</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isArray32</span><span class="p">;</span>
+                <span class="n">_isArray32</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">B1</span> <span class="p">==</span> <span class="m">221</span><span class="p">);</span>
+                <span class="n">f_isArray32</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isArray32</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_intValue</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int?</span> <span class="n">_intValue</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int?</span> <span class="n">IntValue</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_intValue</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_intValue</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">IsInt</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_intValue</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">IsPosInt7</span> <span class="p">?</span> <span class="n">PosInt7Value</span> <span class="p">:</span> <span class="p">(</span><span class="n">IsNegInt5</span> <span class="p">?</span> <span class="n">NegInt5Value</span> <span class="p">:</span> <span class="m">4919</span><span class="p">)));</span>
+                <span class="p">}</span>
+                <span class="n">f_intValue</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_intValue</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_strLen</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int?</span> <span class="n">_strLen</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int?</span> <span class="n">StrLen</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_strLen</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_strLen</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">IsStr</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_strLen</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">IsFixStr</span> <span class="p">?</span> <span class="p">(</span><span class="n">B1</span> <span class="p">&amp;</span> <span class="m">31</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">IsStr8</span> <span class="p">?</span> <span class="n">StrLen8</span> <span class="p">:</span> <span class="p">(</span><span class="n">IsStr16</span> <span class="p">?</span> <span class="n">StrLen16</span> <span class="p">:</span> <span class="n">StrLen32</span><span class="p">))));</span>
+                <span class="p">}</span>
+                <span class="n">f_strLen</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_strLen</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isFixArray</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isFixArray</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool IsFixArray
-        {
-            get
-            {
-                if (f_isFixArray)
-                    return _isFixArray;
-                _isFixArray = (bool) ((B1 &amp; 240) == 144);
-                f_isFixArray = true;
-                return _isFixArray;
-            }
-        }
-        private bool f_isMap;
-        private bool _isMap;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsFixArray</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isFixArray</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isFixArray</span><span class="p">;</span>
+                <span class="n">_isFixArray</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">B1</span> <span class="p">&amp;</span> <span class="m">240</span><span class="p">)</span> <span class="p">==</span> <span class="m">144</span><span class="p">);</span>
+                <span class="n">f_isFixArray</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isFixArray</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isMap</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isMap</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool IsMap
-        {
-            get
-            {
-                if (f_isMap)
-                    return _isMap;
-                _isMap = (bool) ( ((IsFixMap) || (IsMap16) || (IsMap32)) );
-                f_isMap = true;
-                return _isMap;
-            }
-        }
-        private bool f_isArray;
-        private bool _isArray;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsMap</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isMap</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isMap</span><span class="p">;</span>
+                <span class="n">_isMap</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">IsFixMap</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">IsMap16</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">IsMap32</span><span class="p">))</span> <span class="p">);</span>
+                <span class="n">f_isMap</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isMap</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isArray</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isArray</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool IsArray
-        {
-            get
-            {
-                if (f_isArray)
-                    return _isArray;
-                _isArray = (bool) ( ((IsFixArray) || (IsArray16) || (IsArray32)) );
-                f_isArray = true;
-                return _isArray;
-            }
-        }
-        private bool f_isFloat;
-        private bool _isFloat;
-        public bool IsFloat
-        {
-            get
-            {
-                if (f_isFloat)
-                    return _isFloat;
-                _isFloat = (bool) ( ((IsFloat32) || (IsFloat64)) );
-                f_isFloat = true;
-                return _isFloat;
-            }
-        }
-        private bool f_isStr8;
-        private bool _isStr8;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsArray</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isArray</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isArray</span><span class="p">;</span>
+                <span class="n">_isArray</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">IsFixArray</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">IsArray16</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">IsArray32</span><span class="p">))</span> <span class="p">);</span>
+                <span class="n">f_isArray</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isArray</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isFloat</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isFloat</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsFloat</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isFloat</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isFloat</span><span class="p">;</span>
+                <span class="n">_isFloat</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">IsFloat32</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">IsFloat64</span><span class="p">))</span> <span class="p">);</span>
+                <span class="n">f_isFloat</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isFloat</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isStr8</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isStr8</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool IsStr8
-        {
-            get
-            {
-                if (f_isStr8)
-                    return _isStr8;
-                _isStr8 = (bool) (B1 == 217);
-                f_isStr8 = true;
-                return _isStr8;
-            }
-        }
-        private bool f_isFixMap;
-        private bool _isFixMap;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsStr8</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isStr8</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isStr8</span><span class="p">;</span>
+                <span class="n">_isStr8</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">B1</span> <span class="p">==</span> <span class="m">217</span><span class="p">);</span>
+                <span class="n">f_isStr8</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isStr8</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isFixMap</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isFixMap</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool IsFixMap
-        {
-            get
-            {
-                if (f_isFixMap)
-                    return _isFixMap;
-                _isFixMap = (bool) ((B1 &amp; 240) == 128);
-                f_isFixMap = true;
-                return _isFixMap;
-            }
-        }
-        private bool f_isInt;
-        private bool _isInt;
-        public bool IsInt
-        {
-            get
-            {
-                if (f_isInt)
-                    return _isInt;
-                _isInt = (bool) ( ((IsPosInt7) || (IsNegInt5)) );
-                f_isInt = true;
-                return _isInt;
-            }
-        }
-        private bool f_isBool;
-        private bool _isBool;
-        public bool IsBool
-        {
-            get
-            {
-                if (f_isBool)
-                    return _isBool;
-                _isBool = (bool) ( ((B1 == 194) || (B1 == 195)) );
-                f_isBool = true;
-                return _isBool;
-            }
-        }
-        private bool f_isStr16;
-        private bool _isStr16;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsFixMap</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isFixMap</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isFixMap</span><span class="p">;</span>
+                <span class="n">_isFixMap</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">B1</span> <span class="p">&amp;</span> <span class="m">240</span><span class="p">)</span> <span class="p">==</span> <span class="m">128</span><span class="p">);</span>
+                <span class="n">f_isFixMap</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isFixMap</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isInt</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isInt</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsInt</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isInt</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isInt</span><span class="p">;</span>
+                <span class="n">_isInt</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">IsPosInt7</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">IsNegInt5</span><span class="p">))</span> <span class="p">);</span>
+                <span class="n">f_isInt</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isInt</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isBool</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isBool</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsBool</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isBool</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isBool</span><span class="p">;</span>
+                <span class="n">_isBool</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">B1</span> <span class="p">==</span> <span class="m">194</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">B1</span> <span class="p">==</span> <span class="m">195</span><span class="p">))</span> <span class="p">);</span>
+                <span class="n">f_isBool</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isBool</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isStr16</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isStr16</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool IsStr16
-        {
-            get
-            {
-                if (f_isStr16)
-                    return _isStr16;
-                _isStr16 = (bool) (B1 == 218);
-                f_isStr16 = true;
-                return _isStr16;
-            }
-        }
-        private bool f_isFloat64;
-        private bool _isFloat64;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsStr16</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isStr16</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isStr16</span><span class="p">;</span>
+                <span class="n">_isStr16</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">B1</span> <span class="p">==</span> <span class="m">218</span><span class="p">);</span>
+                <span class="n">f_isStr16</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isStr16</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isFloat64</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isFloat64</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-float&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool IsFloat64
-        {
-            get
-            {
-                if (f_isFloat64)
-                    return _isFloat64;
-                _isFloat64 = (bool) (B1 == 203);
-                f_isFloat64 = true;
-                return _isFloat64;
-            }
-        }
-        private bool f_isMap16;
-        private bool _isMap16;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-float&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsFloat64</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isFloat64</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isFloat64</span><span class="p">;</span>
+                <span class="n">_isFloat64</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">B1</span> <span class="p">==</span> <span class="m">203</span><span class="p">);</span>
+                <span class="n">f_isFloat64</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isFloat64</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isMap16</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isMap16</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool IsMap16
-        {
-            get
-            {
-                if (f_isMap16)
-                    return _isMap16;
-                _isMap16 = (bool) (B1 == 222);
-                f_isMap16 = true;
-                return _isMap16;
-            }
-        }
-        private bool f_isNegInt5;
-        private bool _isNegInt5;
-        public bool IsNegInt5
-        {
-            get
-            {
-                if (f_isNegInt5)
-                    return _isNegInt5;
-                _isNegInt5 = (bool) ((B1 &amp; 224) == 224);
-                f_isNegInt5 = true;
-                return _isNegInt5;
-            }
-        }
-        private bool f_posInt7Value;
-        private byte? _posInt7Value;
-        public byte? PosInt7Value
-        {
-            get
-            {
-                if (f_posInt7Value)
-                    return _posInt7Value;
-                if (IsPosInt7) {
-                    _posInt7Value = (byte) (B1);
-                }
-                f_posInt7Value = true;
-                return _posInt7Value;
-            }
-        }
-        private bool f_isNil;
-        private bool _isNil;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsMap16</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isMap16</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isMap16</span><span class="p">;</span>
+                <span class="n">_isMap16</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">B1</span> <span class="p">==</span> <span class="m">222</span><span class="p">);</span>
+                <span class="n">f_isMap16</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isMap16</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isNegInt5</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isNegInt5</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsNegInt5</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isNegInt5</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isNegInt5</span><span class="p">;</span>
+                <span class="n">_isNegInt5</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">B1</span> <span class="p">&amp;</span> <span class="m">224</span><span class="p">)</span> <span class="p">==</span> <span class="m">224</span><span class="p">);</span>
+                <span class="n">f_isNegInt5</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isNegInt5</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_posInt7Value</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte?</span> <span class="n">_posInt7Value</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">byte?</span> <span class="n">PosInt7Value</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_posInt7Value</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_posInt7Value</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">IsPosInt7</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_posInt7Value</span> <span class="p">=</span> <span class="p">(</span><span class="kt">byte</span><span class="p">)</span> <span class="p">(</span><span class="n">B1</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="n">f_posInt7Value</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_posInt7Value</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isNil</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isNil</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-nil&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool IsNil
-        {
-            get
-            {
-                if (f_isNil)
-                    return _isNil;
-                _isNil = (bool) (B1 == 192);
-                f_isNil = true;
-                return _isNil;
-            }
-        }
-        private bool f_floatValue;
-        private double? _floatValue;
-        public double? FloatValue
-        {
-            get
-            {
-                if (f_floatValue)
-                    return _floatValue;
-                if (IsFloat) {
-                    _floatValue = (double) ((IsFloat32 ? Float32Value : Float64Value));
-                }
-                f_floatValue = true;
-                return _floatValue;
-            }
-        }
-        private bool f_numArrayElements;
-        private int? _numArrayElements;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-nil&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsNil</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isNil</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isNil</span><span class="p">;</span>
+                <span class="n">_isNil</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">B1</span> <span class="p">==</span> <span class="m">192</span><span class="p">);</span>
+                <span class="n">f_isNil</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isNil</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_floatValue</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">double?</span> <span class="n">_floatValue</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">double?</span> <span class="n">FloatValue</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_floatValue</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_floatValue</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">IsFloat</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_floatValue</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">((</span><span class="n">IsFloat32</span> <span class="p">?</span> <span class="n">Float32Value</span> <span class="p">:</span> <span class="n">Float64Value</span><span class="p">));</span>
+                <span class="p">}</span>
+                <span class="n">f_floatValue</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_floatValue</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_numArrayElements</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int?</span> <span class="n">_numArrayElements</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public int? NumArrayElements
-        {
-            get
-            {
-                if (f_numArrayElements)
-                    return _numArrayElements;
-                if (IsArray) {
-                    _numArrayElements = (int) ((IsFixArray ? (B1 &amp; 15) : (IsArray16 ? NumArrayElements16 : NumArrayElements32)));
-                }
-                f_numArrayElements = true;
-                return _numArrayElements;
-            }
-        }
-        private bool f_negInt5Value;
-        private int? _negInt5Value;
-        public int? NegInt5Value
-        {
-            get
-            {
-                if (f_negInt5Value)
-                    return _negInt5Value;
-                if (IsNegInt5) {
-                    _negInt5Value = (int) (-((B1 &amp; 31)));
-                }
-                f_negInt5Value = true;
-                return _negInt5Value;
-            }
-        }
-        private bool f_boolValue;
-        private bool? _boolValue;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">int?</span> <span class="n">NumArrayElements</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_numArrayElements</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_numArrayElements</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">IsArray</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_numArrayElements</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">IsFixArray</span> <span class="p">?</span> <span class="p">(</span><span class="n">B1</span> <span class="p">&amp;</span> <span class="m">15</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">IsArray16</span> <span class="p">?</span> <span class="n">NumArrayElements16</span> <span class="p">:</span> <span class="n">NumArrayElements32</span><span class="p">)));</span>
+                <span class="p">}</span>
+                <span class="n">f_numArrayElements</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_numArrayElements</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_negInt5Value</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int?</span> <span class="n">_negInt5Value</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int?</span> <span class="n">NegInt5Value</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_negInt5Value</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_negInt5Value</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">IsNegInt5</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_negInt5Value</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(-((</span><span class="n">B1</span> <span class="p">&amp;</span> <span class="m">31</span><span class="p">)));</span>
+                <span class="p">}</span>
+                <span class="n">f_negInt5Value</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_negInt5Value</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_boolValue</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool?</span> <span class="n">_boolValue</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-bool&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool? BoolValue
-        {
-            get
-            {
-                if (f_boolValue)
-                    return _boolValue;
-                if (IsBool) {
-                    _boolValue = (bool) (B1 == 195);
-                }
-                f_boolValue = true;
-                return _boolValue;
-            }
-        }
-        private bool f_isPosInt7;
-        private bool _isPosInt7;
-        public bool IsPosInt7
-        {
-            get
-            {
-                if (f_isPosInt7)
-                    return _isPosInt7;
-                _isPosInt7 = (bool) ((B1 &amp; 128) == 0);
-                f_isPosInt7 = true;
-                return _isPosInt7;
-            }
-        }
-        private bool f_isArray16;
-        private bool _isArray16;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-bool&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool?</span> <span class="n">BoolValue</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_boolValue</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_boolValue</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">IsBool</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_boolValue</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">B1</span> <span class="p">==</span> <span class="m">195</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="n">f_boolValue</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_boolValue</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isPosInt7</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isPosInt7</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsPosInt7</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isPosInt7</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isPosInt7</span><span class="p">;</span>
+                <span class="n">_isPosInt7</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">B1</span> <span class="p">&amp;</span> <span class="m">128</span><span class="p">)</span> <span class="p">==</span> <span class="m">0</span><span class="p">);</span>
+                <span class="n">f_isPosInt7</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isPosInt7</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isArray16</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isArray16</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool IsArray16
-        {
-            get
-            {
-                if (f_isArray16)
-                    return _isArray16;
-                _isArray16 = (bool) (B1 == 220);
-                f_isArray16 = true;
-                return _isArray16;
-            }
-        }
-        private bool f_isStr;
-        private bool _isStr;
-        public bool IsStr
-        {
-            get
-            {
-                if (f_isStr)
-                    return _isStr;
-                _isStr = (bool) ( ((IsFixStr) || (IsStr8) || (IsStr16) || (IsStr32)) );
-                f_isStr = true;
-                return _isStr;
-            }
-        }
-        private bool f_isFixStr;
-        private bool _isFixStr;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-array&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsArray16</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isArray16</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isArray16</span><span class="p">;</span>
+                <span class="n">_isArray16</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">B1</span> <span class="p">==</span> <span class="m">220</span><span class="p">);</span>
+                <span class="n">f_isArray16</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isArray16</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isStr</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isStr</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsStr</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isStr</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isStr</span><span class="p">;</span>
+                <span class="n">_isStr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">IsFixStr</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">IsStr8</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">IsStr16</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">IsStr32</span><span class="p">))</span> <span class="p">);</span>
+                <span class="n">f_isStr</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isStr</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isFixStr</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isFixStr</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool IsFixStr
-        {
-            get
-            {
-                if (f_isFixStr)
-                    return _isFixStr;
-                _isFixStr = (bool) ((B1 &amp; 224) == 160);
-                f_isFixStr = true;
-                return _isFixStr;
-            }
-        }
-        private bool f_isStr32;
-        private bool _isStr32;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsFixStr</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isFixStr</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isFixStr</span><span class="p">;</span>
+                <span class="n">_isFixStr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">B1</span> <span class="p">&amp;</span> <span class="m">224</span><span class="p">)</span> <span class="p">==</span> <span class="m">160</span><span class="p">);</span>
+                <span class="n">f_isFixStr</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isFixStr</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isStr32</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isStr32</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool IsStr32
-        {
-            get
-            {
-                if (f_isStr32)
-                    return _isStr32;
-                _isStr32 = (bool) (B1 == 219);
-                f_isStr32 = true;
-                return _isStr32;
-            }
-        }
-        private bool f_numMapElements;
-        private int? _numMapElements;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-str&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsStr32</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isStr32</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isStr32</span><span class="p">;</span>
+                <span class="n">_isStr32</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">B1</span> <span class="p">==</span> <span class="m">219</span><span class="p">);</span>
+                <span class="n">f_isStr32</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isStr32</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_numMapElements</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int?</span> <span class="n">_numMapElements</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public int? NumMapElements
-        {
-            get
-            {
-                if (f_numMapElements)
-                    return _numMapElements;
-                if (IsMap) {
-                    _numMapElements = (int) ((IsFixMap ? (B1 &amp; 15) : (IsMap16 ? NumMapElements16 : NumMapElements32)));
-                }
-                f_numMapElements = true;
-                return _numMapElements;
-            }
-        }
-        private bool f_isFloat32;
-        private bool _isFloat32;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">int?</span> <span class="n">NumMapElements</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_numMapElements</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_numMapElements</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">IsMap</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_numMapElements</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">IsFixMap</span> <span class="p">?</span> <span class="p">(</span><span class="n">B1</span> <span class="p">&amp;</span> <span class="m">15</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">IsMap16</span> <span class="p">?</span> <span class="n">NumMapElements16</span> <span class="p">:</span> <span class="n">NumMapElements32</span><span class="p">)));</span>
+                <span class="p">}</span>
+                <span class="n">f_numMapElements</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_numMapElements</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isFloat32</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isFloat32</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-float&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool IsFloat32
-        {
-            get
-            {
-                if (f_isFloat32)
-                    return _isFloat32;
-                _isFloat32 = (bool) (B1 == 202);
-                f_isFloat32 = true;
-                return _isFloat32;
-            }
-        }
-        private bool f_isMap32;
-        private bool _isMap32;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-float&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsFloat32</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isFloat32</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isFloat32</span><span class="p">;</span>
+                <span class="n">_isFloat32</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">B1</span> <span class="p">==</span> <span class="m">202</span><span class="p">);</span>
+                <span class="n">f_isFloat32</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isFloat32</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isMap32</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isMap32</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public bool IsMap32
-        {
-            get
-            {
-                if (f_isMap32)
-                    return _isMap32;
-                _isMap32 = (bool) (B1 == 223);
-                f_isMap32 = true;
-                return _isMap32;
-            }
-        }
-        private byte _b1;
-        private int _intExtra;
-        private float? _float32Value;
-        private double? _float64Value;
-        private byte? _strLen8;
-        private ushort? _strLen16;
-        private uint? _strLen32;
-        private string _strValue;
-        private ushort? _numArrayElements16;
-        private uint? _numArrayElements32;
-        private List&lt;Msgpack&gt; _arrayElements;
-        private ushort? _numMapElements16;
-        private uint? _numMapElements32;
-        private List&lt;MapTuple&gt; _mapElements;
-        private Msgpack m_root;
-        private KaitaiStruct m_parent;
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/msgpack/msgpack/blob/master/spec.md#formats-map&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsMap32</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_isMap32</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_isMap32</span><span class="p">;</span>
+                <span class="n">_isMap32</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">B1</span> <span class="p">==</span> <span class="m">223</span><span class="p">);</span>
+                <span class="n">f_isMap32</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_isMap32</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_b1</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_intExtra</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">float?</span> <span class="n">_float32Value</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">double?</span> <span class="n">_float64Value</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte?</span> <span class="n">_strLen8</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">ushort?</span> <span class="n">_strLen16</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint?</span> <span class="n">_strLen32</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">string</span> <span class="n">_strValue</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">ushort?</span> <span class="n">_numArrayElements16</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint?</span> <span class="n">_numArrayElements32</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Msgpack</span><span class="p">&gt;</span> <span class="n">_arrayElements</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">ushort?</span> <span class="n">_numMapElements16</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint?</span> <span class="n">_numMapElements32</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">MapTuple</span><span class="p">&gt;</span> <span class="n">_mapElements</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Msgpack</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
 
-        /// &lt;summary&gt;
-        /// First byte is msgpack message is either a piece of data by
-        /// itself or determines types of further, more complex data
-        /// structures.
-        /// &lt;/summary&gt;
-        public byte B1 { get { return _b1; } }
-        public int IntExtra { get { return _intExtra; } }
-        public float? Float32Value { get { return _float32Value; } }
-        public double? Float64Value { get { return _float64Value; } }
-        public byte? StrLen8 { get { return _strLen8; } }
-        public ushort? StrLen16 { get { return _strLen16; } }
-        public uint? StrLen32 { get { return _strLen32; } }
-        public string StrValue { get { return _strValue; } }
-        public ushort? NumArrayElements16 { get { return _numArrayElements16; } }
-        public uint? NumArrayElements32 { get { return _numArrayElements32; } }
-        public List&lt;Msgpack&gt; ArrayElements { get { return _arrayElements; } }
-        public ushort? NumMapElements16 { get { return _numMapElements16; } }
-        public uint? NumMapElements32 { get { return _numMapElements32; } }
-        public List&lt;MapTuple&gt; MapElements { get { return _mapElements; } }
-        public Msgpack M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-    }
-}
-</code></pre>
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// First byte is msgpack message is either a piece of data by</span>
+        <span class="c1">/// itself or determines types of further, more complex data</span>
+        <span class="c1">/// structures.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">B1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_b1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">IntExtra</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_intExtra</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">float?</span> <span class="n">Float32Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_float32Value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">double?</span> <span class="n">Float64Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_float64Value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte?</span> <span class="n">StrLen8</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_strLen8</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">ushort?</span> <span class="n">StrLen16</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_strLen16</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint?</span> <span class="n">StrLen32</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_strLen32</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">StrValue</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_strValue</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">ushort?</span> <span class="n">NumArrayElements16</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numArrayElements16</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint?</span> <span class="n">NumArrayElements32</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numArrayElements32</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Msgpack</span><span class="p">&gt;</span> <span class="n">ArrayElements</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_arrayElements</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">ushort?</span> <span class="n">NumMapElements16</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numMapElements16</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint?</span> <span class="n">NumMapElements32</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numMapElements32</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">MapTuple</span><span class="p">&gt;</span> <span class="n">MapElements</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_mapElements</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Msgpack</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -938,8 +935,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

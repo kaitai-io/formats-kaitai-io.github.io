@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -209,185 +206,185 @@ the tag itself, please use <code>id3v1_1::id3_v1_1_tag</code> subtype.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: id3v1_1
-  license: CC0-1.0
-doc: |
-  ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
-  tag is appended to the end of file and spans exactly 128 bytes.
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">id3v1_1</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">ID3v1.1 tag is a method to store simple metadata in .mp3 files. The</span>
+  <span class="no">tag is appended to the end of file and spans exactly 128 bytes.</span>
 
-  This type is supposed to be used on full .mp3 files, seeking to
-  proper position automatically. If you&#39;re interesting in parsing only
-  the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
-doc-ref: http://id3.org/ID3v1
-instances:
-  id3v1_tag:
-    pos: _io.size - 128
-    type: id3_v1_1_tag
-types:
-  id3_v1_1_tag:
-    doc: |
-      ID3v1.1 tag itself, a fixed size 128 byte structure. Contains
-      several metadata fields as fixed-size strings.
+  <span class="no">This type is supposed to be used on full .mp3 files, seeking to</span>
+  <span class="no">proper position automatically. If you&#39;re interesting in parsing only</span>
+  <span class="no">the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http://id3.org/ID3v1</span>
+<span class="nt">instances</span><span class="p">:</span>
+  <span class="nt">id3v1_tag</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_io.size - 128</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">id3_v1_1_tag</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">id3_v1_1_tag</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">ID3v1.1 tag itself, a fixed size 128 byte structure. Contains</span>
+      <span class="no">several metadata fields as fixed-size strings.</span>
 
-      Note that string encoding is not specified by standard, so real
-      encoding used would vary a lot from one implementation to
-      another. Most Windows-based applications tend to use &quot;ANSI&quot;
-      (i.e. locale-dependent encoding, usually one byte per
-      character). Some embedded applications allow selection of
-      charset.
-    seq:
-      - id: magic
-        contents: &#39;TAG&#39;
-      - id: title
-        size: 30
-        doc: Song title
-      - id: artist
-        size: 30
-        doc: Artist name
-      - id: album
-        size: 30
-        doc: Album title
-      - id: year
-        type: str
-        encoding: ASCII
-        size: 4
-        doc: Year of release
-      - id: comment
-        size: 30
-        doc: Arbitary comment
-      - id: genre
-        type: u1
-        enum: genre_enum
-    enums:
-      genre_enum:
-        0: blues
-        1: classic_rock
-        2: country
-        3: dance
-        4: disco
-        5: funk
-        6: grunge
-        7: hip_hop
-        8: jazz
-        9: metal
-        10: new_age
-        11: oldies
-        12: other
-        13: pop
-        14: rnb
-        15: rap
-        16: reggae
-        17: rock
-        18: techno
-        19: industrial
-        20: alternative
-        21: ska
-        22: death_metal
-        23: pranks
-        24: soundtrack
-        25: euro_techno
-        26: ambient
-        27: trip_hop
-        28: vocal
-        29: jazz_funk
-        30: fusion
-        31: trance
-        32: classical
-        33: instrumental
-        34: acid
-        35: house
-        36: game
-        37: sound_clip
-        38: gospel
-        39: noise
-        40: alternrock
-        41: bass
-        42: soul
-        43: punk
-        44: space
-        45: meditative
-        46: instrumental_pop
-        47: instrumental_rock
-        48: ethnic
-        49: gothic
-        50: darkwave
-        51: techno_industrial
-        52: electronic
-        53: pop_folk
-        54: eurodance
-        55: dream
-        56: southern_rock
-        57: comedy
-        58: cult
-        59: gangsta
-        60: top_40
-        61: christian_rap
-        62: pop_funk
-        63: jungle
-        64: native_american
-        65: cabaret
-        66: new_wave
-        67: psychadelic
-        68: rave
-        69: showtunes
-        70: trailer
-        71: lo_fi
-        72: tribal
-        73: acid_punk
-        74: acid_jazz
-        75: polka
-        76: retro
-        77: musical
-        78: rock_n_roll
-        79: hard_rock
-        80: folk
-        81: folk_rock
-        82: national_folk
-        83: swing
-        84: fast_fusion
-        85: bebob
-        86: latin
-        87: revival
-        88: celtic
-        89: bluegrass
-        90: avantgarde
-        91: gothic_rock
-        92: progressive_rock
-        93: psychedelic_rock
-        94: symphonic_rock
-        95: slow_rock
-        96: big_band
-        97: chorus
-        98: easy_listening
-        99: acoustic
-        100: humour
-        101: speech
-        102: chanson
-        103: opera
-        104: chamber_music
-        105: sonata
-        106: symphony
-        107: booty_bass
-        108: primus
-        109: porn_groove
-        110: satire
-        111: slow_jam
-        112: club
-        113: tango
-        114: samba
-        115: folklore
-        116: ballad
-        117: power_ballad
-        118: rhythmic_soul
-        119: freestyle
-        120: duet
-        121: punk_rock
-        122: drum_solo
-        123: a_capella
-        124: euro_house
-        125: dance_hall
-</code></pre>
+      <span class="no">Note that string encoding is not specified by standard, so real</span>
+      <span class="no">encoding used would vary a lot from one implementation to</span>
+      <span class="no">another. Most Windows-based applications tend to use &quot;ANSI&quot;</span>
+      <span class="no">(i.e. locale-dependent encoding, usually one byte per</span>
+      <span class="no">character). Some embedded applications allow selection of</span>
+      <span class="no">charset.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;TAG&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">title</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">30</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Song title</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">artist</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">30</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Artist name</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">album</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">30</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Album title</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">year</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Year of release</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">comment</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">30</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Arbitary comment</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">genre</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">genre_enum</span>
+    <span class="nt">enums</span><span class="p">:</span>
+      <span class="nt">genre_enum</span><span class="p">:</span>
+        <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blues</span>
+        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">classic_rock</span>
+        <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">country</span>
+        <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dance</span>
+        <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">disco</span>
+        <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">funk</span>
+        <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">grunge</span>
+        <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hip_hop</span>
+        <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jazz</span>
+        <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">metal</span>
+        <span class="nt">10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">new_age</span>
+        <span class="nt">11</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">oldies</span>
+        <span class="nt">12</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">other</span>
+        <span class="nt">13</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pop</span>
+        <span class="nt">14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rnb</span>
+        <span class="nt">15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rap</span>
+        <span class="nt">16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reggae</span>
+        <span class="nt">17</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rock</span>
+        <span class="nt">18</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">techno</span>
+        <span class="nt">19</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">industrial</span>
+        <span class="nt">20</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alternative</span>
+        <span class="nt">21</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ska</span>
+        <span class="nt">22</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">death_metal</span>
+        <span class="nt">23</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pranks</span>
+        <span class="nt">24</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">soundtrack</span>
+        <span class="nt">25</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">euro_techno</span>
+        <span class="nt">26</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ambient</span>
+        <span class="nt">27</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trip_hop</span>
+        <span class="nt">28</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vocal</span>
+        <span class="nt">29</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jazz_funk</span>
+        <span class="nt">30</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fusion</span>
+        <span class="nt">31</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trance</span>
+        <span class="nt">32</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">classical</span>
+        <span class="nt">33</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">instrumental</span>
+        <span class="nt">34</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">acid</span>
+        <span class="nt">35</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">house</span>
+        <span class="nt">36</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">game</span>
+        <span class="nt">37</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sound_clip</span>
+        <span class="nt">38</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gospel</span>
+        <span class="nt">39</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">noise</span>
+        <span class="nt">40</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alternrock</span>
+        <span class="nt">41</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bass</span>
+        <span class="nt">42</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">soul</span>
+        <span class="nt">43</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">punk</span>
+        <span class="nt">44</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">space</span>
+        <span class="nt">45</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">meditative</span>
+        <span class="nt">46</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">instrumental_pop</span>
+        <span class="nt">47</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">instrumental_rock</span>
+        <span class="nt">48</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ethnic</span>
+        <span class="nt">49</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gothic</span>
+        <span class="nt">50</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">darkwave</span>
+        <span class="nt">51</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">techno_industrial</span>
+        <span class="nt">52</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">electronic</span>
+        <span class="nt">53</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pop_folk</span>
+        <span class="nt">54</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eurodance</span>
+        <span class="nt">55</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dream</span>
+        <span class="nt">56</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">southern_rock</span>
+        <span class="nt">57</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">comedy</span>
+        <span class="nt">58</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cult</span>
+        <span class="nt">59</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gangsta</span>
+        <span class="nt">60</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">top_40</span>
+        <span class="nt">61</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">christian_rap</span>
+        <span class="nt">62</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pop_funk</span>
+        <span class="nt">63</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jungle</span>
+        <span class="nt">64</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">native_american</span>
+        <span class="nt">65</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cabaret</span>
+        <span class="nt">66</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">new_wave</span>
+        <span class="nt">67</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">psychadelic</span>
+        <span class="nt">68</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rave</span>
+        <span class="nt">69</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">showtunes</span>
+        <span class="nt">70</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trailer</span>
+        <span class="nt">71</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lo_fi</span>
+        <span class="nt">72</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tribal</span>
+        <span class="nt">73</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">acid_punk</span>
+        <span class="nt">74</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">acid_jazz</span>
+        <span class="nt">75</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">polka</span>
+        <span class="nt">76</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">retro</span>
+        <span class="nt">77</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">musical</span>
+        <span class="nt">78</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rock_n_roll</span>
+        <span class="nt">79</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hard_rock</span>
+        <span class="nt">80</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">folk</span>
+        <span class="nt">81</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">folk_rock</span>
+        <span class="nt">82</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">national_folk</span>
+        <span class="nt">83</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">swing</span>
+        <span class="nt">84</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fast_fusion</span>
+        <span class="nt">85</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bebob</span>
+        <span class="nt">86</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">latin</span>
+        <span class="nt">87</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">revival</span>
+        <span class="nt">88</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">celtic</span>
+        <span class="nt">89</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bluegrass</span>
+        <span class="nt">90</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">avantgarde</span>
+        <span class="nt">91</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gothic_rock</span>
+        <span class="nt">92</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">progressive_rock</span>
+        <span class="nt">93</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">psychedelic_rock</span>
+        <span class="nt">94</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">symphonic_rock</span>
+        <span class="nt">95</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">slow_rock</span>
+        <span class="nt">96</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">big_band</span>
+        <span class="nt">97</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chorus</span>
+        <span class="nt">98</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">easy_listening</span>
+        <span class="nt">99</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">acoustic</span>
+        <span class="nt">100</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">humour</span>
+        <span class="nt">101</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">speech</span>
+        <span class="nt">102</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chanson</span>
+        <span class="nt">103</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opera</span>
+        <span class="nt">104</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chamber_music</span>
+        <span class="nt">105</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sonata</span>
+        <span class="nt">106</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">symphony</span>
+        <span class="nt">107</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">booty_bass</span>
+        <span class="nt">108</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">primus</span>
+        <span class="nt">109</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">porn_groove</span>
+        <span class="nt">110</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">satire</span>
+        <span class="nt">111</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">slow_jam</span>
+        <span class="nt">112</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">club</span>
+        <span class="nt">113</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tango</span>
+        <span class="nt">114</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">samba</span>
+        <span class="nt">115</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">folklore</span>
+        <span class="nt">116</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ballad</span>
+        <span class="nt">117</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">power_ballad</span>
+        <span class="nt">118</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rhythmic_soul</span>
+        <span class="nt">119</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">freestyle</span>
+        <span class="nt">120</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">duet</span>
+        <span class="nt">121</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">punk_rock</span>
+        <span class="nt">122</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">drum_solo</span>
+        <span class="nt">123</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">a_capella</span>
+        <span class="nt">124</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">euro_house</span>
+        <span class="nt">125</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dance_hall</span>
+</pre></div>
     </div>
 </section>
 
@@ -411,8 +408,8 @@ types:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -232,156 +229,156 @@ section#format-index .row {
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: avi
-  endian: le
-  title: Microsoft AVI file
-  xref:
-    justsolve: AVI
-    loc: fdd000059
-    pronom: fmt/5
-    wikidata: Q209054
-  license: CC0-1.0
-  ks-version: 0.7
-doc-ref: https://msdn.microsoft.com/en-us/library/ms779636.aspx
-seq:
-  - id: magic1
-    contents: RIFF
-  - id: file_size
-    type: u4
-  - id: magic2
-    contents: &#39;AVI &#39;
-  - id: data
-    type: blocks
-    size: file_size - 4
-types:
-  # either a chunk or list
-  blocks:
-    seq:
-      - id: entries
-        type: block
-        repeat: eos
-  block:
-    seq:
-      - id: four_cc
-        type: u4
-        enum: chunk_type
-      - id: block_size
-        type: u4
-      - id: data
-        size: block_size
-        type:
-          switch-on: four_cc
-          cases:
-            &#39;chunk_type::list&#39;: list_body
-            &#39;chunk_type::avih&#39;: avih_body
-            &#39;chunk_type::strh&#39;: strh_body
-  list_body:
-    seq:
-      - id: list_type
-        type: u4
-        enum: chunk_type
-      - id: data
-        type: blocks
-  avih_body:
-    doc: Main header of an AVI file, defined as AVIMAINHEADER structure
-    doc-ref: https://msdn.microsoft.com/en-us/library/ms779632.aspx
-    seq:
-      - id: micro_sec_per_frame
-        type: u4
-      - id: max_bytes_per_sec
-        type: u4
-      - id: padding_granularity
-        type: u4
-      - id: flags
-        type: u4
-      - id: total_frames
-        type: u4
-      - id: initial_frames
-        type: u4
-      - id: streams
-        type: u4
-      - id: suggested_buffer_size
-        type: u4
-      - id: width
-        type: u4
-      - id: height
-        type: u4
-      - id: reserved
-        size: 16
-  strh_body:
-    doc: Stream header (one header per stream), defined as AVISTREAMHEADER structure
-    doc-ref: https://msdn.microsoft.com/en-us/library/ms779638.aspx
-    seq:
-      - id: fcc_type
-        type: u4
-        enum: stream_type
-        doc: Type of the data contained in the stream
-      - id: fcc_handler
-        type: u4
-        enum: handler_type
-        doc: Type of preferred data handler for the stream (specifies codec for audio / video streams)
-      - id: flags
-        type: u4
-      - id: priority
-        type: u2
-      - id: language
-        type: u2
-      - id: initial_frames
-        type: u4
-      - id: scale
-        type: u4
-      - id: rate
-        type: u4
-      - id: start
-        type: u4
-      - id: length
-        type: u4
-      - id: suggested_buffer_size
-        type: u4
-      - id: quality
-        type: u4
-      - id: sample_size
-        type: u4
-      - id: frame
-        type: rect
-  strf_body:
-    doc: Stream format description
-  rect:
-    seq:
-      - id: left
-        type: s2
-      - id: top
-        type: s2
-      - id: right
-        type: s2
-      - id: bottom
-        type: s2
-enums:
-  chunk_type:
-    0x31786469: idx1
-    0x4b4e554a: junk
-    0x4f464e49: info
-    0x54465349: isft
-    0x5453494c: list
-    0x66727473: strf
-    0x68697661: avih
-    0x68727473: strh
-    0x69766f6d: movi
-    0x6c726468: hdrl
-    0x6c727473: strl
-  stream_type:
-    0x7364696d: mids # MIDI stream
-    0x73646976: vids # Video stream
-    0x73647561: auds # Audio stream
-    0x73747874: txts # Text stream
-  handler_type:
-    0x00000055: mp3
-    0x00002000: ac3
-    0x00002001: dts
-    0x64697663: cvid
-    0x64697678: xvid
-</code></pre>
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">avi</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Microsoft AVI file</span>
+  <span class="nt">xref</span><span class="p">:</span>
+    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">AVI</span>
+    <span class="nt">loc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fdd000059</span>
+    <span class="nt">pronom</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fmt/5</span>
+    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q209054</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.7</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://msdn.microsoft.com/en-us/library/ms779636.aspx</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic1</span>
+    <span class="nt">contents</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RIFF</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_size</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic2</span>
+    <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;AVI</span><span class="nv"> </span><span class="s">&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blocks</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_size - 4</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="c1"># either a chunk or list</span>
+  <span class="nt">blocks</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">block</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+  <span class="nt">block</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">four_cc</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chunk_type</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">block_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">block_size</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">four_cc</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;chunk_type::list&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">list_body</span>
+            <span class="s">&#39;chunk_type::avih&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">avih_body</span>
+            <span class="s">&#39;chunk_type::strh&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">strh_body</span>
+  <span class="nt">list_body</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">list_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chunk_type</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blocks</span>
+  <span class="nt">avih_body</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Main header of an AVI file, defined as AVIMAINHEADER structure</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://msdn.microsoft.com/en-us/library/ms779632.aspx</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">micro_sec_per_frame</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">max_bytes_per_sec</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">padding_granularity</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">total_frames</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">initial_frames</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">streams</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">suggested_buffer_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">width</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">height</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+  <span class="nt">strh_body</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Stream header (one header per stream), defined as AVISTREAMHEADER structure</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://msdn.microsoft.com/en-us/library/ms779638.aspx</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fcc_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stream_type</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Type of the data contained in the stream</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fcc_handler</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">handler_type</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Type of preferred data handler for the stream (specifies codec for audio / video streams)</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">priority</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">language</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">initial_frames</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scale</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rate</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">suggested_buffer_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">quality</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sample_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">frame</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rect</span>
+  <span class="nt">strf_body</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Stream format description</span>
+  <span class="nt">rect</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">left</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">top</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">right</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bottom</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">chunk_type</span><span class="p">:</span>
+    <span class="nt">0x31786469</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">idx1</span>
+    <span class="nt">0x4b4e554a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">junk</span>
+    <span class="nt">0x4f464e49</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">info</span>
+    <span class="nt">0x54465349</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">isft</span>
+    <span class="nt">0x5453494c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">list</span>
+    <span class="nt">0x66727473</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strf</span>
+    <span class="nt">0x68697661</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">avih</span>
+    <span class="nt">0x68727473</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strh</span>
+    <span class="nt">0x69766f6d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">movi</span>
+    <span class="nt">0x6c726468</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hdrl</span>
+    <span class="nt">0x6c727473</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strl</span>
+  <span class="nt">stream_type</span><span class="p">:</span>
+    <span class="nt">0x7364696d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mids</span> <span class="c1"># MIDI stream</span>
+    <span class="nt">0x73646976</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vids</span> <span class="c1"># Video stream</span>
+    <span class="nt">0x73647561</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">auds</span> <span class="c1"># Audio stream</span>
+    <span class="nt">0x73747874</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">txts</span> <span class="c1"># Text stream</span>
+  <span class="nt">handler_type</span><span class="p">:</span>
+    <span class="nt">0x00000055</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mp3</span>
+    <span class="nt">0x00002000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ac3</span>
+    <span class="nt">0x00002001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dts</span>
+    <span class="nt">0x64697663</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cvid</span>
+    <span class="nt">0x64697678</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xvid</span>
+</pre></div>
     </div>
 </section>
 
@@ -405,8 +402,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

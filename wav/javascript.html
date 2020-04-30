@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -243,917 +240,917 @@ var data = new Wav(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.Wav = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-/**
- * The WAVE file format is a subset of Microsoft&#39;s RIFF specification for the
- * storage of multimedia files. A RIFF file starts out with a file header
- * followed by a sequence of data chunks. A WAVE file is often just a RIFF
- * file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --
- * a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing
- * the actual sample data.
- * 
- * This Kaitai implementation was written by John Byrd of Gigantic Software
- * (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
- * @see {@link https://www.loc.gov/preservation/digital/formats/fdd/fdd000001.shtml|Source}
- */
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">Wav</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * The WAVE file format is a subset of Microsoft&#39;s RIFF specification for the</span>
+<span class="cm"> * storage of multimedia files. A RIFF file starts out with a file header</span>
+<span class="cm"> * followed by a sequence of data chunks. A WAVE file is often just a RIFF</span>
+<span class="cm"> * file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --</span>
+<span class="cm"> * a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing</span>
+<span class="cm"> * the actual sample data.</span>
+<span class="cm"> * </span>
+<span class="cm"> * This Kaitai implementation was written by John Byrd of Gigantic Software</span>
+<span class="cm"> * (jbyrd@giganticsoftware.com), and it is likely to contain bugs.</span>
+<span class="cm"> * @see {@link https://www.loc.gov/preservation/digital/formats/fdd/fdd000001.shtml|Source}</span>
+<span class="cm"> */</span>
 
-var Wav = (function() {
-  Wav.WFormatTagType = Object.freeze({
-    UNKNOWN: 0,
-    PCM: 1,
-    ADPCM: 2,
-    IEEE_FLOAT: 3,
-    VSELP: 4,
-    IBM_CVSD: 5,
-    ALAW: 6,
-    MULAW: 7,
-    DTS: 8,
-    DRM: 9,
-    WMAVOICE9: 10,
-    WMAVOICE10: 11,
-    OKI_ADPCM: 16,
-    DVI_ADPCM: 17,
-    MEDIASPACE_ADPCM: 18,
-    SIERRA_ADPCM: 19,
-    G723_ADPCM: 20,
-    DIGISTD: 21,
-    DIGIFIX: 22,
-    DIALOGIC_OKI_ADPCM: 23,
-    MEDIAVISION_ADPCM: 24,
-    CU_CODEC: 25,
-    HP_DYN_VOICE: 26,
-    YAMAHA_ADPCM: 32,
-    SONARC: 33,
-    DSPGROUP_TRUESPEECH: 34,
-    ECHOSC1: 35,
-    AUDIOFILE_AF36: 36,
-    APTX: 37,
-    AUDIOFILE_AF10: 38,
-    PROSODY_1612: 39,
-    LRC: 40,
-    DOLBY_AC2: 48,
-    GSM610: 49,
-    MSNAUDIO: 50,
-    ANTEX_ADPCME: 51,
-    CONTROL_RES_VQLPC: 52,
-    DIGIREAL: 53,
-    DIGIADPCM: 54,
-    CONTROL_RES_CR10: 55,
-    NMS_VBXADPCM: 56,
-    CS_IMAADPCM: 57,
-    ECHOSC3: 58,
-    ROCKWELL_ADPCM: 59,
-    ROCKWELL_DIGITALK: 60,
-    XEBEC: 61,
-    G721_ADPCM: 64,
-    G728_CELP: 65,
-    MSG723: 66,
-    INTEL_G723_1: 67,
-    INTEL_G729: 68,
-    SHARP_G726: 69,
-    MPEG: 80,
-    RT24: 82,
-    PAC: 83,
-    MPEGLAYER3: 85,
-    LUCENT_G723: 89,
-    CIRRUS: 96,
-    ESPCM: 97,
-    VOXWARE: 98,
-    CANOPUS_ATRAC: 99,
-    G726_ADPCM: 100,
-    G722_ADPCM: 101,
-    DSAT: 102,
-    DSAT_DISPLAY: 103,
-    VOXWARE_BYTE_ALIGNED: 105,
-    VOXWARE_AC8: 112,
-    VOXWARE_AC10: 113,
-    VOXWARE_AC16: 114,
-    VOXWARE_AC20: 115,
-    VOXWARE_RT24: 116,
-    VOXWARE_RT29: 117,
-    VOXWARE_RT29HW: 118,
-    VOXWARE_VR12: 119,
-    VOXWARE_VR18: 120,
-    VOXWARE_TQ40: 121,
-    VOXWARE_SC3: 122,
-    VOXWARE_SC3_1: 123,
-    SOFTSOUND: 128,
-    VOXWARE_TQ60: 129,
-    MSRT24: 130,
-    G729A: 131,
-    MVI_MVI2: 132,
-    DF_G726: 133,
-    DF_GSM610: 134,
-    ISIAUDIO: 136,
-    ONLIVE: 137,
-    MULTITUDE_FT_SX20: 138,
-    INFOCOM_ITS_G721_ADPCM: 139,
-    CONVEDIA_G729: 140,
-    CONGRUENCY: 141,
-    SBC24: 145,
-    DOLBY_AC3_SPDIF: 146,
-    MEDIASONIC_G723: 147,
-    PROSODY_8KBPS: 148,
-    ZYXEL_ADPCM: 151,
-    PHILIPS_LPCBB: 152,
-    PACKED: 153,
-    MALDEN_PHONYTALK: 160,
-    RACAL_RECORDER_GSM: 161,
-    RACAL_RECORDER_G720_A: 162,
-    RACAL_RECORDER_G723_1: 163,
-    RACAL_RECORDER_TETRA_ACELP: 164,
-    NEC_AAC: 176,
-    RAW_AAC1: 255,
-    RHETOREX_ADPCM: 256,
-    IRAT: 257,
-    VIVO_G723: 273,
-    VIVO_SIREN: 274,
-    PHILIPS_CELP: 288,
-    PHILIPS_GRUNDIG: 289,
-    DIGITAL_G723: 291,
-    SANYO_LD_ADPCM: 293,
-    SIPROLAB_ACEPLNET: 304,
-    SIPROLAB_ACELP4800: 305,
-    SIPROLAB_ACELP8V3: 306,
-    SIPROLAB_G729: 307,
-    SIPROLAB_G729A: 308,
-    SIPROLAB_KELVIN: 309,
-    VOICEAGE_AMR: 310,
-    G726ADPCM: 320,
-    DICTAPHONE_CELP68: 321,
-    DICTAPHONE_CELP54: 322,
-    QUALCOMM_PUREVOICE: 336,
-    QUALCOMM_HALFRATE: 337,
-    TUBGSM: 341,
-    MSAUDIO1: 352,
-    WMAUDIO2: 353,
-    WMAUDIO3: 354,
-    WMAUDIO_LOSSLESS: 355,
-    WMASPDIF: 356,
-    UNISYS_NAP_ADPCM: 368,
-    UNISYS_NAP_ULAW: 369,
-    UNISYS_NAP_ALAW: 370,
-    UNISYS_NAP_16K: 371,
-    SYCOM_ACM_SYC008: 372,
-    SYCOM_ACM_SYC701_G726L: 373,
-    SYCOM_ACM_SYC701_CELP54: 374,
-    SYCOM_ACM_SYC701_CELP68: 375,
-    KNOWLEDGE_ADVENTURE_ADPCM: 376,
-    FRAUNHOFER_IIS_MPEG2_AAC: 384,
-    DTS_DS: 400,
-    CREATIVE_ADPCM: 512,
-    CREATIVE_FASTSPEECH8: 514,
-    CREATIVE_FASTSPEECH10: 515,
-    UHER_ADPCM: 528,
-    ULEAD_DV_AUDIO: 533,
-    ULEAD_DV_AUDIO_1: 534,
-    QUARTERDECK: 544,
-    ILINK_VC: 560,
-    RAW_SPORT: 576,
-    ESST_AC3: 577,
-    GENERIC_PASSTHRU: 585,
-    IPI_HSX: 592,
-    IPI_RPELP: 593,
-    CS2: 608,
-    SONY_SCX: 624,
-    SONY_SCY: 625,
-    SONY_ATRAC3: 626,
-    SONY_SPC: 627,
-    TELUM_AUDIO: 640,
-    TELUM_IA_AUDIO: 641,
-    NORCOM_VOICE_SYSTEMS_ADPCM: 645,
-    FM_TOWNS_SND: 768,
-    MICRONAS: 848,
-    MICRONAS_CELP833: 849,
-    BTV_DIGITAL: 1024,
-    INTEL_MUSIC_CODER: 1025,
-    INDEO_AUDIO: 1026,
-    QDESIGN_MUSIC: 1104,
-    ON2_VP7_AUDIO: 1280,
-    ON2_VP6_AUDIO: 1281,
-    VME_VMPCM: 1664,
-    TPC: 1665,
-    LIGHTWAVE_LOSSLESS: 2222,
-    OLIGSM: 4096,
-    OLIADPCM: 4097,
-    OLICELP: 4098,
-    OLISBC: 4099,
-    OLIOPR: 4100,
-    LH_CODEC: 4352,
-    LH_CODEC_CELP: 4353,
-    LH_CODEC_SBC8: 4354,
-    LH_CODEC_SBC12: 4355,
-    LH_CODEC_SBC16: 4356,
-    NORRIS: 5120,
-    ISIAUDIO_2: 5121,
-    SOUNDSPACE_MUSICOMPRESS: 5376,
-    MPEG_ADTS_AAC: 5632,
-    MPEG_RAW_AAC: 5633,
-    MPEG_LOAS: 5634,
-    NOKIA_MPEG_ADTS_AAC: 5640,
-    NOKIA_MPEG_RAW_AAC: 5641,
-    VODAFONE_MPEG_ADTS_AAC: 5642,
-    VODAFONE_MPEG_RAW_AAC: 5643,
-    MPEG_HEAAC: 5648,
-    VOXWARE_RT24_SPEECH: 6172,
-    SONICFOUNDRY_LOSSLESS: 6513,
-    INNINGS_TELECOM_ADPCM: 6521,
-    LUCENT_SX8300P: 7175,
-    LUCENT_SX5363S: 7180,
-    CUSEEME: 7939,
-    NTCSOFT_ALF2CM_ACM: 8132,
-    DVM: 8192,
-    DTS2: 8193,
-    MAKEAVIS: 13075,
-    DIVIO_MPEG4_AAC: 16707,
-    NOKIA_ADAPTIVE_MULTIRATE: 16897,
-    DIVIO_G726: 16963,
-    LEAD_SPEECH: 17228,
-    LEAD_VORBIS: 22092,
-    WAVPACK_AUDIO: 22358,
-    OGG_VORBIS_MODE_1: 26447,
-    OGG_VORBIS_MODE_2: 26448,
-    OGG_VORBIS_MODE_3: 26449,
-    OGG_VORBIS_MODE_1_PLUS: 26479,
-    OGG_VORBIS_MODE_2_PLUS: 26480,
-    OGG_VORBIS_MODE_3_PLUS: 26481,
-    THREECOM_NBX: 28672,
-    FAAD_AAC: 28781,
-    AMR_NB: 29537,
-    AMR_WB: 29538,
-    AMR_WP: 29539,
-    GSM_AMR_CBR: 31265,
-    GSM_AMR_VBR_SID: 31266,
-    COMVERSE_INFOSYS_G723_1: 41216,
-    COMVERSE_INFOSYS_AVQSBC: 41217,
-    COMVERSE_INFOSYS_SBC: 41218,
-    SYMBOL_G729_A: 41219,
-    VOICEAGE_AMR_WB: 41220,
-    INGENIENT_G726: 41221,
-    MPEG4_AAC: 41222,
-    ENCORE_G726: 41223,
-    ZOLL_ASAO: 41224,
-    SPEEX_VOICE: 41225,
-    VIANIX_MASC: 41226,
-    WM9_SPECTRUM_ANALYZER: 41227,
-    WMF_SPECTRUM_ANAYZER: 41228,
-    GSM_610: 41229,
-    GSM_620: 41230,
-    GSM_660: 41231,
-    GSM_690: 41232,
-    GSM_ADAPTIVE_MULTIRATE_WB: 41233,
-    POLYCOM_G722: 41234,
-    POLYCOM_G728: 41235,
-    POLYCOM_G729_A: 41236,
-    POLYCOM_SIREN: 41237,
-    GLOBAL_IP_ILBC: 41238,
-    RADIOTIME_TIME_SHIFT_RADIO: 41239,
-    NICE_ACA: 41240,
-    NICE_ADPCM: 41241,
-    VOCORD_G721: 41242,
-    VOCORD_G726: 41243,
-    VOCORD_G722_1: 41244,
-    VOCORD_G728: 41245,
-    VOCORD_G729: 41246,
-    VOCORD_G729_A: 41247,
-    VOCORD_G723_1: 41248,
-    VOCORD_LBC: 41249,
-    NICE_G728: 41250,
-    FRACE_TELECOM_G729: 41251,
-    CODIAN: 41252,
-    FLAC: 61868,
-    EXTENSIBLE: 65534,
-    DEVELOPMENT: 65535,
+<span class="kd">var</span> <span class="nx">Wav</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">Wav</span><span class="p">.</span><span class="nx">WFormatTagType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">UNKNOWN</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">PCM</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">ADPCM</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">IEEE_FLOAT</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nx">VSELP</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nx">IBM_CVSD</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nx">ALAW</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="nx">MULAW</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="nx">DTS</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="nx">DRM</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="nx">WMAVOICE9</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="nx">WMAVOICE10</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
+    <span class="nx">OKI_ADPCM</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="nx">DVI_ADPCM</span><span class="o">:</span> <span class="mi">17</span><span class="p">,</span>
+    <span class="nx">MEDIASPACE_ADPCM</span><span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
+    <span class="nx">SIERRA_ADPCM</span><span class="o">:</span> <span class="mi">19</span><span class="p">,</span>
+    <span class="nx">G723_ADPCM</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="nx">DIGISTD</span><span class="o">:</span> <span class="mi">21</span><span class="p">,</span>
+    <span class="nx">DIGIFIX</span><span class="o">:</span> <span class="mi">22</span><span class="p">,</span>
+    <span class="nx">DIALOGIC_OKI_ADPCM</span><span class="o">:</span> <span class="mi">23</span><span class="p">,</span>
+    <span class="nx">MEDIAVISION_ADPCM</span><span class="o">:</span> <span class="mi">24</span><span class="p">,</span>
+    <span class="nx">CU_CODEC</span><span class="o">:</span> <span class="mi">25</span><span class="p">,</span>
+    <span class="nx">HP_DYN_VOICE</span><span class="o">:</span> <span class="mi">26</span><span class="p">,</span>
+    <span class="nx">YAMAHA_ADPCM</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span>
+    <span class="nx">SONARC</span><span class="o">:</span> <span class="mi">33</span><span class="p">,</span>
+    <span class="nx">DSPGROUP_TRUESPEECH</span><span class="o">:</span> <span class="mi">34</span><span class="p">,</span>
+    <span class="nx">ECHOSC1</span><span class="o">:</span> <span class="mi">35</span><span class="p">,</span>
+    <span class="nx">AUDIOFILE_AF36</span><span class="o">:</span> <span class="mi">36</span><span class="p">,</span>
+    <span class="nx">APTX</span><span class="o">:</span> <span class="mi">37</span><span class="p">,</span>
+    <span class="nx">AUDIOFILE_AF10</span><span class="o">:</span> <span class="mi">38</span><span class="p">,</span>
+    <span class="nx">PROSODY_1612</span><span class="o">:</span> <span class="mi">39</span><span class="p">,</span>
+    <span class="nx">LRC</span><span class="o">:</span> <span class="mi">40</span><span class="p">,</span>
+    <span class="nx">DOLBY_AC2</span><span class="o">:</span> <span class="mi">48</span><span class="p">,</span>
+    <span class="nx">GSM610</span><span class="o">:</span> <span class="mi">49</span><span class="p">,</span>
+    <span class="nx">MSNAUDIO</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="nx">ANTEX_ADPCME</span><span class="o">:</span> <span class="mi">51</span><span class="p">,</span>
+    <span class="nx">CONTROL_RES_VQLPC</span><span class="o">:</span> <span class="mi">52</span><span class="p">,</span>
+    <span class="nx">DIGIREAL</span><span class="o">:</span> <span class="mi">53</span><span class="p">,</span>
+    <span class="nx">DIGIADPCM</span><span class="o">:</span> <span class="mi">54</span><span class="p">,</span>
+    <span class="nx">CONTROL_RES_CR10</span><span class="o">:</span> <span class="mi">55</span><span class="p">,</span>
+    <span class="nx">NMS_VBXADPCM</span><span class="o">:</span> <span class="mi">56</span><span class="p">,</span>
+    <span class="nx">CS_IMAADPCM</span><span class="o">:</span> <span class="mi">57</span><span class="p">,</span>
+    <span class="nx">ECHOSC3</span><span class="o">:</span> <span class="mi">58</span><span class="p">,</span>
+    <span class="nx">ROCKWELL_ADPCM</span><span class="o">:</span> <span class="mi">59</span><span class="p">,</span>
+    <span class="nx">ROCKWELL_DIGITALK</span><span class="o">:</span> <span class="mi">60</span><span class="p">,</span>
+    <span class="nx">XEBEC</span><span class="o">:</span> <span class="mi">61</span><span class="p">,</span>
+    <span class="nx">G721_ADPCM</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
+    <span class="nx">G728_CELP</span><span class="o">:</span> <span class="mi">65</span><span class="p">,</span>
+    <span class="nx">MSG723</span><span class="o">:</span> <span class="mi">66</span><span class="p">,</span>
+    <span class="nx">INTEL_G723_1</span><span class="o">:</span> <span class="mi">67</span><span class="p">,</span>
+    <span class="nx">INTEL_G729</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
+    <span class="nx">SHARP_G726</span><span class="o">:</span> <span class="mi">69</span><span class="p">,</span>
+    <span class="nx">MPEG</span><span class="o">:</span> <span class="mi">80</span><span class="p">,</span>
+    <span class="nx">RT24</span><span class="o">:</span> <span class="mi">82</span><span class="p">,</span>
+    <span class="nx">PAC</span><span class="o">:</span> <span class="mi">83</span><span class="p">,</span>
+    <span class="nx">MPEGLAYER3</span><span class="o">:</span> <span class="mi">85</span><span class="p">,</span>
+    <span class="nx">LUCENT_G723</span><span class="o">:</span> <span class="mi">89</span><span class="p">,</span>
+    <span class="nx">CIRRUS</span><span class="o">:</span> <span class="mi">96</span><span class="p">,</span>
+    <span class="nx">ESPCM</span><span class="o">:</span> <span class="mi">97</span><span class="p">,</span>
+    <span class="nx">VOXWARE</span><span class="o">:</span> <span class="mi">98</span><span class="p">,</span>
+    <span class="nx">CANOPUS_ATRAC</span><span class="o">:</span> <span class="mi">99</span><span class="p">,</span>
+    <span class="nx">G726_ADPCM</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="nx">G722_ADPCM</span><span class="o">:</span> <span class="mi">101</span><span class="p">,</span>
+    <span class="nx">DSAT</span><span class="o">:</span> <span class="mi">102</span><span class="p">,</span>
+    <span class="nx">DSAT_DISPLAY</span><span class="o">:</span> <span class="mi">103</span><span class="p">,</span>
+    <span class="nx">VOXWARE_BYTE_ALIGNED</span><span class="o">:</span> <span class="mi">105</span><span class="p">,</span>
+    <span class="nx">VOXWARE_AC8</span><span class="o">:</span> <span class="mi">112</span><span class="p">,</span>
+    <span class="nx">VOXWARE_AC10</span><span class="o">:</span> <span class="mi">113</span><span class="p">,</span>
+    <span class="nx">VOXWARE_AC16</span><span class="o">:</span> <span class="mi">114</span><span class="p">,</span>
+    <span class="nx">VOXWARE_AC20</span><span class="o">:</span> <span class="mi">115</span><span class="p">,</span>
+    <span class="nx">VOXWARE_RT24</span><span class="o">:</span> <span class="mi">116</span><span class="p">,</span>
+    <span class="nx">VOXWARE_RT29</span><span class="o">:</span> <span class="mi">117</span><span class="p">,</span>
+    <span class="nx">VOXWARE_RT29HW</span><span class="o">:</span> <span class="mi">118</span><span class="p">,</span>
+    <span class="nx">VOXWARE_VR12</span><span class="o">:</span> <span class="mi">119</span><span class="p">,</span>
+    <span class="nx">VOXWARE_VR18</span><span class="o">:</span> <span class="mi">120</span><span class="p">,</span>
+    <span class="nx">VOXWARE_TQ40</span><span class="o">:</span> <span class="mi">121</span><span class="p">,</span>
+    <span class="nx">VOXWARE_SC3</span><span class="o">:</span> <span class="mi">122</span><span class="p">,</span>
+    <span class="nx">VOXWARE_SC3_1</span><span class="o">:</span> <span class="mi">123</span><span class="p">,</span>
+    <span class="nx">SOFTSOUND</span><span class="o">:</span> <span class="mi">128</span><span class="p">,</span>
+    <span class="nx">VOXWARE_TQ60</span><span class="o">:</span> <span class="mi">129</span><span class="p">,</span>
+    <span class="nx">MSRT24</span><span class="o">:</span> <span class="mi">130</span><span class="p">,</span>
+    <span class="nx">G729A</span><span class="o">:</span> <span class="mi">131</span><span class="p">,</span>
+    <span class="nx">MVI_MVI2</span><span class="o">:</span> <span class="mi">132</span><span class="p">,</span>
+    <span class="nx">DF_G726</span><span class="o">:</span> <span class="mi">133</span><span class="p">,</span>
+    <span class="nx">DF_GSM610</span><span class="o">:</span> <span class="mi">134</span><span class="p">,</span>
+    <span class="nx">ISIAUDIO</span><span class="o">:</span> <span class="mi">136</span><span class="p">,</span>
+    <span class="nx">ONLIVE</span><span class="o">:</span> <span class="mi">137</span><span class="p">,</span>
+    <span class="nx">MULTITUDE_FT_SX20</span><span class="o">:</span> <span class="mi">138</span><span class="p">,</span>
+    <span class="nx">INFOCOM_ITS_G721_ADPCM</span><span class="o">:</span> <span class="mi">139</span><span class="p">,</span>
+    <span class="nx">CONVEDIA_G729</span><span class="o">:</span> <span class="mi">140</span><span class="p">,</span>
+    <span class="nx">CONGRUENCY</span><span class="o">:</span> <span class="mi">141</span><span class="p">,</span>
+    <span class="nx">SBC24</span><span class="o">:</span> <span class="mi">145</span><span class="p">,</span>
+    <span class="nx">DOLBY_AC3_SPDIF</span><span class="o">:</span> <span class="mi">146</span><span class="p">,</span>
+    <span class="nx">MEDIASONIC_G723</span><span class="o">:</span> <span class="mi">147</span><span class="p">,</span>
+    <span class="nx">PROSODY_8KBPS</span><span class="o">:</span> <span class="mi">148</span><span class="p">,</span>
+    <span class="nx">ZYXEL_ADPCM</span><span class="o">:</span> <span class="mi">151</span><span class="p">,</span>
+    <span class="nx">PHILIPS_LPCBB</span><span class="o">:</span> <span class="mi">152</span><span class="p">,</span>
+    <span class="nx">PACKED</span><span class="o">:</span> <span class="mi">153</span><span class="p">,</span>
+    <span class="nx">MALDEN_PHONYTALK</span><span class="o">:</span> <span class="mi">160</span><span class="p">,</span>
+    <span class="nx">RACAL_RECORDER_GSM</span><span class="o">:</span> <span class="mi">161</span><span class="p">,</span>
+    <span class="nx">RACAL_RECORDER_G720_A</span><span class="o">:</span> <span class="mi">162</span><span class="p">,</span>
+    <span class="nx">RACAL_RECORDER_G723_1</span><span class="o">:</span> <span class="mi">163</span><span class="p">,</span>
+    <span class="nx">RACAL_RECORDER_TETRA_ACELP</span><span class="o">:</span> <span class="mi">164</span><span class="p">,</span>
+    <span class="nx">NEC_AAC</span><span class="o">:</span> <span class="mi">176</span><span class="p">,</span>
+    <span class="nx">RAW_AAC1</span><span class="o">:</span> <span class="mi">255</span><span class="p">,</span>
+    <span class="nx">RHETOREX_ADPCM</span><span class="o">:</span> <span class="mi">256</span><span class="p">,</span>
+    <span class="nx">IRAT</span><span class="o">:</span> <span class="mi">257</span><span class="p">,</span>
+    <span class="nx">VIVO_G723</span><span class="o">:</span> <span class="mi">273</span><span class="p">,</span>
+    <span class="nx">VIVO_SIREN</span><span class="o">:</span> <span class="mi">274</span><span class="p">,</span>
+    <span class="nx">PHILIPS_CELP</span><span class="o">:</span> <span class="mi">288</span><span class="p">,</span>
+    <span class="nx">PHILIPS_GRUNDIG</span><span class="o">:</span> <span class="mi">289</span><span class="p">,</span>
+    <span class="nx">DIGITAL_G723</span><span class="o">:</span> <span class="mi">291</span><span class="p">,</span>
+    <span class="nx">SANYO_LD_ADPCM</span><span class="o">:</span> <span class="mi">293</span><span class="p">,</span>
+    <span class="nx">SIPROLAB_ACEPLNET</span><span class="o">:</span> <span class="mi">304</span><span class="p">,</span>
+    <span class="nx">SIPROLAB_ACELP4800</span><span class="o">:</span> <span class="mi">305</span><span class="p">,</span>
+    <span class="nx">SIPROLAB_ACELP8V3</span><span class="o">:</span> <span class="mi">306</span><span class="p">,</span>
+    <span class="nx">SIPROLAB_G729</span><span class="o">:</span> <span class="mi">307</span><span class="p">,</span>
+    <span class="nx">SIPROLAB_G729A</span><span class="o">:</span> <span class="mi">308</span><span class="p">,</span>
+    <span class="nx">SIPROLAB_KELVIN</span><span class="o">:</span> <span class="mi">309</span><span class="p">,</span>
+    <span class="nx">VOICEAGE_AMR</span><span class="o">:</span> <span class="mi">310</span><span class="p">,</span>
+    <span class="nx">G726ADPCM</span><span class="o">:</span> <span class="mi">320</span><span class="p">,</span>
+    <span class="nx">DICTAPHONE_CELP68</span><span class="o">:</span> <span class="mi">321</span><span class="p">,</span>
+    <span class="nx">DICTAPHONE_CELP54</span><span class="o">:</span> <span class="mi">322</span><span class="p">,</span>
+    <span class="nx">QUALCOMM_PUREVOICE</span><span class="o">:</span> <span class="mi">336</span><span class="p">,</span>
+    <span class="nx">QUALCOMM_HALFRATE</span><span class="o">:</span> <span class="mi">337</span><span class="p">,</span>
+    <span class="nx">TUBGSM</span><span class="o">:</span> <span class="mi">341</span><span class="p">,</span>
+    <span class="nx">MSAUDIO1</span><span class="o">:</span> <span class="mi">352</span><span class="p">,</span>
+    <span class="nx">WMAUDIO2</span><span class="o">:</span> <span class="mi">353</span><span class="p">,</span>
+    <span class="nx">WMAUDIO3</span><span class="o">:</span> <span class="mi">354</span><span class="p">,</span>
+    <span class="nx">WMAUDIO_LOSSLESS</span><span class="o">:</span> <span class="mi">355</span><span class="p">,</span>
+    <span class="nx">WMASPDIF</span><span class="o">:</span> <span class="mi">356</span><span class="p">,</span>
+    <span class="nx">UNISYS_NAP_ADPCM</span><span class="o">:</span> <span class="mi">368</span><span class="p">,</span>
+    <span class="nx">UNISYS_NAP_ULAW</span><span class="o">:</span> <span class="mi">369</span><span class="p">,</span>
+    <span class="nx">UNISYS_NAP_ALAW</span><span class="o">:</span> <span class="mi">370</span><span class="p">,</span>
+    <span class="nx">UNISYS_NAP_16K</span><span class="o">:</span> <span class="mi">371</span><span class="p">,</span>
+    <span class="nx">SYCOM_ACM_SYC008</span><span class="o">:</span> <span class="mi">372</span><span class="p">,</span>
+    <span class="nx">SYCOM_ACM_SYC701_G726L</span><span class="o">:</span> <span class="mi">373</span><span class="p">,</span>
+    <span class="nx">SYCOM_ACM_SYC701_CELP54</span><span class="o">:</span> <span class="mi">374</span><span class="p">,</span>
+    <span class="nx">SYCOM_ACM_SYC701_CELP68</span><span class="o">:</span> <span class="mi">375</span><span class="p">,</span>
+    <span class="nx">KNOWLEDGE_ADVENTURE_ADPCM</span><span class="o">:</span> <span class="mi">376</span><span class="p">,</span>
+    <span class="nx">FRAUNHOFER_IIS_MPEG2_AAC</span><span class="o">:</span> <span class="mi">384</span><span class="p">,</span>
+    <span class="nx">DTS_DS</span><span class="o">:</span> <span class="mi">400</span><span class="p">,</span>
+    <span class="nx">CREATIVE_ADPCM</span><span class="o">:</span> <span class="mi">512</span><span class="p">,</span>
+    <span class="nx">CREATIVE_FASTSPEECH8</span><span class="o">:</span> <span class="mi">514</span><span class="p">,</span>
+    <span class="nx">CREATIVE_FASTSPEECH10</span><span class="o">:</span> <span class="mi">515</span><span class="p">,</span>
+    <span class="nx">UHER_ADPCM</span><span class="o">:</span> <span class="mi">528</span><span class="p">,</span>
+    <span class="nx">ULEAD_DV_AUDIO</span><span class="o">:</span> <span class="mi">533</span><span class="p">,</span>
+    <span class="nx">ULEAD_DV_AUDIO_1</span><span class="o">:</span> <span class="mi">534</span><span class="p">,</span>
+    <span class="nx">QUARTERDECK</span><span class="o">:</span> <span class="mi">544</span><span class="p">,</span>
+    <span class="nx">ILINK_VC</span><span class="o">:</span> <span class="mi">560</span><span class="p">,</span>
+    <span class="nx">RAW_SPORT</span><span class="o">:</span> <span class="mi">576</span><span class="p">,</span>
+    <span class="nx">ESST_AC3</span><span class="o">:</span> <span class="mi">577</span><span class="p">,</span>
+    <span class="nx">GENERIC_PASSTHRU</span><span class="o">:</span> <span class="mi">585</span><span class="p">,</span>
+    <span class="nx">IPI_HSX</span><span class="o">:</span> <span class="mi">592</span><span class="p">,</span>
+    <span class="nx">IPI_RPELP</span><span class="o">:</span> <span class="mi">593</span><span class="p">,</span>
+    <span class="nx">CS2</span><span class="o">:</span> <span class="mi">608</span><span class="p">,</span>
+    <span class="nx">SONY_SCX</span><span class="o">:</span> <span class="mi">624</span><span class="p">,</span>
+    <span class="nx">SONY_SCY</span><span class="o">:</span> <span class="mi">625</span><span class="p">,</span>
+    <span class="nx">SONY_ATRAC3</span><span class="o">:</span> <span class="mi">626</span><span class="p">,</span>
+    <span class="nx">SONY_SPC</span><span class="o">:</span> <span class="mi">627</span><span class="p">,</span>
+    <span class="nx">TELUM_AUDIO</span><span class="o">:</span> <span class="mi">640</span><span class="p">,</span>
+    <span class="nx">TELUM_IA_AUDIO</span><span class="o">:</span> <span class="mi">641</span><span class="p">,</span>
+    <span class="nx">NORCOM_VOICE_SYSTEMS_ADPCM</span><span class="o">:</span> <span class="mi">645</span><span class="p">,</span>
+    <span class="nx">FM_TOWNS_SND</span><span class="o">:</span> <span class="mi">768</span><span class="p">,</span>
+    <span class="nx">MICRONAS</span><span class="o">:</span> <span class="mi">848</span><span class="p">,</span>
+    <span class="nx">MICRONAS_CELP833</span><span class="o">:</span> <span class="mi">849</span><span class="p">,</span>
+    <span class="nx">BTV_DIGITAL</span><span class="o">:</span> <span class="mi">1024</span><span class="p">,</span>
+    <span class="nx">INTEL_MUSIC_CODER</span><span class="o">:</span> <span class="mi">1025</span><span class="p">,</span>
+    <span class="nx">INDEO_AUDIO</span><span class="o">:</span> <span class="mi">1026</span><span class="p">,</span>
+    <span class="nx">QDESIGN_MUSIC</span><span class="o">:</span> <span class="mi">1104</span><span class="p">,</span>
+    <span class="nx">ON2_VP7_AUDIO</span><span class="o">:</span> <span class="mi">1280</span><span class="p">,</span>
+    <span class="nx">ON2_VP6_AUDIO</span><span class="o">:</span> <span class="mi">1281</span><span class="p">,</span>
+    <span class="nx">VME_VMPCM</span><span class="o">:</span> <span class="mi">1664</span><span class="p">,</span>
+    <span class="nx">TPC</span><span class="o">:</span> <span class="mi">1665</span><span class="p">,</span>
+    <span class="nx">LIGHTWAVE_LOSSLESS</span><span class="o">:</span> <span class="mi">2222</span><span class="p">,</span>
+    <span class="nx">OLIGSM</span><span class="o">:</span> <span class="mi">4096</span><span class="p">,</span>
+    <span class="nx">OLIADPCM</span><span class="o">:</span> <span class="mi">4097</span><span class="p">,</span>
+    <span class="nx">OLICELP</span><span class="o">:</span> <span class="mi">4098</span><span class="p">,</span>
+    <span class="nx">OLISBC</span><span class="o">:</span> <span class="mi">4099</span><span class="p">,</span>
+    <span class="nx">OLIOPR</span><span class="o">:</span> <span class="mi">4100</span><span class="p">,</span>
+    <span class="nx">LH_CODEC</span><span class="o">:</span> <span class="mi">4352</span><span class="p">,</span>
+    <span class="nx">LH_CODEC_CELP</span><span class="o">:</span> <span class="mi">4353</span><span class="p">,</span>
+    <span class="nx">LH_CODEC_SBC8</span><span class="o">:</span> <span class="mi">4354</span><span class="p">,</span>
+    <span class="nx">LH_CODEC_SBC12</span><span class="o">:</span> <span class="mi">4355</span><span class="p">,</span>
+    <span class="nx">LH_CODEC_SBC16</span><span class="o">:</span> <span class="mi">4356</span><span class="p">,</span>
+    <span class="nx">NORRIS</span><span class="o">:</span> <span class="mi">5120</span><span class="p">,</span>
+    <span class="nx">ISIAUDIO_2</span><span class="o">:</span> <span class="mi">5121</span><span class="p">,</span>
+    <span class="nx">SOUNDSPACE_MUSICOMPRESS</span><span class="o">:</span> <span class="mi">5376</span><span class="p">,</span>
+    <span class="nx">MPEG_ADTS_AAC</span><span class="o">:</span> <span class="mi">5632</span><span class="p">,</span>
+    <span class="nx">MPEG_RAW_AAC</span><span class="o">:</span> <span class="mi">5633</span><span class="p">,</span>
+    <span class="nx">MPEG_LOAS</span><span class="o">:</span> <span class="mi">5634</span><span class="p">,</span>
+    <span class="nx">NOKIA_MPEG_ADTS_AAC</span><span class="o">:</span> <span class="mi">5640</span><span class="p">,</span>
+    <span class="nx">NOKIA_MPEG_RAW_AAC</span><span class="o">:</span> <span class="mi">5641</span><span class="p">,</span>
+    <span class="nx">VODAFONE_MPEG_ADTS_AAC</span><span class="o">:</span> <span class="mi">5642</span><span class="p">,</span>
+    <span class="nx">VODAFONE_MPEG_RAW_AAC</span><span class="o">:</span> <span class="mi">5643</span><span class="p">,</span>
+    <span class="nx">MPEG_HEAAC</span><span class="o">:</span> <span class="mi">5648</span><span class="p">,</span>
+    <span class="nx">VOXWARE_RT24_SPEECH</span><span class="o">:</span> <span class="mi">6172</span><span class="p">,</span>
+    <span class="nx">SONICFOUNDRY_LOSSLESS</span><span class="o">:</span> <span class="mi">6513</span><span class="p">,</span>
+    <span class="nx">INNINGS_TELECOM_ADPCM</span><span class="o">:</span> <span class="mi">6521</span><span class="p">,</span>
+    <span class="nx">LUCENT_SX8300P</span><span class="o">:</span> <span class="mi">7175</span><span class="p">,</span>
+    <span class="nx">LUCENT_SX5363S</span><span class="o">:</span> <span class="mi">7180</span><span class="p">,</span>
+    <span class="nx">CUSEEME</span><span class="o">:</span> <span class="mi">7939</span><span class="p">,</span>
+    <span class="nx">NTCSOFT_ALF2CM_ACM</span><span class="o">:</span> <span class="mi">8132</span><span class="p">,</span>
+    <span class="nx">DVM</span><span class="o">:</span> <span class="mi">8192</span><span class="p">,</span>
+    <span class="nx">DTS2</span><span class="o">:</span> <span class="mi">8193</span><span class="p">,</span>
+    <span class="nx">MAKEAVIS</span><span class="o">:</span> <span class="mi">13075</span><span class="p">,</span>
+    <span class="nx">DIVIO_MPEG4_AAC</span><span class="o">:</span> <span class="mi">16707</span><span class="p">,</span>
+    <span class="nx">NOKIA_ADAPTIVE_MULTIRATE</span><span class="o">:</span> <span class="mi">16897</span><span class="p">,</span>
+    <span class="nx">DIVIO_G726</span><span class="o">:</span> <span class="mi">16963</span><span class="p">,</span>
+    <span class="nx">LEAD_SPEECH</span><span class="o">:</span> <span class="mi">17228</span><span class="p">,</span>
+    <span class="nx">LEAD_VORBIS</span><span class="o">:</span> <span class="mi">22092</span><span class="p">,</span>
+    <span class="nx">WAVPACK_AUDIO</span><span class="o">:</span> <span class="mi">22358</span><span class="p">,</span>
+    <span class="nx">OGG_VORBIS_MODE_1</span><span class="o">:</span> <span class="mi">26447</span><span class="p">,</span>
+    <span class="nx">OGG_VORBIS_MODE_2</span><span class="o">:</span> <span class="mi">26448</span><span class="p">,</span>
+    <span class="nx">OGG_VORBIS_MODE_3</span><span class="o">:</span> <span class="mi">26449</span><span class="p">,</span>
+    <span class="nx">OGG_VORBIS_MODE_1_PLUS</span><span class="o">:</span> <span class="mi">26479</span><span class="p">,</span>
+    <span class="nx">OGG_VORBIS_MODE_2_PLUS</span><span class="o">:</span> <span class="mi">26480</span><span class="p">,</span>
+    <span class="nx">OGG_VORBIS_MODE_3_PLUS</span><span class="o">:</span> <span class="mi">26481</span><span class="p">,</span>
+    <span class="nx">THREECOM_NBX</span><span class="o">:</span> <span class="mi">28672</span><span class="p">,</span>
+    <span class="nx">FAAD_AAC</span><span class="o">:</span> <span class="mi">28781</span><span class="p">,</span>
+    <span class="nx">AMR_NB</span><span class="o">:</span> <span class="mi">29537</span><span class="p">,</span>
+    <span class="nx">AMR_WB</span><span class="o">:</span> <span class="mi">29538</span><span class="p">,</span>
+    <span class="nx">AMR_WP</span><span class="o">:</span> <span class="mi">29539</span><span class="p">,</span>
+    <span class="nx">GSM_AMR_CBR</span><span class="o">:</span> <span class="mi">31265</span><span class="p">,</span>
+    <span class="nx">GSM_AMR_VBR_SID</span><span class="o">:</span> <span class="mi">31266</span><span class="p">,</span>
+    <span class="nx">COMVERSE_INFOSYS_G723_1</span><span class="o">:</span> <span class="mi">41216</span><span class="p">,</span>
+    <span class="nx">COMVERSE_INFOSYS_AVQSBC</span><span class="o">:</span> <span class="mi">41217</span><span class="p">,</span>
+    <span class="nx">COMVERSE_INFOSYS_SBC</span><span class="o">:</span> <span class="mi">41218</span><span class="p">,</span>
+    <span class="nx">SYMBOL_G729_A</span><span class="o">:</span> <span class="mi">41219</span><span class="p">,</span>
+    <span class="nx">VOICEAGE_AMR_WB</span><span class="o">:</span> <span class="mi">41220</span><span class="p">,</span>
+    <span class="nx">INGENIENT_G726</span><span class="o">:</span> <span class="mi">41221</span><span class="p">,</span>
+    <span class="nx">MPEG4_AAC</span><span class="o">:</span> <span class="mi">41222</span><span class="p">,</span>
+    <span class="nx">ENCORE_G726</span><span class="o">:</span> <span class="mi">41223</span><span class="p">,</span>
+    <span class="nx">ZOLL_ASAO</span><span class="o">:</span> <span class="mi">41224</span><span class="p">,</span>
+    <span class="nx">SPEEX_VOICE</span><span class="o">:</span> <span class="mi">41225</span><span class="p">,</span>
+    <span class="nx">VIANIX_MASC</span><span class="o">:</span> <span class="mi">41226</span><span class="p">,</span>
+    <span class="nx">WM9_SPECTRUM_ANALYZER</span><span class="o">:</span> <span class="mi">41227</span><span class="p">,</span>
+    <span class="nx">WMF_SPECTRUM_ANAYZER</span><span class="o">:</span> <span class="mi">41228</span><span class="p">,</span>
+    <span class="nx">GSM_610</span><span class="o">:</span> <span class="mi">41229</span><span class="p">,</span>
+    <span class="nx">GSM_620</span><span class="o">:</span> <span class="mi">41230</span><span class="p">,</span>
+    <span class="nx">GSM_660</span><span class="o">:</span> <span class="mi">41231</span><span class="p">,</span>
+    <span class="nx">GSM_690</span><span class="o">:</span> <span class="mi">41232</span><span class="p">,</span>
+    <span class="nx">GSM_ADAPTIVE_MULTIRATE_WB</span><span class="o">:</span> <span class="mi">41233</span><span class="p">,</span>
+    <span class="nx">POLYCOM_G722</span><span class="o">:</span> <span class="mi">41234</span><span class="p">,</span>
+    <span class="nx">POLYCOM_G728</span><span class="o">:</span> <span class="mi">41235</span><span class="p">,</span>
+    <span class="nx">POLYCOM_G729_A</span><span class="o">:</span> <span class="mi">41236</span><span class="p">,</span>
+    <span class="nx">POLYCOM_SIREN</span><span class="o">:</span> <span class="mi">41237</span><span class="p">,</span>
+    <span class="nx">GLOBAL_IP_ILBC</span><span class="o">:</span> <span class="mi">41238</span><span class="p">,</span>
+    <span class="nx">RADIOTIME_TIME_SHIFT_RADIO</span><span class="o">:</span> <span class="mi">41239</span><span class="p">,</span>
+    <span class="nx">NICE_ACA</span><span class="o">:</span> <span class="mi">41240</span><span class="p">,</span>
+    <span class="nx">NICE_ADPCM</span><span class="o">:</span> <span class="mi">41241</span><span class="p">,</span>
+    <span class="nx">VOCORD_G721</span><span class="o">:</span> <span class="mi">41242</span><span class="p">,</span>
+    <span class="nx">VOCORD_G726</span><span class="o">:</span> <span class="mi">41243</span><span class="p">,</span>
+    <span class="nx">VOCORD_G722_1</span><span class="o">:</span> <span class="mi">41244</span><span class="p">,</span>
+    <span class="nx">VOCORD_G728</span><span class="o">:</span> <span class="mi">41245</span><span class="p">,</span>
+    <span class="nx">VOCORD_G729</span><span class="o">:</span> <span class="mi">41246</span><span class="p">,</span>
+    <span class="nx">VOCORD_G729_A</span><span class="o">:</span> <span class="mi">41247</span><span class="p">,</span>
+    <span class="nx">VOCORD_G723_1</span><span class="o">:</span> <span class="mi">41248</span><span class="p">,</span>
+    <span class="nx">VOCORD_LBC</span><span class="o">:</span> <span class="mi">41249</span><span class="p">,</span>
+    <span class="nx">NICE_G728</span><span class="o">:</span> <span class="mi">41250</span><span class="p">,</span>
+    <span class="nx">FRACE_TELECOM_G729</span><span class="o">:</span> <span class="mi">41251</span><span class="p">,</span>
+    <span class="nx">CODIAN</span><span class="o">:</span> <span class="mi">41252</span><span class="p">,</span>
+    <span class="nx">FLAC</span><span class="o">:</span> <span class="mi">61868</span><span class="p">,</span>
+    <span class="nx">EXTENSIBLE</span><span class="o">:</span> <span class="mi">65534</span><span class="p">,</span>
+    <span class="nx">DEVELOPMENT</span><span class="o">:</span> <span class="mi">65535</span><span class="p">,</span>
 
-    0: &quot;UNKNOWN&quot;,
-    1: &quot;PCM&quot;,
-    2: &quot;ADPCM&quot;,
-    3: &quot;IEEE_FLOAT&quot;,
-    4: &quot;VSELP&quot;,
-    5: &quot;IBM_CVSD&quot;,
-    6: &quot;ALAW&quot;,
-    7: &quot;MULAW&quot;,
-    8: &quot;DTS&quot;,
-    9: &quot;DRM&quot;,
-    10: &quot;WMAVOICE9&quot;,
-    11: &quot;WMAVOICE10&quot;,
-    16: &quot;OKI_ADPCM&quot;,
-    17: &quot;DVI_ADPCM&quot;,
-    18: &quot;MEDIASPACE_ADPCM&quot;,
-    19: &quot;SIERRA_ADPCM&quot;,
-    20: &quot;G723_ADPCM&quot;,
-    21: &quot;DIGISTD&quot;,
-    22: &quot;DIGIFIX&quot;,
-    23: &quot;DIALOGIC_OKI_ADPCM&quot;,
-    24: &quot;MEDIAVISION_ADPCM&quot;,
-    25: &quot;CU_CODEC&quot;,
-    26: &quot;HP_DYN_VOICE&quot;,
-    32: &quot;YAMAHA_ADPCM&quot;,
-    33: &quot;SONARC&quot;,
-    34: &quot;DSPGROUP_TRUESPEECH&quot;,
-    35: &quot;ECHOSC1&quot;,
-    36: &quot;AUDIOFILE_AF36&quot;,
-    37: &quot;APTX&quot;,
-    38: &quot;AUDIOFILE_AF10&quot;,
-    39: &quot;PROSODY_1612&quot;,
-    40: &quot;LRC&quot;,
-    48: &quot;DOLBY_AC2&quot;,
-    49: &quot;GSM610&quot;,
-    50: &quot;MSNAUDIO&quot;,
-    51: &quot;ANTEX_ADPCME&quot;,
-    52: &quot;CONTROL_RES_VQLPC&quot;,
-    53: &quot;DIGIREAL&quot;,
-    54: &quot;DIGIADPCM&quot;,
-    55: &quot;CONTROL_RES_CR10&quot;,
-    56: &quot;NMS_VBXADPCM&quot;,
-    57: &quot;CS_IMAADPCM&quot;,
-    58: &quot;ECHOSC3&quot;,
-    59: &quot;ROCKWELL_ADPCM&quot;,
-    60: &quot;ROCKWELL_DIGITALK&quot;,
-    61: &quot;XEBEC&quot;,
-    64: &quot;G721_ADPCM&quot;,
-    65: &quot;G728_CELP&quot;,
-    66: &quot;MSG723&quot;,
-    67: &quot;INTEL_G723_1&quot;,
-    68: &quot;INTEL_G729&quot;,
-    69: &quot;SHARP_G726&quot;,
-    80: &quot;MPEG&quot;,
-    82: &quot;RT24&quot;,
-    83: &quot;PAC&quot;,
-    85: &quot;MPEGLAYER3&quot;,
-    89: &quot;LUCENT_G723&quot;,
-    96: &quot;CIRRUS&quot;,
-    97: &quot;ESPCM&quot;,
-    98: &quot;VOXWARE&quot;,
-    99: &quot;CANOPUS_ATRAC&quot;,
-    100: &quot;G726_ADPCM&quot;,
-    101: &quot;G722_ADPCM&quot;,
-    102: &quot;DSAT&quot;,
-    103: &quot;DSAT_DISPLAY&quot;,
-    105: &quot;VOXWARE_BYTE_ALIGNED&quot;,
-    112: &quot;VOXWARE_AC8&quot;,
-    113: &quot;VOXWARE_AC10&quot;,
-    114: &quot;VOXWARE_AC16&quot;,
-    115: &quot;VOXWARE_AC20&quot;,
-    116: &quot;VOXWARE_RT24&quot;,
-    117: &quot;VOXWARE_RT29&quot;,
-    118: &quot;VOXWARE_RT29HW&quot;,
-    119: &quot;VOXWARE_VR12&quot;,
-    120: &quot;VOXWARE_VR18&quot;,
-    121: &quot;VOXWARE_TQ40&quot;,
-    122: &quot;VOXWARE_SC3&quot;,
-    123: &quot;VOXWARE_SC3_1&quot;,
-    128: &quot;SOFTSOUND&quot;,
-    129: &quot;VOXWARE_TQ60&quot;,
-    130: &quot;MSRT24&quot;,
-    131: &quot;G729A&quot;,
-    132: &quot;MVI_MVI2&quot;,
-    133: &quot;DF_G726&quot;,
-    134: &quot;DF_GSM610&quot;,
-    136: &quot;ISIAUDIO&quot;,
-    137: &quot;ONLIVE&quot;,
-    138: &quot;MULTITUDE_FT_SX20&quot;,
-    139: &quot;INFOCOM_ITS_G721_ADPCM&quot;,
-    140: &quot;CONVEDIA_G729&quot;,
-    141: &quot;CONGRUENCY&quot;,
-    145: &quot;SBC24&quot;,
-    146: &quot;DOLBY_AC3_SPDIF&quot;,
-    147: &quot;MEDIASONIC_G723&quot;,
-    148: &quot;PROSODY_8KBPS&quot;,
-    151: &quot;ZYXEL_ADPCM&quot;,
-    152: &quot;PHILIPS_LPCBB&quot;,
-    153: &quot;PACKED&quot;,
-    160: &quot;MALDEN_PHONYTALK&quot;,
-    161: &quot;RACAL_RECORDER_GSM&quot;,
-    162: &quot;RACAL_RECORDER_G720_A&quot;,
-    163: &quot;RACAL_RECORDER_G723_1&quot;,
-    164: &quot;RACAL_RECORDER_TETRA_ACELP&quot;,
-    176: &quot;NEC_AAC&quot;,
-    255: &quot;RAW_AAC1&quot;,
-    256: &quot;RHETOREX_ADPCM&quot;,
-    257: &quot;IRAT&quot;,
-    273: &quot;VIVO_G723&quot;,
-    274: &quot;VIVO_SIREN&quot;,
-    288: &quot;PHILIPS_CELP&quot;,
-    289: &quot;PHILIPS_GRUNDIG&quot;,
-    291: &quot;DIGITAL_G723&quot;,
-    293: &quot;SANYO_LD_ADPCM&quot;,
-    304: &quot;SIPROLAB_ACEPLNET&quot;,
-    305: &quot;SIPROLAB_ACELP4800&quot;,
-    306: &quot;SIPROLAB_ACELP8V3&quot;,
-    307: &quot;SIPROLAB_G729&quot;,
-    308: &quot;SIPROLAB_G729A&quot;,
-    309: &quot;SIPROLAB_KELVIN&quot;,
-    310: &quot;VOICEAGE_AMR&quot;,
-    320: &quot;G726ADPCM&quot;,
-    321: &quot;DICTAPHONE_CELP68&quot;,
-    322: &quot;DICTAPHONE_CELP54&quot;,
-    336: &quot;QUALCOMM_PUREVOICE&quot;,
-    337: &quot;QUALCOMM_HALFRATE&quot;,
-    341: &quot;TUBGSM&quot;,
-    352: &quot;MSAUDIO1&quot;,
-    353: &quot;WMAUDIO2&quot;,
-    354: &quot;WMAUDIO3&quot;,
-    355: &quot;WMAUDIO_LOSSLESS&quot;,
-    356: &quot;WMASPDIF&quot;,
-    368: &quot;UNISYS_NAP_ADPCM&quot;,
-    369: &quot;UNISYS_NAP_ULAW&quot;,
-    370: &quot;UNISYS_NAP_ALAW&quot;,
-    371: &quot;UNISYS_NAP_16K&quot;,
-    372: &quot;SYCOM_ACM_SYC008&quot;,
-    373: &quot;SYCOM_ACM_SYC701_G726L&quot;,
-    374: &quot;SYCOM_ACM_SYC701_CELP54&quot;,
-    375: &quot;SYCOM_ACM_SYC701_CELP68&quot;,
-    376: &quot;KNOWLEDGE_ADVENTURE_ADPCM&quot;,
-    384: &quot;FRAUNHOFER_IIS_MPEG2_AAC&quot;,
-    400: &quot;DTS_DS&quot;,
-    512: &quot;CREATIVE_ADPCM&quot;,
-    514: &quot;CREATIVE_FASTSPEECH8&quot;,
-    515: &quot;CREATIVE_FASTSPEECH10&quot;,
-    528: &quot;UHER_ADPCM&quot;,
-    533: &quot;ULEAD_DV_AUDIO&quot;,
-    534: &quot;ULEAD_DV_AUDIO_1&quot;,
-    544: &quot;QUARTERDECK&quot;,
-    560: &quot;ILINK_VC&quot;,
-    576: &quot;RAW_SPORT&quot;,
-    577: &quot;ESST_AC3&quot;,
-    585: &quot;GENERIC_PASSTHRU&quot;,
-    592: &quot;IPI_HSX&quot;,
-    593: &quot;IPI_RPELP&quot;,
-    608: &quot;CS2&quot;,
-    624: &quot;SONY_SCX&quot;,
-    625: &quot;SONY_SCY&quot;,
-    626: &quot;SONY_ATRAC3&quot;,
-    627: &quot;SONY_SPC&quot;,
-    640: &quot;TELUM_AUDIO&quot;,
-    641: &quot;TELUM_IA_AUDIO&quot;,
-    645: &quot;NORCOM_VOICE_SYSTEMS_ADPCM&quot;,
-    768: &quot;FM_TOWNS_SND&quot;,
-    848: &quot;MICRONAS&quot;,
-    849: &quot;MICRONAS_CELP833&quot;,
-    1024: &quot;BTV_DIGITAL&quot;,
-    1025: &quot;INTEL_MUSIC_CODER&quot;,
-    1026: &quot;INDEO_AUDIO&quot;,
-    1104: &quot;QDESIGN_MUSIC&quot;,
-    1280: &quot;ON2_VP7_AUDIO&quot;,
-    1281: &quot;ON2_VP6_AUDIO&quot;,
-    1664: &quot;VME_VMPCM&quot;,
-    1665: &quot;TPC&quot;,
-    2222: &quot;LIGHTWAVE_LOSSLESS&quot;,
-    4096: &quot;OLIGSM&quot;,
-    4097: &quot;OLIADPCM&quot;,
-    4098: &quot;OLICELP&quot;,
-    4099: &quot;OLISBC&quot;,
-    4100: &quot;OLIOPR&quot;,
-    4352: &quot;LH_CODEC&quot;,
-    4353: &quot;LH_CODEC_CELP&quot;,
-    4354: &quot;LH_CODEC_SBC8&quot;,
-    4355: &quot;LH_CODEC_SBC12&quot;,
-    4356: &quot;LH_CODEC_SBC16&quot;,
-    5120: &quot;NORRIS&quot;,
-    5121: &quot;ISIAUDIO_2&quot;,
-    5376: &quot;SOUNDSPACE_MUSICOMPRESS&quot;,
-    5632: &quot;MPEG_ADTS_AAC&quot;,
-    5633: &quot;MPEG_RAW_AAC&quot;,
-    5634: &quot;MPEG_LOAS&quot;,
-    5640: &quot;NOKIA_MPEG_ADTS_AAC&quot;,
-    5641: &quot;NOKIA_MPEG_RAW_AAC&quot;,
-    5642: &quot;VODAFONE_MPEG_ADTS_AAC&quot;,
-    5643: &quot;VODAFONE_MPEG_RAW_AAC&quot;,
-    5648: &quot;MPEG_HEAAC&quot;,
-    6172: &quot;VOXWARE_RT24_SPEECH&quot;,
-    6513: &quot;SONICFOUNDRY_LOSSLESS&quot;,
-    6521: &quot;INNINGS_TELECOM_ADPCM&quot;,
-    7175: &quot;LUCENT_SX8300P&quot;,
-    7180: &quot;LUCENT_SX5363S&quot;,
-    7939: &quot;CUSEEME&quot;,
-    8132: &quot;NTCSOFT_ALF2CM_ACM&quot;,
-    8192: &quot;DVM&quot;,
-    8193: &quot;DTS2&quot;,
-    13075: &quot;MAKEAVIS&quot;,
-    16707: &quot;DIVIO_MPEG4_AAC&quot;,
-    16897: &quot;NOKIA_ADAPTIVE_MULTIRATE&quot;,
-    16963: &quot;DIVIO_G726&quot;,
-    17228: &quot;LEAD_SPEECH&quot;,
-    22092: &quot;LEAD_VORBIS&quot;,
-    22358: &quot;WAVPACK_AUDIO&quot;,
-    26447: &quot;OGG_VORBIS_MODE_1&quot;,
-    26448: &quot;OGG_VORBIS_MODE_2&quot;,
-    26449: &quot;OGG_VORBIS_MODE_3&quot;,
-    26479: &quot;OGG_VORBIS_MODE_1_PLUS&quot;,
-    26480: &quot;OGG_VORBIS_MODE_2_PLUS&quot;,
-    26481: &quot;OGG_VORBIS_MODE_3_PLUS&quot;,
-    28672: &quot;THREECOM_NBX&quot;,
-    28781: &quot;FAAD_AAC&quot;,
-    29537: &quot;AMR_NB&quot;,
-    29538: &quot;AMR_WB&quot;,
-    29539: &quot;AMR_WP&quot;,
-    31265: &quot;GSM_AMR_CBR&quot;,
-    31266: &quot;GSM_AMR_VBR_SID&quot;,
-    41216: &quot;COMVERSE_INFOSYS_G723_1&quot;,
-    41217: &quot;COMVERSE_INFOSYS_AVQSBC&quot;,
-    41218: &quot;COMVERSE_INFOSYS_SBC&quot;,
-    41219: &quot;SYMBOL_G729_A&quot;,
-    41220: &quot;VOICEAGE_AMR_WB&quot;,
-    41221: &quot;INGENIENT_G726&quot;,
-    41222: &quot;MPEG4_AAC&quot;,
-    41223: &quot;ENCORE_G726&quot;,
-    41224: &quot;ZOLL_ASAO&quot;,
-    41225: &quot;SPEEX_VOICE&quot;,
-    41226: &quot;VIANIX_MASC&quot;,
-    41227: &quot;WM9_SPECTRUM_ANALYZER&quot;,
-    41228: &quot;WMF_SPECTRUM_ANAYZER&quot;,
-    41229: &quot;GSM_610&quot;,
-    41230: &quot;GSM_620&quot;,
-    41231: &quot;GSM_660&quot;,
-    41232: &quot;GSM_690&quot;,
-    41233: &quot;GSM_ADAPTIVE_MULTIRATE_WB&quot;,
-    41234: &quot;POLYCOM_G722&quot;,
-    41235: &quot;POLYCOM_G728&quot;,
-    41236: &quot;POLYCOM_G729_A&quot;,
-    41237: &quot;POLYCOM_SIREN&quot;,
-    41238: &quot;GLOBAL_IP_ILBC&quot;,
-    41239: &quot;RADIOTIME_TIME_SHIFT_RADIO&quot;,
-    41240: &quot;NICE_ACA&quot;,
-    41241: &quot;NICE_ADPCM&quot;,
-    41242: &quot;VOCORD_G721&quot;,
-    41243: &quot;VOCORD_G726&quot;,
-    41244: &quot;VOCORD_G722_1&quot;,
-    41245: &quot;VOCORD_G728&quot;,
-    41246: &quot;VOCORD_G729&quot;,
-    41247: &quot;VOCORD_G729_A&quot;,
-    41248: &quot;VOCORD_G723_1&quot;,
-    41249: &quot;VOCORD_LBC&quot;,
-    41250: &quot;NICE_G728&quot;,
-    41251: &quot;FRACE_TELECOM_G729&quot;,
-    41252: &quot;CODIAN&quot;,
-    61868: &quot;FLAC&quot;,
-    65534: &quot;EXTENSIBLE&quot;,
-    65535: &quot;DEVELOPMENT&quot;,
-  });
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;UNKNOWN&quot;</span><span class="p">,</span>
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;PCM&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;IEEE_FLOAT&quot;</span><span class="p">,</span>
+    <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;VSELP&quot;</span><span class="p">,</span>
+    <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;IBM_CVSD&quot;</span><span class="p">,</span>
+    <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;ALAW&quot;</span><span class="p">,</span>
+    <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;MULAW&quot;</span><span class="p">,</span>
+    <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;DTS&quot;</span><span class="p">,</span>
+    <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;DRM&quot;</span><span class="p">,</span>
+    <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;WMAVOICE9&quot;</span><span class="p">,</span>
+    <span class="mi">11</span><span class="o">:</span> <span class="s2">&quot;WMAVOICE10&quot;</span><span class="p">,</span>
+    <span class="mi">16</span><span class="o">:</span> <span class="s2">&quot;OKI_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">17</span><span class="o">:</span> <span class="s2">&quot;DVI_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">18</span><span class="o">:</span> <span class="s2">&quot;MEDIASPACE_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">19</span><span class="o">:</span> <span class="s2">&quot;SIERRA_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">20</span><span class="o">:</span> <span class="s2">&quot;G723_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">21</span><span class="o">:</span> <span class="s2">&quot;DIGISTD&quot;</span><span class="p">,</span>
+    <span class="mi">22</span><span class="o">:</span> <span class="s2">&quot;DIGIFIX&quot;</span><span class="p">,</span>
+    <span class="mi">23</span><span class="o">:</span> <span class="s2">&quot;DIALOGIC_OKI_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">24</span><span class="o">:</span> <span class="s2">&quot;MEDIAVISION_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">25</span><span class="o">:</span> <span class="s2">&quot;CU_CODEC&quot;</span><span class="p">,</span>
+    <span class="mi">26</span><span class="o">:</span> <span class="s2">&quot;HP_DYN_VOICE&quot;</span><span class="p">,</span>
+    <span class="mi">32</span><span class="o">:</span> <span class="s2">&quot;YAMAHA_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">33</span><span class="o">:</span> <span class="s2">&quot;SONARC&quot;</span><span class="p">,</span>
+    <span class="mi">34</span><span class="o">:</span> <span class="s2">&quot;DSPGROUP_TRUESPEECH&quot;</span><span class="p">,</span>
+    <span class="mi">35</span><span class="o">:</span> <span class="s2">&quot;ECHOSC1&quot;</span><span class="p">,</span>
+    <span class="mi">36</span><span class="o">:</span> <span class="s2">&quot;AUDIOFILE_AF36&quot;</span><span class="p">,</span>
+    <span class="mi">37</span><span class="o">:</span> <span class="s2">&quot;APTX&quot;</span><span class="p">,</span>
+    <span class="mi">38</span><span class="o">:</span> <span class="s2">&quot;AUDIOFILE_AF10&quot;</span><span class="p">,</span>
+    <span class="mi">39</span><span class="o">:</span> <span class="s2">&quot;PROSODY_1612&quot;</span><span class="p">,</span>
+    <span class="mi">40</span><span class="o">:</span> <span class="s2">&quot;LRC&quot;</span><span class="p">,</span>
+    <span class="mi">48</span><span class="o">:</span> <span class="s2">&quot;DOLBY_AC2&quot;</span><span class="p">,</span>
+    <span class="mi">49</span><span class="o">:</span> <span class="s2">&quot;GSM610&quot;</span><span class="p">,</span>
+    <span class="mi">50</span><span class="o">:</span> <span class="s2">&quot;MSNAUDIO&quot;</span><span class="p">,</span>
+    <span class="mi">51</span><span class="o">:</span> <span class="s2">&quot;ANTEX_ADPCME&quot;</span><span class="p">,</span>
+    <span class="mi">52</span><span class="o">:</span> <span class="s2">&quot;CONTROL_RES_VQLPC&quot;</span><span class="p">,</span>
+    <span class="mi">53</span><span class="o">:</span> <span class="s2">&quot;DIGIREAL&quot;</span><span class="p">,</span>
+    <span class="mi">54</span><span class="o">:</span> <span class="s2">&quot;DIGIADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">55</span><span class="o">:</span> <span class="s2">&quot;CONTROL_RES_CR10&quot;</span><span class="p">,</span>
+    <span class="mi">56</span><span class="o">:</span> <span class="s2">&quot;NMS_VBXADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">57</span><span class="o">:</span> <span class="s2">&quot;CS_IMAADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">58</span><span class="o">:</span> <span class="s2">&quot;ECHOSC3&quot;</span><span class="p">,</span>
+    <span class="mi">59</span><span class="o">:</span> <span class="s2">&quot;ROCKWELL_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">60</span><span class="o">:</span> <span class="s2">&quot;ROCKWELL_DIGITALK&quot;</span><span class="p">,</span>
+    <span class="mi">61</span><span class="o">:</span> <span class="s2">&quot;XEBEC&quot;</span><span class="p">,</span>
+    <span class="mi">64</span><span class="o">:</span> <span class="s2">&quot;G721_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">65</span><span class="o">:</span> <span class="s2">&quot;G728_CELP&quot;</span><span class="p">,</span>
+    <span class="mi">66</span><span class="o">:</span> <span class="s2">&quot;MSG723&quot;</span><span class="p">,</span>
+    <span class="mi">67</span><span class="o">:</span> <span class="s2">&quot;INTEL_G723_1&quot;</span><span class="p">,</span>
+    <span class="mi">68</span><span class="o">:</span> <span class="s2">&quot;INTEL_G729&quot;</span><span class="p">,</span>
+    <span class="mi">69</span><span class="o">:</span> <span class="s2">&quot;SHARP_G726&quot;</span><span class="p">,</span>
+    <span class="mi">80</span><span class="o">:</span> <span class="s2">&quot;MPEG&quot;</span><span class="p">,</span>
+    <span class="mi">82</span><span class="o">:</span> <span class="s2">&quot;RT24&quot;</span><span class="p">,</span>
+    <span class="mi">83</span><span class="o">:</span> <span class="s2">&quot;PAC&quot;</span><span class="p">,</span>
+    <span class="mi">85</span><span class="o">:</span> <span class="s2">&quot;MPEGLAYER3&quot;</span><span class="p">,</span>
+    <span class="mi">89</span><span class="o">:</span> <span class="s2">&quot;LUCENT_G723&quot;</span><span class="p">,</span>
+    <span class="mi">96</span><span class="o">:</span> <span class="s2">&quot;CIRRUS&quot;</span><span class="p">,</span>
+    <span class="mi">97</span><span class="o">:</span> <span class="s2">&quot;ESPCM&quot;</span><span class="p">,</span>
+    <span class="mi">98</span><span class="o">:</span> <span class="s2">&quot;VOXWARE&quot;</span><span class="p">,</span>
+    <span class="mi">99</span><span class="o">:</span> <span class="s2">&quot;CANOPUS_ATRAC&quot;</span><span class="p">,</span>
+    <span class="mi">100</span><span class="o">:</span> <span class="s2">&quot;G726_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">101</span><span class="o">:</span> <span class="s2">&quot;G722_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">102</span><span class="o">:</span> <span class="s2">&quot;DSAT&quot;</span><span class="p">,</span>
+    <span class="mi">103</span><span class="o">:</span> <span class="s2">&quot;DSAT_DISPLAY&quot;</span><span class="p">,</span>
+    <span class="mi">105</span><span class="o">:</span> <span class="s2">&quot;VOXWARE_BYTE_ALIGNED&quot;</span><span class="p">,</span>
+    <span class="mi">112</span><span class="o">:</span> <span class="s2">&quot;VOXWARE_AC8&quot;</span><span class="p">,</span>
+    <span class="mi">113</span><span class="o">:</span> <span class="s2">&quot;VOXWARE_AC10&quot;</span><span class="p">,</span>
+    <span class="mi">114</span><span class="o">:</span> <span class="s2">&quot;VOXWARE_AC16&quot;</span><span class="p">,</span>
+    <span class="mi">115</span><span class="o">:</span> <span class="s2">&quot;VOXWARE_AC20&quot;</span><span class="p">,</span>
+    <span class="mi">116</span><span class="o">:</span> <span class="s2">&quot;VOXWARE_RT24&quot;</span><span class="p">,</span>
+    <span class="mi">117</span><span class="o">:</span> <span class="s2">&quot;VOXWARE_RT29&quot;</span><span class="p">,</span>
+    <span class="mi">118</span><span class="o">:</span> <span class="s2">&quot;VOXWARE_RT29HW&quot;</span><span class="p">,</span>
+    <span class="mi">119</span><span class="o">:</span> <span class="s2">&quot;VOXWARE_VR12&quot;</span><span class="p">,</span>
+    <span class="mi">120</span><span class="o">:</span> <span class="s2">&quot;VOXWARE_VR18&quot;</span><span class="p">,</span>
+    <span class="mi">121</span><span class="o">:</span> <span class="s2">&quot;VOXWARE_TQ40&quot;</span><span class="p">,</span>
+    <span class="mi">122</span><span class="o">:</span> <span class="s2">&quot;VOXWARE_SC3&quot;</span><span class="p">,</span>
+    <span class="mi">123</span><span class="o">:</span> <span class="s2">&quot;VOXWARE_SC3_1&quot;</span><span class="p">,</span>
+    <span class="mi">128</span><span class="o">:</span> <span class="s2">&quot;SOFTSOUND&quot;</span><span class="p">,</span>
+    <span class="mi">129</span><span class="o">:</span> <span class="s2">&quot;VOXWARE_TQ60&quot;</span><span class="p">,</span>
+    <span class="mi">130</span><span class="o">:</span> <span class="s2">&quot;MSRT24&quot;</span><span class="p">,</span>
+    <span class="mi">131</span><span class="o">:</span> <span class="s2">&quot;G729A&quot;</span><span class="p">,</span>
+    <span class="mi">132</span><span class="o">:</span> <span class="s2">&quot;MVI_MVI2&quot;</span><span class="p">,</span>
+    <span class="mi">133</span><span class="o">:</span> <span class="s2">&quot;DF_G726&quot;</span><span class="p">,</span>
+    <span class="mi">134</span><span class="o">:</span> <span class="s2">&quot;DF_GSM610&quot;</span><span class="p">,</span>
+    <span class="mi">136</span><span class="o">:</span> <span class="s2">&quot;ISIAUDIO&quot;</span><span class="p">,</span>
+    <span class="mi">137</span><span class="o">:</span> <span class="s2">&quot;ONLIVE&quot;</span><span class="p">,</span>
+    <span class="mi">138</span><span class="o">:</span> <span class="s2">&quot;MULTITUDE_FT_SX20&quot;</span><span class="p">,</span>
+    <span class="mi">139</span><span class="o">:</span> <span class="s2">&quot;INFOCOM_ITS_G721_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">140</span><span class="o">:</span> <span class="s2">&quot;CONVEDIA_G729&quot;</span><span class="p">,</span>
+    <span class="mi">141</span><span class="o">:</span> <span class="s2">&quot;CONGRUENCY&quot;</span><span class="p">,</span>
+    <span class="mi">145</span><span class="o">:</span> <span class="s2">&quot;SBC24&quot;</span><span class="p">,</span>
+    <span class="mi">146</span><span class="o">:</span> <span class="s2">&quot;DOLBY_AC3_SPDIF&quot;</span><span class="p">,</span>
+    <span class="mi">147</span><span class="o">:</span> <span class="s2">&quot;MEDIASONIC_G723&quot;</span><span class="p">,</span>
+    <span class="mi">148</span><span class="o">:</span> <span class="s2">&quot;PROSODY_8KBPS&quot;</span><span class="p">,</span>
+    <span class="mi">151</span><span class="o">:</span> <span class="s2">&quot;ZYXEL_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">152</span><span class="o">:</span> <span class="s2">&quot;PHILIPS_LPCBB&quot;</span><span class="p">,</span>
+    <span class="mi">153</span><span class="o">:</span> <span class="s2">&quot;PACKED&quot;</span><span class="p">,</span>
+    <span class="mi">160</span><span class="o">:</span> <span class="s2">&quot;MALDEN_PHONYTALK&quot;</span><span class="p">,</span>
+    <span class="mi">161</span><span class="o">:</span> <span class="s2">&quot;RACAL_RECORDER_GSM&quot;</span><span class="p">,</span>
+    <span class="mi">162</span><span class="o">:</span> <span class="s2">&quot;RACAL_RECORDER_G720_A&quot;</span><span class="p">,</span>
+    <span class="mi">163</span><span class="o">:</span> <span class="s2">&quot;RACAL_RECORDER_G723_1&quot;</span><span class="p">,</span>
+    <span class="mi">164</span><span class="o">:</span> <span class="s2">&quot;RACAL_RECORDER_TETRA_ACELP&quot;</span><span class="p">,</span>
+    <span class="mi">176</span><span class="o">:</span> <span class="s2">&quot;NEC_AAC&quot;</span><span class="p">,</span>
+    <span class="mi">255</span><span class="o">:</span> <span class="s2">&quot;RAW_AAC1&quot;</span><span class="p">,</span>
+    <span class="mi">256</span><span class="o">:</span> <span class="s2">&quot;RHETOREX_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">257</span><span class="o">:</span> <span class="s2">&quot;IRAT&quot;</span><span class="p">,</span>
+    <span class="mi">273</span><span class="o">:</span> <span class="s2">&quot;VIVO_G723&quot;</span><span class="p">,</span>
+    <span class="mi">274</span><span class="o">:</span> <span class="s2">&quot;VIVO_SIREN&quot;</span><span class="p">,</span>
+    <span class="mi">288</span><span class="o">:</span> <span class="s2">&quot;PHILIPS_CELP&quot;</span><span class="p">,</span>
+    <span class="mi">289</span><span class="o">:</span> <span class="s2">&quot;PHILIPS_GRUNDIG&quot;</span><span class="p">,</span>
+    <span class="mi">291</span><span class="o">:</span> <span class="s2">&quot;DIGITAL_G723&quot;</span><span class="p">,</span>
+    <span class="mi">293</span><span class="o">:</span> <span class="s2">&quot;SANYO_LD_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">304</span><span class="o">:</span> <span class="s2">&quot;SIPROLAB_ACEPLNET&quot;</span><span class="p">,</span>
+    <span class="mi">305</span><span class="o">:</span> <span class="s2">&quot;SIPROLAB_ACELP4800&quot;</span><span class="p">,</span>
+    <span class="mi">306</span><span class="o">:</span> <span class="s2">&quot;SIPROLAB_ACELP8V3&quot;</span><span class="p">,</span>
+    <span class="mi">307</span><span class="o">:</span> <span class="s2">&quot;SIPROLAB_G729&quot;</span><span class="p">,</span>
+    <span class="mi">308</span><span class="o">:</span> <span class="s2">&quot;SIPROLAB_G729A&quot;</span><span class="p">,</span>
+    <span class="mi">309</span><span class="o">:</span> <span class="s2">&quot;SIPROLAB_KELVIN&quot;</span><span class="p">,</span>
+    <span class="mi">310</span><span class="o">:</span> <span class="s2">&quot;VOICEAGE_AMR&quot;</span><span class="p">,</span>
+    <span class="mi">320</span><span class="o">:</span> <span class="s2">&quot;G726ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">321</span><span class="o">:</span> <span class="s2">&quot;DICTAPHONE_CELP68&quot;</span><span class="p">,</span>
+    <span class="mi">322</span><span class="o">:</span> <span class="s2">&quot;DICTAPHONE_CELP54&quot;</span><span class="p">,</span>
+    <span class="mi">336</span><span class="o">:</span> <span class="s2">&quot;QUALCOMM_PUREVOICE&quot;</span><span class="p">,</span>
+    <span class="mi">337</span><span class="o">:</span> <span class="s2">&quot;QUALCOMM_HALFRATE&quot;</span><span class="p">,</span>
+    <span class="mi">341</span><span class="o">:</span> <span class="s2">&quot;TUBGSM&quot;</span><span class="p">,</span>
+    <span class="mi">352</span><span class="o">:</span> <span class="s2">&quot;MSAUDIO1&quot;</span><span class="p">,</span>
+    <span class="mi">353</span><span class="o">:</span> <span class="s2">&quot;WMAUDIO2&quot;</span><span class="p">,</span>
+    <span class="mi">354</span><span class="o">:</span> <span class="s2">&quot;WMAUDIO3&quot;</span><span class="p">,</span>
+    <span class="mi">355</span><span class="o">:</span> <span class="s2">&quot;WMAUDIO_LOSSLESS&quot;</span><span class="p">,</span>
+    <span class="mi">356</span><span class="o">:</span> <span class="s2">&quot;WMASPDIF&quot;</span><span class="p">,</span>
+    <span class="mi">368</span><span class="o">:</span> <span class="s2">&quot;UNISYS_NAP_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">369</span><span class="o">:</span> <span class="s2">&quot;UNISYS_NAP_ULAW&quot;</span><span class="p">,</span>
+    <span class="mi">370</span><span class="o">:</span> <span class="s2">&quot;UNISYS_NAP_ALAW&quot;</span><span class="p">,</span>
+    <span class="mi">371</span><span class="o">:</span> <span class="s2">&quot;UNISYS_NAP_16K&quot;</span><span class="p">,</span>
+    <span class="mi">372</span><span class="o">:</span> <span class="s2">&quot;SYCOM_ACM_SYC008&quot;</span><span class="p">,</span>
+    <span class="mi">373</span><span class="o">:</span> <span class="s2">&quot;SYCOM_ACM_SYC701_G726L&quot;</span><span class="p">,</span>
+    <span class="mi">374</span><span class="o">:</span> <span class="s2">&quot;SYCOM_ACM_SYC701_CELP54&quot;</span><span class="p">,</span>
+    <span class="mi">375</span><span class="o">:</span> <span class="s2">&quot;SYCOM_ACM_SYC701_CELP68&quot;</span><span class="p">,</span>
+    <span class="mi">376</span><span class="o">:</span> <span class="s2">&quot;KNOWLEDGE_ADVENTURE_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">384</span><span class="o">:</span> <span class="s2">&quot;FRAUNHOFER_IIS_MPEG2_AAC&quot;</span><span class="p">,</span>
+    <span class="mi">400</span><span class="o">:</span> <span class="s2">&quot;DTS_DS&quot;</span><span class="p">,</span>
+    <span class="mi">512</span><span class="o">:</span> <span class="s2">&quot;CREATIVE_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">514</span><span class="o">:</span> <span class="s2">&quot;CREATIVE_FASTSPEECH8&quot;</span><span class="p">,</span>
+    <span class="mi">515</span><span class="o">:</span> <span class="s2">&quot;CREATIVE_FASTSPEECH10&quot;</span><span class="p">,</span>
+    <span class="mi">528</span><span class="o">:</span> <span class="s2">&quot;UHER_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">533</span><span class="o">:</span> <span class="s2">&quot;ULEAD_DV_AUDIO&quot;</span><span class="p">,</span>
+    <span class="mi">534</span><span class="o">:</span> <span class="s2">&quot;ULEAD_DV_AUDIO_1&quot;</span><span class="p">,</span>
+    <span class="mi">544</span><span class="o">:</span> <span class="s2">&quot;QUARTERDECK&quot;</span><span class="p">,</span>
+    <span class="mi">560</span><span class="o">:</span> <span class="s2">&quot;ILINK_VC&quot;</span><span class="p">,</span>
+    <span class="mi">576</span><span class="o">:</span> <span class="s2">&quot;RAW_SPORT&quot;</span><span class="p">,</span>
+    <span class="mi">577</span><span class="o">:</span> <span class="s2">&quot;ESST_AC3&quot;</span><span class="p">,</span>
+    <span class="mi">585</span><span class="o">:</span> <span class="s2">&quot;GENERIC_PASSTHRU&quot;</span><span class="p">,</span>
+    <span class="mi">592</span><span class="o">:</span> <span class="s2">&quot;IPI_HSX&quot;</span><span class="p">,</span>
+    <span class="mi">593</span><span class="o">:</span> <span class="s2">&quot;IPI_RPELP&quot;</span><span class="p">,</span>
+    <span class="mi">608</span><span class="o">:</span> <span class="s2">&quot;CS2&quot;</span><span class="p">,</span>
+    <span class="mi">624</span><span class="o">:</span> <span class="s2">&quot;SONY_SCX&quot;</span><span class="p">,</span>
+    <span class="mi">625</span><span class="o">:</span> <span class="s2">&quot;SONY_SCY&quot;</span><span class="p">,</span>
+    <span class="mi">626</span><span class="o">:</span> <span class="s2">&quot;SONY_ATRAC3&quot;</span><span class="p">,</span>
+    <span class="mi">627</span><span class="o">:</span> <span class="s2">&quot;SONY_SPC&quot;</span><span class="p">,</span>
+    <span class="mi">640</span><span class="o">:</span> <span class="s2">&quot;TELUM_AUDIO&quot;</span><span class="p">,</span>
+    <span class="mi">641</span><span class="o">:</span> <span class="s2">&quot;TELUM_IA_AUDIO&quot;</span><span class="p">,</span>
+    <span class="mi">645</span><span class="o">:</span> <span class="s2">&quot;NORCOM_VOICE_SYSTEMS_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">768</span><span class="o">:</span> <span class="s2">&quot;FM_TOWNS_SND&quot;</span><span class="p">,</span>
+    <span class="mi">848</span><span class="o">:</span> <span class="s2">&quot;MICRONAS&quot;</span><span class="p">,</span>
+    <span class="mi">849</span><span class="o">:</span> <span class="s2">&quot;MICRONAS_CELP833&quot;</span><span class="p">,</span>
+    <span class="mi">1024</span><span class="o">:</span> <span class="s2">&quot;BTV_DIGITAL&quot;</span><span class="p">,</span>
+    <span class="mi">1025</span><span class="o">:</span> <span class="s2">&quot;INTEL_MUSIC_CODER&quot;</span><span class="p">,</span>
+    <span class="mi">1026</span><span class="o">:</span> <span class="s2">&quot;INDEO_AUDIO&quot;</span><span class="p">,</span>
+    <span class="mi">1104</span><span class="o">:</span> <span class="s2">&quot;QDESIGN_MUSIC&quot;</span><span class="p">,</span>
+    <span class="mi">1280</span><span class="o">:</span> <span class="s2">&quot;ON2_VP7_AUDIO&quot;</span><span class="p">,</span>
+    <span class="mi">1281</span><span class="o">:</span> <span class="s2">&quot;ON2_VP6_AUDIO&quot;</span><span class="p">,</span>
+    <span class="mi">1664</span><span class="o">:</span> <span class="s2">&quot;VME_VMPCM&quot;</span><span class="p">,</span>
+    <span class="mi">1665</span><span class="o">:</span> <span class="s2">&quot;TPC&quot;</span><span class="p">,</span>
+    <span class="mi">2222</span><span class="o">:</span> <span class="s2">&quot;LIGHTWAVE_LOSSLESS&quot;</span><span class="p">,</span>
+    <span class="mi">4096</span><span class="o">:</span> <span class="s2">&quot;OLIGSM&quot;</span><span class="p">,</span>
+    <span class="mi">4097</span><span class="o">:</span> <span class="s2">&quot;OLIADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">4098</span><span class="o">:</span> <span class="s2">&quot;OLICELP&quot;</span><span class="p">,</span>
+    <span class="mi">4099</span><span class="o">:</span> <span class="s2">&quot;OLISBC&quot;</span><span class="p">,</span>
+    <span class="mi">4100</span><span class="o">:</span> <span class="s2">&quot;OLIOPR&quot;</span><span class="p">,</span>
+    <span class="mi">4352</span><span class="o">:</span> <span class="s2">&quot;LH_CODEC&quot;</span><span class="p">,</span>
+    <span class="mi">4353</span><span class="o">:</span> <span class="s2">&quot;LH_CODEC_CELP&quot;</span><span class="p">,</span>
+    <span class="mi">4354</span><span class="o">:</span> <span class="s2">&quot;LH_CODEC_SBC8&quot;</span><span class="p">,</span>
+    <span class="mi">4355</span><span class="o">:</span> <span class="s2">&quot;LH_CODEC_SBC12&quot;</span><span class="p">,</span>
+    <span class="mi">4356</span><span class="o">:</span> <span class="s2">&quot;LH_CODEC_SBC16&quot;</span><span class="p">,</span>
+    <span class="mi">5120</span><span class="o">:</span> <span class="s2">&quot;NORRIS&quot;</span><span class="p">,</span>
+    <span class="mi">5121</span><span class="o">:</span> <span class="s2">&quot;ISIAUDIO_2&quot;</span><span class="p">,</span>
+    <span class="mi">5376</span><span class="o">:</span> <span class="s2">&quot;SOUNDSPACE_MUSICOMPRESS&quot;</span><span class="p">,</span>
+    <span class="mi">5632</span><span class="o">:</span> <span class="s2">&quot;MPEG_ADTS_AAC&quot;</span><span class="p">,</span>
+    <span class="mi">5633</span><span class="o">:</span> <span class="s2">&quot;MPEG_RAW_AAC&quot;</span><span class="p">,</span>
+    <span class="mi">5634</span><span class="o">:</span> <span class="s2">&quot;MPEG_LOAS&quot;</span><span class="p">,</span>
+    <span class="mi">5640</span><span class="o">:</span> <span class="s2">&quot;NOKIA_MPEG_ADTS_AAC&quot;</span><span class="p">,</span>
+    <span class="mi">5641</span><span class="o">:</span> <span class="s2">&quot;NOKIA_MPEG_RAW_AAC&quot;</span><span class="p">,</span>
+    <span class="mi">5642</span><span class="o">:</span> <span class="s2">&quot;VODAFONE_MPEG_ADTS_AAC&quot;</span><span class="p">,</span>
+    <span class="mi">5643</span><span class="o">:</span> <span class="s2">&quot;VODAFONE_MPEG_RAW_AAC&quot;</span><span class="p">,</span>
+    <span class="mi">5648</span><span class="o">:</span> <span class="s2">&quot;MPEG_HEAAC&quot;</span><span class="p">,</span>
+    <span class="mi">6172</span><span class="o">:</span> <span class="s2">&quot;VOXWARE_RT24_SPEECH&quot;</span><span class="p">,</span>
+    <span class="mi">6513</span><span class="o">:</span> <span class="s2">&quot;SONICFOUNDRY_LOSSLESS&quot;</span><span class="p">,</span>
+    <span class="mi">6521</span><span class="o">:</span> <span class="s2">&quot;INNINGS_TELECOM_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">7175</span><span class="o">:</span> <span class="s2">&quot;LUCENT_SX8300P&quot;</span><span class="p">,</span>
+    <span class="mi">7180</span><span class="o">:</span> <span class="s2">&quot;LUCENT_SX5363S&quot;</span><span class="p">,</span>
+    <span class="mi">7939</span><span class="o">:</span> <span class="s2">&quot;CUSEEME&quot;</span><span class="p">,</span>
+    <span class="mi">8132</span><span class="o">:</span> <span class="s2">&quot;NTCSOFT_ALF2CM_ACM&quot;</span><span class="p">,</span>
+    <span class="mi">8192</span><span class="o">:</span> <span class="s2">&quot;DVM&quot;</span><span class="p">,</span>
+    <span class="mi">8193</span><span class="o">:</span> <span class="s2">&quot;DTS2&quot;</span><span class="p">,</span>
+    <span class="mi">13075</span><span class="o">:</span> <span class="s2">&quot;MAKEAVIS&quot;</span><span class="p">,</span>
+    <span class="mi">16707</span><span class="o">:</span> <span class="s2">&quot;DIVIO_MPEG4_AAC&quot;</span><span class="p">,</span>
+    <span class="mi">16897</span><span class="o">:</span> <span class="s2">&quot;NOKIA_ADAPTIVE_MULTIRATE&quot;</span><span class="p">,</span>
+    <span class="mi">16963</span><span class="o">:</span> <span class="s2">&quot;DIVIO_G726&quot;</span><span class="p">,</span>
+    <span class="mi">17228</span><span class="o">:</span> <span class="s2">&quot;LEAD_SPEECH&quot;</span><span class="p">,</span>
+    <span class="mi">22092</span><span class="o">:</span> <span class="s2">&quot;LEAD_VORBIS&quot;</span><span class="p">,</span>
+    <span class="mi">22358</span><span class="o">:</span> <span class="s2">&quot;WAVPACK_AUDIO&quot;</span><span class="p">,</span>
+    <span class="mi">26447</span><span class="o">:</span> <span class="s2">&quot;OGG_VORBIS_MODE_1&quot;</span><span class="p">,</span>
+    <span class="mi">26448</span><span class="o">:</span> <span class="s2">&quot;OGG_VORBIS_MODE_2&quot;</span><span class="p">,</span>
+    <span class="mi">26449</span><span class="o">:</span> <span class="s2">&quot;OGG_VORBIS_MODE_3&quot;</span><span class="p">,</span>
+    <span class="mi">26479</span><span class="o">:</span> <span class="s2">&quot;OGG_VORBIS_MODE_1_PLUS&quot;</span><span class="p">,</span>
+    <span class="mi">26480</span><span class="o">:</span> <span class="s2">&quot;OGG_VORBIS_MODE_2_PLUS&quot;</span><span class="p">,</span>
+    <span class="mi">26481</span><span class="o">:</span> <span class="s2">&quot;OGG_VORBIS_MODE_3_PLUS&quot;</span><span class="p">,</span>
+    <span class="mi">28672</span><span class="o">:</span> <span class="s2">&quot;THREECOM_NBX&quot;</span><span class="p">,</span>
+    <span class="mi">28781</span><span class="o">:</span> <span class="s2">&quot;FAAD_AAC&quot;</span><span class="p">,</span>
+    <span class="mi">29537</span><span class="o">:</span> <span class="s2">&quot;AMR_NB&quot;</span><span class="p">,</span>
+    <span class="mi">29538</span><span class="o">:</span> <span class="s2">&quot;AMR_WB&quot;</span><span class="p">,</span>
+    <span class="mi">29539</span><span class="o">:</span> <span class="s2">&quot;AMR_WP&quot;</span><span class="p">,</span>
+    <span class="mi">31265</span><span class="o">:</span> <span class="s2">&quot;GSM_AMR_CBR&quot;</span><span class="p">,</span>
+    <span class="mi">31266</span><span class="o">:</span> <span class="s2">&quot;GSM_AMR_VBR_SID&quot;</span><span class="p">,</span>
+    <span class="mi">41216</span><span class="o">:</span> <span class="s2">&quot;COMVERSE_INFOSYS_G723_1&quot;</span><span class="p">,</span>
+    <span class="mi">41217</span><span class="o">:</span> <span class="s2">&quot;COMVERSE_INFOSYS_AVQSBC&quot;</span><span class="p">,</span>
+    <span class="mi">41218</span><span class="o">:</span> <span class="s2">&quot;COMVERSE_INFOSYS_SBC&quot;</span><span class="p">,</span>
+    <span class="mi">41219</span><span class="o">:</span> <span class="s2">&quot;SYMBOL_G729_A&quot;</span><span class="p">,</span>
+    <span class="mi">41220</span><span class="o">:</span> <span class="s2">&quot;VOICEAGE_AMR_WB&quot;</span><span class="p">,</span>
+    <span class="mi">41221</span><span class="o">:</span> <span class="s2">&quot;INGENIENT_G726&quot;</span><span class="p">,</span>
+    <span class="mi">41222</span><span class="o">:</span> <span class="s2">&quot;MPEG4_AAC&quot;</span><span class="p">,</span>
+    <span class="mi">41223</span><span class="o">:</span> <span class="s2">&quot;ENCORE_G726&quot;</span><span class="p">,</span>
+    <span class="mi">41224</span><span class="o">:</span> <span class="s2">&quot;ZOLL_ASAO&quot;</span><span class="p">,</span>
+    <span class="mi">41225</span><span class="o">:</span> <span class="s2">&quot;SPEEX_VOICE&quot;</span><span class="p">,</span>
+    <span class="mi">41226</span><span class="o">:</span> <span class="s2">&quot;VIANIX_MASC&quot;</span><span class="p">,</span>
+    <span class="mi">41227</span><span class="o">:</span> <span class="s2">&quot;WM9_SPECTRUM_ANALYZER&quot;</span><span class="p">,</span>
+    <span class="mi">41228</span><span class="o">:</span> <span class="s2">&quot;WMF_SPECTRUM_ANAYZER&quot;</span><span class="p">,</span>
+    <span class="mi">41229</span><span class="o">:</span> <span class="s2">&quot;GSM_610&quot;</span><span class="p">,</span>
+    <span class="mi">41230</span><span class="o">:</span> <span class="s2">&quot;GSM_620&quot;</span><span class="p">,</span>
+    <span class="mi">41231</span><span class="o">:</span> <span class="s2">&quot;GSM_660&quot;</span><span class="p">,</span>
+    <span class="mi">41232</span><span class="o">:</span> <span class="s2">&quot;GSM_690&quot;</span><span class="p">,</span>
+    <span class="mi">41233</span><span class="o">:</span> <span class="s2">&quot;GSM_ADAPTIVE_MULTIRATE_WB&quot;</span><span class="p">,</span>
+    <span class="mi">41234</span><span class="o">:</span> <span class="s2">&quot;POLYCOM_G722&quot;</span><span class="p">,</span>
+    <span class="mi">41235</span><span class="o">:</span> <span class="s2">&quot;POLYCOM_G728&quot;</span><span class="p">,</span>
+    <span class="mi">41236</span><span class="o">:</span> <span class="s2">&quot;POLYCOM_G729_A&quot;</span><span class="p">,</span>
+    <span class="mi">41237</span><span class="o">:</span> <span class="s2">&quot;POLYCOM_SIREN&quot;</span><span class="p">,</span>
+    <span class="mi">41238</span><span class="o">:</span> <span class="s2">&quot;GLOBAL_IP_ILBC&quot;</span><span class="p">,</span>
+    <span class="mi">41239</span><span class="o">:</span> <span class="s2">&quot;RADIOTIME_TIME_SHIFT_RADIO&quot;</span><span class="p">,</span>
+    <span class="mi">41240</span><span class="o">:</span> <span class="s2">&quot;NICE_ACA&quot;</span><span class="p">,</span>
+    <span class="mi">41241</span><span class="o">:</span> <span class="s2">&quot;NICE_ADPCM&quot;</span><span class="p">,</span>
+    <span class="mi">41242</span><span class="o">:</span> <span class="s2">&quot;VOCORD_G721&quot;</span><span class="p">,</span>
+    <span class="mi">41243</span><span class="o">:</span> <span class="s2">&quot;VOCORD_G726&quot;</span><span class="p">,</span>
+    <span class="mi">41244</span><span class="o">:</span> <span class="s2">&quot;VOCORD_G722_1&quot;</span><span class="p">,</span>
+    <span class="mi">41245</span><span class="o">:</span> <span class="s2">&quot;VOCORD_G728&quot;</span><span class="p">,</span>
+    <span class="mi">41246</span><span class="o">:</span> <span class="s2">&quot;VOCORD_G729&quot;</span><span class="p">,</span>
+    <span class="mi">41247</span><span class="o">:</span> <span class="s2">&quot;VOCORD_G729_A&quot;</span><span class="p">,</span>
+    <span class="mi">41248</span><span class="o">:</span> <span class="s2">&quot;VOCORD_G723_1&quot;</span><span class="p">,</span>
+    <span class="mi">41249</span><span class="o">:</span> <span class="s2">&quot;VOCORD_LBC&quot;</span><span class="p">,</span>
+    <span class="mi">41250</span><span class="o">:</span> <span class="s2">&quot;NICE_G728&quot;</span><span class="p">,</span>
+    <span class="mi">41251</span><span class="o">:</span> <span class="s2">&quot;FRACE_TELECOM_G729&quot;</span><span class="p">,</span>
+    <span class="mi">41252</span><span class="o">:</span> <span class="s2">&quot;CODIAN&quot;</span><span class="p">,</span>
+    <span class="mi">61868</span><span class="o">:</span> <span class="s2">&quot;FLAC&quot;</span><span class="p">,</span>
+    <span class="mi">65534</span><span class="o">:</span> <span class="s2">&quot;EXTENSIBLE&quot;</span><span class="p">,</span>
+    <span class="mi">65535</span><span class="o">:</span> <span class="s2">&quot;DEVELOPMENT&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
 
-  Wav.ChunkType = Object.freeze({
-    FMT: 544501094,
-    BEXT: 1650817140,
-    CUE: 1668637984,
-    DATA: 1684108385,
-    MINF: 1835626086,
-    REGN: 1919248238,
-    UMID: 1970104676,
+  <span class="nx">Wav</span><span class="p">.</span><span class="nx">ChunkType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">FMT</span><span class="o">:</span> <span class="mi">544501094</span><span class="p">,</span>
+    <span class="nx">BEXT</span><span class="o">:</span> <span class="mi">1650817140</span><span class="p">,</span>
+    <span class="nx">CUE</span><span class="o">:</span> <span class="mi">1668637984</span><span class="p">,</span>
+    <span class="nx">DATA</span><span class="o">:</span> <span class="mi">1684108385</span><span class="p">,</span>
+    <span class="nx">MINF</span><span class="o">:</span> <span class="mi">1835626086</span><span class="p">,</span>
+    <span class="nx">REGN</span><span class="o">:</span> <span class="mi">1919248238</span><span class="p">,</span>
+    <span class="nx">UMID</span><span class="o">:</span> <span class="mi">1970104676</span><span class="p">,</span>
 
-    544501094: &quot;FMT&quot;,
-    1650817140: &quot;BEXT&quot;,
-    1668637984: &quot;CUE&quot;,
-    1684108385: &quot;DATA&quot;,
-    1835626086: &quot;MINF&quot;,
-    1919248238: &quot;REGN&quot;,
-    1970104676: &quot;UMID&quot;,
-  });
+    <span class="mi">544501094</span><span class="o">:</span> <span class="s2">&quot;FMT&quot;</span><span class="p">,</span>
+    <span class="mi">1650817140</span><span class="o">:</span> <span class="s2">&quot;BEXT&quot;</span><span class="p">,</span>
+    <span class="mi">1668637984</span><span class="o">:</span> <span class="s2">&quot;CUE&quot;</span><span class="p">,</span>
+    <span class="mi">1684108385</span><span class="o">:</span> <span class="s2">&quot;DATA&quot;</span><span class="p">,</span>
+    <span class="mi">1835626086</span><span class="o">:</span> <span class="s2">&quot;MINF&quot;</span><span class="p">,</span>
+    <span class="mi">1919248238</span><span class="o">:</span> <span class="s2">&quot;REGN&quot;</span><span class="p">,</span>
+    <span class="mi">1970104676</span><span class="o">:</span> <span class="s2">&quot;UMID&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
 
-  function Wav(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
+  <span class="kd">function</span> <span class="nx">Wav</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-    this._read();
-  }
-  Wav.prototype._read = function() {
-    this.riffId = this._io.ensureFixedContents([82, 73, 70, 70]);
-    this.fileSize = this._io.readU4le();
-    this.waveId = this._io.ensureFixedContents([87, 65, 86, 69]);
-    this._raw_chunks = this._io.readBytes((this.fileSize - 5));
-    var _io__raw_chunks = new KaitaiStream(this._raw_chunks);
-    this.chunks = new ChunksType(_io__raw_chunks, this, this._root);
-  }
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">Wav</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">riffId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">82</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">70</span><span class="p">]);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">fileSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">waveId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">87</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">69</span><span class="p">]);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_raw_chunks</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">fileSize</span> <span class="o">-</span> <span class="mi">5</span><span class="p">));</span>
+    <span class="kd">var</span> <span class="nx">_io__raw_chunks</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_chunks</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">chunks</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ChunksType</span><span class="p">(</span><span class="nx">_io__raw_chunks</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+  <span class="p">}</span>
 
-  var SampleType = Wav.SampleType = (function() {
-    function SampleType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">SampleType</span> <span class="o">=</span> <span class="nx">Wav</span><span class="p">.</span><span class="nx">SampleType</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">SampleType</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    SampleType.prototype._read = function() {
-      this.sample = this._io.readU2le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">SampleType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sample</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return SampleType;
-  })();
+    <span class="k">return</span> <span class="nx">SampleType</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var FormatChunkType = Wav.FormatChunkType = (function() {
-    function FormatChunkType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">FormatChunkType</span> <span class="o">=</span> <span class="nx">Wav</span><span class="p">.</span><span class="nx">FormatChunkType</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">FormatChunkType</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    FormatChunkType.prototype._read = function() {
-      this.wFormatTag = this._io.readU2le();
-      this.nChannels = this._io.readU2le();
-      this.nSamplesPerSec = this._io.readU4le();
-      this.nAvgBytesPerSec = this._io.readU4le();
-      this.nBlockAlign = this._io.readU2le();
-      this.wBitsPerSample = this._io.readU2le();
-      if (!(this.isBasicPcm)) {
-        this.cbSize = this._io.readU2le();
-      }
-      if (this.isCbSizeMeaningful) {
-        this.wValidBitsPerSample = this._io.readU2le();
-      }
-      if (this.isExtensible) {
-        this.channelMaskAndSubformat = new ChannelMaskAndSubformatType(this._io, this, this._root);
-      }
-    }
-    Object.defineProperty(FormatChunkType.prototype, &#39;isExtensible&#39;, {
-      get: function() {
-        if (this._m_isExtensible !== undefined)
-          return this._m_isExtensible;
-        this._m_isExtensible = this.wFormatTag == Wav.WFormatTagType.EXTENSIBLE;
-        return this._m_isExtensible;
-      }
-    });
-    Object.defineProperty(FormatChunkType.prototype, &#39;isBasicPcm&#39;, {
-      get: function() {
-        if (this._m_isBasicPcm !== undefined)
-          return this._m_isBasicPcm;
-        this._m_isBasicPcm = this.wFormatTag == Wav.WFormatTagType.PCM;
-        return this._m_isBasicPcm;
-      }
-    });
-    Object.defineProperty(FormatChunkType.prototype, &#39;isBasicFloat&#39;, {
-      get: function() {
-        if (this._m_isBasicFloat !== undefined)
-          return this._m_isBasicFloat;
-        this._m_isBasicFloat = this.wFormatTag == Wav.WFormatTagType.IEEE_FLOAT;
-        return this._m_isBasicFloat;
-      }
-    });
-    Object.defineProperty(FormatChunkType.prototype, &#39;isCbSizeMeaningful&#39;, {
-      get: function() {
-        if (this._m_isCbSizeMeaningful !== undefined)
-          return this._m_isCbSizeMeaningful;
-        this._m_isCbSizeMeaningful =  ((!(this.isBasicPcm)) &amp;&amp; (this.cbSize != 0)) ;
-        return this._m_isCbSizeMeaningful;
-      }
-    });
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">FormatChunkType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">wFormatTag</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">nChannels</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">nSamplesPerSec</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">nAvgBytesPerSec</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">nBlockAlign</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">wBitsPerSample</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isBasicPcm</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">cbSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isCbSizeMeaningful</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">wValidBitsPerSample</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isExtensible</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">channelMaskAndSubformat</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ChannelMaskAndSubformatType</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">FormatChunkType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isExtensible&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isExtensible</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isExtensible</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isExtensible</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">wFormatTag</span> <span class="o">==</span> <span class="nx">Wav</span><span class="p">.</span><span class="nx">WFormatTagType</span><span class="p">.</span><span class="nx">EXTENSIBLE</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isExtensible</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">FormatChunkType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isBasicPcm&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isBasicPcm</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isBasicPcm</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isBasicPcm</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">wFormatTag</span> <span class="o">==</span> <span class="nx">Wav</span><span class="p">.</span><span class="nx">WFormatTagType</span><span class="p">.</span><span class="nx">PCM</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isBasicPcm</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">FormatChunkType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isBasicFloat&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isBasicFloat</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isBasicFloat</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isBasicFloat</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">wFormatTag</span> <span class="o">==</span> <span class="nx">Wav</span><span class="p">.</span><span class="nx">WFormatTagType</span><span class="p">.</span><span class="nx">IEEE_FLOAT</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isBasicFloat</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">FormatChunkType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isCbSizeMeaningful&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isCbSizeMeaningful</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isCbSizeMeaningful</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isCbSizeMeaningful</span> <span class="o">=</span>  <span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isBasicPcm</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">cbSize</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">))</span> <span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isCbSizeMeaningful</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    return FormatChunkType;
-  })();
+    <span class="k">return</span> <span class="nx">FormatChunkType</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var GuidType = Wav.GuidType = (function() {
-    function GuidType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">GuidType</span> <span class="o">=</span> <span class="nx">Wav</span><span class="p">.</span><span class="nx">GuidType</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">GuidType</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    GuidType.prototype._read = function() {
-      this.data1 = this._io.readU4le();
-      this.data2 = this._io.readU2le();
-      this.data3 = this._io.readU2le();
-      this.data4 = this._io.readU4be();
-      this.data4a = this._io.readU4be();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">GuidType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">data1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">data2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">data3</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">data4</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">data4a</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return GuidType;
-  })();
+    <span class="k">return</span> <span class="nx">GuidType</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var CuePointType = Wav.CuePointType = (function() {
-    function CuePointType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">CuePointType</span> <span class="o">=</span> <span class="nx">Wav</span><span class="p">.</span><span class="nx">CuePointType</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">CuePointType</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    CuePointType.prototype._read = function() {
-      this.dwName = this._io.readU4le();
-      this.dwPosition = this._io.readU4le();
-      this.fccChunk = this._io.readU4le();
-      this.dwChunkStart = this._io.readU4le();
-      this.dwBlockStart = this._io.readU4le();
-      this.dwSampleOffset = this._io.readU4le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">CuePointType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">dwName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">dwPosition</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">fccChunk</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">dwChunkStart</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">dwBlockStart</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">dwSampleOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return CuePointType;
-  })();
+    <span class="k">return</span> <span class="nx">CuePointType</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var DataChunkType = Wav.DataChunkType = (function() {
-    function DataChunkType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">DataChunkType</span> <span class="o">=</span> <span class="nx">Wav</span><span class="p">.</span><span class="nx">DataChunkType</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">DataChunkType</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    DataChunkType.prototype._read = function() {
-      this.data = this._io.readBytesFull();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">DataChunkType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesFull</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return DataChunkType;
-  })();
+    <span class="k">return</span> <span class="nx">DataChunkType</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var SamplesType = Wav.SamplesType = (function() {
-    function SamplesType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">SamplesType</span> <span class="o">=</span> <span class="nx">Wav</span><span class="p">.</span><span class="nx">SamplesType</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">SamplesType</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    SamplesType.prototype._read = function() {
-      this.samples = this._io.readU4le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">SamplesType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">samples</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return SamplesType;
-  })();
+    <span class="k">return</span> <span class="nx">SamplesType</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var ChannelMaskAndSubformatType = Wav.ChannelMaskAndSubformatType = (function() {
-    function ChannelMaskAndSubformatType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">ChannelMaskAndSubformatType</span> <span class="o">=</span> <span class="nx">Wav</span><span class="p">.</span><span class="nx">ChannelMaskAndSubformatType</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ChannelMaskAndSubformatType</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    ChannelMaskAndSubformatType.prototype._read = function() {
-      this.dwChannelMask = new ChannelMaskType(this._io, this, this._root);
-      this.subformat = new GuidType(this._io, this, this._root);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ChannelMaskAndSubformatType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">dwChannelMask</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ChannelMaskType</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">subformat</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GuidType</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return ChannelMaskAndSubformatType;
-  })();
+    <span class="k">return</span> <span class="nx">ChannelMaskAndSubformatType</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var ChunksType = Wav.ChunksType = (function() {
-    function ChunksType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">ChunksType</span> <span class="o">=</span> <span class="nx">Wav</span><span class="p">.</span><span class="nx">ChunksType</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ChunksType</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    ChunksType.prototype._read = function() {
-      this.chunk = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.chunk.push(new ChunkType(this._io, this, this._root));
-        i++;
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ChunksType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">chunk</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">chunk</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">ChunkType</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">));</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return ChunksType;
-  })();
+    <span class="k">return</span> <span class="nx">ChunksType</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var CueChunkType = Wav.CueChunkType = (function() {
-    function CueChunkType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">CueChunkType</span> <span class="o">=</span> <span class="nx">Wav</span><span class="p">.</span><span class="nx">CueChunkType</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">CueChunkType</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    CueChunkType.prototype._read = function() {
-      this.dwCuePoints = this._io.readU4le();
-      if (this.dwCuePoints != 0) {
-        this.cuePoints = new Array(this.dwCuePoints);
-        for (var i = 0; i &lt; this.dwCuePoints; i++) {
-          this.cuePoints[i] = new CuePointType(this._io, this, this._root);
-        }
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">CueChunkType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">dwCuePoints</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">dwCuePoints</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">cuePoints</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">dwCuePoints</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">dwCuePoints</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">cuePoints</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CuePointType</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return CueChunkType;
-  })();
+    <span class="k">return</span> <span class="nx">CueChunkType</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var ChannelMaskType = Wav.ChannelMaskType = (function() {
-    function ChannelMaskType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">ChannelMaskType</span> <span class="o">=</span> <span class="nx">Wav</span><span class="p">.</span><span class="nx">ChannelMaskType</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ChannelMaskType</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    ChannelMaskType.prototype._read = function() {
-      this.frontRightOfCenter = this._io.readBitsInt(1) != 0;
-      this.frontLeftOfCenter = this._io.readBitsInt(1) != 0;
-      this.backRight = this._io.readBitsInt(1) != 0;
-      this.backLeft = this._io.readBitsInt(1) != 0;
-      this.lowFrequency = this._io.readBitsInt(1) != 0;
-      this.frontCenter = this._io.readBitsInt(1) != 0;
-      this.frontRight = this._io.readBitsInt(1) != 0;
-      this.frontLeft = this._io.readBitsInt(1) != 0;
-      this.topCenter = this._io.readBitsInt(1) != 0;
-      this.sideRight = this._io.readBitsInt(1) != 0;
-      this.sideLeft = this._io.readBitsInt(1) != 0;
-      this.backCenter = this._io.readBitsInt(1) != 0;
-      this.topBackLeft = this._io.readBitsInt(1) != 0;
-      this.topFrontRight = this._io.readBitsInt(1) != 0;
-      this.topFrontCenter = this._io.readBitsInt(1) != 0;
-      this.topFrontLeft = this._io.readBitsInt(1) != 0;
-      this.unused1 = this._io.readBitsInt(6);
-      this.topBackRight = this._io.readBitsInt(1) != 0;
-      this.topBackCenter = this._io.readBitsInt(1) != 0;
-      this.unused2 = this._io.readBitsInt(8);
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ChannelMaskType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">frontRightOfCenter</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">frontLeftOfCenter</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">backRight</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">backLeft</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">lowFrequency</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">frontCenter</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">frontRight</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">frontLeft</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">topCenter</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sideRight</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">sideLeft</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">backCenter</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">topBackLeft</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">topFrontRight</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">topFrontCenter</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">topFrontLeft</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">unused1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">topBackRight</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">topBackCenter</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">unused2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    return ChannelMaskType;
-  })();
+    <span class="k">return</span> <span class="nx">ChannelMaskType</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var ChunkType = Wav.ChunkType = (function() {
-    function ChunkType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">ChunkType</span> <span class="o">=</span> <span class="nx">Wav</span><span class="p">.</span><span class="nx">ChunkType</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ChunkType</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    ChunkType.prototype._read = function() {
-      this.chunkId = this._io.readU4be();
-      this.len = this._io.readU4le();
-      switch (this.chunkId) {
-      case 1684108385:
-        this._raw_data = this._io.readBytes(this.len);
-        var _io__raw_data = new KaitaiStream(this._raw_data);
-        this.data = new DataChunkType(_io__raw_data, this, this._root);
-        break;
-      case 1668637984:
-        this._raw_data = this._io.readBytes(this.len);
-        var _io__raw_data = new KaitaiStream(this._raw_data);
-        this.data = new CueChunkType(_io__raw_data, this, this._root);
-        break;
-      case 1650817140:
-        this._raw_data = this._io.readBytes(this.len);
-        var _io__raw_data = new KaitaiStream(this._raw_data);
-        this.data = new BextChunkType(_io__raw_data, this, this._root);
-        break;
-      case 1718449184:
-        this._raw_data = this._io.readBytes(this.len);
-        var _io__raw_data = new KaitaiStream(this._raw_data);
-        this.data = new FormatChunkType(_io__raw_data, this, this._root);
-        break;
-      default:
-        this.data = this._io.readBytes(this.len);
-        break;
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ChunkType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">chunkId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">chunkId</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="mi">1684108385</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DataChunkType</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">1668637984</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CueChunkType</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">1650817140</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BextChunkType</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="mi">1718449184</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_data</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FormatChunkType</span><span class="p">(</span><span class="nx">_io__raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">default</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">len</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return ChunkType;
-  })();
+    <span class="k">return</span> <span class="nx">ChunkType</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var BextChunkType = Wav.BextChunkType = (function() {
-    function BextChunkType(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">BextChunkType</span> <span class="o">=</span> <span class="nx">Wav</span><span class="p">.</span><span class="nx">BextChunkType</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">BextChunkType</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    BextChunkType.prototype._read = function() {
-      this.description = KaitaiStream.bytesToStr(this._io.readBytes(256), &quot;ASCII&quot;);
-      this.originator = KaitaiStream.bytesToStr(this._io.readBytes(32), &quot;ASCII&quot;);
-      this.originatorReference = KaitaiStream.bytesToStr(this._io.readBytes(32), &quot;ASCII&quot;);
-      this.originationDate = KaitaiStream.bytesToStr(this._io.readBytes(10), &quot;ASCII&quot;);
-      this.originationTime = KaitaiStream.bytesToStr(this._io.readBytes(8), &quot;ASCII&quot;);
-      this.timeReferenceLow = this._io.readU4le();
-      this.timeReferenceHigh = this._io.readU4le();
-      this.version = this._io.readU2le();
-      this.umid = this._io.readBytes(64);
-      this.loudnessValue = this._io.readU2le();
-      this.loudnessRange = this._io.readU2le();
-      this.maxTruePeakLevel = this._io.readU2le();
-      this.maxMomentaryLoudness = this._io.readU2le();
-      this.maxShortTermLoudness = this._io.readU2le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">BextChunkType</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">description</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">256</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">originator</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">originatorReference</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">originationDate</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">originationTime</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">timeReferenceLow</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">timeReferenceHigh</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">umid</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">64</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">loudnessValue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">loudnessRange</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">maxTruePeakLevel</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">maxMomentaryLoudness</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">maxShortTermLoudness</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return BextChunkType;
-  })();
-  Object.defineProperty(Wav.prototype, &#39;formatChunk&#39;, {
-    get: function() {
-      if (this._m_formatChunk !== undefined)
-        return this._m_formatChunk;
-      this._m_formatChunk = this.chunks.chunk[0].data;
-      return this._m_formatChunk;
-    }
-  });
+    <span class="k">return</span> <span class="nx">BextChunkType</span><span class="p">;</span>
+  <span class="p">})();</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Wav</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;formatChunk&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_formatChunk</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_formatChunk</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_formatChunk</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">chunks</span><span class="p">.</span><span class="nx">chunk</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">data</span><span class="p">;</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_formatChunk</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
 
-  return Wav;
-})();
-return Wav;
-}));
-</code></pre>
+  <span class="k">return</span> <span class="nx">Wav</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">Wav</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -1180,8 +1177,8 @@ return Wav;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

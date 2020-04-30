@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -273,447 +270,447 @@ data = Wmf.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# WMF (Windows Metafile) is a relatively early vector image format
-# introduced for Microsoft Windows in 1990.
-# 
-# Inside, it provides a serialized list of Windows GDI (Graphics
-# Device Interface) function calls, which, if played back, result in
-# an image being drawn on a given surface (display, off-screen buffer,
-# printer, etc).
-# @see http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf Source
-class Wmf &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># WMF (Windows Metafile) is a relatively early vector image format</span>
+<span class="c1"># introduced for Microsoft Windows in 1990.</span>
+<span class="c1"># </span>
+<span class="c1"># Inside, it provides a serialized list of Windows GDI (Graphics</span>
+<span class="c1"># Device Interface) function calls, which, if played back, result in</span>
+<span class="c1"># an image being drawn on a given surface (display, off-screen buffer,</span>
+<span class="c1"># printer, etc).</span>
+<span class="c1"># @see http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf Source</span>
+<span class="k">class</span> <span class="nc">Wmf</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  FUNC = {
-    0 =&gt; :func_eof,
-    30 =&gt; :func_savedc,
-    53 =&gt; :func_realizepalette,
-    55 =&gt; :func_setpalentries,
-    247 =&gt; :func_createpalette,
-    258 =&gt; :func_setbkmode,
-    259 =&gt; :func_setmapmode,
-    260 =&gt; :func_setrop2,
-    261 =&gt; :func_setrelabs,
-    262 =&gt; :func_setpolyfillmode,
-    263 =&gt; :func_setstretchbltmode,
-    264 =&gt; :func_settextcharextra,
-    295 =&gt; :func_restoredc,
-    298 =&gt; :func_invertregion,
-    299 =&gt; :func_paintregion,
-    300 =&gt; :func_selectclipregion,
-    301 =&gt; :func_selectobject,
-    302 =&gt; :func_settextalign,
-    313 =&gt; :func_resizepalette,
-    322 =&gt; :func_dibcreatepatternbrush,
-    329 =&gt; :func_setlayout,
-    496 =&gt; :func_deleteobject,
-    505 =&gt; :func_createpatternbrush,
-    513 =&gt; :func_setbkcolor,
-    521 =&gt; :func_settextcolor,
-    522 =&gt; :func_settextjustification,
-    523 =&gt; :func_setwindoworg,
-    524 =&gt; :func_setwindowext,
-    525 =&gt; :func_setviewportorg,
-    526 =&gt; :func_setviewportext,
-    527 =&gt; :func_offsetwindoworg,
-    529 =&gt; :func_offsetviewportorg,
-    531 =&gt; :func_lineto,
-    532 =&gt; :func_moveto,
-    544 =&gt; :func_offsetcliprgn,
-    552 =&gt; :func_fillregion,
-    561 =&gt; :func_setmapperflags,
-    564 =&gt; :func_selectpalette,
-    762 =&gt; :func_createpenindirect,
-    763 =&gt; :func_createfontindirect,
-    764 =&gt; :func_createbrushindirect,
-    804 =&gt; :func_polygon,
-    805 =&gt; :func_polyline,
-    1040 =&gt; :func_scalewindowext,
-    1042 =&gt; :func_scaleviewportext,
-    1045 =&gt; :func_excludecliprect,
-    1046 =&gt; :func_intersectcliprect,
-    1048 =&gt; :func_ellipse,
-    1049 =&gt; :func_floodfill,
-    1051 =&gt; :func_rectangle,
-    1055 =&gt; :func_setpixel,
-    1065 =&gt; :func_frameregion,
-    1078 =&gt; :func_animatepalette,
-    1313 =&gt; :func_textout,
-    1336 =&gt; :func_polypolygon,
-    1352 =&gt; :func_extfloodfill,
-    1564 =&gt; :func_roundrect,
-    1565 =&gt; :func_patblt,
-    1574 =&gt; :func_escape,
-    1791 =&gt; :func_createregion,
-    2071 =&gt; :func_arc,
-    2074 =&gt; :func_pie,
-    2096 =&gt; :func_chord,
-    2338 =&gt; :func_bitblt,
-    2368 =&gt; :func_dibbitblt,
-    2610 =&gt; :func_exttextout,
-    2851 =&gt; :func_stretchblt,
-    2881 =&gt; :func_dibstretchblt,
-    3379 =&gt; :func_setdibtodev,
-    3907 =&gt; :func_stretchdib,
-  }
-  I__FUNC = FUNC.invert
+  <span class="no">FUNC</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:func_eof</span><span class="p">,</span>
+    <span class="mi">30</span> <span class="o">=&gt;</span> <span class="ss">:func_savedc</span><span class="p">,</span>
+    <span class="mi">53</span> <span class="o">=&gt;</span> <span class="ss">:func_realizepalette</span><span class="p">,</span>
+    <span class="mi">55</span> <span class="o">=&gt;</span> <span class="ss">:func_setpalentries</span><span class="p">,</span>
+    <span class="mi">247</span> <span class="o">=&gt;</span> <span class="ss">:func_createpalette</span><span class="p">,</span>
+    <span class="mi">258</span> <span class="o">=&gt;</span> <span class="ss">:func_setbkmode</span><span class="p">,</span>
+    <span class="mi">259</span> <span class="o">=&gt;</span> <span class="ss">:func_setmapmode</span><span class="p">,</span>
+    <span class="mi">260</span> <span class="o">=&gt;</span> <span class="ss">:func_setrop2</span><span class="p">,</span>
+    <span class="mi">261</span> <span class="o">=&gt;</span> <span class="ss">:func_setrelabs</span><span class="p">,</span>
+    <span class="mi">262</span> <span class="o">=&gt;</span> <span class="ss">:func_setpolyfillmode</span><span class="p">,</span>
+    <span class="mi">263</span> <span class="o">=&gt;</span> <span class="ss">:func_setstretchbltmode</span><span class="p">,</span>
+    <span class="mi">264</span> <span class="o">=&gt;</span> <span class="ss">:func_settextcharextra</span><span class="p">,</span>
+    <span class="mi">295</span> <span class="o">=&gt;</span> <span class="ss">:func_restoredc</span><span class="p">,</span>
+    <span class="mi">298</span> <span class="o">=&gt;</span> <span class="ss">:func_invertregion</span><span class="p">,</span>
+    <span class="mi">299</span> <span class="o">=&gt;</span> <span class="ss">:func_paintregion</span><span class="p">,</span>
+    <span class="mi">300</span> <span class="o">=&gt;</span> <span class="ss">:func_selectclipregion</span><span class="p">,</span>
+    <span class="mi">301</span> <span class="o">=&gt;</span> <span class="ss">:func_selectobject</span><span class="p">,</span>
+    <span class="mi">302</span> <span class="o">=&gt;</span> <span class="ss">:func_settextalign</span><span class="p">,</span>
+    <span class="mi">313</span> <span class="o">=&gt;</span> <span class="ss">:func_resizepalette</span><span class="p">,</span>
+    <span class="mi">322</span> <span class="o">=&gt;</span> <span class="ss">:func_dibcreatepatternbrush</span><span class="p">,</span>
+    <span class="mi">329</span> <span class="o">=&gt;</span> <span class="ss">:func_setlayout</span><span class="p">,</span>
+    <span class="mi">496</span> <span class="o">=&gt;</span> <span class="ss">:func_deleteobject</span><span class="p">,</span>
+    <span class="mi">505</span> <span class="o">=&gt;</span> <span class="ss">:func_createpatternbrush</span><span class="p">,</span>
+    <span class="mi">513</span> <span class="o">=&gt;</span> <span class="ss">:func_setbkcolor</span><span class="p">,</span>
+    <span class="mi">521</span> <span class="o">=&gt;</span> <span class="ss">:func_settextcolor</span><span class="p">,</span>
+    <span class="mi">522</span> <span class="o">=&gt;</span> <span class="ss">:func_settextjustification</span><span class="p">,</span>
+    <span class="mi">523</span> <span class="o">=&gt;</span> <span class="ss">:func_setwindoworg</span><span class="p">,</span>
+    <span class="mi">524</span> <span class="o">=&gt;</span> <span class="ss">:func_setwindowext</span><span class="p">,</span>
+    <span class="mi">525</span> <span class="o">=&gt;</span> <span class="ss">:func_setviewportorg</span><span class="p">,</span>
+    <span class="mi">526</span> <span class="o">=&gt;</span> <span class="ss">:func_setviewportext</span><span class="p">,</span>
+    <span class="mi">527</span> <span class="o">=&gt;</span> <span class="ss">:func_offsetwindoworg</span><span class="p">,</span>
+    <span class="mi">529</span> <span class="o">=&gt;</span> <span class="ss">:func_offsetviewportorg</span><span class="p">,</span>
+    <span class="mi">531</span> <span class="o">=&gt;</span> <span class="ss">:func_lineto</span><span class="p">,</span>
+    <span class="mi">532</span> <span class="o">=&gt;</span> <span class="ss">:func_moveto</span><span class="p">,</span>
+    <span class="mi">544</span> <span class="o">=&gt;</span> <span class="ss">:func_offsetcliprgn</span><span class="p">,</span>
+    <span class="mi">552</span> <span class="o">=&gt;</span> <span class="ss">:func_fillregion</span><span class="p">,</span>
+    <span class="mi">561</span> <span class="o">=&gt;</span> <span class="ss">:func_setmapperflags</span><span class="p">,</span>
+    <span class="mi">564</span> <span class="o">=&gt;</span> <span class="ss">:func_selectpalette</span><span class="p">,</span>
+    <span class="mi">762</span> <span class="o">=&gt;</span> <span class="ss">:func_createpenindirect</span><span class="p">,</span>
+    <span class="mi">763</span> <span class="o">=&gt;</span> <span class="ss">:func_createfontindirect</span><span class="p">,</span>
+    <span class="mi">764</span> <span class="o">=&gt;</span> <span class="ss">:func_createbrushindirect</span><span class="p">,</span>
+    <span class="mi">804</span> <span class="o">=&gt;</span> <span class="ss">:func_polygon</span><span class="p">,</span>
+    <span class="mi">805</span> <span class="o">=&gt;</span> <span class="ss">:func_polyline</span><span class="p">,</span>
+    <span class="mi">1040</span> <span class="o">=&gt;</span> <span class="ss">:func_scalewindowext</span><span class="p">,</span>
+    <span class="mi">1042</span> <span class="o">=&gt;</span> <span class="ss">:func_scaleviewportext</span><span class="p">,</span>
+    <span class="mi">1045</span> <span class="o">=&gt;</span> <span class="ss">:func_excludecliprect</span><span class="p">,</span>
+    <span class="mi">1046</span> <span class="o">=&gt;</span> <span class="ss">:func_intersectcliprect</span><span class="p">,</span>
+    <span class="mi">1048</span> <span class="o">=&gt;</span> <span class="ss">:func_ellipse</span><span class="p">,</span>
+    <span class="mi">1049</span> <span class="o">=&gt;</span> <span class="ss">:func_floodfill</span><span class="p">,</span>
+    <span class="mi">1051</span> <span class="o">=&gt;</span> <span class="ss">:func_rectangle</span><span class="p">,</span>
+    <span class="mi">1055</span> <span class="o">=&gt;</span> <span class="ss">:func_setpixel</span><span class="p">,</span>
+    <span class="mi">1065</span> <span class="o">=&gt;</span> <span class="ss">:func_frameregion</span><span class="p">,</span>
+    <span class="mi">1078</span> <span class="o">=&gt;</span> <span class="ss">:func_animatepalette</span><span class="p">,</span>
+    <span class="mi">1313</span> <span class="o">=&gt;</span> <span class="ss">:func_textout</span><span class="p">,</span>
+    <span class="mi">1336</span> <span class="o">=&gt;</span> <span class="ss">:func_polypolygon</span><span class="p">,</span>
+    <span class="mi">1352</span> <span class="o">=&gt;</span> <span class="ss">:func_extfloodfill</span><span class="p">,</span>
+    <span class="mi">1564</span> <span class="o">=&gt;</span> <span class="ss">:func_roundrect</span><span class="p">,</span>
+    <span class="mi">1565</span> <span class="o">=&gt;</span> <span class="ss">:func_patblt</span><span class="p">,</span>
+    <span class="mi">1574</span> <span class="o">=&gt;</span> <span class="ss">:func_escape</span><span class="p">,</span>
+    <span class="mi">1791</span> <span class="o">=&gt;</span> <span class="ss">:func_createregion</span><span class="p">,</span>
+    <span class="mi">2071</span> <span class="o">=&gt;</span> <span class="ss">:func_arc</span><span class="p">,</span>
+    <span class="mi">2074</span> <span class="o">=&gt;</span> <span class="ss">:func_pie</span><span class="p">,</span>
+    <span class="mi">2096</span> <span class="o">=&gt;</span> <span class="ss">:func_chord</span><span class="p">,</span>
+    <span class="mi">2338</span> <span class="o">=&gt;</span> <span class="ss">:func_bitblt</span><span class="p">,</span>
+    <span class="mi">2368</span> <span class="o">=&gt;</span> <span class="ss">:func_dibbitblt</span><span class="p">,</span>
+    <span class="mi">2610</span> <span class="o">=&gt;</span> <span class="ss">:func_exttextout</span><span class="p">,</span>
+    <span class="mi">2851</span> <span class="o">=&gt;</span> <span class="ss">:func_stretchblt</span><span class="p">,</span>
+    <span class="mi">2881</span> <span class="o">=&gt;</span> <span class="ss">:func_dibstretchblt</span><span class="p">,</span>
+    <span class="mi">3379</span> <span class="o">=&gt;</span> <span class="ss">:func_setdibtodev</span><span class="p">,</span>
+    <span class="mi">3907</span> <span class="o">=&gt;</span> <span class="ss">:func_stretchdib</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__FUNC</span> <span class="o">=</span> <span class="no">FUNC</span><span class="o">.</span><span class="n">invert</span>
 
-  BIN_RASTER_OP = {
-    1 =&gt; :bin_raster_op_black,
-    2 =&gt; :bin_raster_op_notmergepen,
-    3 =&gt; :bin_raster_op_masknotpen,
-    4 =&gt; :bin_raster_op_notcopypen,
-    5 =&gt; :bin_raster_op_maskpennot,
-    6 =&gt; :bin_raster_op_not,
-    7 =&gt; :bin_raster_op_xorpen,
-    8 =&gt; :bin_raster_op_notmaskpen,
-    9 =&gt; :bin_raster_op_maskpen,
-    10 =&gt; :bin_raster_op_notxorpen,
-    11 =&gt; :bin_raster_op_nop,
-    12 =&gt; :bin_raster_op_mergenotpen,
-    13 =&gt; :bin_raster_op_copypen,
-    14 =&gt; :bin_raster_op_mergepennot,
-    15 =&gt; :bin_raster_op_mergepen,
-    16 =&gt; :bin_raster_op_white,
-  }
-  I__BIN_RASTER_OP = BIN_RASTER_OP.invert
+  <span class="no">BIN_RASTER_OP</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_black</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_notmergepen</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_masknotpen</span><span class="p">,</span>
+    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_notcopypen</span><span class="p">,</span>
+    <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_maskpennot</span><span class="p">,</span>
+    <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_not</span><span class="p">,</span>
+    <span class="mi">7</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_xorpen</span><span class="p">,</span>
+    <span class="mi">8</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_notmaskpen</span><span class="p">,</span>
+    <span class="mi">9</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_maskpen</span><span class="p">,</span>
+    <span class="mi">10</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_notxorpen</span><span class="p">,</span>
+    <span class="mi">11</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_nop</span><span class="p">,</span>
+    <span class="mi">12</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_mergenotpen</span><span class="p">,</span>
+    <span class="mi">13</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_copypen</span><span class="p">,</span>
+    <span class="mi">14</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_mergepennot</span><span class="p">,</span>
+    <span class="mi">15</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_mergepen</span><span class="p">,</span>
+    <span class="mi">16</span> <span class="o">=&gt;</span> <span class="ss">:bin_raster_op_white</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__BIN_RASTER_OP</span> <span class="o">=</span> <span class="no">BIN_RASTER_OP</span><span class="o">.</span><span class="n">invert</span>
 
-  MIX_MODE = {
-    1 =&gt; :mix_mode_transparent,
-    2 =&gt; :mix_mode_opaque,
-  }
-  I__MIX_MODE = MIX_MODE.invert
+  <span class="no">MIX_MODE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:mix_mode_transparent</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:mix_mode_opaque</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__MIX_MODE</span> <span class="o">=</span> <span class="no">MIX_MODE</span><span class="o">.</span><span class="n">invert</span>
 
-  POLY_FILL_MODE = {
-    1 =&gt; :poly_fill_mode_alternate,
-    2 =&gt; :poly_fill_mode_winding,
-  }
-  I__POLY_FILL_MODE = POLY_FILL_MODE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">POLY_FILL_MODE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:poly_fill_mode_alternate</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:poly_fill_mode_winding</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__POLY_FILL_MODE</span> <span class="o">=</span> <span class="no">POLY_FILL_MODE</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @special_header = SpecialHeader.new(@_io, self, @_root)
-    @header = Header.new(@_io, self, @_root)
-    @records = []
-    i = 0
-    begin
-      _ = Record.new(@_io, self, @_root)
-      @records &lt;&lt; _
-      i += 1
-    end until _.function == :func_eof
-    self
-  end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@special_header</span> <span class="o">=</span> <span class="no">SpecialHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@header</span> <span class="o">=</span> <span class="no">Header</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@records</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">begin</span>
+      <span class="n">_</span> <span class="o">=</span> <span class="no">Record</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@records</span> <span class="o">&lt;&lt;</span> <span class="n">_</span>
+      <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span> <span class="k">until</span> <span class="n">_</span><span class="o">.</span><span class="n">function</span> <span class="o">==</span> <span class="ss">:func_eof</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
 
-  ##
-  # @see &#39;&#39; section 2.3.5.31
-  class ParamsSetwindoworg &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see &#39;&#39; section 2.3.5.31</span>
+  <span class="k">class</span> <span class="nc">ParamsSetwindoworg</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @y = @_io.read_s2le
-      @x = @_io.read_s2le
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@y</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="vi">@x</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Y coordinate of the window origin, in logical units.
-    attr_reader :y
+    <span class="c1">##</span>
+    <span class="c1"># Y coordinate of the window origin, in logical units.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:y</span>
 
-    ##
-    # X coordinate of the window origin, in logical units.
-    attr_reader :x
-  end
+    <span class="c1">##</span>
+    <span class="c1"># X coordinate of the window origin, in logical units.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:x</span>
+  <span class="k">end</span>
 
-  ##
-  # @see &#39;&#39; section 2.3.5.15
-  class ParamsSetbkmode &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see &#39;&#39; section 2.3.5.15</span>
+  <span class="k">class</span> <span class="nc">ParamsSetbkmode</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @bk_mode = Kaitai::Struct::Stream::resolve_enum(MIX_MODE, @_io.read_u2le)
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@bk_mode</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MIX_MODE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Defines current graphic context background mix mode.
-    attr_reader :bk_mode
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Defines current graphic context background mix mode.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bk_mode</span>
+  <span class="k">end</span>
 
-  ##
-  # @see &#39;&#39; section 2.2.1.12
-  class PointS &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see &#39;&#39; section 2.2.1.12</span>
+  <span class="k">class</span> <span class="nc">PointS</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @x = @_io.read_s2le
-      @y = @_io.read_s2le
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@x</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="vi">@y</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # X coordinate of the point, in logical units.
-    attr_reader :x
+    <span class="c1">##</span>
+    <span class="c1"># X coordinate of the point, in logical units.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:x</span>
 
-    ##
-    # Y coordinate of the point, in logical units.
-    attr_reader :y
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Y coordinate of the point, in logical units.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:y</span>
+  <span class="k">end</span>
 
-  ##
-  # @see &#39;&#39; section 2.3.5.30
-  class ParamsSetwindowext &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see &#39;&#39; section 2.3.5.30</span>
+  <span class="k">class</span> <span class="nc">ParamsSetwindowext</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @y = @_io.read_s2le
-      @x = @_io.read_s2le
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@y</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="vi">@x</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Vertical extent of the window in logical units.
-    attr_reader :y
+    <span class="c1">##</span>
+    <span class="c1"># Vertical extent of the window in logical units.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:y</span>
 
-    ##
-    # Horizontal extent of the window in logical units.
-    attr_reader :x
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Horizontal extent of the window in logical units.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:x</span>
+  <span class="k">end</span>
 
-  ##
-  # @see &#39;&#39; section 2.3.3.15 = params_polyline
-  class ParamsPolygon &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see &#39;&#39; section 2.3.3.15 = params_polyline</span>
+  <span class="k">class</span> <span class="nc">ParamsPolygon</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @num_points = @_io.read_s2le
-      @points = Array.new(num_points)
-      (num_points).times { |i|
-        @points[i] = PointS.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :num_points
-    attr_reader :points
-  end
-  class Header &lt; Kaitai::Struct::Struct
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@num_points</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="vi">@points</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_points</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">num_points</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@points</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">PointS</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_points</span>
+    <span class="kp">attr_reader</span> <span class="ss">:points</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Header</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-    METAFILE_TYPE = {
-      1 =&gt; :metafile_type_memory_metafile,
-      2 =&gt; :metafile_type_disk_metafile,
-    }
-    I__METAFILE_TYPE = METAFILE_TYPE.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="no">METAFILE_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:metafile_type_memory_metafile</span><span class="p">,</span>
+      <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:metafile_type_disk_metafile</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="no">I__METAFILE_TYPE</span> <span class="o">=</span> <span class="no">METAFILE_TYPE</span><span class="o">.</span><span class="n">invert</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @metafile_type = Kaitai::Struct::Stream::resolve_enum(METAFILE_TYPE, @_io.read_u2le)
-      @header_size = @_io.read_u2le
-      @version = @_io.read_u2le
-      @size = @_io.read_u4le
-      @number_of_objects = @_io.read_u2le
-      @max_record = @_io.read_u4le
-      @number_of_members = @_io.read_u2le
-      self
-    end
-    attr_reader :metafile_type
-    attr_reader :header_size
-    attr_reader :version
-    attr_reader :size
-    attr_reader :number_of_objects
-    attr_reader :max_record
-    attr_reader :number_of_members
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@metafile_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">METAFILE_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="vi">@header_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@number_of_objects</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@max_record</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@number_of_members</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:metafile_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:header_size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:number_of_objects</span>
+    <span class="kp">attr_reader</span> <span class="ss">:max_record</span>
+    <span class="kp">attr_reader</span> <span class="ss">:number_of_members</span>
+  <span class="k">end</span>
 
-  ##
-  # @see &#39;&#39; section 2.2.1.7
-  class ColorRef &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see &#39;&#39; section 2.2.1.7</span>
+  <span class="k">class</span> <span class="nc">ColorRef</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @red = @_io.read_u1
-      @green = @_io.read_u1
-      @blue = @_io.read_u1
-      @reserved = @_io.read_u1
-      self
-    end
-    attr_reader :red
-    attr_reader :green
-    attr_reader :blue
-    attr_reader :reserved
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@red</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@green</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@blue</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:red</span>
+    <span class="kp">attr_reader</span> <span class="ss">:green</span>
+    <span class="kp">attr_reader</span> <span class="ss">:blue</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
+  <span class="k">end</span>
 
-  ##
-  # @see &#39;&#39; section 2.3.5.22
-  class ParamsSetrop2 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see &#39;&#39; section 2.3.5.22</span>
+  <span class="k">class</span> <span class="nc">ParamsSetrop2</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @draw_mode = Kaitai::Struct::Stream::resolve_enum(BIN_RASTER_OP, @_io.read_u2le)
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@draw_mode</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">BIN_RASTER_OP</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Defines current foreground binary raster operation mixing mode.
-    attr_reader :draw_mode
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Defines current foreground binary raster operation mixing mode.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:draw_mode</span>
+  <span class="k">end</span>
 
-  ##
-  # @see &#39;&#39; section 2.3.5.20
-  class ParamsSetpolyfillmode &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see &#39;&#39; section 2.3.5.20</span>
+  <span class="k">class</span> <span class="nc">ParamsSetpolyfillmode</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @poly_fill_mode = Kaitai::Struct::Stream::resolve_enum(POLY_FILL_MODE, @_io.read_u2le)
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@poly_fill_mode</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">POLY_FILL_MODE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Defines current polygon fill mode.
-    attr_reader :poly_fill_mode
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Defines current polygon fill mode.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:poly_fill_mode</span>
+  <span class="k">end</span>
 
-  ##
-  # @see &#39;&#39; section 2.3.3.14
-  class ParamsPolyline &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see &#39;&#39; section 2.3.3.14</span>
+  <span class="k">class</span> <span class="nc">ParamsPolyline</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @num_points = @_io.read_s2le
-      @points = Array.new(num_points)
-      (num_points).times { |i|
-        @points[i] = PointS.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :num_points
-    attr_reader :points
-  end
-  class SpecialHeader &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@num_points</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="vi">@points</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_points</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">num_points</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@points</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">PointS</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_points</span>
+    <span class="kp">attr_reader</span> <span class="ss">:points</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">SpecialHeader</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @magic = @_io.ensure_fixed_contents([215, 205, 198, 154].pack(&#39;C*&#39;))
-      @handle = @_io.ensure_fixed_contents([0, 0].pack(&#39;C*&#39;))
-      @left = @_io.read_s2le
-      @top = @_io.read_s2le
-      @right = @_io.read_s2le
-      @bottom = @_io.read_s2le
-      @inch = @_io.read_u2le
-      @reserved = @_io.ensure_fixed_contents([0, 0, 0, 0].pack(&#39;C*&#39;))
-      @checksum = @_io.read_u2le
-      self
-    end
-    attr_reader :magic
-    attr_reader :handle
-    attr_reader :left
-    attr_reader :top
-    attr_reader :right
-    attr_reader :bottom
-    attr_reader :inch
-    attr_reader :reserved
-    attr_reader :checksum
-  end
-  class Record &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">215</span><span class="p">,</span> <span class="mi">205</span><span class="p">,</span> <span class="mi">198</span><span class="p">,</span> <span class="mi">154</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@handle</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@left</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="vi">@top</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="vi">@right</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="vi">@bottom</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
+      <span class="vi">@inch</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@checksum</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:magic</span>
+    <span class="kp">attr_reader</span> <span class="ss">:handle</span>
+    <span class="kp">attr_reader</span> <span class="ss">:left</span>
+    <span class="kp">attr_reader</span> <span class="ss">:top</span>
+    <span class="kp">attr_reader</span> <span class="ss">:right</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bottom</span>
+    <span class="kp">attr_reader</span> <span class="ss">:inch</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
+    <span class="kp">attr_reader</span> <span class="ss">:checksum</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Record</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @size = @_io.read_u4le
-      @function = Kaitai::Struct::Stream::resolve_enum(FUNC, @_io.read_u2le)
-      case function
-      when :func_setbkmode
-        @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ParamsSetbkmode.new(io, self, @_root)
-      when :func_setbkcolor
-        @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ColorRef.new(io, self, @_root)
-      when :func_setrop2
-        @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ParamsSetrop2.new(io, self, @_root)
-      when :func_polyline
-        @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ParamsPolyline.new(io, self, @_root)
-      when :func_setwindoworg
-        @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ParamsSetwindoworg.new(io, self, @_root)
-      when :func_polygon
-        @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ParamsPolygon.new(io, self, @_root)
-      when :func_setwindowext
-        @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ParamsSetwindowext.new(io, self, @_root)
-      when :func_setpolyfillmode
-        @_raw_params = @_io.read_bytes(((size - 3) * 2))
-        io = Kaitai::Struct::Stream.new(@_raw_params)
-        @params = ParamsSetpolyfillmode.new(io, self, @_root)
-      else
-        @params = @_io.read_bytes(((size - 3) * 2))
-      end
-      self
-    end
-    attr_reader :size
-    attr_reader :function
-    attr_reader :params
-    attr_reader :_raw_params
-  end
-  attr_reader :special_header
-  attr_reader :header
-  attr_reader :records
-end
-</code></pre>
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@function</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">FUNC</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="k">case</span> <span class="n">function</span>
+      <span class="k">when</span> <span class="ss">:func_setbkmode</span>
+        <span class="vi">@_raw_params</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_params</span><span class="p">)</span>
+        <span class="vi">@params</span> <span class="o">=</span> <span class="no">ParamsSetbkmode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:func_setbkcolor</span>
+        <span class="vi">@_raw_params</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_params</span><span class="p">)</span>
+        <span class="vi">@params</span> <span class="o">=</span> <span class="no">ColorRef</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:func_setrop2</span>
+        <span class="vi">@_raw_params</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_params</span><span class="p">)</span>
+        <span class="vi">@params</span> <span class="o">=</span> <span class="no">ParamsSetrop2</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:func_polyline</span>
+        <span class="vi">@_raw_params</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_params</span><span class="p">)</span>
+        <span class="vi">@params</span> <span class="o">=</span> <span class="no">ParamsPolyline</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:func_setwindoworg</span>
+        <span class="vi">@_raw_params</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_params</span><span class="p">)</span>
+        <span class="vi">@params</span> <span class="o">=</span> <span class="no">ParamsSetwindoworg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:func_polygon</span>
+        <span class="vi">@_raw_params</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_params</span><span class="p">)</span>
+        <span class="vi">@params</span> <span class="o">=</span> <span class="no">ParamsPolygon</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:func_setwindowext</span>
+        <span class="vi">@_raw_params</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_params</span><span class="p">)</span>
+        <span class="vi">@params</span> <span class="o">=</span> <span class="no">ParamsSetwindowext</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:func_setpolyfillmode</span>
+        <span class="vi">@_raw_params</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_params</span><span class="p">)</span>
+        <span class="vi">@params</span> <span class="o">=</span> <span class="no">ParamsSetpolyfillmode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@params</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(((</span><span class="n">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:function</span>
+    <span class="kp">attr_reader</span> <span class="ss">:params</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_params</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:special_header</span>
+  <span class="kp">attr_reader</span> <span class="ss">:header</span>
+  <span class="kp">attr_reader</span> <span class="ss">:records</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -740,8 +737,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

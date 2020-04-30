@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -306,243 +303,243 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef ZX_SPECTRUM_TAP_H_
-#define ZX_SPECTRUM_TAP_H_
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef ZX_SPECTRUM_TAP_H_</span>
+<span class="cp">#define ZX_SPECTRUM_TAP_H_</span>
 
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;kaitai/kaitaistruct.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
 
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
 
-/**
- * TAP files are used by emulators of ZX Spectrum computer (released in
- * 1982 by Sinclair Research). TAP file stores blocks of data as if
- * they are written to magnetic tape, which was used as primary media
- * for ZX Spectrum. Contents of this file can be viewed as a very
- * simple linear filesystem, storing named files with some basic
- * metainformation prepended as a header.
- * \sa Source
- */
+<span class="cm">/**</span>
+<span class="cm"> * TAP files are used by emulators of ZX Spectrum computer (released in</span>
+<span class="cm"> * 1982 by Sinclair Research). TAP file stores blocks of data as if</span>
+<span class="cm"> * they are written to magnetic tape, which was used as primary media</span>
+<span class="cm"> * for ZX Spectrum. Contents of this file can be viewed as a very</span>
+<span class="cm"> * simple linear filesystem, storing named files with some basic</span>
+<span class="cm"> * metainformation prepended as a header.</span>
+<span class="cm"> * \sa Source</span>
+<span class="cm"> */</span>
 
-class zx_spectrum_tap_t : public kaitai::kstruct {
+<span class="k">class</span> <span class="nc">zx_spectrum_tap_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-public:
-    class block_t;
-    class program_params_t;
-    class bytes_params_t;
-    class header_t;
-    class array_params_t;
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">block_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">program_params_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">bytes_params_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">header_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">array_params_t</span><span class="p">;</span>
 
-    enum flag_enum_t {
-        FLAG_ENUM_HEADER = 0,
-        FLAG_ENUM_DATA = 255
-    };
+    <span class="k">enum</span> <span class="n">flag_enum_t</span> <span class="p">{</span>
+        <span class="n">FLAG_ENUM_HEADER</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">FLAG_ENUM_DATA</span> <span class="o">=</span> <span class="mi">255</span>
+    <span class="p">};</span>
 
-    enum header_type_enum_t {
-        HEADER_TYPE_ENUM_PROGRAM = 0,
-        HEADER_TYPE_ENUM_NUM_ARRAY = 1,
-        HEADER_TYPE_ENUM_CHAR_ARRAY = 2,
-        HEADER_TYPE_ENUM_BYTES = 3
-    };
+    <span class="k">enum</span> <span class="n">header_type_enum_t</span> <span class="p">{</span>
+        <span class="n">HEADER_TYPE_ENUM_PROGRAM</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">HEADER_TYPE_ENUM_NUM_ARRAY</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">HEADER_TYPE_ENUM_CHAR_ARRAY</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">HEADER_TYPE_ENUM_BYTES</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="p">};</span>
 
-    zx_spectrum_tap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, zx_spectrum_tap_t* p__root = 0);
+    <span class="n">zx_spectrum_tap_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-private:
-    void _read();
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-public:
-    ~zx_spectrum_tap_t();
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">zx_spectrum_tap_t</span><span class="p">();</span>
 
-    class block_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">block_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        block_t(kaitai::kstream* p__io, zx_spectrum_tap_t* p__parent = 0, zx_spectrum_tap_t* p__root = 0);
+        <span class="n">block_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~block_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">block_t</span><span class="p">();</span>
 
-    private:
-        uint16_t m_len_block;
-        flag_enum_t m_flag;
-        header_t* m_header;
-        bool n_header;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">m_len_block</span><span class="p">;</span>
+        <span class="n">flag_enum_t</span> <span class="n">m_flag</span><span class="p">;</span>
+        <span class="n">header_t</span><span class="o">*</span> <span class="n">m_header</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_header</span><span class="p">;</span>
 
-    public:
-        bool _is_null_header() { header(); return n_header; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_header</span><span class="p">()</span> <span class="p">{</span> <span class="n">header</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_header</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
-        std::string m_data;
-        bool n_data;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_data</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_data</span><span class="p">;</span>
 
-    public:
-        bool _is_null_data() { data(); return n_data; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_data</span><span class="p">()</span> <span class="p">{</span> <span class="n">data</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_data</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
-        std::string m_headerless_data;
-        bool n_headerless_data;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_headerless_data</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_headerless_data</span><span class="p">;</span>
 
-    public:
-        bool _is_null_headerless_data() { headerless_data(); return n_headerless_data; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_headerless_data</span><span class="p">()</span> <span class="p">{</span> <span class="n">headerless_data</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_headerless_data</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
-        zx_spectrum_tap_t* m__root;
-        zx_spectrum_tap_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint16_t len_block() const { return m_len_block; }
-        flag_enum_t flag() const { return m_flag; }
-        header_t* header() const { return m_header; }
-        std::string data() const { return m_data; }
-        std::string headerless_data() const { return m_headerless_data; }
-        zx_spectrum_tap_t* _root() const { return m__root; }
-        zx_spectrum_tap_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">len_block</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_block</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">flag_enum_t</span> <span class="n">flag</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flag</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">header_t</span><span class="o">*</span> <span class="n">header</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_header</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">headerless_data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_headerless_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class program_params_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">program_params_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        program_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent = 0, zx_spectrum_tap_t* p__root = 0);
+        <span class="n">program_params_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~program_params_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">program_params_t</span><span class="p">();</span>
 
-    private:
-        uint16_t m_autostart_line;
-        uint16_t m_len_program;
-        zx_spectrum_tap_t* m__root;
-        zx_spectrum_tap_t::header_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">m_autostart_line</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_len_program</span><span class="p">;</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint16_t autostart_line() const { return m_autostart_line; }
-        uint16_t len_program() const { return m_len_program; }
-        zx_spectrum_tap_t* _root() const { return m__root; }
-        zx_spectrum_tap_t::header_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">autostart_line</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_autostart_line</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">len_program</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_program</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class bytes_params_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">bytes_params_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        bytes_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent = 0, zx_spectrum_tap_t* p__root = 0);
+        <span class="n">bytes_params_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~bytes_params_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">bytes_params_t</span><span class="p">();</span>
 
-    private:
-        uint16_t m_start_address;
-        std::string m_reserved;
-        zx_spectrum_tap_t* m__root;
-        zx_spectrum_tap_t::header_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">m_start_address</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_reserved</span><span class="p">;</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint16_t start_address() const { return m_start_address; }
-        std::string reserved() const { return m_reserved; }
-        zx_spectrum_tap_t* _root() const { return m__root; }
-        zx_spectrum_tap_t::header_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">start_address</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_start_address</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reserved</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class header_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">header_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        header_t(kaitai::kstream* p__io, zx_spectrum_tap_t::block_t* p__parent = 0, zx_spectrum_tap_t* p__root = 0);
+        <span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~header_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">header_t</span><span class="p">();</span>
 
-    private:
-        header_type_enum_t m_header_type;
-        std::string m_filename;
-        uint16_t m_len_data;
-        kaitai::kstruct* m_params;
-        bool n_params;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">header_type_enum_t</span> <span class="n">m_header_type</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_filename</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_len_data</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m_params</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_params</span><span class="p">;</span>
 
-    public:
-        bool _is_null_params() { params(); return n_params; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_params</span><span class="p">()</span> <span class="p">{</span> <span class="n">params</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_params</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
-        uint8_t m_checksum;
-        zx_spectrum_tap_t* m__root;
-        zx_spectrum_tap_t::block_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_checksum</span><span class="p">;</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        header_type_enum_t header_type() const { return m_header_type; }
-        std::string filename() const { return m_filename; }
-        uint16_t len_data() const { return m_len_data; }
-        kaitai::kstruct* params() const { return m_params; }
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">header_type_enum_t</span> <span class="n">header_type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_header_type</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">filename</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_filename</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">len_data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">params</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_params</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Bitwise XOR of all bytes including the flag byte
-         */
-        uint8_t checksum() const { return m_checksum; }
-        zx_spectrum_tap_t* _root() const { return m__root; }
-        zx_spectrum_tap_t::block_t* _parent() const { return m__parent; }
-    };
+        <span class="cm">/**</span>
+<span class="cm">         * Bitwise XOR of all bytes including the flag byte</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">checksum</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_checksum</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class array_params_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">array_params_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        array_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent = 0, zx_spectrum_tap_t* p__root = 0);
+        <span class="n">array_params_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~array_params_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">array_params_t</span><span class="p">();</span>
 
-    private:
-        uint8_t m_reserved;
-        uint8_t m_var_name;
-        std::string m_reserved1;
-        zx_spectrum_tap_t* m__root;
-        zx_spectrum_tap_t::header_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_reserved</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_var_name</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_reserved1</span><span class="p">;</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint8_t reserved() const { return m_reserved; }
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">reserved</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Variable name (1..26 meaning A$..Z$ +192)
-         */
-        uint8_t var_name() const { return m_var_name; }
-        std::string reserved1() const { return m_reserved1; }
-        zx_spectrum_tap_t* _root() const { return m__root; }
-        zx_spectrum_tap_t::header_t* _parent() const { return m__parent; }
-    };
+        <span class="cm">/**</span>
+<span class="cm">         * Variable name (1..26 meaning A$..Z$ +192)</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">var_name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_var_name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reserved1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved1</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-private:
-    std::vector&lt;block_t*&gt;* m_block;
-    zx_spectrum_tap_t* m__root;
-    kaitai::kstruct* m__parent;
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">block_t</span><span class="o">*&gt;*</span> <span class="n">m_block</span><span class="p">;</span>
+    <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-public:
-    std::vector&lt;block_t*&gt;* block() const { return m_block; }
-    zx_spectrum_tap_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-};
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">block_t</span><span class="o">*&gt;*</span> <span class="n">block</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_block</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
 
-#endif  // ZX_SPECTRUM_TAP_H_
-</code></pre>
+<span class="cp">#endif  </span><span class="c1">// ZX_SPECTRUM_TAP_H_</span>
+</pre></div>
 
         </div>
         
@@ -558,157 +555,157 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;zx_spectrum_tap.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;zx_spectrum_tap.h&quot;</span><span class="cp"></span>
 
 
 
-zx_spectrum_tap_t::zx_spectrum_tap_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    _read();
-}
+<span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">zx_spectrum_tap_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void zx_spectrum_tap_t::_read() {
-    m_block = new std::vector&lt;block_t*&gt;();
-    {
-        int i = 0;
-        while (!m__io-&gt;is_eof()) {
-            m_block-&gt;push_back(new block_t(m__io, this, m__root));
-            i++;
-        }
-    }
-}
+<span class="kt">void</span> <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_block</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">block_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">m_block</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">block_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-zx_spectrum_tap_t::~zx_spectrum_tap_t() {
-    for (std::vector&lt;block_t*&gt;::iterator it = m_block-&gt;begin(); it != m_block-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_block;
-}
+<span class="n">zx_spectrum_tap_t</span><span class="o">::~</span><span class="n">zx_spectrum_tap_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">block_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_block</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_block</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_block</span><span class="p">;</span>
+<span class="p">}</span>
 
-zx_spectrum_tap_t::block_t::block_t(kaitai::kstream* p__io, zx_spectrum_tap_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::</span><span class="n">block_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void zx_spectrum_tap_t::block_t::_read() {
-    m_len_block = m__io-&gt;read_u2le();
-    m_flag = static_cast&lt;zx_spectrum_tap_t::flag_enum_t&gt;(m__io-&gt;read_u1());
-    n_header = true;
-    if ( ((len_block() == 19) &amp;&amp; (flag() == FLAG_ENUM_HEADER)) ) {
-        n_header = false;
-        m_header = new header_t(m__io, this, m__root);
-    }
-    n_data = true;
-    if (len_block() == 19) {
-        n_data = false;
-        m_data = m__io-&gt;read_bytes((header()-&gt;len_data() + 4));
-    }
-    n_headerless_data = true;
-    if (flag() == FLAG_ENUM_DATA) {
-        n_headerless_data = false;
-        m_headerless_data = m__io-&gt;read_bytes((len_block() - 1));
-    }
-}
+<span class="kt">void</span> <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_len_block</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_flag</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">flag_enum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">n_header</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">len_block</span><span class="p">()</span> <span class="o">==</span> <span class="mi">19</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">flag</span><span class="p">()</span> <span class="o">==</span> <span class="n">FLAG_ENUM_HEADER</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_header</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">header_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">n_data</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">len_block</span><span class="p">()</span> <span class="o">==</span> <span class="mi">19</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_data</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">len_data</span><span class="p">()</span> <span class="o">+</span> <span class="mi">4</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="n">n_headerless_data</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">flag</span><span class="p">()</span> <span class="o">==</span> <span class="n">FLAG_ENUM_DATA</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_headerless_data</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_headerless_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_block</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-zx_spectrum_tap_t::block_t::~block_t() {
-    if (!n_header) {
-        delete m_header;
-    }
-    if (!n_data) {
-    }
-    if (!n_headerless_data) {
-    }
-}
+<span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::~</span><span class="n">block_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_header</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_header</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_headerless_data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-zx_spectrum_tap_t::program_params_t::program_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">program_params_t</span><span class="o">::</span><span class="n">program_params_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void zx_spectrum_tap_t::program_params_t::_read() {
-    m_autostart_line = m__io-&gt;read_u2le();
-    m_len_program = m__io-&gt;read_u2le();
-}
+<span class="kt">void</span> <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">program_params_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_autostart_line</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_len_program</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+<span class="p">}</span>
 
-zx_spectrum_tap_t::program_params_t::~program_params_t() {
-}
+<span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">program_params_t</span><span class="o">::~</span><span class="n">program_params_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-zx_spectrum_tap_t::bytes_params_t::bytes_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">bytes_params_t</span><span class="o">::</span><span class="n">bytes_params_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void zx_spectrum_tap_t::bytes_params_t::_read() {
-    m_start_address = m__io-&gt;read_u2le();
-    m_reserved = m__io-&gt;read_bytes(2);
-}
+<span class="kt">void</span> <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">bytes_params_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_start_address</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_reserved</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
 
-zx_spectrum_tap_t::bytes_params_t::~bytes_params_t() {
-}
+<span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">bytes_params_t</span><span class="o">::~</span><span class="n">bytes_params_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-zx_spectrum_tap_t::header_t::header_t(kaitai::kstream* p__io, zx_spectrum_tap_t::block_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void zx_spectrum_tap_t::header_t::_read() {
-    m_header_type = static_cast&lt;zx_spectrum_tap_t::header_type_enum_t&gt;(m__io-&gt;read_u1());
-    m_filename = kaitai::kstream::bytes_strip_right(m__io-&gt;read_bytes(10), 32);
-    m_len_data = m__io-&gt;read_u2le();
-    n_params = true;
-    switch (header_type()) {
-    case HEADER_TYPE_ENUM_PROGRAM: {
-        n_params = false;
-        m_params = new program_params_t(m__io, this, m__root);
-        break;
-    }
-    case HEADER_TYPE_ENUM_NUM_ARRY: {
-        n_params = false;
-        m_params = new array_params_t(m__io, this, m__root);
-        break;
-    }
-    case HEADER_TYPE_ENUM_CHAR_ARRY: {
-        n_params = false;
-        m_params = new array_params_t(m__io, this, m__root);
-        break;
-    }
-    case HEADER_TYPE_ENUM_BYTES: {
-        n_params = false;
-        m_params = new bytes_params_t(m__io, this, m__root);
-        break;
-    }
-    }
-    m_checksum = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_header_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_type_enum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">m_filename</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_strip_right</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="mi">32</span><span class="p">);</span>
+    <span class="n">m_len_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">n_params</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">header_type</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nl">HEADER_TYPE_ENUM_PROGRAM</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_params</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_params</span> <span class="o">=</span> <span class="k">new</span> <span class="n">program_params_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">HEADER_TYPE_ENUM_NUM_ARRY</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_params</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_params</span> <span class="o">=</span> <span class="k">new</span> <span class="n">array_params_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">HEADER_TYPE_ENUM_CHAR_ARRY</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_params</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_params</span> <span class="o">=</span> <span class="k">new</span> <span class="n">array_params_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">HEADER_TYPE_ENUM_BYTES</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_params</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_params</span> <span class="o">=</span> <span class="k">new</span> <span class="n">bytes_params_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">m_checksum</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-zx_spectrum_tap_t::header_t::~header_t() {
-    if (!n_params) {
-        delete m_params;
-    }
-}
+<span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::~</span><span class="n">header_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_params</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_params</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-zx_spectrum_tap_t::array_params_t::array_params_t(kaitai::kstream* p__io, zx_spectrum_tap_t::header_t* p__parent, zx_spectrum_tap_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">array_params_t</span><span class="o">::</span><span class="n">array_params_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">zx_spectrum_tap_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void zx_spectrum_tap_t::array_params_t::_read() {
-    m_reserved = m__io-&gt;read_u1();
-    m_var_name = m__io-&gt;read_u1();
-    m_reserved1 = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x00\x80&quot;, 2));
-}
+<span class="kt">void</span> <span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">array_params_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_reserved</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_var_name</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_reserved1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00\x80</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">));</span>
+<span class="p">}</span>
 
-zx_spectrum_tap_t::array_params_t::~array_params_t() {
-}
-</code></pre>
+<span class="n">zx_spectrum_tap_t</span><span class="o">::</span><span class="n">array_params_t</span><span class="o">::~</span><span class="n">array_params_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -735,8 +732,8 @@ zx_spectrum_tap_t::array_params_t::~array_params_t() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

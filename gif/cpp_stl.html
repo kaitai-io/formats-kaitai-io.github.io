@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -315,521 +312,521 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef GIF_H_
-#define GIF_H_
-
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-#include &quot;kaitai/kaitaistruct.h&quot;
-
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
-
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
-
-/**
- * GIF (Graphics Interchange Format) is an image file format, developed
- * in 1987. It became popular in 1990s as one of the main image formats
- * used in World Wide Web.
- * 
- * GIF format allows encoding of palette-based images up to 256 colors
- * (each of the colors can be chosen from a 24-bit RGB
- * colorspace). Image data stream uses LZW (Lempel–Ziv–Welch) lossless
- * compression.
- * 
- * Over the years, several version of the format were published and
- * several extensions to it were made, namely, a popular Netscape
- * extension that allows to store several images in one file, switching
- * between them, which produces crude form of animation.
- * 
- * Structurally, format consists of several mandatory headers and then
- * a stream of blocks follows. Blocks can carry additional
- * metainformation or image data.
- */
-
-class gif_t : public kaitai::kstruct {
-
-public:
-    class image_data_t;
-    class color_table_entry_t;
-    class logical_screen_descriptor_struct_t;
-    class local_image_descriptor_t;
-    class block_t;
-    class color_table_t;
-    class header_t;
-    class ext_graphic_control_t;
-    class subblock_t;
-    class ext_application_t;
-    class subblocks_t;
-    class extension_t;
-
-    enum block_type_t {
-        BLOCK_TYPE_EXTENSION = 33,
-        BLOCK_TYPE_LOCAL_IMAGE_DESCRIPTOR = 44,
-        BLOCK_TYPE_END_OF_FILE = 59
-    };
-
-    enum extension_label_t {
-        EXTENSION_LABEL_GRAPHIC_CONTROL = 249,
-        EXTENSION_LABEL_COMMENT = 254,
-        EXTENSION_LABEL_APPLICATION = 255
-    };
-
-    gif_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gif_t* p__root = 0);
-
-private:
-    void _read();
-
-public:
-    ~gif_t();
-
-    /**
-     * \sa - section 22
-     */
-
-    class image_data_t : public kaitai::kstruct {
-
-    public:
-
-        image_data_t(kaitai::kstream* p__io, gif_t::local_image_descriptor_t* p__parent = 0, gif_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~image_data_t();
-
-    private:
-        uint8_t m_lzw_min_code_size;
-        subblocks_t* m_subblocks;
-        gif_t* m__root;
-        gif_t::local_image_descriptor_t* m__parent;
-
-    public:
-        uint8_t lzw_min_code_size() const { return m_lzw_min_code_size; }
-        subblocks_t* subblocks() const { return m_subblocks; }
-        gif_t* _root() const { return m__root; }
-        gif_t::local_image_descriptor_t* _parent() const { return m__parent; }
-    };
-
-    class color_table_entry_t : public kaitai::kstruct {
-
-    public:
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef GIF_H_</span>
+<span class="cp">#define GIF_H_</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * GIF (Graphics Interchange Format) is an image file format, developed</span>
+<span class="cm"> * in 1987. It became popular in 1990s as one of the main image formats</span>
+<span class="cm"> * used in World Wide Web.</span>
+<span class="cm"> * </span>
+<span class="cm"> * GIF format allows encoding of palette-based images up to 256 colors</span>
+<span class="cm"> * (each of the colors can be chosen from a 24-bit RGB</span>
+<span class="cm"> * colorspace). Image data stream uses LZW (Lempel–Ziv–Welch) lossless</span>
+<span class="cm"> * compression.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Over the years, several version of the format were published and</span>
+<span class="cm"> * several extensions to it were made, namely, a popular Netscape</span>
+<span class="cm"> * extension that allows to store several images in one file, switching</span>
+<span class="cm"> * between them, which produces crude form of animation.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Structurally, format consists of several mandatory headers and then</span>
+<span class="cm"> * a stream of blocks follows. Blocks can carry additional</span>
+<span class="cm"> * metainformation or image data.</span>
+<span class="cm"> */</span>
+
+<span class="k">class</span> <span class="nc">gif_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">image_data_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">color_table_entry_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">logical_screen_descriptor_struct_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">local_image_descriptor_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">block_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">color_table_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">header_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">ext_graphic_control_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">subblock_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">ext_application_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">subblocks_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">extension_t</span><span class="p">;</span>
+
+    <span class="k">enum</span> <span class="n">block_type_t</span> <span class="p">{</span>
+        <span class="n">BLOCK_TYPE_EXTENSION</span> <span class="o">=</span> <span class="mi">33</span><span class="p">,</span>
+        <span class="n">BLOCK_TYPE_LOCAL_IMAGE_DESCRIPTOR</span> <span class="o">=</span> <span class="mi">44</span><span class="p">,</span>
+        <span class="n">BLOCK_TYPE_END_OF_FILE</span> <span class="o">=</span> <span class="mi">59</span>
+    <span class="p">};</span>
+
+    <span class="k">enum</span> <span class="n">extension_label_t</span> <span class="p">{</span>
+        <span class="n">EXTENSION_LABEL_GRAPHIC_CONTROL</span> <span class="o">=</span> <span class="mi">249</span><span class="p">,</span>
+        <span class="n">EXTENSION_LABEL_COMMENT</span> <span class="o">=</span> <span class="mi">254</span><span class="p">,</span>
+        <span class="n">EXTENSION_LABEL_APPLICATION</span> <span class="o">=</span> <span class="mi">255</span>
+    <span class="p">};</span>
+
+    <span class="n">gif_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">gif_t</span><span class="p">();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa - section 22</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">image_data_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">image_data_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">local_image_descriptor_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">image_data_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_lzw_min_code_size</span><span class="p">;</span>
+        <span class="n">subblocks_t</span><span class="o">*</span> <span class="n">m_subblocks</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">::</span><span class="n">local_image_descriptor_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">lzw_min_code_size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_lzw_min_code_size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">subblocks_t</span><span class="o">*</span> <span class="n">subblocks</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_subblocks</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">::</span><span class="n">local_image_descriptor_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">color_table_entry_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
 
-        color_table_entry_t(kaitai::kstream* p__io, gif_t::color_table_t* p__parent = 0, gif_t* p__root = 0);
+        <span class="n">color_table_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">color_table_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~color_table_entry_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">color_table_entry_t</span><span class="p">();</span>
 
-    private:
-        uint8_t m_red;
-        uint8_t m_green;
-        uint8_t m_blue;
-        gif_t* m__root;
-        gif_t::color_table_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_red</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_green</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_blue</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">::</span><span class="n">color_table_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint8_t red() const { return m_red; }
-        uint8_t green() const { return m_green; }
-        uint8_t blue() const { return m_blue; }
-        gif_t* _root() const { return m__root; }
-        gif_t::color_table_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">red</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_red</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">green</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_green</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">blue</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_blue</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">::</span><span class="n">color_table_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    /**
-     * \sa - section 18
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * \sa - section 18</span>
+<span class="cm">     */</span>
 
-    class logical_screen_descriptor_struct_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">logical_screen_descriptor_struct_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        logical_screen_descriptor_struct_t(kaitai::kstream* p__io, gif_t* p__parent = 0, gif_t* p__root = 0);
+        <span class="n">logical_screen_descriptor_struct_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~logical_screen_descriptor_struct_t();
-
-    private:
-        bool f_has_color_table;
-        bool m_has_color_table;
-
-    public:
-        bool has_color_table();
-
-    private:
-        bool f_color_table_size;
-        int32_t m_color_table_size;
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">logical_screen_descriptor_struct_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_has_color_table</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_has_color_table</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">has_color_table</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_color_table_size</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_color_table_size</span><span class="p">;</span>
 
-    public:
-        int32_t color_table_size();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">color_table_size</span><span class="p">();</span>
 
-    private:
-        uint16_t m_screen_width;
-        uint16_t m_screen_height;
-        uint8_t m_flags;
-        uint8_t m_bg_color_index;
-        uint8_t m_pixel_aspect_ratio;
-        gif_t* m__root;
-        gif_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">m_screen_width</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_screen_height</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_flags</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_bg_color_index</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_pixel_aspect_ratio</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint16_t screen_width() const { return m_screen_width; }
-        uint16_t screen_height() const { return m_screen_height; }
-        uint8_t flags() const { return m_flags; }
-        uint8_t bg_color_index() const { return m_bg_color_index; }
-        uint8_t pixel_aspect_ratio() const { return m_pixel_aspect_ratio; }
-        gif_t* _root() const { return m__root; }
-        gif_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">screen_width</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_screen_width</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">screen_height</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_screen_height</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">bg_color_index</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_bg_color_index</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">pixel_aspect_ratio</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_pixel_aspect_ratio</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class local_image_descriptor_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">local_image_descriptor_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
-
-        local_image_descriptor_t(kaitai::kstream* p__io, gif_t::block_t* p__parent = 0, gif_t* p__root = 0);
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">local_image_descriptor_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~local_image_descriptor_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">local_image_descriptor_t</span><span class="p">();</span>
 
-    private:
-        bool f_has_color_table;
-        bool m_has_color_table;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_has_color_table</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_has_color_table</span><span class="p">;</span>
 
-    public:
-        bool has_color_table();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">has_color_table</span><span class="p">();</span>
 
-    private:
-        bool f_has_interlace;
-        bool m_has_interlace;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_has_interlace</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_has_interlace</span><span class="p">;</span>
 
-    public:
-        bool has_interlace();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">has_interlace</span><span class="p">();</span>
 
-    private:
-        bool f_has_sorted_color_table;
-        bool m_has_sorted_color_table;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_has_sorted_color_table</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_has_sorted_color_table</span><span class="p">;</span>
 
-    public:
-        bool has_sorted_color_table();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">has_sorted_color_table</span><span class="p">();</span>
 
-    private:
-        bool f_color_table_size;
-        int32_t m_color_table_size;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_color_table_size</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_color_table_size</span><span class="p">;</span>
 
-    public:
-        int32_t color_table_size();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">color_table_size</span><span class="p">();</span>
 
-    private:
-        uint16_t m_left;
-        uint16_t m_top;
-        uint16_t m_width;
-        uint16_t m_height;
-        uint8_t m_flags;
-        color_table_t* m_local_color_table;
-        bool n_local_color_table;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">m_left</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_top</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_width</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_height</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_flags</span><span class="p">;</span>
+        <span class="n">color_table_t</span><span class="o">*</span> <span class="n">m_local_color_table</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_local_color_table</span><span class="p">;</span>
 
-    public:
-        bool _is_null_local_color_table() { local_color_table(); return n_local_color_table; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_local_color_table</span><span class="p">()</span> <span class="p">{</span> <span class="n">local_color_table</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_local_color_table</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
-        image_data_t* m_image_data;
-        gif_t* m__root;
-        gif_t::block_t* m__parent;
-        std::string m__raw_local_color_table;
-        kaitai::kstream* m__io__raw_local_color_table;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">image_data_t</span><span class="o">*</span> <span class="n">m_image_data</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_local_color_table</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_local_color_table</span><span class="p">;</span>
 
-    public:
-        uint16_t left() const { return m_left; }
-        uint16_t top() const { return m_top; }
-        uint16_t width() const { return m_width; }
-        uint16_t height() const { return m_height; }
-        uint8_t flags() const { return m_flags; }
-        color_table_t* local_color_table() const { return m_local_color_table; }
-        image_data_t* image_data() const { return m_image_data; }
-        gif_t* _root() const { return m__root; }
-        gif_t::block_t* _parent() const { return m__parent; }
-        std::string _raw_local_color_table() const { return m__raw_local_color_table; }
-        kaitai::kstream* _io__raw_local_color_table() const { return m__io__raw_local_color_table; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint16_t</span> <span class="n">left</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_left</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">top</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_top</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">width</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_width</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">height</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_height</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">color_table_t</span><span class="o">*</span> <span class="n">local_color_table</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_local_color_table</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">image_data_t</span><span class="o">*</span> <span class="n">image_data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_image_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_local_color_table</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_local_color_table</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_local_color_table</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_local_color_table</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class block_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">block_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        block_t(kaitai::kstream* p__io, gif_t* p__parent = 0, gif_t* p__root = 0);
+        <span class="n">block_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~block_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">block_t</span><span class="p">();</span>
 
-    private:
-        block_type_t m_block_type;
-        kaitai::kstruct* m_body;
-        bool n_body;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">block_type_t</span> <span class="n">m_block_type</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m_body</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_body</span><span class="p">;</span>
 
-    public:
-        bool _is_null_body() { body(); return n_body; };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_body</span><span class="p">()</span> <span class="p">{</span> <span class="n">body</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_body</span><span class="p">;</span> <span class="p">};</span>
 
-    private:
-        gif_t* m__root;
-        gif_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        block_type_t block_type() const { return m_block_type; }
-        kaitai::kstruct* body() const { return m_body; }
-        gif_t* _root() const { return m__root; }
-        gif_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">block_type_t</span> <span class="n">block_type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_block_type</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    /**
-     * \sa - section 19
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * \sa - section 19</span>
+<span class="cm">     */</span>
 
-    class color_table_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">color_table_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        color_table_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gif_t* p__root = 0);
+        <span class="n">color_table_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~color_table_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">color_table_t</span><span class="p">();</span>
 
-    private:
-        std::vector&lt;color_table_entry_t*&gt;* m_entries;
-        gif_t* m__root;
-        kaitai::kstruct* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">color_table_entry_t</span><span class="o">*&gt;*</span> <span class="n">m_entries</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        std::vector&lt;color_table_entry_t*&gt;* entries() const { return m_entries; }
-        gif_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">color_table_entry_t</span><span class="o">*&gt;*</span> <span class="n">entries</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_entries</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    /**
-     * \sa - section 17
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * \sa - section 17</span>
+<span class="cm">     */</span>
 
-    class header_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">header_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        header_t(kaitai::kstream* p__io, gif_t* p__parent = 0, gif_t* p__root = 0);
+        <span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~header_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">header_t</span><span class="p">();</span>
 
-    private:
-        std::string m_magic;
-        std::string m_version;
-        gif_t* m__root;
-        gif_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_magic</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_version</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        std::string magic() const { return m_magic; }
-        std::string version() const { return m_version; }
-        gif_t* _root() const { return m__root; }
-        gif_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">magic</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_magic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">version</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_version</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    /**
-     * \sa - section 23
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * \sa - section 23</span>
+<span class="cm">     */</span>
 
-    class ext_graphic_control_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">ext_graphic_control_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        ext_graphic_control_t(kaitai::kstream* p__io, gif_t::extension_t* p__parent = 0, gif_t* p__root = 0);
+        <span class="n">ext_graphic_control_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">extension_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~ext_graphic_control_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">ext_graphic_control_t</span><span class="p">();</span>
 
-    private:
-        bool f_transparent_color_flag;
-        bool m_transparent_color_flag;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_transparent_color_flag</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_transparent_color_flag</span><span class="p">;</span>
 
-    public:
-        bool transparent_color_flag();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">transparent_color_flag</span><span class="p">();</span>
 
-    private:
-        bool f_user_input_flag;
-        bool m_user_input_flag;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_user_input_flag</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_user_input_flag</span><span class="p">;</span>
 
-    public:
-        bool user_input_flag();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">user_input_flag</span><span class="p">();</span>
 
-    private:
-        std::string m_block_size;
-        uint8_t m_flags;
-        uint16_t m_delay_time;
-        uint8_t m_transparent_idx;
-        std::string m_terminator;
-        gif_t* m__root;
-        gif_t::extension_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_block_size</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_flags</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_delay_time</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_transparent_idx</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_terminator</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">::</span><span class="n">extension_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        std::string block_size() const { return m_block_size; }
-        uint8_t flags() const { return m_flags; }
-        uint16_t delay_time() const { return m_delay_time; }
-        uint8_t transparent_idx() const { return m_transparent_idx; }
-        std::string terminator() const { return m_terminator; }
-        gif_t* _root() const { return m__root; }
-        gif_t::extension_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">block_size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_block_size</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">delay_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_delay_time</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">transparent_idx</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_transparent_idx</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">terminator</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_terminator</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">::</span><span class="n">extension_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class subblock_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">subblock_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        subblock_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gif_t* p__root = 0);
+        <span class="n">subblock_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~subblock_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">subblock_t</span><span class="p">();</span>
 
-    private:
-        uint8_t m_len_bytes;
-        std::string m_bytes;
-        gif_t* m__root;
-        kaitai::kstruct* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_len_bytes</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_bytes</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        uint8_t len_bytes() const { return m_len_bytes; }
-        std::string bytes() const { return m_bytes; }
-        gif_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">len_bytes</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_bytes</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">bytes</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_bytes</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class ext_application_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">ext_application_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        ext_application_t(kaitai::kstream* p__io, gif_t::extension_t* p__parent = 0, gif_t* p__root = 0);
+        <span class="n">ext_application_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">extension_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~ext_application_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">ext_application_t</span><span class="p">();</span>
 
-    private:
-        subblock_t* m_application_id;
-        std::vector&lt;subblock_t*&gt;* m_subblocks;
-        gif_t* m__root;
-        gif_t::extension_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">subblock_t</span><span class="o">*</span> <span class="n">m_application_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">subblock_t</span><span class="o">*&gt;*</span> <span class="n">m_subblocks</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">::</span><span class="n">extension_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        subblock_t* application_id() const { return m_application_id; }
-        std::vector&lt;subblock_t*&gt;* subblocks() const { return m_subblocks; }
-        gif_t* _root() const { return m__root; }
-        gif_t::extension_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">subblock_t</span><span class="o">*</span> <span class="n">application_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_application_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">subblock_t</span><span class="o">*&gt;*</span> <span class="n">subblocks</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_subblocks</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">::</span><span class="n">extension_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class subblocks_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">subblocks_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        subblocks_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, gif_t* p__root = 0);
+        <span class="n">subblocks_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~subblocks_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">subblocks_t</span><span class="p">();</span>
 
-    private:
-        std::vector&lt;subblock_t*&gt;* m_entries;
-        gif_t* m__root;
-        kaitai::kstruct* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">subblock_t</span><span class="o">*&gt;*</span> <span class="n">m_entries</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        std::vector&lt;subblock_t*&gt;* entries() const { return m_entries; }
-        gif_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">subblock_t</span><span class="o">*&gt;*</span> <span class="n">entries</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_entries</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class extension_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">extension_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        extension_t(kaitai::kstream* p__io, gif_t::block_t* p__parent = 0, gif_t* p__root = 0);
+        <span class="n">extension_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~extension_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">extension_t</span><span class="p">();</span>
 
-    private:
-        extension_label_t m_label;
-        kaitai::kstruct* m_body;
-        gif_t* m__root;
-        gif_t::block_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">extension_label_t</span> <span class="n">m_label</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m_body</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">gif_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
-        extension_label_t label() const { return m_label; }
-        kaitai::kstruct* body() const { return m_body; }
-        gif_t* _root() const { return m__root; }
-        gif_t::block_t* _parent() const { return m__parent; }
-    };
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">extension_label_t</span> <span class="n">label</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_label</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">gif_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-private:
-    header_t* m_hdr;
-    logical_screen_descriptor_struct_t* m_logical_screen_descriptor;
-    color_table_t* m_global_color_table;
-    bool n_global_color_table;
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">header_t</span><span class="o">*</span> <span class="n">m_hdr</span><span class="p">;</span>
+    <span class="n">logical_screen_descriptor_struct_t</span><span class="o">*</span> <span class="n">m_logical_screen_descriptor</span><span class="p">;</span>
+    <span class="n">color_table_t</span><span class="o">*</span> <span class="n">m_global_color_table</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">n_global_color_table</span><span class="p">;</span>
 
-public:
-    bool _is_null_global_color_table() { global_color_table(); return n_global_color_table; };
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">_is_null_global_color_table</span><span class="p">()</span> <span class="p">{</span> <span class="n">global_color_table</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_global_color_table</span><span class="p">;</span> <span class="p">};</span>
 
-private:
-    std::vector&lt;block_t*&gt;* m_blocks;
-    gif_t* m__root;
-    kaitai::kstruct* m__parent;
-    std::string m__raw_global_color_table;
-    kaitai::kstream* m__io__raw_global_color_table;
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">block_t</span><span class="o">*&gt;*</span> <span class="n">m_blocks</span><span class="p">;</span>
+    <span class="n">gif_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_global_color_table</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_global_color_table</span><span class="p">;</span>
 
-public:
-    header_t* hdr() const { return m_hdr; }
-    logical_screen_descriptor_struct_t* logical_screen_descriptor() const { return m_logical_screen_descriptor; }
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">header_t</span><span class="o">*</span> <span class="n">hdr</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_hdr</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">logical_screen_descriptor_struct_t</span><span class="o">*</span> <span class="n">logical_screen_descriptor</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_logical_screen_descriptor</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * \sa - section 18
-     */
-    color_table_t* global_color_table() const { return m_global_color_table; }
-    std::vector&lt;block_t*&gt;* blocks() const { return m_blocks; }
-    gif_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-    std::string _raw_global_color_table() const { return m__raw_global_color_table; }
-    kaitai::kstream* _io__raw_global_color_table() const { return m__io__raw_global_color_table; }
-};
+    <span class="cm">/**</span>
+<span class="cm">     * \sa - section 18</span>
+<span class="cm">     */</span>
+    <span class="n">color_table_t</span><span class="o">*</span> <span class="n">global_color_table</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_global_color_table</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">block_t</span><span class="o">*&gt;*</span> <span class="n">blocks</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_blocks</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">gif_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_global_color_table</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_global_color_table</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_global_color_table</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_global_color_table</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
 
-#endif  // GIF_H_
-</code></pre>
+<span class="cp">#endif  </span><span class="c1">// GIF_H_</span>
+</pre></div>
 
         </div>
         
@@ -845,386 +842,386 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;gif.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;gif.h&quot;</span><span class="cp"></span>
 
 
 
-gif_t::gif_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    _read();
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">gif_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void gif_t::_read() {
-    m_hdr = new header_t(m__io, this, m__root);
-    m_logical_screen_descriptor = new logical_screen_descriptor_struct_t(m__io, this, m__root);
-    n_global_color_table = true;
-    if (logical_screen_descriptor()-&gt;has_color_table()) {
-        n_global_color_table = false;
-        m__raw_global_color_table = m__io-&gt;read_bytes((logical_screen_descriptor()-&gt;color_table_size() * 3));
-        m__io__raw_global_color_table = new kaitai::kstream(m__raw_global_color_table);
-        m_global_color_table = new color_table_t(m__io__raw_global_color_table, this, m__root);
-    }
-    m_blocks = new std::vector&lt;block_t*&gt;();
-    {
-        int i = 0;
-        block_t* _;
-        do {
-            _ = new block_t(m__io, this, m__root);
-            m_blocks-&gt;push_back(_);
-            i++;
-        } while (!( ((_io()-&gt;is_eof()) || (_-&gt;block_type() == BLOCK_TYPE_END_OF_FILE)) ));
-    }
-}
+<span class="kt">void</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_hdr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">header_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_logical_screen_descriptor</span> <span class="o">=</span> <span class="k">new</span> <span class="n">logical_screen_descriptor_struct_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">n_global_color_table</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">logical_screen_descriptor</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">has_color_table</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">n_global_color_table</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_global_color_table</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">logical_screen_descriptor</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">color_table_size</span><span class="p">()</span> <span class="o">*</span> <span class="mi">3</span><span class="p">));</span>
+        <span class="n">m__io__raw_global_color_table</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_global_color_table</span><span class="p">);</span>
+        <span class="n">m_global_color_table</span> <span class="o">=</span> <span class="k">new</span> <span class="n">color_table_t</span><span class="p">(</span><span class="n">m__io__raw_global_color_table</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">m_blocks</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">block_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">block_t</span><span class="o">*</span> <span class="n">_</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="k">new</span> <span class="n">block_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+            <span class="n">m_blocks</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">_</span><span class="p">);</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="o">||</span> <span class="p">(</span><span class="n">_</span><span class="o">-&gt;</span><span class="n">block_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">BLOCK_TYPE_END_OF_FILE</span><span class="p">))</span> <span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-gif_t::~gif_t() {
-    delete m_hdr;
-    delete m_logical_screen_descriptor;
-    if (!n_global_color_table) {
-        delete m__io__raw_global_color_table;
-        delete m_global_color_table;
-    }
-    for (std::vector&lt;block_t*&gt;::iterator it = m_blocks-&gt;begin(); it != m_blocks-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_blocks;
-}
+<span class="n">gif_t</span><span class="o">::~</span><span class="n">gif_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_hdr</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_logical_screen_descriptor</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_global_color_table</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_global_color_table</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="n">m_global_color_table</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">block_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_blocks</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_blocks</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_blocks</span><span class="p">;</span>
+<span class="p">}</span>
 
-gif_t::image_data_t::image_data_t(kaitai::kstream* p__io, gif_t::local_image_descriptor_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">image_data_t</span><span class="o">::</span><span class="n">image_data_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">local_image_descriptor_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void gif_t::image_data_t::_read() {
-    m_lzw_min_code_size = m__io-&gt;read_u1();
-    m_subblocks = new subblocks_t(m__io, this, m__root);
-}
+<span class="kt">void</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">image_data_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_lzw_min_code_size</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_subblocks</span> <span class="o">=</span> <span class="k">new</span> <span class="n">subblocks_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+<span class="p">}</span>
 
-gif_t::image_data_t::~image_data_t() {
-    delete m_subblocks;
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">image_data_t</span><span class="o">::~</span><span class="n">image_data_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_subblocks</span><span class="p">;</span>
+<span class="p">}</span>
 
-gif_t::color_table_entry_t::color_table_entry_t(kaitai::kstream* p__io, gif_t::color_table_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">color_table_entry_t</span><span class="o">::</span><span class="n">color_table_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">color_table_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void gif_t::color_table_entry_t::_read() {
-    m_red = m__io-&gt;read_u1();
-    m_green = m__io-&gt;read_u1();
-    m_blue = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">color_table_entry_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_red</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_green</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_blue</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-gif_t::color_table_entry_t::~color_table_entry_t() {
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">color_table_entry_t</span><span class="o">::~</span><span class="n">color_table_entry_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-gif_t::logical_screen_descriptor_struct_t::logical_screen_descriptor_struct_t(kaitai::kstream* p__io, gif_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_has_color_table = false;
-    f_color_table_size = false;
-    _read();
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">logical_screen_descriptor_struct_t</span><span class="o">::</span><span class="n">logical_screen_descriptor_struct_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_has_color_table</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_color_table_size</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void gif_t::logical_screen_descriptor_struct_t::_read() {
-    m_screen_width = m__io-&gt;read_u2le();
-    m_screen_height = m__io-&gt;read_u2le();
-    m_flags = m__io-&gt;read_u1();
-    m_bg_color_index = m__io-&gt;read_u1();
-    m_pixel_aspect_ratio = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">logical_screen_descriptor_struct_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_screen_width</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_screen_height</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_bg_color_index</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_pixel_aspect_ratio</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-gif_t::logical_screen_descriptor_struct_t::~logical_screen_descriptor_struct_t() {
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">logical_screen_descriptor_struct_t</span><span class="o">::~</span><span class="n">logical_screen_descriptor_struct_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-bool gif_t::logical_screen_descriptor_struct_t::has_color_table() {
-    if (f_has_color_table)
-        return m_has_color_table;
-    m_has_color_table = (flags() &amp; 128) != 0;
-    f_has_color_table = true;
-    return m_has_color_table;
-}
+<span class="kt">bool</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">logical_screen_descriptor_struct_t</span><span class="o">::</span><span class="n">has_color_table</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_has_color_table</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_has_color_table</span><span class="p">;</span>
+    <span class="n">m_has_color_table</span> <span class="o">=</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">f_has_color_table</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_has_color_table</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t gif_t::logical_screen_descriptor_struct_t::color_table_size() {
-    if (f_color_table_size)
-        return m_color_table_size;
-    m_color_table_size = (2 &lt;&lt; (flags() &amp; 7));
-    f_color_table_size = true;
-    return m_color_table_size;
-}
+<span class="kt">int32_t</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">logical_screen_descriptor_struct_t</span><span class="o">::</span><span class="n">color_table_size</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_color_table_size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_color_table_size</span><span class="p">;</span>
+    <span class="n">m_color_table_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">));</span>
+    <span class="n">f_color_table_size</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_color_table_size</span><span class="p">;</span>
+<span class="p">}</span>
 
-gif_t::local_image_descriptor_t::local_image_descriptor_t(kaitai::kstream* p__io, gif_t::block_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_has_color_table = false;
-    f_has_interlace = false;
-    f_has_sorted_color_table = false;
-    f_color_table_size = false;
-    _read();
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">local_image_descriptor_t</span><span class="o">::</span><span class="n">local_image_descriptor_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_has_color_table</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_has_interlace</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_has_sorted_color_table</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_color_table_size</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void gif_t::local_image_descriptor_t::_read() {
-    m_left = m__io-&gt;read_u2le();
-    m_top = m__io-&gt;read_u2le();
-    m_width = m__io-&gt;read_u2le();
-    m_height = m__io-&gt;read_u2le();
-    m_flags = m__io-&gt;read_u1();
-    n_local_color_table = true;
-    if (has_color_table()) {
-        n_local_color_table = false;
-        m__raw_local_color_table = m__io-&gt;read_bytes((color_table_size() * 3));
-        m__io__raw_local_color_table = new kaitai::kstream(m__raw_local_color_table);
-        m_local_color_table = new color_table_t(m__io__raw_local_color_table, this, m__root);
-    }
-    m_image_data = new image_data_t(m__io, this, m__root);
-}
+<span class="kt">void</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">local_image_descriptor_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_left</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_top</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_width</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_height</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">n_local_color_table</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">has_color_table</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">n_local_color_table</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_local_color_table</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">color_table_size</span><span class="p">()</span> <span class="o">*</span> <span class="mi">3</span><span class="p">));</span>
+        <span class="n">m__io__raw_local_color_table</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_local_color_table</span><span class="p">);</span>
+        <span class="n">m_local_color_table</span> <span class="o">=</span> <span class="k">new</span> <span class="n">color_table_t</span><span class="p">(</span><span class="n">m__io__raw_local_color_table</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">m_image_data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">image_data_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+<span class="p">}</span>
 
-gif_t::local_image_descriptor_t::~local_image_descriptor_t() {
-    if (!n_local_color_table) {
-        delete m__io__raw_local_color_table;
-        delete m_local_color_table;
-    }
-    delete m_image_data;
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">local_image_descriptor_t</span><span class="o">::~</span><span class="n">local_image_descriptor_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_local_color_table</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_local_color_table</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="n">m_local_color_table</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_image_data</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool gif_t::local_image_descriptor_t::has_color_table() {
-    if (f_has_color_table)
-        return m_has_color_table;
-    m_has_color_table = (flags() &amp; 128) != 0;
-    f_has_color_table = true;
-    return m_has_color_table;
-}
+<span class="kt">bool</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">local_image_descriptor_t</span><span class="o">::</span><span class="n">has_color_table</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_has_color_table</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_has_color_table</span><span class="p">;</span>
+    <span class="n">m_has_color_table</span> <span class="o">=</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">f_has_color_table</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_has_color_table</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool gif_t::local_image_descriptor_t::has_interlace() {
-    if (f_has_interlace)
-        return m_has_interlace;
-    m_has_interlace = (flags() &amp; 64) != 0;
-    f_has_interlace = true;
-    return m_has_interlace;
-}
+<span class="kt">bool</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">local_image_descriptor_t</span><span class="o">::</span><span class="n">has_interlace</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_has_interlace</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_has_interlace</span><span class="p">;</span>
+    <span class="n">m_has_interlace</span> <span class="o">=</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">f_has_interlace</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_has_interlace</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool gif_t::local_image_descriptor_t::has_sorted_color_table() {
-    if (f_has_sorted_color_table)
-        return m_has_sorted_color_table;
-    m_has_sorted_color_table = (flags() &amp; 32) != 0;
-    f_has_sorted_color_table = true;
-    return m_has_sorted_color_table;
-}
+<span class="kt">bool</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">local_image_descriptor_t</span><span class="o">::</span><span class="n">has_sorted_color_table</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_has_sorted_color_table</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_has_sorted_color_table</span><span class="p">;</span>
+    <span class="n">m_has_sorted_color_table</span> <span class="o">=</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">f_has_sorted_color_table</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_has_sorted_color_table</span><span class="p">;</span>
+<span class="p">}</span>
 
-int32_t gif_t::local_image_descriptor_t::color_table_size() {
-    if (f_color_table_size)
-        return m_color_table_size;
-    m_color_table_size = (2 &lt;&lt; (flags() &amp; 7));
-    f_color_table_size = true;
-    return m_color_table_size;
-}
+<span class="kt">int32_t</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">local_image_descriptor_t</span><span class="o">::</span><span class="n">color_table_size</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_color_table_size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_color_table_size</span><span class="p">;</span>
+    <span class="n">m_color_table_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">));</span>
+    <span class="n">f_color_table_size</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_color_table_size</span><span class="p">;</span>
+<span class="p">}</span>
 
-gif_t::block_t::block_t(kaitai::kstream* p__io, gif_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::</span><span class="n">block_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void gif_t::block_t::_read() {
-    m_block_type = static_cast&lt;gif_t::block_type_t&gt;(m__io-&gt;read_u1());
-    n_body = true;
-    switch (block_type()) {
-    case BLOCK_TYPE_EXTENSION: {
-        n_body = false;
-        m_body = new extension_t(m__io, this, m__root);
-        break;
-    }
-    case BLOCK_TYPE_LOCAL_IMAGE_DESCRIPTOR: {
-        n_body = false;
-        m_body = new local_image_descriptor_t(m__io, this, m__root);
-        break;
-    }
-    }
-}
+<span class="kt">void</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_block_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">gif_t</span><span class="o">::</span><span class="n">block_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="n">n_body</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">block_type</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nl">BLOCK_TYPE_EXTENSION</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">extension_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">BLOCK_TYPE_LOCAL_IMAGE_DESCRIPTOR</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">local_image_descriptor_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-gif_t::block_t::~block_t() {
-    if (!n_body) {
-        delete m_body;
-    }
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">::~</span><span class="n">block_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m_body</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-gif_t::color_table_t::color_table_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">color_table_t</span><span class="o">::</span><span class="n">color_table_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void gif_t::color_table_t::_read() {
-    m_entries = new std::vector&lt;color_table_entry_t*&gt;();
-    {
-        int i = 0;
-        while (!m__io-&gt;is_eof()) {
-            m_entries-&gt;push_back(new color_table_entry_t(m__io, this, m__root));
-            i++;
-        }
-    }
-}
+<span class="kt">void</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">color_table_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">color_table_entry_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">color_table_entry_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-gif_t::color_table_t::~color_table_t() {
-    for (std::vector&lt;color_table_entry_t*&gt;::iterator it = m_entries-&gt;begin(); it != m_entries-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_entries;
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">color_table_t</span><span class="o">::~</span><span class="n">color_table_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">color_table_entry_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_entries</span><span class="p">;</span>
+<span class="p">}</span>
 
-gif_t::header_t::header_t(kaitai::kstream* p__io, gif_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void gif_t::header_t::_read() {
-    m_magic = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x47\x49\x46&quot;, 3));
-    m_version = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes(3), std::string(&quot;ASCII&quot;));
-}
+<span class="kt">void</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_magic</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x47\x49\x46</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">));</span>
+    <span class="n">m_version</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+<span class="p">}</span>
 
-gif_t::header_t::~header_t() {
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::~</span><span class="n">header_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-gif_t::ext_graphic_control_t::ext_graphic_control_t(kaitai::kstream* p__io, gif_t::extension_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_transparent_color_flag = false;
-    f_user_input_flag = false;
-    _read();
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">ext_graphic_control_t</span><span class="o">::</span><span class="n">ext_graphic_control_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">extension_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_transparent_color_flag</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_user_input_flag</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void gif_t::ext_graphic_control_t::_read() {
-    m_block_size = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x04&quot;, 1));
-    m_flags = m__io-&gt;read_u1();
-    m_delay_time = m__io-&gt;read_u2le();
-    m_transparent_idx = m__io-&gt;read_u1();
-    m_terminator = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x00&quot;, 1));
-}
+<span class="kt">void</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">ext_graphic_control_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_block_size</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x04</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+    <span class="n">m_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_delay_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_transparent_idx</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_terminator</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x00</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+<span class="p">}</span>
 
-gif_t::ext_graphic_control_t::~ext_graphic_control_t() {
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">ext_graphic_control_t</span><span class="o">::~</span><span class="n">ext_graphic_control_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-bool gif_t::ext_graphic_control_t::transparent_color_flag() {
-    if (f_transparent_color_flag)
-        return m_transparent_color_flag;
-    m_transparent_color_flag = (flags() &amp; 1) != 0;
-    f_transparent_color_flag = true;
-    return m_transparent_color_flag;
-}
+<span class="kt">bool</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">ext_graphic_control_t</span><span class="o">::</span><span class="n">transparent_color_flag</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_transparent_color_flag</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_transparent_color_flag</span><span class="p">;</span>
+    <span class="n">m_transparent_color_flag</span> <span class="o">=</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">f_transparent_color_flag</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_transparent_color_flag</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool gif_t::ext_graphic_control_t::user_input_flag() {
-    if (f_user_input_flag)
-        return m_user_input_flag;
-    m_user_input_flag = (flags() &amp; 2) != 0;
-    f_user_input_flag = true;
-    return m_user_input_flag;
-}
+<span class="kt">bool</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">ext_graphic_control_t</span><span class="o">::</span><span class="n">user_input_flag</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_user_input_flag</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_user_input_flag</span><span class="p">;</span>
+    <span class="n">m_user_input_flag</span> <span class="o">=</span> <span class="p">(</span><span class="n">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">f_user_input_flag</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_user_input_flag</span><span class="p">;</span>
+<span class="p">}</span>
 
-gif_t::subblock_t::subblock_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">subblock_t</span><span class="o">::</span><span class="n">subblock_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void gif_t::subblock_t::_read() {
-    m_len_bytes = m__io-&gt;read_u1();
-    m_bytes = m__io-&gt;read_bytes(len_bytes());
-}
+<span class="kt">void</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">subblock_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_len_bytes</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_bytes</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_bytes</span><span class="p">());</span>
+<span class="p">}</span>
 
-gif_t::subblock_t::~subblock_t() {
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">subblock_t</span><span class="o">::~</span><span class="n">subblock_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-gif_t::ext_application_t::ext_application_t(kaitai::kstream* p__io, gif_t::extension_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">ext_application_t</span><span class="o">::</span><span class="n">ext_application_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">extension_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void gif_t::ext_application_t::_read() {
-    m_application_id = new subblock_t(m__io, this, m__root);
-    m_subblocks = new std::vector&lt;subblock_t*&gt;();
-    {
-        int i = 0;
-        subblock_t* _;
-        do {
-            _ = new subblock_t(m__io, this, m__root);
-            m_subblocks-&gt;push_back(_);
-            i++;
-        } while (!(_-&gt;len_bytes() == 0));
-    }
-}
+<span class="kt">void</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">ext_application_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_application_id</span> <span class="o">=</span> <span class="k">new</span> <span class="n">subblock_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_subblocks</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">subblock_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">subblock_t</span><span class="o">*</span> <span class="n">_</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="k">new</span> <span class="n">subblock_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+            <span class="n">m_subblocks</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">_</span><span class="p">);</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_</span><span class="o">-&gt;</span><span class="n">len_bytes</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-gif_t::ext_application_t::~ext_application_t() {
-    delete m_application_id;
-    for (std::vector&lt;subblock_t*&gt;::iterator it = m_subblocks-&gt;begin(); it != m_subblocks-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_subblocks;
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">ext_application_t</span><span class="o">::~</span><span class="n">ext_application_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_application_id</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">subblock_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_subblocks</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_subblocks</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_subblocks</span><span class="p">;</span>
+<span class="p">}</span>
 
-gif_t::subblocks_t::subblocks_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">subblocks_t</span><span class="o">::</span><span class="n">subblocks_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void gif_t::subblocks_t::_read() {
-    m_entries = new std::vector&lt;subblock_t*&gt;();
-    {
-        int i = 0;
-        subblock_t* _;
-        do {
-            _ = new subblock_t(m__io, this, m__root);
-            m_entries-&gt;push_back(_);
-            i++;
-        } while (!(_-&gt;len_bytes() == 0));
-    }
-}
+<span class="kt">void</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">subblocks_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">subblock_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">subblock_t</span><span class="o">*</span> <span class="n">_</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="k">new</span> <span class="n">subblock_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+            <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">_</span><span class="p">);</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_</span><span class="o">-&gt;</span><span class="n">len_bytes</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-gif_t::subblocks_t::~subblocks_t() {
-    for (std::vector&lt;subblock_t*&gt;::iterator it = m_entries-&gt;begin(); it != m_entries-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_entries;
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">subblocks_t</span><span class="o">::~</span><span class="n">subblocks_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">subblock_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_entries</span><span class="p">;</span>
+<span class="p">}</span>
 
-gif_t::extension_t::extension_t(kaitai::kstream* p__io, gif_t::block_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">gif_t</span><span class="o">::</span><span class="n">extension_t</span><span class="o">::</span><span class="n">extension_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">block_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">gif_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void gif_t::extension_t::_read() {
-    m_label = static_cast&lt;gif_t::extension_label_t&gt;(m__io-&gt;read_u1());
-    switch (label()) {
-    case EXTENSION_LABEL_APPLICATION: {
-        m_body = new ext_application_t(m__io, this, m__root);
-        break;
-    }
-    case EXTENSION_LABEL_COMMENT: {
-        m_body = new subblocks_t(m__io, this, m__root);
-        break;
-    }
-    case EXTENSION_LABEL_GRAPHIC_CONTROL: {
-        m_body = new ext_graphic_control_t(m__io, this, m__root);
-        break;
-    }
-    default: {
-        m_body = new subblocks_t(m__io, this, m__root);
-        break;
-    }
-    }
-}
+<span class="kt">void</span> <span class="n">gif_t</span><span class="o">::</span><span class="n">extension_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_label</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">gif_t</span><span class="o">::</span><span class="n">extension_label_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">());</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">label</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nl">EXTENSION_LABEL_APPLICATION</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ext_application_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">EXTENSION_LABEL_COMMENT</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">subblocks_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">EXTENSION_LABEL_GRAPHIC_CONTROL</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ext_graphic_control_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">default</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">subblocks_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-gif_t::extension_t::~extension_t() {
-    delete m_body;
-}
-</code></pre>
+<span class="n">gif_t</span><span class="o">::</span><span class="n">extension_t</span><span class="o">::~</span><span class="n">extension_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_body</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1251,8 +1248,8 @@ gif_t::extension_t::~extension_t() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

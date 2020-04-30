@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -244,102 +241,102 @@ AndesFirmware data = new AndesFirmware(new ByteBufferKaitaiStream(someArray));</
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
 
 
-/**
- * Firmware image found with MediaTek MT76xx wifi chipsets.
- */
-public class AndesFirmware extends KaitaiStruct {
-    public static AndesFirmware fromFile(String fileName) throws IOException {
-        return new AndesFirmware(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * Firmware image found with MediaTek MT76xx wifi chipsets.</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">AndesFirmware</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">AndesFirmware</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">AndesFirmware</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public AndesFirmware(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">AndesFirmware</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public AndesFirmware(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">AndesFirmware</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public AndesFirmware(KaitaiStream _io, KaitaiStruct _parent, AndesFirmware _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this._raw_imageHeader = this._io.readBytes(32);
-        KaitaiStream _io__raw_imageHeader = new ByteBufferKaitaiStream(_raw_imageHeader);
-        this.imageHeader = new ImageHeader(_io__raw_imageHeader, this, _root);
-        this.ilm = this._io.readBytes(imageHeader().ilmLen());
-        this.dlm = this._io.readBytes(imageHeader().dlmLen());
-    }
-    public static class ImageHeader extends KaitaiStruct {
-        public static ImageHeader fromFile(String fileName) throws IOException {
-            return new ImageHeader(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="kd">public</span> <span class="nf">AndesFirmware</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">AndesFirmware</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_raw_imageHeader</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">);</span>
+        <span class="n">KaitaiStream</span> <span class="n">_io__raw_imageHeader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_imageHeader</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">imageHeader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ImageHeader</span><span class="p">(</span><span class="n">_io__raw_imageHeader</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">ilm</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">imageHeader</span><span class="p">().</span><span class="na">ilmLen</span><span class="p">());</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">dlm</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">imageHeader</span><span class="p">().</span><span class="na">dlmLen</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ImageHeader</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">ImageHeader</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">ImageHeader</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public ImageHeader(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">ImageHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ImageHeader(KaitaiStream _io, AndesFirmware _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">ImageHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">AndesFirmware</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ImageHeader(KaitaiStream _io, AndesFirmware _parent, AndesFirmware _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.ilmLen = this._io.readU4le();
-            this.dlmLen = this._io.readU4le();
-            this.fwVer = this._io.readU2le();
-            this.buildVer = this._io.readU2le();
-            this.extra = this._io.readU4le();
-            this.buildTime = new String(this._io.readBytes(16), Charset.forName(&quot;UTF-8&quot;));
-        }
-        private long ilmLen;
-        private long dlmLen;
-        private int fwVer;
-        private int buildVer;
-        private long extra;
-        private String buildTime;
-        private AndesFirmware _root;
-        private AndesFirmware _parent;
-        public long ilmLen() { return ilmLen; }
-        public long dlmLen() { return dlmLen; }
-        public int fwVer() { return fwVer; }
-        public int buildVer() { return buildVer; }
-        public long extra() { return extra; }
-        public String buildTime() { return buildTime; }
-        public AndesFirmware _root() { return _root; }
-        public AndesFirmware _parent() { return _parent; }
-    }
-    private ImageHeader imageHeader;
-    private byte[] ilm;
-    private byte[] dlm;
-    private AndesFirmware _root;
-    private KaitaiStruct _parent;
-    private byte[] _raw_imageHeader;
-    public ImageHeader imageHeader() { return imageHeader; }
-    public byte[] ilm() { return ilm; }
-    public byte[] dlm() { return dlm; }
-    public AndesFirmware _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-    public byte[] _raw_imageHeader() { return _raw_imageHeader; }
-}
-</code></pre>
+        <span class="kd">public</span> <span class="nf">ImageHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">AndesFirmware</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">AndesFirmware</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ilmLen</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">dlmLen</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fwVer</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">buildVer</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">extra</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">buildTime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">ilmLen</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">dlmLen</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">fwVer</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">buildVer</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">extra</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">buildTime</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">AndesFirmware</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">AndesFirmware</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ilmLen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ilmLen</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">dlmLen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">dlmLen</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">fwVer</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fwVer</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">buildVer</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">buildVer</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">extra</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">extra</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">buildTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">buildTime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">AndesFirmware</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">AndesFirmware</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">ImageHeader</span> <span class="n">imageHeader</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">ilm</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">dlm</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">AndesFirmware</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_imageHeader</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">ImageHeader</span> <span class="nf">imageHeader</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">imageHeader</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">ilm</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ilm</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">dlm</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">dlm</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">AndesFirmware</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_imageHeader</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_imageHeader</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -366,8 +363,8 @@ public class AndesFirmware extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

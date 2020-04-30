@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -253,496 +250,496 @@ speed).</p>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * ISO9660 is standard filesystem used on read-only optical discs
- * (mostly CD-ROM). The standard was based on earlier High Sierra
- * Format (HSF), proposed for CD-ROMs in 1985, and, after several
- * revisions, it was accepted as ISO9960:1998.
- * 
- * The format emphasizes portability (thus having pretty minimal
- * features and very conservative file names standards) and sequential
- * access (which favors disc devices with relatively slow rotation
- * speed).
- */
+<span class="sd">/**</span>
+<span class="sd"> * ISO9660 is standard filesystem used on read-only optical discs</span>
+<span class="sd"> * (mostly CD-ROM). The standard was based on earlier High Sierra</span>
+<span class="sd"> * Format (HSF), proposed for CD-ROMs in 1985, and, after several</span>
+<span class="sd"> * revisions, it was accepted as ISO9960:1998.</span>
+<span class="sd"> * </span>
+<span class="sd"> * The format emphasizes portability (thus having pretty minimal</span>
+<span class="sd"> * features and very conservative file names standards) and sequential</span>
+<span class="sd"> * access (which favors disc devices with relatively slow rotation</span>
+<span class="sd"> * speed).</span>
+<span class="sd"> */</span>
 
-class Iso9660 extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Iso9660 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Iso9660</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Iso9660</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-    }
-    protected $_m_sectorSize;
-    public function sectorSize() {
-        if ($this-&gt;_m_sectorSize !== null)
-            return $this-&gt;_m_sectorSize;
-        $this-&gt;_m_sectorSize = 2048;
-        return $this-&gt;_m_sectorSize;
-    }
-    protected $_m_primaryVolDesc;
-    public function primaryVolDesc() {
-        if ($this-&gt;_m_primaryVolDesc !== null)
-            return $this-&gt;_m_primaryVolDesc;
-        $_pos = $this-&gt;_io-&gt;pos();
-        $this-&gt;_io-&gt;seek((16 * $this-&gt;sectorSize()));
-        $this-&gt;_m_primaryVolDesc = new \Iso9660\VolDesc($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_io-&gt;seek($_pos);
-        return $this-&gt;_m_primaryVolDesc;
-    }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_sectorSize</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sectorSize</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectorSize</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectorSize</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectorSize</span> <span class="o">=</span> <span class="mi">2048</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectorSize</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_primaryVolDesc</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">primaryVolDesc</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_primaryVolDesc</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_primaryVolDesc</span><span class="p">;</span>
+        <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">((</span><span class="mi">16</span> <span class="o">*</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectorSize</span><span class="p">()));</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_primaryVolDesc</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\VolDesc</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_primaryVolDesc</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Iso9660;
+<span class="k">namespace</span> <span class="nx">\Iso9660</span><span class="p">;</span>
 
-class VolDescPrimary extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\VolDesc $_parent = null, \Iso9660 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">VolDescPrimary</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Iso9660\VolDesc</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Iso9660</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_unused1 = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00&quot;);
-        $this-&gt;_m_systemId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(32), &quot;UTF-8&quot;);
-        $this-&gt;_m_volumeId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(32), &quot;UTF-8&quot;);
-        $this-&gt;_m_unused2 = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00\x00\x00\x00\x00\x00\x00\x00&quot;);
-        $this-&gt;_m_volSpaceSize = new \Iso9660\U4bi($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_unused3 = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00&quot;);
-        $this-&gt;_m_volSetSize = new \Iso9660\U2bi($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_volSeqNum = new \Iso9660\U2bi($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_logicalBlockSize = new \Iso9660\U2bi($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_pathTableSize = new \Iso9660\U4bi($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_lbaPathTableLe = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_lbaOptPathTableLe = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_lbaPathTableBe = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_lbaOptPathTableBe = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m__raw_rootDir = $this-&gt;_io-&gt;readBytes(34);
-        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_rootDir);
-        $this-&gt;_m_rootDir = new \Iso9660\DirEntry($io, $this, $this-&gt;_root);
-        $this-&gt;_m_volSetId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(128), &quot;UTF-8&quot;);
-        $this-&gt;_m_publisherId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(128), &quot;UTF-8&quot;);
-        $this-&gt;_m_dataPreparerId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(128), &quot;UTF-8&quot;);
-        $this-&gt;_m_applicationId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(128), &quot;UTF-8&quot;);
-        $this-&gt;_m_copyrightFileId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(38), &quot;UTF-8&quot;);
-        $this-&gt;_m_abstractFileId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(36), &quot;UTF-8&quot;);
-        $this-&gt;_m_bibliographicFileId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(37), &quot;UTF-8&quot;);
-        $this-&gt;_m_volCreateDatetime = new \Iso9660\DecDatetime($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_volModDatetime = new \Iso9660\DecDatetime($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_volExpireDatetime = new \Iso9660\DecDatetime($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_volEffectiveDatetime = new \Iso9660\DecDatetime($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_fileStructureVersion = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_unused4 = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_applicationArea = $this-&gt;_io-&gt;readBytes(512);
-    }
-    protected $_m_pathTable;
-    public function pathTable() {
-        if ($this-&gt;_m_pathTable !== null)
-            return $this-&gt;_m_pathTable;
-        $_pos = $this-&gt;_io-&gt;pos();
-        $this-&gt;_io-&gt;seek(($this-&gt;lbaPathTableLe() * $this-&gt;_root()-&gt;sectorSize()));
-        $this-&gt;_m__raw_pathTable = $this-&gt;_io-&gt;readBytes($this-&gt;pathTableSize()-&gt;le());
-        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_pathTable);
-        $this-&gt;_m_pathTable = new \Iso9660\PathTableLe($io, $this, $this-&gt;_root);
-        $this-&gt;_io-&gt;seek($_pos);
-        return $this-&gt;_m_pathTable;
-    }
-    protected $_m_unused1;
-    protected $_m_systemId;
-    protected $_m_volumeId;
-    protected $_m_unused2;
-    protected $_m_volSpaceSize;
-    protected $_m_unused3;
-    protected $_m_volSetSize;
-    protected $_m_volSeqNum;
-    protected $_m_logicalBlockSize;
-    protected $_m_pathTableSize;
-    protected $_m_lbaPathTableLe;
-    protected $_m_lbaOptPathTableLe;
-    protected $_m_lbaPathTableBe;
-    protected $_m_lbaOptPathTableBe;
-    protected $_m_rootDir;
-    protected $_m_volSetId;
-    protected $_m_publisherId;
-    protected $_m_dataPreparerId;
-    protected $_m_applicationId;
-    protected $_m_copyrightFileId;
-    protected $_m_abstractFileId;
-    protected $_m_bibliographicFileId;
-    protected $_m_volCreateDatetime;
-    protected $_m_volModDatetime;
-    protected $_m_volExpireDatetime;
-    protected $_m_volEffectiveDatetime;
-    protected $_m_fileStructureVersion;
-    protected $_m_unused4;
-    protected $_m_applicationArea;
-    protected $_m__raw_rootDir;
-    protected $_m__raw_pathTable;
-    public function unused1() { return $this-&gt;_m_unused1; }
-    public function systemId() { return $this-&gt;_m_systemId; }
-    public function volumeId() { return $this-&gt;_m_volumeId; }
-    public function unused2() { return $this-&gt;_m_unused2; }
-    public function volSpaceSize() { return $this-&gt;_m_volSpaceSize; }
-    public function unused3() { return $this-&gt;_m_unused3; }
-    public function volSetSize() { return $this-&gt;_m_volSetSize; }
-    public function volSeqNum() { return $this-&gt;_m_volSeqNum; }
-    public function logicalBlockSize() { return $this-&gt;_m_logicalBlockSize; }
-    public function pathTableSize() { return $this-&gt;_m_pathTableSize; }
-    public function lbaPathTableLe() { return $this-&gt;_m_lbaPathTableLe; }
-    public function lbaOptPathTableLe() { return $this-&gt;_m_lbaOptPathTableLe; }
-    public function lbaPathTableBe() { return $this-&gt;_m_lbaPathTableBe; }
-    public function lbaOptPathTableBe() { return $this-&gt;_m_lbaOptPathTableBe; }
-    public function rootDir() { return $this-&gt;_m_rootDir; }
-    public function volSetId() { return $this-&gt;_m_volSetId; }
-    public function publisherId() { return $this-&gt;_m_publisherId; }
-    public function dataPreparerId() { return $this-&gt;_m_dataPreparerId; }
-    public function applicationId() { return $this-&gt;_m_applicationId; }
-    public function copyrightFileId() { return $this-&gt;_m_copyrightFileId; }
-    public function abstractFileId() { return $this-&gt;_m_abstractFileId; }
-    public function bibliographicFileId() { return $this-&gt;_m_bibliographicFileId; }
-    public function volCreateDatetime() { return $this-&gt;_m_volCreateDatetime; }
-    public function volModDatetime() { return $this-&gt;_m_volModDatetime; }
-    public function volExpireDatetime() { return $this-&gt;_m_volExpireDatetime; }
-    public function volEffectiveDatetime() { return $this-&gt;_m_volEffectiveDatetime; }
-    public function fileStructureVersion() { return $this-&gt;_m_fileStructureVersion; }
-    public function unused4() { return $this-&gt;_m_unused4; }
-    public function applicationArea() { return $this-&gt;_m_applicationArea; }
-    public function _raw_rootDir() { return $this-&gt;_m__raw_rootDir; }
-    public function _raw_pathTable() { return $this-&gt;_m__raw_pathTable; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_systemId</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volumeId</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused2</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00\x00\x00\x00\x00\x00\x00\x00</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volSpaceSize</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\U4bi</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused3</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volSetSize</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\U2bi</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volSeqNum</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\U2bi</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_logicalBlockSize</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\U2bi</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pathTableSize</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\U4bi</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lbaPathTableLe</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lbaOptPathTableLe</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lbaPathTableBe</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lbaOptPathTableBe</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_rootDir</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">34</span><span class="p">);</span>
+        <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_rootDir</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rootDir</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\DirEntry</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volSetId</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_publisherId</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataPreparerId</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_applicationId</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_copyrightFileId</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">38</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_abstractFileId</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">36</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bibliographicFileId</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">37</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volCreateDatetime</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\DecDatetime</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volModDatetime</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\DecDatetime</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volExpireDatetime</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\DecDatetime</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volEffectiveDatetime</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\DecDatetime</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileStructureVersion</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused4</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_applicationArea</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">512</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_pathTable</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">pathTable</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pathTable</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pathTable</span><span class="p">;</span>
+        <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lbaPathTableLe</span><span class="p">()</span> <span class="o">*</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">sectorSize</span><span class="p">()));</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_pathTable</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">pathTableSize</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">le</span><span class="p">());</span>
+        <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_pathTable</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pathTable</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\PathTableLe</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pathTable</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_unused1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_systemId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_volumeId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_unused2</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_volSpaceSize</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_unused3</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_volSetSize</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_volSeqNum</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_logicalBlockSize</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_pathTableSize</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lbaPathTableLe</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lbaOptPathTableLe</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lbaPathTableBe</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lbaOptPathTableBe</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_rootDir</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_volSetId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_publisherId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_dataPreparerId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_applicationId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_copyrightFileId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_abstractFileId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_bibliographicFileId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_volCreateDatetime</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_volModDatetime</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_volExpireDatetime</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_volEffectiveDatetime</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_fileStructureVersion</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_unused4</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_applicationArea</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_rootDir</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_pathTable</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">unused1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">systemId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_systemId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">volumeId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volumeId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">unused2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused2</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">volSpaceSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volSpaceSize</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">unused3</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused3</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">volSetSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volSetSize</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">volSeqNum</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volSeqNum</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">logicalBlockSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_logicalBlockSize</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">pathTableSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pathTableSize</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lbaPathTableLe</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lbaPathTableLe</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lbaOptPathTableLe</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lbaOptPathTableLe</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lbaPathTableBe</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lbaPathTableBe</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lbaOptPathTableBe</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lbaOptPathTableBe</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">rootDir</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rootDir</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">volSetId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volSetId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">publisherId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_publisherId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">dataPreparerId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dataPreparerId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">applicationId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_applicationId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">copyrightFileId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_copyrightFileId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">abstractFileId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_abstractFileId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">bibliographicFileId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bibliographicFileId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">volCreateDatetime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volCreateDatetime</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">volModDatetime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volModDatetime</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">volExpireDatetime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volExpireDatetime</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">volEffectiveDatetime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volEffectiveDatetime</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fileStructureVersion</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileStructureVersion</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">unused4</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unused4</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">applicationArea</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_applicationArea</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_rootDir</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_rootDir</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_pathTable</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_pathTable</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Iso9660;
+<span class="k">namespace</span> <span class="nx">\Iso9660</span><span class="p">;</span>
 
-class VolDescBootRecord extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\VolDesc $_parent = null, \Iso9660 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">VolDescBootRecord</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Iso9660\VolDesc</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Iso9660</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_bootSystemId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(32), &quot;UTF-8&quot;);
-        $this-&gt;_m_bootId = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(32), &quot;UTF-8&quot;);
-    }
-    protected $_m_bootSystemId;
-    protected $_m_bootId;
-    public function bootSystemId() { return $this-&gt;_m_bootSystemId; }
-    public function bootId() { return $this-&gt;_m_bootId; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bootSystemId</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bootId</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_bootSystemId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_bootId</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">bootSystemId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bootSystemId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">bootId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bootId</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Iso9660;
+<span class="k">namespace</span> <span class="nx">\Iso9660</span><span class="p">;</span>
 
-class Datetime extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\DirEntryBody $_parent = null, \Iso9660 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Datetime</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Iso9660\DirEntryBody</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Iso9660</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_year = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_month = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_day = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_hour = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_minute = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_sec = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_timezone = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_year;
-    protected $_m_month;
-    protected $_m_day;
-    protected $_m_hour;
-    protected $_m_minute;
-    protected $_m_sec;
-    protected $_m_timezone;
-    public function year() { return $this-&gt;_m_year; }
-    public function month() { return $this-&gt;_m_month; }
-    public function day() { return $this-&gt;_m_day; }
-    public function hour() { return $this-&gt;_m_hour; }
-    public function minute() { return $this-&gt;_m_minute; }
-    public function sec() { return $this-&gt;_m_sec; }
-    public function timezone() { return $this-&gt;_m_timezone; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_year</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_month</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_day</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hour</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minute</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sec</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timezone</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_year</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_month</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_day</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_hour</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_minute</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_sec</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_timezone</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">year</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_year</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">month</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_month</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">day</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_day</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hour</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hour</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">minute</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minute</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sec</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sec</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">timezone</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timezone</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Iso9660;
+<span class="k">namespace</span> <span class="nx">\Iso9660</span><span class="p">;</span>
 
-class DirEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Iso9660 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">DirEntry</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Iso9660</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_len = $this-&gt;_io-&gt;readU1();
-        if ($this-&gt;len() &gt; 0) {
-            $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes(($this-&gt;len() - 1));
-            $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-            $this-&gt;_m_body = new \Iso9660\DirEntryBody($io, $this, $this-&gt;_root);
-        }
-    }
-    protected $_m_len;
-    protected $_m_body;
-    protected $_m__raw_body;
-    public function len() { return $this-&gt;_m_len; }
-    public function body() { return $this-&gt;_m_body; }
-    public function _raw_body() { return $this-&gt;_m__raw_body; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\DirEntryBody</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_body</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Iso9660;
+<span class="k">namespace</span> <span class="nx">\Iso9660</span><span class="p">;</span>
 
-class VolDesc extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660 $_parent = null, \Iso9660 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">VolDesc</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Iso9660</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Iso9660</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_type = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_magic = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x43\x44\x30\x30\x31&quot;);
-        $this-&gt;_m_version = $this-&gt;_io-&gt;readU1();
-        if ($this-&gt;type() == 0) {
-            $this-&gt;_m_volDescBootRecord = new \Iso9660\VolDescBootRecord($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        if ($this-&gt;type() == 1) {
-            $this-&gt;_m_volDescPrimary = new \Iso9660\VolDescPrimary($this-&gt;_io, $this, $this-&gt;_root);
-        }
-    }
-    protected $_m_type;
-    protected $_m_magic;
-    protected $_m_version;
-    protected $_m_volDescBootRecord;
-    protected $_m_volDescPrimary;
-    public function type() { return $this-&gt;_m_type; }
-    public function magic() { return $this-&gt;_m_magic; }
-    public function version() { return $this-&gt;_m_version; }
-    public function volDescBootRecord() { return $this-&gt;_m_volDescBootRecord; }
-    public function volDescPrimary() { return $this-&gt;_m_volDescPrimary; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x43\x44\x30\x30\x31</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">type</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volDescBootRecord</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\VolDescBootRecord</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">type</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volDescPrimary</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\VolDescPrimary</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_type</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_magic</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_version</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_volDescBootRecord</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_volDescPrimary</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">type</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">volDescBootRecord</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volDescBootRecord</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">volDescPrimary</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volDescPrimary</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Iso9660;
+<span class="k">namespace</span> <span class="nx">\Iso9660</span><span class="p">;</span>
 
-class PathTableEntryLe extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\PathTableLe $_parent = null, \Iso9660 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">PathTableEntryLe</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Iso9660\PathTableLe</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Iso9660</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_lenDirName = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_lenExtAttrRec = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_lbaExtent = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_parentDirIdx = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_dirName = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;lenDirName()), &quot;UTF-8&quot;);
-        if (\Kaitai\Struct\Stream::mod($this-&gt;lenDirName(), 2) == 1) {
-            $this-&gt;_m_padding = $this-&gt;_io-&gt;readU1();
-        }
-    }
-    protected $_m_lenDirName;
-    protected $_m_lenExtAttrRec;
-    protected $_m_lbaExtent;
-    protected $_m_parentDirIdx;
-    protected $_m_dirName;
-    protected $_m_padding;
-    public function lenDirName() { return $this-&gt;_m_lenDirName; }
-    public function lenExtAttrRec() { return $this-&gt;_m_lenExtAttrRec; }
-    public function lbaExtent() { return $this-&gt;_m_lbaExtent; }
-    public function parentDirIdx() { return $this-&gt;_m_parentDirIdx; }
-    public function dirName() { return $this-&gt;_m_dirName; }
-    public function padding() { return $this-&gt;_m_padding; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenDirName</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenExtAttrRec</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lbaExtent</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parentDirIdx</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dirName</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenDirName</span><span class="p">()),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenDirName</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padding</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenDirName</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenExtAttrRec</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lbaExtent</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_parentDirIdx</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_dirName</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_padding</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenDirName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenDirName</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenExtAttrRec</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenExtAttrRec</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lbaExtent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lbaExtent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">parentDirIdx</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parentDirIdx</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">dirName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dirName</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">padding</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padding</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Iso9660;
+<span class="k">namespace</span> <span class="nx">\Iso9660</span><span class="p">;</span>
 
-class DirEntries extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\DirEntryBody $_parent = null, \Iso9660 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">DirEntries</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Iso9660\DirEntryBody</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Iso9660</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_entries = [];
-        $i = 0;
-        do {
-            $_ = new \Iso9660\DirEntry($this-&gt;_io, $this, $this-&gt;_root);
-            $this-&gt;_m_entries[] = $_;
-            $i++;
-        } while (!($_-&gt;len() == 0));
-    }
-    protected $_m_entries;
-    public function entries() { return $this-&gt;_m_entries; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">do</span> <span class="p">{</span>
+            <span class="nv">$_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\DirEntry</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$_</span><span class="p">;</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$_</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_entries</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Iso9660;
+<span class="k">namespace</span> <span class="nx">\Iso9660</span><span class="p">;</span>
 
-class U4bi extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Iso9660 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">U4bi</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Iso9660</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_le = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_be = $this-&gt;_io-&gt;readU4be();
-    }
-    protected $_m_le;
-    protected $_m_be;
-    public function le() { return $this-&gt;_m_le; }
-    public function be() { return $this-&gt;_m_be; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_le</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_be</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_le</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_be</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">le</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_le</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">be</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_be</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Iso9660;
+<span class="k">namespace</span> <span class="nx">\Iso9660</span><span class="p">;</span>
 
-class U2bi extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Iso9660 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">U2bi</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Iso9660</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_le = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_be = $this-&gt;_io-&gt;readU2be();
-    }
-    protected $_m_le;
-    protected $_m_be;
-    public function le() { return $this-&gt;_m_le; }
-    public function be() { return $this-&gt;_m_be; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_le</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_be</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_le</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_be</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">le</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_le</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">be</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_be</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Iso9660;
+<span class="k">namespace</span> <span class="nx">\Iso9660</span><span class="p">;</span>
 
-class PathTableLe extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\VolDescPrimary $_parent = null, \Iso9660 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">PathTableLe</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Iso9660\VolDescPrimary</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Iso9660</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_entries = [];
-        $i = 0;
-        while (!$this-&gt;_io-&gt;isEof()) {
-            $this-&gt;_m_entries[] = new \Iso9660\PathTableEntryLe($this-&gt;_io, $this, $this-&gt;_root);
-            $i++;
-        }
-    }
-    protected $_m_entries;
-    public function entries() { return $this-&gt;_m_entries; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\PathTableEntryLe</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_entries</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Iso9660;
+<span class="k">namespace</span> <span class="nx">\Iso9660</span><span class="p">;</span>
 
-class DecDatetime extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\VolDescPrimary $_parent = null, \Iso9660 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">DecDatetime</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Iso9660\VolDescPrimary</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Iso9660</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_year = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(4), &quot;ASCII&quot;);
-        $this-&gt;_m_month = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(2), &quot;ASCII&quot;);
-        $this-&gt;_m_day = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(2), &quot;ASCII&quot;);
-        $this-&gt;_m_hour = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(2), &quot;ASCII&quot;);
-        $this-&gt;_m_minute = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(2), &quot;ASCII&quot;);
-        $this-&gt;_m_sec = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(2), &quot;ASCII&quot;);
-        $this-&gt;_m_secHundreds = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(2), &quot;ASCII&quot;);
-        $this-&gt;_m_timezone = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_year;
-    protected $_m_month;
-    protected $_m_day;
-    protected $_m_hour;
-    protected $_m_minute;
-    protected $_m_sec;
-    protected $_m_secHundreds;
-    protected $_m_timezone;
-    public function year() { return $this-&gt;_m_year; }
-    public function month() { return $this-&gt;_m_month; }
-    public function day() { return $this-&gt;_m_day; }
-    public function hour() { return $this-&gt;_m_hour; }
-    public function minute() { return $this-&gt;_m_minute; }
-    public function sec() { return $this-&gt;_m_sec; }
-    public function secHundreds() { return $this-&gt;_m_secHundreds; }
-    public function timezone() { return $this-&gt;_m_timezone; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_year</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_month</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_day</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hour</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minute</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sec</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_secHundreds</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timezone</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_year</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_month</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_day</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_hour</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_minute</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_sec</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_secHundreds</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_timezone</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">year</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_year</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">month</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_month</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">day</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_day</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hour</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hour</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">minute</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_minute</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sec</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sec</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">secHundreds</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_secHundreds</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">timezone</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timezone</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Iso9660;
+<span class="k">namespace</span> <span class="nx">\Iso9660</span><span class="p">;</span>
 
-class DirEntryBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Iso9660\DirEntry $_parent = null, \Iso9660 $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">DirEntryBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Iso9660\DirEntry</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Iso9660</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_lenExtAttrRec = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_lbaExtent = new \Iso9660\U4bi($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_sizeExtent = new \Iso9660\U4bi($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_datetime = new \Iso9660\Datetime($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_fileFlags = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_fileUnitSize = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_interleaveGapSize = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_volSeqNum = new \Iso9660\U2bi($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_lenFileName = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_fileName = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;lenFileName()), &quot;UTF-8&quot;);
-        if (\Kaitai\Struct\Stream::mod($this-&gt;lenFileName(), 2) == 0) {
-            $this-&gt;_m_padding = $this-&gt;_io-&gt;readU1();
-        }
-        $this-&gt;_m_rest = $this-&gt;_io-&gt;readBytesFull();
-    }
-    protected $_m_extentAsDir;
-    public function extentAsDir() {
-        if ($this-&gt;_m_extentAsDir !== null)
-            return $this-&gt;_m_extentAsDir;
-        if (($this-&gt;fileFlags() &amp; 2) != 0) {
-            $io = $this-&gt;_root()-&gt;_io();
-            $_pos = $io-&gt;pos();
-            $io-&gt;seek(($this-&gt;lbaExtent()-&gt;le() * $this-&gt;_root()-&gt;sectorSize()));
-            $this-&gt;_m__raw_extentAsDir = $io-&gt;readBytes($this-&gt;sizeExtent()-&gt;le());
-            $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_extentAsDir);
-            $this-&gt;_m_extentAsDir = new \Iso9660\DirEntries($io, $this, $this-&gt;_root);
-            $io-&gt;seek($_pos);
-        }
-        return $this-&gt;_m_extentAsDir;
-    }
-    protected $_m_extentAsFile;
-    public function extentAsFile() {
-        if ($this-&gt;_m_extentAsFile !== null)
-            return $this-&gt;_m_extentAsFile;
-        if (($this-&gt;fileFlags() &amp; 2) == 0) {
-            $io = $this-&gt;_root()-&gt;_io();
-            $_pos = $io-&gt;pos();
-            $io-&gt;seek(($this-&gt;lbaExtent()-&gt;le() * $this-&gt;_root()-&gt;sectorSize()));
-            $this-&gt;_m_extentAsFile = $io-&gt;readBytes($this-&gt;sizeExtent()-&gt;le());
-            $io-&gt;seek($_pos);
-        }
-        return $this-&gt;_m_extentAsFile;
-    }
-    protected $_m_lenExtAttrRec;
-    protected $_m_lbaExtent;
-    protected $_m_sizeExtent;
-    protected $_m_datetime;
-    protected $_m_fileFlags;
-    protected $_m_fileUnitSize;
-    protected $_m_interleaveGapSize;
-    protected $_m_volSeqNum;
-    protected $_m_lenFileName;
-    protected $_m_fileName;
-    protected $_m_padding;
-    protected $_m_rest;
-    protected $_m__raw_extentAsDir;
-    public function lenExtAttrRec() { return $this-&gt;_m_lenExtAttrRec; }
-    public function lbaExtent() { return $this-&gt;_m_lbaExtent; }
-    public function sizeExtent() { return $this-&gt;_m_sizeExtent; }
-    public function datetime() { return $this-&gt;_m_datetime; }
-    public function fileFlags() { return $this-&gt;_m_fileFlags; }
-    public function fileUnitSize() { return $this-&gt;_m_fileUnitSize; }
-    public function interleaveGapSize() { return $this-&gt;_m_interleaveGapSize; }
-    public function volSeqNum() { return $this-&gt;_m_volSeqNum; }
-    public function lenFileName() { return $this-&gt;_m_lenFileName; }
-    public function fileName() { return $this-&gt;_m_fileName; }
-    public function padding() { return $this-&gt;_m_padding; }
-    public function rest() { return $this-&gt;_m_rest; }
-    public function _raw_extentAsDir() { return $this-&gt;_m__raw_extentAsDir; }
-}
-</code></pre>
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenExtAttrRec</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lbaExtent</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\U4bi</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sizeExtent</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\U4bi</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_datetime</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\Datetime</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileFlags</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileUnitSize</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_interleaveGapSize</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volSeqNum</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\U2bi</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenFileName</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileName</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenFileName</span><span class="p">()),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">mod</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenFileName</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padding</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rest</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_extentAsDir</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">extentAsDir</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extentAsDir</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extentAsDir</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fileFlags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lbaExtent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">le</span><span class="p">()</span> <span class="o">*</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">sectorSize</span><span class="p">()));</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_extentAsDir</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sizeExtent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">le</span><span class="p">());</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_extentAsDir</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extentAsDir</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Iso9660\DirEntries</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extentAsDir</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_extentAsFile</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">extentAsFile</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extentAsFile</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extentAsFile</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fileFlags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lbaExtent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">le</span><span class="p">()</span> <span class="o">*</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">sectorSize</span><span class="p">()));</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extentAsFile</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sizeExtent</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">le</span><span class="p">());</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_extentAsFile</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenExtAttrRec</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lbaExtent</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_sizeExtent</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_datetime</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_fileFlags</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_fileUnitSize</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_interleaveGapSize</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_volSeqNum</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenFileName</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_fileName</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_padding</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_rest</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_extentAsDir</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenExtAttrRec</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenExtAttrRec</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lbaExtent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lbaExtent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sizeExtent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sizeExtent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">datetime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_datetime</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fileFlags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileFlags</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fileUnitSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileUnitSize</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">interleaveGapSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_interleaveGapSize</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">volSeqNum</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_volSeqNum</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenFileName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenFileName</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fileName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileName</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">padding</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_padding</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">rest</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rest</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_extentAsDir</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_extentAsDir</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -769,8 +766,8 @@ class DirEntryBody extends \Kaitai\Struct\Struct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

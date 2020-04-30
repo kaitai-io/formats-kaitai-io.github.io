@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -244,216 +241,216 @@ data = SshPublicKey.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# SSH public keys are encoded in a special binary format, typically represented
-# to end users as either one-liner OpenSSH format or multi-line PEM format
-# (commerical SSH). Text wrapper carries extra information about user who
-# created the key, comment, etc, but the inner binary is always base64-encoded
-# and follows the same internal format.
-# 
-# This format spec deals with this internal binary format (called &quot;blob&quot; in
-# openssh sources) only. Buffer is expected to be raw binary and not base64-d.
-# Implementation closely follows code in OpenSSH.
-# @see https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970 Source
-class SshPublicKey &lt; Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+<span class="c1">##</span>
+<span class="c1"># SSH public keys are encoded in a special binary format, typically represented</span>
+<span class="c1"># to end users as either one-liner OpenSSH format or multi-line PEM format</span>
+<span class="c1"># (commerical SSH). Text wrapper carries extra information about user who</span>
+<span class="c1"># created the key, comment, etc, but the inner binary is always base64-encoded</span>
+<span class="c1"># and follows the same internal format.</span>
+<span class="c1"># </span>
+<span class="c1"># This format spec deals with this internal binary format (called &quot;blob&quot; in</span>
+<span class="c1"># openssh sources) only. Buffer is expected to be raw binary and not base64-d.</span>
+<span class="c1"># Implementation closely follows code in OpenSSH.</span>
+<span class="c1"># @see https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L1970 Source</span>
+<span class="k">class</span> <span class="nc">SshPublicKey</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @key_name = Cstring.new(@_io, self, @_root)
-    case key_name.value
-    when &quot;ssh-rsa&quot;
-      @body = KeyRsa.new(@_io, self, @_root)
-    when &quot;ecdsa-sha2-nistp256&quot;
-      @body = KeyEcdsa.new(@_io, self, @_root)
-    when &quot;ssh-ed25519&quot;
-      @body = KeyEd25519.new(@_io, self, @_root)
-    when &quot;ssh-dss&quot;
-      @body = KeyDsa.new(@_io, self, @_root)
-    end
-    self
-  end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@key_name</span> <span class="o">=</span> <span class="no">Cstring</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">key_name</span><span class="o">.</span><span class="n">value</span>
+    <span class="k">when</span> <span class="s2">&quot;ssh-rsa&quot;</span>
+      <span class="vi">@body</span> <span class="o">=</span> <span class="no">KeyRsa</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="k">when</span> <span class="s2">&quot;ecdsa-sha2-nistp256&quot;</span>
+      <span class="vi">@body</span> <span class="o">=</span> <span class="no">KeyEcdsa</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="k">when</span> <span class="s2">&quot;ssh-ed25519&quot;</span>
+      <span class="vi">@body</span> <span class="o">=</span> <span class="no">KeyEd25519</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="k">when</span> <span class="s2">&quot;ssh-dss&quot;</span>
+      <span class="vi">@body</span> <span class="o">=</span> <span class="no">KeyDsa</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="k">end</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028 Source
-  class KeyRsa &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2011-L2028 Source</span>
+  <span class="k">class</span> <span class="nc">KeyRsa</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @rsa_e = Bignum2.new(@_io, self, @_root)
-      @rsa_n = Bignum2.new(@_io, self, @_root)
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@rsa_e</span> <span class="o">=</span> <span class="no">Bignum2</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@rsa_n</span> <span class="o">=</span> <span class="no">Bignum2</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Key length in bits
-    def key_length
-      return @key_length unless @key_length.nil?
-      @key_length = rsa_n.length_in_bits
-      @key_length
-    end
+    <span class="c1">##</span>
+    <span class="c1"># Key length in bits</span>
+    <span class="k">def</span> <span class="nf">key_length</span>
+      <span class="k">return</span> <span class="vi">@key_length</span> <span class="k">unless</span> <span class="vi">@key_length</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@key_length</span> <span class="o">=</span> <span class="n">rsa_n</span><span class="o">.</span><span class="n">length_in_bits</span>
+      <span class="vi">@key_length</span>
+    <span class="k">end</span>
 
-    ##
-    # Public key exponent, designated `e` in RSA documentation.
-    attr_reader :rsa_e
+    <span class="c1">##</span>
+    <span class="c1"># Public key exponent, designated `e` in RSA documentation.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:rsa_e</span>
 
-    ##
-    # Modulus of both public and private keys, designated `n` in RSA
-    # documentation. Its length in bits is designated as &quot;key length&quot;.
-    attr_reader :rsa_n
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Modulus of both public and private keys, designated `n` in RSA</span>
+    <span class="c1"># documentation. Its length in bits is designated as &quot;key length&quot;.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:rsa_n</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124 Source
-  class KeyEd25519 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2111-L2124 Source</span>
+  <span class="k">class</span> <span class="nc">KeyEd25519</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len_pk = @_io.read_u4be
-      @pk = @_io.read_bytes(len_pk)
-      self
-    end
-    attr_reader :len_pk
-    attr_reader :pk
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len_pk</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@pk</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_pk</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_pk</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pk</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103 Source
-  class KeyEcdsa &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2060-L2103 Source</span>
+  <span class="k">class</span> <span class="nc">KeyEcdsa</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @curve_name = Cstring.new(@_io, self, @_root)
-      @ec = EllipticCurve.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :curve_name
-    attr_reader :ec
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@curve_name</span> <span class="o">=</span> <span class="no">Cstring</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@ec</span> <span class="o">=</span> <span class="no">EllipticCurve</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:curve_name</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ec</span>
+  <span class="k">end</span>
 
-  ##
-  # A integer-prefixed string designed to be read using `sshbuf_get_cstring`
-  # and written by `sshbuf_put_cstring` routines in ssh sources. Name is an
-  # obscure misnomer, as typically &quot;C string&quot; means a null-terminated string.
-  # @see https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181 Source
-  class Cstring &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># A integer-prefixed string designed to be read using `sshbuf_get_cstring`</span>
+  <span class="c1"># and written by `sshbuf_put_cstring` routines in ssh sources. Name is an</span>
+  <span class="c1"># obscure misnomer, as typically &quot;C string&quot; means a null-terminated string.</span>
+  <span class="c1"># @see https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L181 Source</span>
+  <span class="k">class</span> <span class="nc">Cstring</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len = @_io.read_u4be
-      @value = (@_io.read_bytes(len)).force_encoding(&quot;ASCII&quot;)
-      self
-    end
-    attr_reader :len
-    attr_reader :value
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@value</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:value</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051 Source
-  class KeyDsa &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://github.com/openssh/openssh-portable/blob/master/sshkey.c#L2036-L2051 Source</span>
+  <span class="k">class</span> <span class="nc">KeyDsa</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @dsa_p = Bignum2.new(@_io, self, @_root)
-      @dsa_q = Bignum2.new(@_io, self, @_root)
-      @dsa_g = Bignum2.new(@_io, self, @_root)
-      @dsa_pub_key = Bignum2.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :dsa_p
-    attr_reader :dsa_q
-    attr_reader :dsa_g
-    attr_reader :dsa_pub_key
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@dsa_p</span> <span class="o">=</span> <span class="no">Bignum2</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@dsa_q</span> <span class="o">=</span> <span class="no">Bignum2</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@dsa_g</span> <span class="o">=</span> <span class="no">Bignum2</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@dsa_pub_key</span> <span class="o">=</span> <span class="no">Bignum2</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dsa_p</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dsa_q</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dsa_g</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dsa_pub_key</span>
+  <span class="k">end</span>
 
-  ##
-  # Elliptic curve dump format used by ssh. In OpenSSH code, the following
-  # routines are used to read/write it:
-  # 
-  # * sshbuf_get_ec
-  # * get_ec
-  # @see https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L90
-  #   https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L76
-  #    Source
-  class EllipticCurve &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Elliptic curve dump format used by ssh. In OpenSSH code, the following</span>
+  <span class="c1"># routines are used to read/write it:</span>
+  <span class="c1"># </span>
+  <span class="c1"># * sshbuf_get_ec</span>
+  <span class="c1"># * get_ec</span>
+  <span class="c1"># @see https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L90</span>
+  <span class="c1">#   https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L76</span>
+  <span class="c1">#    Source</span>
+  <span class="k">class</span> <span class="nc">EllipticCurve</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len = @_io.read_u4be
-      @body = @_io.read_bytes(len)
-      self
-    end
-    attr_reader :len
-    attr_reader :body
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body</span>
+  <span class="k">end</span>
 
-  ##
-  # Big integers serialization format used by ssh, v2. In the code, the following
-  # routines are used to read/write it:
-  # 
-  # * sshbuf_get_bignum2
-  # * sshbuf_get_bignum2_bytes_direct
-  # * sshbuf_put_bignum2
-  # * sshbuf_get_bignum2_bytes_direct
-  # @see https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L35
-  #   https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L431
-  #    Source
-  class Bignum2 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Big integers serialization format used by ssh, v2. In the code, the following</span>
+  <span class="c1"># routines are used to read/write it:</span>
+  <span class="c1"># </span>
+  <span class="c1"># * sshbuf_get_bignum2</span>
+  <span class="c1"># * sshbuf_get_bignum2_bytes_direct</span>
+  <span class="c1"># * sshbuf_put_bignum2</span>
+  <span class="c1"># * sshbuf_get_bignum2_bytes_direct</span>
+  <span class="c1"># @see https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-crypto.c#L35</span>
+  <span class="c1">#   https://github.com/openssh/openssh-portable/blob/master/sshbuf-getput-basic.c#L431</span>
+  <span class="c1">#    Source</span>
+  <span class="k">class</span> <span class="nc">Bignum2</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len = @_io.read_u4be
-      @body = @_io.read_bytes(len)
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Length of big integer in bits. In OpenSSH sources, this corresponds to
-    # `BN_num_bits` function.
-    def length_in_bits
-      return @length_in_bits unless @length_in_bits.nil?
-      @length_in_bits = ((len - 1) * 8)
-      @length_in_bits
-    end
-    attr_reader :len
-    attr_reader :body
-  end
-  attr_reader :key_name
-  attr_reader :body
-end
-</code></pre>
+    <span class="c1">##</span>
+    <span class="c1"># Length of big integer in bits. In OpenSSH sources, this corresponds to</span>
+    <span class="c1"># `BN_num_bits` function.</span>
+    <span class="k">def</span> <span class="nf">length_in_bits</span>
+      <span class="k">return</span> <span class="vi">@length_in_bits</span> <span class="k">unless</span> <span class="vi">@length_in_bits</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@length_in_bits</span> <span class="o">=</span> <span class="p">((</span><span class="n">len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span>
+      <span class="vi">@length_in_bits</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:key_name</span>
+  <span class="kp">attr_reader</span> <span class="ss">:body</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -480,8 +477,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -238,363 +235,363 @@ var data = new Id3v11(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.Id3v11 = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-/**
- * ID3v1.1 tag is a method to store simple metadata in .mp3 files. The
- * tag is appended to the end of file and spans exactly 128 bytes.
- * 
- * This type is supposed to be used on full .mp3 files, seeking to
- * proper position automatically. If you&#39;re interesting in parsing only
- * the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.
- * @see {@link http://id3.org/ID3v1|Source}
- */
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">Id3v11</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * ID3v1.1 tag is a method to store simple metadata in .mp3 files. The</span>
+<span class="cm"> * tag is appended to the end of file and spans exactly 128 bytes.</span>
+<span class="cm"> * </span>
+<span class="cm"> * This type is supposed to be used on full .mp3 files, seeking to</span>
+<span class="cm"> * proper position automatically. If you&#39;re interesting in parsing only</span>
+<span class="cm"> * the tag itself, please use `id3v1_1::id3_v1_1_tag` subtype.</span>
+<span class="cm"> * @see {@link http://id3.org/ID3v1|Source}</span>
+<span class="cm"> */</span>
 
-var Id3v11 = (function() {
-  function Id3v11(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
+<span class="kd">var</span> <span class="nx">Id3v11</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">Id3v11</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-    this._read();
-  }
-  Id3v11.prototype._read = function() {
-  }
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">Id3v11</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="p">}</span>
 
-  /**
-   * ID3v1.1 tag itself, a fixed size 128 byte structure. Contains
-   * several metadata fields as fixed-size strings.
-   * 
-   * Note that string encoding is not specified by standard, so real
-   * encoding used would vary a lot from one implementation to
-   * another. Most Windows-based applications tend to use &quot;ANSI&quot;
-   * (i.e. locale-dependent encoding, usually one byte per
-   * character). Some embedded applications allow selection of
-   * charset.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * ID3v1.1 tag itself, a fixed size 128 byte structure. Contains</span>
+<span class="cm">   * several metadata fields as fixed-size strings.</span>
+<span class="cm">   * </span>
+<span class="cm">   * Note that string encoding is not specified by standard, so real</span>
+<span class="cm">   * encoding used would vary a lot from one implementation to</span>
+<span class="cm">   * another. Most Windows-based applications tend to use &quot;ANSI&quot;</span>
+<span class="cm">   * (i.e. locale-dependent encoding, usually one byte per</span>
+<span class="cm">   * character). Some embedded applications allow selection of</span>
+<span class="cm">   * charset.</span>
+<span class="cm">   */</span>
 
-  var Id3V11Tag = Id3v11.Id3V11Tag = (function() {
-    Id3V11Tag.GenreEnum = Object.freeze({
-      BLUES: 0,
-      CLASSIC_ROCK: 1,
-      COUNTRY: 2,
-      DANCE: 3,
-      DISCO: 4,
-      FUNK: 5,
-      GRUNGE: 6,
-      HIP_HOP: 7,
-      JAZZ: 8,
-      METAL: 9,
-      NEW_AGE: 10,
-      OLDIES: 11,
-      OTHER: 12,
-      POP: 13,
-      RNB: 14,
-      RAP: 15,
-      REGGAE: 16,
-      ROCK: 17,
-      TECHNO: 18,
-      INDUSTRIAL: 19,
-      ALTERNATIVE: 20,
-      SKA: 21,
-      DEATH_METAL: 22,
-      PRANKS: 23,
-      SOUNDTRACK: 24,
-      EURO_TECHNO: 25,
-      AMBIENT: 26,
-      TRIP_HOP: 27,
-      VOCAL: 28,
-      JAZZ_FUNK: 29,
-      FUSION: 30,
-      TRANCE: 31,
-      CLASSICAL: 32,
-      INSTRUMENTAL: 33,
-      ACID: 34,
-      HOUSE: 35,
-      GAME: 36,
-      SOUND_CLIP: 37,
-      GOSPEL: 38,
-      NOISE: 39,
-      ALTERNROCK: 40,
-      BASS: 41,
-      SOUL: 42,
-      PUNK: 43,
-      SPACE: 44,
-      MEDITATIVE: 45,
-      INSTRUMENTAL_POP: 46,
-      INSTRUMENTAL_ROCK: 47,
-      ETHNIC: 48,
-      GOTHIC: 49,
-      DARKWAVE: 50,
-      TECHNO_INDUSTRIAL: 51,
-      ELECTRONIC: 52,
-      POP_FOLK: 53,
-      EURODANCE: 54,
-      DREAM: 55,
-      SOUTHERN_ROCK: 56,
-      COMEDY: 57,
-      CULT: 58,
-      GANGSTA: 59,
-      TOP_40: 60,
-      CHRISTIAN_RAP: 61,
-      POP_FUNK: 62,
-      JUNGLE: 63,
-      NATIVE_AMERICAN: 64,
-      CABARET: 65,
-      NEW_WAVE: 66,
-      PSYCHADELIC: 67,
-      RAVE: 68,
-      SHOWTUNES: 69,
-      TRAILER: 70,
-      LO_FI: 71,
-      TRIBAL: 72,
-      ACID_PUNK: 73,
-      ACID_JAZZ: 74,
-      POLKA: 75,
-      RETRO: 76,
-      MUSICAL: 77,
-      ROCK_N_ROLL: 78,
-      HARD_ROCK: 79,
-      FOLK: 80,
-      FOLK_ROCK: 81,
-      NATIONAL_FOLK: 82,
-      SWING: 83,
-      FAST_FUSION: 84,
-      BEBOB: 85,
-      LATIN: 86,
-      REVIVAL: 87,
-      CELTIC: 88,
-      BLUEGRASS: 89,
-      AVANTGARDE: 90,
-      GOTHIC_ROCK: 91,
-      PROGRESSIVE_ROCK: 92,
-      PSYCHEDELIC_ROCK: 93,
-      SYMPHONIC_ROCK: 94,
-      SLOW_ROCK: 95,
-      BIG_BAND: 96,
-      CHORUS: 97,
-      EASY_LISTENING: 98,
-      ACOUSTIC: 99,
-      HUMOUR: 100,
-      SPEECH: 101,
-      CHANSON: 102,
-      OPERA: 103,
-      CHAMBER_MUSIC: 104,
-      SONATA: 105,
-      SYMPHONY: 106,
-      BOOTY_BASS: 107,
-      PRIMUS: 108,
-      PORN_GROOVE: 109,
-      SATIRE: 110,
-      SLOW_JAM: 111,
-      CLUB: 112,
-      TANGO: 113,
-      SAMBA: 114,
-      FOLKLORE: 115,
-      BALLAD: 116,
-      POWER_BALLAD: 117,
-      RHYTHMIC_SOUL: 118,
-      FREESTYLE: 119,
-      DUET: 120,
-      PUNK_ROCK: 121,
-      DRUM_SOLO: 122,
-      A_CAPELLA: 123,
-      EURO_HOUSE: 124,
-      DANCE_HALL: 125,
+  <span class="kd">var</span> <span class="nx">Id3V11Tag</span> <span class="o">=</span> <span class="nx">Id3v11</span><span class="p">.</span><span class="nx">Id3V11Tag</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">Id3V11Tag</span><span class="p">.</span><span class="nx">GenreEnum</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+      <span class="nx">BLUES</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">CLASSIC_ROCK</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">COUNTRY</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="nx">DANCE</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+      <span class="nx">DISCO</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+      <span class="nx">FUNK</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+      <span class="nx">GRUNGE</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+      <span class="nx">HIP_HOP</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+      <span class="nx">JAZZ</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+      <span class="nx">METAL</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
+      <span class="nx">NEW_AGE</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+      <span class="nx">OLDIES</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
+      <span class="nx">OTHER</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
+      <span class="nx">POP</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
+      <span class="nx">RNB</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
+      <span class="nx">RAP</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
+      <span class="nx">REGGAE</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
+      <span class="nx">ROCK</span><span class="o">:</span> <span class="mi">17</span><span class="p">,</span>
+      <span class="nx">TECHNO</span><span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
+      <span class="nx">INDUSTRIAL</span><span class="o">:</span> <span class="mi">19</span><span class="p">,</span>
+      <span class="nx">ALTERNATIVE</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
+      <span class="nx">SKA</span><span class="o">:</span> <span class="mi">21</span><span class="p">,</span>
+      <span class="nx">DEATH_METAL</span><span class="o">:</span> <span class="mi">22</span><span class="p">,</span>
+      <span class="nx">PRANKS</span><span class="o">:</span> <span class="mi">23</span><span class="p">,</span>
+      <span class="nx">SOUNDTRACK</span><span class="o">:</span> <span class="mi">24</span><span class="p">,</span>
+      <span class="nx">EURO_TECHNO</span><span class="o">:</span> <span class="mi">25</span><span class="p">,</span>
+      <span class="nx">AMBIENT</span><span class="o">:</span> <span class="mi">26</span><span class="p">,</span>
+      <span class="nx">TRIP_HOP</span><span class="o">:</span> <span class="mi">27</span><span class="p">,</span>
+      <span class="nx">VOCAL</span><span class="o">:</span> <span class="mi">28</span><span class="p">,</span>
+      <span class="nx">JAZZ_FUNK</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span>
+      <span class="nx">FUSION</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span>
+      <span class="nx">TRANCE</span><span class="o">:</span> <span class="mi">31</span><span class="p">,</span>
+      <span class="nx">CLASSICAL</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span>
+      <span class="nx">INSTRUMENTAL</span><span class="o">:</span> <span class="mi">33</span><span class="p">,</span>
+      <span class="nx">ACID</span><span class="o">:</span> <span class="mi">34</span><span class="p">,</span>
+      <span class="nx">HOUSE</span><span class="o">:</span> <span class="mi">35</span><span class="p">,</span>
+      <span class="nx">GAME</span><span class="o">:</span> <span class="mi">36</span><span class="p">,</span>
+      <span class="nx">SOUND_CLIP</span><span class="o">:</span> <span class="mi">37</span><span class="p">,</span>
+      <span class="nx">GOSPEL</span><span class="o">:</span> <span class="mi">38</span><span class="p">,</span>
+      <span class="nx">NOISE</span><span class="o">:</span> <span class="mi">39</span><span class="p">,</span>
+      <span class="nx">ALTERNROCK</span><span class="o">:</span> <span class="mi">40</span><span class="p">,</span>
+      <span class="nx">BASS</span><span class="o">:</span> <span class="mi">41</span><span class="p">,</span>
+      <span class="nx">SOUL</span><span class="o">:</span> <span class="mi">42</span><span class="p">,</span>
+      <span class="nx">PUNK</span><span class="o">:</span> <span class="mi">43</span><span class="p">,</span>
+      <span class="nx">SPACE</span><span class="o">:</span> <span class="mi">44</span><span class="p">,</span>
+      <span class="nx">MEDITATIVE</span><span class="o">:</span> <span class="mi">45</span><span class="p">,</span>
+      <span class="nx">INSTRUMENTAL_POP</span><span class="o">:</span> <span class="mi">46</span><span class="p">,</span>
+      <span class="nx">INSTRUMENTAL_ROCK</span><span class="o">:</span> <span class="mi">47</span><span class="p">,</span>
+      <span class="nx">ETHNIC</span><span class="o">:</span> <span class="mi">48</span><span class="p">,</span>
+      <span class="nx">GOTHIC</span><span class="o">:</span> <span class="mi">49</span><span class="p">,</span>
+      <span class="nx">DARKWAVE</span><span class="o">:</span> <span class="mi">50</span><span class="p">,</span>
+      <span class="nx">TECHNO_INDUSTRIAL</span><span class="o">:</span> <span class="mi">51</span><span class="p">,</span>
+      <span class="nx">ELECTRONIC</span><span class="o">:</span> <span class="mi">52</span><span class="p">,</span>
+      <span class="nx">POP_FOLK</span><span class="o">:</span> <span class="mi">53</span><span class="p">,</span>
+      <span class="nx">EURODANCE</span><span class="o">:</span> <span class="mi">54</span><span class="p">,</span>
+      <span class="nx">DREAM</span><span class="o">:</span> <span class="mi">55</span><span class="p">,</span>
+      <span class="nx">SOUTHERN_ROCK</span><span class="o">:</span> <span class="mi">56</span><span class="p">,</span>
+      <span class="nx">COMEDY</span><span class="o">:</span> <span class="mi">57</span><span class="p">,</span>
+      <span class="nx">CULT</span><span class="o">:</span> <span class="mi">58</span><span class="p">,</span>
+      <span class="nx">GANGSTA</span><span class="o">:</span> <span class="mi">59</span><span class="p">,</span>
+      <span class="nx">TOP_40</span><span class="o">:</span> <span class="mi">60</span><span class="p">,</span>
+      <span class="nx">CHRISTIAN_RAP</span><span class="o">:</span> <span class="mi">61</span><span class="p">,</span>
+      <span class="nx">POP_FUNK</span><span class="o">:</span> <span class="mi">62</span><span class="p">,</span>
+      <span class="nx">JUNGLE</span><span class="o">:</span> <span class="mi">63</span><span class="p">,</span>
+      <span class="nx">NATIVE_AMERICAN</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
+      <span class="nx">CABARET</span><span class="o">:</span> <span class="mi">65</span><span class="p">,</span>
+      <span class="nx">NEW_WAVE</span><span class="o">:</span> <span class="mi">66</span><span class="p">,</span>
+      <span class="nx">PSYCHADELIC</span><span class="o">:</span> <span class="mi">67</span><span class="p">,</span>
+      <span class="nx">RAVE</span><span class="o">:</span> <span class="mi">68</span><span class="p">,</span>
+      <span class="nx">SHOWTUNES</span><span class="o">:</span> <span class="mi">69</span><span class="p">,</span>
+      <span class="nx">TRAILER</span><span class="o">:</span> <span class="mi">70</span><span class="p">,</span>
+      <span class="nx">LO_FI</span><span class="o">:</span> <span class="mi">71</span><span class="p">,</span>
+      <span class="nx">TRIBAL</span><span class="o">:</span> <span class="mi">72</span><span class="p">,</span>
+      <span class="nx">ACID_PUNK</span><span class="o">:</span> <span class="mi">73</span><span class="p">,</span>
+      <span class="nx">ACID_JAZZ</span><span class="o">:</span> <span class="mi">74</span><span class="p">,</span>
+      <span class="nx">POLKA</span><span class="o">:</span> <span class="mi">75</span><span class="p">,</span>
+      <span class="nx">RETRO</span><span class="o">:</span> <span class="mi">76</span><span class="p">,</span>
+      <span class="nx">MUSICAL</span><span class="o">:</span> <span class="mi">77</span><span class="p">,</span>
+      <span class="nx">ROCK_N_ROLL</span><span class="o">:</span> <span class="mi">78</span><span class="p">,</span>
+      <span class="nx">HARD_ROCK</span><span class="o">:</span> <span class="mi">79</span><span class="p">,</span>
+      <span class="nx">FOLK</span><span class="o">:</span> <span class="mi">80</span><span class="p">,</span>
+      <span class="nx">FOLK_ROCK</span><span class="o">:</span> <span class="mi">81</span><span class="p">,</span>
+      <span class="nx">NATIONAL_FOLK</span><span class="o">:</span> <span class="mi">82</span><span class="p">,</span>
+      <span class="nx">SWING</span><span class="o">:</span> <span class="mi">83</span><span class="p">,</span>
+      <span class="nx">FAST_FUSION</span><span class="o">:</span> <span class="mi">84</span><span class="p">,</span>
+      <span class="nx">BEBOB</span><span class="o">:</span> <span class="mi">85</span><span class="p">,</span>
+      <span class="nx">LATIN</span><span class="o">:</span> <span class="mi">86</span><span class="p">,</span>
+      <span class="nx">REVIVAL</span><span class="o">:</span> <span class="mi">87</span><span class="p">,</span>
+      <span class="nx">CELTIC</span><span class="o">:</span> <span class="mi">88</span><span class="p">,</span>
+      <span class="nx">BLUEGRASS</span><span class="o">:</span> <span class="mi">89</span><span class="p">,</span>
+      <span class="nx">AVANTGARDE</span><span class="o">:</span> <span class="mi">90</span><span class="p">,</span>
+      <span class="nx">GOTHIC_ROCK</span><span class="o">:</span> <span class="mi">91</span><span class="p">,</span>
+      <span class="nx">PROGRESSIVE_ROCK</span><span class="o">:</span> <span class="mi">92</span><span class="p">,</span>
+      <span class="nx">PSYCHEDELIC_ROCK</span><span class="o">:</span> <span class="mi">93</span><span class="p">,</span>
+      <span class="nx">SYMPHONIC_ROCK</span><span class="o">:</span> <span class="mi">94</span><span class="p">,</span>
+      <span class="nx">SLOW_ROCK</span><span class="o">:</span> <span class="mi">95</span><span class="p">,</span>
+      <span class="nx">BIG_BAND</span><span class="o">:</span> <span class="mi">96</span><span class="p">,</span>
+      <span class="nx">CHORUS</span><span class="o">:</span> <span class="mi">97</span><span class="p">,</span>
+      <span class="nx">EASY_LISTENING</span><span class="o">:</span> <span class="mi">98</span><span class="p">,</span>
+      <span class="nx">ACOUSTIC</span><span class="o">:</span> <span class="mi">99</span><span class="p">,</span>
+      <span class="nx">HUMOUR</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+      <span class="nx">SPEECH</span><span class="o">:</span> <span class="mi">101</span><span class="p">,</span>
+      <span class="nx">CHANSON</span><span class="o">:</span> <span class="mi">102</span><span class="p">,</span>
+      <span class="nx">OPERA</span><span class="o">:</span> <span class="mi">103</span><span class="p">,</span>
+      <span class="nx">CHAMBER_MUSIC</span><span class="o">:</span> <span class="mi">104</span><span class="p">,</span>
+      <span class="nx">SONATA</span><span class="o">:</span> <span class="mi">105</span><span class="p">,</span>
+      <span class="nx">SYMPHONY</span><span class="o">:</span> <span class="mi">106</span><span class="p">,</span>
+      <span class="nx">BOOTY_BASS</span><span class="o">:</span> <span class="mi">107</span><span class="p">,</span>
+      <span class="nx">PRIMUS</span><span class="o">:</span> <span class="mi">108</span><span class="p">,</span>
+      <span class="nx">PORN_GROOVE</span><span class="o">:</span> <span class="mi">109</span><span class="p">,</span>
+      <span class="nx">SATIRE</span><span class="o">:</span> <span class="mi">110</span><span class="p">,</span>
+      <span class="nx">SLOW_JAM</span><span class="o">:</span> <span class="mi">111</span><span class="p">,</span>
+      <span class="nx">CLUB</span><span class="o">:</span> <span class="mi">112</span><span class="p">,</span>
+      <span class="nx">TANGO</span><span class="o">:</span> <span class="mi">113</span><span class="p">,</span>
+      <span class="nx">SAMBA</span><span class="o">:</span> <span class="mi">114</span><span class="p">,</span>
+      <span class="nx">FOLKLORE</span><span class="o">:</span> <span class="mi">115</span><span class="p">,</span>
+      <span class="nx">BALLAD</span><span class="o">:</span> <span class="mi">116</span><span class="p">,</span>
+      <span class="nx">POWER_BALLAD</span><span class="o">:</span> <span class="mi">117</span><span class="p">,</span>
+      <span class="nx">RHYTHMIC_SOUL</span><span class="o">:</span> <span class="mi">118</span><span class="p">,</span>
+      <span class="nx">FREESTYLE</span><span class="o">:</span> <span class="mi">119</span><span class="p">,</span>
+      <span class="nx">DUET</span><span class="o">:</span> <span class="mi">120</span><span class="p">,</span>
+      <span class="nx">PUNK_ROCK</span><span class="o">:</span> <span class="mi">121</span><span class="p">,</span>
+      <span class="nx">DRUM_SOLO</span><span class="o">:</span> <span class="mi">122</span><span class="p">,</span>
+      <span class="nx">A_CAPELLA</span><span class="o">:</span> <span class="mi">123</span><span class="p">,</span>
+      <span class="nx">EURO_HOUSE</span><span class="o">:</span> <span class="mi">124</span><span class="p">,</span>
+      <span class="nx">DANCE_HALL</span><span class="o">:</span> <span class="mi">125</span><span class="p">,</span>
 
-      0: &quot;BLUES&quot;,
-      1: &quot;CLASSIC_ROCK&quot;,
-      2: &quot;COUNTRY&quot;,
-      3: &quot;DANCE&quot;,
-      4: &quot;DISCO&quot;,
-      5: &quot;FUNK&quot;,
-      6: &quot;GRUNGE&quot;,
-      7: &quot;HIP_HOP&quot;,
-      8: &quot;JAZZ&quot;,
-      9: &quot;METAL&quot;,
-      10: &quot;NEW_AGE&quot;,
-      11: &quot;OLDIES&quot;,
-      12: &quot;OTHER&quot;,
-      13: &quot;POP&quot;,
-      14: &quot;RNB&quot;,
-      15: &quot;RAP&quot;,
-      16: &quot;REGGAE&quot;,
-      17: &quot;ROCK&quot;,
-      18: &quot;TECHNO&quot;,
-      19: &quot;INDUSTRIAL&quot;,
-      20: &quot;ALTERNATIVE&quot;,
-      21: &quot;SKA&quot;,
-      22: &quot;DEATH_METAL&quot;,
-      23: &quot;PRANKS&quot;,
-      24: &quot;SOUNDTRACK&quot;,
-      25: &quot;EURO_TECHNO&quot;,
-      26: &quot;AMBIENT&quot;,
-      27: &quot;TRIP_HOP&quot;,
-      28: &quot;VOCAL&quot;,
-      29: &quot;JAZZ_FUNK&quot;,
-      30: &quot;FUSION&quot;,
-      31: &quot;TRANCE&quot;,
-      32: &quot;CLASSICAL&quot;,
-      33: &quot;INSTRUMENTAL&quot;,
-      34: &quot;ACID&quot;,
-      35: &quot;HOUSE&quot;,
-      36: &quot;GAME&quot;,
-      37: &quot;SOUND_CLIP&quot;,
-      38: &quot;GOSPEL&quot;,
-      39: &quot;NOISE&quot;,
-      40: &quot;ALTERNROCK&quot;,
-      41: &quot;BASS&quot;,
-      42: &quot;SOUL&quot;,
-      43: &quot;PUNK&quot;,
-      44: &quot;SPACE&quot;,
-      45: &quot;MEDITATIVE&quot;,
-      46: &quot;INSTRUMENTAL_POP&quot;,
-      47: &quot;INSTRUMENTAL_ROCK&quot;,
-      48: &quot;ETHNIC&quot;,
-      49: &quot;GOTHIC&quot;,
-      50: &quot;DARKWAVE&quot;,
-      51: &quot;TECHNO_INDUSTRIAL&quot;,
-      52: &quot;ELECTRONIC&quot;,
-      53: &quot;POP_FOLK&quot;,
-      54: &quot;EURODANCE&quot;,
-      55: &quot;DREAM&quot;,
-      56: &quot;SOUTHERN_ROCK&quot;,
-      57: &quot;COMEDY&quot;,
-      58: &quot;CULT&quot;,
-      59: &quot;GANGSTA&quot;,
-      60: &quot;TOP_40&quot;,
-      61: &quot;CHRISTIAN_RAP&quot;,
-      62: &quot;POP_FUNK&quot;,
-      63: &quot;JUNGLE&quot;,
-      64: &quot;NATIVE_AMERICAN&quot;,
-      65: &quot;CABARET&quot;,
-      66: &quot;NEW_WAVE&quot;,
-      67: &quot;PSYCHADELIC&quot;,
-      68: &quot;RAVE&quot;,
-      69: &quot;SHOWTUNES&quot;,
-      70: &quot;TRAILER&quot;,
-      71: &quot;LO_FI&quot;,
-      72: &quot;TRIBAL&quot;,
-      73: &quot;ACID_PUNK&quot;,
-      74: &quot;ACID_JAZZ&quot;,
-      75: &quot;POLKA&quot;,
-      76: &quot;RETRO&quot;,
-      77: &quot;MUSICAL&quot;,
-      78: &quot;ROCK_N_ROLL&quot;,
-      79: &quot;HARD_ROCK&quot;,
-      80: &quot;FOLK&quot;,
-      81: &quot;FOLK_ROCK&quot;,
-      82: &quot;NATIONAL_FOLK&quot;,
-      83: &quot;SWING&quot;,
-      84: &quot;FAST_FUSION&quot;,
-      85: &quot;BEBOB&quot;,
-      86: &quot;LATIN&quot;,
-      87: &quot;REVIVAL&quot;,
-      88: &quot;CELTIC&quot;,
-      89: &quot;BLUEGRASS&quot;,
-      90: &quot;AVANTGARDE&quot;,
-      91: &quot;GOTHIC_ROCK&quot;,
-      92: &quot;PROGRESSIVE_ROCK&quot;,
-      93: &quot;PSYCHEDELIC_ROCK&quot;,
-      94: &quot;SYMPHONIC_ROCK&quot;,
-      95: &quot;SLOW_ROCK&quot;,
-      96: &quot;BIG_BAND&quot;,
-      97: &quot;CHORUS&quot;,
-      98: &quot;EASY_LISTENING&quot;,
-      99: &quot;ACOUSTIC&quot;,
-      100: &quot;HUMOUR&quot;,
-      101: &quot;SPEECH&quot;,
-      102: &quot;CHANSON&quot;,
-      103: &quot;OPERA&quot;,
-      104: &quot;CHAMBER_MUSIC&quot;,
-      105: &quot;SONATA&quot;,
-      106: &quot;SYMPHONY&quot;,
-      107: &quot;BOOTY_BASS&quot;,
-      108: &quot;PRIMUS&quot;,
-      109: &quot;PORN_GROOVE&quot;,
-      110: &quot;SATIRE&quot;,
-      111: &quot;SLOW_JAM&quot;,
-      112: &quot;CLUB&quot;,
-      113: &quot;TANGO&quot;,
-      114: &quot;SAMBA&quot;,
-      115: &quot;FOLKLORE&quot;,
-      116: &quot;BALLAD&quot;,
-      117: &quot;POWER_BALLAD&quot;,
-      118: &quot;RHYTHMIC_SOUL&quot;,
-      119: &quot;FREESTYLE&quot;,
-      120: &quot;DUET&quot;,
-      121: &quot;PUNK_ROCK&quot;,
-      122: &quot;DRUM_SOLO&quot;,
-      123: &quot;A_CAPELLA&quot;,
-      124: &quot;EURO_HOUSE&quot;,
-      125: &quot;DANCE_HALL&quot;,
-    });
+      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;BLUES&quot;</span><span class="p">,</span>
+      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;CLASSIC_ROCK&quot;</span><span class="p">,</span>
+      <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;COUNTRY&quot;</span><span class="p">,</span>
+      <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;DANCE&quot;</span><span class="p">,</span>
+      <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;DISCO&quot;</span><span class="p">,</span>
+      <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;FUNK&quot;</span><span class="p">,</span>
+      <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;GRUNGE&quot;</span><span class="p">,</span>
+      <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;HIP_HOP&quot;</span><span class="p">,</span>
+      <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;JAZZ&quot;</span><span class="p">,</span>
+      <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;METAL&quot;</span><span class="p">,</span>
+      <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;NEW_AGE&quot;</span><span class="p">,</span>
+      <span class="mi">11</span><span class="o">:</span> <span class="s2">&quot;OLDIES&quot;</span><span class="p">,</span>
+      <span class="mi">12</span><span class="o">:</span> <span class="s2">&quot;OTHER&quot;</span><span class="p">,</span>
+      <span class="mi">13</span><span class="o">:</span> <span class="s2">&quot;POP&quot;</span><span class="p">,</span>
+      <span class="mi">14</span><span class="o">:</span> <span class="s2">&quot;RNB&quot;</span><span class="p">,</span>
+      <span class="mi">15</span><span class="o">:</span> <span class="s2">&quot;RAP&quot;</span><span class="p">,</span>
+      <span class="mi">16</span><span class="o">:</span> <span class="s2">&quot;REGGAE&quot;</span><span class="p">,</span>
+      <span class="mi">17</span><span class="o">:</span> <span class="s2">&quot;ROCK&quot;</span><span class="p">,</span>
+      <span class="mi">18</span><span class="o">:</span> <span class="s2">&quot;TECHNO&quot;</span><span class="p">,</span>
+      <span class="mi">19</span><span class="o">:</span> <span class="s2">&quot;INDUSTRIAL&quot;</span><span class="p">,</span>
+      <span class="mi">20</span><span class="o">:</span> <span class="s2">&quot;ALTERNATIVE&quot;</span><span class="p">,</span>
+      <span class="mi">21</span><span class="o">:</span> <span class="s2">&quot;SKA&quot;</span><span class="p">,</span>
+      <span class="mi">22</span><span class="o">:</span> <span class="s2">&quot;DEATH_METAL&quot;</span><span class="p">,</span>
+      <span class="mi">23</span><span class="o">:</span> <span class="s2">&quot;PRANKS&quot;</span><span class="p">,</span>
+      <span class="mi">24</span><span class="o">:</span> <span class="s2">&quot;SOUNDTRACK&quot;</span><span class="p">,</span>
+      <span class="mi">25</span><span class="o">:</span> <span class="s2">&quot;EURO_TECHNO&quot;</span><span class="p">,</span>
+      <span class="mi">26</span><span class="o">:</span> <span class="s2">&quot;AMBIENT&quot;</span><span class="p">,</span>
+      <span class="mi">27</span><span class="o">:</span> <span class="s2">&quot;TRIP_HOP&quot;</span><span class="p">,</span>
+      <span class="mi">28</span><span class="o">:</span> <span class="s2">&quot;VOCAL&quot;</span><span class="p">,</span>
+      <span class="mi">29</span><span class="o">:</span> <span class="s2">&quot;JAZZ_FUNK&quot;</span><span class="p">,</span>
+      <span class="mi">30</span><span class="o">:</span> <span class="s2">&quot;FUSION&quot;</span><span class="p">,</span>
+      <span class="mi">31</span><span class="o">:</span> <span class="s2">&quot;TRANCE&quot;</span><span class="p">,</span>
+      <span class="mi">32</span><span class="o">:</span> <span class="s2">&quot;CLASSICAL&quot;</span><span class="p">,</span>
+      <span class="mi">33</span><span class="o">:</span> <span class="s2">&quot;INSTRUMENTAL&quot;</span><span class="p">,</span>
+      <span class="mi">34</span><span class="o">:</span> <span class="s2">&quot;ACID&quot;</span><span class="p">,</span>
+      <span class="mi">35</span><span class="o">:</span> <span class="s2">&quot;HOUSE&quot;</span><span class="p">,</span>
+      <span class="mi">36</span><span class="o">:</span> <span class="s2">&quot;GAME&quot;</span><span class="p">,</span>
+      <span class="mi">37</span><span class="o">:</span> <span class="s2">&quot;SOUND_CLIP&quot;</span><span class="p">,</span>
+      <span class="mi">38</span><span class="o">:</span> <span class="s2">&quot;GOSPEL&quot;</span><span class="p">,</span>
+      <span class="mi">39</span><span class="o">:</span> <span class="s2">&quot;NOISE&quot;</span><span class="p">,</span>
+      <span class="mi">40</span><span class="o">:</span> <span class="s2">&quot;ALTERNROCK&quot;</span><span class="p">,</span>
+      <span class="mi">41</span><span class="o">:</span> <span class="s2">&quot;BASS&quot;</span><span class="p">,</span>
+      <span class="mi">42</span><span class="o">:</span> <span class="s2">&quot;SOUL&quot;</span><span class="p">,</span>
+      <span class="mi">43</span><span class="o">:</span> <span class="s2">&quot;PUNK&quot;</span><span class="p">,</span>
+      <span class="mi">44</span><span class="o">:</span> <span class="s2">&quot;SPACE&quot;</span><span class="p">,</span>
+      <span class="mi">45</span><span class="o">:</span> <span class="s2">&quot;MEDITATIVE&quot;</span><span class="p">,</span>
+      <span class="mi">46</span><span class="o">:</span> <span class="s2">&quot;INSTRUMENTAL_POP&quot;</span><span class="p">,</span>
+      <span class="mi">47</span><span class="o">:</span> <span class="s2">&quot;INSTRUMENTAL_ROCK&quot;</span><span class="p">,</span>
+      <span class="mi">48</span><span class="o">:</span> <span class="s2">&quot;ETHNIC&quot;</span><span class="p">,</span>
+      <span class="mi">49</span><span class="o">:</span> <span class="s2">&quot;GOTHIC&quot;</span><span class="p">,</span>
+      <span class="mi">50</span><span class="o">:</span> <span class="s2">&quot;DARKWAVE&quot;</span><span class="p">,</span>
+      <span class="mi">51</span><span class="o">:</span> <span class="s2">&quot;TECHNO_INDUSTRIAL&quot;</span><span class="p">,</span>
+      <span class="mi">52</span><span class="o">:</span> <span class="s2">&quot;ELECTRONIC&quot;</span><span class="p">,</span>
+      <span class="mi">53</span><span class="o">:</span> <span class="s2">&quot;POP_FOLK&quot;</span><span class="p">,</span>
+      <span class="mi">54</span><span class="o">:</span> <span class="s2">&quot;EURODANCE&quot;</span><span class="p">,</span>
+      <span class="mi">55</span><span class="o">:</span> <span class="s2">&quot;DREAM&quot;</span><span class="p">,</span>
+      <span class="mi">56</span><span class="o">:</span> <span class="s2">&quot;SOUTHERN_ROCK&quot;</span><span class="p">,</span>
+      <span class="mi">57</span><span class="o">:</span> <span class="s2">&quot;COMEDY&quot;</span><span class="p">,</span>
+      <span class="mi">58</span><span class="o">:</span> <span class="s2">&quot;CULT&quot;</span><span class="p">,</span>
+      <span class="mi">59</span><span class="o">:</span> <span class="s2">&quot;GANGSTA&quot;</span><span class="p">,</span>
+      <span class="mi">60</span><span class="o">:</span> <span class="s2">&quot;TOP_40&quot;</span><span class="p">,</span>
+      <span class="mi">61</span><span class="o">:</span> <span class="s2">&quot;CHRISTIAN_RAP&quot;</span><span class="p">,</span>
+      <span class="mi">62</span><span class="o">:</span> <span class="s2">&quot;POP_FUNK&quot;</span><span class="p">,</span>
+      <span class="mi">63</span><span class="o">:</span> <span class="s2">&quot;JUNGLE&quot;</span><span class="p">,</span>
+      <span class="mi">64</span><span class="o">:</span> <span class="s2">&quot;NATIVE_AMERICAN&quot;</span><span class="p">,</span>
+      <span class="mi">65</span><span class="o">:</span> <span class="s2">&quot;CABARET&quot;</span><span class="p">,</span>
+      <span class="mi">66</span><span class="o">:</span> <span class="s2">&quot;NEW_WAVE&quot;</span><span class="p">,</span>
+      <span class="mi">67</span><span class="o">:</span> <span class="s2">&quot;PSYCHADELIC&quot;</span><span class="p">,</span>
+      <span class="mi">68</span><span class="o">:</span> <span class="s2">&quot;RAVE&quot;</span><span class="p">,</span>
+      <span class="mi">69</span><span class="o">:</span> <span class="s2">&quot;SHOWTUNES&quot;</span><span class="p">,</span>
+      <span class="mi">70</span><span class="o">:</span> <span class="s2">&quot;TRAILER&quot;</span><span class="p">,</span>
+      <span class="mi">71</span><span class="o">:</span> <span class="s2">&quot;LO_FI&quot;</span><span class="p">,</span>
+      <span class="mi">72</span><span class="o">:</span> <span class="s2">&quot;TRIBAL&quot;</span><span class="p">,</span>
+      <span class="mi">73</span><span class="o">:</span> <span class="s2">&quot;ACID_PUNK&quot;</span><span class="p">,</span>
+      <span class="mi">74</span><span class="o">:</span> <span class="s2">&quot;ACID_JAZZ&quot;</span><span class="p">,</span>
+      <span class="mi">75</span><span class="o">:</span> <span class="s2">&quot;POLKA&quot;</span><span class="p">,</span>
+      <span class="mi">76</span><span class="o">:</span> <span class="s2">&quot;RETRO&quot;</span><span class="p">,</span>
+      <span class="mi">77</span><span class="o">:</span> <span class="s2">&quot;MUSICAL&quot;</span><span class="p">,</span>
+      <span class="mi">78</span><span class="o">:</span> <span class="s2">&quot;ROCK_N_ROLL&quot;</span><span class="p">,</span>
+      <span class="mi">79</span><span class="o">:</span> <span class="s2">&quot;HARD_ROCK&quot;</span><span class="p">,</span>
+      <span class="mi">80</span><span class="o">:</span> <span class="s2">&quot;FOLK&quot;</span><span class="p">,</span>
+      <span class="mi">81</span><span class="o">:</span> <span class="s2">&quot;FOLK_ROCK&quot;</span><span class="p">,</span>
+      <span class="mi">82</span><span class="o">:</span> <span class="s2">&quot;NATIONAL_FOLK&quot;</span><span class="p">,</span>
+      <span class="mi">83</span><span class="o">:</span> <span class="s2">&quot;SWING&quot;</span><span class="p">,</span>
+      <span class="mi">84</span><span class="o">:</span> <span class="s2">&quot;FAST_FUSION&quot;</span><span class="p">,</span>
+      <span class="mi">85</span><span class="o">:</span> <span class="s2">&quot;BEBOB&quot;</span><span class="p">,</span>
+      <span class="mi">86</span><span class="o">:</span> <span class="s2">&quot;LATIN&quot;</span><span class="p">,</span>
+      <span class="mi">87</span><span class="o">:</span> <span class="s2">&quot;REVIVAL&quot;</span><span class="p">,</span>
+      <span class="mi">88</span><span class="o">:</span> <span class="s2">&quot;CELTIC&quot;</span><span class="p">,</span>
+      <span class="mi">89</span><span class="o">:</span> <span class="s2">&quot;BLUEGRASS&quot;</span><span class="p">,</span>
+      <span class="mi">90</span><span class="o">:</span> <span class="s2">&quot;AVANTGARDE&quot;</span><span class="p">,</span>
+      <span class="mi">91</span><span class="o">:</span> <span class="s2">&quot;GOTHIC_ROCK&quot;</span><span class="p">,</span>
+      <span class="mi">92</span><span class="o">:</span> <span class="s2">&quot;PROGRESSIVE_ROCK&quot;</span><span class="p">,</span>
+      <span class="mi">93</span><span class="o">:</span> <span class="s2">&quot;PSYCHEDELIC_ROCK&quot;</span><span class="p">,</span>
+      <span class="mi">94</span><span class="o">:</span> <span class="s2">&quot;SYMPHONIC_ROCK&quot;</span><span class="p">,</span>
+      <span class="mi">95</span><span class="o">:</span> <span class="s2">&quot;SLOW_ROCK&quot;</span><span class="p">,</span>
+      <span class="mi">96</span><span class="o">:</span> <span class="s2">&quot;BIG_BAND&quot;</span><span class="p">,</span>
+      <span class="mi">97</span><span class="o">:</span> <span class="s2">&quot;CHORUS&quot;</span><span class="p">,</span>
+      <span class="mi">98</span><span class="o">:</span> <span class="s2">&quot;EASY_LISTENING&quot;</span><span class="p">,</span>
+      <span class="mi">99</span><span class="o">:</span> <span class="s2">&quot;ACOUSTIC&quot;</span><span class="p">,</span>
+      <span class="mi">100</span><span class="o">:</span> <span class="s2">&quot;HUMOUR&quot;</span><span class="p">,</span>
+      <span class="mi">101</span><span class="o">:</span> <span class="s2">&quot;SPEECH&quot;</span><span class="p">,</span>
+      <span class="mi">102</span><span class="o">:</span> <span class="s2">&quot;CHANSON&quot;</span><span class="p">,</span>
+      <span class="mi">103</span><span class="o">:</span> <span class="s2">&quot;OPERA&quot;</span><span class="p">,</span>
+      <span class="mi">104</span><span class="o">:</span> <span class="s2">&quot;CHAMBER_MUSIC&quot;</span><span class="p">,</span>
+      <span class="mi">105</span><span class="o">:</span> <span class="s2">&quot;SONATA&quot;</span><span class="p">,</span>
+      <span class="mi">106</span><span class="o">:</span> <span class="s2">&quot;SYMPHONY&quot;</span><span class="p">,</span>
+      <span class="mi">107</span><span class="o">:</span> <span class="s2">&quot;BOOTY_BASS&quot;</span><span class="p">,</span>
+      <span class="mi">108</span><span class="o">:</span> <span class="s2">&quot;PRIMUS&quot;</span><span class="p">,</span>
+      <span class="mi">109</span><span class="o">:</span> <span class="s2">&quot;PORN_GROOVE&quot;</span><span class="p">,</span>
+      <span class="mi">110</span><span class="o">:</span> <span class="s2">&quot;SATIRE&quot;</span><span class="p">,</span>
+      <span class="mi">111</span><span class="o">:</span> <span class="s2">&quot;SLOW_JAM&quot;</span><span class="p">,</span>
+      <span class="mi">112</span><span class="o">:</span> <span class="s2">&quot;CLUB&quot;</span><span class="p">,</span>
+      <span class="mi">113</span><span class="o">:</span> <span class="s2">&quot;TANGO&quot;</span><span class="p">,</span>
+      <span class="mi">114</span><span class="o">:</span> <span class="s2">&quot;SAMBA&quot;</span><span class="p">,</span>
+      <span class="mi">115</span><span class="o">:</span> <span class="s2">&quot;FOLKLORE&quot;</span><span class="p">,</span>
+      <span class="mi">116</span><span class="o">:</span> <span class="s2">&quot;BALLAD&quot;</span><span class="p">,</span>
+      <span class="mi">117</span><span class="o">:</span> <span class="s2">&quot;POWER_BALLAD&quot;</span><span class="p">,</span>
+      <span class="mi">118</span><span class="o">:</span> <span class="s2">&quot;RHYTHMIC_SOUL&quot;</span><span class="p">,</span>
+      <span class="mi">119</span><span class="o">:</span> <span class="s2">&quot;FREESTYLE&quot;</span><span class="p">,</span>
+      <span class="mi">120</span><span class="o">:</span> <span class="s2">&quot;DUET&quot;</span><span class="p">,</span>
+      <span class="mi">121</span><span class="o">:</span> <span class="s2">&quot;PUNK_ROCK&quot;</span><span class="p">,</span>
+      <span class="mi">122</span><span class="o">:</span> <span class="s2">&quot;DRUM_SOLO&quot;</span><span class="p">,</span>
+      <span class="mi">123</span><span class="o">:</span> <span class="s2">&quot;A_CAPELLA&quot;</span><span class="p">,</span>
+      <span class="mi">124</span><span class="o">:</span> <span class="s2">&quot;EURO_HOUSE&quot;</span><span class="p">,</span>
+      <span class="mi">125</span><span class="o">:</span> <span class="s2">&quot;DANCE_HALL&quot;</span><span class="p">,</span>
+    <span class="p">});</span>
 
-    function Id3V11Tag(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+    <span class="kd">function</span> <span class="nx">Id3V11Tag</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Id3V11Tag.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([84, 65, 71]);
-      this.title = this._io.readBytes(30);
-      this.artist = this._io.readBytes(30);
-      this.album = this._io.readBytes(30);
-      this.year = KaitaiStream.bytesToStr(this._io.readBytes(4), &quot;ASCII&quot;);
-      this.comment = this._io.readBytes(30);
-      this.genre = this._io.readU1();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Id3V11Tag</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">84</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">71</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">artist</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">album</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">year</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">comment</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">genre</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    /**
-     * Song title
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Song title</span>
+<span class="cm">     */</span>
 
-    /**
-     * Artist name
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Artist name</span>
+<span class="cm">     */</span>
 
-    /**
-     * Album title
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Album title</span>
+<span class="cm">     */</span>
 
-    /**
-     * Year of release
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Year of release</span>
+<span class="cm">     */</span>
 
-    /**
-     * Arbitary comment
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * Arbitary comment</span>
+<span class="cm">     */</span>
 
-    return Id3V11Tag;
-  })();
-  Object.defineProperty(Id3v11.prototype, &#39;id3v1Tag&#39;, {
-    get: function() {
-      if (this._m_id3v1Tag !== undefined)
-        return this._m_id3v1Tag;
-      var _pos = this._io.pos;
-      this._io.seek((this._io.size - 128));
-      this._m_id3v1Tag = new Id3V11Tag(this._io, this, this._root);
-      this._io.seek(_pos);
-      return this._m_id3v1Tag;
-    }
-  });
+    <span class="k">return</span> <span class="nx">Id3V11Tag</span><span class="p">;</span>
+  <span class="p">})();</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Id3v11</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;id3v1Tag&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_id3v1Tag</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_id3v1Tag</span><span class="p">;</span>
+      <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">size</span> <span class="o">-</span> <span class="mi">128</span><span class="p">));</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_id3v1Tag</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Id3V11Tag</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_id3v1Tag</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
 
-  return Id3v11;
-})();
-return Id3v11;
-}));
-</code></pre>
+  <span class="k">return</span> <span class="nx">Id3v11</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">Id3v11</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -621,8 +618,8 @@ return Id3v11;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

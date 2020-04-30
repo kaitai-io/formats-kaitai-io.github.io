@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -268,93 +265,93 @@ data = MbrPartitionTable.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# MBR (Master Boot Record) partition table is a traditional way of
-# MS-DOS to partition larger hard disc drives into distinct
-# partitions.
-# 
-# This table is stored in the end of the boot sector (first sector) of
-# the drive, after the bootstrap code. Original DOS 2.0 specification
-# allowed only 4 partitions per disc, but DOS 3.2 introduced concept
-# of &quot;extended partitions&quot;, which work as nested extra &quot;boot records&quot;
-# which are pointed to by original (&quot;primary&quot;) partitions in MBR.
-class MbrPartitionTable &lt; Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+<span class="c1">##</span>
+<span class="c1"># MBR (Master Boot Record) partition table is a traditional way of</span>
+<span class="c1"># MS-DOS to partition larger hard disc drives into distinct</span>
+<span class="c1"># partitions.</span>
+<span class="c1"># </span>
+<span class="c1"># This table is stored in the end of the boot sector (first sector) of</span>
+<span class="c1"># the drive, after the bootstrap code. Original DOS 2.0 specification</span>
+<span class="c1"># allowed only 4 partitions per disc, but DOS 3.2 introduced concept</span>
+<span class="c1"># of &quot;extended partitions&quot;, which work as nested extra &quot;boot records&quot;</span>
+<span class="c1"># which are pointed to by original (&quot;primary&quot;) partitions in MBR.</span>
+<span class="k">class</span> <span class="nc">MbrPartitionTable</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @bootstrap_code = @_io.read_bytes(446)
-    @partitions = Array.new(4)
-    (4).times { |i|
-      @partitions[i] = PartitionEntry.new(@_io, self, @_root)
-    }
-    @boot_signature = @_io.ensure_fixed_contents([85, 170].pack(&#39;C*&#39;))
-    self
-  end
-  class PartitionEntry &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@bootstrap_code</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">446</span><span class="p">)</span>
+    <span class="vi">@partitions</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@partitions</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">PartitionEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="vi">@boot_signature</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">85</span><span class="p">,</span> <span class="mi">170</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">PartitionEntry</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @status = @_io.read_u1
-      @chs_start = Chs.new(@_io, self, @_root)
-      @partition_type = @_io.read_u1
-      @chs_end = Chs.new(@_io, self, @_root)
-      @lba_start = @_io.read_u4le
-      @num_sectors = @_io.read_u4le
-      self
-    end
-    attr_reader :status
-    attr_reader :chs_start
-    attr_reader :partition_type
-    attr_reader :chs_end
-    attr_reader :lba_start
-    attr_reader :num_sectors
-  end
-  class Chs &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@status</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@chs_start</span> <span class="o">=</span> <span class="no">Chs</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@partition_type</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@chs_end</span> <span class="o">=</span> <span class="no">Chs</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@lba_start</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@num_sectors</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:status</span>
+    <span class="kp">attr_reader</span> <span class="ss">:chs_start</span>
+    <span class="kp">attr_reader</span> <span class="ss">:partition_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:chs_end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:lba_start</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_sectors</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Chs</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @head = @_io.read_u1
-      @b2 = @_io.read_u1
-      @b3 = @_io.read_u1
-      self
-    end
-    def sector
-      return @sector unless @sector.nil?
-      @sector = (b2 &amp; 63)
-      @sector
-    end
-    def cylinder
-      return @cylinder unless @cylinder.nil?
-      @cylinder = (b3 + ((b2 &amp; 192) &lt;&lt; 2))
-      @cylinder
-    end
-    attr_reader :head
-    attr_reader :b2
-    attr_reader :b3
-  end
-  attr_reader :bootstrap_code
-  attr_reader :partitions
-  attr_reader :boot_signature
-end
-</code></pre>
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@head</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@b2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@b3</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">sector</span>
+      <span class="k">return</span> <span class="vi">@sector</span> <span class="k">unless</span> <span class="vi">@sector</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@sector</span> <span class="o">=</span> <span class="p">(</span><span class="n">b2</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span>
+      <span class="vi">@sector</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">cylinder</span>
+      <span class="k">return</span> <span class="vi">@cylinder</span> <span class="k">unless</span> <span class="vi">@cylinder</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@cylinder</span> <span class="o">=</span> <span class="p">(</span><span class="n">b3</span> <span class="o">+</span> <span class="p">((</span><span class="n">b2</span> <span class="o">&amp;</span> <span class="mi">192</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">))</span>
+      <span class="vi">@cylinder</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:head</span>
+    <span class="kp">attr_reader</span> <span class="ss">:b2</span>
+    <span class="kp">attr_reader</span> <span class="ss">:b3</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:bootstrap_code</span>
+  <span class="kp">attr_reader</span> <span class="ss">:partitions</span>
+  <span class="kp">attr_reader</span> <span class="ss">:boot_signature</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -381,8 +378,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -257,578 +254,578 @@ var data = new Edid(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.Edid = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-var Edid = (function() {
-  function Edid(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
-
-    this._read();
-  }
-  Edid.prototype._read = function() {
-    this.magic = this._io.ensureFixedContents([0, 255, 255, 255, 255, 255, 255, 0]);
-    this.mfgBytes = this._io.readU2le();
-    this.productCode = this._io.readU2le();
-    this.serial = this._io.readU4le();
-    this.mfgWeek = this._io.readU1();
-    this.mfgYearMod = this._io.readU1();
-    this.edidVersionMajor = this._io.readU1();
-    this.edidVersionMinor = this._io.readU1();
-    this.inputFlags = this._io.readU1();
-    this.screenSizeH = this._io.readU1();
-    this.screenSizeV = this._io.readU1();
-    this.gammaMod = this._io.readU1();
-    this.featuresFlags = this._io.readU1();
-    this.chromacity = new ChromacityInfo(this._io, this, this._root);
-    this.estTimings = new EstTimingsInfo(this._io, this, this._root);
-    this.stdTimings = new Array(8);
-    for (var i = 0; i &lt; 8; i++) {
-      this.stdTimings[i] = new StdTiming(this._io, this, this._root);
-    }
-  }
-
-  /**
-   * Chromaticity information: colorimetry and white point
-   * coordinates. All coordinates are stored as fixed precision
-   * 10-bit numbers, bits are shuffled for compactness.
-   */
-
-  var ChromacityInfo = Edid.ChromacityInfo = (function() {
-    function ChromacityInfo(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ChromacityInfo.prototype._read = function() {
-      this.redX10 = this._io.readBitsInt(2);
-      this.redY10 = this._io.readBitsInt(2);
-      this.greenX10 = this._io.readBitsInt(2);
-      this.greenY10 = this._io.readBitsInt(2);
-      this.blueX10 = this._io.readBitsInt(2);
-      this.blueY10 = this._io.readBitsInt(2);
-      this.whiteX10 = this._io.readBitsInt(2);
-      this.whiteY10 = this._io.readBitsInt(2);
-      this._io.alignToByte();
-      this.redX92 = this._io.readU1();
-      this.redY92 = this._io.readU1();
-      this.greenX92 = this._io.readU1();
-      this.greenY92 = this._io.readU1();
-      this.blueX92 = this._io.readU1();
-      this.blueY92 = this._io.readU1();
-      this.whiteX92 = this._io.readU1();
-      this.whiteY92 = this._io.readU1();
-    }
-    Object.defineProperty(ChromacityInfo.prototype, &#39;greenXInt&#39;, {
-      get: function() {
-        if (this._m_greenXInt !== undefined)
-          return this._m_greenXInt;
-        this._m_greenXInt = ((this.greenX92 &lt;&lt; 2) | this.greenX10);
-        return this._m_greenXInt;
-      }
-    });
-
-    /**
-     * Red Y coordinate
-     */
-    Object.defineProperty(ChromacityInfo.prototype, &#39;redY&#39;, {
-      get: function() {
-        if (this._m_redY !== undefined)
-          return this._m_redY;
-        this._m_redY = (this.redYInt / 1024.0);
-        return this._m_redY;
-      }
-    });
-    Object.defineProperty(ChromacityInfo.prototype, &#39;greenYInt&#39;, {
-      get: function() {
-        if (this._m_greenYInt !== undefined)
-          return this._m_greenYInt;
-        this._m_greenYInt = ((this.greenY92 &lt;&lt; 2) | this.greenY10);
-        return this._m_greenYInt;
-      }
-    });
-
-    /**
-     * White Y coordinate
-     */
-    Object.defineProperty(ChromacityInfo.prototype, &#39;whiteY&#39;, {
-      get: function() {
-        if (this._m_whiteY !== undefined)
-          return this._m_whiteY;
-        this._m_whiteY = (this.whiteYInt / 1024.0);
-        return this._m_whiteY;
-      }
-    });
-
-    /**
-     * Red X coordinate
-     */
-    Object.defineProperty(ChromacityInfo.prototype, &#39;redX&#39;, {
-      get: function() {
-        if (this._m_redX !== undefined)
-          return this._m_redX;
-        this._m_redX = (this.redXInt / 1024.0);
-        return this._m_redX;
-      }
-    });
-
-    /**
-     * White X coordinate
-     */
-    Object.defineProperty(ChromacityInfo.prototype, &#39;whiteX&#39;, {
-      get: function() {
-        if (this._m_whiteX !== undefined)
-          return this._m_whiteX;
-        this._m_whiteX = (this.whiteXInt / 1024.0);
-        return this._m_whiteX;
-      }
-    });
-
-    /**
-     * Blue X coordinate
-     */
-    Object.defineProperty(ChromacityInfo.prototype, &#39;blueX&#39;, {
-      get: function() {
-        if (this._m_blueX !== undefined)
-          return this._m_blueX;
-        this._m_blueX = (this.blueXInt / 1024.0);
-        return this._m_blueX;
-      }
-    });
-    Object.defineProperty(ChromacityInfo.prototype, &#39;whiteXInt&#39;, {
-      get: function() {
-        if (this._m_whiteXInt !== undefined)
-          return this._m_whiteXInt;
-        this._m_whiteXInt = ((this.whiteX92 &lt;&lt; 2) | this.whiteX10);
-        return this._m_whiteXInt;
-      }
-    });
-    Object.defineProperty(ChromacityInfo.prototype, &#39;whiteYInt&#39;, {
-      get: function() {
-        if (this._m_whiteYInt !== undefined)
-          return this._m_whiteYInt;
-        this._m_whiteYInt = ((this.whiteY92 &lt;&lt; 2) | this.whiteY10);
-        return this._m_whiteYInt;
-      }
-    });
-
-    /**
-     * Green X coordinate
-     */
-    Object.defineProperty(ChromacityInfo.prototype, &#39;greenX&#39;, {
-      get: function() {
-        if (this._m_greenX !== undefined)
-          return this._m_greenX;
-        this._m_greenX = (this.greenXInt / 1024.0);
-        return this._m_greenX;
-      }
-    });
-    Object.defineProperty(ChromacityInfo.prototype, &#39;redXInt&#39;, {
-      get: function() {
-        if (this._m_redXInt !== undefined)
-          return this._m_redXInt;
-        this._m_redXInt = ((this.redX92 &lt;&lt; 2) | this.redX10);
-        return this._m_redXInt;
-      }
-    });
-    Object.defineProperty(ChromacityInfo.prototype, &#39;redYInt&#39;, {
-      get: function() {
-        if (this._m_redYInt !== undefined)
-          return this._m_redYInt;
-        this._m_redYInt = ((this.redY92 &lt;&lt; 2) | this.redY10);
-        return this._m_redYInt;
-      }
-    });
-    Object.defineProperty(ChromacityInfo.prototype, &#39;blueXInt&#39;, {
-      get: function() {
-        if (this._m_blueXInt !== undefined)
-          return this._m_blueXInt;
-        this._m_blueXInt = ((this.blueX92 &lt;&lt; 2) | this.blueX10);
-        return this._m_blueXInt;
-      }
-    });
-
-    /**
-     * Blue Y coordinate
-     */
-    Object.defineProperty(ChromacityInfo.prototype, &#39;blueY&#39;, {
-      get: function() {
-        if (this._m_blueY !== undefined)
-          return this._m_blueY;
-        this._m_blueY = (this.blueYInt / 1024.0);
-        return this._m_blueY;
-      }
-    });
-
-    /**
-     * Green Y coordinate
-     */
-    Object.defineProperty(ChromacityInfo.prototype, &#39;greenY&#39;, {
-      get: function() {
-        if (this._m_greenY !== undefined)
-          return this._m_greenY;
-        this._m_greenY = (this.greenYInt / 1024.0);
-        return this._m_greenY;
-      }
-    });
-    Object.defineProperty(ChromacityInfo.prototype, &#39;blueYInt&#39;, {
-      get: function() {
-        if (this._m_blueYInt !== undefined)
-          return this._m_blueYInt;
-        this._m_blueYInt = ((this.blueY92 &lt;&lt; 2) | this.blueY10);
-        return this._m_blueYInt;
-      }
-    });
-
-    /**
-     * Red X, bits 1..0
-     */
-
-    /**
-     * Red Y, bits 1..0
-     */
-
-    /**
-     * Green X, bits 1..0
-     */
-
-    /**
-     * Green Y, bits 1..0
-     */
-
-    /**
-     * Blue X, bits 1..0
-     */
-
-    /**
-     * Blue Y, bits 1..0
-     */
-
-    /**
-     * White X, bits 1..0
-     */
-
-    /**
-     * White Y, bits 1..0
-     */
-
-    /**
-     * Red X, bits 9..2
-     */
-
-    /**
-     * Red Y, bits 9..2
-     */
-
-    /**
-     * Green X, bits 9..2
-     */
-
-    /**
-     * Green Y, bits 9..2
-     */
-
-    /**
-     * Blue X, bits 9..2
-     */
-
-    /**
-     * Blue Y, bits 9..2
-     */
-
-    /**
-     * White X, bits 9..2
-     */
-
-    /**
-     * White Y, bits 9..2
-     */
-
-    return ChromacityInfo;
-  })();
-
-  var EstTimingsInfo = Edid.EstTimingsInfo = (function() {
-    function EstTimingsInfo(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    EstTimingsInfo.prototype._read = function() {
-      this.can72040070 = this._io.readBitsInt(1) != 0;
-      this.can72040088 = this._io.readBitsInt(1) != 0;
-      this.can64048060 = this._io.readBitsInt(1) != 0;
-      this.can64048067 = this._io.readBitsInt(1) != 0;
-      this.can64048072 = this._io.readBitsInt(1) != 0;
-      this.can64048075 = this._io.readBitsInt(1) != 0;
-      this.can80060056 = this._io.readBitsInt(1) != 0;
-      this.can80060060 = this._io.readBitsInt(1) != 0;
-      this.can80060072 = this._io.readBitsInt(1) != 0;
-      this.can80060075 = this._io.readBitsInt(1) != 0;
-      this.can83262475 = this._io.readBitsInt(1) != 0;
-      this.can102476887I = this._io.readBitsInt(1) != 0;
-      this.can102476860 = this._io.readBitsInt(1) != 0;
-      this.can102476870 = this._io.readBitsInt(1) != 0;
-      this.can102476875 = this._io.readBitsInt(1) != 0;
-      this.can1280102475 = this._io.readBitsInt(1) != 0;
-      this.can115287075 = this._io.readBitsInt(1) != 0;
-      this.reserved = this._io.readBitsInt(7);
-    }
-
-    /**
-     * Supports 720 x 400 @ 70Hz
-     */
-
-    /**
-     * Supports 720 x 400 @ 88Hz
-     */
-
-    /**
-     * Supports 640 x 480 @ 60Hz
-     */
-
-    /**
-     * Supports 640 x 480 @ 67Hz
-     */
-
-    /**
-     * Supports 640 x 480 @ 72Hz
-     */
-
-    /**
-     * Supports 640 x 480 @ 75Hz
-     */
-
-    /**
-     * Supports 800 x 600 @ 56Hz
-     */
-
-    /**
-     * Supports 800 x 600 @ 60Hz
-     */
-
-    /**
-     * Supports 800 x 600 @ 72Hz
-     */
-
-    /**
-     * Supports 800 x 600 @ 75Hz
-     */
-
-    /**
-     * Supports 832 x 624 @ 75Hz
-     */
-
-    /**
-     * Supports 1024 x 768 @ 87Hz(I)
-     */
-
-    /**
-     * Supports 1024 x 768 @ 60Hz
-     */
-
-    /**
-     * Supports 1024 x 768 @ 70Hz
-     */
-
-    /**
-     * Supports 1024 x 768 @ 75Hz
-     */
-
-    /**
-     * Supports 1280 x 1024 @ 75Hz
-     */
-
-    /**
-     * Supports 1152 x 870 @ 75Hz
-     */
-
-    return EstTimingsInfo;
-  })();
-
-  var StdTiming = Edid.StdTiming = (function() {
-    StdTiming.AspectRatios = Object.freeze({
-      RATIO_16_10: 0,
-      RATIO_4_3: 1,
-      RATIO_5_4: 2,
-      RATIO_16_9: 3,
-
-      0: &quot;RATIO_16_10&quot;,
-      1: &quot;RATIO_4_3&quot;,
-      2: &quot;RATIO_5_4&quot;,
-      3: &quot;RATIO_16_9&quot;,
-    });
-
-    function StdTiming(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    StdTiming.prototype._read = function() {
-      this.horizActivePixelsMod = this._io.readU1();
-      this.aspectRatio = this._io.readBitsInt(2);
-      this.refreshRateMod = this._io.readBitsInt(5);
-    }
-
-    /**
-     * Range of horizontal active pixels.
-     */
-    Object.defineProperty(StdTiming.prototype, &#39;horizActivePixels&#39;, {
-      get: function() {
-        if (this._m_horizActivePixels !== undefined)
-          return this._m_horizActivePixels;
-        this._m_horizActivePixels = ((this.horizActivePixelsMod + 31) * 8);
-        return this._m_horizActivePixels;
-      }
-    });
-
-    /**
-     * Vertical refresh rate, Hz.
-     */
-    Object.defineProperty(StdTiming.prototype, &#39;refreshRate&#39;, {
-      get: function() {
-        if (this._m_refreshRate !== undefined)
-          return this._m_refreshRate;
-        this._m_refreshRate = (this.refreshRateMod + 60);
-        return this._m_refreshRate;
-      }
-    });
-
-    /**
-     * Range of horizontal active pixels, written in modified form:
-     * `(horiz_active_pixels / 8) - 31`. This yields an effective
-     * range of 256..2288, with steps of 8 pixels.
-     */
-
-    /**
-     * Aspect ratio of the image. Can be used to calculate number
-     * of vertical pixels.
-     */
-
-    /**
-     * Refresh rate in Hz, written in modified form: `refresh_rate
-     * - 60`. This yields an effective range of 60..123 Hz.
-     */
-
-    return StdTiming;
-  })();
-  Object.defineProperty(Edid.prototype, &#39;mfgYear&#39;, {
-    get: function() {
-      if (this._m_mfgYear !== undefined)
-        return this._m_mfgYear;
-      this._m_mfgYear = (this.mfgYearMod + 1990);
-      return this._m_mfgYear;
-    }
-  });
-  Object.defineProperty(Edid.prototype, &#39;mfgIdCh1&#39;, {
-    get: function() {
-      if (this._m_mfgIdCh1 !== undefined)
-        return this._m_mfgIdCh1;
-      this._m_mfgIdCh1 = ((this.mfgBytes &amp; 31744) &gt;&gt;&gt; 10);
-      return this._m_mfgIdCh1;
-    }
-  });
-  Object.defineProperty(Edid.prototype, &#39;mfgIdCh3&#39;, {
-    get: function() {
-      if (this._m_mfgIdCh3 !== undefined)
-        return this._m_mfgIdCh3;
-      this._m_mfgIdCh3 = (this.mfgBytes &amp; 31);
-      return this._m_mfgIdCh3;
-    }
-  });
-  Object.defineProperty(Edid.prototype, &#39;gamma&#39;, {
-    get: function() {
-      if (this._m_gamma !== undefined)
-        return this._m_gamma;
-      if (this.gammaMod != 255) {
-        this._m_gamma = ((this.gammaMod + 100) / 100.0);
-      }
-      return this._m_gamma;
-    }
-  });
-  Object.defineProperty(Edid.prototype, &#39;mfgIdCh2&#39;, {
-    get: function() {
-      if (this._m_mfgIdCh2 !== undefined)
-        return this._m_mfgIdCh2;
-      this._m_mfgIdCh2 = ((this.mfgBytes &amp; 992) &gt;&gt;&gt; 5);
-      return this._m_mfgIdCh2;
-    }
-  });
-
-  /**
-   * Manufacturer product code
-   */
-
-  /**
-   * Serial number
-   */
-
-  /**
-   * Week of manufacture. Week numbering is not consistent between manufacturers.
-   */
-
-  /**
-   * Year of manufacture, less 1990. (1990–2245). If week=255, it is the model year instead.
-   */
-
-  /**
-   * EDID version, usually 1 (for 1.3)
-   */
-
-  /**
-   * EDID revision, usually 3 (for 1.3)
-   */
-
-  /**
-   * Maximum horizontal image size, in centimetres (max 292 cm/115 in at 16:9 aspect ratio)
-   */
-
-  /**
-   * Maximum vertical image size, in centimetres. If either byte is 0, undefined (e.g. projector)
-   */
-
-  /**
-   * Display gamma, datavalue = (gamma*100)-100 (range 1.00–3.54)
-   */
-
-  /**
-   * Phosphor or filter chromaticity structure, which provides info on colorimetry and white point
-   * @see Standard, section 3.7
-   */
-
-  /**
-   * Block of bit flags that indicates support of so called
-   * &quot;established timings&quot;, which is a commonly used subset of VESA
-   * DMT (Discrete Monitor Timings) modes.
-   * @see Standard, section 3.8
-   */
-
-  /**
-   * Array of descriptions of so called &quot;standard timings&quot;, which are
-   * used to specify up to 8 additional timings not included in
-   * &quot;established timings&quot;.
-   */
-
-  return Edid;
-})();
-return Edid;
-}));
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">Edid</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="kd">var</span> <span class="nx">Edid</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">Edid</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">Edid</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">]);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">mfgBytes</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">productCode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">serial</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">mfgWeek</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">mfgYearMod</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">edidVersionMajor</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">edidVersionMinor</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">inputFlags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">screenSizeH</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">screenSizeV</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">gammaMod</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">featuresFlags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">chromacity</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ChromacityInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">estTimings</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EstTimingsInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">stdTimings</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">stdTimings</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StdTiming</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Chromaticity information: colorimetry and white point</span>
+<span class="cm">   * coordinates. All coordinates are stored as fixed precision</span>
+<span class="cm">   * 10-bit numbers, bits are shuffled for compactness.</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">ChromacityInfo</span> <span class="o">=</span> <span class="nx">Edid</span><span class="p">.</span><span class="nx">ChromacityInfo</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ChromacityInfo</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">redX10</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">redY10</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">greenX10</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">greenY10</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">blueX10</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">blueY10</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">whiteX10</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">whiteY10</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">alignToByte</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">redX92</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">redY92</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">greenX92</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">greenY92</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">blueX92</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">blueY92</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">whiteX92</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">whiteY92</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;greenXInt&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_greenXInt</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_greenXInt</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_greenXInt</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">greenX92</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="k">this</span><span class="p">.</span><span class="nx">greenX10</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_greenXInt</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Red Y coordinate</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;redY&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_redY</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_redY</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_redY</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">redYInt</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_redY</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;greenYInt&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_greenYInt</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_greenYInt</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_greenYInt</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">greenY92</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="k">this</span><span class="p">.</span><span class="nx">greenY10</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_greenYInt</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * White Y coordinate</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;whiteY&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteY</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteY</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteY</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">whiteYInt</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteY</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Red X coordinate</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;redX&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_redX</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_redX</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_redX</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">redXInt</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_redX</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * White X coordinate</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;whiteX&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteX</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteX</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteX</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">whiteXInt</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteX</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Blue X coordinate</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;blueX&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_blueX</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_blueX</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_blueX</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">blueXInt</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_blueX</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;whiteXInt&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteXInt</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteXInt</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteXInt</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">whiteX92</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="k">this</span><span class="p">.</span><span class="nx">whiteX10</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteXInt</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;whiteYInt&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteYInt</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteYInt</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteYInt</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">whiteY92</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="k">this</span><span class="p">.</span><span class="nx">whiteY10</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_whiteYInt</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Green X coordinate</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;greenX&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_greenX</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_greenX</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_greenX</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">greenXInt</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_greenX</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;redXInt&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_redXInt</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_redXInt</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_redXInt</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">redX92</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="k">this</span><span class="p">.</span><span class="nx">redX10</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_redXInt</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;redYInt&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_redYInt</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_redYInt</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_redYInt</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">redY92</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="k">this</span><span class="p">.</span><span class="nx">redY10</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_redYInt</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;blueXInt&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_blueXInt</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_blueXInt</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_blueXInt</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">blueX92</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="k">this</span><span class="p">.</span><span class="nx">blueX10</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_blueXInt</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Blue Y coordinate</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;blueY&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_blueY</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_blueY</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_blueY</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">blueYInt</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_blueY</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Green Y coordinate</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;greenY&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_greenY</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_greenY</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_greenY</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">greenYInt</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_greenY</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ChromacityInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;blueYInt&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_blueYInt</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_blueYInt</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_blueYInt</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">blueY92</span> <span class="o">&lt;&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="k">this</span><span class="p">.</span><span class="nx">blueY10</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_blueYInt</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Red X, bits 1..0</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Red Y, bits 1..0</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Green X, bits 1..0</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Green Y, bits 1..0</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Blue X, bits 1..0</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Blue Y, bits 1..0</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * White X, bits 1..0</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * White Y, bits 1..0</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Red X, bits 9..2</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Red Y, bits 9..2</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Green X, bits 9..2</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Green Y, bits 9..2</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Blue X, bits 9..2</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Blue Y, bits 9..2</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * White X, bits 9..2</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * White Y, bits 9..2</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">ChromacityInfo</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">EstTimingsInfo</span> <span class="o">=</span> <span class="nx">Edid</span><span class="p">.</span><span class="nx">EstTimingsInfo</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">EstTimingsInfo</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">EstTimingsInfo</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can72040070</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can72040088</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can64048060</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can64048067</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can64048072</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can64048075</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can80060056</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can80060060</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can80060072</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can80060075</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can83262475</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can102476887I</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can102476860</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can102476870</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can102476875</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can1280102475</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">can115287075</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 720 x 400 @ 70Hz</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 720 x 400 @ 88Hz</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 640 x 480 @ 60Hz</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 640 x 480 @ 67Hz</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 640 x 480 @ 72Hz</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 640 x 480 @ 75Hz</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 800 x 600 @ 56Hz</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 800 x 600 @ 60Hz</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 800 x 600 @ 72Hz</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 800 x 600 @ 75Hz</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 832 x 624 @ 75Hz</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 1024 x 768 @ 87Hz(I)</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 1024 x 768 @ 60Hz</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 1024 x 768 @ 70Hz</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 1024 x 768 @ 75Hz</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 1280 x 1024 @ 75Hz</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Supports 1152 x 870 @ 75Hz</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">EstTimingsInfo</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">StdTiming</span> <span class="o">=</span> <span class="nx">Edid</span><span class="p">.</span><span class="nx">StdTiming</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">StdTiming</span><span class="p">.</span><span class="nx">AspectRatios</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+      <span class="nx">RATIO_16_10</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+      <span class="nx">RATIO_4_3</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">RATIO_5_4</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+      <span class="nx">RATIO_16_9</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+
+      <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;RATIO_16_10&quot;</span><span class="p">,</span>
+      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;RATIO_4_3&quot;</span><span class="p">,</span>
+      <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;RATIO_5_4&quot;</span><span class="p">,</span>
+      <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;RATIO_16_9&quot;</span><span class="p">,</span>
+    <span class="p">});</span>
+
+    <span class="kd">function</span> <span class="nx">StdTiming</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">StdTiming</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">horizActivePixelsMod</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">aspectRatio</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">refreshRateMod</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsInt</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Range of horizontal active pixels.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">StdTiming</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;horizActivePixels&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_horizActivePixels</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_horizActivePixels</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_horizActivePixels</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">horizActivePixelsMod</span> <span class="o">+</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_horizActivePixels</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Vertical refresh rate, Hz.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">StdTiming</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;refreshRate&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_refreshRate</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_refreshRate</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_refreshRate</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">refreshRateMod</span> <span class="o">+</span> <span class="mi">60</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_refreshRate</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Range of horizontal active pixels, written in modified form:</span>
+<span class="cm">     * `(horiz_active_pixels / 8) - 31`. This yields an effective</span>
+<span class="cm">     * range of 256..2288, with steps of 8 pixels.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Aspect ratio of the image. Can be used to calculate number</span>
+<span class="cm">     * of vertical pixels.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Refresh rate in Hz, written in modified form: `refresh_rate</span>
+<span class="cm">     * - 60`. This yields an effective range of 60..123 Hz.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">StdTiming</span><span class="p">;</span>
+  <span class="p">})();</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Edid</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;mfgYear&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgYear</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgYear</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgYear</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">mfgYearMod</span> <span class="o">+</span> <span class="mi">1990</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgYear</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Edid</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;mfgIdCh1&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgIdCh1</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgIdCh1</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgIdCh1</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">mfgBytes</span> <span class="o">&amp;</span> <span class="mi">31744</span><span class="p">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">10</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgIdCh1</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Edid</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;mfgIdCh3&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgIdCh3</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgIdCh3</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgIdCh3</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">mfgBytes</span> <span class="o">&amp;</span> <span class="mi">31</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgIdCh3</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Edid</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;gamma&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_gamma</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_gamma</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">gammaMod</span> <span class="o">!=</span> <span class="mi">255</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_gamma</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">gammaMod</span> <span class="o">+</span> <span class="mi">100</span><span class="p">)</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_gamma</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Edid</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;mfgIdCh2&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgIdCh2</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgIdCh2</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgIdCh2</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">mfgBytes</span> <span class="o">&amp;</span> <span class="mi">992</span><span class="p">)</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">5</span><span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_mfgIdCh2</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Manufacturer product code</span>
+<span class="cm">   */</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Serial number</span>
+<span class="cm">   */</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Week of manufacture. Week numbering is not consistent between manufacturers.</span>
+<span class="cm">   */</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Year of manufacture, less 1990. (1990–2245). If week=255, it is the model year instead.</span>
+<span class="cm">   */</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * EDID version, usually 1 (for 1.3)</span>
+<span class="cm">   */</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * EDID revision, usually 3 (for 1.3)</span>
+<span class="cm">   */</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Maximum horizontal image size, in centimetres (max 292 cm/115 in at 16:9 aspect ratio)</span>
+<span class="cm">   */</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Maximum vertical image size, in centimetres. If either byte is 0, undefined (e.g. projector)</span>
+<span class="cm">   */</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Display gamma, datavalue = (gamma*100)-100 (range 1.00–3.54)</span>
+<span class="cm">   */</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Phosphor or filter chromaticity structure, which provides info on colorimetry and white point</span>
+<span class="cm">   * @see Standard, section 3.7</span>
+<span class="cm">   */</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Block of bit flags that indicates support of so called</span>
+<span class="cm">   * &quot;established timings&quot;, which is a commonly used subset of VESA</span>
+<span class="cm">   * DMT (Discrete Monitor Timings) modes.</span>
+<span class="cm">   * @see Standard, section 3.8</span>
+<span class="cm">   */</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Array of descriptions of so called &quot;standard timings&quot;, which are</span>
+<span class="cm">   * used to specify up to 8 additional timings not included in</span>
+<span class="cm">   * &quot;established timings&quot;.</span>
+<span class="cm">   */</span>
+
+  <span class="k">return</span> <span class="nx">Edid</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">Edid</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -855,8 +852,8 @@ return Edid;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

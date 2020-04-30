@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -275,705 +272,705 @@ Iso9660 data = new Iso9660(new ByteBufferKaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
 
 
-/**
- * ISO9660 is standard filesystem used on read-only optical discs
- * (mostly CD-ROM). The standard was based on earlier High Sierra
- * Format (HSF), proposed for CD-ROMs in 1985, and, after several
- * revisions, it was accepted as ISO9960:1998.
- * 
- * The format emphasizes portability (thus having pretty minimal
- * features and very conservative file names standards) and sequential
- * access (which favors disc devices with relatively slow rotation
- * speed).
- */
-public class Iso9660 extends KaitaiStruct {
-    public static Iso9660 fromFile(String fileName) throws IOException {
-        return new Iso9660(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * ISO9660 is standard filesystem used on read-only optical discs</span>
+<span class="cm"> * (mostly CD-ROM). The standard was based on earlier High Sierra</span>
+<span class="cm"> * Format (HSF), proposed for CD-ROMs in 1985, and, after several</span>
+<span class="cm"> * revisions, it was accepted as ISO9960:1998.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The format emphasizes portability (thus having pretty minimal</span>
+<span class="cm"> * features and very conservative file names standards) and sequential</span>
+<span class="cm"> * access (which favors disc devices with relatively slow rotation</span>
+<span class="cm"> * speed).</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Iso9660</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Iso9660</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Iso9660</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public Iso9660(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">Iso9660</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public Iso9660(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">Iso9660</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public Iso9660(KaitaiStream _io, KaitaiStruct _parent, Iso9660 _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-    }
+    <span class="kd">public</span> <span class="nf">Iso9660</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class VolDescPrimary extends KaitaiStruct {
-        public static VolDescPrimary fromFile(String fileName) throws IOException {
-            return new VolDescPrimary(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;http://wiki.osdev.org/ISO_9660#The_Primary_Volume_Descriptor&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">VolDescPrimary</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">VolDescPrimary</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">VolDescPrimary</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public VolDescPrimary(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">VolDescPrimary</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public VolDescPrimary(KaitaiStream _io, Iso9660.VolDesc _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">VolDescPrimary</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDesc</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public VolDescPrimary(KaitaiStream _io, Iso9660.VolDesc _parent, Iso9660 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.unused1 = this._io.ensureFixedContents(new byte[] { 0 });
-            this.systemId = new String(this._io.readBytes(32), Charset.forName(&quot;UTF-8&quot;));
-            this.volumeId = new String(this._io.readBytes(32), Charset.forName(&quot;UTF-8&quot;));
-            this.unused2 = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 });
-            this.volSpaceSize = new U4bi(this._io, this, _root);
-            this.unused3 = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
-            this.volSetSize = new U2bi(this._io, this, _root);
-            this.volSeqNum = new U2bi(this._io, this, _root);
-            this.logicalBlockSize = new U2bi(this._io, this, _root);
-            this.pathTableSize = new U4bi(this._io, this, _root);
-            this.lbaPathTableLe = this._io.readU4le();
-            this.lbaOptPathTableLe = this._io.readU4le();
-            this.lbaPathTableBe = this._io.readU4be();
-            this.lbaOptPathTableBe = this._io.readU4be();
-            this._raw_rootDir = this._io.readBytes(34);
-            KaitaiStream _io__raw_rootDir = new ByteBufferKaitaiStream(_raw_rootDir);
-            this.rootDir = new DirEntry(_io__raw_rootDir, this, _root);
-            this.volSetId = new String(this._io.readBytes(128), Charset.forName(&quot;UTF-8&quot;));
-            this.publisherId = new String(this._io.readBytes(128), Charset.forName(&quot;UTF-8&quot;));
-            this.dataPreparerId = new String(this._io.readBytes(128), Charset.forName(&quot;UTF-8&quot;));
-            this.applicationId = new String(this._io.readBytes(128), Charset.forName(&quot;UTF-8&quot;));
-            this.copyrightFileId = new String(this._io.readBytes(38), Charset.forName(&quot;UTF-8&quot;));
-            this.abstractFileId = new String(this._io.readBytes(36), Charset.forName(&quot;UTF-8&quot;));
-            this.bibliographicFileId = new String(this._io.readBytes(37), Charset.forName(&quot;UTF-8&quot;));
-            this.volCreateDatetime = new DecDatetime(this._io, this, _root);
-            this.volModDatetime = new DecDatetime(this._io, this, _root);
-            this.volExpireDatetime = new DecDatetime(this._io, this, _root);
-            this.volEffectiveDatetime = new DecDatetime(this._io, this, _root);
-            this.fileStructureVersion = this._io.readU1();
-            this.unused4 = this._io.readU1();
-            this.applicationArea = this._io.readBytes(512);
-        }
-        private PathTableLe pathTable;
-        public PathTableLe pathTable() {
-            if (this.pathTable != null)
-                return this.pathTable;
-            long _pos = this._io.pos();
-            this._io.seek((lbaPathTableLe() * _root.sectorSize()));
-            this._raw_pathTable = this._io.readBytes(pathTableSize().le());
-            KaitaiStream _io__raw_pathTable = new ByteBufferKaitaiStream(_raw_pathTable);
-            this.pathTable = new PathTableLe(_io__raw_pathTable, this, _root);
-            this._io.seek(_pos);
-            return this.pathTable;
-        }
-        private byte[] unused1;
-        private String systemId;
-        private String volumeId;
-        private byte[] unused2;
-        private U4bi volSpaceSize;
-        private byte[] unused3;
-        private U2bi volSetSize;
-        private U2bi volSeqNum;
-        private U2bi logicalBlockSize;
-        private U4bi pathTableSize;
-        private long lbaPathTableLe;
-        private long lbaOptPathTableLe;
-        private long lbaPathTableBe;
-        private long lbaOptPathTableBe;
-        private DirEntry rootDir;
-        private String volSetId;
-        private String publisherId;
-        private String dataPreparerId;
-        private String applicationId;
-        private String copyrightFileId;
-        private String abstractFileId;
-        private String bibliographicFileId;
-        private DecDatetime volCreateDatetime;
-        private DecDatetime volModDatetime;
-        private DecDatetime volExpireDatetime;
-        private DecDatetime volEffectiveDatetime;
-        private int fileStructureVersion;
-        private int unused4;
-        private byte[] applicationArea;
-        private Iso9660 _root;
-        private Iso9660.VolDesc _parent;
-        private byte[] _raw_rootDir;
-        private byte[] _raw_pathTable;
-        public byte[] unused1() { return unused1; }
-        public String systemId() { return systemId; }
-        public String volumeId() { return volumeId; }
-        public byte[] unused2() { return unused2; }
-        public U4bi volSpaceSize() { return volSpaceSize; }
-        public byte[] unused3() { return unused3; }
-        public U2bi volSetSize() { return volSetSize; }
-        public U2bi volSeqNum() { return volSeqNum; }
-        public U2bi logicalBlockSize() { return logicalBlockSize; }
-        public U4bi pathTableSize() { return pathTableSize; }
-        public long lbaPathTableLe() { return lbaPathTableLe; }
-        public long lbaOptPathTableLe() { return lbaOptPathTableLe; }
-        public long lbaPathTableBe() { return lbaPathTableBe; }
-        public long lbaOptPathTableBe() { return lbaOptPathTableBe; }
-        public DirEntry rootDir() { return rootDir; }
-        public String volSetId() { return volSetId; }
-        public String publisherId() { return publisherId; }
-        public String dataPreparerId() { return dataPreparerId; }
-        public String applicationId() { return applicationId; }
-        public String copyrightFileId() { return copyrightFileId; }
-        public String abstractFileId() { return abstractFileId; }
-        public String bibliographicFileId() { return bibliographicFileId; }
-        public DecDatetime volCreateDatetime() { return volCreateDatetime; }
-        public DecDatetime volModDatetime() { return volModDatetime; }
-        public DecDatetime volExpireDatetime() { return volExpireDatetime; }
-        public DecDatetime volEffectiveDatetime() { return volEffectiveDatetime; }
-        public int fileStructureVersion() { return fileStructureVersion; }
-        public int unused4() { return unused4; }
-        public byte[] applicationArea() { return applicationArea; }
-        public Iso9660 _root() { return _root; }
-        public Iso9660.VolDesc _parent() { return _parent; }
-        public byte[] _raw_rootDir() { return _raw_rootDir; }
-        public byte[] _raw_pathTable() { return _raw_pathTable; }
-    }
-    public static class VolDescBootRecord extends KaitaiStruct {
-        public static VolDescBootRecord fromFile(String fileName) throws IOException {
-            return new VolDescBootRecord(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">VolDescPrimary</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDesc</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">unused1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">systemId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">volumeId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">unused2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">volSpaceSize</span> <span class="o">=</span> <span class="k">new</span> <span class="n">U4bi</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">unused3</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">volSetSize</span> <span class="o">=</span> <span class="k">new</span> <span class="n">U2bi</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">volSeqNum</span> <span class="o">=</span> <span class="k">new</span> <span class="n">U2bi</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">logicalBlockSize</span> <span class="o">=</span> <span class="k">new</span> <span class="n">U2bi</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">pathTableSize</span> <span class="o">=</span> <span class="k">new</span> <span class="n">U4bi</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lbaPathTableLe</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lbaOptPathTableLe</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lbaPathTableBe</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lbaOptPathTableBe</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_rootDir</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">34</span><span class="p">);</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_rootDir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_rootDir</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">rootDir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DirEntry</span><span class="p">(</span><span class="n">_io__raw_rootDir</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">volSetId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">publisherId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">dataPreparerId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">applicationId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">copyrightFileId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">38</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">abstractFileId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">36</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">bibliographicFileId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">37</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">volCreateDatetime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DecDatetime</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">volModDatetime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DecDatetime</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">volExpireDatetime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DecDatetime</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">volEffectiveDatetime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DecDatetime</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fileStructureVersion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">unused4</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">applicationArea</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">512</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">PathTableLe</span> <span class="n">pathTable</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">PathTableLe</span> <span class="nf">pathTable</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">pathTable</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">pathTable</span><span class="p">;</span>
+            <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">lbaPathTableLe</span><span class="p">()</span> <span class="o">*</span> <span class="n">_root</span><span class="p">.</span><span class="na">sectorSize</span><span class="p">()));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_pathTable</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">pathTableSize</span><span class="p">().</span><span class="na">le</span><span class="p">());</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_pathTable</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_pathTable</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">pathTable</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PathTableLe</span><span class="p">(</span><span class="n">_io__raw_pathTable</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">pathTable</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">unused1</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">systemId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">volumeId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">unused2</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">U4bi</span> <span class="n">volSpaceSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">unused3</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">U2bi</span> <span class="n">volSetSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">U2bi</span> <span class="n">volSeqNum</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">U2bi</span> <span class="n">logicalBlockSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">U4bi</span> <span class="n">pathTableSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lbaPathTableLe</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lbaOptPathTableLe</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lbaPathTableBe</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lbaOptPathTableBe</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DirEntry</span> <span class="n">rootDir</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">volSetId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">publisherId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">dataPreparerId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">applicationId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">copyrightFileId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">abstractFileId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">bibliographicFileId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DecDatetime</span> <span class="n">volCreateDatetime</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DecDatetime</span> <span class="n">volModDatetime</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DecDatetime</span> <span class="n">volExpireDatetime</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DecDatetime</span> <span class="n">volEffectiveDatetime</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">fileStructureVersion</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">unused4</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">applicationArea</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDesc</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_rootDir</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_pathTable</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">unused1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">unused1</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">systemId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">systemId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">volumeId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">volumeId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">unused2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">unused2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">U4bi</span> <span class="nf">volSpaceSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">volSpaceSize</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">unused3</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">unused3</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">U2bi</span> <span class="nf">volSetSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">volSetSize</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">U2bi</span> <span class="nf">volSeqNum</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">volSeqNum</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">U2bi</span> <span class="nf">logicalBlockSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">logicalBlockSize</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">U4bi</span> <span class="nf">pathTableSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pathTableSize</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lbaPathTableLe</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lbaPathTableLe</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lbaOptPathTableLe</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lbaOptPathTableLe</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lbaPathTableBe</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lbaPathTableBe</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lbaOptPathTableBe</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lbaOptPathTableBe</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DirEntry</span> <span class="nf">rootDir</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">rootDir</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">volSetId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">volSetId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">publisherId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">publisherId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">dataPreparerId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">dataPreparerId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">applicationId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">applicationId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">copyrightFileId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">copyrightFileId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">abstractFileId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">abstractFileId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">bibliographicFileId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">bibliographicFileId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DecDatetime</span> <span class="nf">volCreateDatetime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">volCreateDatetime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DecDatetime</span> <span class="nf">volModDatetime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">volModDatetime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DecDatetime</span> <span class="nf">volExpireDatetime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">volExpireDatetime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DecDatetime</span> <span class="nf">volEffectiveDatetime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">volEffectiveDatetime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">fileStructureVersion</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileStructureVersion</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">unused4</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">unused4</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">applicationArea</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">applicationArea</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDesc</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_rootDir</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_rootDir</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_pathTable</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_pathTable</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">VolDescBootRecord</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">VolDescBootRecord</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">VolDescBootRecord</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public VolDescBootRecord(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">VolDescBootRecord</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public VolDescBootRecord(KaitaiStream _io, Iso9660.VolDesc _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">VolDescBootRecord</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDesc</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public VolDescBootRecord(KaitaiStream _io, Iso9660.VolDesc _parent, Iso9660 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.bootSystemId = new String(this._io.readBytes(32), Charset.forName(&quot;UTF-8&quot;));
-            this.bootId = new String(this._io.readBytes(32), Charset.forName(&quot;UTF-8&quot;));
-        }
-        private String bootSystemId;
-        private String bootId;
-        private Iso9660 _root;
-        private Iso9660.VolDesc _parent;
-        public String bootSystemId() { return bootSystemId; }
-        public String bootId() { return bootId; }
-        public Iso9660 _root() { return _root; }
-        public Iso9660.VolDesc _parent() { return _parent; }
-    }
-    public static class Datetime extends KaitaiStruct {
-        public static Datetime fromFile(String fileName) throws IOException {
-            return new Datetime(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">VolDescBootRecord</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDesc</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">bootSystemId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">bootId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">bootSystemId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">bootId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDesc</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">bootSystemId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">bootSystemId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">bootId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">bootId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDesc</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Datetime</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Datetime</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Datetime</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Datetime(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Datetime</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Datetime(KaitaiStream _io, Iso9660.DirEntryBody _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Datetime</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">DirEntryBody</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Datetime(KaitaiStream _io, Iso9660.DirEntryBody _parent, Iso9660 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.year = this._io.readU1();
-            this.month = this._io.readU1();
-            this.day = this._io.readU1();
-            this.hour = this._io.readU1();
-            this.minute = this._io.readU1();
-            this.sec = this._io.readU1();
-            this.timezone = this._io.readU1();
-        }
-        private int year;
-        private int month;
-        private int day;
-        private int hour;
-        private int minute;
-        private int sec;
-        private int timezone;
-        private Iso9660 _root;
-        private Iso9660.DirEntryBody _parent;
-        public int year() { return year; }
-        public int month() { return month; }
-        public int day() { return day; }
-        public int hour() { return hour; }
-        public int minute() { return minute; }
-        public int sec() { return sec; }
-        public int timezone() { return timezone; }
-        public Iso9660 _root() { return _root; }
-        public Iso9660.DirEntryBody _parent() { return _parent; }
-    }
-    public static class DirEntry extends KaitaiStruct {
-        public static DirEntry fromFile(String fileName) throws IOException {
-            return new DirEntry(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">Datetime</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">DirEntryBody</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">year</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">month</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">day</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hour</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">minute</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">sec</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">timezone</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">year</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">month</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">day</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">hour</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">minute</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">sec</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">timezone</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">DirEntryBody</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">year</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">year</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">month</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">month</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">day</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">day</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hour</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hour</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">minute</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">minute</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">sec</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">sec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">timezone</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">timezone</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">DirEntryBody</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DirEntry</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">DirEntry</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">DirEntry</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public DirEntry(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">DirEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DirEntry(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">DirEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DirEntry(KaitaiStream _io, KaitaiStruct _parent, Iso9660 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.len = this._io.readU1();
-            if (len() &gt; 0) {
-                this._raw_body = this._io.readBytes((len() - 1));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new DirEntryBody(_io__raw_body, this, _root);
-            }
-        }
-        private int len;
-        private DirEntryBody body;
-        private Iso9660 _root;
-        private KaitaiStruct _parent;
-        private byte[] _raw_body;
-        public int len() { return len; }
-        public DirEntryBody body() { return body; }
-        public Iso9660 _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
-    }
-    public static class VolDesc extends KaitaiStruct {
-        public static VolDesc fromFile(String fileName) throws IOException {
-            return new VolDesc(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">DirEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">len</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">len</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">len</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DirEntryBody</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">len</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DirEntryBody</span> <span class="n">body</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_body</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">len</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">DirEntryBody</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">VolDesc</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">VolDesc</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">VolDesc</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public VolDesc(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">VolDesc</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public VolDesc(KaitaiStream _io, Iso9660 _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">VolDesc</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public VolDesc(KaitaiStream _io, Iso9660 _parent, Iso9660 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.type = this._io.readU1();
-            this.magic = this._io.ensureFixedContents(new byte[] { 67, 68, 48, 48, 49 });
-            this.version = this._io.readU1();
-            if (type() == 0) {
-                this.volDescBootRecord = new VolDescBootRecord(this._io, this, _root);
-            }
-            if (type() == 1) {
-                this.volDescPrimary = new VolDescPrimary(this._io, this, _root);
-            }
-        }
-        private int type;
-        private byte[] magic;
-        private int version;
-        private VolDescBootRecord volDescBootRecord;
-        private VolDescPrimary volDescPrimary;
-        private Iso9660 _root;
-        private Iso9660 _parent;
-        public int type() { return type; }
-        public byte[] magic() { return magic; }
-        public int version() { return version; }
-        public VolDescBootRecord volDescBootRecord() { return volDescBootRecord; }
-        public VolDescPrimary volDescPrimary() { return volDescPrimary; }
-        public Iso9660 _root() { return _root; }
-        public Iso9660 _parent() { return _parent; }
-    }
-    public static class PathTableEntryLe extends KaitaiStruct {
-        public static PathTableEntryLe fromFile(String fileName) throws IOException {
-            return new PathTableEntryLe(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">VolDesc</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">type</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">67</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">49</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">volDescBootRecord</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VolDescBootRecord</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">volDescPrimary</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VolDescPrimary</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">type</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">magic</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">version</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">VolDescBootRecord</span> <span class="n">volDescBootRecord</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">VolDescPrimary</span> <span class="n">volDescPrimary</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">type</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">type</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">magic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">version</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">VolDescBootRecord</span> <span class="nf">volDescBootRecord</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">volDescBootRecord</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">VolDescPrimary</span> <span class="nf">volDescPrimary</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">volDescPrimary</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PathTableEntryLe</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PathTableEntryLe</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">PathTableEntryLe</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public PathTableEntryLe(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">PathTableEntryLe</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PathTableEntryLe(KaitaiStream _io, Iso9660.PathTableLe _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">PathTableEntryLe</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">PathTableLe</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PathTableEntryLe(KaitaiStream _io, Iso9660.PathTableLe _parent, Iso9660 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenDirName = this._io.readU1();
-            this.lenExtAttrRec = this._io.readU1();
-            this.lbaExtent = this._io.readU4le();
-            this.parentDirIdx = this._io.readU2le();
-            this.dirName = new String(this._io.readBytes(lenDirName()), Charset.forName(&quot;UTF-8&quot;));
-            if (KaitaiStream.mod(lenDirName(), 2) == 1) {
-                this.padding = this._io.readU1();
-            }
-        }
-        private int lenDirName;
-        private int lenExtAttrRec;
-        private long lbaExtent;
-        private int parentDirIdx;
-        private String dirName;
-        private Integer padding;
-        private Iso9660 _root;
-        private Iso9660.PathTableLe _parent;
-        public int lenDirName() { return lenDirName; }
-        public int lenExtAttrRec() { return lenExtAttrRec; }
-        public long lbaExtent() { return lbaExtent; }
-        public int parentDirIdx() { return parentDirIdx; }
-        public String dirName() { return dirName; }
-        public Integer padding() { return padding; }
-        public Iso9660 _root() { return _root; }
-        public Iso9660.PathTableLe _parent() { return _parent; }
-    }
-    public static class DirEntries extends KaitaiStruct {
-        public static DirEntries fromFile(String fileName) throws IOException {
-            return new DirEntries(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">PathTableEntryLe</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">PathTableLe</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenDirName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenExtAttrRec</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lbaExtent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">parentDirIdx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">dirName</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenDirName</span><span class="p">()),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="na">mod</span><span class="p">(</span><span class="n">lenDirName</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">padding</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">lenDirName</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">lenExtAttrRec</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lbaExtent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">parentDirIdx</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">dirName</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">padding</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">PathTableLe</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lenDirName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenDirName</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lenExtAttrRec</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenExtAttrRec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lbaExtent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lbaExtent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">parentDirIdx</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">parentDirIdx</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">dirName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">dirName</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">padding</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">padding</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">PathTableLe</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DirEntries</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">DirEntries</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">DirEntries</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public DirEntries(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">DirEntries</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DirEntries(KaitaiStream _io, Iso9660.DirEntryBody _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">DirEntries</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">DirEntryBody</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DirEntries(KaitaiStream _io, Iso9660.DirEntryBody _parent, Iso9660 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new ArrayList&lt;DirEntry&gt;();
-            {
-                DirEntry _it;
-                int i = 0;
-                do {
-                    _it = new DirEntry(this._io, this, _root);
-                    this.entries.add(_it);
-                    i++;
-                } while (!(_it.len() == 0));
-            }
-        }
-        private ArrayList&lt;DirEntry&gt; entries;
-        private Iso9660 _root;
-        private Iso9660.DirEntryBody _parent;
-        public ArrayList&lt;DirEntry&gt; entries() { return entries; }
-        public Iso9660 _root() { return _root; }
-        public Iso9660.DirEntryBody _parent() { return _parent; }
-    }
-    public static class U4bi extends KaitaiStruct {
-        public static U4bi fromFile(String fileName) throws IOException {
-            return new U4bi(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">DirEntries</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">DirEntryBody</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DirEntry</span><span class="o">&gt;</span><span class="p">();</span>
+            <span class="p">{</span>
+                <span class="n">DirEntry</span> <span class="n">_it</span><span class="p">;</span>
+                <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">do</span> <span class="p">{</span>
+                    <span class="n">_it</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DirEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">_it</span><span class="p">);</span>
+                    <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+                <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_it</span><span class="p">.</span><span class="na">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DirEntry</span><span class="o">&gt;</span> <span class="n">entries</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">DirEntryBody</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">DirEntry</span><span class="o">&gt;</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">entries</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">DirEntryBody</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">U4bi</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">U4bi</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">U4bi</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public U4bi(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">U4bi</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public U4bi(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">U4bi</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public U4bi(KaitaiStream _io, KaitaiStruct _parent, Iso9660 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.le = this._io.readU4le();
-            this.be = this._io.readU4be();
-        }
-        private long le;
-        private long be;
-        private Iso9660 _root;
-        private KaitaiStruct _parent;
-        public long le() { return le; }
-        public long be() { return be; }
-        public Iso9660 _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
-    public static class U2bi extends KaitaiStruct {
-        public static U2bi fromFile(String fileName) throws IOException {
-            return new U2bi(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">U4bi</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">le</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">be</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">le</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">be</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">le</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">le</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">be</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">be</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">U2bi</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">U2bi</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">U2bi</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public U2bi(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">U2bi</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public U2bi(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">U2bi</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public U2bi(KaitaiStream _io, KaitaiStruct _parent, Iso9660 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.le = this._io.readU2le();
-            this.be = this._io.readU2be();
-        }
-        private int le;
-        private int be;
-        private Iso9660 _root;
-        private KaitaiStruct _parent;
-        public int le() { return le; }
-        public int be() { return be; }
-        public Iso9660 _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">U2bi</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">le</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">be</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">le</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">be</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">le</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">le</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">be</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">be</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;http://wiki.osdev.org/ISO_9660#The_Path_Table&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class PathTableLe extends KaitaiStruct {
-        public static PathTableLe fromFile(String fileName) throws IOException {
-            return new PathTableLe(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;http://wiki.osdev.org/ISO_9660#The_Path_Table&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PathTableLe</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PathTableLe</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">PathTableLe</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public PathTableLe(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">PathTableLe</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PathTableLe(KaitaiStream _io, Iso9660.VolDescPrimary _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">PathTableLe</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDescPrimary</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PathTableLe(KaitaiStream _io, Iso9660.VolDescPrimary _parent, Iso9660 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new ArrayList&lt;PathTableEntryLe&gt;();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.entries.add(new PathTableEntryLe(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList&lt;PathTableEntryLe&gt; entries;
-        private Iso9660 _root;
-        private Iso9660.VolDescPrimary _parent;
-        public ArrayList&lt;PathTableEntryLe&gt; entries() { return entries; }
-        public Iso9660 _root() { return _root; }
-        public Iso9660.VolDescPrimary _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">PathTableLe</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDescPrimary</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PathTableEntryLe</span><span class="o">&gt;</span><span class="p">();</span>
+            <span class="p">{</span>
+                <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">PathTableEntryLe</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+                    <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PathTableEntryLe</span><span class="o">&gt;</span> <span class="n">entries</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDescPrimary</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PathTableEntryLe</span><span class="o">&gt;</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">entries</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDescPrimary</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;http://wiki.osdev.org/ISO_9660#Date.2Ftime_format&quot;&gt;Source&lt;/a&gt;
-     */
-    public static class DecDatetime extends KaitaiStruct {
-        public static DecDatetime fromFile(String fileName) throws IOException {
-            return new DecDatetime(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;http://wiki.osdev.org/ISO_9660#Date.2Ftime_format&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DecDatetime</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">DecDatetime</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">DecDatetime</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public DecDatetime(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">DecDatetime</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DecDatetime(KaitaiStream _io, Iso9660.VolDescPrimary _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">DecDatetime</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDescPrimary</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DecDatetime(KaitaiStream _io, Iso9660.VolDescPrimary _parent, Iso9660 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.year = new String(this._io.readBytes(4), Charset.forName(&quot;ASCII&quot;));
-            this.month = new String(this._io.readBytes(2), Charset.forName(&quot;ASCII&quot;));
-            this.day = new String(this._io.readBytes(2), Charset.forName(&quot;ASCII&quot;));
-            this.hour = new String(this._io.readBytes(2), Charset.forName(&quot;ASCII&quot;));
-            this.minute = new String(this._io.readBytes(2), Charset.forName(&quot;ASCII&quot;));
-            this.sec = new String(this._io.readBytes(2), Charset.forName(&quot;ASCII&quot;));
-            this.secHundreds = new String(this._io.readBytes(2), Charset.forName(&quot;ASCII&quot;));
-            this.timezone = this._io.readU1();
-        }
-        private String year;
-        private String month;
-        private String day;
-        private String hour;
-        private String minute;
-        private String sec;
-        private String secHundreds;
-        private int timezone;
-        private Iso9660 _root;
-        private Iso9660.VolDescPrimary _parent;
-        public String year() { return year; }
-        public String month() { return month; }
-        public String day() { return day; }
-        public String hour() { return hour; }
-        public String minute() { return minute; }
-        public String sec() { return sec; }
-        public String secHundreds() { return secHundreds; }
-        public int timezone() { return timezone; }
-        public Iso9660 _root() { return _root; }
-        public Iso9660.VolDescPrimary _parent() { return _parent; }
-    }
-    public static class DirEntryBody extends KaitaiStruct {
-        public static DirEntryBody fromFile(String fileName) throws IOException {
-            return new DirEntryBody(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">DecDatetime</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDescPrimary</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">year</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">month</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">day</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hour</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">minute</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">sec</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">secHundreds</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">timezone</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">year</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">month</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">day</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">hour</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">minute</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">sec</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">secHundreds</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">timezone</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDescPrimary</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">year</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">year</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">month</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">month</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">day</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">day</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">hour</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hour</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">minute</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">minute</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">sec</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">sec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">secHundreds</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">secHundreds</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">timezone</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">timezone</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">VolDescPrimary</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DirEntryBody</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">DirEntryBody</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">DirEntryBody</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public DirEntryBody(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">DirEntryBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DirEntryBody(KaitaiStream _io, Iso9660.DirEntry _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">DirEntryBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">DirEntry</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DirEntryBody(KaitaiStream _io, Iso9660.DirEntry _parent, Iso9660 _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenExtAttrRec = this._io.readU1();
-            this.lbaExtent = new U4bi(this._io, this, _root);
-            this.sizeExtent = new U4bi(this._io, this, _root);
-            this.datetime = new Datetime(this._io, this, _root);
-            this.fileFlags = this._io.readU1();
-            this.fileUnitSize = this._io.readU1();
-            this.interleaveGapSize = this._io.readU1();
-            this.volSeqNum = new U2bi(this._io, this, _root);
-            this.lenFileName = this._io.readU1();
-            this.fileName = new String(this._io.readBytes(lenFileName()), Charset.forName(&quot;UTF-8&quot;));
-            if (KaitaiStream.mod(lenFileName(), 2) == 0) {
-                this.padding = this._io.readU1();
-            }
-            this.rest = this._io.readBytesFull();
-        }
-        private DirEntries extentAsDir;
-        public DirEntries extentAsDir() {
-            if (this.extentAsDir != null)
-                return this.extentAsDir;
-            if ((fileFlags() &amp; 2) != 0) {
-                KaitaiStream io = _root._io();
-                long _pos = io.pos();
-                io.seek((lbaExtent().le() * _root.sectorSize()));
-                this._raw_extentAsDir = io.readBytes(sizeExtent().le());
-                KaitaiStream _io__raw_extentAsDir = new ByteBufferKaitaiStream(_raw_extentAsDir);
-                this.extentAsDir = new DirEntries(_io__raw_extentAsDir, this, _root);
-                io.seek(_pos);
-            }
-            return this.extentAsDir;
-        }
-        private byte[] extentAsFile;
-        public byte[] extentAsFile() {
-            if (this.extentAsFile != null)
-                return this.extentAsFile;
-            if ((fileFlags() &amp; 2) == 0) {
-                KaitaiStream io = _root._io();
-                long _pos = io.pos();
-                io.seek((lbaExtent().le() * _root.sectorSize()));
-                this.extentAsFile = io.readBytes(sizeExtent().le());
-                io.seek(_pos);
-            }
-            return this.extentAsFile;
-        }
-        private int lenExtAttrRec;
-        private U4bi lbaExtent;
-        private U4bi sizeExtent;
-        private Datetime datetime;
-        private int fileFlags;
-        private int fileUnitSize;
-        private int interleaveGapSize;
-        private U2bi volSeqNum;
-        private int lenFileName;
-        private String fileName;
-        private Integer padding;
-        private byte[] rest;
-        private Iso9660 _root;
-        private Iso9660.DirEntry _parent;
-        private byte[] _raw_extentAsDir;
-        public int lenExtAttrRec() { return lenExtAttrRec; }
-        public U4bi lbaExtent() { return lbaExtent; }
-        public U4bi sizeExtent() { return sizeExtent; }
-        public Datetime datetime() { return datetime; }
-        public int fileFlags() { return fileFlags; }
-        public int fileUnitSize() { return fileUnitSize; }
-        public int interleaveGapSize() { return interleaveGapSize; }
-        public U2bi volSeqNum() { return volSeqNum; }
-        public int lenFileName() { return lenFileName; }
-        public String fileName() { return fileName; }
-        public Integer padding() { return padding; }
-        public byte[] rest() { return rest; }
-        public Iso9660 _root() { return _root; }
-        public Iso9660.DirEntry _parent() { return _parent; }
-        public byte[] _raw_extentAsDir() { return _raw_extentAsDir; }
-    }
-    private Integer sectorSize;
-    public Integer sectorSize() {
-        if (this.sectorSize != null)
-            return this.sectorSize;
-        int _tmp = (int) (2048);
-        this.sectorSize = _tmp;
-        return this.sectorSize;
-    }
-    private VolDesc primaryVolDesc;
-    public VolDesc primaryVolDesc() {
-        if (this.primaryVolDesc != null)
-            return this.primaryVolDesc;
-        long _pos = this._io.pos();
-        this._io.seek((16 * sectorSize()));
-        this.primaryVolDesc = new VolDesc(this._io, this, _root);
-        this._io.seek(_pos);
-        return this.primaryVolDesc;
-    }
-    private Iso9660 _root;
-    private KaitaiStruct _parent;
-    public Iso9660 _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-}
-</code></pre>
+        <span class="kd">public</span> <span class="nf">DirEntryBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">DirEntry</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenExtAttrRec</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lbaExtent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">U4bi</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">sizeExtent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">U4bi</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">datetime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Datetime</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fileFlags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fileUnitSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">interleaveGapSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">volSeqNum</span> <span class="o">=</span> <span class="k">new</span> <span class="n">U2bi</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenFileName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fileName</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenFileName</span><span class="p">()),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="na">mod</span><span class="p">(</span><span class="n">lenFileName</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">padding</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">rest</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">DirEntries</span> <span class="n">extentAsDir</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">DirEntries</span> <span class="nf">extentAsDir</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">extentAsDir</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">extentAsDir</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">fileFlags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">lbaExtent</span><span class="p">().</span><span class="na">le</span><span class="p">()</span> <span class="o">*</span> <span class="n">_root</span><span class="p">.</span><span class="na">sectorSize</span><span class="p">()));</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_extentAsDir</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">sizeExtent</span><span class="p">().</span><span class="na">le</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_extentAsDir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_extentAsDir</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">extentAsDir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DirEntries</span><span class="p">(</span><span class="n">_io__raw_extentAsDir</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">extentAsDir</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">extentAsFile</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">extentAsFile</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">extentAsFile</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">extentAsFile</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">fileFlags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">lbaExtent</span><span class="p">().</span><span class="na">le</span><span class="p">()</span> <span class="o">*</span> <span class="n">_root</span><span class="p">.</span><span class="na">sectorSize</span><span class="p">()));</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">extentAsFile</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">sizeExtent</span><span class="p">().</span><span class="na">le</span><span class="p">());</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">extentAsFile</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">lenExtAttrRec</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">U4bi</span> <span class="n">lbaExtent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">U4bi</span> <span class="n">sizeExtent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Datetime</span> <span class="n">datetime</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">fileFlags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">fileUnitSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">interleaveGapSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">U2bi</span> <span class="n">volSeqNum</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">lenFileName</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">fileName</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">padding</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">rest</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">DirEntry</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_extentAsDir</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lenExtAttrRec</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenExtAttrRec</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">U4bi</span> <span class="nf">lbaExtent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lbaExtent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">U4bi</span> <span class="nf">sizeExtent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">sizeExtent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Datetime</span> <span class="nf">datetime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">datetime</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">fileFlags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileFlags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">fileUnitSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileUnitSize</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">interleaveGapSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">interleaveGapSize</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">U2bi</span> <span class="nf">volSeqNum</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">volSeqNum</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lenFileName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenFileName</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">fileName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileName</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">padding</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">padding</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">rest</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">rest</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Iso9660</span><span class="p">.</span><span class="na">DirEntry</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_extentAsDir</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_extentAsDir</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">Integer</span> <span class="n">sectorSize</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">sectorSize</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">sectorSize</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">sectorSize</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mi">2048</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">sectorSize</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">sectorSize</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">VolDesc</span> <span class="n">primaryVolDesc</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">VolDesc</span> <span class="nf">primaryVolDesc</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">primaryVolDesc</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">primaryVolDesc</span><span class="p">;</span>
+        <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="mi">16</span> <span class="o">*</span> <span class="n">sectorSize</span><span class="p">()));</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">primaryVolDesc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VolDesc</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">primaryVolDesc</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">Iso9660</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">Iso9660</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1000,8 +997,8 @@ public class Iso9660 extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

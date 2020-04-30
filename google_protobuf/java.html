@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -262,236 +259,236 @@ GoogleProtobuf data = new GoogleProtobuf(new ByteBufferKaitaiStream(someArray));
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
 
 
-/**
- * Google Protocol Buffers (AKA protobuf) is a popular data
- * serialization scheme used for communication protocols, data storage,
- * etc. There are implementations are available for almost every
- * popular language. The focus points of this scheme are brevity (data
- * is encoded in a very size-efficient manner) and extensibility (one
- * can add keys to the structure, while keeping it readable in previous
- * version of software).
- * 
- * Protobuf uses semi-self-describing encoding scheme for its
- * messages. It means that it is possible to parse overall structure of
- * the message (skipping over fields one can&#39;t understand), but to
- * fully understand the message, one needs a protocol definition file
- * (`.proto`). To be specific:
- * 
- * * &quot;Keys&quot; in key-value pairs provided in the message are identified
- *   only with an integer &quot;field tag&quot;. `.proto` file provides info on
- *   which symbolic field names these field tags map to.
- * * &quot;Keys&quot; also provide something called &quot;wire type&quot;. It&#39;s not a data
- *   type in its common sense (i.e. you can&#39;t, for example, distinguish
- *   `sint32` vs `uint32` vs some enum, or `string` from `bytes`), but
- *   it&#39;s enough information to determine how many bytes to
- *   parse. Interpretation of the value should be done according to the
- *   type specified in `.proto` file.
- * * There&#39;s no direct information on which fields are optional /
- *   required, which fields may be repeated or constitute a map, what
- *   restrictions are placed on fields usage in a single message, what
- *   are the fields&#39; default values, etc, etc.
- * @see &lt;a href=&quot;https://developers.google.com/protocol-buffers/docs/encoding&quot;&gt;Source&lt;/a&gt;
- */
-public class GoogleProtobuf extends KaitaiStruct {
-    public static GoogleProtobuf fromFile(String fileName) throws IOException {
-        return new GoogleProtobuf(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * Google Protocol Buffers (AKA protobuf) is a popular data</span>
+<span class="cm"> * serialization scheme used for communication protocols, data storage,</span>
+<span class="cm"> * etc. There are implementations are available for almost every</span>
+<span class="cm"> * popular language. The focus points of this scheme are brevity (data</span>
+<span class="cm"> * is encoded in a very size-efficient manner) and extensibility (one</span>
+<span class="cm"> * can add keys to the structure, while keeping it readable in previous</span>
+<span class="cm"> * version of software).</span>
+<span class="cm"> * </span>
+<span class="cm"> * Protobuf uses semi-self-describing encoding scheme for its</span>
+<span class="cm"> * messages. It means that it is possible to parse overall structure of</span>
+<span class="cm"> * the message (skipping over fields one can&#39;t understand), but to</span>
+<span class="cm"> * fully understand the message, one needs a protocol definition file</span>
+<span class="cm"> * (`.proto`). To be specific:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * &quot;Keys&quot; in key-value pairs provided in the message are identified</span>
+<span class="cm"> *   only with an integer &quot;field tag&quot;. `.proto` file provides info on</span>
+<span class="cm"> *   which symbolic field names these field tags map to.</span>
+<span class="cm"> * * &quot;Keys&quot; also provide something called &quot;wire type&quot;. It&#39;s not a data</span>
+<span class="cm"> *   type in its common sense (i.e. you can&#39;t, for example, distinguish</span>
+<span class="cm"> *   `sint32` vs `uint32` vs some enum, or `string` from `bytes`), but</span>
+<span class="cm"> *   it&#39;s enough information to determine how many bytes to</span>
+<span class="cm"> *   parse. Interpretation of the value should be done according to the</span>
+<span class="cm"> *   type specified in `.proto` file.</span>
+<span class="cm"> * * There&#39;s no direct information on which fields are optional /</span>
+<span class="cm"> *   required, which fields may be repeated or constitute a map, what</span>
+<span class="cm"> *   restrictions are placed on fields usage in a single message, what</span>
+<span class="cm"> *   are the fields&#39; default values, etc, etc.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://developers.google.com/protocol-buffers/docs/encoding&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">GoogleProtobuf</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">GoogleProtobuf</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">GoogleProtobuf</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public GoogleProtobuf(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">GoogleProtobuf</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public GoogleProtobuf(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">GoogleProtobuf</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public GoogleProtobuf(KaitaiStream _io, KaitaiStruct _parent, GoogleProtobuf _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.pairs = new ArrayList&lt;Pair&gt;();
-        {
-            int i = 0;
-            while (!this._io.isEof()) {
-                this.pairs.add(new Pair(this._io, this, _root));
-                i++;
-            }
-        }
-    }
+    <span class="kd">public</span> <span class="nf">GoogleProtobuf</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">GoogleProtobuf</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">pairs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">pairs</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Pair</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+                <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * Key-value pair
-     */
-    public static class Pair extends KaitaiStruct {
-        public static Pair fromFile(String fileName) throws IOException {
-            return new Pair(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * Key-value pair</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Pair</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Pair</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Pair</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public enum WireTypes {
-            VARINT(0),
-            BIT_64(1),
-            LEN_DELIMITED(2),
-            GROUP_START(3),
-            GROUP_END(4),
-            BIT_32(5);
+        <span class="kd">public</span> <span class="kd">enum</span> <span class="n">WireTypes</span> <span class="p">{</span>
+            <span class="n">VARINT</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+            <span class="n">BIT_64</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">LEN_DELIMITED</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+            <span class="n">GROUP_START</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+            <span class="n">GROUP_END</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+            <span class="n">BIT_32</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
 
-            private final long id;
-            WireTypes(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map&lt;Long, WireTypes&gt; byId = new HashMap&lt;Long, WireTypes&gt;(6);
-            static {
-                for (WireTypes e : WireTypes.values())
-                    byId.put(e.id(), e);
-            }
-            public static WireTypes byId(long id) { return byId.get(id); }
-        }
+            <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+            <span class="n">WireTypes</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">WireTypes</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">WireTypes</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+            <span class="kd">static</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">WireTypes</span> <span class="n">e</span> <span class="p">:</span> <span class="n">WireTypes</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                    <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">WireTypes</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        public Pair(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Pair</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Pair(KaitaiStream _io, GoogleProtobuf _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Pair</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">GoogleProtobuf</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Pair(KaitaiStream _io, GoogleProtobuf _parent, GoogleProtobuf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.key = new VlqBase128Le(this._io);
-            switch (wireType()) {
-            case VARINT: {
-                this.value = new VlqBase128Le(this._io);
-                break;
-            }
-            case LEN_DELIMITED: {
-                this.value = new DelimitedBytes(this._io, this, _root);
-                break;
-            }
-            case BIT_64: {
-                this.value = (Object) (this._io.readU8le());
-                break;
-            }
-            case BIT_32: {
-                this.value = (Object) (this._io.readU4le());
-                break;
-            }
-            }
-        }
-        private WireTypes wireType;
+        <span class="kd">public</span> <span class="nf">Pair</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">GoogleProtobuf</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">GoogleProtobuf</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">key</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VlqBase128Le</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">wireType</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">VARINT</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VlqBase128Le</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">LEN_DELIMITED</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DelimitedBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">BIT_64</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">case</span> <span class="n">BIT_32</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">WireTypes</span> <span class="n">wireType</span><span class="p">;</span>
 
-        /**
-         * &quot;Wire type&quot; is a part of the &quot;key&quot; that carries enough
-         * information to parse value from the wire, i.e. read correct
-         * amount of bytes, but there&#39;s not enough informaton to
-         * interprete in unambiguously. For example, one can&#39;t clearly
-         * distinguish 64-bit fixed-sized integers from 64-bit floats,
-         * signed zigzag-encoded varints from regular unsigned varints,
-         * arbitrary bytes from UTF-8 encoded strings, etc.
-         */
-        public WireTypes wireType() {
-            if (this.wireType != null)
-                return this.wireType;
-            this.wireType = WireTypes.byId((key().value() &amp; 7));
-            return this.wireType;
-        }
-        private Integer fieldTag;
+        <span class="cm">/**</span>
+<span class="cm">         * &quot;Wire type&quot; is a part of the &quot;key&quot; that carries enough</span>
+<span class="cm">         * information to parse value from the wire, i.e. read correct</span>
+<span class="cm">         * amount of bytes, but there&#39;s not enough informaton to</span>
+<span class="cm">         * interprete in unambiguously. For example, one can&#39;t clearly</span>
+<span class="cm">         * distinguish 64-bit fixed-sized integers from 64-bit floats,</span>
+<span class="cm">         * signed zigzag-encoded varints from regular unsigned varints,</span>
+<span class="cm">         * arbitrary bytes from UTF-8 encoded strings, etc.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">WireTypes</span> <span class="nf">wireType</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">wireType</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">wireType</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">wireType</span> <span class="o">=</span> <span class="n">WireTypes</span><span class="p">.</span><span class="na">byId</span><span class="p">((</span><span class="n">key</span><span class="p">().</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">));</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">wireType</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">fieldTag</span><span class="p">;</span>
 
-        /**
-         * Identifies a field of protocol. One can look up symbolic
-         * field name in a `.proto` file by this field tag.
-         */
-        public Integer fieldTag() {
-            if (this.fieldTag != null)
-                return this.fieldTag;
-            int _tmp = (int) ((key().value() &gt;&gt; 3));
-            this.fieldTag = _tmp;
-            return this.fieldTag;
-        }
-        private VlqBase128Le key;
-        private Object value;
-        private GoogleProtobuf _root;
-        private GoogleProtobuf _parent;
+        <span class="cm">/**</span>
+<span class="cm">         * Identifies a field of protocol. One can look up symbolic</span>
+<span class="cm">         * field name in a `.proto` file by this field tag.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">fieldTag</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">fieldTag</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">fieldTag</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">key</span><span class="p">().</span><span class="na">value</span><span class="p">()</span> <span class="o">&gt;&gt;</span> <span class="mi">3</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fieldTag</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">fieldTag</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">VlqBase128Le</span> <span class="n">key</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Object</span> <span class="n">value</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">GoogleProtobuf</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">GoogleProtobuf</span> <span class="n">_parent</span><span class="p">;</span>
 
-        /**
-         * Key is a bit-mapped variable-length integer: lower 3 bits
-         * are used for &quot;wire type&quot;, and everything higher designates
-         * an integer &quot;field tag&quot;.
-         */
-        public VlqBase128Le key() { return key; }
+        <span class="cm">/**</span>
+<span class="cm">         * Key is a bit-mapped variable-length integer: lower 3 bits</span>
+<span class="cm">         * are used for &quot;wire type&quot;, and everything higher designates</span>
+<span class="cm">         * an integer &quot;field tag&quot;.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">VlqBase128Le</span> <span class="nf">key</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">key</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Value that corresponds to field identified by
-         * `field_tag`. Type is determined approximately: there is
-         * enough information to parse it unambiguously from a stream,
-         * but further infromation from `.proto` file is required to
-         * interprete it properly.
-         */
-        public Object value() { return value; }
-        public GoogleProtobuf _root() { return _root; }
-        public GoogleProtobuf _parent() { return _parent; }
-    }
-    public static class DelimitedBytes extends KaitaiStruct {
-        public static DelimitedBytes fromFile(String fileName) throws IOException {
-            return new DelimitedBytes(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="cm">/**</span>
+<span class="cm">         * Value that corresponds to field identified by</span>
+<span class="cm">         * `field_tag`. Type is determined approximately: there is</span>
+<span class="cm">         * enough information to parse it unambiguously from a stream,</span>
+<span class="cm">         * but further infromation from `.proto` file is required to</span>
+<span class="cm">         * interprete it properly.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Object</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">GoogleProtobuf</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">GoogleProtobuf</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DelimitedBytes</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">DelimitedBytes</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">DelimitedBytes</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public DelimitedBytes(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">DelimitedBytes</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DelimitedBytes(KaitaiStream _io, GoogleProtobuf.Pair _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">DelimitedBytes</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="na">Pair</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DelimitedBytes(KaitaiStream _io, GoogleProtobuf.Pair _parent, GoogleProtobuf _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.len = new VlqBase128Le(this._io);
-            this.body = this._io.readBytes(len().value());
-        }
-        private VlqBase128Le len;
-        private byte[] body;
-        private GoogleProtobuf _root;
-        private GoogleProtobuf.Pair _parent;
-        public VlqBase128Le len() { return len; }
-        public byte[] body() { return body; }
-        public GoogleProtobuf _root() { return _root; }
-        public GoogleProtobuf.Pair _parent() { return _parent; }
-    }
-    private ArrayList&lt;Pair&gt; pairs;
-    private GoogleProtobuf _root;
-    private KaitaiStruct _parent;
+        <span class="kd">public</span> <span class="nf">DelimitedBytes</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="na">Pair</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">GoogleProtobuf</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">len</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VlqBase128Le</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">len</span><span class="p">().</span><span class="na">value</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">VlqBase128Le</span> <span class="n">len</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">body</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">GoogleProtobuf</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="na">Pair</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">VlqBase128Le</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">len</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">GoogleProtobuf</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">GoogleProtobuf</span><span class="p">.</span><span class="na">Pair</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span> <span class="n">pairs</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">GoogleProtobuf</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
 
-    /**
-     * Key-value pairs which constitute a message
-     */
-    public ArrayList&lt;Pair&gt; pairs() { return pairs; }
-    public GoogleProtobuf _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-}
-</code></pre>
+    <span class="cm">/**</span>
+<span class="cm">     * Key-value pairs which constitute a message</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Pair</span><span class="o">&gt;</span> <span class="nf">pairs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pairs</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">GoogleProtobuf</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -518,8 +515,8 @@ public class GoogleProtobuf extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

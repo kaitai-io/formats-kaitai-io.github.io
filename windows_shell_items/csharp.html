@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -271,273 +268,273 @@ var data = new WindowsShellItems(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
 
-    /// &lt;summary&gt;
-    /// Windows Shell Items (AKA &amp;quot;shellbags&amp;quot;) is an undocumented set of
-    /// structures used internally within Windows to identify paths in
-    /// Windows Folder Hierarchy. It is widely used in Windows Shell (and
-    /// most visible in File Explorer), both as in-memory and in-file
-    /// structures. Some formats embed them, namely:
-    /// 
-    /// * Windows Shell link files (.lnk) Windows registry
-    /// * Windows registry &amp;quot;ShellBags&amp;quot; keys
-    /// 
-    /// The format is mostly undocumented, and is known to vary between
-    /// various Windows versions.
-    /// &lt;/summary&gt;
-    /// &lt;remarks&gt;
-    /// Reference: &lt;a href=&quot;https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc&quot;&gt;Source&lt;/a&gt;
-    /// &lt;/remarks&gt;
-    public partial class WindowsShellItems : KaitaiStruct
-    {
-        public static WindowsShellItems FromFile(string fileName)
-        {
-            return new WindowsShellItems(new KaitaiStream(fileName));
-        }
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// Windows Shell Items (AKA &amp;quot;shellbags&amp;quot;) is an undocumented set of</span>
+    <span class="c1">/// structures used internally within Windows to identify paths in</span>
+    <span class="c1">/// Windows Folder Hierarchy. It is widely used in Windows Shell (and</span>
+    <span class="c1">/// most visible in File Explorer), both as in-memory and in-file</span>
+    <span class="c1">/// structures. Some formats embed them, namely:</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// * Windows Shell link files (.lnk) Windows registry</span>
+    <span class="c1">/// * Windows registry &amp;quot;ShellBags&amp;quot; keys</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// The format is mostly undocumented, and is known to vary between</span>
+    <span class="c1">/// various Windows versions.</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="c1">/// &lt;remarks&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc&quot;&gt;Source&lt;/a&gt;</span>
+    <span class="c1">/// &lt;/remarks&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">WindowsShellItems</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">WindowsShellItems</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">WindowsShellItems</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public WindowsShellItems(KaitaiStream p__io, KaitaiStruct p__parent = null, WindowsShellItems p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            _read();
-        }
-        private void _read()
-        {
-            _items = new List&lt;ShellItem&gt;();
-            {
-                var i = 0;
-                ShellItem M_;
-                do {
-                    M_ = new ShellItem(m_io, this, m_root);
-                    _items.Add(M_);
-                    i++;
-                } while (!(M_.LenData == 0));
-            }
-        }
-        public partial class ShellItemData : KaitaiStruct
-        {
-            public static ShellItemData FromFile(string fileName)
-            {
-                return new ShellItemData(new KaitaiStream(fileName));
-            }
+        <span class="k">public</span> <span class="nf">WindowsShellItems</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">WindowsShellItems</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_items</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ShellItem</span><span class="p">&gt;();</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                <span class="n">ShellItem</span> <span class="n">M_</span><span class="p">;</span>
+                <span class="k">do</span> <span class="p">{</span>
+                    <span class="n">M_</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ShellItem</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="n">_items</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">M_</span><span class="p">);</span>
+                    <span class="n">i</span><span class="p">++;</span>
+                <span class="p">}</span> <span class="k">while</span> <span class="p">(!(</span><span class="n">M_</span><span class="p">.</span><span class="n">LenData</span> <span class="p">==</span> <span class="m">0</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ShellItemData</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">ShellItemData</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">ShellItemData</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public ShellItemData(KaitaiStream p__io, WindowsShellItems.ShellItem p__parent = null, WindowsShellItems p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _code = m_io.ReadU1();
-                switch (Code) {
-                case 31: {
-                    _body1 = new RootFolderBody(m_io, this, m_root);
-                    break;
-                }
-                }
-                switch ((Code &amp; 112)) {
-                case 32: {
-                    _body2 = new VolumeBody(m_io, this, m_root);
-                    break;
-                }
-                case 48: {
-                    _body2 = new FileEntryBody(m_io, this, m_root);
-                    break;
-                }
-                }
-            }
-            private byte _code;
-            private RootFolderBody _body1;
-            private KaitaiStruct _body2;
-            private WindowsShellItems m_root;
-            private WindowsShellItems.ShellItem m_parent;
-            public byte Code { get { return _code; } }
-            public RootFolderBody Body1 { get { return _body1; } }
-            public KaitaiStruct Body2 { get { return _body2; } }
-            public WindowsShellItems M_Root { get { return m_root; } }
-            public WindowsShellItems.ShellItem M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">ShellItemData</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">WindowsShellItems</span><span class="p">.</span><span class="n">ShellItem</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">WindowsShellItems</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_code</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">Code</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="m">31</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_body1</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RootFolderBody</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">switch</span> <span class="p">((</span><span class="n">Code</span> <span class="p">&amp;</span> <span class="m">112</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="m">32</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_body2</span> <span class="p">=</span> <span class="k">new</span> <span class="n">VolumeBody</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="m">48</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_body2</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FileEntryBody</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_code</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RootFolderBody</span> <span class="n">_body1</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">_body2</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">WindowsShellItems</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">WindowsShellItems</span><span class="p">.</span><span class="n">ShellItem</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Code</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_code</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RootFolderBody</span> <span class="n">Body1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">Body2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">WindowsShellItems</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">WindowsShellItems</span><span class="p">.</span><span class="n">ShellItem</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.2.2&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class ShellItem : KaitaiStruct
-        {
-            public static ShellItem FromFile(string fileName)
-            {
-                return new ShellItem(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.2.2&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ShellItem</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">ShellItem</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">ShellItem</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public ShellItem(KaitaiStream p__io, WindowsShellItems p__parent = null, WindowsShellItems p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _lenData = m_io.ReadU2le();
-                if (LenData &gt;= 2) {
-                    __raw_data = m_io.ReadBytes((LenData - 2));
-                    var io___raw_data = new KaitaiStream(__raw_data);
-                    _data = new ShellItemData(io___raw_data, this, m_root);
-                }
-            }
-            private ushort _lenData;
-            private ShellItemData _data;
-            private WindowsShellItems m_root;
-            private WindowsShellItems m_parent;
-            private byte[] __raw_data;
-            public ushort LenData { get { return _lenData; } }
-            public ShellItemData Data { get { return _data; } }
-            public WindowsShellItems M_Root { get { return m_root; } }
-            public WindowsShellItems M_Parent { get { return m_parent; } }
-            public byte[] M_RawData { get { return __raw_data; } }
-        }
+            <span class="k">public</span> <span class="nf">ShellItem</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">WindowsShellItems</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">WindowsShellItems</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_lenData</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">LenData</span> <span class="p">&gt;=</span> <span class="m">2</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">__raw_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">LenData</span> <span class="p">-</span> <span class="m">2</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_data</span><span class="p">);</span>
+                    <span class="n">_data</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ShellItemData</span><span class="p">(</span><span class="n">io___raw_data</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_lenData</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">ShellItemData</span> <span class="n">_data</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">WindowsShellItems</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">WindowsShellItems</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_data</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">LenData</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenData</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">ShellItemData</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">WindowsShellItems</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">WindowsShellItems</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawData</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class RootFolderBody : KaitaiStruct
-        {
-            public static RootFolderBody FromFile(string fileName)
-            {
-                return new RootFolderBody(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#32-root-folder-shell-item&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">RootFolderBody</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">RootFolderBody</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">RootFolderBody</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public RootFolderBody(KaitaiStream p__io, WindowsShellItems.ShellItemData p__parent = null, WindowsShellItems p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _sortIndex = m_io.ReadU1();
-                _shellFolderId = m_io.ReadBytes(16);
-            }
-            private byte _sortIndex;
-            private byte[] _shellFolderId;
-            private WindowsShellItems m_root;
-            private WindowsShellItems.ShellItemData m_parent;
-            public byte SortIndex { get { return _sortIndex; } }
-            public byte[] ShellFolderId { get { return _shellFolderId; } }
-            public WindowsShellItems M_Root { get { return m_root; } }
-            public WindowsShellItems.ShellItemData M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">RootFolderBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">WindowsShellItems</span><span class="p">.</span><span class="n">ShellItemData</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">WindowsShellItems</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_sortIndex</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_shellFolderId</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">16</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_sortIndex</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_shellFolderId</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">WindowsShellItems</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">WindowsShellItems</span><span class="p">.</span><span class="n">ShellItemData</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">SortIndex</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sortIndex</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">ShellFolderId</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_shellFolderId</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">WindowsShellItems</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">WindowsShellItems</span><span class="p">.</span><span class="n">ShellItemData</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class VolumeBody : KaitaiStruct
-        {
-            public static VolumeBody FromFile(string fileName)
-            {
-                return new VolumeBody(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#33-volume-shell-item&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">VolumeBody</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">VolumeBody</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">VolumeBody</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public VolumeBody(KaitaiStream p__io, WindowsShellItems.ShellItemData p__parent = null, WindowsShellItems p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _flags = m_io.ReadU1();
-            }
-            private byte _flags;
-            private WindowsShellItems m_root;
-            private WindowsShellItems.ShellItemData m_parent;
-            public byte Flags { get { return _flags; } }
-            public WindowsShellItems M_Root { get { return m_root; } }
-            public WindowsShellItems.ShellItemData M_Parent { get { return m_parent; } }
-        }
+            <span class="k">public</span> <span class="nf">VolumeBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">WindowsShellItems</span><span class="p">.</span><span class="n">ShellItemData</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">WindowsShellItems</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_flags</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_flags</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">WindowsShellItems</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">WindowsShellItems</span><span class="p">.</span><span class="n">ShellItemData</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Flags</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_flags</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">WindowsShellItems</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">WindowsShellItems</span><span class="p">.</span><span class="n">ShellItemData</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item&quot;&gt;Source&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public partial class FileEntryBody : KaitaiStruct
-        {
-            public static FileEntryBody FromFile(string fileName)
-            {
-                return new FileEntryBody(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/libyal/libfwsi/blob/master/documentation/Windows%20Shell%20Item%20format.asciidoc#34-file-entry-shell-item&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">FileEntryBody</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">FileEntryBody</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">FileEntryBody</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public FileEntryBody(KaitaiStream p__io, WindowsShellItems.ShellItemData p__parent = null, WindowsShellItems p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_isDir = false;
-                f_isFile = false;
-                _read();
-            }
-            private void _read()
-            {
-                __unnamed0 = m_io.ReadU1();
-                _fileSize = m_io.ReadU4le();
-                _lastModTime = m_io.ReadU4le();
-                _fileAttrs = m_io.ReadU2le();
-            }
-            private bool f_isDir;
-            private bool _isDir;
-            public bool IsDir
-            {
-                get
-                {
-                    if (f_isDir)
-                        return _isDir;
-                    _isDir = (bool) ((M_Parent.Code &amp; 1) != 0);
-                    f_isDir = true;
-                    return _isDir;
-                }
-            }
-            private bool f_isFile;
-            private bool _isFile;
-            public bool IsFile
-            {
-                get
-                {
-                    if (f_isFile)
-                        return _isFile;
-                    _isFile = (bool) ((M_Parent.Code &amp; 2) != 0);
-                    f_isFile = true;
-                    return _isFile;
-                }
-            }
-            private byte __unnamed0;
-            private uint _fileSize;
-            private uint _lastModTime;
-            private ushort _fileAttrs;
-            private WindowsShellItems m_root;
-            private WindowsShellItems.ShellItemData m_parent;
-            public byte Unnamed_0 { get { return __unnamed0; } }
-            public uint FileSize { get { return _fileSize; } }
-            public uint LastModTime { get { return _lastModTime; } }
-            public ushort FileAttrs { get { return _fileAttrs; } }
-            public WindowsShellItems M_Root { get { return m_root; } }
-            public WindowsShellItems.ShellItemData M_Parent { get { return m_parent; } }
-        }
-        private List&lt;ShellItem&gt; _items;
-        private WindowsShellItems m_root;
-        private KaitaiStruct m_parent;
+            <span class="k">public</span> <span class="nf">FileEntryBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">WindowsShellItems</span><span class="p">.</span><span class="n">ShellItemData</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">WindowsShellItems</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_isDir</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_isFile</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">__unnamed0</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_fileSize</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_lastModTime</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                <span class="n">_fileAttrs</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isDir</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isDir</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsDir</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isDir</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_isDir</span><span class="p">;</span>
+                    <span class="n">_isDir</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Code</span> <span class="p">&amp;</span> <span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_isDir</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_isDir</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isFile</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isFile</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsFile</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isFile</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_isFile</span><span class="p">;</span>
+                    <span class="n">_isFile</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">Code</span> <span class="p">&amp;</span> <span class="m">2</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_isFile</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_isFile</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">__unnamed0</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_fileSize</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lastModTime</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_fileAttrs</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">WindowsShellItems</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">WindowsShellItems</span><span class="p">.</span><span class="n">ShellItemData</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Unnamed_0</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__unnamed0</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">FileSize</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fileSize</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">LastModTime</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lastModTime</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">FileAttrs</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_fileAttrs</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">WindowsShellItems</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">WindowsShellItems</span><span class="p">.</span><span class="n">ShellItemData</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ShellItem</span><span class="p">&gt;</span> <span class="n">_items</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">WindowsShellItems</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
 
-        /// &lt;remarks&gt;
-        /// Reference: &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.2.1&lt;/a&gt;
-        /// &lt;/remarks&gt;
-        public List&lt;ShellItem&gt; Items { get { return _items; } }
-        public WindowsShellItems M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-    }
-}
-</code></pre>
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.2.1&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ShellItem</span><span class="p">&gt;</span> <span class="n">Items</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_items</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">WindowsShellItems</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -564,8 +561,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

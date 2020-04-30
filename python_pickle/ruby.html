@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -293,638 +290,638 @@ data = PythonPickle.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# Python Pickle format serializes Python objects to a byte stream, as a sequence
-# of operations to run on the Pickle Virtual Machine.
-# 
-# The format is mostly implementation defined, there is no formal specification.
-# Pickle data types are closely coupled to the Python object model.
-# Python singletons, and most builtin types (e.g. `None`, `int`,`dict`, `list`)
-# are serialised using dedicated Pickle opcodes.
-# Other builtin types, and all classes  (e.g. `set`, `datetime.datetime`) are
-# serialised by encoding the name of a constructor callable.
-# They are deserialised by importing that constructor, and calling it.
-# So, unpickling an arbitrary pickle, using the Python&#39;s stdlib pickle module
-# can cause arbitrary code execution.
-# 
-# Pickle format has evolved with Python, later protocols add opcodes &amp; types.
-# Later Python releases can pickle to or unpickle from any earlier protocol.
-# 
-# * Protocol 0: ASCII clean, no explicit version, fields are &#39;\n&#39; terminated.
-# * Protocol 1: Binary, no explicit version, first length prefixed types.
-# * Protocol 2: Python 2.3+. Explicit versioning, more length prefixed types.
-#   https://www.python.org/dev/peps/pep-0307/
-# * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.
-# * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.
-#   https://www.python.org/dev/peps/pep-3154/
-# * Protocol 5: Python 3.8+: Opcodes for `bytearray` and out of band data
-#   https://www.python.org/dev/peps/pep-0574/
-# @see https://github.com/python/cpython/blob/v3.8.1/Lib/pickletools.py Source
-class PythonPickle &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># Python Pickle format serializes Python objects to a byte stream, as a sequence</span>
+<span class="c1"># of operations to run on the Pickle Virtual Machine.</span>
+<span class="c1"># </span>
+<span class="c1"># The format is mostly implementation defined, there is no formal specification.</span>
+<span class="c1"># Pickle data types are closely coupled to the Python object model.</span>
+<span class="c1"># Python singletons, and most builtin types (e.g. `None`, `int`,`dict`, `list`)</span>
+<span class="c1"># are serialised using dedicated Pickle opcodes.</span>
+<span class="c1"># Other builtin types, and all classes  (e.g. `set`, `datetime.datetime`) are</span>
+<span class="c1"># serialised by encoding the name of a constructor callable.</span>
+<span class="c1"># They are deserialised by importing that constructor, and calling it.</span>
+<span class="c1"># So, unpickling an arbitrary pickle, using the Python&#39;s stdlib pickle module</span>
+<span class="c1"># can cause arbitrary code execution.</span>
+<span class="c1"># </span>
+<span class="c1"># Pickle format has evolved with Python, later protocols add opcodes &amp; types.</span>
+<span class="c1"># Later Python releases can pickle to or unpickle from any earlier protocol.</span>
+<span class="c1"># </span>
+<span class="c1"># * Protocol 0: ASCII clean, no explicit version, fields are &#39;\n&#39; terminated.</span>
+<span class="c1"># * Protocol 1: Binary, no explicit version, first length prefixed types.</span>
+<span class="c1"># * Protocol 2: Python 2.3+. Explicit versioning, more length prefixed types.</span>
+<span class="c1">#   https://www.python.org/dev/peps/pep-0307/</span>
+<span class="c1"># * Protocol 3: Python 3.0+. Dedicated opcodes for `bytes` objects.</span>
+<span class="c1"># * Protocol 4: Python 3.4+. Opcodes for 64 bit strings, framing, `set`.</span>
+<span class="c1">#   https://www.python.org/dev/peps/pep-3154/</span>
+<span class="c1"># * Protocol 5: Python 3.8+: Opcodes for `bytearray` and out of band data</span>
+<span class="c1">#   https://www.python.org/dev/peps/pep-0574/</span>
+<span class="c1"># @see https://github.com/python/cpython/blob/v3.8.1/Lib/pickletools.py Source</span>
+<span class="k">class</span> <span class="nc">PythonPickle</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  OPCODE = {
-    40 =&gt; :opcode_mark,
-    41 =&gt; :opcode_empty_tuple,
-    46 =&gt; :opcode_stop,
-    48 =&gt; :opcode_pop,
-    49 =&gt; :opcode_pop_mark,
-    50 =&gt; :opcode_dup,
-    66 =&gt; :opcode_binbytes,
-    67 =&gt; :opcode_short_binbytes,
-    70 =&gt; :opcode_float,
-    71 =&gt; :opcode_binfloat,
-    73 =&gt; :opcode_int,
-    74 =&gt; :opcode_binint,
-    75 =&gt; :opcode_binint1,
-    76 =&gt; :opcode_long,
-    77 =&gt; :opcode_binint2,
-    78 =&gt; :opcode_none,
-    80 =&gt; :opcode_persid,
-    81 =&gt; :opcode_binpersid,
-    82 =&gt; :opcode_reduce,
-    83 =&gt; :opcode_string,
-    84 =&gt; :opcode_binstring,
-    85 =&gt; :opcode_short_binstring,
-    86 =&gt; :opcode_unicode,
-    88 =&gt; :opcode_binunicode,
-    93 =&gt; :opcode_empty_list,
-    97 =&gt; :opcode_append,
-    98 =&gt; :opcode_build,
-    99 =&gt; :opcode_global,
-    100 =&gt; :opcode_dict,
-    101 =&gt; :opcode_appends,
-    103 =&gt; :opcode_get,
-    104 =&gt; :opcode_binget,
-    105 =&gt; :opcode_inst,
-    106 =&gt; :opcode_long_binget,
-    108 =&gt; :opcode_list,
-    111 =&gt; :opcode_obj,
-    112 =&gt; :opcode_put,
-    113 =&gt; :opcode_binput,
-    114 =&gt; :opcode_long_binput,
-    115 =&gt; :opcode_setitem,
-    116 =&gt; :opcode_tuple,
-    117 =&gt; :opcode_setitems,
-    125 =&gt; :opcode_empty_dict,
-    128 =&gt; :opcode_proto,
-    129 =&gt; :opcode_newobj,
-    130 =&gt; :opcode_ext1,
-    131 =&gt; :opcode_ext2,
-    132 =&gt; :opcode_ext4,
-    133 =&gt; :opcode_tuple1,
-    134 =&gt; :opcode_tuple2,
-    135 =&gt; :opcode_tuple3,
-    136 =&gt; :opcode_newtrue,
-    137 =&gt; :opcode_newfalse,
-    138 =&gt; :opcode_long1,
-    139 =&gt; :opcode_long4,
-    140 =&gt; :opcode_short_binunicode,
-    141 =&gt; :opcode_binunicode8,
-    142 =&gt; :opcode_binbytes8,
-    143 =&gt; :opcode_empty_set,
-    144 =&gt; :opcode_additems,
-    145 =&gt; :opcode_frozenset,
-    146 =&gt; :opcode_newobj_ex,
-    147 =&gt; :opcode_stack_global,
-    148 =&gt; :opcode_memoize,
-    149 =&gt; :opcode_frame,
-    150 =&gt; :opcode_bytearray8,
-    151 =&gt; :opcode_next_buffer,
-    152 =&gt; :opcode_read_buffer,
-  }
-  I__OPCODE = OPCODE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">OPCODE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">40</span> <span class="o">=&gt;</span> <span class="ss">:opcode_mark</span><span class="p">,</span>
+    <span class="mi">41</span> <span class="o">=&gt;</span> <span class="ss">:opcode_empty_tuple</span><span class="p">,</span>
+    <span class="mi">46</span> <span class="o">=&gt;</span> <span class="ss">:opcode_stop</span><span class="p">,</span>
+    <span class="mi">48</span> <span class="o">=&gt;</span> <span class="ss">:opcode_pop</span><span class="p">,</span>
+    <span class="mi">49</span> <span class="o">=&gt;</span> <span class="ss">:opcode_pop_mark</span><span class="p">,</span>
+    <span class="mi">50</span> <span class="o">=&gt;</span> <span class="ss">:opcode_dup</span><span class="p">,</span>
+    <span class="mi">66</span> <span class="o">=&gt;</span> <span class="ss">:opcode_binbytes</span><span class="p">,</span>
+    <span class="mi">67</span> <span class="o">=&gt;</span> <span class="ss">:opcode_short_binbytes</span><span class="p">,</span>
+    <span class="mi">70</span> <span class="o">=&gt;</span> <span class="ss">:opcode_float</span><span class="p">,</span>
+    <span class="mi">71</span> <span class="o">=&gt;</span> <span class="ss">:opcode_binfloat</span><span class="p">,</span>
+    <span class="mi">73</span> <span class="o">=&gt;</span> <span class="ss">:opcode_int</span><span class="p">,</span>
+    <span class="mi">74</span> <span class="o">=&gt;</span> <span class="ss">:opcode_binint</span><span class="p">,</span>
+    <span class="mi">75</span> <span class="o">=&gt;</span> <span class="ss">:opcode_binint1</span><span class="p">,</span>
+    <span class="mi">76</span> <span class="o">=&gt;</span> <span class="ss">:opcode_long</span><span class="p">,</span>
+    <span class="mi">77</span> <span class="o">=&gt;</span> <span class="ss">:opcode_binint2</span><span class="p">,</span>
+    <span class="mi">78</span> <span class="o">=&gt;</span> <span class="ss">:opcode_none</span><span class="p">,</span>
+    <span class="mi">80</span> <span class="o">=&gt;</span> <span class="ss">:opcode_persid</span><span class="p">,</span>
+    <span class="mi">81</span> <span class="o">=&gt;</span> <span class="ss">:opcode_binpersid</span><span class="p">,</span>
+    <span class="mi">82</span> <span class="o">=&gt;</span> <span class="ss">:opcode_reduce</span><span class="p">,</span>
+    <span class="mi">83</span> <span class="o">=&gt;</span> <span class="ss">:opcode_string</span><span class="p">,</span>
+    <span class="mi">84</span> <span class="o">=&gt;</span> <span class="ss">:opcode_binstring</span><span class="p">,</span>
+    <span class="mi">85</span> <span class="o">=&gt;</span> <span class="ss">:opcode_short_binstring</span><span class="p">,</span>
+    <span class="mi">86</span> <span class="o">=&gt;</span> <span class="ss">:opcode_unicode</span><span class="p">,</span>
+    <span class="mi">88</span> <span class="o">=&gt;</span> <span class="ss">:opcode_binunicode</span><span class="p">,</span>
+    <span class="mi">93</span> <span class="o">=&gt;</span> <span class="ss">:opcode_empty_list</span><span class="p">,</span>
+    <span class="mi">97</span> <span class="o">=&gt;</span> <span class="ss">:opcode_append</span><span class="p">,</span>
+    <span class="mi">98</span> <span class="o">=&gt;</span> <span class="ss">:opcode_build</span><span class="p">,</span>
+    <span class="mi">99</span> <span class="o">=&gt;</span> <span class="ss">:opcode_global</span><span class="p">,</span>
+    <span class="mi">100</span> <span class="o">=&gt;</span> <span class="ss">:opcode_dict</span><span class="p">,</span>
+    <span class="mi">101</span> <span class="o">=&gt;</span> <span class="ss">:opcode_appends</span><span class="p">,</span>
+    <span class="mi">103</span> <span class="o">=&gt;</span> <span class="ss">:opcode_get</span><span class="p">,</span>
+    <span class="mi">104</span> <span class="o">=&gt;</span> <span class="ss">:opcode_binget</span><span class="p">,</span>
+    <span class="mi">105</span> <span class="o">=&gt;</span> <span class="ss">:opcode_inst</span><span class="p">,</span>
+    <span class="mi">106</span> <span class="o">=&gt;</span> <span class="ss">:opcode_long_binget</span><span class="p">,</span>
+    <span class="mi">108</span> <span class="o">=&gt;</span> <span class="ss">:opcode_list</span><span class="p">,</span>
+    <span class="mi">111</span> <span class="o">=&gt;</span> <span class="ss">:opcode_obj</span><span class="p">,</span>
+    <span class="mi">112</span> <span class="o">=&gt;</span> <span class="ss">:opcode_put</span><span class="p">,</span>
+    <span class="mi">113</span> <span class="o">=&gt;</span> <span class="ss">:opcode_binput</span><span class="p">,</span>
+    <span class="mi">114</span> <span class="o">=&gt;</span> <span class="ss">:opcode_long_binput</span><span class="p">,</span>
+    <span class="mi">115</span> <span class="o">=&gt;</span> <span class="ss">:opcode_setitem</span><span class="p">,</span>
+    <span class="mi">116</span> <span class="o">=&gt;</span> <span class="ss">:opcode_tuple</span><span class="p">,</span>
+    <span class="mi">117</span> <span class="o">=&gt;</span> <span class="ss">:opcode_setitems</span><span class="p">,</span>
+    <span class="mi">125</span> <span class="o">=&gt;</span> <span class="ss">:opcode_empty_dict</span><span class="p">,</span>
+    <span class="mi">128</span> <span class="o">=&gt;</span> <span class="ss">:opcode_proto</span><span class="p">,</span>
+    <span class="mi">129</span> <span class="o">=&gt;</span> <span class="ss">:opcode_newobj</span><span class="p">,</span>
+    <span class="mi">130</span> <span class="o">=&gt;</span> <span class="ss">:opcode_ext1</span><span class="p">,</span>
+    <span class="mi">131</span> <span class="o">=&gt;</span> <span class="ss">:opcode_ext2</span><span class="p">,</span>
+    <span class="mi">132</span> <span class="o">=&gt;</span> <span class="ss">:opcode_ext4</span><span class="p">,</span>
+    <span class="mi">133</span> <span class="o">=&gt;</span> <span class="ss">:opcode_tuple1</span><span class="p">,</span>
+    <span class="mi">134</span> <span class="o">=&gt;</span> <span class="ss">:opcode_tuple2</span><span class="p">,</span>
+    <span class="mi">135</span> <span class="o">=&gt;</span> <span class="ss">:opcode_tuple3</span><span class="p">,</span>
+    <span class="mi">136</span> <span class="o">=&gt;</span> <span class="ss">:opcode_newtrue</span><span class="p">,</span>
+    <span class="mi">137</span> <span class="o">=&gt;</span> <span class="ss">:opcode_newfalse</span><span class="p">,</span>
+    <span class="mi">138</span> <span class="o">=&gt;</span> <span class="ss">:opcode_long1</span><span class="p">,</span>
+    <span class="mi">139</span> <span class="o">=&gt;</span> <span class="ss">:opcode_long4</span><span class="p">,</span>
+    <span class="mi">140</span> <span class="o">=&gt;</span> <span class="ss">:opcode_short_binunicode</span><span class="p">,</span>
+    <span class="mi">141</span> <span class="o">=&gt;</span> <span class="ss">:opcode_binunicode8</span><span class="p">,</span>
+    <span class="mi">142</span> <span class="o">=&gt;</span> <span class="ss">:opcode_binbytes8</span><span class="p">,</span>
+    <span class="mi">143</span> <span class="o">=&gt;</span> <span class="ss">:opcode_empty_set</span><span class="p">,</span>
+    <span class="mi">144</span> <span class="o">=&gt;</span> <span class="ss">:opcode_additems</span><span class="p">,</span>
+    <span class="mi">145</span> <span class="o">=&gt;</span> <span class="ss">:opcode_frozenset</span><span class="p">,</span>
+    <span class="mi">146</span> <span class="o">=&gt;</span> <span class="ss">:opcode_newobj_ex</span><span class="p">,</span>
+    <span class="mi">147</span> <span class="o">=&gt;</span> <span class="ss">:opcode_stack_global</span><span class="p">,</span>
+    <span class="mi">148</span> <span class="o">=&gt;</span> <span class="ss">:opcode_memoize</span><span class="p">,</span>
+    <span class="mi">149</span> <span class="o">=&gt;</span> <span class="ss">:opcode_frame</span><span class="p">,</span>
+    <span class="mi">150</span> <span class="o">=&gt;</span> <span class="ss">:opcode_bytearray8</span><span class="p">,</span>
+    <span class="mi">151</span> <span class="o">=&gt;</span> <span class="ss">:opcode_next_buffer</span><span class="p">,</span>
+    <span class="mi">152</span> <span class="o">=&gt;</span> <span class="ss">:opcode_read_buffer</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__OPCODE</span> <span class="o">=</span> <span class="no">OPCODE</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @ops = []
-    i = 0
-    begin
-      _ = Op.new(@_io, self, @_root)
-      @ops &lt;&lt; _
-      i += 1
-    end until _.code == :opcode_stop
-    self
-  end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@ops</span> <span class="o">=</span> <span class="o">[]</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">begin</span>
+      <span class="n">_</span> <span class="o">=</span> <span class="no">Op</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@ops</span> <span class="o">&lt;&lt;</span> <span class="n">_</span>
+      <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span> <span class="k">until</span> <span class="n">_</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="ss">:opcode_stop</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
 
-  ##
-  # Length prefixed string, between 0 and 2**64-1 bytes long.
-  # 
-  # Only a 64-bit build of Python would produce a pickle containing strings
-  # large enough to need this type. Such a pickle could not be unpickled on
-  # a 32-bit build of Python, because the string would be larger than
-  # `sys.maxsize`.
-  class Unicodestring8 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Length prefixed string, between 0 and 2**64-1 bytes long.</span>
+  <span class="c1"># </span>
+  <span class="c1"># Only a 64-bit build of Python would produce a pickle containing strings</span>
+  <span class="c1"># large enough to need this type. Such a pickle could not be unpickled on</span>
+  <span class="c1"># a 32-bit build of Python, because the string would be larger than</span>
+  <span class="c1"># `sys.maxsize`.</span>
+  <span class="k">class</span> <span class="nc">Unicodestring8</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len = @_io.read_u8le
-      @val = (@_io.read_bytes(len)).force_encoding(&quot;utf8&quot;)
-      self
-    end
-    attr_reader :len
-    attr_reader :val
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
 
-  ##
-  # Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,
-  # encoded as two&#39;s complement.
-  class Long1 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Large signed integer, in the range -2**(8*255-1) to 2**(8*255-1)-1,</span>
+  <span class="c1"># encoded as two&#39;s complement.</span>
+  <span class="k">class</span> <span class="nc">Long1</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len = @_io.read_u1
-      @val = @_io.read_bytes(len)
-      self
-    end
-    attr_reader :len
-    attr_reader :val
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
 
-  ##
-  # Length prefixed string, between 0 and 2**64-1 bytes long.
-  # 
-  # Only a 64-bit build of Python would produce a pickle containing strings
-  # large enough to need this type. Such a pickle could not be unpickled on
-  # a 32-bit build of Python, because the string would be larger than
-  # `sys.maxsize`.
-  class Bytes8 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Length prefixed string, between 0 and 2**64-1 bytes long.</span>
+  <span class="c1"># </span>
+  <span class="c1"># Only a 64-bit build of Python would produce a pickle containing strings</span>
+  <span class="c1"># large enough to need this type. Such a pickle could not be unpickled on</span>
+  <span class="c1"># a 32-bit build of Python, because the string would be larger than</span>
+  <span class="c1"># `sys.maxsize`.</span>
+  <span class="k">class</span> <span class="nc">Bytes8</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len = @_io.read_u8le
-      @val = @_io.read_bytes(len)
-      self
-    end
-    attr_reader :len
-    attr_reader :val
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
 
-  ##
-  # Length prefixed byte string, between 0 and 255 bytes long.
-  class Bytes1 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Length prefixed byte string, between 0 and 255 bytes long.</span>
+  <span class="k">class</span> <span class="nc">Bytes1</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len = @_io.read_u1
-      @val = @_io.read_bytes(len)
-      self
-    end
-    attr_reader :len
-    attr_reader :val
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
 
-  ##
-  # Length prefixed string, between 0 and 2**32-1 bytes long
-  class Bytes4 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Length prefixed string, between 0 and 2**32-1 bytes long</span>
+  <span class="k">class</span> <span class="nc">Bytes4</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len = @_io.read_u4le
-      @val = @_io.read_bytes(len)
-      self
-    end
-    attr_reader :len
-    attr_reader :val
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
 
-  ##
-  # Some opcodes take no argument, this empty type is used for them.
-  class NoArg &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Some opcodes take no argument, this empty type is used for them.</span>
+  <span class="k">class</span> <span class="nc">NoArg</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      self
-    end
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
 
-  ##
-  # Unquoted string, does not contain string escapes.
-  class StringnlNoescape &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Unquoted string, does not contain string escapes.</span>
+  <span class="k">class</span> <span class="nc">StringnlNoescape</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @val = (@_io.read_bytes_term(10, false, true, true)).force_encoding(&quot;ascii&quot;)
-      self
-    end
-    attr_reader :val
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
 
-  ##
-  # Integer, encoded with the ASCII chracters [0-9-], followed by &#39;L&#39;.
-  class DecimalnlLong &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Integer, encoded with the ASCII chracters [0-9-], followed by &#39;L&#39;.</span>
+  <span class="k">class</span> <span class="nc">DecimalnlLong</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @val = (@_io.read_bytes_term(10, false, true, true)).force_encoding(&quot;ascii&quot;)
-      self
-    end
-    attr_reader :val
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
 
-  ##
-  # Length prefixed string, between 0 and 2**32-1 bytes long
-  class Unicodestring4 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Length prefixed string, between 0 and 2**32-1 bytes long</span>
+  <span class="k">class</span> <span class="nc">Unicodestring4</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len = @_io.read_u4le
-      @val = (@_io.read_bytes(len)).force_encoding(&quot;utf8&quot;)
-      self
-    end
-    attr_reader :len
-    attr_reader :val
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
 
-  ##
-  # Unquoted string, containing Python Unicode escapes.
-  class Unicodestringnl &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Unquoted string, containing Python Unicode escapes.</span>
+  <span class="k">class</span> <span class="nc">Unicodestringnl</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @val = (@_io.read_bytes_term(10, false, true, true)).force_encoding(&quot;ascii&quot;)
-      self
-    end
-    attr_reader :val
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
 
-  ##
-  # Large signed integer, in the range -2**(8*2**32-1) to 2**(8*2**32-1)-1,
-  # encoded as two&#39;s complement.
-  class Long4 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Large signed integer, in the range -2**(8*2**32-1) to 2**(8*2**32-1)-1,</span>
+  <span class="c1"># encoded as two&#39;s complement.</span>
+  <span class="k">class</span> <span class="nc">Long4</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len = @_io.read_u4le
-      @val = @_io.read_bytes(len)
-      self
-    end
-    attr_reader :len
-    attr_reader :val
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
 
-  ##
-  # Length prefixed string, between 0 and 255 bytes long. Encoding is
-  # unspecified.
-  # 
-  # The default Python 2.x string type (`str`) is a sequence of bytes.
-  # These are pickled as `string1` or `string4`, when protocol == 2.
-  # The bytes are written directly, no explicit encoding is performed.
-  # 
-  # Python 3.x will not pickle an object as `string1` or `string4`.
-  # Instead, opcodes and types with a known encoding are used.
-  # When unpickling
-  # 
-  # - `pickle.Unpickler` objects default to ASCII, which can be overriden
-  # - `pickletools.dis` uses latin1, and cannot be overriden
-  # @see https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495 Source
-  class String1 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Length prefixed string, between 0 and 255 bytes long. Encoding is</span>
+  <span class="c1"># unspecified.</span>
+  <span class="c1"># </span>
+  <span class="c1"># The default Python 2.x string type (`str`) is a sequence of bytes.</span>
+  <span class="c1"># These are pickled as `string1` or `string4`, when protocol == 2.</span>
+  <span class="c1"># The bytes are written directly, no explicit encoding is performed.</span>
+  <span class="c1"># </span>
+  <span class="c1"># Python 3.x will not pickle an object as `string1` or `string4`.</span>
+  <span class="c1"># Instead, opcodes and types with a known encoding are used.</span>
+  <span class="c1"># When unpickling</span>
+  <span class="c1"># </span>
+  <span class="c1"># - `pickle.Unpickler` objects default to ASCII, which can be overriden</span>
+  <span class="c1"># - `pickletools.dis` uses latin1, and cannot be overriden</span>
+  <span class="c1"># @see https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495 Source</span>
+  <span class="k">class</span> <span class="nc">String1</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len = @_io.read_u1
-      @val = @_io.read_bytes(len)
-      self
-    end
-    attr_reader :len
-    attr_reader :val
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
 
-  ##
-  # Length prefixed string, between 0 and 2**64-1 bytes long.
-  # 
-  # The contents are deserilised into a `bytearray` object.
-  class Bytearray8 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Length prefixed string, between 0 and 2**64-1 bytes long.</span>
+  <span class="c1"># </span>
+  <span class="c1"># The contents are deserilised into a `bytearray` object.</span>
+  <span class="k">class</span> <span class="nc">Bytearray8</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len = @_io.read_u8le
-      @val = @_io.read_bytes(len)
-      self
-    end
-    attr_reader :len
-    attr_reader :val
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
 
-  ##
-  # Integer or boolean, encoded with the ASCII characters [0-9-].
-  # 
-  # The values &#39;00&#39; and &#39;01&#39; encode the Python values `False` and `True`.
-  # Normally a value would not contain leading &#39;0&#39; characters.
-  class DecimalnlShort &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Integer or boolean, encoded with the ASCII characters [0-9-].</span>
+  <span class="c1"># </span>
+  <span class="c1"># The values &#39;00&#39; and &#39;01&#39; encode the Python values `False` and `True`.</span>
+  <span class="c1"># Normally a value would not contain leading &#39;0&#39; characters.</span>
+  <span class="k">class</span> <span class="nc">DecimalnlShort</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @val = (@_io.read_bytes_term(10, false, true, true)).force_encoding(&quot;ascii&quot;)
-      self
-    end
-    attr_reader :val
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
 
-  ##
-  # Length prefixed string, between 0 and 255 bytes long
-  class Unicodestring1 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Length prefixed string, between 0 and 255 bytes long</span>
+  <span class="k">class</span> <span class="nc">Unicodestring1</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len = @_io.read_u4le
-      @val = (@_io.read_bytes(len)).force_encoding(&quot;utf8&quot;)
-      self
-    end
-    attr_reader :len
-    attr_reader :val
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
 
-  ##
-  # Quoted string, possibly containing Python string escapes.
-  class Stringnl &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Quoted string, possibly containing Python string escapes.</span>
+  <span class="k">class</span> <span class="nc">Stringnl</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @val = (@_io.read_bytes_term(10, false, true, true)).force_encoding(&quot;ascii&quot;)
-      self
-    end
-    attr_reader :val
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
 
-  ##
-  # Pair of unquoted, unescaped strings.
-  class StringnlNoescapePair &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Pair of unquoted, unescaped strings.</span>
+  <span class="k">class</span> <span class="nc">StringnlNoescapePair</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @val1 = StringnlNoescape.new(@_io, self, @_root)
-      @val2 = StringnlNoescape.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :val1
-    attr_reader :val2
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@val1</span> <span class="o">=</span> <span class="no">StringnlNoescape</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@val2</span> <span class="o">=</span> <span class="no">StringnlNoescape</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val1</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val2</span>
+  <span class="k">end</span>
 
-  ##
-  # Length prefixed string, between 0 and 2**31-1 bytes long. Encoding is
-  # unspecified.
-  # 
-  # Although the len field is signed, any length &lt; 0 will raise an exception
-  # during unpickling.
-  # 
-  # See the documentation for `string1` for further detail about encodings.
-  # @see https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495 Source
-  class String4 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Length prefixed string, between 0 and 2**31-1 bytes long. Encoding is</span>
+  <span class="c1"># unspecified.</span>
+  <span class="c1"># </span>
+  <span class="c1"># Although the len field is signed, any length &lt; 0 will raise an exception</span>
+  <span class="c1"># during unpickling.</span>
+  <span class="c1"># </span>
+  <span class="c1"># See the documentation for `string1` for further detail about encodings.</span>
+  <span class="c1"># @see https://github.com/python/cpython/blob/bb8071a4/Lib/pickle.py#L486-L495 Source</span>
+  <span class="k">class</span> <span class="nc">String4</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len = @_io.read_s4le
-      @val = @_io.read_bytes(len)
-      self
-    end
-    attr_reader :len
-    attr_reader :val
-  end
-  class Op &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Op</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @code = Kaitai::Struct::Stream::resolve_enum(OPCODE, @_io.read_u1)
-      case code
-      when :opcode_list
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_ext2
-        @arg = @_io.read_u2le
-      when :opcode_readonly_buffer
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_stop
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_binunicode
-        @arg = Unicodestring4.new(@_io, self, @_root)
-      when :opcode_put
-        @arg = DecimalnlShort.new(@_io, self, @_root)
-      when :opcode_newfalse
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_long1
-        @arg = Long1.new(@_io, self, @_root)
-      when :opcode_unicode
-        @arg = Unicodestringnl.new(@_io, self, @_root)
-      when :opcode_empty_list
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_mark
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_persid
-        @arg = StringnlNoescape.new(@_io, self, @_root)
-      when :opcode_stack_global
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_binint
-        @arg = @_io.read_s4le
-      when :opcode_binput
-        @arg = @_io.read_u1
-      when :opcode_binint1
-        @arg = @_io.read_u1
-      when :opcode_binint2
-        @arg = @_io.read_u2le
-      when :opcode_tuple
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_short_binstring
-        @arg = String1.new(@_io, self, @_root)
-      when :opcode_empty_set
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_string
-        @arg = Stringnl.new(@_io, self, @_root)
-      when :opcode_empty_dict
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_binget
-        @arg = @_io.read_u1
-      when :opcode_append
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_pop_mark
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_get
-        @arg = DecimalnlShort.new(@_io, self, @_root)
-      when :opcode_newobj
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_reduce
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_binbytes
-        @arg = Bytes4.new(@_io, self, @_root)
-      when :opcode_next_buffer
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_binbytes8
-        @arg = Bytes8.new(@_io, self, @_root)
-      when :opcode_setitem
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_frame
-        @arg = @_io.read_u8le
-      when :opcode_float
-        @arg = Floatnl.new(@_io, self, @_root)
-      when :opcode_binunicode8
-        @arg = Unicodestring8.new(@_io, self, @_root)
-      when :opcode_int
-        @arg = DecimalnlShort.new(@_io, self, @_root)
-      when :opcode_long_binput
-        @arg = @_io.read_u4le
-      when :opcode_empty_tuple
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_long
-        @arg = DecimalnlLong.new(@_io, self, @_root)
-      when :opcode_frozenset
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_global
-        @arg = StringnlNoescapePair.new(@_io, self, @_root)
-      when :opcode_obj
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_additems
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_tuple1
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_setitems
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_none
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_build
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_ext4
-        @arg = @_io.read_u4le
-      when :opcode_newobj_ex
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_binfloat
-        @arg = @_io.read_f8be
-      when :opcode_dup
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_bytearray8
-        @arg = Bytearray8.new(@_io, self, @_root)
-      when :opcode_long4
-        @arg = Long4.new(@_io, self, @_root)
-      when :opcode_short_binunicode
-        @arg = Unicodestring1.new(@_io, self, @_root)
-      when :opcode_tuple3
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_short_binbytes
-        @arg = Bytes1.new(@_io, self, @_root)
-      when :opcode_ext1
-        @arg = @_io.read_u1
-      when :opcode_dict
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_appends
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_inst
-        @arg = StringnlNoescapePair.new(@_io, self, @_root)
-      when :opcode_binpersid
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_memoize
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_proto
-        @arg = @_io.read_u1
-      when :opcode_newtrue
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_binstring
-        @arg = String4.new(@_io, self, @_root)
-      when :opcode_tuple2
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_pop
-        @arg = NoArg.new(@_io, self, @_root)
-      when :opcode_long_binget
-        @arg = @_io.read_u4le
-      end
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@code</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">OPCODE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="k">case</span> <span class="n">code</span>
+      <span class="k">when</span> <span class="ss">:opcode_list</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_ext2</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_readonly_buffer</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_stop</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binunicode</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Unicodestring4</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_put</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">DecimalnlShort</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_newfalse</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_long1</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Long1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_unicode</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Unicodestringnl</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_empty_list</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_mark</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_persid</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">StringnlNoescape</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_stack_global</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binint</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
+      <span class="k">when</span> <span class="ss">:opcode_binput</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_binint1</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_binint2</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">when</span> <span class="ss">:opcode_tuple</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_short_binstring</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">String1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_empty_set</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_string</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Stringnl</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_empty_dict</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binget</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_append</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_pop_mark</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_get</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">DecimalnlShort</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_newobj</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_reduce</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binbytes</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Bytes4</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_next_buffer</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binbytes8</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Bytes8</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_setitem</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_frame</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
+      <span class="k">when</span> <span class="ss">:opcode_float</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Floatnl</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binunicode8</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Unicodestring8</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_int</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">DecimalnlShort</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_long_binput</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">when</span> <span class="ss">:opcode_empty_tuple</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_long</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">DecimalnlLong</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_frozenset</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_global</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">StringnlNoescapePair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_obj</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_additems</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_tuple1</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_setitems</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_none</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_build</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_ext4</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">when</span> <span class="ss">:opcode_newobj_ex</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binfloat</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f8be</span>
+      <span class="k">when</span> <span class="ss">:opcode_dup</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_bytearray8</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Bytearray8</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_long4</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Long4</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_short_binunicode</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Unicodestring1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_tuple3</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_short_binbytes</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Bytes1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_ext1</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_dict</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_appends</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_inst</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">StringnlNoescapePair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binpersid</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_memoize</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_proto</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">when</span> <span class="ss">:opcode_newtrue</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_binstring</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">String4</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_tuple2</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_pop</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_long_binget</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Operation code that determines which action should be
-    # performed next by the Pickle Virtual Machine. Some opcodes
-    # are only available in later versions of the Pickle protocol.
-    attr_reader :code
+    <span class="c1">##</span>
+    <span class="c1"># Operation code that determines which action should be</span>
+    <span class="c1"># performed next by the Pickle Virtual Machine. Some opcodes</span>
+    <span class="c1"># are only available in later versions of the Pickle protocol.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:code</span>
 
-    ##
-    # Optional argument for the operation. Data type and length
-    # are determined by the value of the opcode.
-    attr_reader :arg
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Optional argument for the operation. Data type and length</span>
+    <span class="c1"># are determined by the value of the opcode.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:arg</span>
+  <span class="k">end</span>
 
-  ##
-  # Double float, encoded with the ASCII characters [0-9.e+-], &#39;-inf&#39;, &#39;inf&#39;,
-  # or &#39;nan&#39;.
-  class Floatnl &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Double float, encoded with the ASCII characters [0-9.e+-], &#39;-inf&#39;, &#39;inf&#39;,</span>
+  <span class="c1"># or &#39;nan&#39;.</span>
+  <span class="k">class</span> <span class="nc">Floatnl</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @val = (@_io.read_bytes_term(10, false, true, true)).force_encoding(&quot;ascii&quot;)
-      self
-    end
-    attr_reader :val
-  end
-  attr_reader :ops
-end
-</code></pre>
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@val</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:val</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:ops</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -951,8 +948,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

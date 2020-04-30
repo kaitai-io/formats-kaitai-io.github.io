@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -244,344 +241,344 @@ Tga data = new Tga(new ByteBufferKaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.nio.charset.Charset;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
 
 
-/**
- * TGA (AKA Truevision TGA, AKA TARGA), is a raster image file format created by Truevision. It supports up to 32 bits per pixel (three 8-bit RGB channels + 8-bit alpha channel), color mapping and optional lossless RLE compression.
- * @see &lt;a href=&quot;http://www.dca.fee.unicamp.br/~martino/disciplinas/ea978/tgaffs.pdf&quot;&gt;Source&lt;/a&gt;
- */
-public class Tga extends KaitaiStruct {
-    public static Tga fromFile(String fileName) throws IOException {
-        return new Tga(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * TGA (AKA Truevision TGA, AKA TARGA), is a raster image file format created by Truevision. It supports up to 32 bits per pixel (three 8-bit RGB channels + 8-bit alpha channel), color mapping and optional lossless RLE compression.</span>
+<span class="cm"> * @see &lt;a href=&quot;http://www.dca.fee.unicamp.br/~martino/disciplinas/ea978/tgaffs.pdf&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Tga</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Tga</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Tga</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public enum ColorMapEnum {
-        NO_COLOR_MAP(0),
-        HAS_COLOR_MAP(1);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">ColorMapEnum</span> <span class="p">{</span>
+        <span class="n">NO_COLOR_MAP</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+        <span class="n">HAS_COLOR_MAP</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
 
-        private final long id;
-        ColorMapEnum(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, ColorMapEnum&gt; byId = new HashMap&lt;Long, ColorMapEnum&gt;(2);
-        static {
-            for (ColorMapEnum e : ColorMapEnum.values())
-                byId.put(e.id(), e);
-        }
-        public static ColorMapEnum byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">ColorMapEnum</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">ColorMapEnum</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">ColorMapEnum</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">ColorMapEnum</span> <span class="n">e</span> <span class="p">:</span> <span class="n">ColorMapEnum</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">ColorMapEnum</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public enum ImageTypeEnum {
-        NO_IMAGE_DATA(0),
-        UNCOMP_COLOR_MAPPED(1),
-        UNCOMP_TRUE_COLOR(2),
-        UNCOMP_BW(3),
-        RLE_COLOR_MAPPED(9),
-        RLE_TRUE_COLOR(10),
-        RLE_BW(11);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">ImageTypeEnum</span> <span class="p">{</span>
+        <span class="n">NO_IMAGE_DATA</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+        <span class="n">UNCOMP_COLOR_MAPPED</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">UNCOMP_TRUE_COLOR</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">UNCOMP_BW</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+        <span class="n">RLE_COLOR_MAPPED</span><span class="p">(</span><span class="mi">9</span><span class="p">),</span>
+        <span class="n">RLE_TRUE_COLOR</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+        <span class="n">RLE_BW</span><span class="p">(</span><span class="mi">11</span><span class="p">);</span>
 
-        private final long id;
-        ImageTypeEnum(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, ImageTypeEnum&gt; byId = new HashMap&lt;Long, ImageTypeEnum&gt;(7);
-        static {
-            for (ImageTypeEnum e : ImageTypeEnum.values())
-                byId.put(e.id(), e);
-        }
-        public static ImageTypeEnum byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">ImageTypeEnum</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">ImageTypeEnum</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">ImageTypeEnum</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">ImageTypeEnum</span> <span class="n">e</span> <span class="p">:</span> <span class="n">ImageTypeEnum</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">ImageTypeEnum</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public Tga(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">Tga</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public Tga(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">Tga</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public Tga(KaitaiStream _io, KaitaiStruct _parent, Tga _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.imageIdLen = this._io.readU1();
-        this.colorMapType = ColorMapEnum.byId(this._io.readU1());
-        this.imageType = ImageTypeEnum.byId(this._io.readU1());
-        this.colorMapOfs = this._io.readU2le();
-        this.numColorMap = this._io.readU2le();
-        this.colorMapDepth = this._io.readU1();
-        this.xOffset = this._io.readU2le();
-        this.yOffset = this._io.readU2le();
-        this.width = this._io.readU2le();
-        this.height = this._io.readU2le();
-        this.imageDepth = this._io.readU1();
-        this.imgDescriptor = this._io.readU1();
-        this.imageId = this._io.readBytes(imageIdLen());
-        if (colorMapType() == ColorMapEnum.HAS_COLOR_MAP) {
-            colorMap = new ArrayList&lt;byte[]&gt;((int) (numColorMap()));
-            for (int i = 0; i &lt; numColorMap(); i++) {
-                this.colorMap.add(this._io.readBytes(((colorMapDepth() + 7) / 8)));
-            }
-        }
-    }
-    public static class TgaFooter extends KaitaiStruct {
-        public static TgaFooter fromFile(String fileName) throws IOException {
-            return new TgaFooter(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="kd">public</span> <span class="nf">Tga</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Tga</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">imageIdLen</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">colorMapType</span> <span class="o">=</span> <span class="n">ColorMapEnum</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">imageType</span> <span class="o">=</span> <span class="n">ImageTypeEnum</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">colorMapOfs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">numColorMap</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">colorMapDepth</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">xOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">yOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">width</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">height</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">imageDepth</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">imgDescriptor</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">imageId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">imageIdLen</span><span class="p">());</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">colorMapType</span><span class="p">()</span> <span class="o">==</span> <span class="n">ColorMapEnum</span><span class="p">.</span><span class="na">HAS_COLOR_MAP</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">colorMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numColorMap</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numColorMap</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">colorMap</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(((</span><span class="n">colorMapDepth</span><span class="p">()</span> <span class="o">+</span> <span class="mi">7</span><span class="p">)</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">TgaFooter</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">TgaFooter</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">TgaFooter</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public TgaFooter(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">TgaFooter</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public TgaFooter(KaitaiStream _io, Tga _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">TgaFooter</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Tga</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public TgaFooter(KaitaiStream _io, Tga _parent, Tga _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.extAreaOfs = this._io.readU4le();
-            this.devDirOfs = this._io.readU4le();
-            this.versionMagic = this._io.readBytes(18);
-        }
-        private Boolean isValid;
-        public Boolean isValid() {
-            if (this.isValid != null)
-                return this.isValid;
-            boolean _tmp = (boolean) (Arrays.equals(versionMagic(), new byte[] { 84, 82, 85, 69, 86, 73, 83, 73, 79, 78, 45, 88, 70, 73, 76, 69, 46, 0 }));
-            this.isValid = _tmp;
-            return this.isValid;
-        }
-        private TgaExtArea extArea;
-        public TgaExtArea extArea() {
-            if (this.extArea != null)
-                return this.extArea;
-            if (isValid()) {
-                long _pos = this._io.pos();
-                this._io.seek(extAreaOfs());
-                this.extArea = new TgaExtArea(this._io, this, _root);
-                this._io.seek(_pos);
-            }
-            return this.extArea;
-        }
-        private long extAreaOfs;
-        private long devDirOfs;
-        private byte[] versionMagic;
-        private Tga _root;
-        private Tga _parent;
+        <span class="kd">public</span> <span class="nf">TgaFooter</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Tga</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Tga</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">extAreaOfs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">devDirOfs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">versionMagic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">18</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">isValid</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">isValid</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">isValid</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">isValid</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">versionMagic</span><span class="p">(),</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">88</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">46</span><span class="p">,</span> <span class="mi">0</span> <span class="p">}));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">isValid</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">isValid</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">TgaExtArea</span> <span class="n">extArea</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">TgaExtArea</span> <span class="nf">extArea</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">extArea</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">extArea</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">isValid</span><span class="p">())</span> <span class="p">{</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">extAreaOfs</span><span class="p">());</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">extArea</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TgaExtArea</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">extArea</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">extAreaOfs</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">devDirOfs</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">versionMagic</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Tga</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Tga</span> <span class="n">_parent</span><span class="p">;</span>
 
-        /**
-         * Offset to extension area
-         */
-        public long extAreaOfs() { return extAreaOfs; }
+        <span class="cm">/**</span>
+<span class="cm">         * Offset to extension area</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">extAreaOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">extAreaOfs</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Offset to developer directory
-         */
-        public long devDirOfs() { return devDirOfs; }
-        public byte[] versionMagic() { return versionMagic; }
-        public Tga _root() { return _root; }
-        public Tga _parent() { return _parent; }
-    }
-    public static class TgaExtArea extends KaitaiStruct {
-        public static TgaExtArea fromFile(String fileName) throws IOException {
-            return new TgaExtArea(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="cm">/**</span>
+<span class="cm">         * Offset to developer directory</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">devDirOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">devDirOfs</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">versionMagic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">versionMagic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Tga</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Tga</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">TgaExtArea</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">TgaExtArea</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">TgaExtArea</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public TgaExtArea(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">TgaExtArea</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public TgaExtArea(KaitaiStream _io, Tga.TgaFooter _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">TgaExtArea</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Tga</span><span class="p">.</span><span class="na">TgaFooter</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public TgaExtArea(KaitaiStream _io, Tga.TgaFooter _parent, Tga _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.extAreaSize = this._io.readU2le();
-            this.authorName = new String(this._io.readBytes(41), Charset.forName(&quot;ASCII&quot;));
-            comments = new ArrayList&lt;String&gt;((int) (4));
-            for (int i = 0; i &lt; 4; i++) {
-                this.comments.add(new String(this._io.readBytes(81), Charset.forName(&quot;ASCII&quot;)));
-            }
-            this.timestamp = this._io.readBytes(12);
-            this.jobId = new String(this._io.readBytes(41), Charset.forName(&quot;ASCII&quot;));
-            this.jobTime = new String(this._io.readBytes(6), Charset.forName(&quot;ASCII&quot;));
-            this.softwareId = new String(this._io.readBytes(41), Charset.forName(&quot;ASCII&quot;));
-            this.softwareVersion = this._io.readBytes(3);
-            this.keyColor = this._io.readU4le();
-            this.pixelAspectRatio = this._io.readU4le();
-            this.gammaValue = this._io.readU4le();
-            this.colorCorrOfs = this._io.readU4le();
-            this.postageStampOfs = this._io.readU4le();
-            this.scanLineOfs = this._io.readU4le();
-            this.attributes = this._io.readU1();
-        }
-        private int extAreaSize;
-        private String authorName;
-        private ArrayList&lt;String&gt; comments;
-        private byte[] timestamp;
-        private String jobId;
-        private String jobTime;
-        private String softwareId;
-        private byte[] softwareVersion;
-        private long keyColor;
-        private long pixelAspectRatio;
-        private long gammaValue;
-        private long colorCorrOfs;
-        private long postageStampOfs;
-        private long scanLineOfs;
-        private int attributes;
-        private Tga _root;
-        private Tga.TgaFooter _parent;
+        <span class="kd">public</span> <span class="nf">TgaExtArea</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Tga</span><span class="p">.</span><span class="na">TgaFooter</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Tga</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">extAreaSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">authorName</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">41</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+            <span class="n">comments</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">comments</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">81</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">)));</span>
+            <span class="p">}</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">timestamp</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">jobId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">41</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">jobTime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">softwareId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">41</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">softwareVersion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">keyColor</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">pixelAspectRatio</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">gammaValue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">colorCorrOfs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">postageStampOfs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">scanLineOfs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">attributes</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">extAreaSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">authorName</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">comments</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">timestamp</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">jobId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">jobTime</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">softwareId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">softwareVersion</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">keyColor</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">pixelAspectRatio</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">gammaValue</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">colorCorrOfs</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">postageStampOfs</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">scanLineOfs</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">attributes</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Tga</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Tga</span><span class="p">.</span><span class="na">TgaFooter</span> <span class="n">_parent</span><span class="p">;</span>
 
-        /**
-         * Extension area size in bytes (always 495)
-         */
-        public int extAreaSize() { return extAreaSize; }
-        public String authorName() { return authorName; }
+        <span class="cm">/**</span>
+<span class="cm">         * Extension area size in bytes (always 495)</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">extAreaSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">extAreaSize</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">authorName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">authorName</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Comments, organized as four lines, each consisting of 80 characters plus a NULL
-         */
-        public ArrayList&lt;String&gt; comments() { return comments; }
+        <span class="cm">/**</span>
+<span class="cm">         * Comments, organized as four lines, each consisting of 80 characters plus a NULL</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">comments</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">comments</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Image creation date / time
-         */
-        public byte[] timestamp() { return timestamp; }
+        <span class="cm">/**</span>
+<span class="cm">         * Image creation date / time</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">timestamp</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">timestamp</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Internal job ID, to be used in image workflow systems
-         */
-        public String jobId() { return jobId; }
+        <span class="cm">/**</span>
+<span class="cm">         * Internal job ID, to be used in image workflow systems</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">jobId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">jobId</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Hours, minutes and seconds spent creating the file (for billing, etc.)
-         */
-        public String jobTime() { return jobTime; }
+        <span class="cm">/**</span>
+<span class="cm">         * Hours, minutes and seconds spent creating the file (for billing, etc.)</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">jobTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">jobTime</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * The application that created the file.
-         */
-        public String softwareId() { return softwareId; }
-        public byte[] softwareVersion() { return softwareVersion; }
-        public long keyColor() { return keyColor; }
-        public long pixelAspectRatio() { return pixelAspectRatio; }
-        public long gammaValue() { return gammaValue; }
+        <span class="cm">/**</span>
+<span class="cm">         * The application that created the file.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">softwareId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">softwareId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">softwareVersion</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">softwareVersion</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">keyColor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">keyColor</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">pixelAspectRatio</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">pixelAspectRatio</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">gammaValue</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">gammaValue</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Number of bytes from the beginning of the file to the color correction table if present
-         */
-        public long colorCorrOfs() { return colorCorrOfs; }
+        <span class="cm">/**</span>
+<span class="cm">         * Number of bytes from the beginning of the file to the color correction table if present</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">colorCorrOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">colorCorrOfs</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Number of bytes from the beginning of the file to the postage stamp image if present
-         */
-        public long postageStampOfs() { return postageStampOfs; }
+        <span class="cm">/**</span>
+<span class="cm">         * Number of bytes from the beginning of the file to the postage stamp image if present</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">postageStampOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">postageStampOfs</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Number of bytes from the beginning of the file to the scan lines table if present
-         */
-        public long scanLineOfs() { return scanLineOfs; }
+        <span class="cm">/**</span>
+<span class="cm">         * Number of bytes from the beginning of the file to the scan lines table if present</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">scanLineOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">scanLineOfs</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Specifies the alpha channel
-         */
-        public int attributes() { return attributes; }
-        public Tga _root() { return _root; }
-        public Tga.TgaFooter _parent() { return _parent; }
-    }
-    private TgaFooter footer;
-    public TgaFooter footer() {
-        if (this.footer != null)
-            return this.footer;
-        long _pos = this._io.pos();
-        this._io.seek((_io().size() - 26));
-        this.footer = new TgaFooter(this._io, this, _root);
-        this._io.seek(_pos);
-        return this.footer;
-    }
-    private int imageIdLen;
-    private ColorMapEnum colorMapType;
-    private ImageTypeEnum imageType;
-    private int colorMapOfs;
-    private int numColorMap;
-    private int colorMapDepth;
-    private int xOffset;
-    private int yOffset;
-    private int width;
-    private int height;
-    private int imageDepth;
-    private int imgDescriptor;
-    private byte[] imageId;
-    private ArrayList&lt;byte[]&gt; colorMap;
-    private Tga _root;
-    private KaitaiStruct _parent;
-    public int imageIdLen() { return imageIdLen; }
-    public ColorMapEnum colorMapType() { return colorMapType; }
-    public ImageTypeEnum imageType() { return imageType; }
-    public int colorMapOfs() { return colorMapOfs; }
+        <span class="cm">/**</span>
+<span class="cm">         * Specifies the alpha channel</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">attributes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">attributes</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Tga</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Tga</span><span class="p">.</span><span class="na">TgaFooter</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">TgaFooter</span> <span class="n">footer</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">TgaFooter</span> <span class="nf">footer</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">footer</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">footer</span><span class="p">;</span>
+        <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">_io</span><span class="p">().</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">26</span><span class="p">));</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">footer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TgaFooter</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">footer</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">imageIdLen</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">ColorMapEnum</span> <span class="n">colorMapType</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">ImageTypeEnum</span> <span class="n">imageType</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">colorMapOfs</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">numColorMap</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">colorMapDepth</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">xOffset</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">yOffset</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">width</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">height</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">imageDepth</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">imgDescriptor</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">imageId</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span> <span class="n">colorMap</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">Tga</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">imageIdLen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">imageIdLen</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">ColorMapEnum</span> <span class="nf">colorMapType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">colorMapType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">ImageTypeEnum</span> <span class="nf">imageType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">imageType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">colorMapOfs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">colorMapOfs</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of entries in a color map
-     */
-    public int numColorMap() { return numColorMap; }
+    <span class="cm">/**</span>
+<span class="cm">     * Number of entries in a color map</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numColorMap</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numColorMap</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of bits in a each color maps entry
-     */
-    public int colorMapDepth() { return colorMapDepth; }
-    public int xOffset() { return xOffset; }
-    public int yOffset() { return yOffset; }
+    <span class="cm">/**</span>
+<span class="cm">     * Number of bits in a each color maps entry</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">colorMapDepth</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">colorMapDepth</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">xOffset</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">xOffset</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">yOffset</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">yOffset</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Width of the image, in pixels
-     */
-    public int width() { return width; }
+    <span class="cm">/**</span>
+<span class="cm">     * Width of the image, in pixels</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">width</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">width</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Height of the image, in pixels
-     */
-    public int height() { return height; }
-    public int imageDepth() { return imageDepth; }
-    public int imgDescriptor() { return imgDescriptor; }
+    <span class="cm">/**</span>
+<span class="cm">     * Height of the image, in pixels</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">height</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">height</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">imageDepth</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">imageDepth</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">imgDescriptor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">imgDescriptor</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Arbitrary application-specific information that is used to
-     * identify image. May contain text or some binary data.
-     */
-    public byte[] imageId() { return imageId; }
+    <span class="cm">/**</span>
+<span class="cm">     * Arbitrary application-specific information that is used to</span>
+<span class="cm">     * identify image. May contain text or some binary data.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">imageId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">imageId</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Color map
-     */
-    public ArrayList&lt;byte[]&gt; colorMap() { return colorMap; }
-    public Tga _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-}
-</code></pre>
+    <span class="cm">/**</span>
+<span class="cm">     * Color map</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span> <span class="nf">colorMap</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">colorMap</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">Tga</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -608,8 +605,8 @@ public class Tga extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

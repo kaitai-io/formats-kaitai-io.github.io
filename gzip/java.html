@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -276,407 +273,407 @@ one method is widely used: 8 = deflate.
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
 
 
-/**
- * Gzip is a popular and standard single-file archiving format. It
- * essentially provides a container that stores original file name,
- * timestamp and a few other things (like optional comment), basic
- * CRCs, etc, and a file compressed by a chosen compression algorithm.
- * 
- * As of 2019, there is actually only one working solution for
- * compression algorithms, so it&#39;s typically raw DEFLATE stream
- * (without zlib header) in all gzipped files.
- * @see &lt;a href=&quot;https://tools.ietf.org/html/rfc1952&quot;&gt;Source&lt;/a&gt;
- */
-public class Gzip extends KaitaiStruct {
-    public static Gzip fromFile(String fileName) throws IOException {
-        return new Gzip(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * Gzip is a popular and standard single-file archiving format. It</span>
+<span class="cm"> * essentially provides a container that stores original file name,</span>
+<span class="cm"> * timestamp and a few other things (like optional comment), basic</span>
+<span class="cm"> * CRCs, etc, and a file compressed by a chosen compression algorithm.</span>
+<span class="cm"> * </span>
+<span class="cm"> * As of 2019, there is actually only one working solution for</span>
+<span class="cm"> * compression algorithms, so it&#39;s typically raw DEFLATE stream</span>
+<span class="cm"> * (without zlib header) in all gzipped files.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://tools.ietf.org/html/rfc1952&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Gzip</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Gzip</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Gzip</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public enum CompressionMethods {
-        DEFLATE(8);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">CompressionMethods</span> <span class="p">{</span>
+        <span class="n">DEFLATE</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
 
-        private final long id;
-        CompressionMethods(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, CompressionMethods&gt; byId = new HashMap&lt;Long, CompressionMethods&gt;(1);
-        static {
-            for (CompressionMethods e : CompressionMethods.values())
-                byId.put(e.id(), e);
-        }
-        public static CompressionMethods byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">CompressionMethods</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">CompressionMethods</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">CompressionMethods</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">CompressionMethods</span> <span class="n">e</span> <span class="p">:</span> <span class="n">CompressionMethods</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">CompressionMethods</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public enum Oses {
-        FAT(0),
-        AMIGA(1),
-        VMS(2),
-        UNIX(3),
-        VM_CMS(4),
-        ATARI_TOS(5),
-        HPFS(6),
-        MACINTOSH(7),
-        Z_SYSTEM(8),
-        CP_M(9),
-        TOPS_20(10),
-        NTFS(11),
-        QDOS(12),
-        ACORN_RISCOS(13),
-        UNKNOWN(255);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">Oses</span> <span class="p">{</span>
+        <span class="n">FAT</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+        <span class="n">AMIGA</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">VMS</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">UNIX</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+        <span class="n">VM_CMS</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+        <span class="n">ATARI_TOS</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">HPFS</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span>
+        <span class="n">MACINTOSH</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span>
+        <span class="n">Z_SYSTEM</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span>
+        <span class="n">CP_M</span><span class="p">(</span><span class="mi">9</span><span class="p">),</span>
+        <span class="n">TOPS_20</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span>
+        <span class="n">NTFS</span><span class="p">(</span><span class="mi">11</span><span class="p">),</span>
+        <span class="n">QDOS</span><span class="p">(</span><span class="mi">12</span><span class="p">),</span>
+        <span class="n">ACORN_RISCOS</span><span class="p">(</span><span class="mi">13</span><span class="p">),</span>
+        <span class="n">UNKNOWN</span><span class="p">(</span><span class="mi">255</span><span class="p">);</span>
 
-        private final long id;
-        Oses(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, Oses&gt; byId = new HashMap&lt;Long, Oses&gt;(15);
-        static {
-            for (Oses e : Oses.values())
-                byId.put(e.id(), e);
-        }
-        public static Oses byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">Oses</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Oses</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Oses</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">15</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">Oses</span> <span class="n">e</span> <span class="p">:</span> <span class="n">Oses</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Oses</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public Gzip(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">Gzip</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public Gzip(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">Gzip</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public Gzip(KaitaiStream _io, KaitaiStruct _parent, Gzip _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { 31, -117 });
-        this.compressionMethod = CompressionMethods.byId(this._io.readU1());
-        this.flags = new Flags(this._io, this, _root);
-        this.modTime = this._io.readU4le();
-        switch (compressionMethod()) {
-        case DEFLATE: {
-            this.extraFlags = new ExtraFlagsDeflate(this._io, this, _root);
-            break;
-        }
-        }
-        this.os = Oses.byId(this._io.readU1());
-        if (flags().hasExtra()) {
-            this.extras = new Extras(this._io, this, _root);
-        }
-        if (flags().hasName()) {
-            this.name = this._io.readBytesTerm(0, false, true, true);
-        }
-        if (flags().hasComment()) {
-            this.comment = this._io.readBytesTerm(0, false, true, true);
-        }
-        if (flags().hasHeaderCrc()) {
-            this.headerCrc16 = this._io.readU2le();
-        }
-        this.body = this._io.readBytes(((_io().size() - _io().pos()) - 8));
-        this.bodyCrc32 = this._io.readU4le();
-        this.lenUncompressed = this._io.readU4le();
-    }
-    public static class Flags extends KaitaiStruct {
-        public static Flags fromFile(String fileName) throws IOException {
-            return new Flags(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="kd">public</span> <span class="nf">Gzip</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Gzip</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">31</span><span class="p">,</span> <span class="o">-</span><span class="mi">117</span> <span class="p">});</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">compressionMethod</span> <span class="o">=</span> <span class="n">CompressionMethods</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Flags</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">modTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="n">compressionMethod</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">DEFLATE</span><span class="p">:</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">extraFlags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ExtraFlagsDeflate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">os</span> <span class="o">=</span> <span class="n">Oses</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">().</span><span class="na">hasExtra</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">extras</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Extras</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">().</span><span class="na">hasName</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">().</span><span class="na">hasComment</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">comment</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">flags</span><span class="p">().</span><span class="na">hasHeaderCrc</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">headerCrc16</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(((</span><span class="n">_io</span><span class="p">().</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="n">_io</span><span class="p">().</span><span class="na">pos</span><span class="p">())</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">bodyCrc32</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">lenUncompressed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Flags</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Flags</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Flags</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Flags(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Flags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Flags(KaitaiStream _io, Gzip _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Flags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Gzip</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Flags(KaitaiStream _io, Gzip _parent, Gzip _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.reserved1 = this._io.readBitsInt(3);
-            this.hasComment = this._io.readBitsInt(1) != 0;
-            this.hasName = this._io.readBitsInt(1) != 0;
-            this.hasExtra = this._io.readBitsInt(1) != 0;
-            this.hasHeaderCrc = this._io.readBitsInt(1) != 0;
-            this.isText = this._io.readBitsInt(1) != 0;
-        }
-        private long reserved1;
-        private boolean hasComment;
-        private boolean hasName;
-        private boolean hasExtra;
-        private boolean hasHeaderCrc;
-        private boolean isText;
-        private Gzip _root;
-        private Gzip _parent;
-        public long reserved1() { return reserved1; }
-        public boolean hasComment() { return hasComment; }
-        public boolean hasName() { return hasName; }
+        <span class="kd">public</span> <span class="nf">Flags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Gzip</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Gzip</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasComment</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasExtra</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasHeaderCrc</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">isText</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">reserved1</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasComment</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasName</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasExtra</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasHeaderCrc</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">isText</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Gzip</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Gzip</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved1</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasComment</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasComment</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasName</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * If true, optional extra fields are present in the archive.
-         */
-        public boolean hasExtra() { return hasExtra; }
+        <span class="cm">/**</span>
+<span class="cm">         * If true, optional extra fields are present in the archive.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasExtra</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasExtra</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * If true, this archive includes a CRC16 checksum for the header.
-         */
-        public boolean hasHeaderCrc() { return hasHeaderCrc; }
+        <span class="cm">/**</span>
+<span class="cm">         * If true, this archive includes a CRC16 checksum for the header.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasHeaderCrc</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasHeaderCrc</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * If true, file inside this archive is a text file from
-         * compressor&#39;s point of view.
-         */
-        public boolean isText() { return isText; }
-        public Gzip _root() { return _root; }
-        public Gzip _parent() { return _parent; }
-    }
-    public static class ExtraFlagsDeflate extends KaitaiStruct {
-        public static ExtraFlagsDeflate fromFile(String fileName) throws IOException {
-            return new ExtraFlagsDeflate(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="cm">/**</span>
+<span class="cm">         * If true, file inside this archive is a text file from</span>
+<span class="cm">         * compressor&#39;s point of view.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isText</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">isText</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Gzip</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Gzip</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ExtraFlagsDeflate</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">ExtraFlagsDeflate</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">ExtraFlagsDeflate</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public enum CompressionStrengths {
-            BEST(2),
-            FAST(4);
+        <span class="kd">public</span> <span class="kd">enum</span> <span class="n">CompressionStrengths</span> <span class="p">{</span>
+            <span class="n">BEST</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+            <span class="n">FAST</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
 
-            private final long id;
-            CompressionStrengths(long id) { this.id = id; }
-            public long id() { return id; }
-            private static final Map&lt;Long, CompressionStrengths&gt; byId = new HashMap&lt;Long, CompressionStrengths&gt;(2);
-            static {
-                for (CompressionStrengths e : CompressionStrengths.values())
-                    byId.put(e.id(), e);
-            }
-            public static CompressionStrengths byId(long id) { return byId.get(id); }
-        }
+            <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+            <span class="n">CompressionStrengths</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">CompressionStrengths</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">CompressionStrengths</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+            <span class="kd">static</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="n">CompressionStrengths</span> <span class="n">e</span> <span class="p">:</span> <span class="n">CompressionStrengths</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                    <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">CompressionStrengths</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        public ExtraFlagsDeflate(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">ExtraFlagsDeflate</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ExtraFlagsDeflate(KaitaiStream _io, Gzip _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">ExtraFlagsDeflate</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Gzip</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public ExtraFlagsDeflate(KaitaiStream _io, Gzip _parent, Gzip _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.compressionStrength = CompressionStrengths.byId(this._io.readU1());
-        }
-        private CompressionStrengths compressionStrength;
-        private Gzip _root;
-        private Gzip _parent;
-        public CompressionStrengths compressionStrength() { return compressionStrength; }
-        public Gzip _root() { return _root; }
-        public Gzip _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">ExtraFlagsDeflate</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Gzip</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Gzip</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">compressionStrength</span> <span class="o">=</span> <span class="n">CompressionStrengths</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">CompressionStrengths</span> <span class="n">compressionStrength</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Gzip</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Gzip</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">CompressionStrengths</span> <span class="nf">compressionStrength</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">compressionStrength</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Gzip</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Gzip</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * Container for many subfields, constrained by size of stream.
-     */
-    public static class Subfields extends KaitaiStruct {
-        public static Subfields fromFile(String fileName) throws IOException {
-            return new Subfields(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * Container for many subfields, constrained by size of stream.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Subfields</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Subfields</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Subfields</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Subfields(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Subfields</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Subfields(KaitaiStream _io, Gzip.Extras _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Subfields</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Gzip</span><span class="p">.</span><span class="na">Extras</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Subfields(KaitaiStream _io, Gzip.Extras _parent, Gzip _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.entries = new ArrayList&lt;Subfield&gt;();
-            {
-                int i = 0;
-                while (!this._io.isEof()) {
-                    this.entries.add(new Subfield(this._io, this, _root));
-                    i++;
-                }
-            }
-        }
-        private ArrayList&lt;Subfield&gt; entries;
-        private Gzip _root;
-        private Gzip.Extras _parent;
-        public ArrayList&lt;Subfield&gt; entries() { return entries; }
-        public Gzip _root() { return _root; }
-        public Gzip.Extras _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">Subfields</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Gzip</span><span class="p">.</span><span class="na">Extras</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Gzip</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Subfield</span><span class="o">&gt;</span><span class="p">();</span>
+            <span class="p">{</span>
+                <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Subfield</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+                    <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Subfield</span><span class="o">&gt;</span> <span class="n">entries</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Gzip</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Gzip</span><span class="p">.</span><span class="na">Extras</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Subfield</span><span class="o">&gt;</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">entries</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Gzip</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Gzip</span><span class="p">.</span><span class="na">Extras</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * Every subfield follows typical [TLV scheme](https://en.wikipedia.org/wiki/Type-length-value):
-     * 
-     * * `id` serves role of &quot;T&quot;ype
-     * * `len_data` serves role of &quot;L&quot;ength
-     * * `data` serves role of &quot;V&quot;alue
-     * 
-     * This way it&#39;s possible to for arbitrary parser to skip over
-     * subfields it does not support.
-     */
-    public static class Subfield extends KaitaiStruct {
-        public static Subfield fromFile(String fileName) throws IOException {
-            return new Subfield(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * Every subfield follows typical [TLV scheme](https://en.wikipedia.org/wiki/Type-length-value):</span>
+<span class="cm">     * </span>
+<span class="cm">     * * `id` serves role of &quot;T&quot;ype</span>
+<span class="cm">     * * `len_data` serves role of &quot;L&quot;ength</span>
+<span class="cm">     * * `data` serves role of &quot;V&quot;alue</span>
+<span class="cm">     * </span>
+<span class="cm">     * This way it&#39;s possible to for arbitrary parser to skip over</span>
+<span class="cm">     * subfields it does not support.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Subfield</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Subfield</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Subfield</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Subfield(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Subfield</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Subfield(KaitaiStream _io, Gzip.Subfields _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Subfield</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Gzip</span><span class="p">.</span><span class="na">Subfields</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Subfield(KaitaiStream _io, Gzip.Subfields _parent, Gzip _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.id = this._io.readU2le();
-            this.lenData = this._io.readU2le();
-            this.data = this._io.readBytes(lenData());
-        }
-        private int id;
-        private int lenData;
-        private byte[] data;
-        private Gzip _root;
-        private Gzip.Subfields _parent;
+        <span class="kd">public</span> <span class="nf">Subfield</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Gzip</span><span class="p">.</span><span class="na">Subfields</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Gzip</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenData</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">id</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">lenData</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Gzip</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Gzip</span><span class="p">.</span><span class="na">Subfields</span> <span class="n">_parent</span><span class="p">;</span>
 
-        /**
-         * Subfield ID, typically two ASCII letters.
-         */
-        public int id() { return id; }
-        public int lenData() { return lenData; }
-        public byte[] data() { return data; }
-        public Gzip _root() { return _root; }
-        public Gzip.Subfields _parent() { return _parent; }
-    }
-    public static class Extras extends KaitaiStruct {
-        public static Extras fromFile(String fileName) throws IOException {
-            return new Extras(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="cm">/**</span>
+<span class="cm">         * Subfield ID, typically two ASCII letters.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lenData</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenData</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Gzip</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Gzip</span><span class="p">.</span><span class="na">Subfields</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Extras</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Extras</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Extras</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Extras(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Extras</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Extras(KaitaiStream _io, Gzip _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Extras</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Gzip</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Extras(KaitaiStream _io, Gzip _parent, Gzip _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenSubfields = this._io.readU2le();
-            this._raw_subfields = this._io.readBytes(lenSubfields());
-            KaitaiStream _io__raw_subfields = new ByteBufferKaitaiStream(_raw_subfields);
-            this.subfields = new Subfields(_io__raw_subfields, this, _root);
-        }
-        private int lenSubfields;
-        private Subfields subfields;
-        private Gzip _root;
-        private Gzip _parent;
-        private byte[] _raw_subfields;
-        public int lenSubfields() { return lenSubfields; }
-        public Subfields subfields() { return subfields; }
-        public Gzip _root() { return _root; }
-        public Gzip _parent() { return _parent; }
-        public byte[] _raw_subfields() { return _raw_subfields; }
-    }
-    private byte[] magic;
-    private CompressionMethods compressionMethod;
-    private Flags flags;
-    private long modTime;
-    private ExtraFlagsDeflate extraFlags;
-    private Oses os;
-    private Extras extras;
-    private byte[] name;
-    private byte[] comment;
-    private Integer headerCrc16;
-    private byte[] body;
-    private long bodyCrc32;
-    private long lenUncompressed;
-    private Gzip _root;
-    private KaitaiStruct _parent;
-    public byte[] magic() { return magic; }
+        <span class="kd">public</span> <span class="nf">Extras</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Gzip</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Gzip</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenSubfields</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_subfields</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenSubfields</span><span class="p">());</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_subfields</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_subfields</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">subfields</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Subfields</span><span class="p">(</span><span class="n">_io__raw_subfields</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">lenSubfields</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Subfields</span> <span class="n">subfields</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Gzip</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Gzip</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_subfields</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lenSubfields</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenSubfields</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Subfields</span> <span class="nf">subfields</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">subfields</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Gzip</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Gzip</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_subfields</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_subfields</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">magic</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">CompressionMethods</span> <span class="n">compressionMethod</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">Flags</span> <span class="n">flags</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">modTime</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">ExtraFlagsDeflate</span> <span class="n">extraFlags</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">Oses</span> <span class="n">os</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">Extras</span> <span class="n">extras</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">name</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">comment</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">Integer</span> <span class="n">headerCrc16</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">body</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">bodyCrc32</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenUncompressed</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">Gzip</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">magic</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Compression method used to compress file body. In practice, only
-     * one method is widely used: 8 = deflate.
-     */
-    public CompressionMethods compressionMethod() { return compressionMethod; }
-    public Flags flags() { return flags; }
+    <span class="cm">/**</span>
+<span class="cm">     * Compression method used to compress file body. In practice, only</span>
+<span class="cm">     * one method is widely used: 8 = deflate.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">CompressionMethods</span> <span class="nf">compressionMethod</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">compressionMethod</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">Flags</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Last modification time of a file archived in UNIX timestamp format.
-     */
-    public long modTime() { return modTime; }
+    <span class="cm">/**</span>
+<span class="cm">     * Last modification time of a file archived in UNIX timestamp format.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">modTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">modTime</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Extra flags, specific to compression method chosen.
-     */
-    public ExtraFlagsDeflate extraFlags() { return extraFlags; }
+    <span class="cm">/**</span>
+<span class="cm">     * Extra flags, specific to compression method chosen.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">ExtraFlagsDeflate</span> <span class="nf">extraFlags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">extraFlags</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * OS used to compress this file.
-     */
-    public Oses os() { return os; }
-    public Extras extras() { return extras; }
-    public byte[] name() { return name; }
-    public byte[] comment() { return comment; }
-    public Integer headerCrc16() { return headerCrc16; }
+    <span class="cm">/**</span>
+<span class="cm">     * OS used to compress this file.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">Oses</span> <span class="nf">os</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">os</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">Extras</span> <span class="nf">extras</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">extras</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">name</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">comment</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">comment</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">headerCrc16</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">headerCrc16</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Compressed body of a file archived. Note that we don&#39;t make an
-     * attempt to decompress it here.
-     */
-    public byte[] body() { return body; }
+    <span class="cm">/**</span>
+<span class="cm">     * Compressed body of a file archived. Note that we don&#39;t make an</span>
+<span class="cm">     * attempt to decompress it here.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">body</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * CRC32 checksum of an uncompressed file body
-     */
-    public long bodyCrc32() { return bodyCrc32; }
+    <span class="cm">/**</span>
+<span class="cm">     * CRC32 checksum of an uncompressed file body</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">bodyCrc32</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">bodyCrc32</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Size of original uncompressed data in bytes (truncated to 32
-     * bits).
-     */
-    public long lenUncompressed() { return lenUncompressed; }
-    public Gzip _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-}
-</code></pre>
+    <span class="cm">/**</span>
+<span class="cm">     * Size of original uncompressed data in bytes (truncated to 32</span>
+<span class="cm">     * bits).</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenUncompressed</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenUncompressed</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">Gzip</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -703,8 +700,8 @@ public class Gzip extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

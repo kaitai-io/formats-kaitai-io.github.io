@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -208,305 +205,305 @@ and, optionally, an argument. Register arguments are part of the
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: code_6502
-  endian: le
-  license: CC0-1.0
-doc: |
-  This spec can be used to disassemble raw stream of 6502 CPU machine
-  code into individual operations. Each operation includes an opcode
-  and, optionally, an argument. Register arguments are part of the
-  `opcode` enum.
-seq:
-  - id: operations
-    type: operation
-    repeat: eos
-types:
-  operation:
-    seq:
-      - id: code
-        type: u1
-        enum: opcode
-      - id: args
-        type:
-          switch-on: code
-          cases:
-            &#39;opcode::ora_x_ind&#39;: u1
-            &#39;opcode::ora_zpg&#39;: u1
-            &#39;opcode::asl_zpg&#39;: u1
-            &#39;opcode::ora_imm&#39;: u1
-            &#39;opcode::ora_abs&#39;: u2
-            &#39;opcode::asl_abs&#39;: u2
-            &#39;opcode::bpl_rel&#39;: s1
-            &#39;opcode::ora_ind_y&#39;: u1
-            &#39;opcode::ora_zpg_x&#39;: u1
-            &#39;opcode::asl_zpg_x&#39;: u1
-            &#39;opcode::ora_abs_y&#39;: u2
-            &#39;opcode::ora_abs_x&#39;: u2
-            &#39;opcode::asl_abs_x&#39;: u2
-            &#39;opcode::jsr_abs&#39;: u2
-            &#39;opcode::and_x_ind&#39;: u1
-            &#39;opcode::bit_zpg&#39;: u1
-            &#39;opcode::and_zpg&#39;: u1
-            &#39;opcode::rol_zpg&#39;: u1
-            &#39;opcode::and_imm&#39;: u1
-            &#39;opcode::bit_abs&#39;: u2
-            &#39;opcode::and_abs&#39;: u2
-            &#39;opcode::rol_abs&#39;: u2
-            &#39;opcode::bmi_rel&#39;: s1
-            &#39;opcode::and_ind_y&#39;: u1
-            &#39;opcode::and_zpg_x&#39;: u1
-            &#39;opcode::rol_zpg_x&#39;: u1
-            &#39;opcode::and_abs_y&#39;: u2
-            &#39;opcode::and_abs_x&#39;: u2
-            &#39;opcode::rol_abs_x&#39;: u2
-            &#39;opcode::eor_x_ind&#39;: u1
-            &#39;opcode::eor_zpg&#39;: u1
-            &#39;opcode::lsr_zpg&#39;: u1
-            &#39;opcode::eor_imm&#39;: u1
-            &#39;opcode::jmp_abs&#39;: u2
-            &#39;opcode::eor_abs&#39;: u2
-            &#39;opcode::lsr_abs&#39;: u2
-            &#39;opcode::bvc_rel&#39;: s1
-            &#39;opcode::eor_ind_y&#39;: u1
-            &#39;opcode::eor_zpg_x&#39;: u1
-            &#39;opcode::lsr_zpg_x&#39;: u1
-            &#39;opcode::eor_abs_y&#39;: u2
-            &#39;opcode::eor_abs_x&#39;: u2
-            &#39;opcode::lsr_abs_x&#39;: u2
-            &#39;opcode::adc_x_ind&#39;: u1
-            &#39;opcode::adc_zpg&#39;: u1
-            &#39;opcode::ror_zpg&#39;: u1
-            &#39;opcode::adc_imm&#39;: u1
-            &#39;opcode::jmp_ind&#39;: u2
-            &#39;opcode::adc_abs&#39;: u2
-            &#39;opcode::ror_abs&#39;: u2
-            &#39;opcode::bvs_rel&#39;: s1
-            &#39;opcode::adc_ind_y&#39;: u1
-            &#39;opcode::adc_zpg_x&#39;: u1
-            &#39;opcode::ror_zpg_x&#39;: u1
-            &#39;opcode::adc_abs_y&#39;: u2
-            &#39;opcode::adc_abs_x&#39;: u2
-            &#39;opcode::ror_abs_x&#39;: u2
-            &#39;opcode::sta_x_ind&#39;: u1
-            &#39;opcode::sty_zpg&#39;: u1
-            &#39;opcode::sta_zpg&#39;: u1
-            &#39;opcode::stx_zpg&#39;: u1
-            &#39;opcode::sty_abs&#39;: u2
-            &#39;opcode::sta_abs&#39;: u2
-            &#39;opcode::stx_abs&#39;: u2
-            &#39;opcode::bcc_rel&#39;: s1
-            &#39;opcode::sta_ind_y&#39;: u1
-            &#39;opcode::sty_zpg_x&#39;: u1
-            &#39;opcode::sta_zpg_x&#39;: u1
-            &#39;opcode::stx_zpg_y&#39;: u1
-            &#39;opcode::sta_abs_y&#39;: u2
-            &#39;opcode::sta_abs_x&#39;: u2
-            &#39;opcode::ldy_imm&#39;: u1
-            &#39;opcode::lda_x_ind&#39;: u1
-            &#39;opcode::ldx_imm&#39;: u1
-            &#39;opcode::ldy_zpg&#39;: u1
-            &#39;opcode::lda_zpg&#39;: u1
-            &#39;opcode::ldx_zpg&#39;: u1
-            &#39;opcode::lda_imm&#39;: u1
-            &#39;opcode::ldy_abs&#39;: u2
-            &#39;opcode::lda_abs&#39;: u2
-            &#39;opcode::ldx_abs&#39;: u2
-            &#39;opcode::bcs_rel&#39;: s1
-            &#39;opcode::lda_ind_y&#39;: u1
-            &#39;opcode::ldy_zpg_x&#39;: u1
-            &#39;opcode::lda_zpg_x&#39;: u1
-            &#39;opcode::ldx_zpg_y&#39;: u1
-            &#39;opcode::lda_abs_y&#39;: u2
-            &#39;opcode::ldy_abs_x&#39;: u2
-            &#39;opcode::lda_abs_x&#39;: u2
-            &#39;opcode::ldx_abs_y&#39;: u2
-            &#39;opcode::cpy_imm&#39;: u1
-            &#39;opcode::cmp_x_ind&#39;: u1
-            &#39;opcode::cpy_zpg&#39;: u1
-            &#39;opcode::cmp_zpg&#39;: u1
-            &#39;opcode::dec_zpg&#39;: u1
-            &#39;opcode::cmp_imm&#39;: u1
-            &#39;opcode::cpy_abs&#39;: u2
-            &#39;opcode::cmp_abs&#39;: u2
-            &#39;opcode::dec_abs&#39;: u2
-            &#39;opcode::bne_rel&#39;: s1
-            &#39;opcode::cmp_ind_y&#39;: u1
-            &#39;opcode::cmp_zpg_x&#39;: u1
-            &#39;opcode::dec_zpg_x&#39;: u1
-            &#39;opcode::cmp_abs_y&#39;: u2
-            &#39;opcode::cmp_abs_x&#39;: u2
-            &#39;opcode::dec_abs_x&#39;: u2
-            &#39;opcode::cpx_imm&#39;: u1
-            &#39;opcode::sbc_x_ind&#39;: u1
-            &#39;opcode::cpx_zpg&#39;: u1
-            &#39;opcode::sbc_zpg&#39;: u1
-            &#39;opcode::inc_zpg&#39;: u1
-            &#39;opcode::sbc_imm&#39;: u1
-            &#39;opcode::cpx_abs&#39;: u2
-            &#39;opcode::sbc_abs&#39;: u2
-            &#39;opcode::inc_abs&#39;: u2
-            &#39;opcode::beq_rel&#39;: s1
-            &#39;opcode::sbc_ind_y&#39;: u1
-            &#39;opcode::sbc_zpg_x&#39;: u1
-            &#39;opcode::inc_zpg_x&#39;: u1
-            &#39;opcode::sbc_abs_y&#39;: u2
-            &#39;opcode::sbc_abs_x&#39;: u2
-            &#39;opcode::inc_abs_x&#39;: u2
-enums:
-  opcode:
-    0x00: brk_impl
-    0x01: ora_x_ind
-    0x05: ora_zpg
-    0x06: asl_zpg
-    0x08: php_impl
-    0x09: ora_imm
-    0x0a: asl_a
-    0x0d: ora_abs
-    0x0e: asl_abs
-    0x10: bpl_rel
-    0x11: ora_ind_y
-    0x15: ora_zpg_x
-    0x16: asl_zpg_x
-    0x18: clc_impl
-    0x19: ora_abs_y
-    0x1d: ora_abs_x
-    0x1e: asl_abs_x
-    0x20: jsr_abs
-    0x21: and_x_ind
-    0x24: bit_zpg
-    0x25: and_zpg
-    0x26: rol_zpg
-    0x28: plp_impl
-    0x29: and_imm
-    0x2a: rol_a
-    0x2c: bit_abs
-    0x2d: and_abs
-    0x2e: rol_abs
-    0x30: bmi_rel
-    0x31: and_ind_y
-    0x35: and_zpg_x
-    0x36: rol_zpg_x
-    0x38: sec_impl
-    0x39: and_abs_y
-    0x3d: and_abs_x
-    0x3e: rol_abs_x
-    0x40: rti_impl
-    0x41: eor_x_ind
-    0x45: eor_zpg
-    0x46: lsr_zpg
-    0x48: pha_impl
-    0x49: eor_imm
-    0x4a: lsr_a
-    0x4c: jmp_abs
-    0x4d: eor_abs
-    0x4e: lsr_abs
-    0x50: bvc_rel
-    0x51: eor_ind_y
-    0x55: eor_zpg_x
-    0x56: lsr_zpg_x
-    0x58: cli_impl
-    0x59: eor_abs_y
-    0x5d: eor_abs_x
-    0x5e: lsr_abs_x
-    0x60: rts_impl
-    0x61: adc_x_ind
-    0x65: adc_zpg
-    0x66: ror_zpg
-    0x68: pla_impl
-    0x69: adc_imm
-    0x6a: ror_a
-    0x6c: jmp_ind
-    0x6d: adc_abs
-    0x6e: ror_abs
-    0x70: bvs_rel
-    0x71: adc_ind_y
-    0x75: adc_zpg_x
-    0x76: ror_zpg_x
-    0x78: sei_impl
-    0x79: adc_abs_y
-    0x7d: adc_abs_x
-    0x7e: ror_abs_x
-    0x81: sta_x_ind
-    0x84: sty_zpg
-    0x85: sta_zpg
-    0x86: stx_zpg
-    0x88: dey_impl
-    0x8a: txa_impl
-    0x8c: sty_abs
-    0x8d: sta_abs
-    0x8e: stx_abs
-    0x90: bcc_rel
-    0x91: sta_ind_y
-    0x94: sty_zpg_x
-    0x95: sta_zpg_x
-    0x96: stx_zpg_y
-    0x98: tya_impl
-    0x99: sta_abs_y
-    0x9a: txs_impl
-    0x9d: sta_abs_x
-    0xa0: ldy_imm
-    0xa1: lda_x_ind
-    0xa2: ldx_imm
-    0xa4: ldy_zpg
-    0xa5: lda_zpg
-    0xa6: ldx_zpg
-    0xa8: tay_impl
-    0xa9: lda_imm
-    0xaa: tax_impl
-    0xac: ldy_abs
-    0xad: lda_abs
-    0xae: ldx_abs
-    0xb0: bcs_rel
-    0xb1: lda_ind_y
-    0xb4: ldy_zpg_x
-    0xb5: lda_zpg_x
-    0xb6: ldx_zpg_y
-    0xb8: clv_impl
-    0xb9: lda_abs_y
-    0xba: tsx_impl
-    0xbc: ldy_abs_x
-    0xbd: lda_abs_x
-    0xbe: ldx_abs_y
-    0xc0: cpy_imm
-    0xc1: cmp_x_ind
-    0xc4: cpy_zpg
-    0xc5: cmp_zpg
-    0xc6: dec_zpg
-    0xc8: iny_impl
-    0xc9: cmp_imm
-    0xca: dex_impl
-    0xcc: cpy_abs
-    0xcd: cmp_abs
-    0xce: dec_abs
-    0xd0: bne_rel
-    0xd1: cmp_ind_y
-    0xd5: cmp_zpg_x
-    0xd6: dec_zpg_x
-    0xd8: cld_impl
-    0xd9: cmp_abs_y
-    0xdd: cmp_abs_x
-    0xde: dec_abs_x
-    0xe0: cpx_imm
-    0xe1: sbc_x_ind
-    0xe4: cpx_zpg
-    0xe5: sbc_zpg
-    0xe6: inc_zpg
-    0xe8: inx_impl
-    0xe9: sbc_imm
-    0xea: nop_impl
-    0xec: cpx_abs
-    0xed: sbc_abs
-    0xee: inc_abs
-    0xf0: beq_rel
-    0xf1: sbc_ind_y
-    0xf5: sbc_zpg_x
-    0xf6: inc_zpg_x
-    0xf8: sed_impl
-    0xf9: sbc_abs_y
-    0xfd: sbc_abs_x
-    0xfe: inc_abs_x
-</code></pre>
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">code_6502</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">This spec can be used to disassemble raw stream of 6502 CPU machine</span>
+  <span class="no">code into individual operations. Each operation includes an opcode</span>
+  <span class="no">and, optionally, an argument. Register arguments are part of the</span>
+  <span class="no">`opcode` enum.</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">operations</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">operation</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">operation</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">code</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opcode</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">args</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">code</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="s">&#39;opcode::ora_x_ind&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::ora_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::asl_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::ora_imm&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::ora_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::asl_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::bpl_rel&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+            <span class="s">&#39;opcode::ora_ind_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::ora_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::asl_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::ora_abs_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::ora_abs_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::asl_abs_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::jsr_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::and_x_ind&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::bit_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::and_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::rol_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::and_imm&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::bit_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::and_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::rol_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::bmi_rel&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+            <span class="s">&#39;opcode::and_ind_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::and_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::rol_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::and_abs_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::and_abs_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::rol_abs_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::eor_x_ind&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::eor_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::lsr_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::eor_imm&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::jmp_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::eor_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::lsr_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::bvc_rel&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+            <span class="s">&#39;opcode::eor_ind_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::eor_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::lsr_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::eor_abs_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::eor_abs_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::lsr_abs_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::adc_x_ind&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::adc_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::ror_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::adc_imm&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::jmp_ind&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::adc_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::ror_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::bvs_rel&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+            <span class="s">&#39;opcode::adc_ind_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::adc_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::ror_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::adc_abs_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::adc_abs_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::ror_abs_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::sta_x_ind&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::sty_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::sta_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::stx_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::sty_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::sta_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::stx_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::bcc_rel&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+            <span class="s">&#39;opcode::sta_ind_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::sty_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::sta_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::stx_zpg_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::sta_abs_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::sta_abs_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::ldy_imm&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::lda_x_ind&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::ldx_imm&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::ldy_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::lda_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::ldx_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::lda_imm&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::ldy_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::lda_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::ldx_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::bcs_rel&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+            <span class="s">&#39;opcode::lda_ind_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::ldy_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::lda_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::ldx_zpg_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::lda_abs_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::ldy_abs_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::lda_abs_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::ldx_abs_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::cpy_imm&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::cmp_x_ind&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::cpy_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::cmp_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::dec_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::cmp_imm&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::cpy_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::cmp_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::dec_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::bne_rel&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+            <span class="s">&#39;opcode::cmp_ind_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::cmp_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::dec_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::cmp_abs_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::cmp_abs_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::dec_abs_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::cpx_imm&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::sbc_x_ind&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::cpx_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::sbc_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::inc_zpg&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::sbc_imm&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::cpx_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::sbc_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::inc_abs&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::beq_rel&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+            <span class="s">&#39;opcode::sbc_ind_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::sbc_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::inc_zpg_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="s">&#39;opcode::sbc_abs_y&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::sbc_abs_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+            <span class="s">&#39;opcode::inc_abs_x&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">opcode</span><span class="p">:</span>
+    <span class="nt">0x00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">brk_impl</span>
+    <span class="nt">0x01</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ora_x_ind</span>
+    <span class="nt">0x05</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ora_zpg</span>
+    <span class="nt">0x06</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">asl_zpg</span>
+    <span class="nt">0x08</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">php_impl</span>
+    <span class="nt">0x09</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ora_imm</span>
+    <span class="nt">0x0a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">asl_a</span>
+    <span class="nt">0x0d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ora_abs</span>
+    <span class="nt">0x0e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">asl_abs</span>
+    <span class="nt">0x10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bpl_rel</span>
+    <span class="nt">0x11</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ora_ind_y</span>
+    <span class="nt">0x15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ora_zpg_x</span>
+    <span class="nt">0x16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">asl_zpg_x</span>
+    <span class="nt">0x18</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">clc_impl</span>
+    <span class="nt">0x19</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ora_abs_y</span>
+    <span class="nt">0x1d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ora_abs_x</span>
+    <span class="nt">0x1e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">asl_abs_x</span>
+    <span class="nt">0x20</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jsr_abs</span>
+    <span class="nt">0x21</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">and_x_ind</span>
+    <span class="nt">0x24</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bit_zpg</span>
+    <span class="nt">0x25</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">and_zpg</span>
+    <span class="nt">0x26</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rol_zpg</span>
+    <span class="nt">0x28</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">plp_impl</span>
+    <span class="nt">0x29</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">and_imm</span>
+    <span class="nt">0x2a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rol_a</span>
+    <span class="nt">0x2c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bit_abs</span>
+    <span class="nt">0x2d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">and_abs</span>
+    <span class="nt">0x2e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rol_abs</span>
+    <span class="nt">0x30</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bmi_rel</span>
+    <span class="nt">0x31</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">and_ind_y</span>
+    <span class="nt">0x35</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">and_zpg_x</span>
+    <span class="nt">0x36</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rol_zpg_x</span>
+    <span class="nt">0x38</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sec_impl</span>
+    <span class="nt">0x39</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">and_abs_y</span>
+    <span class="nt">0x3d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">and_abs_x</span>
+    <span class="nt">0x3e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rol_abs_x</span>
+    <span class="nt">0x40</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rti_impl</span>
+    <span class="nt">0x41</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eor_x_ind</span>
+    <span class="nt">0x45</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eor_zpg</span>
+    <span class="nt">0x46</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lsr_zpg</span>
+    <span class="nt">0x48</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pha_impl</span>
+    <span class="nt">0x49</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eor_imm</span>
+    <span class="nt">0x4a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lsr_a</span>
+    <span class="nt">0x4c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jmp_abs</span>
+    <span class="nt">0x4d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eor_abs</span>
+    <span class="nt">0x4e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lsr_abs</span>
+    <span class="nt">0x50</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bvc_rel</span>
+    <span class="nt">0x51</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eor_ind_y</span>
+    <span class="nt">0x55</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eor_zpg_x</span>
+    <span class="nt">0x56</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lsr_zpg_x</span>
+    <span class="nt">0x58</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cli_impl</span>
+    <span class="nt">0x59</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eor_abs_y</span>
+    <span class="nt">0x5d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eor_abs_x</span>
+    <span class="nt">0x5e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lsr_abs_x</span>
+    <span class="nt">0x60</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rts_impl</span>
+    <span class="nt">0x61</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adc_x_ind</span>
+    <span class="nt">0x65</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adc_zpg</span>
+    <span class="nt">0x66</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ror_zpg</span>
+    <span class="nt">0x68</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pla_impl</span>
+    <span class="nt">0x69</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adc_imm</span>
+    <span class="nt">0x6a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ror_a</span>
+    <span class="nt">0x6c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">jmp_ind</span>
+    <span class="nt">0x6d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adc_abs</span>
+    <span class="nt">0x6e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ror_abs</span>
+    <span class="nt">0x70</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bvs_rel</span>
+    <span class="nt">0x71</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adc_ind_y</span>
+    <span class="nt">0x75</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adc_zpg_x</span>
+    <span class="nt">0x76</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ror_zpg_x</span>
+    <span class="nt">0x78</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sei_impl</span>
+    <span class="nt">0x79</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adc_abs_y</span>
+    <span class="nt">0x7d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">adc_abs_x</span>
+    <span class="nt">0x7e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ror_abs_x</span>
+    <span class="nt">0x81</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sta_x_ind</span>
+    <span class="nt">0x84</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sty_zpg</span>
+    <span class="nt">0x85</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sta_zpg</span>
+    <span class="nt">0x86</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stx_zpg</span>
+    <span class="nt">0x88</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dey_impl</span>
+    <span class="nt">0x8a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">txa_impl</span>
+    <span class="nt">0x8c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sty_abs</span>
+    <span class="nt">0x8d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sta_abs</span>
+    <span class="nt">0x8e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stx_abs</span>
+    <span class="nt">0x90</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bcc_rel</span>
+    <span class="nt">0x91</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sta_ind_y</span>
+    <span class="nt">0x94</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sty_zpg_x</span>
+    <span class="nt">0x95</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sta_zpg_x</span>
+    <span class="nt">0x96</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stx_zpg_y</span>
+    <span class="nt">0x98</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tya_impl</span>
+    <span class="nt">0x99</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sta_abs_y</span>
+    <span class="nt">0x9a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">txs_impl</span>
+    <span class="nt">0x9d</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sta_abs_x</span>
+    <span class="nt">0xa0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ldy_imm</span>
+    <span class="nt">0xa1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lda_x_ind</span>
+    <span class="nt">0xa2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ldx_imm</span>
+    <span class="nt">0xa4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ldy_zpg</span>
+    <span class="nt">0xa5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lda_zpg</span>
+    <span class="nt">0xa6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ldx_zpg</span>
+    <span class="nt">0xa8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tay_impl</span>
+    <span class="nt">0xa9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lda_imm</span>
+    <span class="nt">0xaa</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tax_impl</span>
+    <span class="nt">0xac</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ldy_abs</span>
+    <span class="nt">0xad</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lda_abs</span>
+    <span class="nt">0xae</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ldx_abs</span>
+    <span class="nt">0xb0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bcs_rel</span>
+    <span class="nt">0xb1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lda_ind_y</span>
+    <span class="nt">0xb4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ldy_zpg_x</span>
+    <span class="nt">0xb5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lda_zpg_x</span>
+    <span class="nt">0xb6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ldx_zpg_y</span>
+    <span class="nt">0xb8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">clv_impl</span>
+    <span class="nt">0xb9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lda_abs_y</span>
+    <span class="nt">0xba</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tsx_impl</span>
+    <span class="nt">0xbc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ldy_abs_x</span>
+    <span class="nt">0xbd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lda_abs_x</span>
+    <span class="nt">0xbe</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ldx_abs_y</span>
+    <span class="nt">0xc0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpy_imm</span>
+    <span class="nt">0xc1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cmp_x_ind</span>
+    <span class="nt">0xc4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpy_zpg</span>
+    <span class="nt">0xc5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cmp_zpg</span>
+    <span class="nt">0xc6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dec_zpg</span>
+    <span class="nt">0xc8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iny_impl</span>
+    <span class="nt">0xc9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cmp_imm</span>
+    <span class="nt">0xca</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dex_impl</span>
+    <span class="nt">0xcc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpy_abs</span>
+    <span class="nt">0xcd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cmp_abs</span>
+    <span class="nt">0xce</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dec_abs</span>
+    <span class="nt">0xd0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bne_rel</span>
+    <span class="nt">0xd1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cmp_ind_y</span>
+    <span class="nt">0xd5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cmp_zpg_x</span>
+    <span class="nt">0xd6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dec_zpg_x</span>
+    <span class="nt">0xd8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cld_impl</span>
+    <span class="nt">0xd9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cmp_abs_y</span>
+    <span class="nt">0xdd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cmp_abs_x</span>
+    <span class="nt">0xde</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dec_abs_x</span>
+    <span class="nt">0xe0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpx_imm</span>
+    <span class="nt">0xe1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sbc_x_ind</span>
+    <span class="nt">0xe4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpx_zpg</span>
+    <span class="nt">0xe5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sbc_zpg</span>
+    <span class="nt">0xe6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inc_zpg</span>
+    <span class="nt">0xe8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inx_impl</span>
+    <span class="nt">0xe9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sbc_imm</span>
+    <span class="nt">0xea</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nop_impl</span>
+    <span class="nt">0xec</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cpx_abs</span>
+    <span class="nt">0xed</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sbc_abs</span>
+    <span class="nt">0xee</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inc_abs</span>
+    <span class="nt">0xf0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">beq_rel</span>
+    <span class="nt">0xf1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sbc_ind_y</span>
+    <span class="nt">0xf5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sbc_zpg_x</span>
+    <span class="nt">0xf6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inc_zpg_x</span>
+    <span class="nt">0xf8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sed_impl</span>
+    <span class="nt">0xf9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sbc_abs_y</span>
+    <span class="nt">0xfd</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sbc_abs_x</span>
+    <span class="nt">0xfe</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inc_abs_x</span>
+</pre></div>
     </div>
 </section>
 
@@ -530,8 +527,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

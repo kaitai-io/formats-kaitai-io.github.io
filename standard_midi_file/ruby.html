@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -280,308 +277,308 @@ data = StandardMidiFile.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# Standard MIDI file, typically knows just as &quot;MID&quot;, is a standard way
-# to serialize series of MIDI events, which is a protocol used in many
-# music synthesizers to transfer music data: notes being played,
-# effects being applied, etc.
-# 
-# Internally, file consists of a header and series of tracks, every
-# track listing MIDI events with certain header designating time these
-# events are happening.
-# 
-# NOTE: Rarely, MIDI files employ certain stateful compression scheme
-# to avoid storing certain elements of further elements, instead
-# reusing them from events which happened earlier in the
-# stream. Kaitai Struct (as of v0.9) is currently unable to parse
-# these, but files employing this mechanism are relatively rare.
-class StandardMidiFile &lt; Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+<span class="c1">##</span>
+<span class="c1"># Standard MIDI file, typically knows just as &quot;MID&quot;, is a standard way</span>
+<span class="c1"># to serialize series of MIDI events, which is a protocol used in many</span>
+<span class="c1"># music synthesizers to transfer music data: notes being played,</span>
+<span class="c1"># effects being applied, etc.</span>
+<span class="c1"># </span>
+<span class="c1"># Internally, file consists of a header and series of tracks, every</span>
+<span class="c1"># track listing MIDI events with certain header designating time these</span>
+<span class="c1"># events are happening.</span>
+<span class="c1"># </span>
+<span class="c1"># NOTE: Rarely, MIDI files employ certain stateful compression scheme</span>
+<span class="c1"># to avoid storing certain elements of further elements, instead</span>
+<span class="c1"># reusing them from events which happened earlier in the</span>
+<span class="c1"># stream. Kaitai Struct (as of v0.9) is currently unable to parse</span>
+<span class="c1"># these, but files employing this mechanism are relatively rare.</span>
+<span class="k">class</span> <span class="nc">StandardMidiFile</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @hdr = Header.new(@_io, self, @_root)
-    @tracks = Array.new(hdr.num_tracks)
-    (hdr.num_tracks).times { |i|
-      @tracks[i] = Track.new(@_io, self, @_root)
-    }
-    self
-  end
-  class TrackEvents &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@hdr</span> <span class="o">=</span> <span class="no">Header</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@tracks</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">num_tracks</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">hdr</span><span class="o">.</span><span class="n">num_tracks</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@tracks</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Track</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">TrackEvents</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @event = []
-      i = 0
-      while not @_io.eof?
-        @event &lt;&lt; TrackEvent.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :event
-  end
-  class TrackEvent &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@event</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+        <span class="vi">@event</span> <span class="o">&lt;&lt;</span> <span class="no">TrackEvent</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:event</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">TrackEvent</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @v_time = VlqBase128Be.new(@_io)
-      @event_header = @_io.read_u1
-      if event_header == 255
-        @meta_event_body = MetaEventBody.new(@_io, self, @_root)
-      end
-      if event_header == 240
-        @sysex_body = SysexEventBody.new(@_io, self, @_root)
-      end
-      case event_type
-      when 224
-        @event_body = PitchBendEvent.new(@_io, self, @_root)
-      when 144
-        @event_body = NoteOnEvent.new(@_io, self, @_root)
-      when 208
-        @event_body = ChannelPressureEvent.new(@_io, self, @_root)
-      when 192
-        @event_body = ProgramChangeEvent.new(@_io, self, @_root)
-      when 160
-        @event_body = PolyphonicPressureEvent.new(@_io, self, @_root)
-      when 176
-        @event_body = ControllerEvent.new(@_io, self, @_root)
-      when 128
-        @event_body = NoteOffEvent.new(@_io, self, @_root)
-      end
-      self
-    end
-    def event_type
-      return @event_type unless @event_type.nil?
-      @event_type = (event_header &amp; 240)
-      @event_type
-    end
-    def channel
-      return @channel unless @channel.nil?
-      if event_type != 240
-        @channel = (event_header &amp; 15)
-      end
-      @channel
-    end
-    attr_reader :v_time
-    attr_reader :event_header
-    attr_reader :meta_event_body
-    attr_reader :sysex_body
-    attr_reader :event_body
-  end
-  class PitchBendEvent &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@v_time</span> <span class="o">=</span> <span class="no">VlqBase128Be</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+      <span class="vi">@event_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">if</span> <span class="n">event_header</span> <span class="o">==</span> <span class="mi">255</span>
+        <span class="vi">@meta_event_body</span> <span class="o">=</span> <span class="no">MetaEventBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">event_header</span> <span class="o">==</span> <span class="mi">240</span>
+        <span class="vi">@sysex_body</span> <span class="o">=</span> <span class="no">SysexEventBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">case</span> <span class="n">event_type</span>
+      <span class="k">when</span> <span class="mi">224</span>
+        <span class="vi">@event_body</span> <span class="o">=</span> <span class="no">PitchBendEvent</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="mi">144</span>
+        <span class="vi">@event_body</span> <span class="o">=</span> <span class="no">NoteOnEvent</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="mi">208</span>
+        <span class="vi">@event_body</span> <span class="o">=</span> <span class="no">ChannelPressureEvent</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="mi">192</span>
+        <span class="vi">@event_body</span> <span class="o">=</span> <span class="no">ProgramChangeEvent</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="mi">160</span>
+        <span class="vi">@event_body</span> <span class="o">=</span> <span class="no">PolyphonicPressureEvent</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="mi">176</span>
+        <span class="vi">@event_body</span> <span class="o">=</span> <span class="no">ControllerEvent</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="mi">128</span>
+        <span class="vi">@event_body</span> <span class="o">=</span> <span class="no">NoteOffEvent</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">event_type</span>
+      <span class="k">return</span> <span class="vi">@event_type</span> <span class="k">unless</span> <span class="vi">@event_type</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@event_type</span> <span class="o">=</span> <span class="p">(</span><span class="n">event_header</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">)</span>
+      <span class="vi">@event_type</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">channel</span>
+      <span class="k">return</span> <span class="vi">@channel</span> <span class="k">unless</span> <span class="vi">@channel</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="k">if</span> <span class="n">event_type</span> <span class="o">!=</span> <span class="mi">240</span>
+        <span class="vi">@channel</span> <span class="o">=</span> <span class="p">(</span><span class="n">event_header</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@channel</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:v_time</span>
+    <span class="kp">attr_reader</span> <span class="ss">:event_header</span>
+    <span class="kp">attr_reader</span> <span class="ss">:meta_event_body</span>
+    <span class="kp">attr_reader</span> <span class="ss">:sysex_body</span>
+    <span class="kp">attr_reader</span> <span class="ss">:event_body</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">PitchBendEvent</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @b1 = @_io.read_u1
-      @b2 = @_io.read_u1
-      self
-    end
-    def bend_value
-      return @bend_value unless @bend_value.nil?
-      @bend_value = (((b2 &lt;&lt; 7) + b1) - 16384)
-      @bend_value
-    end
-    def adj_bend_value
-      return @adj_bend_value unless @adj_bend_value.nil?
-      @adj_bend_value = (bend_value - 16384)
-      @adj_bend_value
-    end
-    attr_reader :b1
-    attr_reader :b2
-  end
-  class ProgramChangeEvent &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@b1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@b2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">bend_value</span>
+      <span class="k">return</span> <span class="vi">@bend_value</span> <span class="k">unless</span> <span class="vi">@bend_value</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@bend_value</span> <span class="o">=</span> <span class="p">(((</span><span class="n">b2</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span><span class="p">)</span> <span class="o">+</span> <span class="n">b1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">16384</span><span class="p">)</span>
+      <span class="vi">@bend_value</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">adj_bend_value</span>
+      <span class="k">return</span> <span class="vi">@adj_bend_value</span> <span class="k">unless</span> <span class="vi">@adj_bend_value</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@adj_bend_value</span> <span class="o">=</span> <span class="p">(</span><span class="n">bend_value</span> <span class="o">-</span> <span class="mi">16384</span><span class="p">)</span>
+      <span class="vi">@adj_bend_value</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:b1</span>
+    <span class="kp">attr_reader</span> <span class="ss">:b2</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ProgramChangeEvent</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @program = @_io.read_u1
-      self
-    end
-    attr_reader :program
-  end
-  class NoteOnEvent &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@program</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:program</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">NoteOnEvent</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @note = @_io.read_u1
-      @velocity = @_io.read_u1
-      self
-    end
-    attr_reader :note
-    attr_reader :velocity
-  end
-  class PolyphonicPressureEvent &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@note</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@velocity</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:note</span>
+    <span class="kp">attr_reader</span> <span class="ss">:velocity</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">PolyphonicPressureEvent</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @note = @_io.read_u1
-      @pressure = @_io.read_u1
-      self
-    end
-    attr_reader :note
-    attr_reader :pressure
-  end
-  class Track &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@note</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@pressure</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:note</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pressure</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Track</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @magic = @_io.ensure_fixed_contents([77, 84, 114, 107].pack(&#39;C*&#39;))
-      @len_events = @_io.read_u4be
-      @_raw_events = @_io.read_bytes(len_events)
-      io = Kaitai::Struct::Stream.new(@_raw_events)
-      @events = TrackEvents.new(io, self, @_root)
-      self
-    end
-    attr_reader :magic
-    attr_reader :len_events
-    attr_reader :events
-    attr_reader :_raw_events
-  end
-  class MetaEventBody &lt; Kaitai::Struct::Struct
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">77</span><span class="p">,</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">107</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@len_events</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@_raw_events</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_events</span><span class="p">)</span>
+      <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_events</span><span class="p">)</span>
+      <span class="vi">@events</span> <span class="o">=</span> <span class="no">TrackEvents</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:magic</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_events</span>
+    <span class="kp">attr_reader</span> <span class="ss">:events</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_events</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">MetaEventBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-    META_TYPE_ENUM = {
-      0 =&gt; :meta_type_enum_sequence_number,
-      1 =&gt; :meta_type_enum_text_event,
-      2 =&gt; :meta_type_enum_copyright,
-      3 =&gt; :meta_type_enum_sequence_track_name,
-      4 =&gt; :meta_type_enum_instrument_name,
-      5 =&gt; :meta_type_enum_lyric_text,
-      6 =&gt; :meta_type_enum_marker_text,
-      7 =&gt; :meta_type_enum_cue_point,
-      32 =&gt; :meta_type_enum_midi_channel_prefix_assignment,
-      47 =&gt; :meta_type_enum_end_of_track,
-      81 =&gt; :meta_type_enum_tempo,
-      84 =&gt; :meta_type_enum_smpte_offset,
-      88 =&gt; :meta_type_enum_time_signature,
-      89 =&gt; :meta_type_enum_key_signature,
-      127 =&gt; :meta_type_enum_sequencer_specific_event,
-    }
-    I__META_TYPE_ENUM = META_TYPE_ENUM.invert
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="no">META_TYPE_ENUM</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:meta_type_enum_sequence_number</span><span class="p">,</span>
+      <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:meta_type_enum_text_event</span><span class="p">,</span>
+      <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:meta_type_enum_copyright</span><span class="p">,</span>
+      <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:meta_type_enum_sequence_track_name</span><span class="p">,</span>
+      <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:meta_type_enum_instrument_name</span><span class="p">,</span>
+      <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:meta_type_enum_lyric_text</span><span class="p">,</span>
+      <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:meta_type_enum_marker_text</span><span class="p">,</span>
+      <span class="mi">7</span> <span class="o">=&gt;</span> <span class="ss">:meta_type_enum_cue_point</span><span class="p">,</span>
+      <span class="mi">32</span> <span class="o">=&gt;</span> <span class="ss">:meta_type_enum_midi_channel_prefix_assignment</span><span class="p">,</span>
+      <span class="mi">47</span> <span class="o">=&gt;</span> <span class="ss">:meta_type_enum_end_of_track</span><span class="p">,</span>
+      <span class="mi">81</span> <span class="o">=&gt;</span> <span class="ss">:meta_type_enum_tempo</span><span class="p">,</span>
+      <span class="mi">84</span> <span class="o">=&gt;</span> <span class="ss">:meta_type_enum_smpte_offset</span><span class="p">,</span>
+      <span class="mi">88</span> <span class="o">=&gt;</span> <span class="ss">:meta_type_enum_time_signature</span><span class="p">,</span>
+      <span class="mi">89</span> <span class="o">=&gt;</span> <span class="ss">:meta_type_enum_key_signature</span><span class="p">,</span>
+      <span class="mi">127</span> <span class="o">=&gt;</span> <span class="ss">:meta_type_enum_sequencer_specific_event</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="no">I__META_TYPE_ENUM</span> <span class="o">=</span> <span class="no">META_TYPE_ENUM</span><span class="o">.</span><span class="n">invert</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @meta_type = Kaitai::Struct::Stream::resolve_enum(META_TYPE_ENUM, @_io.read_u1)
-      @len = VlqBase128Be.new(@_io)
-      @body = @_io.read_bytes(len.value)
-      self
-    end
-    attr_reader :meta_type
-    attr_reader :len
-    attr_reader :body
-  end
-  class ControllerEvent &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@meta_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">META_TYPE_ENUM</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="no">VlqBase128Be</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+      <span class="vi">@body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:meta_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ControllerEvent</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @controller = @_io.read_u1
-      @value = @_io.read_u1
-      self
-    end
-    attr_reader :controller
-    attr_reader :value
-  end
-  class Header &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@controller</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:controller</span>
+    <span class="kp">attr_reader</span> <span class="ss">:value</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Header</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @magic = @_io.ensure_fixed_contents([77, 84, 104, 100].pack(&#39;C*&#39;))
-      @len_header = @_io.read_u4be
-      @format = @_io.read_u2be
-      @num_tracks = @_io.read_u2be
-      @division = @_io.read_s2be
-      self
-    end
-    attr_reader :magic
-    attr_reader :len_header
-    attr_reader :format
-    attr_reader :num_tracks
-    attr_reader :division
-  end
-  class SysexEventBody &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">77</span><span class="p">,</span> <span class="mi">84</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">100</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@len_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@format</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@num_tracks</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@division</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2be</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:magic</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_header</span>
+    <span class="kp">attr_reader</span> <span class="ss">:format</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_tracks</span>
+    <span class="kp">attr_reader</span> <span class="ss">:division</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">SysexEventBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len = VlqBase128Be.new(@_io)
-      @data = @_io.read_bytes(len.value)
-      self
-    end
-    attr_reader :len
-    attr_reader :data
-  end
-  class NoteOffEvent &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="no">VlqBase128Be</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
+      <span class="vi">@data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">NoteOffEvent</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @note = @_io.read_u1
-      @velocity = @_io.read_u1
-      self
-    end
-    attr_reader :note
-    attr_reader :velocity
-  end
-  class ChannelPressureEvent &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@note</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@velocity</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:note</span>
+    <span class="kp">attr_reader</span> <span class="ss">:velocity</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ChannelPressureEvent</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @pressure = @_io.read_u1
-      self
-    end
-    attr_reader :pressure
-  end
-  attr_reader :hdr
-  attr_reader :tracks
-end
-</code></pre>
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@pressure</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:pressure</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:hdr</span>
+  <span class="kp">attr_reader</span> <span class="ss">:tracks</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -608,8 +605,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

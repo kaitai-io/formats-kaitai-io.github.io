@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -284,303 +281,303 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef XWD_H_
-#define XWD_H_
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef XWD_H_</span>
+<span class="cp">#define XWD_H_</span>
 
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;kaitai/kaitaistruct.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
 
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
 
-/**
- * xwd is a file format written by eponymous X11 screen capture
- * application (xwd stands for &quot;X Window Dump&quot;). Typically, an average
- * user transforms xwd format into something more widespread by any of
- * `xwdtopnm` and `pnmto...` utilities right away.
- * 
- * xwd format itself provides a raw uncompressed bitmap with some
- * metainformation, like pixel format, width, height, bit depth,
- * etc. Note that technically format includes machine-dependent fields
- * and thus is probably a poor choice for true cross-platform usage.
- */
+<span class="cm">/**</span>
+<span class="cm"> * xwd is a file format written by eponymous X11 screen capture</span>
+<span class="cm"> * application (xwd stands for &quot;X Window Dump&quot;). Typically, an average</span>
+<span class="cm"> * user transforms xwd format into something more widespread by any of</span>
+<span class="cm"> * `xwdtopnm` and `pnmto...` utilities right away.</span>
+<span class="cm"> * </span>
+<span class="cm"> * xwd format itself provides a raw uncompressed bitmap with some</span>
+<span class="cm"> * metainformation, like pixel format, width, height, bit depth,</span>
+<span class="cm"> * etc. Note that technically format includes machine-dependent fields</span>
+<span class="cm"> * and thus is probably a poor choice for true cross-platform usage.</span>
+<span class="cm"> */</span>
 
-class xwd_t : public kaitai::kstruct {
+<span class="k">class</span> <span class="nc">xwd_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-public:
-    class header_t;
-    class color_map_entry_t;
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">header_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">color_map_entry_t</span><span class="p">;</span>
 
-    enum pixmap_format_t {
-        PIXMAP_FORMAT_X_Y_BITMAP = 0,
-        PIXMAP_FORMAT_X_Y_PIXMAP = 1,
-        PIXMAP_FORMAT_Z_PIXMAP = 2
-    };
+    <span class="k">enum</span> <span class="n">pixmap_format_t</span> <span class="p">{</span>
+        <span class="n">PIXMAP_FORMAT_X_Y_BITMAP</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">PIXMAP_FORMAT_X_Y_PIXMAP</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">PIXMAP_FORMAT_Z_PIXMAP</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="p">};</span>
 
-    enum byte_order_t {
-        BYTE_ORDER_LE = 0,
-        BYTE_ORDER_BE = 1
-    };
+    <span class="k">enum</span> <span class="n">byte_order_t</span> <span class="p">{</span>
+        <span class="n">BYTE_ORDER_LE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">BYTE_ORDER_BE</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="p">};</span>
 
-    enum visual_class_t {
-        VISUAL_CLASS_STATIC_GRAY = 0,
-        VISUAL_CLASS_GRAY_SCALE = 1,
-        VISUAL_CLASS_STATIC_COLOR = 2,
-        VISUAL_CLASS_PSEUDO_COLOR = 3,
-        VISUAL_CLASS_TRUE_COLOR = 4,
-        VISUAL_CLASS_DIRECT_COLOR = 5
-    };
+    <span class="k">enum</span> <span class="n">visual_class_t</span> <span class="p">{</span>
+        <span class="n">VISUAL_CLASS_STATIC_GRAY</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">VISUAL_CLASS_GRAY_SCALE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">VISUAL_CLASS_STATIC_COLOR</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">VISUAL_CLASS_PSEUDO_COLOR</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">VISUAL_CLASS_TRUE_COLOR</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">VISUAL_CLASS_DIRECT_COLOR</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="p">};</span>
 
-    xwd_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, xwd_t* p__root = 0);
+    <span class="n">xwd_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">xwd_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-private:
-    void _read();
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-public:
-    ~xwd_t();
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">xwd_t</span><span class="p">();</span>
 
-    class header_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">header_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        header_t(kaitai::kstream* p__io, xwd_t* p__parent = 0, xwd_t* p__root = 0);
+        <span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">xwd_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">xwd_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~header_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">header_t</span><span class="p">();</span>
 
-    private:
-        uint32_t m_file_version;
-        pixmap_format_t m_pixmap_format;
-        uint32_t m_pixmap_depth;
-        uint32_t m_pixmap_width;
-        uint32_t m_pixmap_height;
-        uint32_t m_x_offset;
-        byte_order_t m_byte_order;
-        uint32_t m_bitmap_unit;
-        uint32_t m_bitmap_bit_order;
-        uint32_t m_bitmap_pad;
-        uint32_t m_bits_per_pixel;
-        uint32_t m_bytes_per_line;
-        visual_class_t m_visual_class;
-        uint32_t m_red_mask;
-        uint32_t m_green_mask;
-        uint32_t m_blue_mask;
-        uint32_t m_bits_per_rgb;
-        uint32_t m_number_of_colors;
-        uint32_t m_color_map_entries;
-        uint32_t m_window_width;
-        uint32_t m_window_height;
-        int32_t m_window_x;
-        int32_t m_window_y;
-        uint32_t m_window_border_width;
-        std::string m_creator;
-        xwd_t* m__root;
-        xwd_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">m_file_version</span><span class="p">;</span>
+        <span class="n">pixmap_format_t</span> <span class="n">m_pixmap_format</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_pixmap_depth</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_pixmap_width</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_pixmap_height</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_x_offset</span><span class="p">;</span>
+        <span class="n">byte_order_t</span> <span class="n">m_byte_order</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_bitmap_unit</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_bitmap_bit_order</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_bitmap_pad</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_bits_per_pixel</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_bytes_per_line</span><span class="p">;</span>
+        <span class="n">visual_class_t</span> <span class="n">m_visual_class</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_red_mask</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_green_mask</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_blue_mask</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_bits_per_rgb</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_number_of_colors</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_color_map_entries</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_window_width</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_window_height</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_window_x</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_window_y</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_window_border_width</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_creator</span><span class="p">;</span>
+        <span class="n">xwd_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">xwd_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        /**
-         * X11WD file version (always 07h)
-         */
-        uint32_t file_version() const { return m_file_version; }
+        <span class="cm">/**</span>
+<span class="cm">         * X11WD file version (always 07h)</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">file_version</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_file_version</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Format of the image data
-         */
-        pixmap_format_t pixmap_format() const { return m_pixmap_format; }
+        <span class="cm">/**</span>
+<span class="cm">         * Format of the image data</span>
+<span class="cm">         */</span>
+        <span class="n">pixmap_format_t</span> <span class="n">pixmap_format</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_pixmap_format</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Pixmap depth in pixels - in practice, bits per pixel
-         */
-        uint32_t pixmap_depth() const { return m_pixmap_depth; }
+        <span class="cm">/**</span>
+<span class="cm">         * Pixmap depth in pixels - in practice, bits per pixel</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">pixmap_depth</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_pixmap_depth</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Pixmap width in pixels
-         */
-        uint32_t pixmap_width() const { return m_pixmap_width; }
+        <span class="cm">/**</span>
+<span class="cm">         * Pixmap width in pixels</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">pixmap_width</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_pixmap_width</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Pixmap height in pixels
-         */
-        uint32_t pixmap_height() const { return m_pixmap_height; }
+        <span class="cm">/**</span>
+<span class="cm">         * Pixmap height in pixels</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">pixmap_height</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_pixmap_height</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Bitmap X offset (number of pixels to ignore at the beginning of each scan-line)
-         */
-        uint32_t x_offset() const { return m_x_offset; }
+        <span class="cm">/**</span>
+<span class="cm">         * Bitmap X offset (number of pixels to ignore at the beginning of each scan-line)</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">x_offset</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_x_offset</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Byte order of image data
-         */
-        byte_order_t byte_order() const { return m_byte_order; }
+        <span class="cm">/**</span>
+<span class="cm">         * Byte order of image data</span>
+<span class="cm">         */</span>
+        <span class="n">byte_order_t</span> <span class="n">byte_order</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_byte_order</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Bitmap base data size
-         */
-        uint32_t bitmap_unit() const { return m_bitmap_unit; }
+        <span class="cm">/**</span>
+<span class="cm">         * Bitmap base data size</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">bitmap_unit</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_bitmap_unit</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Bit-order of image data
-         */
-        uint32_t bitmap_bit_order() const { return m_bitmap_bit_order; }
+        <span class="cm">/**</span>
+<span class="cm">         * Bit-order of image data</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">bitmap_bit_order</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_bitmap_bit_order</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Bitmap scan-line pad
-         */
-        uint32_t bitmap_pad() const { return m_bitmap_pad; }
+        <span class="cm">/**</span>
+<span class="cm">         * Bitmap scan-line pad</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">bitmap_pad</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_bitmap_pad</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Bits per pixel
-         */
-        uint32_t bits_per_pixel() const { return m_bits_per_pixel; }
+        <span class="cm">/**</span>
+<span class="cm">         * Bits per pixel</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">bits_per_pixel</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_bits_per_pixel</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Bytes per scan-line
-         */
-        uint32_t bytes_per_line() const { return m_bytes_per_line; }
+        <span class="cm">/**</span>
+<span class="cm">         * Bytes per scan-line</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">bytes_per_line</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_bytes_per_line</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Class of the image
-         */
-        visual_class_t visual_class() const { return m_visual_class; }
+        <span class="cm">/**</span>
+<span class="cm">         * Class of the image</span>
+<span class="cm">         */</span>
+        <span class="n">visual_class_t</span> <span class="n">visual_class</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_visual_class</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Red mask
-         */
-        uint32_t red_mask() const { return m_red_mask; }
+        <span class="cm">/**</span>
+<span class="cm">         * Red mask</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">red_mask</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_red_mask</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Green mask
-         */
-        uint32_t green_mask() const { return m_green_mask; }
+        <span class="cm">/**</span>
+<span class="cm">         * Green mask</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">green_mask</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_green_mask</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Blue mask
-         */
-        uint32_t blue_mask() const { return m_blue_mask; }
+        <span class="cm">/**</span>
+<span class="cm">         * Blue mask</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">blue_mask</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_blue_mask</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Size of each color mask in bits
-         */
-        uint32_t bits_per_rgb() const { return m_bits_per_rgb; }
+        <span class="cm">/**</span>
+<span class="cm">         * Size of each color mask in bits</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">bits_per_rgb</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_bits_per_rgb</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Number of colors in image
-         */
-        uint32_t number_of_colors() const { return m_number_of_colors; }
+        <span class="cm">/**</span>
+<span class="cm">         * Number of colors in image</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">number_of_colors</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_number_of_colors</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Number of entries in color map
-         */
-        uint32_t color_map_entries() const { return m_color_map_entries; }
+        <span class="cm">/**</span>
+<span class="cm">         * Number of entries in color map</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">color_map_entries</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_color_map_entries</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Window width
-         */
-        uint32_t window_width() const { return m_window_width; }
+        <span class="cm">/**</span>
+<span class="cm">         * Window width</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">window_width</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_window_width</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Window height
-         */
-        uint32_t window_height() const { return m_window_height; }
+        <span class="cm">/**</span>
+<span class="cm">         * Window height</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">window_height</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_window_height</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Window upper left X coordinate
-         */
-        int32_t window_x() const { return m_window_x; }
+        <span class="cm">/**</span>
+<span class="cm">         * Window upper left X coordinate</span>
+<span class="cm">         */</span>
+        <span class="kt">int32_t</span> <span class="n">window_x</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_window_x</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Window upper left Y coordinate
-         */
-        int32_t window_y() const { return m_window_y; }
+        <span class="cm">/**</span>
+<span class="cm">         * Window upper left Y coordinate</span>
+<span class="cm">         */</span>
+        <span class="kt">int32_t</span> <span class="n">window_y</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_window_y</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Window border width
-         */
-        uint32_t window_border_width() const { return m_window_border_width; }
+        <span class="cm">/**</span>
+<span class="cm">         * Window border width</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">window_border_width</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_window_border_width</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Program that created this xwd file
-         */
-        std::string creator() const { return m_creator; }
-        xwd_t* _root() const { return m__root; }
-        xwd_t* _parent() const { return m__parent; }
-    };
+        <span class="cm">/**</span>
+<span class="cm">         * Program that created this xwd file</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">creator</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_creator</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">xwd_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">xwd_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-    class color_map_entry_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">color_map_entry_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        color_map_entry_t(kaitai::kstream* p__io, xwd_t* p__parent = 0, xwd_t* p__root = 0);
+        <span class="n">color_map_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">xwd_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">xwd_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~color_map_entry_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">color_map_entry_t</span><span class="p">();</span>
 
-    private:
-        uint32_t m_entry_number;
-        uint16_t m_red;
-        uint16_t m_green;
-        uint16_t m_blue;
-        uint8_t m_flags;
-        uint8_t m_padding;
-        xwd_t* m__root;
-        xwd_t* m__parent;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">m_entry_number</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_red</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_green</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_blue</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_flags</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_padding</span><span class="p">;</span>
+        <span class="n">xwd_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">xwd_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        /**
-         * Number of the color map entry
-         */
-        uint32_t entry_number() const { return m_entry_number; }
-        uint16_t red() const { return m_red; }
-        uint16_t green() const { return m_green; }
-        uint16_t blue() const { return m_blue; }
-        uint8_t flags() const { return m_flags; }
-        uint8_t padding() const { return m_padding; }
-        xwd_t* _root() const { return m__root; }
-        xwd_t* _parent() const { return m__parent; }
-    };
+        <span class="cm">/**</span>
+<span class="cm">         * Number of the color map entry</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">entry_number</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_entry_number</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">red</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_red</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">green</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_green</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">blue</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_blue</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">padding</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_padding</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">xwd_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">xwd_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
 
-private:
-    uint32_t m_len_header;
-    header_t* m_hdr;
-    std::vector&lt;color_map_entry_t*&gt;* m_color_map;
-    xwd_t* m__root;
-    kaitai::kstruct* m__parent;
-    std::string m__raw_hdr;
-    kaitai::kstream* m__io__raw_hdr;
-    std::vector&lt;std::string&gt;* m__raw_color_map;
-    std::vector&lt;kaitai::kstream*&gt;* m__io__raw_color_map;
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">uint32_t</span> <span class="n">m_len_header</span><span class="p">;</span>
+    <span class="n">header_t</span><span class="o">*</span> <span class="n">m_hdr</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">color_map_entry_t</span><span class="o">*&gt;*</span> <span class="n">m_color_map</span><span class="p">;</span>
+    <span class="n">xwd_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_hdr</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_hdr</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;*</span> <span class="n">m__raw_color_map</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*&gt;*</span> <span class="n">m__io__raw_color_map</span><span class="p">;</span>
 
-public:
+<span class="k">public</span><span class="o">:</span>
 
-    /**
-     * Size of the header in bytes
-     */
-    uint32_t len_header() const { return m_len_header; }
-    header_t* hdr() const { return m_hdr; }
-    std::vector&lt;color_map_entry_t*&gt;* color_map() const { return m_color_map; }
-    xwd_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-    std::string _raw_hdr() const { return m__raw_hdr; }
-    kaitai::kstream* _io__raw_hdr() const { return m__io__raw_hdr; }
-    std::vector&lt;std::string&gt;* _raw_color_map() const { return m__raw_color_map; }
-    std::vector&lt;kaitai::kstream*&gt;* _io__raw_color_map() const { return m__io__raw_color_map; }
-};
+    <span class="cm">/**</span>
+<span class="cm">     * Size of the header in bytes</span>
+<span class="cm">     */</span>
+    <span class="kt">uint32_t</span> <span class="n">len_header</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_header</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">header_t</span><span class="o">*</span> <span class="n">hdr</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_hdr</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">color_map_entry_t</span><span class="o">*&gt;*</span> <span class="n">color_map</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_color_map</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">xwd_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_hdr</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_hdr</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_hdr</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_hdr</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;*</span> <span class="n">_raw_color_map</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_color_map</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*&gt;*</span> <span class="n">_io__raw_color_map</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_color_map</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
 
-#endif  // XWD_H_
-</code></pre>
+<span class="cp">#endif  </span><span class="c1">// XWD_H_</span>
+</pre></div>
 
         </div>
         
@@ -596,107 +593,107 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;xwd.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;xwd.h&quot;</span><span class="cp"></span>
 
 
 
-xwd_t::xwd_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, xwd_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    _read();
-}
+<span class="n">xwd_t</span><span class="o">::</span><span class="n">xwd_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">xwd_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void xwd_t::_read() {
-    m_len_header = m__io-&gt;read_u4be();
-    m__raw_hdr = m__io-&gt;read_bytes((len_header() - 4));
-    m__io__raw_hdr = new kaitai::kstream(m__raw_hdr);
-    m_hdr = new header_t(m__io__raw_hdr, this, m__root);
-    int l_color_map = hdr()-&gt;color_map_entries();
-    m__raw_color_map = new std::vector&lt;std::string&gt;();
-    m__raw_color_map-&gt;reserve(l_color_map);
-    m__io__raw_color_map = new std::vector&lt;kaitai::kstream*&gt;();
-    m__io__raw_color_map-&gt;reserve(l_color_map);
-    m_color_map = new std::vector&lt;color_map_entry_t*&gt;();
-    m_color_map-&gt;reserve(l_color_map);
-    for (int i = 0; i &lt; l_color_map; i++) {
-        m__raw_color_map-&gt;push_back(m__io-&gt;read_bytes(12));
-        kaitai::kstream* io__raw_color_map = new kaitai::kstream(m__raw_color_map-&gt;at(m__raw_color_map-&gt;size() - 1));
-        m__io__raw_color_map-&gt;push_back(io__raw_color_map);
-        m_color_map-&gt;push_back(new color_map_entry_t(io__raw_color_map, this, m__root));
-    }
-}
+<span class="kt">void</span> <span class="n">xwd_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_len_header</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m__raw_hdr</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_header</span><span class="p">()</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+    <span class="n">m__io__raw_hdr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_hdr</span><span class="p">);</span>
+    <span class="n">m_hdr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">header_t</span><span class="p">(</span><span class="n">m__io__raw_hdr</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">l_color_map</span> <span class="o">=</span> <span class="n">hdr</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">color_map_entries</span><span class="p">();</span>
+    <span class="n">m__raw_color_map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="n">m__raw_color_map</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_color_map</span><span class="p">);</span>
+    <span class="n">m__io__raw_color_map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="n">m__io__raw_color_map</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_color_map</span><span class="p">);</span>
+    <span class="n">m_color_map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">color_map_entry_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="n">m_color_map</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_color_map</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_color_map</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">m__raw_color_map</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">12</span><span class="p">));</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">io__raw_color_map</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_color_map</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">m__raw_color_map</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+        <span class="n">m__io__raw_color_map</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">io__raw_color_map</span><span class="p">);</span>
+        <span class="n">m_color_map</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">color_map_entry_t</span><span class="p">(</span><span class="n">io__raw_color_map</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-xwd_t::~xwd_t() {
-    delete m__io__raw_hdr;
-    delete m_hdr;
-    delete m__raw_color_map;
-    for (std::vector&lt;kaitai::kstream*&gt;::iterator it = m__io__raw_color_map-&gt;begin(); it != m__io__raw_color_map-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m__io__raw_color_map;
-    for (std::vector&lt;color_map_entry_t*&gt;::iterator it = m_color_map-&gt;begin(); it != m_color_map-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_color_map;
-}
+<span class="n">xwd_t</span><span class="o">::~</span><span class="n">xwd_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m__io__raw_hdr</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_hdr</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m__raw_color_map</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m__io__raw_color_map</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m__io__raw_color_map</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m__io__raw_color_map</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">color_map_entry_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_color_map</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_color_map</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_color_map</span><span class="p">;</span>
+<span class="p">}</span>
 
-xwd_t::header_t::header_t(kaitai::kstream* p__io, xwd_t* p__parent, xwd_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">xwd_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">xwd_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">xwd_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void xwd_t::header_t::_read() {
-    m_file_version = m__io-&gt;read_u4be();
-    m_pixmap_format = static_cast&lt;xwd_t::pixmap_format_t&gt;(m__io-&gt;read_u4be());
-    m_pixmap_depth = m__io-&gt;read_u4be();
-    m_pixmap_width = m__io-&gt;read_u4be();
-    m_pixmap_height = m__io-&gt;read_u4be();
-    m_x_offset = m__io-&gt;read_u4be();
-    m_byte_order = static_cast&lt;xwd_t::byte_order_t&gt;(m__io-&gt;read_u4be());
-    m_bitmap_unit = m__io-&gt;read_u4be();
-    m_bitmap_bit_order = m__io-&gt;read_u4be();
-    m_bitmap_pad = m__io-&gt;read_u4be();
-    m_bits_per_pixel = m__io-&gt;read_u4be();
-    m_bytes_per_line = m__io-&gt;read_u4be();
-    m_visual_class = static_cast&lt;xwd_t::visual_class_t&gt;(m__io-&gt;read_u4be());
-    m_red_mask = m__io-&gt;read_u4be();
-    m_green_mask = m__io-&gt;read_u4be();
-    m_blue_mask = m__io-&gt;read_u4be();
-    m_bits_per_rgb = m__io-&gt;read_u4be();
-    m_number_of_colors = m__io-&gt;read_u4be();
-    m_color_map_entries = m__io-&gt;read_u4be();
-    m_window_width = m__io-&gt;read_u4be();
-    m_window_height = m__io-&gt;read_u4be();
-    m_window_x = m__io-&gt;read_s4be();
-    m_window_y = m__io-&gt;read_s4be();
-    m_window_border_width = m__io-&gt;read_u4be();
-    m_creator = kaitai::kstream::bytes_to_str(m__io-&gt;read_bytes_term(0, false, true, true), std::string(&quot;UTF-8&quot;));
-}
+<span class="kt">void</span> <span class="n">xwd_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_file_version</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_pixmap_format</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">pixmap_format_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">());</span>
+    <span class="n">m_pixmap_depth</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_pixmap_width</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_pixmap_height</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_x_offset</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_byte_order</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">byte_order_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">());</span>
+    <span class="n">m_bitmap_unit</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_bitmap_bit_order</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_bitmap_pad</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_bits_per_pixel</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_bytes_per_line</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_visual_class</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">xwd_t</span><span class="o">::</span><span class="n">visual_class_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">());</span>
+    <span class="n">m_red_mask</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_green_mask</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_blue_mask</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_bits_per_rgb</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_number_of_colors</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_color_map_entries</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_window_width</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_window_height</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_window_x</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s4be</span><span class="p">();</span>
+    <span class="n">m_window_y</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s4be</span><span class="p">();</span>
+    <span class="n">m_window_border_width</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_creator</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">true</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+<span class="p">}</span>
 
-xwd_t::header_t::~header_t() {
-}
+<span class="n">xwd_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::~</span><span class="n">header_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-xwd_t::color_map_entry_t::color_map_entry_t(kaitai::kstream* p__io, xwd_t* p__parent, xwd_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">xwd_t</span><span class="o">::</span><span class="n">color_map_entry_t</span><span class="o">::</span><span class="n">color_map_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">xwd_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">xwd_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void xwd_t::color_map_entry_t::_read() {
-    m_entry_number = m__io-&gt;read_u4be();
-    m_red = m__io-&gt;read_u2be();
-    m_green = m__io-&gt;read_u2be();
-    m_blue = m__io-&gt;read_u2be();
-    m_flags = m__io-&gt;read_u1();
-    m_padding = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">xwd_t</span><span class="o">::</span><span class="n">color_map_entry_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_entry_number</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_red</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">m_green</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">m_blue</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">m_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_padding</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-xwd_t::color_map_entry_t::~color_map_entry_t() {
-}
-</code></pre>
+<span class="n">xwd_t</span><span class="o">::</span><span class="n">color_map_entry_t</span><span class="o">::~</span><span class="n">color_map_entry_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -723,8 +720,8 @@ xwd_t::color_map_entry_t::~color_map_entry_t() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

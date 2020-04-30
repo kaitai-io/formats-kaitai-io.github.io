@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -225,164 +222,164 @@ empty (contain no file data) they can be omitted.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: tr_dos_image
-  file-extension: trd
-  title: &quot;TR-DOS flat-file disk image&quot;
-  license: CC0-1.0
-  endian: le
-doc: |
-  .trd file is a raw dump of TR-DOS (ZX-Spectrum) floppy. .trd files are
-  headerless and contain consequent &quot;logical tracks&quot;, each logical track
-  consists of 16 256-byte sectors.
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tr_dos_image</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trd</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="s">&quot;TR-DOS</span><span class="nv"> </span><span class="s">flat-file</span><span class="nv"> </span><span class="s">disk</span><span class="nv"> </span><span class="s">image&quot;</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">.trd file is a raw dump of TR-DOS (ZX-Spectrum) floppy. .trd files are</span>
+  <span class="no">headerless and contain consequent &quot;logical tracks&quot;, each logical track</span>
+  <span class="no">consists of 16 256-byte sectors.</span>
 
-  Logical tracks are defined the same way as used by TR-DOS: for single-side
-  floppies it&#39;s just a physical track number, for two-side floppies sides are
-  interleaved, i.e. logical_track_num = (physical_track_num &lt;&lt; 1) | side
+  <span class="no">Logical tracks are defined the same way as used by TR-DOS: for single-side</span>
+  <span class="no">floppies it&#39;s just a physical track number, for two-side floppies sides are</span>
+  <span class="no">interleaved, i.e. logical_track_num = (physical_track_num &lt;&lt; 1) | side</span>
 
-  So, this format definition is more for TR-DOS filesystem than for .trd files,
-  which are formatless.
+  <span class="no">So, this format definition is more for TR-DOS filesystem than for .trd files,</span>
+  <span class="no">which are formatless.</span>
 
-  Strings (file names, disk label, disk password) are padded with spaces and use
-  ZX Spectrum character set, including UDGs, block drawing chars and Basic
-  tokens. ASCII range is mostly standard ASCII, with few characters (^, `, DEL)
-  replaced with (up arrow, pound, copyright symbol).
+  <span class="no">Strings (file names, disk label, disk password) are padded with spaces and use</span>
+  <span class="no">ZX Spectrum character set, including UDGs, block drawing chars and Basic</span>
+  <span class="no">tokens. ASCII range is mostly standard ASCII, with few characters (^, `, DEL)</span>
+  <span class="no">replaced with (up arrow, pound, copyright symbol).</span>
 
-  .trd file can be smaller than actual floppy disk, if last logical tracks are
-  empty (contain no file data) they can be omitted.
-seq:
-  - id: files
-    type: file
-    repeat: until
-    # After 128 files there is disk info entry, which also has 0x00 terminator
-    # in the same position as file name. So usually even with 128 files you can
-    # just read until 0x00.
-    repeat-until: _.is_terminator
-instances:
-  volume_info:
-    pos: 0x800
-    type: volume_info
-types:
-  file:
-    seq:
-      - id: name
-        # It uses custom type due to limitation of streams: there&#39;s no way to
-        # extract first byte from byte array directly
-        type: filename
-        size: 8
-      - id: extension
-        type: u1
-      - id: position_and_length
-        type:
-          switch-on: extension
-          cases:
-            0x42: position_and_length_basic # &#39;B&#39;
-            0x43: position_and_length_code  # &#39;C&#39;
-            0x23: position_and_length_print # &#39;#&#39;
-            _: position_and_length_generic
-      - id: length_sectors
-        type: u1
-      - id: starting_sector
-        type: u1
-      - id: starting_track
-        type: u1
-    instances:
-      is_deleted:
-        value: name.first_byte == 0x01
-      is_terminator:
-        value: name.first_byte == 0x00
-      contents:
-        pos: starting_track * 256 * 16 + starting_sector * 256
-        size: length_sectors * 256
-  position_and_length_basic:
-    seq:
-      - id: program_and_data_length
-        type: u2
-      - id: program_length
-        type: u2
-  position_and_length_code:
-    seq:
-      - id: start_address
-        type: u2
-        doc: Default memory address to load this byte array into
-      - id: length
-        type: u2
-  position_and_length_print:
-    seq:
-      - id: extent_no
-        type: u1
-      - id: reserved
-        type: u1
-      - id: length
-        type: u2
-  position_and_length_generic: # used for standard &#39;D&#39; type and unknown types
-    seq:
-      - id: reserved
-        type: u2
-      - id: length
-        type: u2
-  volume_info:
-    seq:
-      # This is 0x00 at the same position as first character of filename in
-      # file entries for convenience. When disk has 128 files, it acts as
-      # &quot;last file&quot; terminator.
-      - id: catalog_end
-        contents: [0]
-      - id: unused
-        size: 224
-      - id: first_free_sector_sector
-        type: u1
-      - id: first_free_sector_track
-        doc: |
-          track number is logical, for double-sided disks it&#39;s
-          (physical_track &lt;&lt; 1) | side, the same way that tracks are stored
-          sequentially in .trd file
-        type: u1
-      - id: disk_type
-        type: u1
-        enum: disk_type
-      - id: num_files
-        doc: |
-          Number of non-deleted files. Directory can have more than
-          number_of_files entries due to deleted files
-        type: u1
-      - id: num_free_sectors
-        type: u2
-      - id: tr_dos_id
-        contents: [0x10]
-      - id: unused_2
-        size: 2
-      - id: password
-        size: 9
-      - id: unused_3
-        size: 1
-      - id: num_deleted_files
-        type: u1
-      - id: label
-        size: 8
-      - id: unused_4
-        size: 3
-    instances:
-      num_tracks:
-        value: &quot;disk_type.to_i &amp; 0x01 != 0 ? 40 : 80&quot;
-      num_sides:
-        value: &quot;disk_type.to_i &amp; 0x08 != 0 ? 1 : 2&quot;
-  filename:
-    seq:
-      - id: name
-        size: 8
-    instances:
-      first_byte:
-        pos: 0
-        type: u1
+  <span class="no">.trd file can be smaller than actual floppy disk, if last logical tracks are</span>
+  <span class="no">empty (contain no file data) they can be omitted.</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">files</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">until</span>
+    <span class="c1"># After 128 files there is disk info entry, which also has 0x00 terminator</span>
+    <span class="c1"># in the same position as file name. So usually even with 128 files you can</span>
+    <span class="c1"># just read until 0x00.</span>
+    <span class="nt">repeat-until</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_.is_terminator</span>
+<span class="nt">instances</span><span class="p">:</span>
+  <span class="nt">volume_info</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x800</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">volume_info</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">file</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+        <span class="c1"># It uses custom type due to limitation of streams: there&#39;s no way to</span>
+        <span class="c1"># extract first byte from byte array directly</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filename</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extension</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">position_and_length</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extension</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="nt">0x42</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">position_and_length_basic</span> <span class="c1"># &#39;B&#39;</span>
+            <span class="nt">0x43</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">position_and_length_code</span>  <span class="c1"># &#39;C&#39;</span>
+            <span class="nt">0x23</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">position_and_length_print</span> <span class="c1"># &#39;#&#39;</span>
+            <span class="nt">_</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">position_and_length_generic</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length_sectors</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">starting_sector</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">starting_track</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">is_deleted</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name.first_byte == 0x01</span>
+      <span class="nt">is_terminator</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name.first_byte == 0x00</span>
+      <span class="nt">contents</span><span class="p">:</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">starting_track * 256 * 16 + starting_sector * 256</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length_sectors * 256</span>
+  <span class="nt">position_and_length_basic</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">program_and_data_length</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">program_length</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+  <span class="nt">position_and_length_code</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start_address</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Default memory address to load this byte array into</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+  <span class="nt">position_and_length_print</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extent_no</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+  <span class="nt">position_and_length_generic</span><span class="p">:</span> <span class="c1"># used for standard &#39;D&#39; type and unknown types</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+  <span class="nt">volume_info</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="c1"># This is 0x00 at the same position as first character of filename in</span>
+      <span class="c1"># file entries for convenience. When disk has 128 files, it acts as</span>
+      <span class="c1"># &quot;last file&quot; terminator.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">catalog_end</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">]</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">224</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">first_free_sector_sector</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">first_free_sector_track</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">track number is logical, for double-sided disks it&#39;s</span>
+          <span class="no">(physical_track &lt;&lt; 1) | side, the same way that tracks are stored</span>
+          <span class="no">sequentially in .trd file</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">disk_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">disk_type</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_files</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Number of non-deleted files. Directory can have more than</span>
+          <span class="no">number_of_files entries due to deleted files</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_free_sectors</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tr_dos_id</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0x10</span><span class="p p-Indicator">]</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused_2</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">password</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">9</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused_3</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_deleted_files</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">label</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unused_4</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">num_tracks</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&quot;disk_type.to_i</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0x01</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">40</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">80&quot;</span>
+      <span class="nt">num_sides</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&quot;disk_type.to_i</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0x08</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">2&quot;</span>
+  <span class="nt">filename</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">first_byte</span><span class="p">:</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
 
-enums:
-  disk_type:
-    0x16: type_80_tracks_double_side
-    0x17: type_40_tracks_double_side
-    0x18: type_80_tracks_single_side
-    0x19: type_40_tracks_single_side
-</code></pre>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">disk_type</span><span class="p">:</span>
+    <span class="nt">0x16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type_80_tracks_double_side</span>
+    <span class="nt">0x17</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type_40_tracks_double_side</span>
+    <span class="nt">0x18</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type_80_tracks_single_side</span>
+    <span class="nt">0x19</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type_40_tracks_single_side</span>
+</pre></div>
     </div>
 </section>
 
@@ -406,8 +403,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

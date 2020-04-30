@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -256,201 +253,201 @@ understands how to access data in AppleSingle container.</p>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * AppleSingle and AppleDouble files are used by certain Mac
- * applications (e.g. Finder) to store Mac-specific file attributes on
- * filesystems that do not support that.
- * 
- * Syntactically, both formats are the same, the only difference is how
- * they are being used:
- * 
- * * AppleSingle means that only one file will be created on external
- *   filesystem that will hold both the data (AKA &quot;data fork&quot; in Apple
- *   terminology), and the attributes (AKA &quot;resource fork&quot;).
- * * AppleDouble means that two files will be created: a normal file
- *   that keeps the data (&quot;data fork&quot;) is kept separately from an
- *   auxiliary file that contains attributes (&quot;resource fork&quot;), which
- *   is kept with the same name, but starting with an extra dot and
- *   underscore `._` to keep it hidden.
- * 
- * In modern practice (Mac OS X), Finder only uses AppleDouble to keep
- * compatibility with other OSes, as virtually nobody outside of Mac
- * understands how to access data in AppleSingle container.
- */
+<span class="sd">/**</span>
+<span class="sd"> * AppleSingle and AppleDouble files are used by certain Mac</span>
+<span class="sd"> * applications (e.g. Finder) to store Mac-specific file attributes on</span>
+<span class="sd"> * filesystems that do not support that.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Syntactically, both formats are the same, the only difference is how</span>
+<span class="sd"> * they are being used:</span>
+<span class="sd"> * </span>
+<span class="sd"> * * AppleSingle means that only one file will be created on external</span>
+<span class="sd"> *   filesystem that will hold both the data (AKA &quot;data fork&quot; in Apple</span>
+<span class="sd"> *   terminology), and the attributes (AKA &quot;resource fork&quot;).</span>
+<span class="sd"> * * AppleDouble means that two files will be created: a normal file</span>
+<span class="sd"> *   that keeps the data (&quot;data fork&quot;) is kept separately from an</span>
+<span class="sd"> *   auxiliary file that contains attributes (&quot;resource fork&quot;), which</span>
+<span class="sd"> *   is kept with the same name, but starting with an extra dot and</span>
+<span class="sd"> *   underscore `._` to keep it hidden.</span>
+<span class="sd"> * </span>
+<span class="sd"> * In modern practice (Mac OS X), Finder only uses AppleDouble to keep</span>
+<span class="sd"> * compatibility with other OSes, as virtually nobody outside of Mac</span>
+<span class="sd"> * understands how to access data in AppleSingle container.</span>
+<span class="sd"> */</span>
 
-class AppleSingleDouble extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \AppleSingleDouble $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">AppleSingleDouble</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\AppleSingleDouble</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_magic = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_version = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_reserved = $this-&gt;_io-&gt;readBytes(16);
-        $this-&gt;_m_numEntries = $this-&gt;_io-&gt;readU2be();
-        $this-&gt;_m_entries = [];
-        $n = $this-&gt;numEntries();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_entries[] = new \AppleSingleDouble\Entry($this-&gt;_io, $this, $this-&gt;_root);
-        }
-    }
-    protected $_m_magic;
-    protected $_m_version;
-    protected $_m_reserved;
-    protected $_m_numEntries;
-    protected $_m_entries;
-    public function magic() { return $this-&gt;_m_magic; }
-    public function version() { return $this-&gt;_m_version; }
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numEntries</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numEntries</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\AppleSingleDouble\Entry</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_magic</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_version</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_reserved</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numEntries</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_entries</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Must be all 0.
-     */
-    public function reserved() { return $this-&gt;_m_reserved; }
-    public function numEntries() { return $this-&gt;_m_numEntries; }
-    public function entries() { return $this-&gt;_m_entries; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * Must be all 0.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numEntries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numEntries</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \AppleSingleDouble;
+<span class="k">namespace</span> <span class="nx">\AppleSingleDouble</span><span class="p">;</span>
 
-class Entry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \AppleSingleDouble $_parent = null, \AppleSingleDouble $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Entry</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\AppleSingleDouble</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\AppleSingleDouble</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_type = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_ofsBody = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_lenBody = $this-&gt;_io-&gt;readU4be();
-    }
-    protected $_m_body;
-    public function body() {
-        if ($this-&gt;_m_body !== null)
-            return $this-&gt;_m_body;
-        $_pos = $this-&gt;_io-&gt;pos();
-        $this-&gt;_io-&gt;seek($this-&gt;ofsBody());
-        switch ($this-&gt;type()) {
-            case \AppleSingleDouble\Entry\Types::FINDER_INFO:
-                $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytes($this-&gt;lenBody());
-                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \AppleSingleDouble\FinderInfo($io, $this, $this-&gt;_root);
-                break;
-            default:
-                $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;lenBody());
-                break;
-        }
-        $this-&gt;_io-&gt;seek($_pos);
-        return $this-&gt;_m_body;
-    }
-    protected $_m_type;
-    protected $_m_ofsBody;
-    protected $_m_lenBody;
-    protected $_m__raw_body;
-    public function type() { return $this-&gt;_m_type; }
-    public function ofsBody() { return $this-&gt;_m_ofsBody; }
-    public function lenBody() { return $this-&gt;_m_lenBody; }
-    public function _raw_body() { return $this-&gt;_m__raw_body; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsBody</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenBody</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span>
+        <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsBody</span><span class="p">());</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">type</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="nx">\AppleSingleDouble\Entry\Types</span><span class="o">::</span><span class="na">FINDER_INFO</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\AppleSingleDouble\FinderInfo</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">default</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_type</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_ofsBody</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenBody</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_body</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">type</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_type</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsBody</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenBody</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \AppleSingleDouble\Entry;
+<span class="k">namespace</span> <span class="nx">\AppleSingleDouble\Entry</span><span class="p">;</span>
 
-class Types {
-    const DATA_FORK = 1;
-    const RESOURCE_FORK = 2;
+<span class="k">class</span> <span class="nc">Types</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">DATA_FORK</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RESOURCE_FORK</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
 
-    /**
-     * File name on a file system that supports all the attributes.
-     */
-    const REAL_NAME = 3;
-    const COMMENT = 4;
-    const ICON_BW = 5;
-    const ICON_COLOR = 6;
+    <span class="sd">/**</span>
+<span class="sd">     * File name on a file system that supports all the attributes.</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">REAL_NAME</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">COMMENT</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ICON_BW</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ICON_COLOR</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
 
-    /**
-     * File creation, modification, access date/timestamps.
-     */
-    const FILE_DATES_INFO = 8;
-    const FINDER_INFO = 9;
-    const MACINTOSH_FILE_INFO = 10;
-    const PRODOS_FILE_INFO = 11;
-    const MSDOS_FILE_INFO = 12;
-    const AFP_SHORT_NAME = 13;
-    const AFP_FILE_INFO = 14;
-    const AFP_DIRECTORY_ID = 15;
-}
+    <span class="sd">/**</span>
+<span class="sd">     * File creation, modification, access date/timestamps.</span>
+<span class="sd">     */</span>
+    <span class="k">const</span> <span class="no">FILE_DATES_INFO</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">FINDER_INFO</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MACINTOSH_FILE_INFO</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">PRODOS_FILE_INFO</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MSDOS_FILE_INFO</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">AFP_SHORT_NAME</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">AFP_FILE_INFO</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">AFP_DIRECTORY_ID</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
+<span class="p">}</span>
 
-/**
- * Information specific to Finder
- */
+<span class="sd">/**</span>
+<span class="sd"> * Information specific to Finder</span>
+<span class="sd"> */</span>
 
-namespace \AppleSingleDouble;
+<span class="k">namespace</span> <span class="nx">\AppleSingleDouble</span><span class="p">;</span>
 
-class FinderInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \AppleSingleDouble\Entry $_parent = null, \AppleSingleDouble $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">FinderInfo</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\AppleSingleDouble\Entry</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\AppleSingleDouble</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_fileType = $this-&gt;_io-&gt;readBytes(4);
-        $this-&gt;_m_fileCreator = $this-&gt;_io-&gt;readBytes(4);
-        $this-&gt;_m_flags = $this-&gt;_io-&gt;readU2be();
-        $this-&gt;_m_location = new \AppleSingleDouble\Point($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_folderId = $this-&gt;_io-&gt;readU2be();
-    }
-    protected $_m_fileType;
-    protected $_m_fileCreator;
-    protected $_m_flags;
-    protected $_m_location;
-    protected $_m_folderId;
-    public function fileType() { return $this-&gt;_m_fileType; }
-    public function fileCreator() { return $this-&gt;_m_fileCreator; }
-    public function flags() { return $this-&gt;_m_flags; }
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileCreator</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_location</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\AppleSingleDouble\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_folderId</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_fileType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_fileCreator</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_flags</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_location</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_folderId</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fileType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fileCreator</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileCreator</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flags</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * File icon&#39;s coordinates when displaying this folder.
-     */
-    public function location() { return $this-&gt;_m_location; }
+    <span class="sd">/**</span>
+<span class="sd">     * File icon&#39;s coordinates when displaying this folder.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">location</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_location</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * File folder ID (=window).
-     */
-    public function folderId() { return $this-&gt;_m_folderId; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * File folder ID (=window).</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">folderId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_folderId</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-/**
- * Specifies 2D coordinate in QuickDraw grid.
- */
+<span class="sd">/**</span>
+<span class="sd"> * Specifies 2D coordinate in QuickDraw grid.</span>
+<span class="sd"> */</span>
 
-namespace \AppleSingleDouble;
+<span class="k">namespace</span> <span class="nx">\AppleSingleDouble</span><span class="p">;</span>
 
-class Point extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \AppleSingleDouble\FinderInfo $_parent = null, \AppleSingleDouble $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Point</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\AppleSingleDouble\FinderInfo</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\AppleSingleDouble</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_x = $this-&gt;_io-&gt;readU2be();
-        $this-&gt;_m_y = $this-&gt;_io-&gt;readU2be();
-    }
-    protected $_m_x;
-    protected $_m_y;
-    public function x() { return $this-&gt;_m_x; }
-    public function y() { return $this-&gt;_m_y; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_x</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_y</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \AppleSingleDouble;
+<span class="k">namespace</span> <span class="nx">\AppleSingleDouble</span><span class="p">;</span>
 
-class FileType {
-    const APPLE_SINGLE = 333312;
-    const APPLE_DOUBLE = 333319;
-}
-</code></pre>
+<span class="k">class</span> <span class="nc">FileType</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">APPLE_SINGLE</span> <span class="o">=</span> <span class="mi">333312</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">APPLE_DOUBLE</span> <span class="o">=</span> <span class="mi">333319</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -477,8 +474,8 @@ class FileType {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

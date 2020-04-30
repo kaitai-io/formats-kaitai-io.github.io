@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -264,224 +261,224 @@ var data = new Ipv4Packet(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
-    public partial class Ipv4Packet : KaitaiStruct
-    {
-        public static Ipv4Packet FromFile(string fileName)
-        {
-            return new Ipv4Packet(new KaitaiStream(fileName));
-        }
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Ipv4Packet</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">Ipv4Packet</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Ipv4Packet</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Ipv4Packet(KaitaiStream p__io, KaitaiStruct p__parent = null, Ipv4Packet p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            f_version = false;
-            f_ihl = false;
-            f_ihlBytes = false;
-            _read();
-        }
-        private void _read()
-        {
-            _b1 = m_io.ReadU1();
-            _b2 = m_io.ReadU1();
-            _totalLength = m_io.ReadU2be();
-            _identification = m_io.ReadU2be();
-            _b67 = m_io.ReadU2be();
-            _ttl = m_io.ReadU1();
-            _protocol = m_io.ReadU1();
-            _headerChecksum = m_io.ReadU2be();
-            _srcIpAddr = m_io.ReadBytes(4);
-            _dstIpAddr = m_io.ReadBytes(4);
-            __raw_options = m_io.ReadBytes((IhlBytes - 20));
-            var io___raw_options = new KaitaiStream(__raw_options);
-            _options = new Ipv4Options(io___raw_options, this, m_root);
-            __raw_body = m_io.ReadBytes((TotalLength - IhlBytes));
-            var io___raw_body = new KaitaiStream(__raw_body);
-            _body = new ProtocolBody(Protocol, io___raw_body);
-        }
-        public partial class Ipv4Options : KaitaiStruct
-        {
-            public static Ipv4Options FromFile(string fileName)
-            {
-                return new Ipv4Options(new KaitaiStream(fileName));
-            }
+        <span class="k">public</span> <span class="nf">Ipv4Packet</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Ipv4Packet</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">f_version</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_ihl</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_ihlBytes</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_b1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_b2</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_totalLength</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+            <span class="n">_identification</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+            <span class="n">_b67</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+            <span class="n">_ttl</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_protocol</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+            <span class="n">_headerChecksum</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+            <span class="n">_srcIpAddr</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+            <span class="n">_dstIpAddr</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+            <span class="n">__raw_options</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">IhlBytes</span> <span class="p">-</span> <span class="m">20</span><span class="p">));</span>
+            <span class="kt">var</span> <span class="n">io___raw_options</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_options</span><span class="p">);</span>
+            <span class="n">_options</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Ipv4Options</span><span class="p">(</span><span class="n">io___raw_options</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">TotalLength</span> <span class="p">-</span> <span class="n">IhlBytes</span><span class="p">));</span>
+            <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+            <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ProtocolBody</span><span class="p">(</span><span class="n">Protocol</span><span class="p">,</span> <span class="n">io___raw_body</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Ipv4Options</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Ipv4Options</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Ipv4Options</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Ipv4Options(KaitaiStream p__io, Ipv4Packet p__parent = null, Ipv4Packet p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _entries = new List&lt;Ipv4Option&gt;();
-                {
-                    var i = 0;
-                    while (!m_io.IsEof) {
-                        _entries.Add(new Ipv4Option(m_io, this, m_root));
-                        i++;
-                    }
-                }
-            }
-            private List&lt;Ipv4Option&gt; _entries;
-            private Ipv4Packet m_root;
-            private Ipv4Packet m_parent;
-            public List&lt;Ipv4Option&gt; Entries { get { return _entries; } }
-            public Ipv4Packet M_Root { get { return m_root; } }
-            public Ipv4Packet M_Parent { get { return m_parent; } }
-        }
-        public partial class Ipv4Option : KaitaiStruct
-        {
-            public static Ipv4Option FromFile(string fileName)
-            {
-                return new Ipv4Option(new KaitaiStream(fileName));
-            }
+            <span class="k">public</span> <span class="nf">Ipv4Options</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Ipv4Packet</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Ipv4Packet</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Ipv4Option</span><span class="p">&gt;();</span>
+                <span class="p">{</span>
+                    <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                    <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Ipv4Option</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                        <span class="n">i</span><span class="p">++;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Ipv4Option</span><span class="p">&gt;</span> <span class="n">_entries</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Ipv4Packet</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Ipv4Packet</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Ipv4Option</span><span class="p">&gt;</span> <span class="n">Entries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_entries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Ipv4Packet</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Ipv4Packet</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Ipv4Option</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Ipv4Option</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Ipv4Option</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Ipv4Option(KaitaiStream p__io, Ipv4Packet.Ipv4Options p__parent = null, Ipv4Packet p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                f_copy = false;
-                f_optClass = false;
-                f_number = false;
-                _read();
-            }
-            private void _read()
-            {
-                _b1 = m_io.ReadU1();
-                _len = m_io.ReadU1();
-                _body = m_io.ReadBytes((Len &gt; 2 ? (Len - 2) : 0));
-            }
-            private bool f_copy;
-            private int _copy;
-            public int Copy
-            {
-                get
-                {
-                    if (f_copy)
-                        return _copy;
-                    _copy = (int) (((B1 &amp; 128) &gt;&gt; 7));
-                    f_copy = true;
-                    return _copy;
-                }
-            }
-            private bool f_optClass;
-            private int _optClass;
-            public int OptClass
-            {
-                get
-                {
-                    if (f_optClass)
-                        return _optClass;
-                    _optClass = (int) (((B1 &amp; 96) &gt;&gt; 5));
-                    f_optClass = true;
-                    return _optClass;
-                }
-            }
-            private bool f_number;
-            private int _number;
-            public int Number
-            {
-                get
-                {
-                    if (f_number)
-                        return _number;
-                    _number = (int) ((B1 &amp; 31));
-                    f_number = true;
-                    return _number;
-                }
-            }
-            private byte _b1;
-            private byte _len;
-            private byte[] _body;
-            private Ipv4Packet m_root;
-            private Ipv4Packet.Ipv4Options m_parent;
-            public byte B1 { get { return _b1; } }
-            public byte Len { get { return _len; } }
-            public byte[] Body { get { return _body; } }
-            public Ipv4Packet M_Root { get { return m_root; } }
-            public Ipv4Packet.Ipv4Options M_Parent { get { return m_parent; } }
-        }
-        private bool f_version;
-        private int _version;
-        public int Version
-        {
-            get
-            {
-                if (f_version)
-                    return _version;
-                _version = (int) (((B1 &amp; 240) &gt;&gt; 4));
-                f_version = true;
-                return _version;
-            }
-        }
-        private bool f_ihl;
-        private int _ihl;
-        public int Ihl
-        {
-            get
-            {
-                if (f_ihl)
-                    return _ihl;
-                _ihl = (int) ((B1 &amp; 15));
-                f_ihl = true;
-                return _ihl;
-            }
-        }
-        private bool f_ihlBytes;
-        private int _ihlBytes;
-        public int IhlBytes
-        {
-            get
-            {
-                if (f_ihlBytes)
-                    return _ihlBytes;
-                _ihlBytes = (int) ((Ihl * 4));
-                f_ihlBytes = true;
-                return _ihlBytes;
-            }
-        }
-        private byte _b1;
-        private byte _b2;
-        private ushort _totalLength;
-        private ushort _identification;
-        private ushort _b67;
-        private byte _ttl;
-        private byte _protocol;
-        private ushort _headerChecksum;
-        private byte[] _srcIpAddr;
-        private byte[] _dstIpAddr;
-        private Ipv4Options _options;
-        private ProtocolBody _body;
-        private Ipv4Packet m_root;
-        private KaitaiStruct m_parent;
-        private byte[] __raw_options;
-        private byte[] __raw_body;
-        public byte B1 { get { return _b1; } }
-        public byte B2 { get { return _b2; } }
-        public ushort TotalLength { get { return _totalLength; } }
-        public ushort Identification { get { return _identification; } }
-        public ushort B67 { get { return _b67; } }
-        public byte Ttl { get { return _ttl; } }
-        public byte Protocol { get { return _protocol; } }
-        public ushort HeaderChecksum { get { return _headerChecksum; } }
-        public byte[] SrcIpAddr { get { return _srcIpAddr; } }
-        public byte[] DstIpAddr { get { return _dstIpAddr; } }
-        public Ipv4Options Options { get { return _options; } }
-        public ProtocolBody Body { get { return _body; } }
-        public Ipv4Packet M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-        public byte[] M_RawOptions { get { return __raw_options; } }
-        public byte[] M_RawBody { get { return __raw_body; } }
-    }
-}
-</code></pre>
+            <span class="k">public</span> <span class="nf">Ipv4Option</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">Ipv4Options</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Ipv4Packet</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_copy</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_optClass</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_number</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_b1</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_len</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                <span class="n">_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Len</span> <span class="p">&gt;</span> <span class="m">2</span> <span class="p">?</span> <span class="p">(</span><span class="n">Len</span> <span class="p">-</span> <span class="m">2</span><span class="p">)</span> <span class="p">:</span> <span class="m">0</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_copy</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_copy</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Copy</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_copy</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_copy</span><span class="p">;</span>
+                    <span class="n">_copy</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">B1</span> <span class="p">&amp;</span> <span class="m">128</span><span class="p">)</span> <span class="p">&gt;&gt;</span> <span class="m">7</span><span class="p">));</span>
+                    <span class="n">f_copy</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_copy</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_optClass</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_optClass</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">OptClass</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_optClass</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_optClass</span><span class="p">;</span>
+                    <span class="n">_optClass</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">B1</span> <span class="p">&amp;</span> <span class="m">96</span><span class="p">)</span> <span class="p">&gt;&gt;</span> <span class="m">5</span><span class="p">));</span>
+                    <span class="n">f_optClass</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_optClass</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_number</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">int</span> <span class="n">_number</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">int</span> <span class="n">Number</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_number</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_number</span><span class="p">;</span>
+                    <span class="n">_number</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">B1</span> <span class="p">&amp;</span> <span class="m">31</span><span class="p">));</span>
+                    <span class="n">f_number</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_number</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_b1</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span> <span class="n">_len</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_body</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Ipv4Packet</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">Ipv4Options</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">B1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_b1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span> <span class="n">Len</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_len</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Ipv4Packet</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Ipv4Packet</span><span class="p">.</span><span class="n">Ipv4Options</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_version</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_version</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Version</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_version</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_version</span><span class="p">;</span>
+                <span class="n">_version</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">B1</span> <span class="p">&amp;</span> <span class="m">240</span><span class="p">)</span> <span class="p">&gt;&gt;</span> <span class="m">4</span><span class="p">));</span>
+                <span class="n">f_version</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_version</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_ihl</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_ihl</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Ihl</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_ihl</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_ihl</span><span class="p">;</span>
+                <span class="n">_ihl</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">B1</span> <span class="p">&amp;</span> <span class="m">15</span><span class="p">));</span>
+                <span class="n">f_ihl</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_ihl</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_ihlBytes</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_ihlBytes</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">IhlBytes</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_ihlBytes</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_ihlBytes</span><span class="p">;</span>
+                <span class="n">_ihlBytes</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">Ihl</span> <span class="p">*</span> <span class="m">4</span><span class="p">));</span>
+                <span class="n">f_ihlBytes</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_ihlBytes</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_b1</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_b2</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_totalLength</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_identification</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_b67</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_ttl</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_protocol</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_headerChecksum</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_srcIpAddr</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_dstIpAddr</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Ipv4Options</span> <span class="n">_options</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">ProtocolBody</span> <span class="n">_body</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Ipv4Packet</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_options</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_body</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">B1</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_b1</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">B2</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_b2</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">ushort</span> <span class="n">TotalLength</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_totalLength</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Identification</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_identification</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">ushort</span> <span class="n">B67</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_b67</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">Ttl</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ttl</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">Protocol</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_protocol</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">ushort</span> <span class="n">HeaderChecksum</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_headerChecksum</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">SrcIpAddr</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_srcIpAddr</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">DstIpAddr</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_dstIpAddr</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Ipv4Options</span> <span class="n">Options</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_options</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">ProtocolBody</span> <span class="n">Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Ipv4Packet</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawOptions</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_options</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -508,8 +505,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

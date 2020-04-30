@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -258,380 +255,380 @@ these, but files employing this mechanism are relatively rare.</p>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * Standard MIDI file, typically knows just as &quot;MID&quot;, is a standard way
- * to serialize series of MIDI events, which is a protocol used in many
- * music synthesizers to transfer music data: notes being played,
- * effects being applied, etc.
- * 
- * Internally, file consists of a header and series of tracks, every
- * track listing MIDI events with certain header designating time these
- * events are happening.
- * 
- * NOTE: Rarely, MIDI files employ certain stateful compression scheme
- * to avoid storing certain elements of further elements, instead
- * reusing them from events which happened earlier in the
- * stream. Kaitai Struct (as of v0.9) is currently unable to parse
- * these, but files employing this mechanism are relatively rare.
- */
+<span class="sd">/**</span>
+<span class="sd"> * Standard MIDI file, typically knows just as &quot;MID&quot;, is a standard way</span>
+<span class="sd"> * to serialize series of MIDI events, which is a protocol used in many</span>
+<span class="sd"> * music synthesizers to transfer music data: notes being played,</span>
+<span class="sd"> * effects being applied, etc.</span>
+<span class="sd"> * </span>
+<span class="sd"> * Internally, file consists of a header and series of tracks, every</span>
+<span class="sd"> * track listing MIDI events with certain header designating time these</span>
+<span class="sd"> * events are happening.</span>
+<span class="sd"> * </span>
+<span class="sd"> * NOTE: Rarely, MIDI files employ certain stateful compression scheme</span>
+<span class="sd"> * to avoid storing certain elements of further elements, instead</span>
+<span class="sd"> * reusing them from events which happened earlier in the</span>
+<span class="sd"> * stream. Kaitai Struct (as of v0.9) is currently unable to parse</span>
+<span class="sd"> * these, but files employing this mechanism are relatively rare.</span>
+<span class="sd"> */</span>
 
-class StandardMidiFile extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \StandardMidiFile $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">StandardMidiFile</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_hdr = new \StandardMidiFile\Header($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_tracks = [];
-        $n = $this-&gt;hdr()-&gt;numTracks();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_tracks[] = new \StandardMidiFile\Track($this-&gt;_io, $this, $this-&gt;_root);
-        }
-    }
-    protected $_m_hdr;
-    protected $_m_tracks;
-    public function hdr() { return $this-&gt;_m_hdr; }
-    public function tracks() { return $this-&gt;_m_tracks; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hdr</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\StandardMidiFile\Header</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tracks</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hdr</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">numTracks</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tracks</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\StandardMidiFile\Track</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_hdr</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_tracks</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">hdr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_hdr</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">tracks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tracks</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \StandardMidiFile;
+<span class="k">namespace</span> <span class="nx">\StandardMidiFile</span><span class="p">;</span>
 
-class TrackEvents extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\Track $_parent = null, \StandardMidiFile $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">TrackEvents</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\StandardMidiFile\Track</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_event = [];
-        $i = 0;
-        while (!$this-&gt;_io-&gt;isEof()) {
-            $this-&gt;_m_event[] = new \StandardMidiFile\TrackEvent($this-&gt;_io, $this, $this-&gt;_root);
-            $i++;
-        }
-    }
-    protected $_m_event;
-    public function event() { return $this-&gt;_m_event; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_event</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_event</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\StandardMidiFile\TrackEvent</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_event</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">event</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_event</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \StandardMidiFile;
+<span class="k">namespace</span> <span class="nx">\StandardMidiFile</span><span class="p">;</span>
 
-class TrackEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvents $_parent = null, \StandardMidiFile $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">TrackEvent</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\StandardMidiFile\TrackEvents</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_vTime = new \VlqBase128Be($this-&gt;_io);
-        $this-&gt;_m_eventHeader = $this-&gt;_io-&gt;readU1();
-        if ($this-&gt;eventHeader() == 255) {
-            $this-&gt;_m_metaEventBody = new \StandardMidiFile\MetaEventBody($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        if ($this-&gt;eventHeader() == 240) {
-            $this-&gt;_m_sysexBody = new \StandardMidiFile\SysexEventBody($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        switch ($this-&gt;eventType()) {
-            case 224:
-                $this-&gt;_m_eventBody = new \StandardMidiFile\PitchBendEvent($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case 144:
-                $this-&gt;_m_eventBody = new \StandardMidiFile\NoteOnEvent($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case 208:
-                $this-&gt;_m_eventBody = new \StandardMidiFile\ChannelPressureEvent($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case 192:
-                $this-&gt;_m_eventBody = new \StandardMidiFile\ProgramChangeEvent($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case 160:
-                $this-&gt;_m_eventBody = new \StandardMidiFile\PolyphonicPressureEvent($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case 176:
-                $this-&gt;_m_eventBody = new \StandardMidiFile\ControllerEvent($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-            case 128:
-                $this-&gt;_m_eventBody = new \StandardMidiFile\NoteOffEvent($this-&gt;_io, $this, $this-&gt;_root);
-                break;
-        }
-    }
-    protected $_m_eventType;
-    public function eventType() {
-        if ($this-&gt;_m_eventType !== null)
-            return $this-&gt;_m_eventType;
-        $this-&gt;_m_eventType = ($this-&gt;eventHeader() &amp; 240);
-        return $this-&gt;_m_eventType;
-    }
-    protected $_m_channel;
-    public function channel() {
-        if ($this-&gt;_m_channel !== null)
-            return $this-&gt;_m_channel;
-        if ($this-&gt;eventType() != 240) {
-            $this-&gt;_m_channel = ($this-&gt;eventHeader() &amp; 15);
-        }
-        return $this-&gt;_m_channel;
-    }
-    protected $_m_vTime;
-    protected $_m_eventHeader;
-    protected $_m_metaEventBody;
-    protected $_m_sysexBody;
-    protected $_m_eventBody;
-    public function vTime() { return $this-&gt;_m_vTime; }
-    public function eventHeader() { return $this-&gt;_m_eventHeader; }
-    public function metaEventBody() { return $this-&gt;_m_metaEventBody; }
-    public function sysexBody() { return $this-&gt;_m_sysexBody; }
-    public function eventBody() { return $this-&gt;_m_eventBody; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_vTime</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\VlqBase128Be</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_eventHeader</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">eventHeader</span><span class="p">()</span> <span class="o">==</span> <span class="mi">255</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_metaEventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\StandardMidiFile\MetaEventBody</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">eventHeader</span><span class="p">()</span> <span class="o">==</span> <span class="mi">240</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sysexBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\StandardMidiFile\SysexEventBody</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">eventType</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="mi">224</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_eventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\StandardMidiFile\PitchBendEvent</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">144</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_eventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\StandardMidiFile\NoteOnEvent</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">208</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_eventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\StandardMidiFile\ChannelPressureEvent</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">192</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_eventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\StandardMidiFile\ProgramChangeEvent</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">160</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_eventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\StandardMidiFile\PolyphonicPressureEvent</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">176</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_eventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\StandardMidiFile\ControllerEvent</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">128</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_eventBody</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\StandardMidiFile\NoteOffEvent</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_eventType</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">eventType</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_eventType</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_eventType</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_eventType</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">eventHeader</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_eventType</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_channel</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">channel</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_channel</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_channel</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">eventType</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">240</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_channel</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">eventHeader</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">15</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_channel</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_vTime</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_eventHeader</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_metaEventBody</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_sysexBody</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_eventBody</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">vTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_vTime</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">eventHeader</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_eventHeader</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">metaEventBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_metaEventBody</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sysexBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sysexBody</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">eventBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_eventBody</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \StandardMidiFile;
+<span class="k">namespace</span> <span class="nx">\StandardMidiFile</span><span class="p">;</span>
 
-class PitchBendEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">PitchBendEvent</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\StandardMidiFile\TrackEvent</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_b1 = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_b2 = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_bendValue;
-    public function bendValue() {
-        if ($this-&gt;_m_bendValue !== null)
-            return $this-&gt;_m_bendValue;
-        $this-&gt;_m_bendValue = ((($this-&gt;b2() &lt;&lt; 7) + $this-&gt;b1()) - 16384);
-        return $this-&gt;_m_bendValue;
-    }
-    protected $_m_adjBendValue;
-    public function adjBendValue() {
-        if ($this-&gt;_m_adjBendValue !== null)
-            return $this-&gt;_m_adjBendValue;
-        $this-&gt;_m_adjBendValue = ($this-&gt;bendValue() - 16384);
-        return $this-&gt;_m_adjBendValue;
-    }
-    protected $_m_b1;
-    protected $_m_b2;
-    public function b1() { return $this-&gt;_m_b1; }
-    public function b2() { return $this-&gt;_m_b2; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b2</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_bendValue</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">bendValue</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bendValue</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bendValue</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bendValue</span> <span class="o">=</span> <span class="p">(((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">b2</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span><span class="p">)</span> <span class="o">+</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">b1</span><span class="p">())</span> <span class="o">-</span> <span class="mi">16384</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bendValue</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_adjBendValue</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">adjBendValue</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_adjBendValue</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_adjBendValue</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_adjBendValue</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bendValue</span><span class="p">()</span> <span class="o">-</span> <span class="mi">16384</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_adjBendValue</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_b1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_b2</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">b1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">b2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_b2</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \StandardMidiFile;
+<span class="k">namespace</span> <span class="nx">\StandardMidiFile</span><span class="p">;</span>
 
-class ProgramChangeEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ProgramChangeEvent</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\StandardMidiFile\TrackEvent</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_program = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_program;
-    public function program() { return $this-&gt;_m_program; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_program</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_program</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">program</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_program</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \StandardMidiFile;
+<span class="k">namespace</span> <span class="nx">\StandardMidiFile</span><span class="p">;</span>
 
-class NoteOnEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">NoteOnEvent</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\StandardMidiFile\TrackEvent</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_note = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_velocity = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_note;
-    protected $_m_velocity;
-    public function note() { return $this-&gt;_m_note; }
-    public function velocity() { return $this-&gt;_m_velocity; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_note</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_velocity</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_note</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_velocity</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">note</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_note</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">velocity</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_velocity</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \StandardMidiFile;
+<span class="k">namespace</span> <span class="nx">\StandardMidiFile</span><span class="p">;</span>
 
-class PolyphonicPressureEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">PolyphonicPressureEvent</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\StandardMidiFile\TrackEvent</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_note = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_pressure = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_note;
-    protected $_m_pressure;
-    public function note() { return $this-&gt;_m_note; }
-    public function pressure() { return $this-&gt;_m_pressure; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_note</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pressure</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_note</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_pressure</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">note</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_note</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">pressure</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pressure</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \StandardMidiFile;
+<span class="k">namespace</span> <span class="nx">\StandardMidiFile</span><span class="p">;</span>
 
-class Track extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile $_parent = null, \StandardMidiFile $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Track</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_magic = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x4D\x54\x72\x6B&quot;);
-        $this-&gt;_m_lenEvents = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m__raw_events = $this-&gt;_io-&gt;readBytes($this-&gt;lenEvents());
-        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_events);
-        $this-&gt;_m_events = new \StandardMidiFile\TrackEvents($io, $this, $this-&gt;_root);
-    }
-    protected $_m_magic;
-    protected $_m_lenEvents;
-    protected $_m_events;
-    protected $_m__raw_events;
-    public function magic() { return $this-&gt;_m_magic; }
-    public function lenEvents() { return $this-&gt;_m_lenEvents; }
-    public function events() { return $this-&gt;_m_events; }
-    public function _raw_events() { return $this-&gt;_m__raw_events; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x4D\x54\x72\x6B</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenEvents</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_events</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenEvents</span><span class="p">());</span>
+        <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_events</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_events</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\StandardMidiFile\TrackEvents</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_magic</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenEvents</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_events</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_events</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenEvents</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenEvents</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">events</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_events</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_events</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_events</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \StandardMidiFile;
+<span class="k">namespace</span> <span class="nx">\StandardMidiFile</span><span class="p">;</span>
 
-class MetaEventBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">MetaEventBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\StandardMidiFile\TrackEvent</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_metaType = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_len = new \VlqBase128Be($this-&gt;_io);
-        $this-&gt;_m_body = $this-&gt;_io-&gt;readBytes($this-&gt;len()-&gt;value());
-    }
-    protected $_m_metaType;
-    protected $_m_len;
-    protected $_m_body;
-    public function metaType() { return $this-&gt;_m_metaType; }
-    public function len() { return $this-&gt;_m_len; }
-    public function body() { return $this-&gt;_m_body; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_metaType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\VlqBase128Be</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_metaType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">metaType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_metaType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \StandardMidiFile\MetaEventBody;
+<span class="k">namespace</span> <span class="nx">\StandardMidiFile\MetaEventBody</span><span class="p">;</span>
 
-class MetaTypeEnum {
-    const SEQUENCE_NUMBER = 0;
-    const TEXT_EVENT = 1;
-    const COPYRIGHT = 2;
-    const SEQUENCE_TRACK_NAME = 3;
-    const INSTRUMENT_NAME = 4;
-    const LYRIC_TEXT = 5;
-    const MARKER_TEXT = 6;
-    const CUE_POINT = 7;
-    const MIDI_CHANNEL_PREFIX_ASSIGNMENT = 32;
-    const END_OF_TRACK = 47;
-    const TEMPO = 81;
-    const SMPTE_OFFSET = 84;
-    const TIME_SIGNATURE = 88;
-    const KEY_SIGNATURE = 89;
-    const SEQUENCER_SPECIFIC_EVENT = 127;
-}
+<span class="k">class</span> <span class="nc">MetaTypeEnum</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">SEQUENCE_NUMBER</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">TEXT_EVENT</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">COPYRIGHT</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SEQUENCE_TRACK_NAME</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">INSTRUMENT_NAME</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LYRIC_TEXT</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MARKER_TEXT</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CUE_POINT</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MIDI_CHANNEL_PREFIX_ASSIGNMENT</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">END_OF_TRACK</span> <span class="o">=</span> <span class="mi">47</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">TEMPO</span> <span class="o">=</span> <span class="mi">81</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SMPTE_OFFSET</span> <span class="o">=</span> <span class="mi">84</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">TIME_SIGNATURE</span> <span class="o">=</span> <span class="mi">88</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">KEY_SIGNATURE</span> <span class="o">=</span> <span class="mi">89</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">SEQUENCER_SPECIFIC_EVENT</span> <span class="o">=</span> <span class="mi">127</span><span class="p">;</span>
+<span class="p">}</span>
 
-namespace \StandardMidiFile;
+<span class="k">namespace</span> <span class="nx">\StandardMidiFile</span><span class="p">;</span>
 
-class ControllerEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ControllerEvent</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\StandardMidiFile\TrackEvent</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_controller = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_value = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_controller;
-    protected $_m_value;
-    public function controller() { return $this-&gt;_m_controller; }
-    public function value() { return $this-&gt;_m_value; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_controller</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_controller</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">controller</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_controller</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \StandardMidiFile;
+<span class="k">namespace</span> <span class="nx">\StandardMidiFile</span><span class="p">;</span>
 
-class Header extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile $_parent = null, \StandardMidiFile $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Header</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_magic = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x4D\x54\x68\x64&quot;);
-        $this-&gt;_m_lenHeader = $this-&gt;_io-&gt;readU4be();
-        $this-&gt;_m_format = $this-&gt;_io-&gt;readU2be();
-        $this-&gt;_m_numTracks = $this-&gt;_io-&gt;readU2be();
-        $this-&gt;_m_division = $this-&gt;_io-&gt;readS2be();
-    }
-    protected $_m_magic;
-    protected $_m_lenHeader;
-    protected $_m_format;
-    protected $_m_numTracks;
-    protected $_m_division;
-    public function magic() { return $this-&gt;_m_magic; }
-    public function lenHeader() { return $this-&gt;_m_lenHeader; }
-    public function format() { return $this-&gt;_m_format; }
-    public function numTracks() { return $this-&gt;_m_numTracks; }
-    public function division() { return $this-&gt;_m_division; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x4D\x54\x68\x64</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeader</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_format</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTracks</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_division</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS2be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_magic</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenHeader</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_format</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numTracks</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_division</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenHeader</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenHeader</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">format</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_format</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numTracks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numTracks</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">division</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_division</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \StandardMidiFile;
+<span class="k">namespace</span> <span class="nx">\StandardMidiFile</span><span class="p">;</span>
 
-class SysexEventBody extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">SysexEventBody</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\StandardMidiFile\TrackEvent</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_len = new \VlqBase128Be($this-&gt;_io);
-        $this-&gt;_m_data = $this-&gt;_io-&gt;readBytes($this-&gt;len()-&gt;value());
-    }
-    protected $_m_len;
-    protected $_m_data;
-    public function len() { return $this-&gt;_m_len; }
-    public function data() { return $this-&gt;_m_data; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\VlqBase128Be</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">len</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_len</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">len</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_len</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \StandardMidiFile;
+<span class="k">namespace</span> <span class="nx">\StandardMidiFile</span><span class="p">;</span>
 
-class NoteOffEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">NoteOffEvent</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\StandardMidiFile\TrackEvent</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_note = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_velocity = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_note;
-    protected $_m_velocity;
-    public function note() { return $this-&gt;_m_note; }
-    public function velocity() { return $this-&gt;_m_velocity; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_note</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_velocity</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_note</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_velocity</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">note</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_note</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">velocity</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_velocity</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \StandardMidiFile;
+<span class="k">namespace</span> <span class="nx">\StandardMidiFile</span><span class="p">;</span>
 
-class ChannelPressureEvent extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \StandardMidiFile\TrackEvent $_parent = null, \StandardMidiFile $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">ChannelPressureEvent</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\StandardMidiFile\TrackEvent</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\StandardMidiFile</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_pressure = $this-&gt;_io-&gt;readU1();
-    }
-    protected $_m_pressure;
-    public function pressure() { return $this-&gt;_m_pressure; }
-}
-</code></pre>
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pressure</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_pressure</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">pressure</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pressure</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -658,8 +655,8 @@ class ChannelPressureEvent extends \Kaitai\Struct\Struct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

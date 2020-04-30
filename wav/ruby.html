@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -246,639 +243,639 @@ data = Wav.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# The WAVE file format is a subset of Microsoft&#39;s RIFF specification for the
-# storage of multimedia files. A RIFF file starts out with a file header
-# followed by a sequence of data chunks. A WAVE file is often just a RIFF
-# file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --
-# a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing
-# the actual sample data.
-# 
-# This Kaitai implementation was written by John Byrd of Gigantic Software
-# (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
-# @see https://www.loc.gov/preservation/digital/formats/fdd/fdd000001.shtml Source
-class Wav &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># The WAVE file format is a subset of Microsoft&#39;s RIFF specification for the</span>
+<span class="c1"># storage of multimedia files. A RIFF file starts out with a file header</span>
+<span class="c1"># followed by a sequence of data chunks. A WAVE file is often just a RIFF</span>
+<span class="c1"># file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --</span>
+<span class="c1"># a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing</span>
+<span class="c1"># the actual sample data.</span>
+<span class="c1"># </span>
+<span class="c1"># This Kaitai implementation was written by John Byrd of Gigantic Software</span>
+<span class="c1"># (jbyrd@giganticsoftware.com), and it is likely to contain bugs.</span>
+<span class="c1"># @see https://www.loc.gov/preservation/digital/formats/fdd/fdd000001.shtml Source</span>
+<span class="k">class</span> <span class="nc">Wav</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  W_FORMAT_TAG_TYPE = {
-    0 =&gt; :w_format_tag_type_unknown,
-    1 =&gt; :w_format_tag_type_pcm,
-    2 =&gt; :w_format_tag_type_adpcm,
-    3 =&gt; :w_format_tag_type_ieee_float,
-    4 =&gt; :w_format_tag_type_vselp,
-    5 =&gt; :w_format_tag_type_ibm_cvsd,
-    6 =&gt; :w_format_tag_type_alaw,
-    7 =&gt; :w_format_tag_type_mulaw,
-    8 =&gt; :w_format_tag_type_dts,
-    9 =&gt; :w_format_tag_type_drm,
-    10 =&gt; :w_format_tag_type_wmavoice9,
-    11 =&gt; :w_format_tag_type_wmavoice10,
-    16 =&gt; :w_format_tag_type_oki_adpcm,
-    17 =&gt; :w_format_tag_type_dvi_adpcm,
-    18 =&gt; :w_format_tag_type_mediaspace_adpcm,
-    19 =&gt; :w_format_tag_type_sierra_adpcm,
-    20 =&gt; :w_format_tag_type_g723_adpcm,
-    21 =&gt; :w_format_tag_type_digistd,
-    22 =&gt; :w_format_tag_type_digifix,
-    23 =&gt; :w_format_tag_type_dialogic_oki_adpcm,
-    24 =&gt; :w_format_tag_type_mediavision_adpcm,
-    25 =&gt; :w_format_tag_type_cu_codec,
-    26 =&gt; :w_format_tag_type_hp_dyn_voice,
-    32 =&gt; :w_format_tag_type_yamaha_adpcm,
-    33 =&gt; :w_format_tag_type_sonarc,
-    34 =&gt; :w_format_tag_type_dspgroup_truespeech,
-    35 =&gt; :w_format_tag_type_echosc1,
-    36 =&gt; :w_format_tag_type_audiofile_af36,
-    37 =&gt; :w_format_tag_type_aptx,
-    38 =&gt; :w_format_tag_type_audiofile_af10,
-    39 =&gt; :w_format_tag_type_prosody_1612,
-    40 =&gt; :w_format_tag_type_lrc,
-    48 =&gt; :w_format_tag_type_dolby_ac2,
-    49 =&gt; :w_format_tag_type_gsm610,
-    50 =&gt; :w_format_tag_type_msnaudio,
-    51 =&gt; :w_format_tag_type_antex_adpcme,
-    52 =&gt; :w_format_tag_type_control_res_vqlpc,
-    53 =&gt; :w_format_tag_type_digireal,
-    54 =&gt; :w_format_tag_type_digiadpcm,
-    55 =&gt; :w_format_tag_type_control_res_cr10,
-    56 =&gt; :w_format_tag_type_nms_vbxadpcm,
-    57 =&gt; :w_format_tag_type_cs_imaadpcm,
-    58 =&gt; :w_format_tag_type_echosc3,
-    59 =&gt; :w_format_tag_type_rockwell_adpcm,
-    60 =&gt; :w_format_tag_type_rockwell_digitalk,
-    61 =&gt; :w_format_tag_type_xebec,
-    64 =&gt; :w_format_tag_type_g721_adpcm,
-    65 =&gt; :w_format_tag_type_g728_celp,
-    66 =&gt; :w_format_tag_type_msg723,
-    67 =&gt; :w_format_tag_type_intel_g723_1,
-    68 =&gt; :w_format_tag_type_intel_g729,
-    69 =&gt; :w_format_tag_type_sharp_g726,
-    80 =&gt; :w_format_tag_type_mpeg,
-    82 =&gt; :w_format_tag_type_rt24,
-    83 =&gt; :w_format_tag_type_pac,
-    85 =&gt; :w_format_tag_type_mpeglayer3,
-    89 =&gt; :w_format_tag_type_lucent_g723,
-    96 =&gt; :w_format_tag_type_cirrus,
-    97 =&gt; :w_format_tag_type_espcm,
-    98 =&gt; :w_format_tag_type_voxware,
-    99 =&gt; :w_format_tag_type_canopus_atrac,
-    100 =&gt; :w_format_tag_type_g726_adpcm,
-    101 =&gt; :w_format_tag_type_g722_adpcm,
-    102 =&gt; :w_format_tag_type_dsat,
-    103 =&gt; :w_format_tag_type_dsat_display,
-    105 =&gt; :w_format_tag_type_voxware_byte_aligned,
-    112 =&gt; :w_format_tag_type_voxware_ac8,
-    113 =&gt; :w_format_tag_type_voxware_ac10,
-    114 =&gt; :w_format_tag_type_voxware_ac16,
-    115 =&gt; :w_format_tag_type_voxware_ac20,
-    116 =&gt; :w_format_tag_type_voxware_rt24,
-    117 =&gt; :w_format_tag_type_voxware_rt29,
-    118 =&gt; :w_format_tag_type_voxware_rt29hw,
-    119 =&gt; :w_format_tag_type_voxware_vr12,
-    120 =&gt; :w_format_tag_type_voxware_vr18,
-    121 =&gt; :w_format_tag_type_voxware_tq40,
-    122 =&gt; :w_format_tag_type_voxware_sc3,
-    123 =&gt; :w_format_tag_type_voxware_sc3_1,
-    128 =&gt; :w_format_tag_type_softsound,
-    129 =&gt; :w_format_tag_type_voxware_tq60,
-    130 =&gt; :w_format_tag_type_msrt24,
-    131 =&gt; :w_format_tag_type_g729a,
-    132 =&gt; :w_format_tag_type_mvi_mvi2,
-    133 =&gt; :w_format_tag_type_df_g726,
-    134 =&gt; :w_format_tag_type_df_gsm610,
-    136 =&gt; :w_format_tag_type_isiaudio,
-    137 =&gt; :w_format_tag_type_onlive,
-    138 =&gt; :w_format_tag_type_multitude_ft_sx20,
-    139 =&gt; :w_format_tag_type_infocom_its_g721_adpcm,
-    140 =&gt; :w_format_tag_type_convedia_g729,
-    141 =&gt; :w_format_tag_type_congruency,
-    145 =&gt; :w_format_tag_type_sbc24,
-    146 =&gt; :w_format_tag_type_dolby_ac3_spdif,
-    147 =&gt; :w_format_tag_type_mediasonic_g723,
-    148 =&gt; :w_format_tag_type_prosody_8kbps,
-    151 =&gt; :w_format_tag_type_zyxel_adpcm,
-    152 =&gt; :w_format_tag_type_philips_lpcbb,
-    153 =&gt; :w_format_tag_type_packed,
-    160 =&gt; :w_format_tag_type_malden_phonytalk,
-    161 =&gt; :w_format_tag_type_racal_recorder_gsm,
-    162 =&gt; :w_format_tag_type_racal_recorder_g720_a,
-    163 =&gt; :w_format_tag_type_racal_recorder_g723_1,
-    164 =&gt; :w_format_tag_type_racal_recorder_tetra_acelp,
-    176 =&gt; :w_format_tag_type_nec_aac,
-    255 =&gt; :w_format_tag_type_raw_aac1,
-    256 =&gt; :w_format_tag_type_rhetorex_adpcm,
-    257 =&gt; :w_format_tag_type_irat,
-    273 =&gt; :w_format_tag_type_vivo_g723,
-    274 =&gt; :w_format_tag_type_vivo_siren,
-    288 =&gt; :w_format_tag_type_philips_celp,
-    289 =&gt; :w_format_tag_type_philips_grundig,
-    291 =&gt; :w_format_tag_type_digital_g723,
-    293 =&gt; :w_format_tag_type_sanyo_ld_adpcm,
-    304 =&gt; :w_format_tag_type_siprolab_aceplnet,
-    305 =&gt; :w_format_tag_type_siprolab_acelp4800,
-    306 =&gt; :w_format_tag_type_siprolab_acelp8v3,
-    307 =&gt; :w_format_tag_type_siprolab_g729,
-    308 =&gt; :w_format_tag_type_siprolab_g729a,
-    309 =&gt; :w_format_tag_type_siprolab_kelvin,
-    310 =&gt; :w_format_tag_type_voiceage_amr,
-    320 =&gt; :w_format_tag_type_g726adpcm,
-    321 =&gt; :w_format_tag_type_dictaphone_celp68,
-    322 =&gt; :w_format_tag_type_dictaphone_celp54,
-    336 =&gt; :w_format_tag_type_qualcomm_purevoice,
-    337 =&gt; :w_format_tag_type_qualcomm_halfrate,
-    341 =&gt; :w_format_tag_type_tubgsm,
-    352 =&gt; :w_format_tag_type_msaudio1,
-    353 =&gt; :w_format_tag_type_wmaudio2,
-    354 =&gt; :w_format_tag_type_wmaudio3,
-    355 =&gt; :w_format_tag_type_wmaudio_lossless,
-    356 =&gt; :w_format_tag_type_wmaspdif,
-    368 =&gt; :w_format_tag_type_unisys_nap_adpcm,
-    369 =&gt; :w_format_tag_type_unisys_nap_ulaw,
-    370 =&gt; :w_format_tag_type_unisys_nap_alaw,
-    371 =&gt; :w_format_tag_type_unisys_nap_16k,
-    372 =&gt; :w_format_tag_type_sycom_acm_syc008,
-    373 =&gt; :w_format_tag_type_sycom_acm_syc701_g726l,
-    374 =&gt; :w_format_tag_type_sycom_acm_syc701_celp54,
-    375 =&gt; :w_format_tag_type_sycom_acm_syc701_celp68,
-    376 =&gt; :w_format_tag_type_knowledge_adventure_adpcm,
-    384 =&gt; :w_format_tag_type_fraunhofer_iis_mpeg2_aac,
-    400 =&gt; :w_format_tag_type_dts_ds,
-    512 =&gt; :w_format_tag_type_creative_adpcm,
-    514 =&gt; :w_format_tag_type_creative_fastspeech8,
-    515 =&gt; :w_format_tag_type_creative_fastspeech10,
-    528 =&gt; :w_format_tag_type_uher_adpcm,
-    533 =&gt; :w_format_tag_type_ulead_dv_audio,
-    534 =&gt; :w_format_tag_type_ulead_dv_audio_1,
-    544 =&gt; :w_format_tag_type_quarterdeck,
-    560 =&gt; :w_format_tag_type_ilink_vc,
-    576 =&gt; :w_format_tag_type_raw_sport,
-    577 =&gt; :w_format_tag_type_esst_ac3,
-    585 =&gt; :w_format_tag_type_generic_passthru,
-    592 =&gt; :w_format_tag_type_ipi_hsx,
-    593 =&gt; :w_format_tag_type_ipi_rpelp,
-    608 =&gt; :w_format_tag_type_cs2,
-    624 =&gt; :w_format_tag_type_sony_scx,
-    625 =&gt; :w_format_tag_type_sony_scy,
-    626 =&gt; :w_format_tag_type_sony_atrac3,
-    627 =&gt; :w_format_tag_type_sony_spc,
-    640 =&gt; :w_format_tag_type_telum_audio,
-    641 =&gt; :w_format_tag_type_telum_ia_audio,
-    645 =&gt; :w_format_tag_type_norcom_voice_systems_adpcm,
-    768 =&gt; :w_format_tag_type_fm_towns_snd,
-    848 =&gt; :w_format_tag_type_micronas,
-    849 =&gt; :w_format_tag_type_micronas_celp833,
-    1024 =&gt; :w_format_tag_type_btv_digital,
-    1025 =&gt; :w_format_tag_type_intel_music_coder,
-    1026 =&gt; :w_format_tag_type_indeo_audio,
-    1104 =&gt; :w_format_tag_type_qdesign_music,
-    1280 =&gt; :w_format_tag_type_on2_vp7_audio,
-    1281 =&gt; :w_format_tag_type_on2_vp6_audio,
-    1664 =&gt; :w_format_tag_type_vme_vmpcm,
-    1665 =&gt; :w_format_tag_type_tpc,
-    2222 =&gt; :w_format_tag_type_lightwave_lossless,
-    4096 =&gt; :w_format_tag_type_oligsm,
-    4097 =&gt; :w_format_tag_type_oliadpcm,
-    4098 =&gt; :w_format_tag_type_olicelp,
-    4099 =&gt; :w_format_tag_type_olisbc,
-    4100 =&gt; :w_format_tag_type_oliopr,
-    4352 =&gt; :w_format_tag_type_lh_codec,
-    4353 =&gt; :w_format_tag_type_lh_codec_celp,
-    4354 =&gt; :w_format_tag_type_lh_codec_sbc8,
-    4355 =&gt; :w_format_tag_type_lh_codec_sbc12,
-    4356 =&gt; :w_format_tag_type_lh_codec_sbc16,
-    5120 =&gt; :w_format_tag_type_norris,
-    5121 =&gt; :w_format_tag_type_isiaudio_2,
-    5376 =&gt; :w_format_tag_type_soundspace_musicompress,
-    5632 =&gt; :w_format_tag_type_mpeg_adts_aac,
-    5633 =&gt; :w_format_tag_type_mpeg_raw_aac,
-    5634 =&gt; :w_format_tag_type_mpeg_loas,
-    5640 =&gt; :w_format_tag_type_nokia_mpeg_adts_aac,
-    5641 =&gt; :w_format_tag_type_nokia_mpeg_raw_aac,
-    5642 =&gt; :w_format_tag_type_vodafone_mpeg_adts_aac,
-    5643 =&gt; :w_format_tag_type_vodafone_mpeg_raw_aac,
-    5648 =&gt; :w_format_tag_type_mpeg_heaac,
-    6172 =&gt; :w_format_tag_type_voxware_rt24_speech,
-    6513 =&gt; :w_format_tag_type_sonicfoundry_lossless,
-    6521 =&gt; :w_format_tag_type_innings_telecom_adpcm,
-    7175 =&gt; :w_format_tag_type_lucent_sx8300p,
-    7180 =&gt; :w_format_tag_type_lucent_sx5363s,
-    7939 =&gt; :w_format_tag_type_cuseeme,
-    8132 =&gt; :w_format_tag_type_ntcsoft_alf2cm_acm,
-    8192 =&gt; :w_format_tag_type_dvm,
-    8193 =&gt; :w_format_tag_type_dts2,
-    13075 =&gt; :w_format_tag_type_makeavis,
-    16707 =&gt; :w_format_tag_type_divio_mpeg4_aac,
-    16897 =&gt; :w_format_tag_type_nokia_adaptive_multirate,
-    16963 =&gt; :w_format_tag_type_divio_g726,
-    17228 =&gt; :w_format_tag_type_lead_speech,
-    22092 =&gt; :w_format_tag_type_lead_vorbis,
-    22358 =&gt; :w_format_tag_type_wavpack_audio,
-    26447 =&gt; :w_format_tag_type_ogg_vorbis_mode_1,
-    26448 =&gt; :w_format_tag_type_ogg_vorbis_mode_2,
-    26449 =&gt; :w_format_tag_type_ogg_vorbis_mode_3,
-    26479 =&gt; :w_format_tag_type_ogg_vorbis_mode_1_plus,
-    26480 =&gt; :w_format_tag_type_ogg_vorbis_mode_2_plus,
-    26481 =&gt; :w_format_tag_type_ogg_vorbis_mode_3_plus,
-    28672 =&gt; :w_format_tag_type_threecom_nbx,
-    28781 =&gt; :w_format_tag_type_faad_aac,
-    29537 =&gt; :w_format_tag_type_amr_nb,
-    29538 =&gt; :w_format_tag_type_amr_wb,
-    29539 =&gt; :w_format_tag_type_amr_wp,
-    31265 =&gt; :w_format_tag_type_gsm_amr_cbr,
-    31266 =&gt; :w_format_tag_type_gsm_amr_vbr_sid,
-    41216 =&gt; :w_format_tag_type_comverse_infosys_g723_1,
-    41217 =&gt; :w_format_tag_type_comverse_infosys_avqsbc,
-    41218 =&gt; :w_format_tag_type_comverse_infosys_sbc,
-    41219 =&gt; :w_format_tag_type_symbol_g729_a,
-    41220 =&gt; :w_format_tag_type_voiceage_amr_wb,
-    41221 =&gt; :w_format_tag_type_ingenient_g726,
-    41222 =&gt; :w_format_tag_type_mpeg4_aac,
-    41223 =&gt; :w_format_tag_type_encore_g726,
-    41224 =&gt; :w_format_tag_type_zoll_asao,
-    41225 =&gt; :w_format_tag_type_speex_voice,
-    41226 =&gt; :w_format_tag_type_vianix_masc,
-    41227 =&gt; :w_format_tag_type_wm9_spectrum_analyzer,
-    41228 =&gt; :w_format_tag_type_wmf_spectrum_anayzer,
-    41229 =&gt; :w_format_tag_type_gsm_610,
-    41230 =&gt; :w_format_tag_type_gsm_620,
-    41231 =&gt; :w_format_tag_type_gsm_660,
-    41232 =&gt; :w_format_tag_type_gsm_690,
-    41233 =&gt; :w_format_tag_type_gsm_adaptive_multirate_wb,
-    41234 =&gt; :w_format_tag_type_polycom_g722,
-    41235 =&gt; :w_format_tag_type_polycom_g728,
-    41236 =&gt; :w_format_tag_type_polycom_g729_a,
-    41237 =&gt; :w_format_tag_type_polycom_siren,
-    41238 =&gt; :w_format_tag_type_global_ip_ilbc,
-    41239 =&gt; :w_format_tag_type_radiotime_time_shift_radio,
-    41240 =&gt; :w_format_tag_type_nice_aca,
-    41241 =&gt; :w_format_tag_type_nice_adpcm,
-    41242 =&gt; :w_format_tag_type_vocord_g721,
-    41243 =&gt; :w_format_tag_type_vocord_g726,
-    41244 =&gt; :w_format_tag_type_vocord_g722_1,
-    41245 =&gt; :w_format_tag_type_vocord_g728,
-    41246 =&gt; :w_format_tag_type_vocord_g729,
-    41247 =&gt; :w_format_tag_type_vocord_g729_a,
-    41248 =&gt; :w_format_tag_type_vocord_g723_1,
-    41249 =&gt; :w_format_tag_type_vocord_lbc,
-    41250 =&gt; :w_format_tag_type_nice_g728,
-    41251 =&gt; :w_format_tag_type_frace_telecom_g729,
-    41252 =&gt; :w_format_tag_type_codian,
-    61868 =&gt; :w_format_tag_type_flac,
-    65534 =&gt; :w_format_tag_type_extensible,
-    65535 =&gt; :w_format_tag_type_development,
-  }
-  I__W_FORMAT_TAG_TYPE = W_FORMAT_TAG_TYPE.invert
+  <span class="no">W_FORMAT_TAG_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_unknown</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_pcm</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_adpcm</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_ieee_float</span><span class="p">,</span>
+    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vselp</span><span class="p">,</span>
+    <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_ibm_cvsd</span><span class="p">,</span>
+    <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_alaw</span><span class="p">,</span>
+    <span class="mi">7</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_mulaw</span><span class="p">,</span>
+    <span class="mi">8</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_dts</span><span class="p">,</span>
+    <span class="mi">9</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_drm</span><span class="p">,</span>
+    <span class="mi">10</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_wmavoice9</span><span class="p">,</span>
+    <span class="mi">11</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_wmavoice10</span><span class="p">,</span>
+    <span class="mi">16</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_oki_adpcm</span><span class="p">,</span>
+    <span class="mi">17</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_dvi_adpcm</span><span class="p">,</span>
+    <span class="mi">18</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_mediaspace_adpcm</span><span class="p">,</span>
+    <span class="mi">19</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_sierra_adpcm</span><span class="p">,</span>
+    <span class="mi">20</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_g723_adpcm</span><span class="p">,</span>
+    <span class="mi">21</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_digistd</span><span class="p">,</span>
+    <span class="mi">22</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_digifix</span><span class="p">,</span>
+    <span class="mi">23</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_dialogic_oki_adpcm</span><span class="p">,</span>
+    <span class="mi">24</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_mediavision_adpcm</span><span class="p">,</span>
+    <span class="mi">25</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_cu_codec</span><span class="p">,</span>
+    <span class="mi">26</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_hp_dyn_voice</span><span class="p">,</span>
+    <span class="mi">32</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_yamaha_adpcm</span><span class="p">,</span>
+    <span class="mi">33</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_sonarc</span><span class="p">,</span>
+    <span class="mi">34</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_dspgroup_truespeech</span><span class="p">,</span>
+    <span class="mi">35</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_echosc1</span><span class="p">,</span>
+    <span class="mi">36</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_audiofile_af36</span><span class="p">,</span>
+    <span class="mi">37</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_aptx</span><span class="p">,</span>
+    <span class="mi">38</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_audiofile_af10</span><span class="p">,</span>
+    <span class="mi">39</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_prosody_1612</span><span class="p">,</span>
+    <span class="mi">40</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_lrc</span><span class="p">,</span>
+    <span class="mi">48</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_dolby_ac2</span><span class="p">,</span>
+    <span class="mi">49</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_gsm610</span><span class="p">,</span>
+    <span class="mi">50</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_msnaudio</span><span class="p">,</span>
+    <span class="mi">51</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_antex_adpcme</span><span class="p">,</span>
+    <span class="mi">52</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_control_res_vqlpc</span><span class="p">,</span>
+    <span class="mi">53</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_digireal</span><span class="p">,</span>
+    <span class="mi">54</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_digiadpcm</span><span class="p">,</span>
+    <span class="mi">55</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_control_res_cr10</span><span class="p">,</span>
+    <span class="mi">56</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_nms_vbxadpcm</span><span class="p">,</span>
+    <span class="mi">57</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_cs_imaadpcm</span><span class="p">,</span>
+    <span class="mi">58</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_echosc3</span><span class="p">,</span>
+    <span class="mi">59</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_rockwell_adpcm</span><span class="p">,</span>
+    <span class="mi">60</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_rockwell_digitalk</span><span class="p">,</span>
+    <span class="mi">61</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_xebec</span><span class="p">,</span>
+    <span class="mi">64</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_g721_adpcm</span><span class="p">,</span>
+    <span class="mi">65</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_g728_celp</span><span class="p">,</span>
+    <span class="mi">66</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_msg723</span><span class="p">,</span>
+    <span class="mi">67</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_intel_g723_1</span><span class="p">,</span>
+    <span class="mi">68</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_intel_g729</span><span class="p">,</span>
+    <span class="mi">69</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_sharp_g726</span><span class="p">,</span>
+    <span class="mi">80</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_mpeg</span><span class="p">,</span>
+    <span class="mi">82</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_rt24</span><span class="p">,</span>
+    <span class="mi">83</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_pac</span><span class="p">,</span>
+    <span class="mi">85</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_mpeglayer3</span><span class="p">,</span>
+    <span class="mi">89</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_lucent_g723</span><span class="p">,</span>
+    <span class="mi">96</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_cirrus</span><span class="p">,</span>
+    <span class="mi">97</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_espcm</span><span class="p">,</span>
+    <span class="mi">98</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware</span><span class="p">,</span>
+    <span class="mi">99</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_canopus_atrac</span><span class="p">,</span>
+    <span class="mi">100</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_g726_adpcm</span><span class="p">,</span>
+    <span class="mi">101</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_g722_adpcm</span><span class="p">,</span>
+    <span class="mi">102</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_dsat</span><span class="p">,</span>
+    <span class="mi">103</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_dsat_display</span><span class="p">,</span>
+    <span class="mi">105</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware_byte_aligned</span><span class="p">,</span>
+    <span class="mi">112</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware_ac8</span><span class="p">,</span>
+    <span class="mi">113</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware_ac10</span><span class="p">,</span>
+    <span class="mi">114</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware_ac16</span><span class="p">,</span>
+    <span class="mi">115</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware_ac20</span><span class="p">,</span>
+    <span class="mi">116</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware_rt24</span><span class="p">,</span>
+    <span class="mi">117</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware_rt29</span><span class="p">,</span>
+    <span class="mi">118</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware_rt29hw</span><span class="p">,</span>
+    <span class="mi">119</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware_vr12</span><span class="p">,</span>
+    <span class="mi">120</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware_vr18</span><span class="p">,</span>
+    <span class="mi">121</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware_tq40</span><span class="p">,</span>
+    <span class="mi">122</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware_sc3</span><span class="p">,</span>
+    <span class="mi">123</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware_sc3_1</span><span class="p">,</span>
+    <span class="mi">128</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_softsound</span><span class="p">,</span>
+    <span class="mi">129</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware_tq60</span><span class="p">,</span>
+    <span class="mi">130</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_msrt24</span><span class="p">,</span>
+    <span class="mi">131</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_g729a</span><span class="p">,</span>
+    <span class="mi">132</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_mvi_mvi2</span><span class="p">,</span>
+    <span class="mi">133</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_df_g726</span><span class="p">,</span>
+    <span class="mi">134</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_df_gsm610</span><span class="p">,</span>
+    <span class="mi">136</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_isiaudio</span><span class="p">,</span>
+    <span class="mi">137</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_onlive</span><span class="p">,</span>
+    <span class="mi">138</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_multitude_ft_sx20</span><span class="p">,</span>
+    <span class="mi">139</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_infocom_its_g721_adpcm</span><span class="p">,</span>
+    <span class="mi">140</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_convedia_g729</span><span class="p">,</span>
+    <span class="mi">141</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_congruency</span><span class="p">,</span>
+    <span class="mi">145</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_sbc24</span><span class="p">,</span>
+    <span class="mi">146</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_dolby_ac3_spdif</span><span class="p">,</span>
+    <span class="mi">147</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_mediasonic_g723</span><span class="p">,</span>
+    <span class="mi">148</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_prosody_8kbps</span><span class="p">,</span>
+    <span class="mi">151</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_zyxel_adpcm</span><span class="p">,</span>
+    <span class="mi">152</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_philips_lpcbb</span><span class="p">,</span>
+    <span class="mi">153</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_packed</span><span class="p">,</span>
+    <span class="mi">160</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_malden_phonytalk</span><span class="p">,</span>
+    <span class="mi">161</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_racal_recorder_gsm</span><span class="p">,</span>
+    <span class="mi">162</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_racal_recorder_g720_a</span><span class="p">,</span>
+    <span class="mi">163</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_racal_recorder_g723_1</span><span class="p">,</span>
+    <span class="mi">164</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_racal_recorder_tetra_acelp</span><span class="p">,</span>
+    <span class="mi">176</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_nec_aac</span><span class="p">,</span>
+    <span class="mi">255</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_raw_aac1</span><span class="p">,</span>
+    <span class="mi">256</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_rhetorex_adpcm</span><span class="p">,</span>
+    <span class="mi">257</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_irat</span><span class="p">,</span>
+    <span class="mi">273</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vivo_g723</span><span class="p">,</span>
+    <span class="mi">274</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vivo_siren</span><span class="p">,</span>
+    <span class="mi">288</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_philips_celp</span><span class="p">,</span>
+    <span class="mi">289</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_philips_grundig</span><span class="p">,</span>
+    <span class="mi">291</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_digital_g723</span><span class="p">,</span>
+    <span class="mi">293</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_sanyo_ld_adpcm</span><span class="p">,</span>
+    <span class="mi">304</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_siprolab_aceplnet</span><span class="p">,</span>
+    <span class="mi">305</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_siprolab_acelp4800</span><span class="p">,</span>
+    <span class="mi">306</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_siprolab_acelp8v3</span><span class="p">,</span>
+    <span class="mi">307</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_siprolab_g729</span><span class="p">,</span>
+    <span class="mi">308</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_siprolab_g729a</span><span class="p">,</span>
+    <span class="mi">309</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_siprolab_kelvin</span><span class="p">,</span>
+    <span class="mi">310</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voiceage_amr</span><span class="p">,</span>
+    <span class="mi">320</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_g726adpcm</span><span class="p">,</span>
+    <span class="mi">321</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_dictaphone_celp68</span><span class="p">,</span>
+    <span class="mi">322</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_dictaphone_celp54</span><span class="p">,</span>
+    <span class="mi">336</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_qualcomm_purevoice</span><span class="p">,</span>
+    <span class="mi">337</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_qualcomm_halfrate</span><span class="p">,</span>
+    <span class="mi">341</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_tubgsm</span><span class="p">,</span>
+    <span class="mi">352</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_msaudio1</span><span class="p">,</span>
+    <span class="mi">353</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_wmaudio2</span><span class="p">,</span>
+    <span class="mi">354</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_wmaudio3</span><span class="p">,</span>
+    <span class="mi">355</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_wmaudio_lossless</span><span class="p">,</span>
+    <span class="mi">356</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_wmaspdif</span><span class="p">,</span>
+    <span class="mi">368</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_unisys_nap_adpcm</span><span class="p">,</span>
+    <span class="mi">369</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_unisys_nap_ulaw</span><span class="p">,</span>
+    <span class="mi">370</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_unisys_nap_alaw</span><span class="p">,</span>
+    <span class="mi">371</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_unisys_nap_16k</span><span class="p">,</span>
+    <span class="mi">372</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_sycom_acm_syc008</span><span class="p">,</span>
+    <span class="mi">373</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_sycom_acm_syc701_g726l</span><span class="p">,</span>
+    <span class="mi">374</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_sycom_acm_syc701_celp54</span><span class="p">,</span>
+    <span class="mi">375</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_sycom_acm_syc701_celp68</span><span class="p">,</span>
+    <span class="mi">376</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_knowledge_adventure_adpcm</span><span class="p">,</span>
+    <span class="mi">384</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_fraunhofer_iis_mpeg2_aac</span><span class="p">,</span>
+    <span class="mi">400</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_dts_ds</span><span class="p">,</span>
+    <span class="mi">512</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_creative_adpcm</span><span class="p">,</span>
+    <span class="mi">514</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_creative_fastspeech8</span><span class="p">,</span>
+    <span class="mi">515</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_creative_fastspeech10</span><span class="p">,</span>
+    <span class="mi">528</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_uher_adpcm</span><span class="p">,</span>
+    <span class="mi">533</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_ulead_dv_audio</span><span class="p">,</span>
+    <span class="mi">534</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_ulead_dv_audio_1</span><span class="p">,</span>
+    <span class="mi">544</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_quarterdeck</span><span class="p">,</span>
+    <span class="mi">560</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_ilink_vc</span><span class="p">,</span>
+    <span class="mi">576</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_raw_sport</span><span class="p">,</span>
+    <span class="mi">577</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_esst_ac3</span><span class="p">,</span>
+    <span class="mi">585</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_generic_passthru</span><span class="p">,</span>
+    <span class="mi">592</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_ipi_hsx</span><span class="p">,</span>
+    <span class="mi">593</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_ipi_rpelp</span><span class="p">,</span>
+    <span class="mi">608</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_cs2</span><span class="p">,</span>
+    <span class="mi">624</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_sony_scx</span><span class="p">,</span>
+    <span class="mi">625</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_sony_scy</span><span class="p">,</span>
+    <span class="mi">626</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_sony_atrac3</span><span class="p">,</span>
+    <span class="mi">627</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_sony_spc</span><span class="p">,</span>
+    <span class="mi">640</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_telum_audio</span><span class="p">,</span>
+    <span class="mi">641</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_telum_ia_audio</span><span class="p">,</span>
+    <span class="mi">645</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_norcom_voice_systems_adpcm</span><span class="p">,</span>
+    <span class="mi">768</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_fm_towns_snd</span><span class="p">,</span>
+    <span class="mi">848</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_micronas</span><span class="p">,</span>
+    <span class="mi">849</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_micronas_celp833</span><span class="p">,</span>
+    <span class="mi">1024</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_btv_digital</span><span class="p">,</span>
+    <span class="mi">1025</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_intel_music_coder</span><span class="p">,</span>
+    <span class="mi">1026</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_indeo_audio</span><span class="p">,</span>
+    <span class="mi">1104</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_qdesign_music</span><span class="p">,</span>
+    <span class="mi">1280</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_on2_vp7_audio</span><span class="p">,</span>
+    <span class="mi">1281</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_on2_vp6_audio</span><span class="p">,</span>
+    <span class="mi">1664</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vme_vmpcm</span><span class="p">,</span>
+    <span class="mi">1665</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_tpc</span><span class="p">,</span>
+    <span class="mi">2222</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_lightwave_lossless</span><span class="p">,</span>
+    <span class="mi">4096</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_oligsm</span><span class="p">,</span>
+    <span class="mi">4097</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_oliadpcm</span><span class="p">,</span>
+    <span class="mi">4098</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_olicelp</span><span class="p">,</span>
+    <span class="mi">4099</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_olisbc</span><span class="p">,</span>
+    <span class="mi">4100</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_oliopr</span><span class="p">,</span>
+    <span class="mi">4352</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_lh_codec</span><span class="p">,</span>
+    <span class="mi">4353</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_lh_codec_celp</span><span class="p">,</span>
+    <span class="mi">4354</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_lh_codec_sbc8</span><span class="p">,</span>
+    <span class="mi">4355</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_lh_codec_sbc12</span><span class="p">,</span>
+    <span class="mi">4356</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_lh_codec_sbc16</span><span class="p">,</span>
+    <span class="mi">5120</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_norris</span><span class="p">,</span>
+    <span class="mi">5121</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_isiaudio_2</span><span class="p">,</span>
+    <span class="mi">5376</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_soundspace_musicompress</span><span class="p">,</span>
+    <span class="mi">5632</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_mpeg_adts_aac</span><span class="p">,</span>
+    <span class="mi">5633</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_mpeg_raw_aac</span><span class="p">,</span>
+    <span class="mi">5634</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_mpeg_loas</span><span class="p">,</span>
+    <span class="mi">5640</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_nokia_mpeg_adts_aac</span><span class="p">,</span>
+    <span class="mi">5641</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_nokia_mpeg_raw_aac</span><span class="p">,</span>
+    <span class="mi">5642</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vodafone_mpeg_adts_aac</span><span class="p">,</span>
+    <span class="mi">5643</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vodafone_mpeg_raw_aac</span><span class="p">,</span>
+    <span class="mi">5648</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_mpeg_heaac</span><span class="p">,</span>
+    <span class="mi">6172</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voxware_rt24_speech</span><span class="p">,</span>
+    <span class="mi">6513</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_sonicfoundry_lossless</span><span class="p">,</span>
+    <span class="mi">6521</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_innings_telecom_adpcm</span><span class="p">,</span>
+    <span class="mi">7175</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_lucent_sx8300p</span><span class="p">,</span>
+    <span class="mi">7180</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_lucent_sx5363s</span><span class="p">,</span>
+    <span class="mi">7939</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_cuseeme</span><span class="p">,</span>
+    <span class="mi">8132</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_ntcsoft_alf2cm_acm</span><span class="p">,</span>
+    <span class="mi">8192</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_dvm</span><span class="p">,</span>
+    <span class="mi">8193</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_dts2</span><span class="p">,</span>
+    <span class="mi">13075</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_makeavis</span><span class="p">,</span>
+    <span class="mi">16707</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_divio_mpeg4_aac</span><span class="p">,</span>
+    <span class="mi">16897</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_nokia_adaptive_multirate</span><span class="p">,</span>
+    <span class="mi">16963</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_divio_g726</span><span class="p">,</span>
+    <span class="mi">17228</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_lead_speech</span><span class="p">,</span>
+    <span class="mi">22092</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_lead_vorbis</span><span class="p">,</span>
+    <span class="mi">22358</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_wavpack_audio</span><span class="p">,</span>
+    <span class="mi">26447</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_ogg_vorbis_mode_1</span><span class="p">,</span>
+    <span class="mi">26448</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_ogg_vorbis_mode_2</span><span class="p">,</span>
+    <span class="mi">26449</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_ogg_vorbis_mode_3</span><span class="p">,</span>
+    <span class="mi">26479</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_ogg_vorbis_mode_1_plus</span><span class="p">,</span>
+    <span class="mi">26480</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_ogg_vorbis_mode_2_plus</span><span class="p">,</span>
+    <span class="mi">26481</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_ogg_vorbis_mode_3_plus</span><span class="p">,</span>
+    <span class="mi">28672</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_threecom_nbx</span><span class="p">,</span>
+    <span class="mi">28781</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_faad_aac</span><span class="p">,</span>
+    <span class="mi">29537</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_amr_nb</span><span class="p">,</span>
+    <span class="mi">29538</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_amr_wb</span><span class="p">,</span>
+    <span class="mi">29539</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_amr_wp</span><span class="p">,</span>
+    <span class="mi">31265</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_gsm_amr_cbr</span><span class="p">,</span>
+    <span class="mi">31266</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_gsm_amr_vbr_sid</span><span class="p">,</span>
+    <span class="mi">41216</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_comverse_infosys_g723_1</span><span class="p">,</span>
+    <span class="mi">41217</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_comverse_infosys_avqsbc</span><span class="p">,</span>
+    <span class="mi">41218</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_comverse_infosys_sbc</span><span class="p">,</span>
+    <span class="mi">41219</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_symbol_g729_a</span><span class="p">,</span>
+    <span class="mi">41220</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_voiceage_amr_wb</span><span class="p">,</span>
+    <span class="mi">41221</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_ingenient_g726</span><span class="p">,</span>
+    <span class="mi">41222</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_mpeg4_aac</span><span class="p">,</span>
+    <span class="mi">41223</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_encore_g726</span><span class="p">,</span>
+    <span class="mi">41224</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_zoll_asao</span><span class="p">,</span>
+    <span class="mi">41225</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_speex_voice</span><span class="p">,</span>
+    <span class="mi">41226</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vianix_masc</span><span class="p">,</span>
+    <span class="mi">41227</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_wm9_spectrum_analyzer</span><span class="p">,</span>
+    <span class="mi">41228</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_wmf_spectrum_anayzer</span><span class="p">,</span>
+    <span class="mi">41229</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_gsm_610</span><span class="p">,</span>
+    <span class="mi">41230</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_gsm_620</span><span class="p">,</span>
+    <span class="mi">41231</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_gsm_660</span><span class="p">,</span>
+    <span class="mi">41232</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_gsm_690</span><span class="p">,</span>
+    <span class="mi">41233</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_gsm_adaptive_multirate_wb</span><span class="p">,</span>
+    <span class="mi">41234</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_polycom_g722</span><span class="p">,</span>
+    <span class="mi">41235</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_polycom_g728</span><span class="p">,</span>
+    <span class="mi">41236</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_polycom_g729_a</span><span class="p">,</span>
+    <span class="mi">41237</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_polycom_siren</span><span class="p">,</span>
+    <span class="mi">41238</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_global_ip_ilbc</span><span class="p">,</span>
+    <span class="mi">41239</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_radiotime_time_shift_radio</span><span class="p">,</span>
+    <span class="mi">41240</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_nice_aca</span><span class="p">,</span>
+    <span class="mi">41241</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_nice_adpcm</span><span class="p">,</span>
+    <span class="mi">41242</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vocord_g721</span><span class="p">,</span>
+    <span class="mi">41243</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vocord_g726</span><span class="p">,</span>
+    <span class="mi">41244</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vocord_g722_1</span><span class="p">,</span>
+    <span class="mi">41245</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vocord_g728</span><span class="p">,</span>
+    <span class="mi">41246</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vocord_g729</span><span class="p">,</span>
+    <span class="mi">41247</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vocord_g729_a</span><span class="p">,</span>
+    <span class="mi">41248</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vocord_g723_1</span><span class="p">,</span>
+    <span class="mi">41249</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vocord_lbc</span><span class="p">,</span>
+    <span class="mi">41250</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_nice_g728</span><span class="p">,</span>
+    <span class="mi">41251</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_frace_telecom_g729</span><span class="p">,</span>
+    <span class="mi">41252</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_codian</span><span class="p">,</span>
+    <span class="mi">61868</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_flac</span><span class="p">,</span>
+    <span class="mi">65534</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_extensible</span><span class="p">,</span>
+    <span class="mi">65535</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_development</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__W_FORMAT_TAG_TYPE</span> <span class="o">=</span> <span class="no">W_FORMAT_TAG_TYPE</span><span class="o">.</span><span class="n">invert</span>
 
-  CHUNK_TYPE = {
-    544501094 =&gt; :chunk_type_fmt,
-    1650817140 =&gt; :chunk_type_bext,
-    1668637984 =&gt; :chunk_type_cue,
-    1684108385 =&gt; :chunk_type_data,
-    1835626086 =&gt; :chunk_type_minf,
-    1919248238 =&gt; :chunk_type_regn,
-    1970104676 =&gt; :chunk_type_umid,
-  }
-  I__CHUNK_TYPE = CHUNK_TYPE.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">CHUNK_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">544501094</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_fmt</span><span class="p">,</span>
+    <span class="mi">1650817140</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_bext</span><span class="p">,</span>
+    <span class="mi">1668637984</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_cue</span><span class="p">,</span>
+    <span class="mi">1684108385</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_data</span><span class="p">,</span>
+    <span class="mi">1835626086</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_minf</span><span class="p">,</span>
+    <span class="mi">1919248238</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_regn</span><span class="p">,</span>
+    <span class="mi">1970104676</span> <span class="o">=&gt;</span> <span class="ss">:chunk_type_umid</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__CHUNK_TYPE</span> <span class="o">=</span> <span class="no">CHUNK_TYPE</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @riff_id = @_io.ensure_fixed_contents([82, 73, 70, 70].pack(&#39;C*&#39;))
-    @file_size = @_io.read_u4le
-    @wave_id = @_io.ensure_fixed_contents([87, 65, 86, 69].pack(&#39;C*&#39;))
-    @_raw_chunks = @_io.read_bytes((file_size - 5))
-    io = Kaitai::Struct::Stream.new(@_raw_chunks)
-    @chunks = ChunksType.new(io, self, @_root)
-    self
-  end
-  class SampleType &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@riff_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">82</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">70</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+    <span class="vi">@file_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+    <span class="vi">@wave_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">87</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">69</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+    <span class="vi">@_raw_chunks</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">file_size</span> <span class="o">-</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_chunks</span><span class="p">)</span>
+    <span class="vi">@chunks</span> <span class="o">=</span> <span class="no">ChunksType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">SampleType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @sample = @_io.read_u2le
-      self
-    end
-    attr_reader :sample
-  end
-  class FormatChunkType &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@sample</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:sample</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">FormatChunkType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @w_format_tag = Kaitai::Struct::Stream::resolve_enum(W_FORMAT_TAG_TYPE, @_io.read_u2le)
-      @n_channels = @_io.read_u2le
-      @n_samples_per_sec = @_io.read_u4le
-      @n_avg_bytes_per_sec = @_io.read_u4le
-      @n_block_align = @_io.read_u2le
-      @w_bits_per_sample = @_io.read_u2le
-      if !(is_basic_pcm)
-        @cb_size = @_io.read_u2le
-      end
-      if is_cb_size_meaningful
-        @w_valid_bits_per_sample = @_io.read_u2le
-      end
-      if is_extensible
-        @channel_mask_and_subformat = ChannelMaskAndSubformatType.new(@_io, self, @_root)
-      end
-      self
-    end
-    def is_extensible
-      return @is_extensible unless @is_extensible.nil?
-      @is_extensible = w_format_tag == :w_format_tag_type_extensible
-      @is_extensible
-    end
-    def is_basic_pcm
-      return @is_basic_pcm unless @is_basic_pcm.nil?
-      @is_basic_pcm = w_format_tag == :w_format_tag_type_pcm
-      @is_basic_pcm
-    end
-    def is_basic_float
-      return @is_basic_float unless @is_basic_float.nil?
-      @is_basic_float = w_format_tag == :w_format_tag_type_ieee_float
-      @is_basic_float
-    end
-    def is_cb_size_meaningful
-      return @is_cb_size_meaningful unless @is_cb_size_meaningful.nil?
-      @is_cb_size_meaningful =  ((!(is_basic_pcm)) &amp;&amp; (cb_size != 0)) 
-      @is_cb_size_meaningful
-    end
-    attr_reader :w_format_tag
-    attr_reader :n_channels
-    attr_reader :n_samples_per_sec
-    attr_reader :n_avg_bytes_per_sec
-    attr_reader :n_block_align
-    attr_reader :w_bits_per_sample
-    attr_reader :cb_size
-    attr_reader :w_valid_bits_per_sample
-    attr_reader :channel_mask_and_subformat
-  end
-  class GuidType &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@w_format_tag</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">W_FORMAT_TAG_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="vi">@n_channels</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@n_samples_per_sec</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@n_avg_bytes_per_sec</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@n_block_align</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@w_bits_per_sample</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">if</span> <span class="o">!</span><span class="p">(</span><span class="n">is_basic_pcm</span><span class="p">)</span>
+        <span class="vi">@cb_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">is_cb_size_meaningful</span>
+        <span class="vi">@w_valid_bits_per_sample</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">is_extensible</span>
+        <span class="vi">@channel_mask_and_subformat</span> <span class="o">=</span> <span class="no">ChannelMaskAndSubformatType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">is_extensible</span>
+      <span class="k">return</span> <span class="vi">@is_extensible</span> <span class="k">unless</span> <span class="vi">@is_extensible</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@is_extensible</span> <span class="o">=</span> <span class="n">w_format_tag</span> <span class="o">==</span> <span class="ss">:w_format_tag_type_extensible</span>
+      <span class="vi">@is_extensible</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">is_basic_pcm</span>
+      <span class="k">return</span> <span class="vi">@is_basic_pcm</span> <span class="k">unless</span> <span class="vi">@is_basic_pcm</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@is_basic_pcm</span> <span class="o">=</span> <span class="n">w_format_tag</span> <span class="o">==</span> <span class="ss">:w_format_tag_type_pcm</span>
+      <span class="vi">@is_basic_pcm</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">is_basic_float</span>
+      <span class="k">return</span> <span class="vi">@is_basic_float</span> <span class="k">unless</span> <span class="vi">@is_basic_float</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@is_basic_float</span> <span class="o">=</span> <span class="n">w_format_tag</span> <span class="o">==</span> <span class="ss">:w_format_tag_type_ieee_float</span>
+      <span class="vi">@is_basic_float</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">is_cb_size_meaningful</span>
+      <span class="k">return</span> <span class="vi">@is_cb_size_meaningful</span> <span class="k">unless</span> <span class="vi">@is_cb_size_meaningful</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@is_cb_size_meaningful</span> <span class="o">=</span>  <span class="p">((</span><span class="o">!</span><span class="p">(</span><span class="n">is_basic_pcm</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">cb_size</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">))</span> 
+      <span class="vi">@is_cb_size_meaningful</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:w_format_tag</span>
+    <span class="kp">attr_reader</span> <span class="ss">:n_channels</span>
+    <span class="kp">attr_reader</span> <span class="ss">:n_samples_per_sec</span>
+    <span class="kp">attr_reader</span> <span class="ss">:n_avg_bytes_per_sec</span>
+    <span class="kp">attr_reader</span> <span class="ss">:n_block_align</span>
+    <span class="kp">attr_reader</span> <span class="ss">:w_bits_per_sample</span>
+    <span class="kp">attr_reader</span> <span class="ss">:cb_size</span>
+    <span class="kp">attr_reader</span> <span class="ss">:w_valid_bits_per_sample</span>
+    <span class="kp">attr_reader</span> <span class="ss">:channel_mask_and_subformat</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">GuidType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @data1 = @_io.read_u4le
-      @data2 = @_io.read_u2le
-      @data3 = @_io.read_u2le
-      @data4 = @_io.read_u4be
-      @data4a = @_io.read_u4be
-      self
-    end
-    attr_reader :data1
-    attr_reader :data2
-    attr_reader :data3
-    attr_reader :data4
-    attr_reader :data4a
-  end
-  class CuePointType &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@data1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@data2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@data3</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@data4</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@data4a</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data1</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data2</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data3</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data4</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data4a</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">CuePointType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @dw_name = @_io.read_u4le
-      @dw_position = @_io.read_u4le
-      @fcc_chunk = @_io.read_u4le
-      @dw_chunk_start = @_io.read_u4le
-      @dw_block_start = @_io.read_u4le
-      @dw_sample_offset = @_io.read_u4le
-      self
-    end
-    attr_reader :dw_name
-    attr_reader :dw_position
-    attr_reader :fcc_chunk
-    attr_reader :dw_chunk_start
-    attr_reader :dw_block_start
-    attr_reader :dw_sample_offset
-  end
-  class DataChunkType &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@dw_name</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@dw_position</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@fcc_chunk</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@dw_chunk_start</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@dw_block_start</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@dw_sample_offset</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dw_name</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dw_position</span>
+    <span class="kp">attr_reader</span> <span class="ss">:fcc_chunk</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dw_chunk_start</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dw_block_start</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dw_sample_offset</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">DataChunkType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @data = @_io.read_bytes_full
-      self
-    end
-    attr_reader :data
-  end
-  class SamplesType &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">SamplesType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @samples = @_io.read_u4le
-      self
-    end
-    attr_reader :samples
-  end
-  class ChannelMaskAndSubformatType &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@samples</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:samples</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ChannelMaskAndSubformatType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @dw_channel_mask = ChannelMaskType.new(@_io, self, @_root)
-      @subformat = GuidType.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :dw_channel_mask
-    attr_reader :subformat
-  end
-  class ChunksType &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@dw_channel_mask</span> <span class="o">=</span> <span class="no">ChannelMaskType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@subformat</span> <span class="o">=</span> <span class="no">GuidType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dw_channel_mask</span>
+    <span class="kp">attr_reader</span> <span class="ss">:subformat</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ChunksType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @chunk = []
-      i = 0
-      while not @_io.eof?
-        @chunk &lt;&lt; ChunkType.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :chunk
-  end
-  class CueChunkType &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@chunk</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+        <span class="vi">@chunk</span> <span class="o">&lt;&lt;</span> <span class="no">ChunkType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:chunk</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">CueChunkType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @dw_cue_points = @_io.read_u4le
-      if dw_cue_points != 0
-        @cue_points = Array.new(dw_cue_points)
-        (dw_cue_points).times { |i|
-          @cue_points[i] = CuePointType.new(@_io, self, @_root)
-        }
-      end
-      self
-    end
-    attr_reader :dw_cue_points
-    attr_reader :cue_points
-  end
-  class ChannelMaskType &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@dw_cue_points</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">if</span> <span class="n">dw_cue_points</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="vi">@cue_points</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">dw_cue_points</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">dw_cue_points</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+          <span class="vi">@cue_points</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">CuePointType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="p">}</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dw_cue_points</span>
+    <span class="kp">attr_reader</span> <span class="ss">:cue_points</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ChannelMaskType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @front_right_of_center = @_io.read_bits_int(1) != 0
-      @front_left_of_center = @_io.read_bits_int(1) != 0
-      @back_right = @_io.read_bits_int(1) != 0
-      @back_left = @_io.read_bits_int(1) != 0
-      @low_frequency = @_io.read_bits_int(1) != 0
-      @front_center = @_io.read_bits_int(1) != 0
-      @front_right = @_io.read_bits_int(1) != 0
-      @front_left = @_io.read_bits_int(1) != 0
-      @top_center = @_io.read_bits_int(1) != 0
-      @side_right = @_io.read_bits_int(1) != 0
-      @side_left = @_io.read_bits_int(1) != 0
-      @back_center = @_io.read_bits_int(1) != 0
-      @top_back_left = @_io.read_bits_int(1) != 0
-      @top_front_right = @_io.read_bits_int(1) != 0
-      @top_front_center = @_io.read_bits_int(1) != 0
-      @top_front_left = @_io.read_bits_int(1) != 0
-      @unused1 = @_io.read_bits_int(6)
-      @top_back_right = @_io.read_bits_int(1) != 0
-      @top_back_center = @_io.read_bits_int(1) != 0
-      @unused2 = @_io.read_bits_int(8)
-      self
-    end
-    attr_reader :front_right_of_center
-    attr_reader :front_left_of_center
-    attr_reader :back_right
-    attr_reader :back_left
-    attr_reader :low_frequency
-    attr_reader :front_center
-    attr_reader :front_right
-    attr_reader :front_left
-    attr_reader :top_center
-    attr_reader :side_right
-    attr_reader :side_left
-    attr_reader :back_center
-    attr_reader :top_back_left
-    attr_reader :top_front_right
-    attr_reader :top_front_center
-    attr_reader :top_front_left
-    attr_reader :unused1
-    attr_reader :top_back_right
-    attr_reader :top_back_center
-    attr_reader :unused2
-  end
-  class ChunkType &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@front_right_of_center</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@front_left_of_center</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@back_right</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@back_left</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@low_frequency</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@front_center</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@front_right</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@front_left</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@top_center</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@side_right</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@side_left</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@back_center</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@top_back_left</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@top_front_right</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@top_front_center</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@top_front_left</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@unused1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+      <span class="vi">@top_back_right</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@top_back_center</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+      <span class="vi">@unused2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:front_right_of_center</span>
+    <span class="kp">attr_reader</span> <span class="ss">:front_left_of_center</span>
+    <span class="kp">attr_reader</span> <span class="ss">:back_right</span>
+    <span class="kp">attr_reader</span> <span class="ss">:back_left</span>
+    <span class="kp">attr_reader</span> <span class="ss">:low_frequency</span>
+    <span class="kp">attr_reader</span> <span class="ss">:front_center</span>
+    <span class="kp">attr_reader</span> <span class="ss">:front_right</span>
+    <span class="kp">attr_reader</span> <span class="ss">:front_left</span>
+    <span class="kp">attr_reader</span> <span class="ss">:top_center</span>
+    <span class="kp">attr_reader</span> <span class="ss">:side_right</span>
+    <span class="kp">attr_reader</span> <span class="ss">:side_left</span>
+    <span class="kp">attr_reader</span> <span class="ss">:back_center</span>
+    <span class="kp">attr_reader</span> <span class="ss">:top_back_left</span>
+    <span class="kp">attr_reader</span> <span class="ss">:top_front_right</span>
+    <span class="kp">attr_reader</span> <span class="ss">:top_front_center</span>
+    <span class="kp">attr_reader</span> <span class="ss">:top_front_left</span>
+    <span class="kp">attr_reader</span> <span class="ss">:unused1</span>
+    <span class="kp">attr_reader</span> <span class="ss">:top_back_right</span>
+    <span class="kp">attr_reader</span> <span class="ss">:top_back_center</span>
+    <span class="kp">attr_reader</span> <span class="ss">:unused2</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">ChunkType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @chunk_id = @_io.read_u4be
-      @len = @_io.read_u4le
-      case chunk_id
-      when 1684108385
-        @_raw_data = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = DataChunkType.new(io, self, @_root)
-      when 1668637984
-        @_raw_data = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = CueChunkType.new(io, self, @_root)
-      when 1650817140
-        @_raw_data = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = BextChunkType.new(io, self, @_root)
-      when 1718449184
-        @_raw_data = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_data)
-        @data = FormatChunkType.new(io, self, @_root)
-      else
-        @data = @_io.read_bytes(len)
-      end
-      self
-    end
-    attr_reader :chunk_id
-    attr_reader :len
-    attr_reader :data
-    attr_reader :_raw_data
-  end
-  class BextChunkType &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@chunk_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="k">case</span> <span class="n">chunk_id</span>
+      <span class="k">when</span> <span class="mi">1684108385</span>
+        <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="no">DataChunkType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="mi">1668637984</span>
+        <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="no">CueChunkType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="mi">1650817140</span>
+        <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="no">BextChunkType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="mi">1718449184</span>
+        <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_data</span><span class="p">)</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="no">FormatChunkType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:chunk_id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_data</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">BextChunkType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @description = (@_io.read_bytes(256)).force_encoding(&quot;ASCII&quot;)
-      @originator = (@_io.read_bytes(32)).force_encoding(&quot;ASCII&quot;)
-      @originator_reference = (@_io.read_bytes(32)).force_encoding(&quot;ASCII&quot;)
-      @origination_date = (@_io.read_bytes(10)).force_encoding(&quot;ASCII&quot;)
-      @origination_time = (@_io.read_bytes(8)).force_encoding(&quot;ASCII&quot;)
-      @time_reference_low = @_io.read_u4le
-      @time_reference_high = @_io.read_u4le
-      @version = @_io.read_u2le
-      @umid = @_io.read_bytes(64)
-      @loudness_value = @_io.read_u2le
-      @loudness_range = @_io.read_u2le
-      @max_true_peak_level = @_io.read_u2le
-      @max_momentary_loudness = @_io.read_u2le
-      @max_short_term_loudness = @_io.read_u2le
-      self
-    end
-    attr_reader :description
-    attr_reader :originator
-    attr_reader :originator_reference
-    attr_reader :origination_date
-    attr_reader :origination_time
-    attr_reader :time_reference_low
-    attr_reader :time_reference_high
-    attr_reader :version
-    attr_reader :umid
-    attr_reader :loudness_value
-    attr_reader :loudness_range
-    attr_reader :max_true_peak_level
-    attr_reader :max_momentary_loudness
-    attr_reader :max_short_term_loudness
-  end
-  def format_chunk
-    return @format_chunk unless @format_chunk.nil?
-    @format_chunk = chunks.chunk[0].data
-    @format_chunk
-  end
-  attr_reader :riff_id
-  attr_reader :file_size
-  attr_reader :wave_id
-  attr_reader :chunks
-  attr_reader :_raw_chunks
-end
-</code></pre>
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@description</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">256</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+      <span class="vi">@originator</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+      <span class="vi">@originator_reference</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+      <span class="vi">@origination_date</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+      <span class="vi">@origination_time</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+      <span class="vi">@time_reference_low</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@time_reference_high</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@umid</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+      <span class="vi">@loudness_value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@loudness_range</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@max_true_peak_level</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@max_momentary_loudness</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@max_short_term_loudness</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:description</span>
+    <span class="kp">attr_reader</span> <span class="ss">:originator</span>
+    <span class="kp">attr_reader</span> <span class="ss">:originator_reference</span>
+    <span class="kp">attr_reader</span> <span class="ss">:origination_date</span>
+    <span class="kp">attr_reader</span> <span class="ss">:origination_time</span>
+    <span class="kp">attr_reader</span> <span class="ss">:time_reference_low</span>
+    <span class="kp">attr_reader</span> <span class="ss">:time_reference_high</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:umid</span>
+    <span class="kp">attr_reader</span> <span class="ss">:loudness_value</span>
+    <span class="kp">attr_reader</span> <span class="ss">:loudness_range</span>
+    <span class="kp">attr_reader</span> <span class="ss">:max_true_peak_level</span>
+    <span class="kp">attr_reader</span> <span class="ss">:max_momentary_loudness</span>
+    <span class="kp">attr_reader</span> <span class="ss">:max_short_term_loudness</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">format_chunk</span>
+    <span class="k">return</span> <span class="vi">@format_chunk</span> <span class="k">unless</span> <span class="vi">@format_chunk</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="vi">@format_chunk</span> <span class="o">=</span> <span class="n">chunks</span><span class="o">.</span><span class="n">chunk</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">data</span>
+    <span class="vi">@format_chunk</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:riff_id</span>
+  <span class="kp">attr_reader</span> <span class="ss">:file_size</span>
+  <span class="kp">attr_reader</span> <span class="ss">:wave_id</span>
+  <span class="kp">attr_reader</span> <span class="ss">:chunks</span>
+  <span class="kp">attr_reader</span> <span class="ss">:_raw_chunks</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -905,8 +902,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

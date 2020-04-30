@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -271,660 +268,660 @@ WindowsLnkFile data = new WindowsLnkFile(new ByteBufferKaitaiStream(someArray));
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.nio.charset.Charset;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
 
 
-/**
- * Windows .lnk files (AKA &quot;shell link&quot; file) are most frequently used
- * in Windows shell to create &quot;shortcuts&quot; to another files, usually for
- * purposes of running a program from some other directory, sometimes
- * with certain preconfigured arguments and some other options.
- * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Source&lt;/a&gt;
- */
-public class WindowsLnkFile extends KaitaiStruct {
-    public static WindowsLnkFile fromFile(String fileName) throws IOException {
-        return new WindowsLnkFile(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * Windows .lnk files (AKA &quot;shell link&quot; file) are most frequently used</span>
+<span class="cm"> * in Windows shell to create &quot;shortcuts&quot; to another files, usually for</span>
+<span class="cm"> * purposes of running a program from some other directory, sometimes</span>
+<span class="cm"> * with certain preconfigured arguments and some other options.</span>
+<span class="cm"> * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WindowsLnkFile</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">WindowsLnkFile</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">WindowsLnkFile</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public enum WindowState {
-        NORMAL(1),
-        MAXIMIZED(3),
-        MIN_NO_ACTIVE(7);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">WindowState</span> <span class="p">{</span>
+        <span class="n">NORMAL</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">MAXIMIZED</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+        <span class="n">MIN_NO_ACTIVE</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
 
-        private final long id;
-        WindowState(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, WindowState&gt; byId = new HashMap&lt;Long, WindowState&gt;(3);
-        static {
-            for (WindowState e : WindowState.values())
-                byId.put(e.id(), e);
-        }
-        public static WindowState byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">WindowState</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">WindowState</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">WindowState</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">WindowState</span> <span class="n">e</span> <span class="p">:</span> <span class="n">WindowState</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">WindowState</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public enum DriveTypes {
-        UNKNOWN(0),
-        NO_ROOT_DIR(1),
-        REMOVABLE(2),
-        FIXED(3),
-        REMOTE(4),
-        CDROM(5),
-        RAMDISK(6);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">DriveTypes</span> <span class="p">{</span>
+        <span class="n">UNKNOWN</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+        <span class="n">NO_ROOT_DIR</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">REMOVABLE</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">FIXED</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+        <span class="n">REMOTE</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+        <span class="n">CDROM</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+        <span class="n">RAMDISK</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
 
-        private final long id;
-        DriveTypes(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, DriveTypes&gt; byId = new HashMap&lt;Long, DriveTypes&gt;(7);
-        static {
-            for (DriveTypes e : DriveTypes.values())
-                byId.put(e.id(), e);
-        }
-        public static DriveTypes byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">DriveTypes</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">DriveTypes</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">DriveTypes</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">DriveTypes</span> <span class="n">e</span> <span class="p">:</span> <span class="n">DriveTypes</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">DriveTypes</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public WindowsLnkFile(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">WindowsLnkFile</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public WindowsLnkFile(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">WindowsLnkFile</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public WindowsLnkFile(KaitaiStream _io, KaitaiStruct _parent, WindowsLnkFile _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.header = new FileHeader(this._io, this, _root);
-        if (header().flags().hasLinkTargetIdList()) {
-            this.targetIdList = new LinkTargetIdList(this._io, this, _root);
-        }
-        if (header().flags().hasLinkInfo()) {
-            this.info = new LinkInfo(this._io, this, _root);
-        }
-        if (header().flags().hasName()) {
-            this.name = new StringData(this._io, this, _root);
-        }
-        if (header().flags().hasRelPath()) {
-            this.relPath = new StringData(this._io, this, _root);
-        }
-        if (header().flags().hasWorkDir()) {
-            this.workDir = new StringData(this._io, this, _root);
-        }
-        if (header().flags().hasArguments()) {
-            this.arguments = new StringData(this._io, this, _root);
-        }
-        if (header().flags().hasIconLocation()) {
-            this.iconLocation = new StringData(this._io, this, _root);
-        }
-    }
+    <span class="kd">public</span> <span class="nf">WindowsLnkFile</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">flags</span><span class="p">().</span><span class="na">hasLinkTargetIdList</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">targetIdList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkTargetIdList</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">flags</span><span class="p">().</span><span class="na">hasLinkInfo</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">info</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">flags</span><span class="p">().</span><span class="na">hasName</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringData</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">flags</span><span class="p">().</span><span class="na">hasRelPath</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">relPath</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringData</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">flags</span><span class="p">().</span><span class="na">hasWorkDir</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">workDir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringData</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">flags</span><span class="p">().</span><span class="na">hasArguments</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">arguments</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringData</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">flags</span><span class="p">().</span><span class="na">hasIconLocation</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">iconLocation</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringData</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.2&lt;/a&gt;
-     */
-    public static class LinkTargetIdList extends KaitaiStruct {
-        public static LinkTargetIdList fromFile(String fileName) throws IOException {
-            return new LinkTargetIdList(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.2&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">LinkTargetIdList</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">LinkTargetIdList</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">LinkTargetIdList</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public LinkTargetIdList(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">LinkTargetIdList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public LinkTargetIdList(KaitaiStream _io, WindowsLnkFile _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">LinkTargetIdList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public LinkTargetIdList(KaitaiStream _io, WindowsLnkFile _parent, WindowsLnkFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenIdList = this._io.readU2le();
-            this._raw_idList = this._io.readBytes(lenIdList());
-            KaitaiStream _io__raw_idList = new ByteBufferKaitaiStream(_raw_idList);
-            this.idList = new WindowsShellItems(_io__raw_idList);
-        }
-        private int lenIdList;
-        private WindowsShellItems idList;
-        private WindowsLnkFile _root;
-        private WindowsLnkFile _parent;
-        private byte[] _raw_idList;
-        public int lenIdList() { return lenIdList; }
-        public WindowsShellItems idList() { return idList; }
-        public WindowsLnkFile _root() { return _root; }
-        public WindowsLnkFile _parent() { return _parent; }
-        public byte[] _raw_idList() { return _raw_idList; }
-    }
-    public static class StringData extends KaitaiStruct {
-        public static StringData fromFile(String fileName) throws IOException {
-            return new StringData(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">LinkTargetIdList</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenIdList</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_idList</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenIdList</span><span class="p">());</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_idList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_idList</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">idList</span> <span class="o">=</span> <span class="k">new</span> <span class="n">WindowsShellItems</span><span class="p">(</span><span class="n">_io__raw_idList</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">lenIdList</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsShellItems</span> <span class="n">idList</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsLnkFile</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_idList</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lenIdList</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenIdList</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsShellItems</span> <span class="nf">idList</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">idList</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsLnkFile</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsLnkFile</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_idList</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_idList</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">StringData</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">StringData</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">StringData</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public StringData(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">StringData</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public StringData(KaitaiStream _io, WindowsLnkFile _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">StringData</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public StringData(KaitaiStream _io, WindowsLnkFile _parent, WindowsLnkFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.charsStr = this._io.readU2le();
-            this.str = new String(this._io.readBytes((charsStr() * 2)), Charset.forName(&quot;UTF-16LE&quot;));
-        }
-        private int charsStr;
-        private String str;
-        private WindowsLnkFile _root;
-        private WindowsLnkFile _parent;
-        public int charsStr() { return charsStr; }
-        public String str() { return str; }
-        public WindowsLnkFile _root() { return _root; }
-        public WindowsLnkFile _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">StringData</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">charsStr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">str</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">charsStr</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-16LE&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">charsStr</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">str</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsLnkFile</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">charsStr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">charsStr</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">str</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">str</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsLnkFile</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsLnkFile</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.3&lt;/a&gt;
-     */
-    public static class LinkInfo extends KaitaiStruct {
-        public static LinkInfo fromFile(String fileName) throws IOException {
-            return new LinkInfo(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.3&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">LinkInfo</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">LinkInfo</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">LinkInfo</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public LinkInfo(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">LinkInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public LinkInfo(KaitaiStream _io, WindowsLnkFile _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">LinkInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public LinkInfo(KaitaiStream _io, WindowsLnkFile _parent, WindowsLnkFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenAll = this._io.readU4le();
-            this._raw_all = this._io.readBytes((lenAll() - 4));
-            KaitaiStream _io__raw_all = new ByteBufferKaitaiStream(_raw_all);
-            this.all = new All(_io__raw_all, this, _root);
-        }
+        <span class="kd">public</span> <span class="nf">LinkInfo</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenAll</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_all</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">lenAll</span><span class="p">()</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_all</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_all</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">all</span> <span class="o">=</span> <span class="k">new</span> <span class="n">All</span><span class="p">(</span><span class="n">_io__raw_all</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        /**
-         * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.3.1&lt;/a&gt;
-         */
-        public static class VolumeIdBody extends KaitaiStruct {
-            public static VolumeIdBody fromFile(String fileName) throws IOException {
-                return new VolumeIdBody(new ByteBufferKaitaiStream(fileName));
-            }
+        <span class="cm">/**</span>
+<span class="cm">         * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.3.1&lt;/a&gt;</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">VolumeIdBody</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">VolumeIdBody</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">VolumeIdBody</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public VolumeIdBody(KaitaiStream _io) {
-                this(_io, null, null);
-            }
+            <span class="kd">public</span> <span class="nf">VolumeIdBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public VolumeIdBody(KaitaiStream _io, WindowsLnkFile.LinkInfo.VolumeIdSpec _parent) {
-                this(_io, _parent, null);
-            }
+            <span class="kd">public</span> <span class="nf">VolumeIdBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">VolumeIdSpec</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public VolumeIdBody(KaitaiStream _io, WindowsLnkFile.LinkInfo.VolumeIdSpec _parent, WindowsLnkFile _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.driveType = WindowsLnkFile.DriveTypes.byId(this._io.readU4le());
-                this.driveSerialNumber = this._io.readU4le();
-                this.ofsVolumeLabel = this._io.readU4le();
-                if (isUnicode()) {
-                    this.ofsVolumeLabelUnicode = this._io.readU4le();
-                }
-            }
-            private Boolean isUnicode;
-            public Boolean isUnicode() {
-                if (this.isUnicode != null)
-                    return this.isUnicode;
-                boolean _tmp = (boolean) (ofsVolumeLabel() == 20);
-                this.isUnicode = _tmp;
-                return this.isUnicode;
-            }
-            private String volumeLabelAnsi;
-            public String volumeLabelAnsi() {
-                if (this.volumeLabelAnsi != null)
-                    return this.volumeLabelAnsi;
-                if (!(isUnicode())) {
-                    long _pos = this._io.pos();
-                    this._io.seek((ofsVolumeLabel() - 4));
-                    this.volumeLabelAnsi = new String(this._io.readBytesTerm(0, false, true, true), Charset.forName(&quot;cp437&quot;));
-                    this._io.seek(_pos);
-                }
-                return this.volumeLabelAnsi;
-            }
-            private DriveTypes driveType;
-            private long driveSerialNumber;
-            private long ofsVolumeLabel;
-            private Long ofsVolumeLabelUnicode;
-            private WindowsLnkFile _root;
-            private WindowsLnkFile.LinkInfo.VolumeIdSpec _parent;
-            public DriveTypes driveType() { return driveType; }
-            public long driveSerialNumber() { return driveSerialNumber; }
-            public long ofsVolumeLabel() { return ofsVolumeLabel; }
-            public Long ofsVolumeLabelUnicode() { return ofsVolumeLabelUnicode; }
-            public WindowsLnkFile _root() { return _root; }
-            public WindowsLnkFile.LinkInfo.VolumeIdSpec _parent() { return _parent; }
-        }
+            <span class="kd">public</span> <span class="nf">VolumeIdBody</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">VolumeIdSpec</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">driveType</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">DriveTypes</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">driveSerialNumber</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">ofsVolumeLabel</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">isUnicode</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">ofsVolumeLabelUnicode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">isUnicode</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">isUnicode</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">isUnicode</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">isUnicode</span><span class="p">;</span>
+                <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">(</span><span class="n">ofsVolumeLabel</span><span class="p">()</span> <span class="o">==</span> <span class="mi">20</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">isUnicode</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">isUnicode</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">String</span> <span class="n">volumeLabelAnsi</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">String</span> <span class="nf">volumeLabelAnsi</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">volumeLabelAnsi</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">volumeLabelAnsi</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">isUnicode</span><span class="p">()))</span> <span class="p">{</span>
+                    <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">ofsVolumeLabel</span><span class="p">()</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">volumeLabelAnsi</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;cp437&quot;</span><span class="p">));</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">volumeLabelAnsi</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">DriveTypes</span> <span class="n">driveType</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">driveSerialNumber</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsVolumeLabel</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">Long</span> <span class="n">ofsVolumeLabelUnicode</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">VolumeIdSpec</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">DriveTypes</span> <span class="nf">driveType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">driveType</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">driveSerialNumber</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">driveSerialNumber</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsVolumeLabel</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsVolumeLabel</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">Long</span> <span class="nf">ofsVolumeLabelUnicode</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsVolumeLabelUnicode</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">WindowsLnkFile</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">VolumeIdSpec</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /**
-         * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.3&lt;/a&gt;
-         */
-        public static class All extends KaitaiStruct {
-            public static All fromFile(String fileName) throws IOException {
-                return new All(new ByteBufferKaitaiStream(fileName));
-            }
+        <span class="cm">/**</span>
+<span class="cm">         * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.3&lt;/a&gt;</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">All</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">All</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">All</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public All(KaitaiStream _io) {
-                this(_io, null, null);
-            }
+            <span class="kd">public</span> <span class="nf">All</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public All(KaitaiStream _io, WindowsLnkFile.LinkInfo _parent) {
-                this(_io, _parent, null);
-            }
+            <span class="kd">public</span> <span class="nf">All</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public All(KaitaiStream _io, WindowsLnkFile.LinkInfo _parent, WindowsLnkFile _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.lenHeader = this._io.readU4le();
-                this._raw_header = this._io.readBytes((lenHeader() - 8));
-                KaitaiStream _io__raw_header = new ByteBufferKaitaiStream(_raw_header);
-                this.header = new Header(_io__raw_header, this, _root);
-            }
-            private VolumeIdSpec volumeId;
-            public VolumeIdSpec volumeId() {
-                if (this.volumeId != null)
-                    return this.volumeId;
-                if (header().flags().hasVolumeIdAndLocalBasePath()) {
-                    long _pos = this._io.pos();
-                    this._io.seek((header().ofsVolumeId() - 4));
-                    this.volumeId = new VolumeIdSpec(this._io, this, _root);
-                    this._io.seek(_pos);
-                }
-                return this.volumeId;
-            }
-            private byte[] localBasePath;
-            public byte[] localBasePath() {
-                if (this.localBasePath != null)
-                    return this.localBasePath;
-                if (header().flags().hasVolumeIdAndLocalBasePath()) {
-                    long _pos = this._io.pos();
-                    this._io.seek((header().ofsLocalBasePath() - 4));
-                    this.localBasePath = this._io.readBytesTerm(0, false, true, true);
-                    this._io.seek(_pos);
-                }
-                return this.localBasePath;
-            }
-            private long lenHeader;
-            private Header header;
-            private WindowsLnkFile _root;
-            private WindowsLnkFile.LinkInfo _parent;
-            private byte[] _raw_header;
-            public long lenHeader() { return lenHeader; }
-            public Header header() { return header; }
-            public WindowsLnkFile _root() { return _root; }
-            public WindowsLnkFile.LinkInfo _parent() { return _parent; }
-            public byte[] _raw_header() { return _raw_header; }
-        }
+            <span class="kd">public</span> <span class="nf">All</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">lenHeader</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_header</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">lenHeader</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_header</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Header</span><span class="p">(</span><span class="n">_io__raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">VolumeIdSpec</span> <span class="n">volumeId</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">VolumeIdSpec</span> <span class="nf">volumeId</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">volumeId</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">volumeId</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">flags</span><span class="p">().</span><span class="na">hasVolumeIdAndLocalBasePath</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">header</span><span class="p">().</span><span class="na">ofsVolumeId</span><span class="p">()</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">volumeId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VolumeIdSpec</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">volumeId</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">localBasePath</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">localBasePath</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">localBasePath</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">localBasePath</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">header</span><span class="p">().</span><span class="na">flags</span><span class="p">().</span><span class="na">hasVolumeIdAndLocalBasePath</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">header</span><span class="p">().</span><span class="na">ofsLocalBasePath</span><span class="p">()</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">localBasePath</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">localBasePath</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenHeader</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">Header</span> <span class="n">header</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_header</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenHeader</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenHeader</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">Header</span> <span class="nf">header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">header</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">WindowsLnkFile</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_header</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /**
-         * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.3.1&lt;/a&gt;
-         */
-        public static class VolumeIdSpec extends KaitaiStruct {
-            public static VolumeIdSpec fromFile(String fileName) throws IOException {
-                return new VolumeIdSpec(new ByteBufferKaitaiStream(fileName));
-            }
+        <span class="cm">/**</span>
+<span class="cm">         * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.3.1&lt;/a&gt;</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">VolumeIdSpec</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">VolumeIdSpec</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">VolumeIdSpec</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public VolumeIdSpec(KaitaiStream _io) {
-                this(_io, null, null);
-            }
+            <span class="kd">public</span> <span class="nf">VolumeIdSpec</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public VolumeIdSpec(KaitaiStream _io, WindowsLnkFile.LinkInfo.All _parent) {
-                this(_io, _parent, null);
-            }
+            <span class="kd">public</span> <span class="nf">VolumeIdSpec</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">All</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public VolumeIdSpec(KaitaiStream _io, WindowsLnkFile.LinkInfo.All _parent, WindowsLnkFile _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.lenAll = this._io.readU4le();
-                this._raw_body = this._io.readBytes((lenAll() - 4));
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new VolumeIdBody(_io__raw_body, this, _root);
-            }
-            private long lenAll;
-            private VolumeIdBody body;
-            private WindowsLnkFile _root;
-            private WindowsLnkFile.LinkInfo.All _parent;
-            private byte[] _raw_body;
-            public long lenAll() { return lenAll; }
-            public VolumeIdBody body() { return body; }
-            public WindowsLnkFile _root() { return _root; }
-            public WindowsLnkFile.LinkInfo.All _parent() { return _parent; }
-            public byte[] _raw_body() { return _raw_body; }
-        }
+            <span class="kd">public</span> <span class="nf">VolumeIdSpec</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">All</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">lenAll</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">lenAll</span><span class="p">()</span> <span class="o">-</span> <span class="mi">4</span><span class="p">));</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VolumeIdBody</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenAll</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">VolumeIdBody</span> <span class="n">body</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">All</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_body</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenAll</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenAll</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">VolumeIdBody</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">body</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">WindowsLnkFile</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">All</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /**
-         * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.3&lt;/a&gt;
-         */
-        public static class LinkInfoFlags extends KaitaiStruct {
-            public static LinkInfoFlags fromFile(String fileName) throws IOException {
-                return new LinkInfoFlags(new ByteBufferKaitaiStream(fileName));
-            }
+        <span class="cm">/**</span>
+<span class="cm">         * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.3&lt;/a&gt;</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">LinkInfoFlags</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">LinkInfoFlags</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">LinkInfoFlags</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public LinkInfoFlags(KaitaiStream _io) {
-                this(_io, null, null);
-            }
+            <span class="kd">public</span> <span class="nf">LinkInfoFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public LinkInfoFlags(KaitaiStream _io, WindowsLnkFile.LinkInfo.Header _parent) {
-                this(_io, _parent, null);
-            }
+            <span class="kd">public</span> <span class="nf">LinkInfoFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">Header</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public LinkInfoFlags(KaitaiStream _io, WindowsLnkFile.LinkInfo.Header _parent, WindowsLnkFile _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.reserved1 = this._io.readBitsInt(6);
-                this.hasCommonNetRelLink = this._io.readBitsInt(1) != 0;
-                this.hasVolumeIdAndLocalBasePath = this._io.readBitsInt(1) != 0;
-                this.reserved2 = this._io.readBitsInt(24);
-            }
-            private long reserved1;
-            private boolean hasCommonNetRelLink;
-            private boolean hasVolumeIdAndLocalBasePath;
-            private long reserved2;
-            private WindowsLnkFile _root;
-            private WindowsLnkFile.LinkInfo.Header _parent;
-            public long reserved1() { return reserved1; }
-            public boolean hasCommonNetRelLink() { return hasCommonNetRelLink; }
-            public boolean hasVolumeIdAndLocalBasePath() { return hasVolumeIdAndLocalBasePath; }
-            public long reserved2() { return reserved2; }
-            public WindowsLnkFile _root() { return _root; }
-            public WindowsLnkFile.LinkInfo.Header _parent() { return _parent; }
-        }
+            <span class="kd">public</span> <span class="nf">LinkInfoFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">Header</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">reserved1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">hasCommonNetRelLink</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">hasVolumeIdAndLocalBasePath</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">reserved2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">24</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">reserved1</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasCommonNetRelLink</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasVolumeIdAndLocalBasePath</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">reserved2</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">Header</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved1</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasCommonNetRelLink</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasCommonNetRelLink</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasVolumeIdAndLocalBasePath</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasVolumeIdAndLocalBasePath</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">reserved2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved2</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">WindowsLnkFile</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">Header</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
 
-        /**
-         * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.3&lt;/a&gt;
-         */
-        public static class Header extends KaitaiStruct {
-            public static Header fromFile(String fileName) throws IOException {
-                return new Header(new ByteBufferKaitaiStream(fileName));
-            }
+        <span class="cm">/**</span>
+<span class="cm">         * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.3&lt;/a&gt;</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Header</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">Header</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">Header</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Header(KaitaiStream _io) {
-                this(_io, null, null);
-            }
+            <span class="kd">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public Header(KaitaiStream _io, WindowsLnkFile.LinkInfo.All _parent) {
-                this(_io, _parent, null);
-            }
+            <span class="kd">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">All</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
 
-            public Header(KaitaiStream _io, WindowsLnkFile.LinkInfo.All _parent, WindowsLnkFile _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.flags = new LinkInfoFlags(this._io, this, _root);
-                this.ofsVolumeId = this._io.readU4le();
-                this.ofsLocalBasePath = this._io.readU4le();
-                this.ofsCommonNetRelLink = this._io.readU4le();
-                this.ofsCommonPathSuffix = this._io.readU4le();
-                if (!(_io().isEof())) {
-                    this.ofsLocalBasePathUnicode = this._io.readU4le();
-                }
-                if (!(_io().isEof())) {
-                    this.ofsCommonPathSuffixUnicode = this._io.readU4le();
-                }
-            }
-            private LinkInfoFlags flags;
-            private long ofsVolumeId;
-            private long ofsLocalBasePath;
-            private long ofsCommonNetRelLink;
-            private long ofsCommonPathSuffix;
-            private Long ofsLocalBasePathUnicode;
-            private Long ofsCommonPathSuffixUnicode;
-            private WindowsLnkFile _root;
-            private WindowsLnkFile.LinkInfo.All _parent;
-            public LinkInfoFlags flags() { return flags; }
-            public long ofsVolumeId() { return ofsVolumeId; }
-            public long ofsLocalBasePath() { return ofsLocalBasePath; }
-            public long ofsCommonNetRelLink() { return ofsCommonNetRelLink; }
-            public long ofsCommonPathSuffix() { return ofsCommonPathSuffix; }
-            public Long ofsLocalBasePathUnicode() { return ofsLocalBasePathUnicode; }
-            public Long ofsCommonPathSuffixUnicode() { return ofsCommonPathSuffixUnicode; }
-            public WindowsLnkFile _root() { return _root; }
-            public WindowsLnkFile.LinkInfo.All _parent() { return _parent; }
-        }
-        private long lenAll;
-        private All all;
-        private WindowsLnkFile _root;
-        private WindowsLnkFile _parent;
-        private byte[] _raw_all;
-        public long lenAll() { return lenAll; }
-        public All all() { return all; }
-        public WindowsLnkFile _root() { return _root; }
-        public WindowsLnkFile _parent() { return _parent; }
-        public byte[] _raw_all() { return _raw_all; }
-    }
+            <span class="kd">public</span> <span class="nf">Header</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">All</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkInfoFlags</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">ofsVolumeId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">ofsLocalBasePath</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">ofsCommonNetRelLink</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">ofsCommonPathSuffix</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="p">().</span><span class="na">isEof</span><span class="p">()))</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">ofsLocalBasePathUnicode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_io</span><span class="p">().</span><span class="na">isEof</span><span class="p">()))</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">ofsCommonPathSuffixUnicode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">LinkInfoFlags</span> <span class="n">flags</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsVolumeId</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsLocalBasePath</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsCommonNetRelLink</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="kt">long</span> <span class="n">ofsCommonPathSuffix</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">Long</span> <span class="n">ofsLocalBasePathUnicode</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">Long</span> <span class="n">ofsCommonPathSuffixUnicode</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">All</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">LinkInfoFlags</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsVolumeId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsVolumeId</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsLocalBasePath</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsLocalBasePath</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsCommonNetRelLink</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsCommonNetRelLink</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="kt">long</span> <span class="nf">ofsCommonPathSuffix</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsCommonPathSuffix</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">Long</span> <span class="nf">ofsLocalBasePathUnicode</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsLocalBasePathUnicode</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">Long</span> <span class="nf">ofsCommonPathSuffixUnicode</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ofsCommonPathSuffixUnicode</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">WindowsLnkFile</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">LinkInfo</span><span class="p">.</span><span class="na">All</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lenAll</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">All</span> <span class="n">all</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsLnkFile</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_all</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lenAll</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenAll</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">All</span> <span class="nf">all</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">all</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsLnkFile</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsLnkFile</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_all</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_all</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.1.1&lt;/a&gt;
-     */
-    public static class LinkFlags extends KaitaiStruct {
-        public static LinkFlags fromFile(String fileName) throws IOException {
-            return new LinkFlags(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.1.1&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">LinkFlags</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">LinkFlags</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">LinkFlags</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public LinkFlags(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">LinkFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public LinkFlags(KaitaiStream _io, WindowsLnkFile.FileHeader _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">LinkFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">FileHeader</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public LinkFlags(KaitaiStream _io, WindowsLnkFile.FileHeader _parent, WindowsLnkFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.isUnicode = this._io.readBitsInt(1) != 0;
-            this.hasIconLocation = this._io.readBitsInt(1) != 0;
-            this.hasArguments = this._io.readBitsInt(1) != 0;
-            this.hasWorkDir = this._io.readBitsInt(1) != 0;
-            this.hasRelPath = this._io.readBitsInt(1) != 0;
-            this.hasName = this._io.readBitsInt(1) != 0;
-            this.hasLinkInfo = this._io.readBitsInt(1) != 0;
-            this.hasLinkTargetIdList = this._io.readBitsInt(1) != 0;
-            this._unnamed8 = this._io.readBitsInt(16);
-            this.reserved = this._io.readBitsInt(5);
-            this.keepLocalIdListForUncTarget = this._io.readBitsInt(1) != 0;
-            this._unnamed11 = this._io.readBitsInt(2);
-        }
-        private boolean isUnicode;
-        private boolean hasIconLocation;
-        private boolean hasArguments;
-        private boolean hasWorkDir;
-        private boolean hasRelPath;
-        private boolean hasName;
-        private boolean hasLinkInfo;
-        private boolean hasLinkTargetIdList;
-        private long _unnamed8;
-        private long reserved;
-        private boolean keepLocalIdListForUncTarget;
-        private long _unnamed11;
-        private WindowsLnkFile _root;
-        private WindowsLnkFile.FileHeader _parent;
-        public boolean isUnicode() { return isUnicode; }
-        public boolean hasIconLocation() { return hasIconLocation; }
-        public boolean hasArguments() { return hasArguments; }
-        public boolean hasWorkDir() { return hasWorkDir; }
-        public boolean hasRelPath() { return hasRelPath; }
-        public boolean hasName() { return hasName; }
-        public boolean hasLinkInfo() { return hasLinkInfo; }
-        public boolean hasLinkTargetIdList() { return hasLinkTargetIdList; }
-        public long _unnamed8() { return _unnamed8; }
-        public long reserved() { return reserved; }
-        public boolean keepLocalIdListForUncTarget() { return keepLocalIdListForUncTarget; }
-        public long _unnamed11() { return _unnamed11; }
-        public WindowsLnkFile _root() { return _root; }
-        public WindowsLnkFile.FileHeader _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">LinkFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">FileHeader</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">isUnicode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasIconLocation</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasArguments</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasWorkDir</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasRelPath</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasLinkInfo</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasLinkTargetIdList</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_unnamed8</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">keepLocalIdListForUncTarget</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_unnamed11</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">isUnicode</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasIconLocation</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasArguments</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasWorkDir</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasRelPath</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasName</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasLinkInfo</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">hasLinkTargetIdList</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">_unnamed8</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">reserved</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">keepLocalIdListForUncTarget</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">_unnamed11</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">FileHeader</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isUnicode</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">isUnicode</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasIconLocation</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasIconLocation</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasArguments</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasArguments</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasWorkDir</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasWorkDir</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasRelPath</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasRelPath</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasName</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasLinkInfo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasLinkInfo</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">hasLinkTargetIdList</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hasLinkTargetIdList</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">_unnamed8</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unnamed8</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">keepLocalIdListForUncTarget</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">keepLocalIdListForUncTarget</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">_unnamed11</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_unnamed11</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsLnkFile</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">FileHeader</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.1&lt;/a&gt;
-     */
-    public static class FileHeader extends KaitaiStruct {
-        public static FileHeader fromFile(String fileName) throws IOException {
-            return new FileHeader(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://winprotocoldoc.blob.core.windows.net/productionwindowsarchives/MS-SHLLINK/[MS-SHLLINK].pdf&quot;&gt;Section 2.1&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">FileHeader</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">FileHeader</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">FileHeader</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public FileHeader(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">FileHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public FileHeader(KaitaiStream _io, WindowsLnkFile _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">FileHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public FileHeader(KaitaiStream _io, WindowsLnkFile _parent, WindowsLnkFile _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lenHeader = this._io.ensureFixedContents(new byte[] { 76, 0, 0, 0 });
-            this.linkClsid = this._io.ensureFixedContents(new byte[] { 1, 20, 2, 0, 0, 0, 0, 0, -64, 0, 0, 0, 0, 0, 0, 70 });
-            this._raw_flags = this._io.readBytes(4);
-            KaitaiStream _io__raw_flags = new ByteBufferKaitaiStream(_raw_flags);
-            this.flags = new LinkFlags(_io__raw_flags, this, _root);
-            this.fileAttrs = this._io.readU4le();
-            this.timeCreation = this._io.readU8le();
-            this.timeAccess = this._io.readU8le();
-            this.timeWrite = this._io.readU8le();
-            this.targetFileSize = this._io.readU4le();
-            this.iconIndex = this._io.readS4le();
-            this.showCommand = WindowsLnkFile.WindowState.byId(this._io.readU4le());
-            this.hotkey = this._io.readU2le();
-            this.reserved = this._io.ensureFixedContents(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 });
-        }
-        private byte[] lenHeader;
-        private byte[] linkClsid;
-        private LinkFlags flags;
-        private long fileAttrs;
-        private long timeCreation;
-        private long timeAccess;
-        private long timeWrite;
-        private long targetFileSize;
-        private int iconIndex;
-        private WindowState showCommand;
-        private int hotkey;
-        private byte[] reserved;
-        private WindowsLnkFile _root;
-        private WindowsLnkFile _parent;
-        private byte[] _raw_flags;
+        <span class="kd">public</span> <span class="nf">FileHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lenHeader</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">linkClsid</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">64</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">70</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+            <span class="n">KaitaiStream</span> <span class="n">_io__raw_flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_flags</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkFlags</span><span class="p">(</span><span class="n">_io__raw_flags</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fileAttrs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">timeCreation</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">timeAccess</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">timeWrite</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">targetFileSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">iconIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readS4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">showCommand</span> <span class="o">=</span> <span class="n">WindowsLnkFile</span><span class="p">.</span><span class="na">WindowState</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hotkey</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span> <span class="p">});</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">lenHeader</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">linkClsid</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">LinkFlags</span> <span class="n">flags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">fileAttrs</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">timeCreation</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">timeAccess</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">timeWrite</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">targetFileSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">iconIndex</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowState</span> <span class="n">showCommand</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">hotkey</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">reserved</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">WindowsLnkFile</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_flags</span><span class="p">;</span>
 
-        /**
-         * Technically, a size of the header, but in reality, it&#39;s
-         * fixed by standard.
-         */
-        public byte[] lenHeader() { return lenHeader; }
+        <span class="cm">/**</span>
+<span class="cm">         * Technically, a size of the header, but in reality, it&#39;s</span>
+<span class="cm">         * fixed by standard.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">lenHeader</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lenHeader</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * 16-byte class identified (CLSID), reserved for Windows shell
-         * link files.
-         */
-        public byte[] linkClsid() { return linkClsid; }
-        public LinkFlags flags() { return flags; }
-        public long fileAttrs() { return fileAttrs; }
-        public long timeCreation() { return timeCreation; }
-        public long timeAccess() { return timeAccess; }
-        public long timeWrite() { return timeWrite; }
+        <span class="cm">/**</span>
+<span class="cm">         * 16-byte class identified (CLSID), reserved for Windows shell</span>
+<span class="cm">         * link files.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">linkClsid</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">linkClsid</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">LinkFlags</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">fileAttrs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileAttrs</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">timeCreation</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">timeCreation</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">timeAccess</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">timeAccess</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">timeWrite</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">timeWrite</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Lower 32 bits of the size of the file that this link targets
-         */
-        public long targetFileSize() { return targetFileSize; }
+        <span class="cm">/**</span>
+<span class="cm">         * Lower 32 bits of the size of the file that this link targets</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">targetFileSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">targetFileSize</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Index of an icon to use from target file
-         */
-        public int iconIndex() { return iconIndex; }
+        <span class="cm">/**</span>
+<span class="cm">         * Index of an icon to use from target file</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">iconIndex</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">iconIndex</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Window state to set after the launch of target executable
-         */
-        public WindowState showCommand() { return showCommand; }
-        public int hotkey() { return hotkey; }
-        public byte[] reserved() { return reserved; }
-        public WindowsLnkFile _root() { return _root; }
-        public WindowsLnkFile _parent() { return _parent; }
-        public byte[] _raw_flags() { return _raw_flags; }
-    }
-    private FileHeader header;
-    private LinkTargetIdList targetIdList;
-    private LinkInfo info;
-    private StringData name;
-    private StringData relPath;
-    private StringData workDir;
-    private StringData arguments;
-    private StringData iconLocation;
-    private WindowsLnkFile _root;
-    private KaitaiStruct _parent;
-    public FileHeader header() { return header; }
-    public LinkTargetIdList targetIdList() { return targetIdList; }
-    public LinkInfo info() { return info; }
-    public StringData name() { return name; }
-    public StringData relPath() { return relPath; }
-    public StringData workDir() { return workDir; }
-    public StringData arguments() { return arguments; }
-    public StringData iconLocation() { return iconLocation; }
-    public WindowsLnkFile _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-}
-</code></pre>
+        <span class="cm">/**</span>
+<span class="cm">         * Window state to set after the launch of target executable</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">WindowState</span> <span class="nf">showCommand</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">showCommand</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">hotkey</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hotkey</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsLnkFile</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">WindowsLnkFile</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_flags</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">FileHeader</span> <span class="n">header</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">LinkTargetIdList</span> <span class="n">targetIdList</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">LinkInfo</span> <span class="n">info</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">StringData</span> <span class="n">name</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">StringData</span> <span class="n">relPath</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">StringData</span> <span class="n">workDir</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">StringData</span> <span class="n">arguments</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">StringData</span> <span class="n">iconLocation</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">WindowsLnkFile</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">FileHeader</span> <span class="nf">header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">header</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">LinkTargetIdList</span> <span class="nf">targetIdList</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">targetIdList</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">LinkInfo</span> <span class="nf">info</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">info</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">StringData</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">name</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">StringData</span> <span class="nf">relPath</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">relPath</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">StringData</span> <span class="nf">workDir</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">workDir</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">StringData</span> <span class="nf">arguments</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">arguments</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">StringData</span> <span class="nf">iconLocation</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">iconLocation</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">WindowsLnkFile</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -951,8 +948,8 @@ public class WindowsLnkFile extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

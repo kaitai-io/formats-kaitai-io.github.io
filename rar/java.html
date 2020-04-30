@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -287,521 +284,521 @@ Rar data = new Rar(new ByteBufferKaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
 
 
-/**
- * RAR is a archive format used by popular proprietary RAR archiver,
- * created by Eugene Roshal. There are two major versions of format
- * (v1.5-4.0 and RAR v5+).
- * 
- * File format essentially consists of a linear sequence of
- * blocks. Each block has fixed header and custom body (that depends on
- * block type), so it&#39;s possible to skip block even if one doesn&#39;t know
- * how to process a certain block type.
- * @see &lt;a href=&quot;http://acritum.com/winrar/rar-format&quot;&gt;&lt;/a&gt;
- */
-public class Rar extends KaitaiStruct {
-    public static Rar fromFile(String fileName) throws IOException {
-        return new Rar(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * RAR is a archive format used by popular proprietary RAR archiver,</span>
+<span class="cm"> * created by Eugene Roshal. There are two major versions of format</span>
+<span class="cm"> * (v1.5-4.0 and RAR v5+).</span>
+<span class="cm"> * </span>
+<span class="cm"> * File format essentially consists of a linear sequence of</span>
+<span class="cm"> * blocks. Each block has fixed header and custom body (that depends on</span>
+<span class="cm"> * block type), so it&#39;s possible to skip block even if one doesn&#39;t know</span>
+<span class="cm"> * how to process a certain block type.</span>
+<span class="cm"> * @see &lt;a href=&quot;http://acritum.com/winrar/rar-format&quot;&gt;&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Rar</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Rar</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">Rar</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public enum BlockTypes {
-        MARKER(114),
-        ARCHIVE_HEADER(115),
-        FILE_HEADER(116),
-        OLD_STYLE_COMMENT_HEADER(117),
-        OLD_STYLE_AUTHENTICITY_INFO_76(118),
-        OLD_STYLE_SUBBLOCK(119),
-        OLD_STYLE_RECOVERY_RECORD(120),
-        OLD_STYLE_AUTHENTICITY_INFO_79(121),
-        SUBBLOCK(122),
-        TERMINATOR(123);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">BlockTypes</span> <span class="p">{</span>
+        <span class="n">MARKER</span><span class="p">(</span><span class="mi">114</span><span class="p">),</span>
+        <span class="n">ARCHIVE_HEADER</span><span class="p">(</span><span class="mi">115</span><span class="p">),</span>
+        <span class="n">FILE_HEADER</span><span class="p">(</span><span class="mi">116</span><span class="p">),</span>
+        <span class="n">OLD_STYLE_COMMENT_HEADER</span><span class="p">(</span><span class="mi">117</span><span class="p">),</span>
+        <span class="n">OLD_STYLE_AUTHENTICITY_INFO_76</span><span class="p">(</span><span class="mi">118</span><span class="p">),</span>
+        <span class="n">OLD_STYLE_SUBBLOCK</span><span class="p">(</span><span class="mi">119</span><span class="p">),</span>
+        <span class="n">OLD_STYLE_RECOVERY_RECORD</span><span class="p">(</span><span class="mi">120</span><span class="p">),</span>
+        <span class="n">OLD_STYLE_AUTHENTICITY_INFO_79</span><span class="p">(</span><span class="mi">121</span><span class="p">),</span>
+        <span class="n">SUBBLOCK</span><span class="p">(</span><span class="mi">122</span><span class="p">),</span>
+        <span class="n">TERMINATOR</span><span class="p">(</span><span class="mi">123</span><span class="p">);</span>
 
-        private final long id;
-        BlockTypes(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, BlockTypes&gt; byId = new HashMap&lt;Long, BlockTypes&gt;(10);
-        static {
-            for (BlockTypes e : BlockTypes.values())
-                byId.put(e.id(), e);
-        }
-        public static BlockTypes byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">BlockTypes</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">BlockTypes</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">BlockTypes</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">BlockTypes</span> <span class="n">e</span> <span class="p">:</span> <span class="n">BlockTypes</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">BlockTypes</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public enum Oses {
-        MS_DOS(0),
-        OS_2(1),
-        WINDOWS(2),
-        UNIX(3),
-        MAC_OS(4),
-        BEOS(5);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">Oses</span> <span class="p">{</span>
+        <span class="n">MS_DOS</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+        <span class="n">OS_2</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">WINDOWS</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">UNIX</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+        <span class="n">MAC_OS</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+        <span class="n">BEOS</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>
 
-        private final long id;
-        Oses(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, Oses&gt; byId = new HashMap&lt;Long, Oses&gt;(6);
-        static {
-            for (Oses e : Oses.values())
-                byId.put(e.id(), e);
-        }
-        public static Oses byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">Oses</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Oses</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Oses</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">Oses</span> <span class="n">e</span> <span class="p">:</span> <span class="n">Oses</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Oses</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public enum Methods {
-        STORE(48),
-        FASTEST(49),
-        FAST(50),
-        NORMAL(51),
-        GOOD(52),
-        BEST(53);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">Methods</span> <span class="p">{</span>
+        <span class="n">STORE</span><span class="p">(</span><span class="mi">48</span><span class="p">),</span>
+        <span class="n">FASTEST</span><span class="p">(</span><span class="mi">49</span><span class="p">),</span>
+        <span class="n">FAST</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+        <span class="n">NORMAL</span><span class="p">(</span><span class="mi">51</span><span class="p">),</span>
+        <span class="n">GOOD</span><span class="p">(</span><span class="mi">52</span><span class="p">),</span>
+        <span class="n">BEST</span><span class="p">(</span><span class="mi">53</span><span class="p">);</span>
 
-        private final long id;
-        Methods(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, Methods&gt; byId = new HashMap&lt;Long, Methods&gt;(6);
-        static {
-            for (Methods e : Methods.values())
-                byId.put(e.id(), e);
-        }
-        public static Methods byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">Methods</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Methods</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Methods</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">Methods</span> <span class="n">e</span> <span class="p">:</span> <span class="n">Methods</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Methods</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public Rar(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">Rar</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public Rar(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">Rar</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public Rar(KaitaiStream _io, KaitaiStruct _parent, Rar _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.magic = new MagicSignature(this._io, this, _root);
-        this.blocks = new ArrayList&lt;KaitaiStruct&gt;();
-        {
-            int i = 0;
-            while (!this._io.isEof()) {
-                switch (magic().version()) {
-                case 0: {
-                    this.blocks.add(new Block(this._io, this, _root));
-                    break;
-                }
-                case 1: {
-                    this.blocks.add(new BlockV5(this._io, this, _root));
-                    break;
-                }
-                }
-                i++;
-            }
-        }
-    }
-    public static class BlockV5 extends KaitaiStruct {
-        public static BlockV5 fromFile(String fileName) throws IOException {
-            return new BlockV5(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="kd">public</span> <span class="nf">Rar</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">magic</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MagicSignature</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">blocks</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">KaitaiStruct</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">magic</span><span class="p">().</span><span class="na">version</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="mi">0</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">blocks</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Block</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="mi">1</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">blocks</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">BlockV5</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">BlockV5</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">BlockV5</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">BlockV5</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public BlockV5(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">BlockV5</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public BlockV5(KaitaiStream _io, Rar _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">BlockV5</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public BlockV5(KaitaiStream _io, Rar _parent, Rar _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-        }
-        private Rar _root;
-        private Rar _parent;
-        public Rar _root() { return _root; }
-        public Rar _parent() { return _parent; }
-    }
+        <span class="kd">public</span> <span class="nf">BlockV5</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Rar</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Rar</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Rar</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Rar</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * Basic block that RAR files consist of. There are several block
-     * types (see `block_type`), which have different `body` and
-     * `add_body`.
-     */
-    public static class Block extends KaitaiStruct {
-        public static Block fromFile(String fileName) throws IOException {
-            return new Block(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * Basic block that RAR files consist of. There are several block</span>
+<span class="cm">     * types (see `block_type`), which have different `body` and</span>
+<span class="cm">     * `add_body`.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Block</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Block</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Block</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Block(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Block</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Block(KaitaiStream _io, Rar _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Block</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Block(KaitaiStream _io, Rar _parent, Rar _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.crc16 = this._io.readU2le();
-            this.blockType = Rar.BlockTypes.byId(this._io.readU1());
-            this.flags = this._io.readU2le();
-            this.blockSize = this._io.readU2le();
-            if (hasAdd()) {
-                this.addSize = this._io.readU4le();
-            }
-            switch (blockType()) {
-            case FILE_HEADER: {
-                this._raw_body = this._io.readBytes(bodySize());
-                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                this.body = new BlockFileHeader(_io__raw_body, this, _root);
-                break;
-            }
-            default: {
-                this.body = this._io.readBytes(bodySize());
-                break;
-            }
-            }
-            if (hasAdd()) {
-                this.addBody = this._io.readBytes(addSize());
-            }
-        }
-        private Boolean hasAdd;
+        <span class="kd">public</span> <span class="nf">Block</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">crc16</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">blockType</span> <span class="o">=</span> <span class="n">Rar</span><span class="p">.</span><span class="na">BlockTypes</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">flags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">blockSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hasAdd</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">addSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">blockType</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="n">FILE_HEADER</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">bodySize</span><span class="p">());</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BlockFileHeader</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">bodySize</span><span class="p">());</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hasAdd</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">addBody</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">addSize</span><span class="p">());</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">hasAdd</span><span class="p">;</span>
 
-        /**
-         * True if block has additional content attached to it
-         */
-        public Boolean hasAdd() {
-            if (this.hasAdd != null)
-                return this.hasAdd;
-            boolean _tmp = (boolean) ((flags() &amp; 32768) != 0);
-            this.hasAdd = _tmp;
-            return this.hasAdd;
-        }
-        private Byte headerSize;
-        public Byte headerSize() {
-            if (this.headerSize != null)
-                return this.headerSize;
-            byte _tmp = (byte) ((hasAdd() ? 11 : 7));
-            this.headerSize = _tmp;
-            return this.headerSize;
-        }
-        private Integer bodySize;
-        public Integer bodySize() {
-            if (this.bodySize != null)
-                return this.bodySize;
-            int _tmp = (int) ((blockSize() - headerSize()));
-            this.bodySize = _tmp;
-            return this.bodySize;
-        }
-        private int crc16;
-        private BlockTypes blockType;
-        private int flags;
-        private int blockSize;
-        private Long addSize;
-        private Object body;
-        private byte[] addBody;
-        private Rar _root;
-        private Rar _parent;
-        private byte[] _raw_body;
+        <span class="cm">/**</span>
+<span class="cm">         * True if block has additional content attached to it</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">hasAdd</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">hasAdd</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasAdd</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasAdd</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasAdd</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Byte</span> <span class="n">headerSize</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Byte</span> <span class="nf">headerSize</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">headerSize</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">headerSize</span><span class="p">;</span>
+            <span class="kt">byte</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">byte</span><span class="p">)</span> <span class="p">((</span><span class="n">hasAdd</span><span class="p">()</span> <span class="o">?</span> <span class="mi">11</span> <span class="p">:</span> <span class="mi">7</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">headerSize</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">headerSize</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">bodySize</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">bodySize</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">bodySize</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">bodySize</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">blockSize</span><span class="p">()</span> <span class="o">-</span> <span class="n">headerSize</span><span class="p">()));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">bodySize</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">bodySize</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">crc16</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">BlockTypes</span> <span class="n">blockType</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">flags</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">blockSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Long</span> <span class="n">addSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Object</span> <span class="n">body</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">addBody</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Rar</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Rar</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_body</span><span class="p">;</span>
 
-        /**
-         * CRC16 of whole block or some part of it (depends on block type)
-         */
-        public int crc16() { return crc16; }
-        public BlockTypes blockType() { return blockType; }
-        public int flags() { return flags; }
+        <span class="cm">/**</span>
+<span class="cm">         * CRC16 of whole block or some part of it (depends on block type)</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">crc16</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">crc16</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">BlockTypes</span> <span class="nf">blockType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">blockType</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">flags</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">flags</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Size of block (header + body, but without additional content)
-         */
-        public int blockSize() { return blockSize; }
+        <span class="cm">/**</span>
+<span class="cm">         * Size of block (header + body, but without additional content)</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">blockSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">blockSize</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Size of additional content in this block
-         */
-        public Long addSize() { return addSize; }
-        public Object body() { return body; }
+        <span class="cm">/**</span>
+<span class="cm">         * Size of additional content in this block</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Long</span> <span class="nf">addSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">addSize</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Object</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">body</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Additional content in this block
-         */
-        public byte[] addBody() { return addBody; }
-        public Rar _root() { return _root; }
-        public Rar _parent() { return _parent; }
-        public byte[] _raw_body() { return _raw_body; }
-    }
-    public static class BlockFileHeader extends KaitaiStruct {
-        public static BlockFileHeader fromFile(String fileName) throws IOException {
-            return new BlockFileHeader(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="cm">/**</span>
+<span class="cm">         * Additional content in this block</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">addBody</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">addBody</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Rar</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Rar</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">BlockFileHeader</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">BlockFileHeader</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">BlockFileHeader</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public BlockFileHeader(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">BlockFileHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public BlockFileHeader(KaitaiStream _io, Rar.Block _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">BlockFileHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Rar</span><span class="p">.</span><span class="na">Block</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public BlockFileHeader(KaitaiStream _io, Rar.Block _parent, Rar _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.lowUnpSize = this._io.readU4le();
-            this.hostOs = Rar.Oses.byId(this._io.readU1());
-            this.fileCrc32 = this._io.readU4le();
-            this.fileTime = new DosTime(this._io, this, _root);
-            this.rarVersion = this._io.readU1();
-            this.method = Rar.Methods.byId(this._io.readU1());
-            this.nameSize = this._io.readU2le();
-            this.attr = this._io.readU4le();
-            if ((_parent().flags() &amp; 256) != 0) {
-                this.highPackSize = this._io.readU4le();
-            }
-            this.fileName = this._io.readBytes(nameSize());
-            if ((_parent().flags() &amp; 1024) != 0) {
-                this.salt = this._io.readU8le();
-            }
-        }
-        private long lowUnpSize;
-        private Oses hostOs;
-        private long fileCrc32;
-        private DosTime fileTime;
-        private int rarVersion;
-        private Methods method;
-        private int nameSize;
-        private long attr;
-        private Long highPackSize;
-        private byte[] fileName;
-        private Long salt;
-        private Rar _root;
-        private Rar.Block _parent;
+        <span class="kd">public</span> <span class="nf">BlockFileHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Rar</span><span class="p">.</span><span class="na">Block</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lowUnpSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hostOs</span> <span class="o">=</span> <span class="n">Rar</span><span class="p">.</span><span class="na">Oses</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fileCrc32</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fileTime</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DosTime</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">rarVersion</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">method</span> <span class="o">=</span> <span class="n">Rar</span><span class="p">.</span><span class="na">Methods</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">nameSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">attr</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">_parent</span><span class="p">().</span><span class="na">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">highPackSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">fileName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">nameSize</span><span class="p">());</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">_parent</span><span class="p">().</span><span class="na">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">salt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lowUnpSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Oses</span> <span class="n">hostOs</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">fileCrc32</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">DosTime</span> <span class="n">fileTime</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">rarVersion</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Methods</span> <span class="n">method</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">nameSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">attr</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Long</span> <span class="n">highPackSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">fileName</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Long</span> <span class="n">salt</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Rar</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Rar</span><span class="p">.</span><span class="na">Block</span> <span class="n">_parent</span><span class="p">;</span>
 
-        /**
-         * Uncompressed file size (lower 32 bits, if 64-bit header flag is present)
-         */
-        public long lowUnpSize() { return lowUnpSize; }
+        <span class="cm">/**</span>
+<span class="cm">         * Uncompressed file size (lower 32 bits, if 64-bit header flag is present)</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lowUnpSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lowUnpSize</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Operating system used for archiving
-         */
-        public Oses hostOs() { return hostOs; }
-        public long fileCrc32() { return fileCrc32; }
+        <span class="cm">/**</span>
+<span class="cm">         * Operating system used for archiving</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Oses</span> <span class="nf">hostOs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">hostOs</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">fileCrc32</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileCrc32</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Date and time in standard MS DOS format
-         */
-        public DosTime fileTime() { return fileTime; }
+        <span class="cm">/**</span>
+<span class="cm">         * Date and time in standard MS DOS format</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">DosTime</span> <span class="nf">fileTime</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileTime</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * RAR version needed to extract file (Version number is encoded as 10 * Major version + minor version.)
-         */
-        public int rarVersion() { return rarVersion; }
+        <span class="cm">/**</span>
+<span class="cm">         * RAR version needed to extract file (Version number is encoded as 10 * Major version + minor version.)</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">rarVersion</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">rarVersion</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Compression method
-         */
-        public Methods method() { return method; }
+        <span class="cm">/**</span>
+<span class="cm">         * Compression method</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Methods</span> <span class="nf">method</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">method</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * File name size
-         */
-        public int nameSize() { return nameSize; }
+        <span class="cm">/**</span>
+<span class="cm">         * File name size</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">nameSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">nameSize</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * File attributes
-         */
-        public long attr() { return attr; }
+        <span class="cm">/**</span>
+<span class="cm">         * File attributes</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">attr</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">attr</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Compressed file size, high 32 bits, only if 64-bit header flag is present
-         */
-        public Long highPackSize() { return highPackSize; }
-        public byte[] fileName() { return fileName; }
-        public Long salt() { return salt; }
-        public Rar _root() { return _root; }
-        public Rar.Block _parent() { return _parent; }
-    }
+        <span class="cm">/**</span>
+<span class="cm">         * Compressed file size, high 32 bits, only if 64-bit header flag is present</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Long</span> <span class="nf">highPackSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">highPackSize</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">fileName</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">fileName</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Long</span> <span class="nf">salt</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">salt</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Rar</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Rar</span><span class="p">.</span><span class="na">Block</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    /**
-     * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and
-     * 8-byte magic (and pretty different block format) for v5+. This
-     * type would parse and validate both versions of signature. Note
-     * that actually this signature is a valid RAR &quot;block&quot;: in theory,
-     * one can omit signature reading at all, and read this normally,
-     * as a block, if exact RAR version is known (and thus it&#39;s
-     * possible to choose correct block format).
-     */
-    public static class MagicSignature extends KaitaiStruct {
-        public static MagicSignature fromFile(String fileName) throws IOException {
-            return new MagicSignature(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="cm">/**</span>
+<span class="cm">     * RAR uses either 7-byte magic for RAR versions 1.5 to 4.0, and</span>
+<span class="cm">     * 8-byte magic (and pretty different block format) for v5+. This</span>
+<span class="cm">     * type would parse and validate both versions of signature. Note</span>
+<span class="cm">     * that actually this signature is a valid RAR &quot;block&quot;: in theory,</span>
+<span class="cm">     * one can omit signature reading at all, and read this normally,</span>
+<span class="cm">     * as a block, if exact RAR version is known (and thus it&#39;s</span>
+<span class="cm">     * possible to choose correct block format).</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MagicSignature</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">MagicSignature</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">MagicSignature</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public MagicSignature(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">MagicSignature</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public MagicSignature(KaitaiStream _io, Rar _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">MagicSignature</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public MagicSignature(KaitaiStream _io, Rar _parent, Rar _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.magic1 = this._io.ensureFixedContents(new byte[] { 82, 97, 114, 33, 26, 7 });
-            this.version = this._io.readU1();
-            if (version() == 1) {
-                this.magic3 = this._io.ensureFixedContents(new byte[] { 0 });
-            }
-        }
-        private byte[] magic1;
-        private int version;
-        private byte[] magic3;
-        private Rar _root;
-        private Rar _parent;
+        <span class="kd">public</span> <span class="nf">MagicSignature</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">magic1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">7</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">version</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">magic3</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">});</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">magic1</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">version</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">magic3</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Rar</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Rar</span> <span class="n">_parent</span><span class="p">;</span>
 
-        /**
-         * Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version
-         */
-        public byte[] magic1() { return magic1; }
+        <span class="cm">/**</span>
+<span class="cm">         * Fixed part of file&#39;s magic signature that doesn&#39;t change with RAR version</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">magic1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">magic1</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * Variable part of magic signature: 0 means old (RAR 1.5-4.0)
-         * format, 1 means new (RAR 5+) format
-         */
-        public int version() { return version; }
+        <span class="cm">/**</span>
+<span class="cm">         * Variable part of magic signature: 0 means old (RAR 1.5-4.0)</span>
+<span class="cm">         * format, 1 means new (RAR 5+) format</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">version</span><span class="p">;</span> <span class="p">}</span>
 
-        /**
-         * New format (RAR 5+) magic contains extra byte
-         */
-        public byte[] magic3() { return magic3; }
-        public Rar _root() { return _root; }
-        public Rar _parent() { return _parent; }
-    }
-    public static class DosTime extends KaitaiStruct {
-        public static DosTime fromFile(String fileName) throws IOException {
-            return new DosTime(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="cm">/**</span>
+<span class="cm">         * New format (RAR 5+) magic contains extra byte</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">magic3</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">magic3</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Rar</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Rar</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DosTime</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">DosTime</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">DosTime</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public DosTime(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">DosTime</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DosTime(KaitaiStream _io, Rar.BlockFileHeader _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">DosTime</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Rar</span><span class="p">.</span><span class="na">BlockFileHeader</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public DosTime(KaitaiStream _io, Rar.BlockFileHeader _parent, Rar _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.time = this._io.readU2le();
-            this.date = this._io.readU2le();
-        }
-        private Integer month;
-        public Integer month() {
-            if (this.month != null)
-                return this.month;
-            int _tmp = (int) (((date() &amp; 480) &gt;&gt; 5));
-            this.month = _tmp;
-            return this.month;
-        }
-        private Integer seconds;
-        public Integer seconds() {
-            if (this.seconds != null)
-                return this.seconds;
-            int _tmp = (int) (((time() &amp; 31) * 2));
-            this.seconds = _tmp;
-            return this.seconds;
-        }
-        private Integer year;
-        public Integer year() {
-            if (this.year != null)
-                return this.year;
-            int _tmp = (int) ((((date() &amp; 65024) &gt;&gt; 9) + 1980));
-            this.year = _tmp;
-            return this.year;
-        }
-        private Integer minutes;
-        public Integer minutes() {
-            if (this.minutes != null)
-                return this.minutes;
-            int _tmp = (int) (((time() &amp; 2016) &gt;&gt; 5));
-            this.minutes = _tmp;
-            return this.minutes;
-        }
-        private Integer day;
-        public Integer day() {
-            if (this.day != null)
-                return this.day;
-            int _tmp = (int) ((date() &amp; 31));
-            this.day = _tmp;
-            return this.day;
-        }
-        private Integer hours;
-        public Integer hours() {
-            if (this.hours != null)
-                return this.hours;
-            int _tmp = (int) (((time() &amp; 63488) &gt;&gt; 11));
-            this.hours = _tmp;
-            return this.hours;
-        }
-        private int time;
-        private int date;
-        private Rar _root;
-        private Rar.BlockFileHeader _parent;
-        public int time() { return time; }
-        public int date() { return date; }
-        public Rar _root() { return _root; }
-        public Rar.BlockFileHeader _parent() { return _parent; }
-    }
-    private MagicSignature magic;
-    private ArrayList&lt;KaitaiStruct&gt; blocks;
-    private Rar _root;
-    private KaitaiStruct _parent;
+        <span class="kd">public</span> <span class="nf">DosTime</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Rar</span><span class="p">.</span><span class="na">BlockFileHeader</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Rar</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">time</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">date</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">month</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">month</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">month</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">month</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">date</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">480</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">month</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">month</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">seconds</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">seconds</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">seconds</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">seconds</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">time</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">seconds</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">seconds</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">year</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">year</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">year</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">year</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((((</span><span class="n">date</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">65024</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">9</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1980</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">year</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">year</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">minutes</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">minutes</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">minutes</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">minutes</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">time</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2016</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">5</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">minutes</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">minutes</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">day</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">day</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">day</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">day</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">date</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">31</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">day</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">day</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Integer</span> <span class="n">hours</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">hours</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">hours</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hours</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(((</span><span class="n">time</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">63488</span><span class="p">)</span> <span class="o">&gt;&gt;</span> <span class="mi">11</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hours</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hours</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">time</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">date</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Rar</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Rar</span><span class="p">.</span><span class="na">BlockFileHeader</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">time</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">time</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">date</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">date</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Rar</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Rar</span><span class="p">.</span><span class="na">BlockFileHeader</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">MagicSignature</span> <span class="n">magic</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">KaitaiStruct</span><span class="o">&gt;</span> <span class="n">blocks</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">Rar</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
 
-    /**
-     * File format signature to validate that it is indeed a RAR archive
-     */
-    public MagicSignature magic() { return magic; }
+    <span class="cm">/**</span>
+<span class="cm">     * File format signature to validate that it is indeed a RAR archive</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">MagicSignature</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">magic</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Sequence of blocks that constitute the RAR file
-     */
-    public ArrayList&lt;KaitaiStruct&gt; blocks() { return blocks; }
-    public Rar _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-}
-</code></pre>
+    <span class="cm">/**</span>
+<span class="cm">     * Sequence of blocks that constitute the RAR file</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">KaitaiStruct</span><span class="o">&gt;</span> <span class="nf">blocks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">blocks</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">Rar</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -828,8 +825,8 @@ public class Rar extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

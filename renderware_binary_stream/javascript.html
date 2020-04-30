@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -230,852 +227,852 @@ var data = new RenderwareBinaryStream(new KaitaiStream(arrayBuffer));</code></pr
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.RenderwareBinaryStream = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-/**
- * @see {@link https://www.gtamodding.com/wiki/RenderWare_binary_stream_file|Source}
- */
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">RenderwareBinaryStream</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * @see {@link https://www.gtamodding.com/wiki/RenderWare_binary_stream_file|Source}</span>
+<span class="cm"> */</span>
 
-var RenderwareBinaryStream = (function() {
-  RenderwareBinaryStream.Sections = Object.freeze({
-    STRUCT: 1,
-    STRING: 2,
-    EXTENSION: 3,
-    CAMERA: 5,
-    TEXTURE: 6,
-    MATERIAL: 7,
-    MATERIAL_LIST: 8,
-    ATOMIC_SECTION: 9,
-    PLANE_SECTION: 10,
-    WORLD: 11,
-    SPLINE: 12,
-    MATRIX: 13,
-    FRAME_LIST: 14,
-    GEOMETRY: 15,
-    CLUMP: 16,
-    LIGHT: 18,
-    UNICODE_STRING: 19,
-    ATOMIC: 20,
-    TEXTURE_NATIVE: 21,
-    TEXTURE_DICTIONARY: 22,
-    ANIMATION_DATABASE: 23,
-    IMAGE: 24,
-    SKIN_ANIMATION: 25,
-    GEOMETRY_LIST: 26,
-    ANIM_ANIMATION: 27,
-    TEAM: 28,
-    CROWD: 29,
-    DELTA_MORPH_ANIMATION: 30,
-    RIGHT_TO_RENDER: 31,
-    MULTITEXTURE_EFFECT_NATIVE: 32,
-    MULTITEXTURE_EFFECT_DICTIONARY: 33,
-    TEAM_DICTIONARY: 34,
-    PLATFORM_INDEPENDENT_TEXTURE_DICTIONARY: 35,
-    TABLE_OF_CONTENTS: 36,
-    PARTICLE_STANDARD_GLOBAL_DATA: 37,
-    ALTPIPE: 38,
-    PLATFORM_INDEPENDENT_PEDS: 39,
-    PATCH_MESH: 40,
-    CHUNK_GROUP_START: 41,
-    CHUNK_GROUP_END: 42,
-    UV_ANIMATION_DICTIONARY: 43,
-    COLL_TREE: 44,
-    METRICS_PLG: 257,
-    SPLINE_PLG: 258,
-    STEREO_PLG: 259,
-    VRML_PLG: 260,
-    MORPH_PLG: 261,
-    PVS_PLG: 262,
-    MEMORY_LEAK_PLG: 263,
-    ANIMATION_PLG: 264,
-    GLOSS_PLG: 265,
-    LOGO_PLG: 266,
-    MEMORY_INFO_PLG: 267,
-    RANDOM_PLG: 268,
-    PNG_IMAGE_PLG: 269,
-    BONE_PLG: 270,
-    VRML_ANIM_PLG: 271,
-    SKY_MIPMAP_VAL: 272,
-    MRM_PLG: 273,
-    LOD_ATOMIC_PLG: 274,
-    ME_PLG: 275,
-    LIGHTMAP_PLG: 276,
-    REFINE_PLG: 277,
-    SKIN_PLG: 278,
-    LABEL_PLG: 279,
-    PARTICLES_PLG: 280,
-    GEOMTX_PLG: 281,
-    SYNTH_CORE_PLG: 282,
-    STQPP_PLG: 283,
-    PART_PP_PLG: 284,
-    COLLISION_PLG: 285,
-    HANIM_PLG: 286,
-    USER_DATA_PLG: 287,
-    MATERIAL_EFFECTS_PLG: 288,
-    PARTICLE_SYSTEM_PLG: 289,
-    DELTA_MORPH_PLG: 290,
-    PATCH_PLG: 291,
-    TEAM_PLG: 292,
-    CROWD_PP_PLG: 293,
-    MIP_SPLIT_PLG: 294,
-    ANISOTROPY_PLG: 295,
-    GCN_MATERIAL_PLG: 297,
-    GEOMETRIC_PVS_PLG: 298,
-    XBOX_MATERIAL_PLG: 299,
-    MULTI_TEXTURE_PLG: 300,
-    CHAIN_PLG: 301,
-    TOON_PLG: 302,
-    PTANK_PLG: 303,
-    PARTICLE_STANDARD_PLG: 304,
-    PDS_PLG: 305,
-    PRTADV_PLG: 306,
-    NORMAL_MAP_PLG: 307,
-    ADC_PLG: 308,
-    UV_ANIMATION_PLG: 309,
-    CHARACTER_SET_PLG: 384,
-    NOHS_WORLD_PLG: 385,
-    IMPORT_UTIL_PLG: 386,
-    SLERP_PLG: 387,
-    OPTIM_PLG: 388,
-    TL_WORLD_PLG: 389,
-    DATABASE_PLG: 390,
-    RAYTRACE_PLG: 391,
-    RAY_PLG: 392,
-    LIBRARY_PLG: 393,
-    PLG_2D: 400,
-    TILE_RENDER_PLG: 401,
-    JPEG_IMAGE_PLG: 402,
-    TGA_IMAGE_PLG: 403,
-    GIF_IMAGE_PLG: 404,
-    QUAT_PLG: 405,
-    SPLINE_PVS_PLG: 406,
-    MIPMAP_PLG: 407,
-    MIPMAPK_PLG: 408,
-    FONT_2D: 409,
-    INTERSECTION_PLG: 410,
-    TIFF_IMAGE_PLG: 411,
-    PICK_PLG: 412,
-    BMP_IMAGE_PLG: 413,
-    RAS_IMAGE_PLG: 414,
-    SKIN_FX_PLG: 415,
-    VCAT_PLG: 416,
-    PATH_2D: 417,
-    BRUSH_2D: 418,
-    OBJECT_2D: 419,
-    SHAPE_2D: 420,
-    SCENE_2D: 421,
-    PICK_REGION_2D: 422,
-    OBJECT_STRING_2D: 423,
-    ANIMATION_PLG_2D: 424,
-    ANIMATION_2D: 425,
-    KEYFRAME_2D: 432,
-    MAESTRO_2D: 433,
-    BARYCENTRIC: 434,
-    PLATFORM_INDEPENDENT_TEXTURE_DICTIONARY_TK: 435,
-    TOC_TK: 436,
-    TPL_TK: 437,
-    ALTPIPE_TK: 438,
-    ANIMATION_TK: 439,
-    SKIN_SPLIT_TOOKIT: 440,
-    COMPRESSED_KEY_TK: 441,
-    GEOMETRY_CONDITIONING_PLG: 442,
-    WING_PLG: 443,
-    GENERIC_PIPELINE_TK: 444,
-    LIGHTMAP_CONVERSION_TK: 445,
-    FILESYSTEM_PLG: 446,
-    DICTIONARY_TK: 447,
-    UV_ANIMATION_LINEAR: 448,
-    UV_ANIMATION_PARAMETER: 449,
-    BIN_MESH_PLG: 1294,
-    NATIVE_DATA_PLG: 1296,
-    ZMODELER_LOCK: 61982,
-    ATOMIC_VISIBILITY_DISTANCE: 39055872,
-    CLUMP_VISIBILITY_DISTANCE: 39055873,
-    FRAME_VISIBILITY_DISTANCE: 39055874,
-    PIPELINE_SET: 39056115,
-    UNUSED_5: 39056116,
-    TEXDICTIONARY_LINK: 39056117,
-    SPECULAR_MATERIAL: 39056118,
-    UNUSED_8: 39056119,
-    EFFECT_2D: 39056120,
-    EXTRA_VERT_COLOUR: 39056121,
-    COLLISION_MODEL: 39056122,
-    GTA_HANIM: 39056123,
-    REFLECTION_MATERIAL: 39056124,
-    BREAKABLE: 39056125,
-    FRAME: 39056126,
-    UNUSED_16: 39056127,
+<span class="kd">var</span> <span class="nx">RenderwareBinaryStream</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Sections</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">STRUCT</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">STRING</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">EXTENSION</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nx">CAMERA</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nx">TEXTURE</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="nx">MATERIAL</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="nx">MATERIAL_LIST</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="nx">ATOMIC_SECTION</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="nx">PLANE_SECTION</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="nx">WORLD</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
+    <span class="nx">SPLINE</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
+    <span class="nx">MATRIX</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
+    <span class="nx">FRAME_LIST</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="nx">GEOMETRY</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="nx">CLUMP</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
+    <span class="nx">LIGHT</span><span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
+    <span class="nx">UNICODE_STRING</span><span class="o">:</span> <span class="mi">19</span><span class="p">,</span>
+    <span class="nx">ATOMIC</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="nx">TEXTURE_NATIVE</span><span class="o">:</span> <span class="mi">21</span><span class="p">,</span>
+    <span class="nx">TEXTURE_DICTIONARY</span><span class="o">:</span> <span class="mi">22</span><span class="p">,</span>
+    <span class="nx">ANIMATION_DATABASE</span><span class="o">:</span> <span class="mi">23</span><span class="p">,</span>
+    <span class="nx">IMAGE</span><span class="o">:</span> <span class="mi">24</span><span class="p">,</span>
+    <span class="nx">SKIN_ANIMATION</span><span class="o">:</span> <span class="mi">25</span><span class="p">,</span>
+    <span class="nx">GEOMETRY_LIST</span><span class="o">:</span> <span class="mi">26</span><span class="p">,</span>
+    <span class="nx">ANIM_ANIMATION</span><span class="o">:</span> <span class="mi">27</span><span class="p">,</span>
+    <span class="nx">TEAM</span><span class="o">:</span> <span class="mi">28</span><span class="p">,</span>
+    <span class="nx">CROWD</span><span class="o">:</span> <span class="mi">29</span><span class="p">,</span>
+    <span class="nx">DELTA_MORPH_ANIMATION</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span>
+    <span class="nx">RIGHT_TO_RENDER</span><span class="o">:</span> <span class="mi">31</span><span class="p">,</span>
+    <span class="nx">MULTITEXTURE_EFFECT_NATIVE</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span>
+    <span class="nx">MULTITEXTURE_EFFECT_DICTIONARY</span><span class="o">:</span> <span class="mi">33</span><span class="p">,</span>
+    <span class="nx">TEAM_DICTIONARY</span><span class="o">:</span> <span class="mi">34</span><span class="p">,</span>
+    <span class="nx">PLATFORM_INDEPENDENT_TEXTURE_DICTIONARY</span><span class="o">:</span> <span class="mi">35</span><span class="p">,</span>
+    <span class="nx">TABLE_OF_CONTENTS</span><span class="o">:</span> <span class="mi">36</span><span class="p">,</span>
+    <span class="nx">PARTICLE_STANDARD_GLOBAL_DATA</span><span class="o">:</span> <span class="mi">37</span><span class="p">,</span>
+    <span class="nx">ALTPIPE</span><span class="o">:</span> <span class="mi">38</span><span class="p">,</span>
+    <span class="nx">PLATFORM_INDEPENDENT_PEDS</span><span class="o">:</span> <span class="mi">39</span><span class="p">,</span>
+    <span class="nx">PATCH_MESH</span><span class="o">:</span> <span class="mi">40</span><span class="p">,</span>
+    <span class="nx">CHUNK_GROUP_START</span><span class="o">:</span> <span class="mi">41</span><span class="p">,</span>
+    <span class="nx">CHUNK_GROUP_END</span><span class="o">:</span> <span class="mi">42</span><span class="p">,</span>
+    <span class="nx">UV_ANIMATION_DICTIONARY</span><span class="o">:</span> <span class="mi">43</span><span class="p">,</span>
+    <span class="nx">COLL_TREE</span><span class="o">:</span> <span class="mi">44</span><span class="p">,</span>
+    <span class="nx">METRICS_PLG</span><span class="o">:</span> <span class="mi">257</span><span class="p">,</span>
+    <span class="nx">SPLINE_PLG</span><span class="o">:</span> <span class="mi">258</span><span class="p">,</span>
+    <span class="nx">STEREO_PLG</span><span class="o">:</span> <span class="mi">259</span><span class="p">,</span>
+    <span class="nx">VRML_PLG</span><span class="o">:</span> <span class="mi">260</span><span class="p">,</span>
+    <span class="nx">MORPH_PLG</span><span class="o">:</span> <span class="mi">261</span><span class="p">,</span>
+    <span class="nx">PVS_PLG</span><span class="o">:</span> <span class="mi">262</span><span class="p">,</span>
+    <span class="nx">MEMORY_LEAK_PLG</span><span class="o">:</span> <span class="mi">263</span><span class="p">,</span>
+    <span class="nx">ANIMATION_PLG</span><span class="o">:</span> <span class="mi">264</span><span class="p">,</span>
+    <span class="nx">GLOSS_PLG</span><span class="o">:</span> <span class="mi">265</span><span class="p">,</span>
+    <span class="nx">LOGO_PLG</span><span class="o">:</span> <span class="mi">266</span><span class="p">,</span>
+    <span class="nx">MEMORY_INFO_PLG</span><span class="o">:</span> <span class="mi">267</span><span class="p">,</span>
+    <span class="nx">RANDOM_PLG</span><span class="o">:</span> <span class="mi">268</span><span class="p">,</span>
+    <span class="nx">PNG_IMAGE_PLG</span><span class="o">:</span> <span class="mi">269</span><span class="p">,</span>
+    <span class="nx">BONE_PLG</span><span class="o">:</span> <span class="mi">270</span><span class="p">,</span>
+    <span class="nx">VRML_ANIM_PLG</span><span class="o">:</span> <span class="mi">271</span><span class="p">,</span>
+    <span class="nx">SKY_MIPMAP_VAL</span><span class="o">:</span> <span class="mi">272</span><span class="p">,</span>
+    <span class="nx">MRM_PLG</span><span class="o">:</span> <span class="mi">273</span><span class="p">,</span>
+    <span class="nx">LOD_ATOMIC_PLG</span><span class="o">:</span> <span class="mi">274</span><span class="p">,</span>
+    <span class="nx">ME_PLG</span><span class="o">:</span> <span class="mi">275</span><span class="p">,</span>
+    <span class="nx">LIGHTMAP_PLG</span><span class="o">:</span> <span class="mi">276</span><span class="p">,</span>
+    <span class="nx">REFINE_PLG</span><span class="o">:</span> <span class="mi">277</span><span class="p">,</span>
+    <span class="nx">SKIN_PLG</span><span class="o">:</span> <span class="mi">278</span><span class="p">,</span>
+    <span class="nx">LABEL_PLG</span><span class="o">:</span> <span class="mi">279</span><span class="p">,</span>
+    <span class="nx">PARTICLES_PLG</span><span class="o">:</span> <span class="mi">280</span><span class="p">,</span>
+    <span class="nx">GEOMTX_PLG</span><span class="o">:</span> <span class="mi">281</span><span class="p">,</span>
+    <span class="nx">SYNTH_CORE_PLG</span><span class="o">:</span> <span class="mi">282</span><span class="p">,</span>
+    <span class="nx">STQPP_PLG</span><span class="o">:</span> <span class="mi">283</span><span class="p">,</span>
+    <span class="nx">PART_PP_PLG</span><span class="o">:</span> <span class="mi">284</span><span class="p">,</span>
+    <span class="nx">COLLISION_PLG</span><span class="o">:</span> <span class="mi">285</span><span class="p">,</span>
+    <span class="nx">HANIM_PLG</span><span class="o">:</span> <span class="mi">286</span><span class="p">,</span>
+    <span class="nx">USER_DATA_PLG</span><span class="o">:</span> <span class="mi">287</span><span class="p">,</span>
+    <span class="nx">MATERIAL_EFFECTS_PLG</span><span class="o">:</span> <span class="mi">288</span><span class="p">,</span>
+    <span class="nx">PARTICLE_SYSTEM_PLG</span><span class="o">:</span> <span class="mi">289</span><span class="p">,</span>
+    <span class="nx">DELTA_MORPH_PLG</span><span class="o">:</span> <span class="mi">290</span><span class="p">,</span>
+    <span class="nx">PATCH_PLG</span><span class="o">:</span> <span class="mi">291</span><span class="p">,</span>
+    <span class="nx">TEAM_PLG</span><span class="o">:</span> <span class="mi">292</span><span class="p">,</span>
+    <span class="nx">CROWD_PP_PLG</span><span class="o">:</span> <span class="mi">293</span><span class="p">,</span>
+    <span class="nx">MIP_SPLIT_PLG</span><span class="o">:</span> <span class="mi">294</span><span class="p">,</span>
+    <span class="nx">ANISOTROPY_PLG</span><span class="o">:</span> <span class="mi">295</span><span class="p">,</span>
+    <span class="nx">GCN_MATERIAL_PLG</span><span class="o">:</span> <span class="mi">297</span><span class="p">,</span>
+    <span class="nx">GEOMETRIC_PVS_PLG</span><span class="o">:</span> <span class="mi">298</span><span class="p">,</span>
+    <span class="nx">XBOX_MATERIAL_PLG</span><span class="o">:</span> <span class="mi">299</span><span class="p">,</span>
+    <span class="nx">MULTI_TEXTURE_PLG</span><span class="o">:</span> <span class="mi">300</span><span class="p">,</span>
+    <span class="nx">CHAIN_PLG</span><span class="o">:</span> <span class="mi">301</span><span class="p">,</span>
+    <span class="nx">TOON_PLG</span><span class="o">:</span> <span class="mi">302</span><span class="p">,</span>
+    <span class="nx">PTANK_PLG</span><span class="o">:</span> <span class="mi">303</span><span class="p">,</span>
+    <span class="nx">PARTICLE_STANDARD_PLG</span><span class="o">:</span> <span class="mi">304</span><span class="p">,</span>
+    <span class="nx">PDS_PLG</span><span class="o">:</span> <span class="mi">305</span><span class="p">,</span>
+    <span class="nx">PRTADV_PLG</span><span class="o">:</span> <span class="mi">306</span><span class="p">,</span>
+    <span class="nx">NORMAL_MAP_PLG</span><span class="o">:</span> <span class="mi">307</span><span class="p">,</span>
+    <span class="nx">ADC_PLG</span><span class="o">:</span> <span class="mi">308</span><span class="p">,</span>
+    <span class="nx">UV_ANIMATION_PLG</span><span class="o">:</span> <span class="mi">309</span><span class="p">,</span>
+    <span class="nx">CHARACTER_SET_PLG</span><span class="o">:</span> <span class="mi">384</span><span class="p">,</span>
+    <span class="nx">NOHS_WORLD_PLG</span><span class="o">:</span> <span class="mi">385</span><span class="p">,</span>
+    <span class="nx">IMPORT_UTIL_PLG</span><span class="o">:</span> <span class="mi">386</span><span class="p">,</span>
+    <span class="nx">SLERP_PLG</span><span class="o">:</span> <span class="mi">387</span><span class="p">,</span>
+    <span class="nx">OPTIM_PLG</span><span class="o">:</span> <span class="mi">388</span><span class="p">,</span>
+    <span class="nx">TL_WORLD_PLG</span><span class="o">:</span> <span class="mi">389</span><span class="p">,</span>
+    <span class="nx">DATABASE_PLG</span><span class="o">:</span> <span class="mi">390</span><span class="p">,</span>
+    <span class="nx">RAYTRACE_PLG</span><span class="o">:</span> <span class="mi">391</span><span class="p">,</span>
+    <span class="nx">RAY_PLG</span><span class="o">:</span> <span class="mi">392</span><span class="p">,</span>
+    <span class="nx">LIBRARY_PLG</span><span class="o">:</span> <span class="mi">393</span><span class="p">,</span>
+    <span class="nx">PLG_2D</span><span class="o">:</span> <span class="mi">400</span><span class="p">,</span>
+    <span class="nx">TILE_RENDER_PLG</span><span class="o">:</span> <span class="mi">401</span><span class="p">,</span>
+    <span class="nx">JPEG_IMAGE_PLG</span><span class="o">:</span> <span class="mi">402</span><span class="p">,</span>
+    <span class="nx">TGA_IMAGE_PLG</span><span class="o">:</span> <span class="mi">403</span><span class="p">,</span>
+    <span class="nx">GIF_IMAGE_PLG</span><span class="o">:</span> <span class="mi">404</span><span class="p">,</span>
+    <span class="nx">QUAT_PLG</span><span class="o">:</span> <span class="mi">405</span><span class="p">,</span>
+    <span class="nx">SPLINE_PVS_PLG</span><span class="o">:</span> <span class="mi">406</span><span class="p">,</span>
+    <span class="nx">MIPMAP_PLG</span><span class="o">:</span> <span class="mi">407</span><span class="p">,</span>
+    <span class="nx">MIPMAPK_PLG</span><span class="o">:</span> <span class="mi">408</span><span class="p">,</span>
+    <span class="nx">FONT_2D</span><span class="o">:</span> <span class="mi">409</span><span class="p">,</span>
+    <span class="nx">INTERSECTION_PLG</span><span class="o">:</span> <span class="mi">410</span><span class="p">,</span>
+    <span class="nx">TIFF_IMAGE_PLG</span><span class="o">:</span> <span class="mi">411</span><span class="p">,</span>
+    <span class="nx">PICK_PLG</span><span class="o">:</span> <span class="mi">412</span><span class="p">,</span>
+    <span class="nx">BMP_IMAGE_PLG</span><span class="o">:</span> <span class="mi">413</span><span class="p">,</span>
+    <span class="nx">RAS_IMAGE_PLG</span><span class="o">:</span> <span class="mi">414</span><span class="p">,</span>
+    <span class="nx">SKIN_FX_PLG</span><span class="o">:</span> <span class="mi">415</span><span class="p">,</span>
+    <span class="nx">VCAT_PLG</span><span class="o">:</span> <span class="mi">416</span><span class="p">,</span>
+    <span class="nx">PATH_2D</span><span class="o">:</span> <span class="mi">417</span><span class="p">,</span>
+    <span class="nx">BRUSH_2D</span><span class="o">:</span> <span class="mi">418</span><span class="p">,</span>
+    <span class="nx">OBJECT_2D</span><span class="o">:</span> <span class="mi">419</span><span class="p">,</span>
+    <span class="nx">SHAPE_2D</span><span class="o">:</span> <span class="mi">420</span><span class="p">,</span>
+    <span class="nx">SCENE_2D</span><span class="o">:</span> <span class="mi">421</span><span class="p">,</span>
+    <span class="nx">PICK_REGION_2D</span><span class="o">:</span> <span class="mi">422</span><span class="p">,</span>
+    <span class="nx">OBJECT_STRING_2D</span><span class="o">:</span> <span class="mi">423</span><span class="p">,</span>
+    <span class="nx">ANIMATION_PLG_2D</span><span class="o">:</span> <span class="mi">424</span><span class="p">,</span>
+    <span class="nx">ANIMATION_2D</span><span class="o">:</span> <span class="mi">425</span><span class="p">,</span>
+    <span class="nx">KEYFRAME_2D</span><span class="o">:</span> <span class="mi">432</span><span class="p">,</span>
+    <span class="nx">MAESTRO_2D</span><span class="o">:</span> <span class="mi">433</span><span class="p">,</span>
+    <span class="nx">BARYCENTRIC</span><span class="o">:</span> <span class="mi">434</span><span class="p">,</span>
+    <span class="nx">PLATFORM_INDEPENDENT_TEXTURE_DICTIONARY_TK</span><span class="o">:</span> <span class="mi">435</span><span class="p">,</span>
+    <span class="nx">TOC_TK</span><span class="o">:</span> <span class="mi">436</span><span class="p">,</span>
+    <span class="nx">TPL_TK</span><span class="o">:</span> <span class="mi">437</span><span class="p">,</span>
+    <span class="nx">ALTPIPE_TK</span><span class="o">:</span> <span class="mi">438</span><span class="p">,</span>
+    <span class="nx">ANIMATION_TK</span><span class="o">:</span> <span class="mi">439</span><span class="p">,</span>
+    <span class="nx">SKIN_SPLIT_TOOKIT</span><span class="o">:</span> <span class="mi">440</span><span class="p">,</span>
+    <span class="nx">COMPRESSED_KEY_TK</span><span class="o">:</span> <span class="mi">441</span><span class="p">,</span>
+    <span class="nx">GEOMETRY_CONDITIONING_PLG</span><span class="o">:</span> <span class="mi">442</span><span class="p">,</span>
+    <span class="nx">WING_PLG</span><span class="o">:</span> <span class="mi">443</span><span class="p">,</span>
+    <span class="nx">GENERIC_PIPELINE_TK</span><span class="o">:</span> <span class="mi">444</span><span class="p">,</span>
+    <span class="nx">LIGHTMAP_CONVERSION_TK</span><span class="o">:</span> <span class="mi">445</span><span class="p">,</span>
+    <span class="nx">FILESYSTEM_PLG</span><span class="o">:</span> <span class="mi">446</span><span class="p">,</span>
+    <span class="nx">DICTIONARY_TK</span><span class="o">:</span> <span class="mi">447</span><span class="p">,</span>
+    <span class="nx">UV_ANIMATION_LINEAR</span><span class="o">:</span> <span class="mi">448</span><span class="p">,</span>
+    <span class="nx">UV_ANIMATION_PARAMETER</span><span class="o">:</span> <span class="mi">449</span><span class="p">,</span>
+    <span class="nx">BIN_MESH_PLG</span><span class="o">:</span> <span class="mi">1294</span><span class="p">,</span>
+    <span class="nx">NATIVE_DATA_PLG</span><span class="o">:</span> <span class="mi">1296</span><span class="p">,</span>
+    <span class="nx">ZMODELER_LOCK</span><span class="o">:</span> <span class="mi">61982</span><span class="p">,</span>
+    <span class="nx">ATOMIC_VISIBILITY_DISTANCE</span><span class="o">:</span> <span class="mi">39055872</span><span class="p">,</span>
+    <span class="nx">CLUMP_VISIBILITY_DISTANCE</span><span class="o">:</span> <span class="mi">39055873</span><span class="p">,</span>
+    <span class="nx">FRAME_VISIBILITY_DISTANCE</span><span class="o">:</span> <span class="mi">39055874</span><span class="p">,</span>
+    <span class="nx">PIPELINE_SET</span><span class="o">:</span> <span class="mi">39056115</span><span class="p">,</span>
+    <span class="nx">UNUSED_5</span><span class="o">:</span> <span class="mi">39056116</span><span class="p">,</span>
+    <span class="nx">TEXDICTIONARY_LINK</span><span class="o">:</span> <span class="mi">39056117</span><span class="p">,</span>
+    <span class="nx">SPECULAR_MATERIAL</span><span class="o">:</span> <span class="mi">39056118</span><span class="p">,</span>
+    <span class="nx">UNUSED_8</span><span class="o">:</span> <span class="mi">39056119</span><span class="p">,</span>
+    <span class="nx">EFFECT_2D</span><span class="o">:</span> <span class="mi">39056120</span><span class="p">,</span>
+    <span class="nx">EXTRA_VERT_COLOUR</span><span class="o">:</span> <span class="mi">39056121</span><span class="p">,</span>
+    <span class="nx">COLLISION_MODEL</span><span class="o">:</span> <span class="mi">39056122</span><span class="p">,</span>
+    <span class="nx">GTA_HANIM</span><span class="o">:</span> <span class="mi">39056123</span><span class="p">,</span>
+    <span class="nx">REFLECTION_MATERIAL</span><span class="o">:</span> <span class="mi">39056124</span><span class="p">,</span>
+    <span class="nx">BREAKABLE</span><span class="o">:</span> <span class="mi">39056125</span><span class="p">,</span>
+    <span class="nx">FRAME</span><span class="o">:</span> <span class="mi">39056126</span><span class="p">,</span>
+    <span class="nx">UNUSED_16</span><span class="o">:</span> <span class="mi">39056127</span><span class="p">,</span>
 
-    1: &quot;STRUCT&quot;,
-    2: &quot;STRING&quot;,
-    3: &quot;EXTENSION&quot;,
-    5: &quot;CAMERA&quot;,
-    6: &quot;TEXTURE&quot;,
-    7: &quot;MATERIAL&quot;,
-    8: &quot;MATERIAL_LIST&quot;,
-    9: &quot;ATOMIC_SECTION&quot;,
-    10: &quot;PLANE_SECTION&quot;,
-    11: &quot;WORLD&quot;,
-    12: &quot;SPLINE&quot;,
-    13: &quot;MATRIX&quot;,
-    14: &quot;FRAME_LIST&quot;,
-    15: &quot;GEOMETRY&quot;,
-    16: &quot;CLUMP&quot;,
-    18: &quot;LIGHT&quot;,
-    19: &quot;UNICODE_STRING&quot;,
-    20: &quot;ATOMIC&quot;,
-    21: &quot;TEXTURE_NATIVE&quot;,
-    22: &quot;TEXTURE_DICTIONARY&quot;,
-    23: &quot;ANIMATION_DATABASE&quot;,
-    24: &quot;IMAGE&quot;,
-    25: &quot;SKIN_ANIMATION&quot;,
-    26: &quot;GEOMETRY_LIST&quot;,
-    27: &quot;ANIM_ANIMATION&quot;,
-    28: &quot;TEAM&quot;,
-    29: &quot;CROWD&quot;,
-    30: &quot;DELTA_MORPH_ANIMATION&quot;,
-    31: &quot;RIGHT_TO_RENDER&quot;,
-    32: &quot;MULTITEXTURE_EFFECT_NATIVE&quot;,
-    33: &quot;MULTITEXTURE_EFFECT_DICTIONARY&quot;,
-    34: &quot;TEAM_DICTIONARY&quot;,
-    35: &quot;PLATFORM_INDEPENDENT_TEXTURE_DICTIONARY&quot;,
-    36: &quot;TABLE_OF_CONTENTS&quot;,
-    37: &quot;PARTICLE_STANDARD_GLOBAL_DATA&quot;,
-    38: &quot;ALTPIPE&quot;,
-    39: &quot;PLATFORM_INDEPENDENT_PEDS&quot;,
-    40: &quot;PATCH_MESH&quot;,
-    41: &quot;CHUNK_GROUP_START&quot;,
-    42: &quot;CHUNK_GROUP_END&quot;,
-    43: &quot;UV_ANIMATION_DICTIONARY&quot;,
-    44: &quot;COLL_TREE&quot;,
-    257: &quot;METRICS_PLG&quot;,
-    258: &quot;SPLINE_PLG&quot;,
-    259: &quot;STEREO_PLG&quot;,
-    260: &quot;VRML_PLG&quot;,
-    261: &quot;MORPH_PLG&quot;,
-    262: &quot;PVS_PLG&quot;,
-    263: &quot;MEMORY_LEAK_PLG&quot;,
-    264: &quot;ANIMATION_PLG&quot;,
-    265: &quot;GLOSS_PLG&quot;,
-    266: &quot;LOGO_PLG&quot;,
-    267: &quot;MEMORY_INFO_PLG&quot;,
-    268: &quot;RANDOM_PLG&quot;,
-    269: &quot;PNG_IMAGE_PLG&quot;,
-    270: &quot;BONE_PLG&quot;,
-    271: &quot;VRML_ANIM_PLG&quot;,
-    272: &quot;SKY_MIPMAP_VAL&quot;,
-    273: &quot;MRM_PLG&quot;,
-    274: &quot;LOD_ATOMIC_PLG&quot;,
-    275: &quot;ME_PLG&quot;,
-    276: &quot;LIGHTMAP_PLG&quot;,
-    277: &quot;REFINE_PLG&quot;,
-    278: &quot;SKIN_PLG&quot;,
-    279: &quot;LABEL_PLG&quot;,
-    280: &quot;PARTICLES_PLG&quot;,
-    281: &quot;GEOMTX_PLG&quot;,
-    282: &quot;SYNTH_CORE_PLG&quot;,
-    283: &quot;STQPP_PLG&quot;,
-    284: &quot;PART_PP_PLG&quot;,
-    285: &quot;COLLISION_PLG&quot;,
-    286: &quot;HANIM_PLG&quot;,
-    287: &quot;USER_DATA_PLG&quot;,
-    288: &quot;MATERIAL_EFFECTS_PLG&quot;,
-    289: &quot;PARTICLE_SYSTEM_PLG&quot;,
-    290: &quot;DELTA_MORPH_PLG&quot;,
-    291: &quot;PATCH_PLG&quot;,
-    292: &quot;TEAM_PLG&quot;,
-    293: &quot;CROWD_PP_PLG&quot;,
-    294: &quot;MIP_SPLIT_PLG&quot;,
-    295: &quot;ANISOTROPY_PLG&quot;,
-    297: &quot;GCN_MATERIAL_PLG&quot;,
-    298: &quot;GEOMETRIC_PVS_PLG&quot;,
-    299: &quot;XBOX_MATERIAL_PLG&quot;,
-    300: &quot;MULTI_TEXTURE_PLG&quot;,
-    301: &quot;CHAIN_PLG&quot;,
-    302: &quot;TOON_PLG&quot;,
-    303: &quot;PTANK_PLG&quot;,
-    304: &quot;PARTICLE_STANDARD_PLG&quot;,
-    305: &quot;PDS_PLG&quot;,
-    306: &quot;PRTADV_PLG&quot;,
-    307: &quot;NORMAL_MAP_PLG&quot;,
-    308: &quot;ADC_PLG&quot;,
-    309: &quot;UV_ANIMATION_PLG&quot;,
-    384: &quot;CHARACTER_SET_PLG&quot;,
-    385: &quot;NOHS_WORLD_PLG&quot;,
-    386: &quot;IMPORT_UTIL_PLG&quot;,
-    387: &quot;SLERP_PLG&quot;,
-    388: &quot;OPTIM_PLG&quot;,
-    389: &quot;TL_WORLD_PLG&quot;,
-    390: &quot;DATABASE_PLG&quot;,
-    391: &quot;RAYTRACE_PLG&quot;,
-    392: &quot;RAY_PLG&quot;,
-    393: &quot;LIBRARY_PLG&quot;,
-    400: &quot;PLG_2D&quot;,
-    401: &quot;TILE_RENDER_PLG&quot;,
-    402: &quot;JPEG_IMAGE_PLG&quot;,
-    403: &quot;TGA_IMAGE_PLG&quot;,
-    404: &quot;GIF_IMAGE_PLG&quot;,
-    405: &quot;QUAT_PLG&quot;,
-    406: &quot;SPLINE_PVS_PLG&quot;,
-    407: &quot;MIPMAP_PLG&quot;,
-    408: &quot;MIPMAPK_PLG&quot;,
-    409: &quot;FONT_2D&quot;,
-    410: &quot;INTERSECTION_PLG&quot;,
-    411: &quot;TIFF_IMAGE_PLG&quot;,
-    412: &quot;PICK_PLG&quot;,
-    413: &quot;BMP_IMAGE_PLG&quot;,
-    414: &quot;RAS_IMAGE_PLG&quot;,
-    415: &quot;SKIN_FX_PLG&quot;,
-    416: &quot;VCAT_PLG&quot;,
-    417: &quot;PATH_2D&quot;,
-    418: &quot;BRUSH_2D&quot;,
-    419: &quot;OBJECT_2D&quot;,
-    420: &quot;SHAPE_2D&quot;,
-    421: &quot;SCENE_2D&quot;,
-    422: &quot;PICK_REGION_2D&quot;,
-    423: &quot;OBJECT_STRING_2D&quot;,
-    424: &quot;ANIMATION_PLG_2D&quot;,
-    425: &quot;ANIMATION_2D&quot;,
-    432: &quot;KEYFRAME_2D&quot;,
-    433: &quot;MAESTRO_2D&quot;,
-    434: &quot;BARYCENTRIC&quot;,
-    435: &quot;PLATFORM_INDEPENDENT_TEXTURE_DICTIONARY_TK&quot;,
-    436: &quot;TOC_TK&quot;,
-    437: &quot;TPL_TK&quot;,
-    438: &quot;ALTPIPE_TK&quot;,
-    439: &quot;ANIMATION_TK&quot;,
-    440: &quot;SKIN_SPLIT_TOOKIT&quot;,
-    441: &quot;COMPRESSED_KEY_TK&quot;,
-    442: &quot;GEOMETRY_CONDITIONING_PLG&quot;,
-    443: &quot;WING_PLG&quot;,
-    444: &quot;GENERIC_PIPELINE_TK&quot;,
-    445: &quot;LIGHTMAP_CONVERSION_TK&quot;,
-    446: &quot;FILESYSTEM_PLG&quot;,
-    447: &quot;DICTIONARY_TK&quot;,
-    448: &quot;UV_ANIMATION_LINEAR&quot;,
-    449: &quot;UV_ANIMATION_PARAMETER&quot;,
-    1294: &quot;BIN_MESH_PLG&quot;,
-    1296: &quot;NATIVE_DATA_PLG&quot;,
-    61982: &quot;ZMODELER_LOCK&quot;,
-    39055872: &quot;ATOMIC_VISIBILITY_DISTANCE&quot;,
-    39055873: &quot;CLUMP_VISIBILITY_DISTANCE&quot;,
-    39055874: &quot;FRAME_VISIBILITY_DISTANCE&quot;,
-    39056115: &quot;PIPELINE_SET&quot;,
-    39056116: &quot;UNUSED_5&quot;,
-    39056117: &quot;TEXDICTIONARY_LINK&quot;,
-    39056118: &quot;SPECULAR_MATERIAL&quot;,
-    39056119: &quot;UNUSED_8&quot;,
-    39056120: &quot;EFFECT_2D&quot;,
-    39056121: &quot;EXTRA_VERT_COLOUR&quot;,
-    39056122: &quot;COLLISION_MODEL&quot;,
-    39056123: &quot;GTA_HANIM&quot;,
-    39056124: &quot;REFLECTION_MATERIAL&quot;,
-    39056125: &quot;BREAKABLE&quot;,
-    39056126: &quot;FRAME&quot;,
-    39056127: &quot;UNUSED_16&quot;,
-  });
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;STRUCT&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;STRING&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;EXTENSION&quot;</span><span class="p">,</span>
+    <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;CAMERA&quot;</span><span class="p">,</span>
+    <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;TEXTURE&quot;</span><span class="p">,</span>
+    <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;MATERIAL&quot;</span><span class="p">,</span>
+    <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;MATERIAL_LIST&quot;</span><span class="p">,</span>
+    <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;ATOMIC_SECTION&quot;</span><span class="p">,</span>
+    <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;PLANE_SECTION&quot;</span><span class="p">,</span>
+    <span class="mi">11</span><span class="o">:</span> <span class="s2">&quot;WORLD&quot;</span><span class="p">,</span>
+    <span class="mi">12</span><span class="o">:</span> <span class="s2">&quot;SPLINE&quot;</span><span class="p">,</span>
+    <span class="mi">13</span><span class="o">:</span> <span class="s2">&quot;MATRIX&quot;</span><span class="p">,</span>
+    <span class="mi">14</span><span class="o">:</span> <span class="s2">&quot;FRAME_LIST&quot;</span><span class="p">,</span>
+    <span class="mi">15</span><span class="o">:</span> <span class="s2">&quot;GEOMETRY&quot;</span><span class="p">,</span>
+    <span class="mi">16</span><span class="o">:</span> <span class="s2">&quot;CLUMP&quot;</span><span class="p">,</span>
+    <span class="mi">18</span><span class="o">:</span> <span class="s2">&quot;LIGHT&quot;</span><span class="p">,</span>
+    <span class="mi">19</span><span class="o">:</span> <span class="s2">&quot;UNICODE_STRING&quot;</span><span class="p">,</span>
+    <span class="mi">20</span><span class="o">:</span> <span class="s2">&quot;ATOMIC&quot;</span><span class="p">,</span>
+    <span class="mi">21</span><span class="o">:</span> <span class="s2">&quot;TEXTURE_NATIVE&quot;</span><span class="p">,</span>
+    <span class="mi">22</span><span class="o">:</span> <span class="s2">&quot;TEXTURE_DICTIONARY&quot;</span><span class="p">,</span>
+    <span class="mi">23</span><span class="o">:</span> <span class="s2">&quot;ANIMATION_DATABASE&quot;</span><span class="p">,</span>
+    <span class="mi">24</span><span class="o">:</span> <span class="s2">&quot;IMAGE&quot;</span><span class="p">,</span>
+    <span class="mi">25</span><span class="o">:</span> <span class="s2">&quot;SKIN_ANIMATION&quot;</span><span class="p">,</span>
+    <span class="mi">26</span><span class="o">:</span> <span class="s2">&quot;GEOMETRY_LIST&quot;</span><span class="p">,</span>
+    <span class="mi">27</span><span class="o">:</span> <span class="s2">&quot;ANIM_ANIMATION&quot;</span><span class="p">,</span>
+    <span class="mi">28</span><span class="o">:</span> <span class="s2">&quot;TEAM&quot;</span><span class="p">,</span>
+    <span class="mi">29</span><span class="o">:</span> <span class="s2">&quot;CROWD&quot;</span><span class="p">,</span>
+    <span class="mi">30</span><span class="o">:</span> <span class="s2">&quot;DELTA_MORPH_ANIMATION&quot;</span><span class="p">,</span>
+    <span class="mi">31</span><span class="o">:</span> <span class="s2">&quot;RIGHT_TO_RENDER&quot;</span><span class="p">,</span>
+    <span class="mi">32</span><span class="o">:</span> <span class="s2">&quot;MULTITEXTURE_EFFECT_NATIVE&quot;</span><span class="p">,</span>
+    <span class="mi">33</span><span class="o">:</span> <span class="s2">&quot;MULTITEXTURE_EFFECT_DICTIONARY&quot;</span><span class="p">,</span>
+    <span class="mi">34</span><span class="o">:</span> <span class="s2">&quot;TEAM_DICTIONARY&quot;</span><span class="p">,</span>
+    <span class="mi">35</span><span class="o">:</span> <span class="s2">&quot;PLATFORM_INDEPENDENT_TEXTURE_DICTIONARY&quot;</span><span class="p">,</span>
+    <span class="mi">36</span><span class="o">:</span> <span class="s2">&quot;TABLE_OF_CONTENTS&quot;</span><span class="p">,</span>
+    <span class="mi">37</span><span class="o">:</span> <span class="s2">&quot;PARTICLE_STANDARD_GLOBAL_DATA&quot;</span><span class="p">,</span>
+    <span class="mi">38</span><span class="o">:</span> <span class="s2">&quot;ALTPIPE&quot;</span><span class="p">,</span>
+    <span class="mi">39</span><span class="o">:</span> <span class="s2">&quot;PLATFORM_INDEPENDENT_PEDS&quot;</span><span class="p">,</span>
+    <span class="mi">40</span><span class="o">:</span> <span class="s2">&quot;PATCH_MESH&quot;</span><span class="p">,</span>
+    <span class="mi">41</span><span class="o">:</span> <span class="s2">&quot;CHUNK_GROUP_START&quot;</span><span class="p">,</span>
+    <span class="mi">42</span><span class="o">:</span> <span class="s2">&quot;CHUNK_GROUP_END&quot;</span><span class="p">,</span>
+    <span class="mi">43</span><span class="o">:</span> <span class="s2">&quot;UV_ANIMATION_DICTIONARY&quot;</span><span class="p">,</span>
+    <span class="mi">44</span><span class="o">:</span> <span class="s2">&quot;COLL_TREE&quot;</span><span class="p">,</span>
+    <span class="mi">257</span><span class="o">:</span> <span class="s2">&quot;METRICS_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">258</span><span class="o">:</span> <span class="s2">&quot;SPLINE_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">259</span><span class="o">:</span> <span class="s2">&quot;STEREO_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">260</span><span class="o">:</span> <span class="s2">&quot;VRML_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">261</span><span class="o">:</span> <span class="s2">&quot;MORPH_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">262</span><span class="o">:</span> <span class="s2">&quot;PVS_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">263</span><span class="o">:</span> <span class="s2">&quot;MEMORY_LEAK_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">264</span><span class="o">:</span> <span class="s2">&quot;ANIMATION_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">265</span><span class="o">:</span> <span class="s2">&quot;GLOSS_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">266</span><span class="o">:</span> <span class="s2">&quot;LOGO_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">267</span><span class="o">:</span> <span class="s2">&quot;MEMORY_INFO_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">268</span><span class="o">:</span> <span class="s2">&quot;RANDOM_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">269</span><span class="o">:</span> <span class="s2">&quot;PNG_IMAGE_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">270</span><span class="o">:</span> <span class="s2">&quot;BONE_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">271</span><span class="o">:</span> <span class="s2">&quot;VRML_ANIM_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">272</span><span class="o">:</span> <span class="s2">&quot;SKY_MIPMAP_VAL&quot;</span><span class="p">,</span>
+    <span class="mi">273</span><span class="o">:</span> <span class="s2">&quot;MRM_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">274</span><span class="o">:</span> <span class="s2">&quot;LOD_ATOMIC_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">275</span><span class="o">:</span> <span class="s2">&quot;ME_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">276</span><span class="o">:</span> <span class="s2">&quot;LIGHTMAP_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">277</span><span class="o">:</span> <span class="s2">&quot;REFINE_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">278</span><span class="o">:</span> <span class="s2">&quot;SKIN_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">279</span><span class="o">:</span> <span class="s2">&quot;LABEL_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">280</span><span class="o">:</span> <span class="s2">&quot;PARTICLES_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">281</span><span class="o">:</span> <span class="s2">&quot;GEOMTX_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">282</span><span class="o">:</span> <span class="s2">&quot;SYNTH_CORE_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">283</span><span class="o">:</span> <span class="s2">&quot;STQPP_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">284</span><span class="o">:</span> <span class="s2">&quot;PART_PP_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">285</span><span class="o">:</span> <span class="s2">&quot;COLLISION_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">286</span><span class="o">:</span> <span class="s2">&quot;HANIM_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">287</span><span class="o">:</span> <span class="s2">&quot;USER_DATA_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">288</span><span class="o">:</span> <span class="s2">&quot;MATERIAL_EFFECTS_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">289</span><span class="o">:</span> <span class="s2">&quot;PARTICLE_SYSTEM_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">290</span><span class="o">:</span> <span class="s2">&quot;DELTA_MORPH_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">291</span><span class="o">:</span> <span class="s2">&quot;PATCH_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">292</span><span class="o">:</span> <span class="s2">&quot;TEAM_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">293</span><span class="o">:</span> <span class="s2">&quot;CROWD_PP_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">294</span><span class="o">:</span> <span class="s2">&quot;MIP_SPLIT_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">295</span><span class="o">:</span> <span class="s2">&quot;ANISOTROPY_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">297</span><span class="o">:</span> <span class="s2">&quot;GCN_MATERIAL_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">298</span><span class="o">:</span> <span class="s2">&quot;GEOMETRIC_PVS_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">299</span><span class="o">:</span> <span class="s2">&quot;XBOX_MATERIAL_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">300</span><span class="o">:</span> <span class="s2">&quot;MULTI_TEXTURE_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">301</span><span class="o">:</span> <span class="s2">&quot;CHAIN_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">302</span><span class="o">:</span> <span class="s2">&quot;TOON_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">303</span><span class="o">:</span> <span class="s2">&quot;PTANK_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">304</span><span class="o">:</span> <span class="s2">&quot;PARTICLE_STANDARD_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">305</span><span class="o">:</span> <span class="s2">&quot;PDS_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">306</span><span class="o">:</span> <span class="s2">&quot;PRTADV_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">307</span><span class="o">:</span> <span class="s2">&quot;NORMAL_MAP_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">308</span><span class="o">:</span> <span class="s2">&quot;ADC_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">309</span><span class="o">:</span> <span class="s2">&quot;UV_ANIMATION_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">384</span><span class="o">:</span> <span class="s2">&quot;CHARACTER_SET_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">385</span><span class="o">:</span> <span class="s2">&quot;NOHS_WORLD_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">386</span><span class="o">:</span> <span class="s2">&quot;IMPORT_UTIL_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">387</span><span class="o">:</span> <span class="s2">&quot;SLERP_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">388</span><span class="o">:</span> <span class="s2">&quot;OPTIM_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">389</span><span class="o">:</span> <span class="s2">&quot;TL_WORLD_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">390</span><span class="o">:</span> <span class="s2">&quot;DATABASE_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">391</span><span class="o">:</span> <span class="s2">&quot;RAYTRACE_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">392</span><span class="o">:</span> <span class="s2">&quot;RAY_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">393</span><span class="o">:</span> <span class="s2">&quot;LIBRARY_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">400</span><span class="o">:</span> <span class="s2">&quot;PLG_2D&quot;</span><span class="p">,</span>
+    <span class="mi">401</span><span class="o">:</span> <span class="s2">&quot;TILE_RENDER_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">402</span><span class="o">:</span> <span class="s2">&quot;JPEG_IMAGE_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">403</span><span class="o">:</span> <span class="s2">&quot;TGA_IMAGE_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">404</span><span class="o">:</span> <span class="s2">&quot;GIF_IMAGE_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">405</span><span class="o">:</span> <span class="s2">&quot;QUAT_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">406</span><span class="o">:</span> <span class="s2">&quot;SPLINE_PVS_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">407</span><span class="o">:</span> <span class="s2">&quot;MIPMAP_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">408</span><span class="o">:</span> <span class="s2">&quot;MIPMAPK_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">409</span><span class="o">:</span> <span class="s2">&quot;FONT_2D&quot;</span><span class="p">,</span>
+    <span class="mi">410</span><span class="o">:</span> <span class="s2">&quot;INTERSECTION_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">411</span><span class="o">:</span> <span class="s2">&quot;TIFF_IMAGE_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">412</span><span class="o">:</span> <span class="s2">&quot;PICK_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">413</span><span class="o">:</span> <span class="s2">&quot;BMP_IMAGE_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">414</span><span class="o">:</span> <span class="s2">&quot;RAS_IMAGE_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">415</span><span class="o">:</span> <span class="s2">&quot;SKIN_FX_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">416</span><span class="o">:</span> <span class="s2">&quot;VCAT_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">417</span><span class="o">:</span> <span class="s2">&quot;PATH_2D&quot;</span><span class="p">,</span>
+    <span class="mi">418</span><span class="o">:</span> <span class="s2">&quot;BRUSH_2D&quot;</span><span class="p">,</span>
+    <span class="mi">419</span><span class="o">:</span> <span class="s2">&quot;OBJECT_2D&quot;</span><span class="p">,</span>
+    <span class="mi">420</span><span class="o">:</span> <span class="s2">&quot;SHAPE_2D&quot;</span><span class="p">,</span>
+    <span class="mi">421</span><span class="o">:</span> <span class="s2">&quot;SCENE_2D&quot;</span><span class="p">,</span>
+    <span class="mi">422</span><span class="o">:</span> <span class="s2">&quot;PICK_REGION_2D&quot;</span><span class="p">,</span>
+    <span class="mi">423</span><span class="o">:</span> <span class="s2">&quot;OBJECT_STRING_2D&quot;</span><span class="p">,</span>
+    <span class="mi">424</span><span class="o">:</span> <span class="s2">&quot;ANIMATION_PLG_2D&quot;</span><span class="p">,</span>
+    <span class="mi">425</span><span class="o">:</span> <span class="s2">&quot;ANIMATION_2D&quot;</span><span class="p">,</span>
+    <span class="mi">432</span><span class="o">:</span> <span class="s2">&quot;KEYFRAME_2D&quot;</span><span class="p">,</span>
+    <span class="mi">433</span><span class="o">:</span> <span class="s2">&quot;MAESTRO_2D&quot;</span><span class="p">,</span>
+    <span class="mi">434</span><span class="o">:</span> <span class="s2">&quot;BARYCENTRIC&quot;</span><span class="p">,</span>
+    <span class="mi">435</span><span class="o">:</span> <span class="s2">&quot;PLATFORM_INDEPENDENT_TEXTURE_DICTIONARY_TK&quot;</span><span class="p">,</span>
+    <span class="mi">436</span><span class="o">:</span> <span class="s2">&quot;TOC_TK&quot;</span><span class="p">,</span>
+    <span class="mi">437</span><span class="o">:</span> <span class="s2">&quot;TPL_TK&quot;</span><span class="p">,</span>
+    <span class="mi">438</span><span class="o">:</span> <span class="s2">&quot;ALTPIPE_TK&quot;</span><span class="p">,</span>
+    <span class="mi">439</span><span class="o">:</span> <span class="s2">&quot;ANIMATION_TK&quot;</span><span class="p">,</span>
+    <span class="mi">440</span><span class="o">:</span> <span class="s2">&quot;SKIN_SPLIT_TOOKIT&quot;</span><span class="p">,</span>
+    <span class="mi">441</span><span class="o">:</span> <span class="s2">&quot;COMPRESSED_KEY_TK&quot;</span><span class="p">,</span>
+    <span class="mi">442</span><span class="o">:</span> <span class="s2">&quot;GEOMETRY_CONDITIONING_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">443</span><span class="o">:</span> <span class="s2">&quot;WING_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">444</span><span class="o">:</span> <span class="s2">&quot;GENERIC_PIPELINE_TK&quot;</span><span class="p">,</span>
+    <span class="mi">445</span><span class="o">:</span> <span class="s2">&quot;LIGHTMAP_CONVERSION_TK&quot;</span><span class="p">,</span>
+    <span class="mi">446</span><span class="o">:</span> <span class="s2">&quot;FILESYSTEM_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">447</span><span class="o">:</span> <span class="s2">&quot;DICTIONARY_TK&quot;</span><span class="p">,</span>
+    <span class="mi">448</span><span class="o">:</span> <span class="s2">&quot;UV_ANIMATION_LINEAR&quot;</span><span class="p">,</span>
+    <span class="mi">449</span><span class="o">:</span> <span class="s2">&quot;UV_ANIMATION_PARAMETER&quot;</span><span class="p">,</span>
+    <span class="mi">1294</span><span class="o">:</span> <span class="s2">&quot;BIN_MESH_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">1296</span><span class="o">:</span> <span class="s2">&quot;NATIVE_DATA_PLG&quot;</span><span class="p">,</span>
+    <span class="mi">61982</span><span class="o">:</span> <span class="s2">&quot;ZMODELER_LOCK&quot;</span><span class="p">,</span>
+    <span class="mi">39055872</span><span class="o">:</span> <span class="s2">&quot;ATOMIC_VISIBILITY_DISTANCE&quot;</span><span class="p">,</span>
+    <span class="mi">39055873</span><span class="o">:</span> <span class="s2">&quot;CLUMP_VISIBILITY_DISTANCE&quot;</span><span class="p">,</span>
+    <span class="mi">39055874</span><span class="o">:</span> <span class="s2">&quot;FRAME_VISIBILITY_DISTANCE&quot;</span><span class="p">,</span>
+    <span class="mi">39056115</span><span class="o">:</span> <span class="s2">&quot;PIPELINE_SET&quot;</span><span class="p">,</span>
+    <span class="mi">39056116</span><span class="o">:</span> <span class="s2">&quot;UNUSED_5&quot;</span><span class="p">,</span>
+    <span class="mi">39056117</span><span class="o">:</span> <span class="s2">&quot;TEXDICTIONARY_LINK&quot;</span><span class="p">,</span>
+    <span class="mi">39056118</span><span class="o">:</span> <span class="s2">&quot;SPECULAR_MATERIAL&quot;</span><span class="p">,</span>
+    <span class="mi">39056119</span><span class="o">:</span> <span class="s2">&quot;UNUSED_8&quot;</span><span class="p">,</span>
+    <span class="mi">39056120</span><span class="o">:</span> <span class="s2">&quot;EFFECT_2D&quot;</span><span class="p">,</span>
+    <span class="mi">39056121</span><span class="o">:</span> <span class="s2">&quot;EXTRA_VERT_COLOUR&quot;</span><span class="p">,</span>
+    <span class="mi">39056122</span><span class="o">:</span> <span class="s2">&quot;COLLISION_MODEL&quot;</span><span class="p">,</span>
+    <span class="mi">39056123</span><span class="o">:</span> <span class="s2">&quot;GTA_HANIM&quot;</span><span class="p">,</span>
+    <span class="mi">39056124</span><span class="o">:</span> <span class="s2">&quot;REFLECTION_MATERIAL&quot;</span><span class="p">,</span>
+    <span class="mi">39056125</span><span class="o">:</span> <span class="s2">&quot;BREAKABLE&quot;</span><span class="p">,</span>
+    <span class="mi">39056126</span><span class="o">:</span> <span class="s2">&quot;FRAME&quot;</span><span class="p">,</span>
+    <span class="mi">39056127</span><span class="o">:</span> <span class="s2">&quot;UNUSED_16&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
 
-  function RenderwareBinaryStream(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
+  <span class="kd">function</span> <span class="nx">RenderwareBinaryStream</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-    this._read();
-  }
-  RenderwareBinaryStream.prototype._read = function() {
-    this.code = this._io.readU4le();
-    this.size = this._io.readU4le();
-    this.libraryIdStamp = this._io.readU4le();
-    switch (this.code) {
-    case RenderwareBinaryStream.Sections.TEXTURE_DICTIONARY:
-      this._raw_body = this._io.readBytes(this.size);
-      var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new ListWithHeader(_io__raw_body, this, this._root);
-      break;
-    case RenderwareBinaryStream.Sections.GEOMETRY_LIST:
-      this._raw_body = this._io.readBytes(this.size);
-      var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new ListWithHeader(_io__raw_body, this, this._root);
-      break;
-    case RenderwareBinaryStream.Sections.CLUMP:
-      this._raw_body = this._io.readBytes(this.size);
-      var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new ListWithHeader(_io__raw_body, this, this._root);
-      break;
-    case RenderwareBinaryStream.Sections.TEXTURE_NATIVE:
-      this._raw_body = this._io.readBytes(this.size);
-      var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new ListWithHeader(_io__raw_body, this, this._root);
-      break;
-    case RenderwareBinaryStream.Sections.FRAME_LIST:
-      this._raw_body = this._io.readBytes(this.size);
-      var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new ListWithHeader(_io__raw_body, this, this._root);
-      break;
-    case RenderwareBinaryStream.Sections.GEOMETRY:
-      this._raw_body = this._io.readBytes(this.size);
-      var _io__raw_body = new KaitaiStream(this._raw_body);
-      this.body = new ListWithHeader(_io__raw_body, this, this._root);
-      break;
-    default:
-      this.body = this._io.readBytes(this.size);
-      break;
-    }
-  }
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">code</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">libraryIdStamp</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">code</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Sections</span><span class="p">.</span><span class="nx">TEXTURE_DICTIONARY</span><span class="o">:</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ListWithHeader</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Sections</span><span class="p">.</span><span class="nx">GEOMETRY_LIST</span><span class="o">:</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ListWithHeader</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Sections</span><span class="p">.</span><span class="nx">CLUMP</span><span class="o">:</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ListWithHeader</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Sections</span><span class="p">.</span><span class="nx">TEXTURE_NATIVE</span><span class="o">:</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ListWithHeader</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Sections</span><span class="p">.</span><span class="nx">FRAME_LIST</span><span class="o">:</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ListWithHeader</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Sections</span><span class="p">.</span><span class="nx">GEOMETRY</span><span class="o">:</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+      <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ListWithHeader</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="k">default</span><span class="o">:</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">);</span>
+      <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
 
-  /**
-   * @see {@link https://www.gtamodding.com/wiki/RpClump|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.gtamodding.com/wiki/RpClump|Source}</span>
+<span class="cm">   */</span>
 
-  var StructClump = RenderwareBinaryStream.StructClump = (function() {
-    function StructClump(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">StructClump</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">StructClump</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">StructClump</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    StructClump.prototype._read = function() {
-      this.numAtomics = this._io.readU4le();
-      if (this._parent.version &gt;= 208896) {
-        this.numLights = this._io.readU4le();
-      }
-      if (this._parent.version &gt;= 208896) {
-        this.numCameras = this._io.readU4le();
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">StructClump</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numAtomics</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">version</span> <span class="o">&gt;=</span> <span class="mi">208896</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">numLights</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">version</span> <span class="o">&gt;=</span> <span class="mi">208896</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">numCameras</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return StructClump;
-  })();
+    <span class="k">return</span> <span class="nx">StructClump</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * @see {@link https://www.gtamodding.com/wiki/RpGeometry|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.gtamodding.com/wiki/RpGeometry|Source}</span>
+<span class="cm">   */</span>
 
-  var StructGeometry = RenderwareBinaryStream.StructGeometry = (function() {
-    function StructGeometry(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">StructGeometry</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">StructGeometry</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">StructGeometry</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    StructGeometry.prototype._read = function() {
-      this.format = this._io.readU4le();
-      this.numTriangles = this._io.readU4le();
-      this.numVertices = this._io.readU4le();
-      this.numMorphTargets = this._io.readU4le();
-      if (this._parent.version &lt; 212992) {
-        this.surfProp = new SurfaceProperties(this._io, this, this._root);
-      }
-      if (!(this.isNative)) {
-        this.geometry = new GeometryNonNative(this._io, this, this._root);
-      }
-      this.morphTargets = new Array(this.numMorphTargets);
-      for (var i = 0; i &lt; this.numMorphTargets; i++) {
-        this.morphTargets[i] = new MorphTarget(this._io, this, this._root);
-      }
-    }
-    Object.defineProperty(StructGeometry.prototype, &#39;isTextured&#39;, {
-      get: function() {
-        if (this._m_isTextured !== undefined)
-          return this._m_isTextured;
-        this._m_isTextured = (this.format &amp; 4) != 0;
-        return this._m_isTextured;
-      }
-    });
-    Object.defineProperty(StructGeometry.prototype, &#39;isPrelit&#39;, {
-      get: function() {
-        if (this._m_isPrelit !== undefined)
-          return this._m_isPrelit;
-        this._m_isPrelit = (this.format &amp; 8) != 0;
-        return this._m_isPrelit;
-      }
-    });
-    Object.defineProperty(StructGeometry.prototype, &#39;isTextured2&#39;, {
-      get: function() {
-        if (this._m_isTextured2 !== undefined)
-          return this._m_isTextured2;
-        this._m_isTextured2 = (this.format &amp; 128) != 0;
-        return this._m_isTextured2;
-      }
-    });
-    Object.defineProperty(StructGeometry.prototype, &#39;isNative&#39;, {
-      get: function() {
-        if (this._m_isNative !== undefined)
-          return this._m_isNative;
-        this._m_isNative = (this.format &amp; 16777216) != 0;
-        return this._m_isNative;
-      }
-    });
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">StructGeometry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">format</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numTriangles</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numVertices</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numMorphTargets</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">version</span> <span class="o">&lt;</span> <span class="mi">212992</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">surfProp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SurfaceProperties</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isNative</span><span class="p">))</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">geometry</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GeometryNonNative</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">morphTargets</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numMorphTargets</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numMorphTargets</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">morphTargets</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MorphTarget</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">StructGeometry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isTextured&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isTextured</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isTextured</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isTextured</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">format</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isTextured</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">StructGeometry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isPrelit&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isPrelit</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isPrelit</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isPrelit</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">format</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isPrelit</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">StructGeometry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isTextured2&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isTextured2</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isTextured2</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isTextured2</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">format</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isTextured2</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">StructGeometry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isNative&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isNative</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isNative</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isNative</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">format</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isNative</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    return StructGeometry;
-  })();
+    <span class="k">return</span> <span class="nx">StructGeometry</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var GeometryNonNative = RenderwareBinaryStream.GeometryNonNative = (function() {
-    function GeometryNonNative(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">GeometryNonNative</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">GeometryNonNative</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">GeometryNonNative</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    GeometryNonNative.prototype._read = function() {
-      if (this._parent.isPrelit) {
-        this.prelitColors = new Array(this._parent.numVertices);
-        for (var i = 0; i &lt; this._parent.numVertices; i++) {
-          this.prelitColors[i] = new Rgba(this._io, this, this._root);
-        }
-      }
-      if ( ((this._parent.isTextured) || (this._parent.isTextured2)) ) {
-        this.texCoords = new Array(this._parent.numVertices);
-        for (var i = 0; i &lt; this._parent.numVertices; i++) {
-          this.texCoords[i] = new TexCoord(this._io, this, this._root);
-        }
-      }
-      this.triangles = new Array(this._parent.numTriangles);
-      for (var i = 0; i &lt; this._parent.numTriangles; i++) {
-        this.triangles[i] = new Triangle(this._io, this, this._root);
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">GeometryNonNative</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">isPrelit</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">prelitColors</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">numVertices</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">numVertices</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">prelitColors</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Rgba</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">isTextured</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">isTextured2</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">texCoords</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">numVertices</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">numVertices</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">texCoords</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TexCoord</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">triangles</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">numTriangles</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">numTriangles</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">triangles</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Triangle</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return GeometryNonNative;
-  })();
+    <span class="k">return</span> <span class="nx">GeometryNonNative</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * @see {@link https://www.gtamodding.com/wiki/Geometry_List_(RW_Section)#Structure|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.gtamodding.com/wiki/Geometry_List_(RW_Section)#Structure|Source}</span>
+<span class="cm">   */</span>
 
-  var StructGeometryList = RenderwareBinaryStream.StructGeometryList = (function() {
-    function StructGeometryList(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">StructGeometryList</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">StructGeometryList</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">StructGeometryList</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    StructGeometryList.prototype._read = function() {
-      this.numGeometries = this._io.readU4le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">StructGeometryList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numGeometries</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return StructGeometryList;
-  })();
+    <span class="k">return</span> <span class="nx">StructGeometryList</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var Rgba = RenderwareBinaryStream.Rgba = (function() {
-    function Rgba(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Rgba</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Rgba</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Rgba</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Rgba.prototype._read = function() {
-      this.r = this._io.readU1();
-      this.g = this._io.readU1();
-      this.b = this._io.readU1();
-      this.a = this._io.readU1();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Rgba</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">r</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">g</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">b</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">a</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return Rgba;
-  })();
+    <span class="k">return</span> <span class="nx">Rgba</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var Sphere = RenderwareBinaryStream.Sphere = (function() {
-    function Sphere(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Sphere</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Sphere</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Sphere</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Sphere.prototype._read = function() {
-      this.x = this._io.readF4le();
-      this.y = this._io.readF4le();
-      this.z = this._io.readF4le();
-      this.radius = this._io.readF4le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Sphere</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readF4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readF4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readF4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">radius</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readF4le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return Sphere;
-  })();
+    <span class="k">return</span> <span class="nx">Sphere</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var MorphTarget = RenderwareBinaryStream.MorphTarget = (function() {
-    function MorphTarget(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">MorphTarget</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">MorphTarget</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">MorphTarget</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    MorphTarget.prototype._read = function() {
-      this.boundingSphere = new Sphere(this._io, this, this._root);
-      this.hasVertices = this._io.readU4le();
-      this.hasNormals = this._io.readU4le();
-      if (this.hasVertices != 0) {
-        this.vertices = new Array(this._parent.numVertices);
-        for (var i = 0; i &lt; this._parent.numVertices; i++) {
-          this.vertices[i] = new Vector3d(this._io, this, this._root);
-        }
-      }
-      if (this.hasNormals != 0) {
-        this.normals = new Array(this._parent.numVertices);
-        for (var i = 0; i &lt; this._parent.numVertices; i++) {
-          this.normals[i] = new Vector3d(this._io, this, this._root);
-        }
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">MorphTarget</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">boundingSphere</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Sphere</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">hasVertices</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">hasNormals</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">hasVertices</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">vertices</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">numVertices</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">numVertices</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">vertices</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vector3d</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">hasNormals</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">normals</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">numVertices</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">numVertices</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">normals</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vector3d</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return MorphTarget;
-  })();
+    <span class="k">return</span> <span class="nx">MorphTarget</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * @see {@link https://www.gtamodding.com/wiki/RpGeometry|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.gtamodding.com/wiki/RpGeometry|Source}</span>
+<span class="cm">   */</span>
 
-  var SurfaceProperties = RenderwareBinaryStream.SurfaceProperties = (function() {
-    function SurfaceProperties(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">SurfaceProperties</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">SurfaceProperties</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">SurfaceProperties</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    SurfaceProperties.prototype._read = function() {
-      this.ambient = this._io.readF4le();
-      this.specular = this._io.readF4le();
-      this.diffuse = this._io.readF4le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">SurfaceProperties</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">ambient</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readF4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">specular</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readF4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">diffuse</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readF4le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return SurfaceProperties;
-  })();
+    <span class="k">return</span> <span class="nx">SurfaceProperties</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * @see {@link https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure|Source}</span>
+<span class="cm">   */</span>
 
-  var StructFrameList = RenderwareBinaryStream.StructFrameList = (function() {
-    function StructFrameList(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">StructFrameList</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">StructFrameList</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">StructFrameList</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    StructFrameList.prototype._read = function() {
-      this.numFrames = this._io.readU4le();
-      this.frames = new Array(this.numFrames);
-      for (var i = 0; i &lt; this.numFrames; i++) {
-        this.frames[i] = new Frame(this._io, this, this._root);
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">StructFrameList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numFrames</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">frames</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numFrames</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numFrames</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">frames</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Frame</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return StructFrameList;
-  })();
+    <span class="k">return</span> <span class="nx">StructFrameList</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * @see {@link https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure|Source}</span>
+<span class="cm">   */</span>
 
-  var Matrix = RenderwareBinaryStream.Matrix = (function() {
-    function Matrix(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Matrix</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Matrix</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Matrix</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Matrix.prototype._read = function() {
-      this.entries = new Array(3);
-      for (var i = 0; i &lt; 3; i++) {
-        this.entries[i] = new Vector3d(this._io, this, this._root);
-      }
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Matrix</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vector3d</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
 
-    return Matrix;
-  })();
+    <span class="k">return</span> <span class="nx">Matrix</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * @see {@link https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure|Source}</span>
+<span class="cm">   */</span>
 
-  var Vector3d = RenderwareBinaryStream.Vector3d = (function() {
-    function Vector3d(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Vector3d</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Vector3d</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Vector3d</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Vector3d.prototype._read = function() {
-      this.x = this._io.readF4le();
-      this.y = this._io.readF4le();
-      this.z = this._io.readF4le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Vector3d</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readF4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readF4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">z</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readF4le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return Vector3d;
-  })();
+    <span class="k">return</span> <span class="nx">Vector3d</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * Typical structure used by many data types in RenderWare binary
-   * stream. Substream contains a list of binary stream entries,
-   * first entry always has type &quot;struct&quot; and carries some specific
-   * binary data it in, determined by the type of parent. All other
-   * entries, beside the first one, are normal, self-describing
-   * records.
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * Typical structure used by many data types in RenderWare binary</span>
+<span class="cm">   * stream. Substream contains a list of binary stream entries,</span>
+<span class="cm">   * first entry always has type &quot;struct&quot; and carries some specific</span>
+<span class="cm">   * binary data it in, determined by the type of parent. All other</span>
+<span class="cm">   * entries, beside the first one, are normal, self-describing</span>
+<span class="cm">   * records.</span>
+<span class="cm">   */</span>
 
-  var ListWithHeader = RenderwareBinaryStream.ListWithHeader = (function() {
-    function ListWithHeader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">ListWithHeader</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">ListWithHeader</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ListWithHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    ListWithHeader.prototype._read = function() {
-      this.code = this._io.ensureFixedContents([1, 0, 0, 0]);
-      this.headerSize = this._io.readU4le();
-      this.libraryIdStamp = this._io.readU4le();
-      switch (this._parent.code) {
-      case RenderwareBinaryStream.Sections.TEXTURE_DICTIONARY:
-        this._raw_header = this._io.readBytes(this.headerSize);
-        var _io__raw_header = new KaitaiStream(this._raw_header);
-        this.header = new StructTextureDictionary(_io__raw_header, this, this._root);
-        break;
-      case RenderwareBinaryStream.Sections.GEOMETRY_LIST:
-        this._raw_header = this._io.readBytes(this.headerSize);
-        var _io__raw_header = new KaitaiStream(this._raw_header);
-        this.header = new StructGeometryList(_io__raw_header, this, this._root);
-        break;
-      case RenderwareBinaryStream.Sections.CLUMP:
-        this._raw_header = this._io.readBytes(this.headerSize);
-        var _io__raw_header = new KaitaiStream(this._raw_header);
-        this.header = new StructClump(_io__raw_header, this, this._root);
-        break;
-      case RenderwareBinaryStream.Sections.FRAME_LIST:
-        this._raw_header = this._io.readBytes(this.headerSize);
-        var _io__raw_header = new KaitaiStream(this._raw_header);
-        this.header = new StructFrameList(_io__raw_header, this, this._root);
-        break;
-      case RenderwareBinaryStream.Sections.GEOMETRY:
-        this._raw_header = this._io.readBytes(this.headerSize);
-        var _io__raw_header = new KaitaiStream(this._raw_header);
-        this.header = new StructGeometry(_io__raw_header, this, this._root);
-        break;
-      default:
-        this.header = this._io.readBytes(this.headerSize);
-        break;
-      }
-      this.entries = [];
-      var i = 0;
-      while (!this._io.isEof()) {
-        this.entries.push(new RenderwareBinaryStream(this._io, this, null));
-        i++;
-      }
-    }
-    Object.defineProperty(ListWithHeader.prototype, &#39;version&#39;, {
-      get: function() {
-        if (this._m_version !== undefined)
-          return this._m_version;
-        this._m_version = ((this.libraryIdStamp &amp; 4294901760) != 0 ? ((((this.libraryIdStamp &gt;&gt;&gt; 14) &amp; 261888) + 196608) | ((this.libraryIdStamp &gt;&gt;&gt; 16) &amp; 63)) : (this.libraryIdStamp &lt;&lt; 8));
-        return this._m_version;
-      }
-    });
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ListWithHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">code</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">headerSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">libraryIdStamp</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">code</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Sections</span><span class="p">.</span><span class="nx">TEXTURE_DICTIONARY</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_header</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">headerSize</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_header</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StructTextureDictionary</span><span class="p">(</span><span class="nx">_io__raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Sections</span><span class="p">.</span><span class="nx">GEOMETRY_LIST</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_header</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">headerSize</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_header</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StructGeometryList</span><span class="p">(</span><span class="nx">_io__raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Sections</span><span class="p">.</span><span class="nx">CLUMP</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_header</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">headerSize</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_header</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StructClump</span><span class="p">(</span><span class="nx">_io__raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Sections</span><span class="p">.</span><span class="nx">FRAME_LIST</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_header</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">headerSize</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_header</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StructFrameList</span><span class="p">(</span><span class="nx">_io__raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Sections</span><span class="p">.</span><span class="nx">GEOMETRY</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_header</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">headerSize</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_header</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StructGeometry</span><span class="p">(</span><span class="nx">_io__raw_header</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">default</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">header</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">headerSize</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
+      <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+      <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">RenderwareBinaryStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">));</span>
+        <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">ListWithHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_version</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_version</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_version</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">libraryIdStamp</span> <span class="o">&amp;</span> <span class="mi">4294901760</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="p">((((</span><span class="k">this</span><span class="p">.</span><span class="nx">libraryIdStamp</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">14</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">261888</span><span class="p">)</span> <span class="o">+</span> <span class="mi">196608</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">libraryIdStamp</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">))</span> <span class="o">:</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">libraryIdStamp</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">));</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_version</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
 
-    return ListWithHeader;
-  })();
+    <span class="k">return</span> <span class="nx">ListWithHeader</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var Triangle = RenderwareBinaryStream.Triangle = (function() {
-    function Triangle(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Triangle</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Triangle</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Triangle</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Triangle.prototype._read = function() {
-      this.vertex2 = this._io.readU2le();
-      this.vertex1 = this._io.readU2le();
-      this.materialId = this._io.readU2le();
-      this.vertex3 = this._io.readU2le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Triangle</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">vertex2</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">vertex1</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">materialId</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">vertex3</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return Triangle;
-  })();
+    <span class="k">return</span> <span class="nx">Triangle</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  /**
-   * @see {@link https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure|Source}
-   */
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure|Source}</span>
+<span class="cm">   */</span>
 
-  var Frame = RenderwareBinaryStream.Frame = (function() {
-    function Frame(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">Frame</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">Frame</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Frame</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    Frame.prototype._read = function() {
-      this.rotationMatrix = new Matrix(this._io, this, this._root);
-      this.position = new Vector3d(this._io, this, this._root);
-      this.curFrameIdx = this._io.readS4le();
-      this.matrixCreationFlags = this._io.readU4le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Frame</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">rotationMatrix</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Matrix</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">position</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Vector3d</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">curFrameIdx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">matrixCreationFlags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return Frame;
-  })();
+    <span class="k">return</span> <span class="nx">Frame</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var TexCoord = RenderwareBinaryStream.TexCoord = (function() {
-    function TexCoord(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">TexCoord</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">TexCoord</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">TexCoord</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    TexCoord.prototype._read = function() {
-      this.u = this._io.readF4le();
-      this.v = this._io.readF4le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">TexCoord</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">u</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readF4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">v</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readF4le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return TexCoord;
-  })();
+    <span class="k">return</span> <span class="nx">TexCoord</span><span class="p">;</span>
+  <span class="p">})();</span>
 
-  var StructTextureDictionary = RenderwareBinaryStream.StructTextureDictionary = (function() {
-    function StructTextureDictionary(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
+  <span class="kd">var</span> <span class="nx">StructTextureDictionary</span> <span class="o">=</span> <span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">StructTextureDictionary</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">StructTextureDictionary</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
 
-      this._read();
-    }
-    StructTextureDictionary.prototype._read = function() {
-      this.numTextures = this._io.readU4le();
-    }
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">StructTextureDictionary</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numTextures</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    return StructTextureDictionary;
-  })();
-  Object.defineProperty(RenderwareBinaryStream.prototype, &#39;version&#39;, {
-    get: function() {
-      if (this._m_version !== undefined)
-        return this._m_version;
-      this._m_version = ((this.libraryIdStamp &amp; 4294901760) != 0 ? ((((this.libraryIdStamp &gt;&gt;&gt; 14) &amp; 261888) + 196608) | ((this.libraryIdStamp &gt;&gt;&gt; 16) &amp; 63)) : (this.libraryIdStamp &lt;&lt; 8));
-      return this._m_version;
-    }
-  });
+    <span class="k">return</span> <span class="nx">StructTextureDictionary</span><span class="p">;</span>
+  <span class="p">})();</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">RenderwareBinaryStream</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_version</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_version</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_version</span> <span class="o">=</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">libraryIdStamp</span> <span class="o">&amp;</span> <span class="mi">4294901760</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="p">((((</span><span class="k">this</span><span class="p">.</span><span class="nx">libraryIdStamp</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">14</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">261888</span><span class="p">)</span> <span class="o">+</span> <span class="mi">196608</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">libraryIdStamp</span> <span class="o">&gt;&gt;&gt;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">))</span> <span class="o">:</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">libraryIdStamp</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">));</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_version</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
 
-  return RenderwareBinaryStream;
-})();
-return RenderwareBinaryStream;
-}));
-</code></pre>
+  <span class="k">return</span> <span class="nx">RenderwareBinaryStream</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">RenderwareBinaryStream</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -1102,8 +1099,8 @@ return RenderwareBinaryStream;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

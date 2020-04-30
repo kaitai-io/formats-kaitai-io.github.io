@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -287,148 +284,148 @@ var data = new Stl(new KaitaiStream(someArray));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-using System.Collections.Generic;
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
 
-namespace Kaitai
-{
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
 
-    /// &lt;summary&gt;
-    /// STL files are used to represent simple 3D models, defined using
-    /// triangular 3D faces.
-    /// 
-    /// Initially it was introduced as native format for 3D Systems
-    /// Stereolithography CAD system, but due to its extreme simplicity, it
-    /// was adopted by a wide range of 3D modelling, CAD, rapid prototyping
-    /// and 3D printing applications as the simplest 3D model exchange
-    /// format.
-    /// 
-    /// STL is extremely bare-bones format: there are no complex headers, no
-    /// texture / color support, no units specifications, no distinct vertex
-    /// arrays. Whole model is specified as a collection of triangular
-    /// faces.
-    /// 
-    /// There are two versions of the format (text and binary), this spec
-    /// describes binary version.
-    /// &lt;/summary&gt;
-    public partial class Stl : KaitaiStruct
-    {
-        public static Stl FromFile(string fileName)
-        {
-            return new Stl(new KaitaiStream(fileName));
-        }
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// STL files are used to represent simple 3D models, defined using</span>
+    <span class="c1">/// triangular 3D faces.</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// Initially it was introduced as native format for 3D Systems</span>
+    <span class="c1">/// Stereolithography CAD system, but due to its extreme simplicity, it</span>
+    <span class="c1">/// was adopted by a wide range of 3D modelling, CAD, rapid prototyping</span>
+    <span class="c1">/// and 3D printing applications as the simplest 3D model exchange</span>
+    <span class="c1">/// format.</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// STL is extremely bare-bones format: there are no complex headers, no</span>
+    <span class="c1">/// texture / color support, no units specifications, no distinct vertex</span>
+    <span class="c1">/// arrays. Whole model is specified as a collection of triangular</span>
+    <span class="c1">/// faces.</span>
+    <span class="c1">/// </span>
+    <span class="c1">/// There are two versions of the format (text and binary), this spec</span>
+    <span class="c1">/// describes binary version.</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Stl</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">Stl</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">Stl</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Stl(KaitaiStream p__io, KaitaiStruct p__parent = null, Stl p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            _read();
-        }
-        private void _read()
-        {
-            _header = m_io.ReadBytes(80);
-            _numTriangles = m_io.ReadU4le();
-            _triangles = new List&lt;Triangle&gt;((int) (NumTriangles));
-            for (var i = 0; i &lt; NumTriangles; i++)
-            {
-                _triangles.Add(new Triangle(m_io, this, m_root));
-            }
-        }
+        <span class="k">public</span> <span class="nf">Stl</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Stl</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_header</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">80</span><span class="p">);</span>
+            <span class="n">_numTriangles</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+            <span class="n">_triangles</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Triangle</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">NumTriangles</span><span class="p">));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">NumTriangles</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+            <span class="p">{</span>
+                <span class="n">_triangles</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Triangle</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Each STL triangle is defined by its 3 points in 3D space and a
-        /// normal vector, which is generally used to determine where is
-        /// &amp;quot;inside&amp;quot; and &amp;quot;outside&amp;quot; of the model.
-        /// &lt;/summary&gt;
-        public partial class Triangle : KaitaiStruct
-        {
-            public static Triangle FromFile(string fileName)
-            {
-                return new Triangle(new KaitaiStream(fileName));
-            }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Each STL triangle is defined by its 3 points in 3D space and a</span>
+        <span class="c1">/// normal vector, which is generally used to determine where is</span>
+        <span class="c1">/// &amp;quot;inside&amp;quot; and &amp;quot;outside&amp;quot; of the model.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Triangle</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Triangle</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Triangle</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Triangle(KaitaiStream p__io, Stl p__parent = null, Stl p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _normal = new Vec3d(m_io, this, m_root);
-                _vertices = new List&lt;Vec3d&gt;((int) (3));
-                for (var i = 0; i &lt; 3; i++)
-                {
-                    _vertices.Add(new Vec3d(m_io, this, m_root));
-                }
-                _abr = m_io.ReadU2le();
-            }
-            private Vec3d _normal;
-            private List&lt;Vec3d&gt; _vertices;
-            private ushort _abr;
-            private Stl m_root;
-            private Stl m_parent;
-            public Vec3d Normal { get { return _normal; } }
-            public List&lt;Vec3d&gt; Vertices { get { return _vertices; } }
+            <span class="k">public</span> <span class="nf">Triangle</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Stl</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Stl</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_normal</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Vec3d</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="n">_vertices</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vec3d</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="m">3</span><span class="p">));</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="m">3</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+                <span class="p">{</span>
+                    <span class="n">_vertices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Vec3d</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="p">}</span>
+                <span class="n">_abr</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Vec3d</span> <span class="n">_normal</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vec3d</span><span class="p">&gt;</span> <span class="n">_vertices</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_abr</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Stl</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Stl</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">Vec3d</span> <span class="n">Normal</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_normal</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Vec3d</span><span class="p">&gt;</span> <span class="n">Vertices</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_vertices</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-            /// &lt;summary&gt;
-            /// In theory (per standard), it&#39;s &amp;quot;attribute byte count&amp;quot; with
-            /// no other details given on what &amp;quot;attribute&amp;quot; is and what
-            /// should be stored in this field.
-            /// 
-            /// In practice, software dealing with STL either expected to
-            /// see 0 here, or uses this 16-bit field per se to store
-            /// additional attributes (such as RGB color of a vertex or
-            /// color index).
-            /// &lt;/summary&gt;
-            public ushort Abr { get { return _abr; } }
-            public Stl M_Root { get { return m_root; } }
-            public Stl M_Parent { get { return m_parent; } }
-        }
-        public partial class Vec3d : KaitaiStruct
-        {
-            public static Vec3d FromFile(string fileName)
-            {
-                return new Vec3d(new KaitaiStream(fileName));
-            }
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// In theory (per standard), it&#39;s &amp;quot;attribute byte count&amp;quot; with</span>
+            <span class="c1">/// no other details given on what &amp;quot;attribute&amp;quot; is and what</span>
+            <span class="c1">/// should be stored in this field.</span>
+            <span class="c1">/// </span>
+            <span class="c1">/// In practice, software dealing with STL either expected to</span>
+            <span class="c1">/// see 0 here, or uses this 16-bit field per se to store</span>
+            <span class="c1">/// additional attributes (such as RGB color of a vertex or</span>
+            <span class="c1">/// color index).</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Abr</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_abr</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Stl</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Stl</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Vec3d</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">Vec3d</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">Vec3d</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public Vec3d(KaitaiStream p__io, Stl.Triangle p__parent = null, Stl p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _x = m_io.ReadF4le();
-                _y = m_io.ReadF4le();
-                _z = m_io.ReadF4le();
-            }
-            private float _x;
-            private float _y;
-            private float _z;
-            private Stl m_root;
-            private Stl.Triangle m_parent;
-            public float X { get { return _x; } }
-            public float Y { get { return _y; } }
-            public float Z { get { return _z; } }
-            public Stl M_Root { get { return m_root; } }
-            public Stl.Triangle M_Parent { get { return m_parent; } }
-        }
-        private byte[] _header;
-        private uint _numTriangles;
-        private List&lt;Triangle&gt; _triangles;
-        private Stl m_root;
-        private KaitaiStruct m_parent;
-        public byte[] Header { get { return _header; } }
-        public uint NumTriangles { get { return _numTriangles; } }
-        public List&lt;Triangle&gt; Triangles { get { return _triangles; } }
-        public Stl M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-    }
-}
-</code></pre>
+            <span class="k">public</span> <span class="nf">Vec3d</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Stl</span><span class="p">.</span><span class="n">Triangle</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Stl</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_x</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+                <span class="n">_y</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+                <span class="n">_z</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadF4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_x</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_y</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">float</span> <span class="n">_z</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Stl</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Stl</span><span class="p">.</span><span class="n">Triangle</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">X</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_x</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">Y</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_y</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">float</span> <span class="n">Z</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_z</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Stl</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Stl</span><span class="p">.</span><span class="n">Triangle</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_header</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numTriangles</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Triangle</span><span class="p">&gt;</span> <span class="n">_triangles</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">Stl</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Header</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_header</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumTriangles</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numTriangles</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Triangle</span><span class="p">&gt;</span> <span class="n">Triangles</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_triangles</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">Stl</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -455,8 +452,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

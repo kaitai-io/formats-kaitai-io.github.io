@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -214,330 +211,330 @@ section#format-index .row {
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-class MicrosoftCfb extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MicrosoftCfb $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">MicrosoftCfb</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MicrosoftCfb</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_header = new \MicrosoftCfb\CfbHeader($this-&gt;_io, $this, $this-&gt;_root);
-    }
-    protected $_m_sectorSize;
-    public function sectorSize() {
-        if ($this-&gt;_m_sectorSize !== null)
-            return $this-&gt;_m_sectorSize;
-        $this-&gt;_m_sectorSize = (1 &lt;&lt; $this-&gt;header()-&gt;sectorShift());
-        return $this-&gt;_m_sectorSize;
-    }
-    protected $_m_fat;
-    public function fat() {
-        if ($this-&gt;_m_fat !== null)
-            return $this-&gt;_m_fat;
-        $_pos = $this-&gt;_io-&gt;pos();
-        $this-&gt;_io-&gt;seek($this-&gt;sectorSize());
-        $this-&gt;_m__raw_fat = $this-&gt;_io-&gt;readBytes(($this-&gt;header()-&gt;sizeFat() * $this-&gt;sectorSize()));
-        $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_fat);
-        $this-&gt;_m_fat = new \MicrosoftCfb\FatEntries($io, $this, $this-&gt;_root);
-        $this-&gt;_io-&gt;seek($_pos);
-        return $this-&gt;_m_fat;
-    }
-    protected $_m_dir;
-    public function dir() {
-        if ($this-&gt;_m_dir !== null)
-            return $this-&gt;_m_dir;
-        $_pos = $this-&gt;_io-&gt;pos();
-        $this-&gt;_io-&gt;seek((($this-&gt;header()-&gt;ofsDir() + 1) * $this-&gt;sectorSize()));
-        $this-&gt;_m_dir = new \MicrosoftCfb\DirEntry($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_io-&gt;seek($_pos);
-        return $this-&gt;_m_dir;
-    }
-    protected $_m_header;
-    protected $_m__raw_fat;
-    public function header() { return $this-&gt;_m_header; }
-    public function _raw_fat() { return $this-&gt;_m__raw_fat; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MicrosoftCfb\CfbHeader</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_sectorSize</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sectorSize</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectorSize</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectorSize</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectorSize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">sectorShift</span><span class="p">());</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectorSize</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_fat</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fat</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fat</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fat</span><span class="p">;</span>
+        <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectorSize</span><span class="p">());</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_fat</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">sizeFat</span><span class="p">()</span> <span class="o">*</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectorSize</span><span class="p">()));</span>
+        <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_fat</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fat</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MicrosoftCfb\FatEntries</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fat</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_dir</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">dir</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dir</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dir</span><span class="p">;</span>
+        <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">ofsDir</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectorSize</span><span class="p">()));</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dir</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MicrosoftCfb\DirEntry</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dir</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_header</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_fat</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_fat</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_fat</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \MicrosoftCfb;
+<span class="k">namespace</span> <span class="nx">\MicrosoftCfb</span><span class="p">;</span>
 
-class CfbHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftCfb $_parent = null, \MicrosoftCfb $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">CfbHeader</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MicrosoftCfb</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MicrosoftCfb</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_signature = $this-&gt;_io-&gt;ensureFixedContents(&quot;\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1&quot;);
-        $this-&gt;_m_clsid = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00&quot;);
-        $this-&gt;_m_versionMinor = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_versionMajor = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_byteOrder = $this-&gt;_io-&gt;ensureFixedContents(&quot;\xFE\xFF&quot;);
-        $this-&gt;_m_sectorShift = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_miniSectorShift = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_reserved1 = $this-&gt;_io-&gt;readBytes(6);
-        $this-&gt;_m_sizeDir = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_sizeFat = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_ofsDir = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_transactionSeq = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_miniStreamCutoffSize = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_ofsMiniFat = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_sizeMiniFat = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_ofsDifat = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_sizeDifat = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_difat = [];
-        $n = 109;
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_difat[] = $this-&gt;_io-&gt;readS4le();
-        }
-    }
-    protected $_m_signature;
-    protected $_m_clsid;
-    protected $_m_versionMinor;
-    protected $_m_versionMajor;
-    protected $_m_byteOrder;
-    protected $_m_sectorShift;
-    protected $_m_miniSectorShift;
-    protected $_m_reserved1;
-    protected $_m_sizeDir;
-    protected $_m_sizeFat;
-    protected $_m_ofsDir;
-    protected $_m_transactionSeq;
-    protected $_m_miniStreamCutoffSize;
-    protected $_m_ofsMiniFat;
-    protected $_m_sizeMiniFat;
-    protected $_m_ofsDifat;
-    protected $_m_sizeDifat;
-    protected $_m_difat;
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_signature</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_clsid</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionMinor</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionMajor</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byteOrder</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xFE\xFF</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectorShift</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_miniSectorShift</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sizeDir</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sizeFat</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsDir</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_transactionSeq</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_miniStreamCutoffSize</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsMiniFat</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sizeMiniFat</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsDifat</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sizeDifat</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_difat</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="mi">109</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_difat</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_signature</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_clsid</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_versionMinor</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_versionMajor</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_byteOrder</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_sectorShift</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_miniSectorShift</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_reserved1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_sizeDir</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_sizeFat</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_ofsDir</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_transactionSeq</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_miniStreamCutoffSize</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_ofsMiniFat</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_sizeMiniFat</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_ofsDifat</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_sizeDifat</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_difat</span><span class="p">;</span>
 
-    /**
-     * Magic bytes that confirm that this is a CFB file
-     */
-    public function signature() { return $this-&gt;_m_signature; }
+    <span class="sd">/**</span>
+<span class="sd">     * Magic bytes that confirm that this is a CFB file</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">signature</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_signature</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Reserved class ID field, must be all 0
-     */
-    public function clsid() { return $this-&gt;_m_clsid; }
-    public function versionMinor() { return $this-&gt;_m_versionMinor; }
-    public function versionMajor() { return $this-&gt;_m_versionMajor; }
+    <span class="sd">/**</span>
+<span class="sd">     * Reserved class ID field, must be all 0</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">clsid</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_clsid</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">versionMinor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionMinor</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">versionMajor</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_versionMajor</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * In theory, specifies a byte order. In practice, no other values besides FE FF (which imply little endian order) are used.
-     */
-    public function byteOrder() { return $this-&gt;_m_byteOrder; }
+    <span class="sd">/**</span>
+<span class="sd">     * In theory, specifies a byte order. In practice, no other values besides FE FF (which imply little endian order) are used.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">byteOrder</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_byteOrder</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * For major version 3, must be 0x9 (sector size = 512 bytes). For major version 4, must be 0xc (sector size = 4096 bytes).
-     */
-    public function sectorShift() { return $this-&gt;_m_sectorShift; }
-    public function miniSectorShift() { return $this-&gt;_m_miniSectorShift; }
-    public function reserved1() { return $this-&gt;_m_reserved1; }
+    <span class="sd">/**</span>
+<span class="sd">     * For major version 3, must be 0x9 (sector size = 512 bytes). For major version 4, must be 0xc (sector size = 4096 bytes).</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sectorShift</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectorShift</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">miniSectorShift</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_miniSectorShift</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved1</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of directory sectors in this file. For major version 3, must be 0.
-     */
-    public function sizeDir() { return $this-&gt;_m_sizeDir; }
+    <span class="sd">/**</span>
+<span class="sd">     * Number of directory sectors in this file. For major version 3, must be 0.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sizeDir</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sizeDir</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of FAT sectors in this file.
-     */
-    public function sizeFat() { return $this-&gt;_m_sizeFat; }
+    <span class="sd">/**</span>
+<span class="sd">     * Number of FAT sectors in this file.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sizeFat</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sizeFat</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Starting sector number for directory stream.
-     */
-    public function ofsDir() { return $this-&gt;_m_ofsDir; }
+    <span class="sd">/**</span>
+<span class="sd">     * Starting sector number for directory stream.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsDir</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsDir</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * A transaction sequence number, which is incremented each time the file is saved if transactions are implemented, 0 otherwise.
-     */
-    public function transactionSeq() { return $this-&gt;_m_transactionSeq; }
-    public function miniStreamCutoffSize() { return $this-&gt;_m_miniStreamCutoffSize; }
+    <span class="sd">/**</span>
+<span class="sd">     * A transaction sequence number, which is incremented each time the file is saved if transactions are implemented, 0 otherwise.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">transactionSeq</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_transactionSeq</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">miniStreamCutoffSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_miniStreamCutoffSize</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Starting sector number for mini FAT.
-     */
-    public function ofsMiniFat() { return $this-&gt;_m_ofsMiniFat; }
+    <span class="sd">/**</span>
+<span class="sd">     * Starting sector number for mini FAT.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsMiniFat</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsMiniFat</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of mini FAT sectors in this file.
-     */
-    public function sizeMiniFat() { return $this-&gt;_m_sizeMiniFat; }
+    <span class="sd">/**</span>
+<span class="sd">     * Number of mini FAT sectors in this file.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sizeMiniFat</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sizeMiniFat</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Starting sector number for DIFAT.
-     */
-    public function ofsDifat() { return $this-&gt;_m_ofsDifat; }
+    <span class="sd">/**</span>
+<span class="sd">     * Starting sector number for DIFAT.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">ofsDifat</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofsDifat</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Number of DIFAT sectors in this file.
-     */
-    public function sizeDifat() { return $this-&gt;_m_sizeDifat; }
-    public function difat() { return $this-&gt;_m_difat; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * Number of DIFAT sectors in this file.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sizeDifat</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sizeDifat</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">difat</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_difat</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \MicrosoftCfb;
+<span class="k">namespace</span> <span class="nx">\MicrosoftCfb</span><span class="p">;</span>
 
-class FatEntries extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \MicrosoftCfb $_parent = null, \MicrosoftCfb $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">FatEntries</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\MicrosoftCfb</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MicrosoftCfb</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_entries = [];
-        $i = 0;
-        while (!$this-&gt;_io-&gt;isEof()) {
-            $this-&gt;_m_entries[] = $this-&gt;_io-&gt;readS4le();
-            $i++;
-        }
-    }
-    protected $_m_entries;
-    public function entries() { return $this-&gt;_m_entries; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_entries</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \MicrosoftCfb;
+<span class="k">namespace</span> <span class="nx">\MicrosoftCfb</span><span class="p">;</span>
 
-class DirEntry extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \MicrosoftCfb $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">DirEntry</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\MicrosoftCfb</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_name = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes(64), &quot;UTF-16LE&quot;);
-        $this-&gt;_m_nameLen = $this-&gt;_io-&gt;readU2le();
-        $this-&gt;_m_objectType = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_colorFlag = $this-&gt;_io-&gt;readU1();
-        $this-&gt;_m_leftSiblingId = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_rightSiblingId = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_childId = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_clsid = $this-&gt;_io-&gt;readBytes(16);
-        $this-&gt;_m_state = $this-&gt;_io-&gt;readU4le();
-        $this-&gt;_m_timeCreate = $this-&gt;_io-&gt;readU8le();
-        $this-&gt;_m_timeMod = $this-&gt;_io-&gt;readU8le();
-        $this-&gt;_m_ofs = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_size = $this-&gt;_io-&gt;readU8le();
-    }
-    protected $_m_miniStream;
-    public function miniStream() {
-        if ($this-&gt;_m_miniStream !== null)
-            return $this-&gt;_m_miniStream;
-        if ($this-&gt;objectType() == \MicrosoftCfb\DirEntry\ObjType::ROOT_STORAGE) {
-            $io = $this-&gt;_root()-&gt;_io();
-            $_pos = $io-&gt;pos();
-            $io-&gt;seek((($this-&gt;ofs() + 1) * $this-&gt;_root()-&gt;sectorSize()));
-            $this-&gt;_m_miniStream = $io-&gt;readBytes($this-&gt;size());
-            $io-&gt;seek($_pos);
-        }
-        return $this-&gt;_m_miniStream;
-    }
-    protected $_m_child;
-    public function child() {
-        if ($this-&gt;_m_child !== null)
-            return $this-&gt;_m_child;
-        if ($this-&gt;childId() != -1) {
-            $io = $this-&gt;_root()-&gt;_io();
-            $_pos = $io-&gt;pos();
-            $io-&gt;seek(((($this-&gt;_root()-&gt;header()-&gt;ofsDir() + 1) * $this-&gt;_root()-&gt;sectorSize()) + ($this-&gt;childId() * 128)));
-            $this-&gt;_m_child = new \MicrosoftCfb\DirEntry($io, $this, $this-&gt;_root);
-            $io-&gt;seek($_pos);
-        }
-        return $this-&gt;_m_child;
-    }
-    protected $_m_leftSibling;
-    public function leftSibling() {
-        if ($this-&gt;_m_leftSibling !== null)
-            return $this-&gt;_m_leftSibling;
-        if ($this-&gt;leftSiblingId() != -1) {
-            $io = $this-&gt;_root()-&gt;_io();
-            $_pos = $io-&gt;pos();
-            $io-&gt;seek(((($this-&gt;_root()-&gt;header()-&gt;ofsDir() + 1) * $this-&gt;_root()-&gt;sectorSize()) + ($this-&gt;leftSiblingId() * 128)));
-            $this-&gt;_m_leftSibling = new \MicrosoftCfb\DirEntry($io, $this, $this-&gt;_root);
-            $io-&gt;seek($_pos);
-        }
-        return $this-&gt;_m_leftSibling;
-    }
-    protected $_m_rightSibling;
-    public function rightSibling() {
-        if ($this-&gt;_m_rightSibling !== null)
-            return $this-&gt;_m_rightSibling;
-        if ($this-&gt;rightSiblingId() != -1) {
-            $io = $this-&gt;_root()-&gt;_io();
-            $_pos = $io-&gt;pos();
-            $io-&gt;seek(((($this-&gt;_root()-&gt;header()-&gt;ofsDir() + 1) * $this-&gt;_root()-&gt;sectorSize()) + ($this-&gt;rightSiblingId() * 128)));
-            $this-&gt;_m_rightSibling = new \MicrosoftCfb\DirEntry($io, $this, $this-&gt;_root);
-            $io-&gt;seek($_pos);
-        }
-        return $this-&gt;_m_rightSibling;
-    }
-    protected $_m_name;
-    protected $_m_nameLen;
-    protected $_m_objectType;
-    protected $_m_colorFlag;
-    protected $_m_leftSiblingId;
-    protected $_m_rightSiblingId;
-    protected $_m_childId;
-    protected $_m_clsid;
-    protected $_m_state;
-    protected $_m_timeCreate;
-    protected $_m_timeMod;
-    protected $_m_ofs;
-    protected $_m_size;
-    public function name() { return $this-&gt;_m_name; }
-    public function nameLen() { return $this-&gt;_m_nameLen; }
-    public function objectType() { return $this-&gt;_m_objectType; }
-    public function colorFlag() { return $this-&gt;_m_colorFlag; }
-    public function leftSiblingId() { return $this-&gt;_m_leftSiblingId; }
-    public function rightSiblingId() { return $this-&gt;_m_rightSiblingId; }
-    public function childId() { return $this-&gt;_m_childId; }
-    public function clsid() { return $this-&gt;_m_clsid; }
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span> <span class="s2">&quot;UTF-16LE&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nameLen</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_objectType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorFlag</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_leftSiblingId</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rightSiblingId</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_childId</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_clsid</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_state</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timeCreate</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timeMod</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_size</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU8le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_miniStream</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">miniStream</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_miniStream</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_miniStream</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">objectType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\MicrosoftCfb\DirEntry\ObjType</span><span class="o">::</span><span class="na">ROOT_STORAGE</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofs</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">sectorSize</span><span class="p">()));</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_miniStream</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">size</span><span class="p">());</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_miniStream</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_child</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">child</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_child</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_child</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">childId</span><span class="p">()</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">((((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">ofsDir</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">sectorSize</span><span class="p">())</span> <span class="o">+</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">childId</span><span class="p">()</span> <span class="o">*</span> <span class="mi">128</span><span class="p">)));</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_child</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MicrosoftCfb\DirEntry</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_child</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_leftSibling</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">leftSibling</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_leftSibling</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_leftSibling</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">leftSiblingId</span><span class="p">()</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">((((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">ofsDir</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">sectorSize</span><span class="p">())</span> <span class="o">+</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">leftSiblingId</span><span class="p">()</span> <span class="o">*</span> <span class="mi">128</span><span class="p">)));</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_leftSibling</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MicrosoftCfb\DirEntry</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_leftSibling</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_rightSibling</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">rightSibling</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rightSibling</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rightSibling</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rightSiblingId</span><span class="p">()</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">((((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">ofsDir</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">sectorSize</span><span class="p">())</span> <span class="o">+</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rightSiblingId</span><span class="p">()</span> <span class="o">*</span> <span class="mi">128</span><span class="p">)));</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rightSibling</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MicrosoftCfb\DirEntry</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rightSibling</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_name</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_nameLen</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_objectType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_colorFlag</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_leftSiblingId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_rightSiblingId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_childId</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_clsid</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_state</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_timeCreate</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_timeMod</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_ofs</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_size</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_name</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">nameLen</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nameLen</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">objectType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_objectType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">colorFlag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_colorFlag</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">leftSiblingId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_leftSiblingId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">rightSiblingId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rightSiblingId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">childId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_childId</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">clsid</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_clsid</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * User-defined flags for storage or root storage objects
-     */
-    public function state() { return $this-&gt;_m_state; }
+    <span class="sd">/**</span>
+<span class="sd">     * User-defined flags for storage or root storage objects</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">state</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_state</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Creation time, in Windows FILETIME format (number of 100-nanosecond intervals since January 1, 1601, UTC)
-     */
-    public function timeCreate() { return $this-&gt;_m_timeCreate; }
+    <span class="sd">/**</span>
+<span class="sd">     * Creation time, in Windows FILETIME format (number of 100-nanosecond intervals since January 1, 1601, UTC)</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">timeCreate</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timeCreate</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Modification time, in Windows FILETIME format (number of 100-nanosecond intervals since January 1, 1601, UTC).
-     */
-    public function timeMod() { return $this-&gt;_m_timeMod; }
+    <span class="sd">/**</span>
+<span class="sd">     * Modification time, in Windows FILETIME format (number of 100-nanosecond intervals since January 1, 1601, UTC).</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">timeMod</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_timeMod</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * For stream object, number of starting sector. For a root storage object, first sector of the mini stream, if the mini stream exists.
-     */
-    public function ofs() { return $this-&gt;_m_ofs; }
+    <span class="sd">/**</span>
+<span class="sd">     * For stream object, number of starting sector. For a root storage object, first sector of the mini stream, if the mini stream exists.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">ofs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ofs</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * For stream object, size of user-defined data in bytes. For a root storage object, size of the mini stream.
-     */
-    public function size() { return $this-&gt;_m_size; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * For stream object, size of user-defined data in bytes. For a root storage object, size of the mini stream.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">size</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_size</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \MicrosoftCfb\DirEntry;
+<span class="k">namespace</span> <span class="nx">\MicrosoftCfb\DirEntry</span><span class="p">;</span>
 
-class ObjType {
-    const UNKNOWN = 0;
-    const STORAGE = 1;
-    const STREAM = 2;
-    const ROOT_STORAGE = 5;
-}
+<span class="k">class</span> <span class="nc">ObjType</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">UNKNOWN</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">STORAGE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">STREAM</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ROOT_STORAGE</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="p">}</span>
 
-namespace \MicrosoftCfb\DirEntry;
+<span class="k">namespace</span> <span class="nx">\MicrosoftCfb\DirEntry</span><span class="p">;</span>
 
-class RbColor {
-    const RED = 0;
-    const BLACK = 1;
-}
-</code></pre>
+<span class="k">class</span> <span class="nc">RbColor</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">RED</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">BLACK</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -564,8 +561,8 @@ class RbColor {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

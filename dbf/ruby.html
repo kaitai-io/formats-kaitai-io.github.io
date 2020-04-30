@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -274,166 +271,166 @@ data = Dbf.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
-class Dbf &lt; Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+<span class="k">class</span> <span class="nc">Dbf</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @header1 = Header1.new(@_io, self, @_root)
-    @_raw_header2 = @_io.read_bytes((header1.len_header - 12))
-    io = Kaitai::Struct::Stream.new(@_raw_header2)
-    @header2 = Header2.new(io, self, @_root)
-    @records = Array.new(header1.num_records)
-    (header1.num_records).times { |i|
-      @records[i] = @_io.read_bytes(header1.len_record)
-    }
-    self
-  end
-  class Header2 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@header1</span> <span class="o">=</span> <span class="no">Header1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@_raw_header2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">header1</span><span class="o">.</span><span class="n">len_header</span> <span class="o">-</span> <span class="mi">12</span><span class="p">))</span>
+    <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_header2</span><span class="p">)</span>
+    <span class="vi">@header2</span> <span class="o">=</span> <span class="no">Header2</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@records</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header1</span><span class="o">.</span><span class="n">num_records</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">header1</span><span class="o">.</span><span class="n">num_records</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@records</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">header1</span><span class="o">.</span><span class="n">len_record</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Header2</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      if _root.header1.dbase_level == 3
-        @header_dbase_3 = HeaderDbase3.new(@_io, self, @_root)
-      end
-      if _root.header1.dbase_level == 7
-        @header_dbase_7 = HeaderDbase7.new(@_io, self, @_root)
-      end
-      @fields = Array.new(11)
-      (11).times { |i|
-        @fields[i] = Field.new(@_io, self, @_root)
-      }
-      self
-    end
-    attr_reader :header_dbase_3
-    attr_reader :header_dbase_7
-    attr_reader :fields
-  end
-  class Field &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">if</span> <span class="n">_root</span><span class="o">.</span><span class="n">header1</span><span class="o">.</span><span class="n">dbase_level</span> <span class="o">==</span> <span class="mi">3</span>
+        <span class="vi">@header_dbase_3</span> <span class="o">=</span> <span class="no">HeaderDbase3</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="n">_root</span><span class="o">.</span><span class="n">header1</span><span class="o">.</span><span class="n">dbase_level</span> <span class="o">==</span> <span class="mi">7</span>
+        <span class="vi">@header_dbase_7</span> <span class="o">=</span> <span class="no">HeaderDbase7</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="vi">@fields</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span>
+      <span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@fields</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Field</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:header_dbase_3</span>
+    <span class="kp">attr_reader</span> <span class="ss">:header_dbase_7</span>
+    <span class="kp">attr_reader</span> <span class="ss">:fields</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Field</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @name = (@_io.read_bytes(11)).force_encoding(&quot;ASCII&quot;)
-      @datatype = @_io.read_u1
-      @data_address = @_io.read_u4le
-      @length = @_io.read_u1
-      @decimal_count = @_io.read_u1
-      @reserved1 = @_io.read_bytes(2)
-      @work_area_id = @_io.read_u1
-      @reserved2 = @_io.read_bytes(2)
-      @set_fields_flag = @_io.read_u1
-      @reserved3 = @_io.read_bytes(8)
-      self
-    end
-    attr_reader :name
-    attr_reader :datatype
-    attr_reader :data_address
-    attr_reader :length
-    attr_reader :decimal_count
-    attr_reader :reserved1
-    attr_reader :work_area_id
-    attr_reader :reserved2
-    attr_reader :set_fields_flag
-    attr_reader :reserved3
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@name</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">11</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+      <span class="vi">@datatype</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@data_address</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@decimal_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@reserved1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+      <span class="vi">@work_area_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@reserved2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+      <span class="vi">@set_fields_flag</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@reserved3</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:name</span>
+    <span class="kp">attr_reader</span> <span class="ss">:datatype</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data_address</span>
+    <span class="kp">attr_reader</span> <span class="ss">:length</span>
+    <span class="kp">attr_reader</span> <span class="ss">:decimal_count</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved1</span>
+    <span class="kp">attr_reader</span> <span class="ss">:work_area_id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved2</span>
+    <span class="kp">attr_reader</span> <span class="ss">:set_fields_flag</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved3</span>
+  <span class="k">end</span>
 
-  ##
-  # @see http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm - section 1.1
-  class Header1 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see http://www.dbase.com/Knowledgebase/INT/db7_file_fmt.htm - section 1.1</span>
+  <span class="k">class</span> <span class="nc">Header1</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @version = @_io.read_u1
-      @last_update_y = @_io.read_u1
-      @last_update_m = @_io.read_u1
-      @last_update_d = @_io.read_u1
-      @num_records = @_io.read_u4le
-      @len_header = @_io.read_u2le
-      @len_record = @_io.read_u2le
-      self
-    end
-    def dbase_level
-      return @dbase_level unless @dbase_level.nil?
-      @dbase_level = (version &amp; 7)
-      @dbase_level
-    end
-    attr_reader :version
-    attr_reader :last_update_y
-    attr_reader :last_update_m
-    attr_reader :last_update_d
-    attr_reader :num_records
-    attr_reader :len_header
-    attr_reader :len_record
-  end
-  class HeaderDbase3 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@last_update_y</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@last_update_m</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@last_update_d</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@num_records</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@len_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="vi">@len_record</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">dbase_level</span>
+      <span class="k">return</span> <span class="vi">@dbase_level</span> <span class="k">unless</span> <span class="vi">@dbase_level</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@dbase_level</span> <span class="o">=</span> <span class="p">(</span><span class="n">version</span> <span class="o">&amp;</span> <span class="mi">7</span><span class="p">)</span>
+      <span class="vi">@dbase_level</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:last_update_y</span>
+    <span class="kp">attr_reader</span> <span class="ss">:last_update_m</span>
+    <span class="kp">attr_reader</span> <span class="ss">:last_update_d</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_records</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_header</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_record</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">HeaderDbase3</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @reserved1 = @_io.read_bytes(3)
-      @reserved2 = @_io.read_bytes(13)
-      @reserved3 = @_io.read_bytes(4)
-      self
-    end
-    attr_reader :reserved1
-    attr_reader :reserved2
-    attr_reader :reserved3
-  end
-  class HeaderDbase7 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@reserved1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+      <span class="vi">@reserved2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">13</span><span class="p">)</span>
+      <span class="vi">@reserved3</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved1</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved2</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved3</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">HeaderDbase7</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @reserved1 = @_io.ensure_fixed_contents([0, 0].pack(&#39;C*&#39;))
-      @has_incomplete_transaction = @_io.read_u1
-      @dbase_iv_encryption = @_io.read_u1
-      @reserved2 = @_io.read_bytes(12)
-      @production_mdx = @_io.read_u1
-      @language_driver_id = @_io.read_u1
-      @reserved3 = @_io.ensure_fixed_contents([0, 0].pack(&#39;C*&#39;))
-      @language_driver_name = @_io.read_bytes(32)
-      @reserved4 = @_io.read_bytes(4)
-      self
-    end
-    attr_reader :reserved1
-    attr_reader :has_incomplete_transaction
-    attr_reader :dbase_iv_encryption
-    attr_reader :reserved2
-    attr_reader :production_mdx
-    attr_reader :language_driver_id
-    attr_reader :reserved3
-    attr_reader :language_driver_name
-    attr_reader :reserved4
-  end
-  attr_reader :header1
-  attr_reader :header2
-  attr_reader :records
-  attr_reader :_raw_header2
-end
-</code></pre>
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@reserved1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@has_incomplete_transaction</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@dbase_iv_encryption</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@reserved2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+      <span class="vi">@production_mdx</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@language_driver_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@reserved3</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">))</span>
+      <span class="vi">@language_driver_name</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+      <span class="vi">@reserved4</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved1</span>
+    <span class="kp">attr_reader</span> <span class="ss">:has_incomplete_transaction</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dbase_iv_encryption</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved2</span>
+    <span class="kp">attr_reader</span> <span class="ss">:production_mdx</span>
+    <span class="kp">attr_reader</span> <span class="ss">:language_driver_id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved3</span>
+    <span class="kp">attr_reader</span> <span class="ss">:language_driver_name</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved4</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:header1</span>
+  <span class="kp">attr_reader</span> <span class="ss">:header2</span>
+  <span class="kp">attr_reader</span> <span class="ss">:records</span>
+  <span class="kp">attr_reader</span> <span class="ss">:_raw_header2</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -460,8 +457,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -207,231 +204,231 @@ with sha1 and md5 checksums.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: uimage
-  endian: be
-  license: CC0-1.0
-  title: U-Boot Image wrapper
-doc: |
-  The new uImage format allows more flexibility in handling images of various
-  types (kernel, ramdisk, etc.), it also enhances integrity protection of images
-  with sha1 and md5 checksums.
-doc-ref: https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h
-seq:
-  - id: header
-    type: uheader
-  - id: data
-    size: header.len_image
-types:
-  uheader:
-    seq:
-      - id: magic
-        contents: [0x27, 0x05, 0x19, 0x56]
-      - id: header_crc
-        type: u4
-      - id: timestamp
-        type: u4
-      - id: len_image
-        type: u4
-      - id: load_address
-        type: u4
-      - id: entry_address
-        type: u4
-      - id: data_crc
-        type: u4
-      - id: os_type
-        type: u1
-        enum: uimage_os
-      - id: architecture
-        type: u1
-        enum: uimage_arch
-      - id: image_type
-        type: u1
-        enum: uimage_type
-      - id: compression_type
-        type: u1
-        enum: uimage_comp
-      - id: name
-        size: 32
-        encoding: UTF-8
-        type: strz
-enums:
-  uimage_os:
-    0:  
-      id: invalid   
-      doc: Invalid OS
-    1:  
-      id: openbsd   
-      doc: OpenBSD
-    2:  
-      id: netbsd    
-      doc: NetBSD
-    3:  
-      id: freebsd   
-      doc: FreeBSD
-    4:  
-      id: bsd4_4    
-      doc: 4.4BSD
-    5:  
-      id: linux     
-      doc: Linux
-    6:  
-      id: svr4      
-      doc: SVR4
-    7:  
-      id: esix      
-      doc: Esix
-    8:  
-      id: solaris   
-      doc: Solaris
-    9:  
-      id: irix      
-      doc: Irix
-    10: 
-      id: sco       
-      doc: SCO
-    11: 
-      id: dell      
-      doc: Dell
-    12: 
-      id: ncr       
-      doc: NCR
-    13: 
-      id: lynxos    
-      doc: LynxOS
-    14: 
-      id: vxworks   
-      doc: VxWorks
-    15: 
-      id: psos      
-      doc: pSOS
-    16: 
-      id: qnx       
-      doc: QNX
-    17: 
-      id: u_boot    
-      doc: Firmware
-    18: 
-      id: rtems     
-      doc: RTEMS
-    19: 
-      id: artos     
-      doc: ARTOS
-    20: 
-      id: unity     
-      doc: Unity OS
-    21: 
-      id: integrity 
-      doc: INTEGRITY
-  uimage_arch:
-    0:  
-      id: invalid    
-      doc: Invalid CPU
-    1:  
-      id: alpha      
-      doc: Alpha
-    2:  
-      id: arm        
-      doc: ARM
-    3:  
-      id: i386       
-      doc: Intel x86
-    4:  
-      id: ia64       
-      doc: IA64
-    5:  
-      id: mips       
-      doc: MIPS
-    6:  
-      id: mips64     
-      doc: MIPS 64 Bit
-    7:  
-      id: ppc        
-      doc: PowerPC
-    8:  
-      id: s390       
-      doc: IBM S390
-    9:  
-      id: sh         
-      doc: SuperH
-    10: 
-      id: sparc      
-      doc: Sparc
-    11: 
-      id: sparc64    
-      doc: Sparc 64 Bit
-    12: 
-      id: m68k       
-      doc: M68K
-    13: 
-      id: nios       
-      doc: Nios-32
-    14: 
-      id: microblaze 
-      doc: MicroBlaze
-    15: 
-      id: nios2      
-      doc: Nios-II
-    16: 
-      id: blackfin   
-      doc: Blackfin
-    17: 
-      id: avr32      
-      doc: AVR32
-    18: 
-      id: st200      
-      doc: STMicroelectronics ST200
-  uimage_comp:
-    0: 
-      id: none
-      doc: No Compression Used
-    1: 
-      id: gzip 
-      doc: gzip Compression Used
-    2: 
-      id: bzip2
-      doc: bzip2 Compression Used
-    3: 
-      id: lzma 
-      doc: lzma Compression Used
-    4: 
-      id: lzo  
-      doc: lzo Compression Used
-  uimage_type:
-    0:  
-      id: invalid    
-      doc: Invalid Image
-    1:  
-      id: standalone 
-      doc: Standalone Program
-    2:  
-      id: kernel     
-      doc: OS Kernel Image
-    3:  
-      id: ramdisk    
-      doc: RAMDisk Image
-    4:  
-      id: multi      
-      doc: Multi-File Image
-    5:  
-      id: firmware   
-      doc: Firmware Image
-    6:  
-      id: script     
-      doc: Script file
-    7:  
-      id: filesystem 
-      doc: Filesystem Image (any type)
-    8:  
-      id: flatdt     
-      doc: Binary Flat Device Tree Blob
-    9:  
-      id: kwbimage   
-      doc: Kirkwood Boot Image
-    10: 
-      id: imximage   
-      doc: Freescale IMXBoot Image
-</code></pre>
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uimage</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">U-Boot Image wrapper</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">The new uImage format allows more flexibility in handling images of various</span>
+  <span class="no">types (kernel, ramdisk, etc.), it also enhances integrity protection of images</span>
+  <span class="no">with sha1 and md5 checksums.</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uheader</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.len_image</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">uheader</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0x27</span><span class="p p-Indicator">,</span> <span class="nv">0x05</span><span class="p p-Indicator">,</span> <span class="nv">0x19</span><span class="p p-Indicator">,</span> <span class="nv">0x56</span><span class="p p-Indicator">]</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_crc</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">timestamp</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_image</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">load_address</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entry_address</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_crc</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">os_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uimage_os</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">architecture</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uimage_arch</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uimage_type</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compression_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uimage_comp</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">32</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">uimage_os</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">invalid</span>   
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Invalid OS</span>
+    <span class="nt">1</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">openbsd</span>   
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">OpenBSD</span>
+    <span class="nt">2</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">netbsd</span>    
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NetBSD</span>
+    <span class="nt">3</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">freebsd</span>   
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">FreeBSD</span>
+    <span class="nt">4</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bsd4_4</span>    
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4.4BSD</span>
+    <span class="nt">5</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">linux</span>     
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Linux</span>
+    <span class="nt">6</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">svr4</span>      
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SVR4</span>
+    <span class="nt">7</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">esix</span>      
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Esix</span>
+    <span class="nt">8</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">solaris</span>   
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Solaris</span>
+    <span class="nt">9</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">irix</span>      
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Irix</span>
+    <span class="nt">10</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sco</span>       
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SCO</span>
+    <span class="nt">11</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dell</span>      
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Dell</span>
+    <span class="nt">12</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ncr</span>       
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">NCR</span>
+    <span class="nt">13</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lynxos</span>    
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">LynxOS</span>
+    <span class="nt">14</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vxworks</span>   
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">VxWorks</span>
+    <span class="nt">15</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">psos</span>      
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pSOS</span>
+    <span class="nt">16</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">qnx</span>       
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">QNX</span>
+    <span class="nt">17</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u_boot</span>    
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Firmware</span>
+    <span class="nt">18</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rtems</span>     
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RTEMS</span>
+    <span class="nt">19</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">artos</span>     
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ARTOS</span>
+    <span class="nt">20</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unity</span>     
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Unity OS</span>
+    <span class="nt">21</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">integrity</span> 
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">INTEGRITY</span>
+  <span class="nt">uimage_arch</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">invalid</span>    
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Invalid CPU</span>
+    <span class="nt">1</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alpha</span>      
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Alpha</span>
+    <span class="nt">2</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arm</span>        
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ARM</span>
+    <span class="nt">3</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">i386</span>       
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Intel x86</span>
+    <span class="nt">4</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ia64</span>       
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">IA64</span>
+    <span class="nt">5</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mips</span>       
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MIPS</span>
+    <span class="nt">6</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mips64</span>     
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MIPS 64 Bit</span>
+    <span class="nt">7</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ppc</span>        
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PowerPC</span>
+    <span class="nt">8</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s390</span>       
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">IBM S390</span>
+    <span class="nt">9</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh</span>         
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SuperH</span>
+    <span class="nt">10</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sparc</span>      
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Sparc</span>
+    <span class="nt">11</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sparc64</span>    
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Sparc 64 Bit</span>
+    <span class="nt">12</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">m68k</span>       
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">M68K</span>
+    <span class="nt">13</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nios</span>       
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Nios-32</span>
+    <span class="nt">14</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">microblaze</span> 
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MicroBlaze</span>
+    <span class="nt">15</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nios2</span>      
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Nios-II</span>
+    <span class="nt">16</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blackfin</span>   
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Blackfin</span>
+    <span class="nt">17</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">avr32</span>      
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">AVR32</span>
+    <span class="nt">18</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">st200</span>      
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">STMicroelectronics ST200</span>
+  <span class="nt">uimage_comp</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">No Compression Used</span>
+    <span class="nt">1</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gzip</span> 
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gzip Compression Used</span>
+    <span class="nt">2</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bzip2</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bzip2 Compression Used</span>
+    <span class="nt">3</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lzma</span> 
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lzma Compression Used</span>
+    <span class="nt">4</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lzo</span>  
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lzo Compression Used</span>
+  <span class="nt">uimage_type</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">invalid</span>    
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Invalid Image</span>
+    <span class="nt">1</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">standalone</span> 
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Standalone Program</span>
+    <span class="nt">2</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kernel</span>     
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">OS Kernel Image</span>
+    <span class="nt">3</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ramdisk</span>    
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RAMDisk Image</span>
+    <span class="nt">4</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">multi</span>      
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Multi-File Image</span>
+    <span class="nt">5</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">firmware</span>   
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Firmware Image</span>
+    <span class="nt">6</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">script</span>     
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Script file</span>
+    <span class="nt">7</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filesystem</span> 
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Filesystem Image (any type)</span>
+    <span class="nt">8</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flatdt</span>     
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Binary Flat Device Tree Blob</span>
+    <span class="nt">9</span><span class="p">:</span>  
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">kwbimage</span>   
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Kirkwood Boot Image</span>
+    <span class="nt">10</span><span class="p">:</span> 
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">imximage</span>   
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Freescale IMXBoot Image</span>
+</pre></div>
     </div>
 </section>
 
@@ -455,8 +452,8 @@ enums:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

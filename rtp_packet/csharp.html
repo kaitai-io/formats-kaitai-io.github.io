@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -266,194 +263,194 @@ bytes appended to the payload as padding.
         </div>
 
         <div class="row">
-            <pre><code class="csharp">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
 
 
-namespace Kaitai
-{
+<span class="k">namespace</span> <span class="nn">Kaitai</span>
+<span class="p">{</span>
 
-    /// &lt;summary&gt;
-    /// The Real-time Transport Protocol (RTP) is a widely used network
-    /// protocol for transmitting audio or video. It usually works with the
-    /// RTP Control Protocol (RTCP). The transmission can be based on
-    /// Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).
-    /// &lt;/summary&gt;
-    public partial class RtpPacket : KaitaiStruct
-    {
-        public static RtpPacket FromFile(string fileName)
-        {
-            return new RtpPacket(new KaitaiStream(fileName));
-        }
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// The Real-time Transport Protocol (RTP) is a widely used network</span>
+    <span class="c1">/// protocol for transmitting audio or video. It usually works with the</span>
+    <span class="c1">/// RTP Control Protocol (RTCP). The transmission can be based on</span>
+    <span class="c1">/// Transmission Control Protocol (TCP) or User Datagram Protocol (UDP).</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">RtpPacket</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="n">RtpPacket</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="nf">RtpPacket</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
 
-        public enum PayloadTypeEnum
-        {
-            Pcmu = 0,
-            Reserved1 = 1,
-            Reserved2 = 2,
-            Gsm = 3,
-            G723 = 4,
-            Dvi41 = 5,
-            Dvi42 = 6,
-            Lpc = 7,
-            Pama = 8,
-            G722 = 9,
-            L161 = 10,
-            L162 = 11,
-            Qcelp = 12,
-            Cn = 13,
-            Mpa = 14,
-            G728 = 15,
-            Dvi43 = 16,
-            Dvi44 = 17,
-            G729 = 18,
-            Reserved3 = 19,
-            Unassigned1 = 20,
-            Unassigned2 = 21,
-            Unassigned3 = 22,
-            Unassigned4 = 23,
-            Unassigned5 = 24,
-            Celb = 25,
-            Jpeg = 26,
-            Unassigned6 = 27,
-            Nv = 28,
-            Unassigned7 = 29,
-            Unassigned8 = 30,
-            H261 = 31,
-            Mpv = 32,
-            Mp2t = 33,
-            H263 = 34,
-            MpegPs = 96,
-        }
-        public RtpPacket(KaitaiStream p__io, KaitaiStruct p__parent = null, RtpPacket p__root = null) : base(p__io)
-        {
-            m_parent = p__parent;
-            m_root = p__root ?? this;
-            f_lenPaddingIfExists = false;
-            f_lenPadding = false;
-            _read();
-        }
-        private void _read()
-        {
-            _version = m_io.ReadBitsInt(2);
-            _hasPadding = m_io.ReadBitsInt(1) != 0;
-            _hasExtension = m_io.ReadBitsInt(1) != 0;
-            _csrcCount = m_io.ReadBitsInt(4);
-            _marker = m_io.ReadBitsInt(1) != 0;
-            _payloadType = ((PayloadTypeEnum) m_io.ReadBitsInt(7));
-            m_io.AlignToByte();
-            _sequenceNumber = m_io.ReadU2be();
-            _timestamp = m_io.ReadU4be();
-            _ssrc = m_io.ReadU4be();
-            if (HasExtension) {
-                _headerExtension = new HeaderExtention(m_io, this, m_root);
-            }
-            _data = m_io.ReadBytes(((M_Io.Size - M_Io.Pos) - LenPadding));
-            _padding = m_io.ReadBytes(LenPadding);
-        }
-        public partial class HeaderExtention : KaitaiStruct
-        {
-            public static HeaderExtention FromFile(string fileName)
-            {
-                return new HeaderExtention(new KaitaiStream(fileName));
-            }
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">PayloadTypeEnum</span>
+        <span class="p">{</span>
+            <span class="n">Pcmu</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">Reserved1</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="n">Reserved2</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+            <span class="n">Gsm</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+            <span class="n">G723</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
+            <span class="n">Dvi41</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+            <span class="n">Dvi42</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
+            <span class="n">Lpc</span> <span class="p">=</span> <span class="m">7</span><span class="p">,</span>
+            <span class="n">Pama</span> <span class="p">=</span> <span class="m">8</span><span class="p">,</span>
+            <span class="n">G722</span> <span class="p">=</span> <span class="m">9</span><span class="p">,</span>
+            <span class="n">L161</span> <span class="p">=</span> <span class="m">10</span><span class="p">,</span>
+            <span class="n">L162</span> <span class="p">=</span> <span class="m">11</span><span class="p">,</span>
+            <span class="n">Qcelp</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
+            <span class="n">Cn</span> <span class="p">=</span> <span class="m">13</span><span class="p">,</span>
+            <span class="n">Mpa</span> <span class="p">=</span> <span class="m">14</span><span class="p">,</span>
+            <span class="n">G728</span> <span class="p">=</span> <span class="m">15</span><span class="p">,</span>
+            <span class="n">Dvi43</span> <span class="p">=</span> <span class="m">16</span><span class="p">,</span>
+            <span class="n">Dvi44</span> <span class="p">=</span> <span class="m">17</span><span class="p">,</span>
+            <span class="n">G729</span> <span class="p">=</span> <span class="m">18</span><span class="p">,</span>
+            <span class="n">Reserved3</span> <span class="p">=</span> <span class="m">19</span><span class="p">,</span>
+            <span class="n">Unassigned1</span> <span class="p">=</span> <span class="m">20</span><span class="p">,</span>
+            <span class="n">Unassigned2</span> <span class="p">=</span> <span class="m">21</span><span class="p">,</span>
+            <span class="n">Unassigned3</span> <span class="p">=</span> <span class="m">22</span><span class="p">,</span>
+            <span class="n">Unassigned4</span> <span class="p">=</span> <span class="m">23</span><span class="p">,</span>
+            <span class="n">Unassigned5</span> <span class="p">=</span> <span class="m">24</span><span class="p">,</span>
+            <span class="n">Celb</span> <span class="p">=</span> <span class="m">25</span><span class="p">,</span>
+            <span class="n">Jpeg</span> <span class="p">=</span> <span class="m">26</span><span class="p">,</span>
+            <span class="n">Unassigned6</span> <span class="p">=</span> <span class="m">27</span><span class="p">,</span>
+            <span class="n">Nv</span> <span class="p">=</span> <span class="m">28</span><span class="p">,</span>
+            <span class="n">Unassigned7</span> <span class="p">=</span> <span class="m">29</span><span class="p">,</span>
+            <span class="n">Unassigned8</span> <span class="p">=</span> <span class="m">30</span><span class="p">,</span>
+            <span class="n">H261</span> <span class="p">=</span> <span class="m">31</span><span class="p">,</span>
+            <span class="n">Mpv</span> <span class="p">=</span> <span class="m">32</span><span class="p">,</span>
+            <span class="n">Mp2t</span> <span class="p">=</span> <span class="m">33</span><span class="p">,</span>
+            <span class="n">H263</span> <span class="p">=</span> <span class="m">34</span><span class="p">,</span>
+            <span class="n">MpegPs</span> <span class="p">=</span> <span class="m">96</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="nf">RtpPacket</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RtpPacket</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+            <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">f_lenPaddingIfExists</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_lenPadding</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">_version</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">2</span><span class="p">);</span>
+            <span class="n">_hasPadding</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+            <span class="n">_hasExtension</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+            <span class="n">_csrcCount</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
+            <span class="n">_marker</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">;</span>
+            <span class="n">_payloadType</span> <span class="p">=</span> <span class="p">((</span><span class="n">PayloadTypeEnum</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsInt</span><span class="p">(</span><span class="m">7</span><span class="p">));</span>
+            <span class="n">m_io</span><span class="p">.</span><span class="n">AlignToByte</span><span class="p">();</span>
+            <span class="n">_sequenceNumber</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+            <span class="n">_timestamp</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="n">_ssrc</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">HasExtension</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">_headerExtension</span> <span class="p">=</span> <span class="k">new</span> <span class="n">HeaderExtention</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="n">_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(((</span><span class="n">M_Io</span><span class="p">.</span><span class="n">Size</span> <span class="p">-</span> <span class="n">M_Io</span><span class="p">.</span><span class="n">Pos</span><span class="p">)</span> <span class="p">-</span> <span class="n">LenPadding</span><span class="p">));</span>
+            <span class="n">_padding</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenPadding</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">HeaderExtention</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">HeaderExtention</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">HeaderExtention</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
 
-            public HeaderExtention(KaitaiStream p__io, RtpPacket p__parent = null, RtpPacket p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _read();
-            }
-            private void _read()
-            {
-                _id = m_io.ReadU2be();
-                _length = m_io.ReadU2be();
-            }
-            private ushort _id;
-            private ushort _length;
-            private RtpPacket m_root;
-            private RtpPacket m_parent;
-            public ushort Id { get { return _id; } }
-            public ushort Length { get { return _length; } }
-            public RtpPacket M_Root { get { return m_root; } }
-            public RtpPacket M_Parent { get { return m_parent; } }
-        }
-        private bool f_lenPaddingIfExists;
-        private byte? _lenPaddingIfExists;
+            <span class="k">public</span> <span class="nf">HeaderExtention</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">RtpPacket</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">RtpPacket</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_id</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_length</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_id</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_length</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RtpPacket</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">RtpPacket</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_id</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Length</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_length</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RtpPacket</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">RtpPacket</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_lenPaddingIfExists</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte?</span> <span class="n">_lenPaddingIfExists</span><span class="p">;</span>
 
-        /// &lt;summary&gt;
-        /// If padding bit is enabled, last byte of data contains number of
-        /// bytes appended to the payload as padding.
-        /// &lt;/summary&gt;
-        public byte? LenPaddingIfExists
-        {
-            get
-            {
-                if (f_lenPaddingIfExists)
-                    return _lenPaddingIfExists;
-                if (HasPadding) {
-                    long _pos = m_io.Pos;
-                    m_io.Seek((M_Io.Size - 1));
-                    _lenPaddingIfExists = m_io.ReadU1();
-                    m_io.Seek(_pos);
-                }
-                f_lenPaddingIfExists = true;
-                return _lenPaddingIfExists;
-            }
-        }
-        private bool f_lenPadding;
-        private byte _lenPadding;
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// If padding bit is enabled, last byte of data contains number of</span>
+        <span class="c1">/// bytes appended to the payload as padding.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte?</span> <span class="n">LenPaddingIfExists</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_lenPaddingIfExists</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_lenPaddingIfExists</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">HasPadding</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+                    <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">((</span><span class="n">M_Io</span><span class="p">.</span><span class="n">Size</span> <span class="p">-</span> <span class="m">1</span><span class="p">));</span>
+                    <span class="n">_lenPaddingIfExists</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                    <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="n">f_lenPaddingIfExists</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_lenPaddingIfExists</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_lenPadding</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span> <span class="n">_lenPadding</span><span class="p">;</span>
 
-        /// &lt;summary&gt;
-        /// Always returns number of padding bytes to in the payload.
-        /// &lt;/summary&gt;
-        public byte LenPadding
-        {
-            get
-            {
-                if (f_lenPadding)
-                    return _lenPadding;
-                _lenPadding = (byte) ((HasPadding ? LenPaddingIfExists : 0));
-                f_lenPadding = true;
-                return _lenPadding;
-            }
-        }
-        private ulong _version;
-        private bool _hasPadding;
-        private bool _hasExtension;
-        private ulong _csrcCount;
-        private bool _marker;
-        private PayloadTypeEnum _payloadType;
-        private ushort _sequenceNumber;
-        private uint _timestamp;
-        private uint _ssrc;
-        private HeaderExtention _headerExtension;
-        private byte[] _data;
-        private byte[] _padding;
-        private RtpPacket m_root;
-        private KaitaiStruct m_parent;
-        public ulong Version { get { return _version; } }
-        public bool HasPadding { get { return _hasPadding; } }
-        public bool HasExtension { get { return _hasExtension; } }
-        public ulong CsrcCount { get { return _csrcCount; } }
-        public bool Marker { get { return _marker; } }
-        public PayloadTypeEnum PayloadType { get { return _payloadType; } }
-        public ushort SequenceNumber { get { return _sequenceNumber; } }
-        public uint Timestamp { get { return _timestamp; } }
-        public uint Ssrc { get { return _ssrc; } }
-        public HeaderExtention HeaderExtension { get { return _headerExtension; } }
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Always returns number of padding bytes to in the payload.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span> <span class="n">LenPadding</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_lenPadding</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_lenPadding</span><span class="p">;</span>
+                <span class="n">_lenPadding</span> <span class="p">=</span> <span class="p">(</span><span class="kt">byte</span><span class="p">)</span> <span class="p">((</span><span class="n">HasPadding</span> <span class="p">?</span> <span class="n">LenPaddingIfExists</span> <span class="p">:</span> <span class="m">0</span><span class="p">));</span>
+                <span class="n">f_lenPadding</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_lenPadding</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_version</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_hasPadding</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_hasExtension</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_csrcCount</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">_marker</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">PayloadTypeEnum</span> <span class="n">_payloadType</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_sequenceNumber</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_timestamp</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_ssrc</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">HeaderExtention</span> <span class="n">_headerExtension</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_data</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_padding</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">RtpPacket</span> <span class="n">m_root</span><span class="p">;</span>
+        <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Version</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_version</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">HasPadding</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_hasPadding</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">HasExtension</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_hasExtension</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">ulong</span> <span class="n">CsrcCount</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_csrcCount</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">bool</span> <span class="n">Marker</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_marker</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">PayloadTypeEnum</span> <span class="n">PayloadType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_payloadType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">ushort</span> <span class="n">SequenceNumber</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sequenceNumber</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">Timestamp</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_timestamp</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">Ssrc</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ssrc</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">HeaderExtention</span> <span class="n">HeaderExtension</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_headerExtension</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
 
-        /// &lt;summary&gt;
-        /// Payload without padding.
-        /// &lt;/summary&gt;
-        public byte[] Data { get { return _data; } }
-        public byte[] Padding { get { return _padding; } }
-        public RtpPacket M_Root { get { return m_root; } }
-        public KaitaiStruct M_Parent { get { return m_parent; } }
-    }
-}
-</code></pre>
+        <span class="c1">/// &lt;summary&gt;</span>
+        <span class="c1">/// Payload without padding.</span>
+        <span class="c1">/// &lt;/summary&gt;</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Padding</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_padding</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">RtpPacket</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -480,8 +477,8 @@ namespace Kaitai
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

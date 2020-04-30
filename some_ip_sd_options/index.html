@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -166,186 +163,186 @@ reachable (IP-Address, TransportProtocol, Port Number).</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: some_ip_sd_options
-  title: AUTOSAR SOME/IP Service Discovery Options
-  license: CC0-1.0
-  ks-version: 0.9
-  endian: be
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">some_ip_sd_options</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">AUTOSAR SOME/IP Service Discovery Options</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.9</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
     
-doc: |
-  FormatOptions are used to transport additional information to the entries. 
-  This includes forinstance the information how a service instance is 
-  reachable (IP-Address, TransportProtocol, Port Number).
-doc-ref: |
-  https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf
-  - section 4.1.2.4 Options Format
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">FormatOptions are used to transport additional information to the entries. </span>
+  <span class="no">This includes forinstance the information how a service instance is </span>
+  <span class="no">reachable (IP-Address, TransportProtocol, Port Number).</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">https://www.autosar.org/fileadmin/user_upload/standards/foundation/19-11/AUTOSAR_PRS_SOMEIPServiceDiscoveryProtocol.pdf</span>
+  <span class="no">- section 4.1.2.4 Options Format</span>
 
-seq:
-  - id: entries
-    type: sd_option
-    repeat: eos
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sd_option</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
     
-types:
-  sd_option:
-    seq:
-    - id: header
-      type: sd_option_header
-    - id: content
-      type:
-        switch-on: header.type
-        cases:
-          option_types::configuration_option : sd_configuration_option
-          option_types::load_balancing_option : sd_load_balancing_option
-          option_types::ipv4_endpoint_option : sd_ipv4_endpoint_option
-          option_types::ipv6_endpoint_option : sd_ipv6_endpoint_option
-          option_types::ipv4_multicast_option : sd_ipv4_multicast_option
-          option_types::ipv6_multicast_option : sd_ipv6_multicast_option
-          option_types::ipv4_sd_endpoint_option : sd_ipv4_sd_endpoint_option
-          option_types::ipv6_sd_endpoint_option : sd_ipv6_sd_endpoint_option
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">sd_option</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+      <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sd_option_header</span>
+    <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">content</span>
+      <span class="nt">type</span><span class="p">:</span>
+        <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.type</span>
+        <span class="nt">cases</span><span class="p">:</span>
+          <span class="l l-Scalar l-Scalar-Plain">option_types::configuration_option</span> <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sd_configuration_option</span>
+          <span class="l l-Scalar l-Scalar-Plain">option_types::load_balancing_option</span> <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sd_load_balancing_option</span>
+          <span class="l l-Scalar l-Scalar-Plain">option_types::ipv4_endpoint_option</span> <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sd_ipv4_endpoint_option</span>
+          <span class="l l-Scalar l-Scalar-Plain">option_types::ipv6_endpoint_option</span> <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sd_ipv6_endpoint_option</span>
+          <span class="l l-Scalar l-Scalar-Plain">option_types::ipv4_multicast_option</span> <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sd_ipv4_multicast_option</span>
+          <span class="l l-Scalar l-Scalar-Plain">option_types::ipv6_multicast_option</span> <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sd_ipv6_multicast_option</span>
+          <span class="l l-Scalar l-Scalar-Plain">option_types::ipv4_sd_endpoint_option</span> <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sd_ipv4_sd_endpoint_option</span>
+          <span class="l l-Scalar l-Scalar-Plain">option_types::ipv6_sd_endpoint_option</span> <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">sd_ipv6_sd_endpoint_option</span>
           
-    types:
-      sd_option_header:
-        seq:
-          - id: length
-            type: u2
-          - id: type
-            type: u1
-            enum: option_types
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">sd_option_header</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">option_types</span>
             
-      sd_configuration_option:
-        seq:
-          - id: reserved
-            type: u1
-          - id: configurations
-            type: sd_config_strings_container
-            size: _parent.header.length - 1
+      <span class="nt">sd_configuration_option</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">configurations</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sd_config_strings_container</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.header.length - 1</span>
             
-      sd_config_strings_container:
-        seq:
-          - id: config_strings
-            type: sd_config_string
-            repeat: eos
+      <span class="nt">sd_config_strings_container</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">config_strings</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sd_config_string</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
       
-      sd_config_string:
-        seq:
-          - id: length
-            type: u1
-          - id: config
-            type: sd_config_kv_pair
-            size: length
-            if: length != 0
+      <span class="nt">sd_config_string</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">config</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sd_config_kv_pair</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length != 0</span>
       
-      sd_config_kv_pair:
-        seq:
-        - id: key
-          type: str
-          terminator: 0x3D
-          encoding: ASCII
-        - id: value
-          type: str
-          size-eos: true 
-          encoding: ASCII
+      <span class="nt">sd_config_kv_pair</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key</span>
+          <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+          <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x3D</span>
+          <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+        <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+          <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+          <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span> 
+          <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
       
       
-      sd_load_balancing_option:
-        seq:
-          - id: reserved
-            type: u1
-          - id: priority
-            type: u2
-          - id: weight
-            type: u2
+      <span class="nt">sd_load_balancing_option</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">priority</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">weight</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
       
-      sd_ipv4_endpoint_option:
-        seq:
-          - id: reserved
-            type: u1
-          - id: address
-            size: 4
-          - id: reserved2
-            type: u1
-          - id: l4_protocol
-            type: u1
-          - id: port
-            type: u2
+      <span class="nt">sd_ipv4_endpoint_option</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">address</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved2</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">l4_protocol</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">port</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
       
-      sd_ipv6_endpoint_option:
-        seq:
-          - id: reserved
-            type: u1
-          - id: address
-            size: 16
-          - id: reserved2
-            type: u1
-          - id: l4_protocol
-            type: u1
-          - id: port
-            type: u2
+      <span class="nt">sd_ipv6_endpoint_option</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">address</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved2</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">l4_protocol</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">port</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
       
-      sd_ipv4_multicast_option:
-        seq:
-          - id: reserved
-            type: u1
-          - id: address
-            size: 4
-          - id: reserved2
-            type: u1
-          - id: l4_protocol
-            type: u1
-          - id: port
-            type: u2
+      <span class="nt">sd_ipv4_multicast_option</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">address</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved2</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">l4_protocol</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">port</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
       
-      sd_ipv6_multicast_option:
-        seq:
-          - id: reserved
-            type: u1
-          - id: address
-            size: 16
-          - id: reserved2
-            type: u1
-          - id: l4_protocol
-            type: u1
-          - id: port
-            type: u2
+      <span class="nt">sd_ipv6_multicast_option</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">address</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved2</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">l4_protocol</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">port</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
       
-      sd_ipv4_sd_endpoint_option:
-        seq:
-          - id: reserved
-            type: u1
-          - id: address
-            size: 4
-          - id: reserved2
-            type: u1
-          - id: l4_protocol
-            type: u1
-          - id: port
-            type: u2
+      <span class="nt">sd_ipv4_sd_endpoint_option</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">address</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved2</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">l4_protocol</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">port</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
       
-      sd_ipv6_sd_endpoint_option:
-        seq:
-          - id: reserved
-            type: u1
-          - id: address
-            size: 16
-          - id: reserved2
-            type: u1
-          - id: l4_protocol
-            type: u1
-          - id: port
-            type: u2
+      <span class="nt">sd_ipv6_sd_endpoint_option</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">address</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved2</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">l4_protocol</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">port</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
       
-    enums:
-      option_types:
-        0x01 : configuration_option
-        0x02 : load_balancing_option
-        0x04 : ipv4_endpoint_option
-        0x06 : ipv6_endpoint_option
-        0x14 : ipv4_multicast_option
-        0x16 : ipv6_multicast_option
-        0x24 : ipv4_sd_endpoint_option
-        0x26 : ipv6_sd_endpoint_option
-</code></pre>
+    <span class="nt">enums</span><span class="p">:</span>
+      <span class="nt">option_types</span><span class="p">:</span>
+        <span class="nt">0x01 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">configuration_option</span>
+        <span class="nt">0x02 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">load_balancing_option</span>
+        <span class="nt">0x04 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ipv4_endpoint_option</span>
+        <span class="nt">0x06 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ipv6_endpoint_option</span>
+        <span class="nt">0x14 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ipv4_multicast_option</span>
+        <span class="nt">0x16 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ipv6_multicast_option</span>
+        <span class="nt">0x24 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ipv4_sd_endpoint_option</span>
+        <span class="nt">0x26 </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ipv6_sd_endpoint_option</span>
+</pre></div>
     </div>
 </section>
 
@@ -369,8 +366,8 @@ types:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

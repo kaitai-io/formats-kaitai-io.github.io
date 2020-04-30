@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -236,207 +233,207 @@ GptPartitionTable data = new GptPartitionTable(new ByteBufferKaitaiStream(someAr
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
 
 
-/**
- * @see &quot;Specification taken from https://en.wikipedia.org/wiki/GUID_Partition_Table&quot;
- */
-public class GptPartitionTable extends KaitaiStruct {
-    public static GptPartitionTable fromFile(String fileName) throws IOException {
-        return new GptPartitionTable(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * @see &quot;Specification taken from https://en.wikipedia.org/wiki/GUID_Partition_Table&quot;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">GptPartitionTable</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">GptPartitionTable</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">GptPartitionTable</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public GptPartitionTable(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">GptPartitionTable</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public GptPartitionTable(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">GptPartitionTable</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public GptPartitionTable(KaitaiStream _io, KaitaiStruct _parent, GptPartitionTable _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-    }
-    public static class PartitionEntry extends KaitaiStruct {
-        public static PartitionEntry fromFile(String fileName) throws IOException {
-            return new PartitionEntry(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="kd">public</span> <span class="nf">GptPartitionTable</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">GptPartitionTable</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PartitionEntry</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PartitionEntry</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">PartitionEntry</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public PartitionEntry(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">PartitionEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PartitionEntry(KaitaiStream _io, GptPartitionTable.PartitionHeader _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">PartitionEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">GptPartitionTable</span><span class="p">.</span><span class="na">PartitionHeader</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PartitionEntry(KaitaiStream _io, GptPartitionTable.PartitionHeader _parent, GptPartitionTable _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.typeGuid = this._io.readBytes(16);
-            this.guid = this._io.readBytes(16);
-            this.firstLba = this._io.readU8le();
-            this.lastLba = this._io.readU8le();
-            this.attributes = this._io.readU8le();
-            this.name = new String(this._io.readBytes(72), Charset.forName(&quot;UTF-16LE&quot;));
-        }
-        private byte[] typeGuid;
-        private byte[] guid;
-        private long firstLba;
-        private long lastLba;
-        private long attributes;
-        private String name;
-        private GptPartitionTable _root;
-        private GptPartitionTable.PartitionHeader _parent;
-        public byte[] typeGuid() { return typeGuid; }
-        public byte[] guid() { return guid; }
-        public long firstLba() { return firstLba; }
-        public long lastLba() { return lastLba; }
-        public long attributes() { return attributes; }
-        public String name() { return name; }
-        public GptPartitionTable _root() { return _root; }
-        public GptPartitionTable.PartitionHeader _parent() { return _parent; }
-    }
-    public static class PartitionHeader extends KaitaiStruct {
-        public static PartitionHeader fromFile(String fileName) throws IOException {
-            return new PartitionHeader(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">PartitionEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">GptPartitionTable</span><span class="p">.</span><span class="na">PartitionHeader</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">GptPartitionTable</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">typeGuid</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">guid</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">firstLba</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lastLba</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">attributes</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">name</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">72</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-16LE&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">typeGuid</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">guid</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">firstLba</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lastLba</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">attributes</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">GptPartitionTable</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">GptPartitionTable</span><span class="p">.</span><span class="na">PartitionHeader</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">typeGuid</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">typeGuid</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">guid</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">guid</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">firstLba</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">firstLba</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lastLba</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lastLba</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">attributes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">attributes</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">name</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">GptPartitionTable</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">GptPartitionTable</span><span class="p">.</span><span class="na">PartitionHeader</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PartitionHeader</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PartitionHeader</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">PartitionHeader</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public PartitionHeader(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">PartitionHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PartitionHeader(KaitaiStream _io, GptPartitionTable _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">PartitionHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">GptPartitionTable</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public PartitionHeader(KaitaiStream _io, GptPartitionTable _parent, GptPartitionTable _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.signature = this._io.ensureFixedContents(new byte[] { 69, 70, 73, 32, 80, 65, 82, 84 });
-            this.revision = this._io.readU4le();
-            this.headerSize = this._io.readU4le();
-            this.crc32Header = this._io.readU4le();
-            this.reserved = this._io.readU4le();
-            this.currentLba = this._io.readU8le();
-            this.backupLba = this._io.readU8le();
-            this.firstUsableLba = this._io.readU8le();
-            this.lastUsableLba = this._io.readU8le();
-            this.diskGuid = this._io.readBytes(16);
-            this.entriesStart = this._io.readU8le();
-            this.entriesCount = this._io.readU4le();
-            this.entriesSize = this._io.readU4le();
-            this.crc32Array = this._io.readU4le();
-        }
-        private ArrayList&lt;PartitionEntry&gt; entries;
-        public ArrayList&lt;PartitionEntry&gt; entries() {
-            if (this.entries != null)
-                return this.entries;
-            KaitaiStream io = _root._io();
-            long _pos = io.pos();
-            io.seek((entriesStart() * _root.sectorSize()));
-            this._raw_entries = new ArrayList&lt;byte[]&gt;((int) (entriesCount()));
-            entries = new ArrayList&lt;PartitionEntry&gt;((int) (entriesCount()));
-            for (int i = 0; i &lt; entriesCount(); i++) {
-                this._raw_entries.add(io.readBytes(entriesSize()));
-                KaitaiStream _io__raw_entries = new ByteBufferKaitaiStream(_raw_entries.get(_raw_entries.size() - 1));
-                this.entries.add(new PartitionEntry(_io__raw_entries, this, _root));
-            }
-            io.seek(_pos);
-            return this.entries;
-        }
-        private byte[] signature;
-        private long revision;
-        private long headerSize;
-        private long crc32Header;
-        private long reserved;
-        private long currentLba;
-        private long backupLba;
-        private long firstUsableLba;
-        private long lastUsableLba;
-        private byte[] diskGuid;
-        private long entriesStart;
-        private long entriesCount;
-        private long entriesSize;
-        private long crc32Array;
-        private GptPartitionTable _root;
-        private GptPartitionTable _parent;
-        private ArrayList&lt;byte[]&gt; _raw_entries;
-        public byte[] signature() { return signature; }
-        public long revision() { return revision; }
-        public long headerSize() { return headerSize; }
-        public long crc32Header() { return crc32Header; }
-        public long reserved() { return reserved; }
-        public long currentLba() { return currentLba; }
-        public long backupLba() { return backupLba; }
-        public long firstUsableLba() { return firstUsableLba; }
-        public long lastUsableLba() { return lastUsableLba; }
-        public byte[] diskGuid() { return diskGuid; }
-        public long entriesStart() { return entriesStart; }
-        public long entriesCount() { return entriesCount; }
-        public long entriesSize() { return entriesSize; }
-        public long crc32Array() { return crc32Array; }
-        public GptPartitionTable _root() { return _root; }
-        public GptPartitionTable _parent() { return _parent; }
-        public ArrayList&lt;byte[]&gt; _raw_entries() { return _raw_entries; }
-    }
-    private Integer sectorSize;
-    public Integer sectorSize() {
-        if (this.sectorSize != null)
-            return this.sectorSize;
-        int _tmp = (int) (512);
-        this.sectorSize = _tmp;
-        return this.sectorSize;
-    }
-    private PartitionHeader primary;
-    public PartitionHeader primary() {
-        if (this.primary != null)
-            return this.primary;
-        KaitaiStream io = _root._io();
-        long _pos = io.pos();
-        io.seek(_root.sectorSize());
-        this.primary = new PartitionHeader(io, this, _root);
-        io.seek(_pos);
-        return this.primary;
-    }
-    private PartitionHeader backup;
-    public PartitionHeader backup() {
-        if (this.backup != null)
-            return this.backup;
-        KaitaiStream io = _root._io();
-        long _pos = io.pos();
-        io.seek((_io().size() - _root.sectorSize()));
-        this.backup = new PartitionHeader(io, this, _root);
-        io.seek(_pos);
-        return this.backup;
-    }
-    private GptPartitionTable _root;
-    private KaitaiStruct _parent;
-    public GptPartitionTable _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-}
-</code></pre>
+        <span class="kd">public</span> <span class="nf">PartitionHeader</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">GptPartitionTable</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">GptPartitionTable</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">signature</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">82</span><span class="p">,</span> <span class="mi">84</span> <span class="p">});</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">revision</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">headerSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">crc32Header</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">currentLba</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">backupLba</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">firstUsableLba</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">lastUsableLba</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">diskGuid</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">entriesStart</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU8le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">entriesCount</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">entriesSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">crc32Array</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PartitionEntry</span><span class="o">&gt;</span> <span class="n">entries</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PartitionEntry</span><span class="o">&gt;</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">entries</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">;</span>
+            <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+            <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+            <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">entriesStart</span><span class="p">()</span> <span class="o">*</span> <span class="n">_root</span><span class="p">.</span><span class="na">sectorSize</span><span class="p">()));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_raw_entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">entriesCount</span><span class="p">()));</span>
+            <span class="n">entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">PartitionEntry</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">entriesCount</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">entriesCount</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_raw_entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">entriesSize</span><span class="p">()));</span>
+                <span class="n">KaitaiStream</span> <span class="n">_io__raw_entries</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_entries</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">_raw_entries</span><span class="p">.</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">PartitionEntry</span><span class="p">(</span><span class="n">_io__raw_entries</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+            <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">entries</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">signature</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">revision</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">headerSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">crc32Header</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">reserved</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">currentLba</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">backupLba</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">firstUsableLba</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">lastUsableLba</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">diskGuid</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">entriesStart</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">entriesCount</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">entriesSize</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">crc32Array</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">GptPartitionTable</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">GptPartitionTable</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span> <span class="n">_raw_entries</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">signature</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">signature</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">revision</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">revision</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">headerSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">headerSize</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">crc32Header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">crc32Header</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">reserved</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">currentLba</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">currentLba</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">backupLba</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">backupLba</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">firstUsableLba</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">firstUsableLba</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">lastUsableLba</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">lastUsableLba</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">diskGuid</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">diskGuid</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">entriesStart</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">entriesStart</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">entriesCount</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">entriesCount</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">entriesSize</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">entriesSize</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">crc32Array</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">crc32Array</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">GptPartitionTable</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">GptPartitionTable</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span> <span class="nf">_raw_entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_entries</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">Integer</span> <span class="n">sectorSize</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">sectorSize</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">sectorSize</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">sectorSize</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mi">512</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">sectorSize</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">sectorSize</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">PartitionHeader</span> <span class="n">primary</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">PartitionHeader</span> <span class="nf">primary</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">primary</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">primary</span><span class="p">;</span>
+        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+        <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+        <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_root</span><span class="p">.</span><span class="na">sectorSize</span><span class="p">());</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">primary</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PartitionHeader</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">primary</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">PartitionHeader</span> <span class="n">backup</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">PartitionHeader</span> <span class="nf">backup</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">backup</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">backup</span><span class="p">;</span>
+        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+        <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+        <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">((</span><span class="n">_io</span><span class="p">().</span><span class="na">size</span><span class="p">()</span> <span class="o">-</span> <span class="n">_root</span><span class="p">.</span><span class="na">sectorSize</span><span class="p">()));</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">backup</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PartitionHeader</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+        <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">backup</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="n">GptPartitionTable</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="n">GptPartitionTable</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -463,8 +460,8 @@ public class GptPartitionTable extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

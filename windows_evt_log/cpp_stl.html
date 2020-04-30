@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -295,408 +292,408 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef WINDOWS_EVT_LOG_H_
-#define WINDOWS_EVT_LOG_H_
-
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-#include &quot;kaitai/kaitaistruct.h&quot;
-
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
-
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
-
-/**
- * EVT files are Windows Event Log files written by older Windows
- * operating systems (2000, XP, 2003). They are used as binary log
- * files by several major Windows subsystems and
- * applications. Typically, several of them can be found in
- * `%WINDIR%\system32\config` directory:
- * 
- * * Application = `AppEvent.evt`
- * * System = `SysEvent.evt`
- * * Security = `SecEvent.evt`
- * 
- * Alternatively, one can export any system event log as distinct .evt
- * file using relevant option in Event Viewer application.
- * 
- * A Windows application can submit an entry into these logs using
- * [ReportEvent](https://msdn.microsoft.com/en-us/library/aa363679(v=vs.85).aspx)
- * function of Windows API.
- * 
- * Internally, EVT files consist of a fixed-size header and event
- * records. There are several usage scenarios (non-wrapping vs wrapping
- * log files) which result in slightly different organization of
- * records.
- * \sa Source
- */
-
-class windows_evt_log_t : public kaitai::kstruct {
-
-public:
-    class header_t;
-    class record_t;
-    class record_body_t;
-    class cursor_record_body_t;
-
-    windows_evt_log_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, windows_evt_log_t* p__root = 0);
-
-private:
-    void _read();
-
-public:
-    ~windows_evt_log_t();
-
-    /**
-     * \sa Source
-     */
-
-    class header_t : public kaitai::kstruct {
-
-    public:
-        class flags_t;
-
-        header_t(kaitai::kstream* p__io, windows_evt_log_t* p__parent = 0, windows_evt_log_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~header_t();
-
-        class flags_t : public kaitai::kstruct {
-
-        public:
-
-            flags_t(kaitai::kstream* p__io, windows_evt_log_t::header_t* p__parent = 0, windows_evt_log_t* p__root = 0);
-
-        private:
-            void _read();
-
-        public:
-            ~flags_t();
-
-        private:
-            uint64_t m_reserved;
-            bool m_archive;
-            bool m_log_full;
-            bool m_wrap;
-            bool m_dirty;
-            windows_evt_log_t* m__root;
-            windows_evt_log_t::header_t* m__parent;
-
-        public:
-            uint64_t reserved() const { return m_reserved; }
-
-            /**
-             * True if archive attribute has been set for this log file.
-             */
-            bool archive() const { return m_archive; }
-
-            /**
-             * True if last write operation failed due to log being full.
-             */
-            bool log_full() const { return m_log_full; }
-
-            /**
-             * True if wrapping of record has occured.
-             */
-            bool wrap() const { return m_wrap; }
-
-            /**
-             * True if write operation was in progress, but log file
-             * wasn&#39;t properly closed.
-             */
-            bool dirty() const { return m_dirty; }
-            windows_evt_log_t* _root() const { return m__root; }
-            windows_evt_log_t::header_t* _parent() const { return m__parent; }
-        };
-
-    private:
-        uint32_t m_len_header;
-        std::string m_magic;
-        uint32_t m_version_major;
-        uint32_t m_version_minor;
-        uint32_t m_ofs_start;
-        uint32_t m_ofs_end;
-        uint32_t m_cur_rec_idx;
-        uint32_t m_oldest_rec_idx;
-        uint32_t m_len_file_max;
-        flags_t* m_flags;
-        uint32_t m_retention;
-        uint32_t m_len_header_2;
-        windows_evt_log_t* m__root;
-        windows_evt_log_t* m__parent;
-
-    public:
-
-        /**
-         * Size of the header structure, must be 0x30.
-         */
-        uint32_t len_header() const { return m_len_header; }
-        std::string magic() const { return m_magic; }
-        uint32_t version_major() const { return m_version_major; }
-        uint32_t version_minor() const { return m_version_minor; }
-
-        /**
-         * Offset of oldest record kept in this log file.
-         */
-        uint32_t ofs_start() const { return m_ofs_start; }
-
-        /**
-         * Offset of EOF log record, which is a placeholder for new record.
-         */
-        uint32_t ofs_end() const { return m_ofs_end; }
-
-        /**
-         * Index of current record, where a new submission would be
-         * written to (normally there should to EOF log record there).
-         */
-        uint32_t cur_rec_idx() const { return m_cur_rec_idx; }
-
-        /**
-         * Index of oldest record in the log file
-         */
-        uint32_t oldest_rec_idx() const { return m_oldest_rec_idx; }
-
-        /**
-         * Total maximum size of the log file
-         */
-        uint32_t len_file_max() const { return m_len_file_max; }
-        flags_t* flags() const { return m_flags; }
-        uint32_t retention() const { return m_retention; }
-
-        /**
-         * Size of the header structure repeated again, and again it must be 0x30.
-         */
-        uint32_t len_header_2() const { return m_len_header_2; }
-        windows_evt_log_t* _root() const { return m__root; }
-        windows_evt_log_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa Source
-     */
-
-    class record_t : public kaitai::kstruct {
-
-    public:
-
-        record_t(kaitai::kstream* p__io, windows_evt_log_t* p__parent = 0, windows_evt_log_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~record_t();
-
-    private:
-        uint32_t m_len_record;
-        uint32_t m_type;
-        kaitai::kstruct* m_body;
-        bool n_body;
-
-    public:
-        bool _is_null_body() { body(); return n_body; };
-
-    private:
-        uint32_t m_len_record2;
-        windows_evt_log_t* m__root;
-        windows_evt_log_t* m__parent;
-        std::string m__raw_body;
-        kaitai::kstream* m__io__raw_body;
-
-    public:
-
-        /**
-         * Size of whole record, including all headers, footers and data
-         */
-        uint32_t len_record() const { return m_len_record; }
-
-        /**
-         * Type of record. Normal log records specify &quot;LfLe&quot;
-         * (0x654c664c) in this field, cursor records use 0x11111111.
-         */
-        uint32_t type() const { return m_type; }
-
-        /**
-         * Record body interpretation depends on type of record. Body
-         * size is specified in a way that it won&#39;t include a 8-byte
-         * &quot;header&quot; (`len_record` + `type`) and a &quot;footer&quot;
-         * (`len_record2`).
-         */
-        kaitai::kstruct* body() const { return m_body; }
-
-        /**
-         * Size of whole record again.
-         */
-        uint32_t len_record2() const { return m_len_record2; }
-        windows_evt_log_t* _root() const { return m__root; }
-        windows_evt_log_t* _parent() const { return m__parent; }
-        std::string _raw_body() const { return m__raw_body; }
-        kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
-    };
-
-    /**
-     * \sa Source
-     */
-
-    class record_body_t : public kaitai::kstruct {
-
-    public:
-
-        enum event_types_t {
-            EVENT_TYPES_ERROR = 1,
-            EVENT_TYPES_AUDIT_FAILURE = 2,
-            EVENT_TYPES_AUDIT_SUCCESS = 3,
-            EVENT_TYPES_INFO = 4,
-            EVENT_TYPES_WARNING = 5
-        };
-
-        record_body_t(kaitai::kstream* p__io, windows_evt_log_t::record_t* p__parent = 0, windows_evt_log_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~record_body_t();
-
-    private:
-        bool f_user_sid;
-        std::string m_user_sid;
-
-    public:
-        std::string user_sid();
-
-    private:
-        bool f_data;
-        std::string m_data;
-
-    public:
-        std::string data();
-
-    private:
-        uint32_t m_idx;
-        uint32_t m_time_generated;
-        uint32_t m_time_written;
-        uint32_t m_event_id;
-        event_types_t m_event_type;
-        uint16_t m_num_strings;
-        uint16_t m_event_category;
-        std::string m_reserved;
-        uint32_t m_ofs_strings;
-        uint32_t m_len_user_sid;
-        uint32_t m_ofs_user_sid;
-        uint32_t m_len_data;
-        uint32_t m_ofs_data;
-        windows_evt_log_t* m__root;
-        windows_evt_log_t::record_t* m__parent;
-
-    public:
-
-        /**
-         * Index of record in the file.
-         */
-        uint32_t idx() const { return m_idx; }
-
-        /**
-         * Time when this record was generated, POSIX timestamp format.
-         */
-        uint32_t time_generated() const { return m_time_generated; }
-
-        /**
-         * Time when thsi record was written into the log file, POSIX timestamp format.
-         */
-        uint32_t time_written() const { return m_time_written; }
-
-        /**
-         * Identifier of an event, meaning is specific to particular
-         * source of events / event type.
-         */
-        uint32_t event_id() const { return m_event_id; }
-
-        /**
-         * Type of event.
-         * \sa Source
-         */
-        event_types_t event_type() const { return m_event_type; }
-
-        /**
-         * Number of strings present in the log.
-         */
-        uint16_t num_strings() const { return m_num_strings; }
-
-        /**
-         * \sa Source
-         */
-        uint16_t event_category() const { return m_event_category; }
-        std::string reserved() const { return m_reserved; }
-
-        /**
-         * Offset of strings present in the log
-         */
-        uint32_t ofs_strings() const { return m_ofs_strings; }
-        uint32_t len_user_sid() const { return m_len_user_sid; }
-        uint32_t ofs_user_sid() const { return m_ofs_user_sid; }
-        uint32_t len_data() const { return m_len_data; }
-        uint32_t ofs_data() const { return m_ofs_data; }
-        windows_evt_log_t* _root() const { return m__root; }
-        windows_evt_log_t::record_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa Source
-     */
-
-    class cursor_record_body_t : public kaitai::kstruct {
-
-    public:
-
-        cursor_record_body_t(kaitai::kstream* p__io, windows_evt_log_t::record_t* p__parent = 0, windows_evt_log_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~cursor_record_body_t();
-
-    private:
-        std::string m_magic;
-        uint32_t m_ofs_first_record;
-        uint32_t m_ofs_next_record;
-        uint32_t m_idx_next_record;
-        uint32_t m_idx_first_record;
-        windows_evt_log_t* m__root;
-        windows_evt_log_t::record_t* m__parent;
-
-    public:
-        std::string magic() const { return m_magic; }
-        uint32_t ofs_first_record() const { return m_ofs_first_record; }
-        uint32_t ofs_next_record() const { return m_ofs_next_record; }
-        uint32_t idx_next_record() const { return m_idx_next_record; }
-        uint32_t idx_first_record() const { return m_idx_first_record; }
-        windows_evt_log_t* _root() const { return m__root; }
-        windows_evt_log_t::record_t* _parent() const { return m__parent; }
-    };
-
-private:
-    header_t* m_header;
-    std::vector&lt;record_t*&gt;* m_records;
-    windows_evt_log_t* m__root;
-    kaitai::kstruct* m__parent;
-
-public:
-    header_t* header() const { return m_header; }
-    std::vector&lt;record_t*&gt;* records() const { return m_records; }
-    windows_evt_log_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-};
-
-#endif  // WINDOWS_EVT_LOG_H_
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef WINDOWS_EVT_LOG_H_</span>
+<span class="cp">#define WINDOWS_EVT_LOG_H_</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * EVT files are Windows Event Log files written by older Windows</span>
+<span class="cm"> * operating systems (2000, XP, 2003). They are used as binary log</span>
+<span class="cm"> * files by several major Windows subsystems and</span>
+<span class="cm"> * applications. Typically, several of them can be found in</span>
+<span class="cm"> * `%WINDIR%\system32\config` directory:</span>
+<span class="cm"> * </span>
+<span class="cm"> * * Application = `AppEvent.evt`</span>
+<span class="cm"> * * System = `SysEvent.evt`</span>
+<span class="cm"> * * Security = `SecEvent.evt`</span>
+<span class="cm"> * </span>
+<span class="cm"> * Alternatively, one can export any system event log as distinct .evt</span>
+<span class="cm"> * file using relevant option in Event Viewer application.</span>
+<span class="cm"> * </span>
+<span class="cm"> * A Windows application can submit an entry into these logs using</span>
+<span class="cm"> * [ReportEvent](https://msdn.microsoft.com/en-us/library/aa363679(v=vs.85).aspx)</span>
+<span class="cm"> * function of Windows API.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Internally, EVT files consist of a fixed-size header and event</span>
+<span class="cm"> * records. There are several usage scenarios (non-wrapping vs wrapping</span>
+<span class="cm"> * log files) which result in slightly different organization of</span>
+<span class="cm"> * records.</span>
+<span class="cm"> * \sa Source</span>
+<span class="cm"> */</span>
+
+<span class="k">class</span> <span class="nc">windows_evt_log_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">header_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">record_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">record_body_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">cursor_record_body_t</span><span class="p">;</span>
+
+    <span class="n">windows_evt_log_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">windows_evt_log_t</span><span class="p">();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">header_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="k">class</span> <span class="nc">flags_t</span><span class="p">;</span>
+
+        <span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">header_t</span><span class="p">();</span>
+
+        <span class="k">class</span> <span class="nc">flags_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+        <span class="k">public</span><span class="o">:</span>
+
+            <span class="n">flags_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="o">~</span><span class="n">flags_t</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">uint64_t</span> <span class="n">m_reserved</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_archive</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_log_full</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_wrap</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_dirty</span><span class="p">;</span>
+            <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+            <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">uint64_t</span> <span class="n">reserved</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * True if archive attribute has been set for this log file.</span>
+<span class="cm">             */</span>
+            <span class="kt">bool</span> <span class="n">archive</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_archive</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * True if last write operation failed due to log being full.</span>
+<span class="cm">             */</span>
+            <span class="kt">bool</span> <span class="n">log_full</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_log_full</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * True if wrapping of record has occured.</span>
+<span class="cm">             */</span>
+            <span class="kt">bool</span> <span class="n">wrap</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_wrap</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * True if write operation was in progress, but log file</span>
+<span class="cm">             * wasn&#39;t properly closed.</span>
+<span class="cm">             */</span>
+            <span class="kt">bool</span> <span class="n">dirty</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_dirty</span><span class="p">;</span> <span class="p">}</span>
+            <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">m_len_header</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_magic</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_version_major</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_version_minor</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_ofs_start</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_ofs_end</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_cur_rec_idx</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_oldest_rec_idx</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_len_file_max</span><span class="p">;</span>
+        <span class="n">flags_t</span><span class="o">*</span> <span class="n">m_flags</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_retention</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_len_header_2</span><span class="p">;</span>
+        <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Size of the header structure, must be 0x30.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">len_header</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_header</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">magic</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_magic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">version_major</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_version_major</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">version_minor</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_version_minor</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Offset of oldest record kept in this log file.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">ofs_start</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_start</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Offset of EOF log record, which is a placeholder for new record.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">ofs_end</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_end</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Index of current record, where a new submission would be</span>
+<span class="cm">         * written to (normally there should to EOF log record there).</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">cur_rec_idx</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_cur_rec_idx</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Index of oldest record in the log file</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">oldest_rec_idx</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_oldest_rec_idx</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Total maximum size of the log file</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">len_file_max</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_file_max</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">flags_t</span><span class="o">*</span> <span class="n">flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">retention</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_retention</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Size of the header structure repeated again, and again it must be 0x30.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">len_header_2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_header_2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">record_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">record_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">record_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">m_len_record</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_type</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m_body</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_body</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_body</span><span class="p">()</span> <span class="p">{</span> <span class="n">body</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_body</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">m_len_record2</span><span class="p">;</span>
+        <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_body</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_body</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Size of whole record, including all headers, footers and data</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">len_record</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_record</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Type of record. Normal log records specify &quot;LfLe&quot;</span>
+<span class="cm">         * (0x654c664c) in this field, cursor records use 0x11111111.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_type</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Record body interpretation depends on type of record. Body</span>
+<span class="cm">         * size is specified in a way that it won&#39;t include a 8-byte</span>
+<span class="cm">         * &quot;header&quot; (`len_record` + `type`) and a &quot;footer&quot;</span>
+<span class="cm">         * (`len_record2`).</span>
+<span class="cm">         */</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Size of whole record again.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">len_record2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_record2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">record_body_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="k">enum</span> <span class="n">event_types_t</span> <span class="p">{</span>
+            <span class="n">EVENT_TYPES_ERROR</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">EVENT_TYPES_AUDIT_FAILURE</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">EVENT_TYPES_AUDIT_SUCCESS</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="n">EVENT_TYPES_INFO</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="n">EVENT_TYPES_WARNING</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="p">};</span>
+
+        <span class="n">record_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">record_body_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_user_sid</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_user_sid</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">user_sid</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_data</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_data</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">data</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">m_idx</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_time_generated</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_time_written</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_event_id</span><span class="p">;</span>
+        <span class="n">event_types_t</span> <span class="n">m_event_type</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_num_strings</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_event_category</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_reserved</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_ofs_strings</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_len_user_sid</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_ofs_user_sid</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_len_data</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_ofs_data</span><span class="p">;</span>
+        <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Index of record in the file.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">idx</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_idx</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Time when this record was generated, POSIX timestamp format.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">time_generated</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_time_generated</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Time when thsi record was written into the log file, POSIX timestamp format.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">time_written</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_time_written</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Identifier of an event, meaning is specific to particular</span>
+<span class="cm">         * source of events / event type.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">event_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_event_id</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Type of event.</span>
+<span class="cm">         * \sa Source</span>
+<span class="cm">         */</span>
+        <span class="n">event_types_t</span> <span class="n">event_type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_event_type</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Number of strings present in the log.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">num_strings</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_num_strings</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * \sa Source</span>
+<span class="cm">         */</span>
+        <span class="kt">uint16_t</span> <span class="n">event_category</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_event_category</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reserved</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Offset of strings present in the log</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">ofs_strings</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_strings</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">len_user_sid</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_user_sid</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">ofs_user_sid</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_user_sid</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">len_data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">ofs_data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">cursor_record_body_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">cursor_record_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">cursor_record_body_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_magic</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_ofs_first_record</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_ofs_next_record</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_idx_next_record</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_idx_first_record</span><span class="p">;</span>
+        <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">magic</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_magic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">ofs_first_record</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_first_record</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">ofs_next_record</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_next_record</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">idx_next_record</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_idx_next_record</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">idx_first_record</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_idx_first_record</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">header_t</span><span class="o">*</span> <span class="n">m_header</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">record_t</span><span class="o">*&gt;*</span> <span class="n">m_records</span><span class="p">;</span>
+    <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">header_t</span><span class="o">*</span> <span class="n">header</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_header</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">record_t</span><span class="o">*&gt;*</span> <span class="n">records</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_records</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cp">#endif  </span><span class="c1">// WINDOWS_EVT_LOG_H_</span>
+</pre></div>
 
         </div>
         
@@ -712,190 +709,190 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;windows_evt_log.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;windows_evt_log.h&quot;</span><span class="cp"></span>
 
 
 
-windows_evt_log_t::windows_evt_log_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, windows_evt_log_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    _read();
-}
+<span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">windows_evt_log_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void windows_evt_log_t::_read() {
-    m_header = new header_t(m__io, this, m__root);
-    m_records = new std::vector&lt;record_t*&gt;();
-    {
-        int i = 0;
-        while (!m__io-&gt;is_eof()) {
-            m_records-&gt;push_back(new record_t(m__io, this, m__root));
-            i++;
-        }
-    }
-}
+<span class="kt">void</span> <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">header_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_records</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">record_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">m_records</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">record_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-windows_evt_log_t::~windows_evt_log_t() {
-    delete m_header;
-    for (std::vector&lt;record_t*&gt;::iterator it = m_records-&gt;begin(); it != m_records-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_records;
-}
+<span class="n">windows_evt_log_t</span><span class="o">::~</span><span class="n">windows_evt_log_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_header</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">record_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_records</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_records</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_records</span><span class="p">;</span>
+<span class="p">}</span>
 
-windows_evt_log_t::header_t::header_t(kaitai::kstream* p__io, windows_evt_log_t* p__parent, windows_evt_log_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">header_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void windows_evt_log_t::header_t::_read() {
-    m_len_header = m__io-&gt;read_u4le();
-    m_magic = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x4C\x66\x4C\x65&quot;, 4));
-    m_version_major = m__io-&gt;read_u4le();
-    m_version_minor = m__io-&gt;read_u4le();
-    m_ofs_start = m__io-&gt;read_u4le();
-    m_ofs_end = m__io-&gt;read_u4le();
-    m_cur_rec_idx = m__io-&gt;read_u4le();
-    m_oldest_rec_idx = m__io-&gt;read_u4le();
-    m_len_file_max = m__io-&gt;read_u4le();
-    m_flags = new flags_t(m__io, this, m__root);
-    m_retention = m__io-&gt;read_u4le();
-    m_len_header_2 = m__io-&gt;read_u4le();
-}
+<span class="kt">void</span> <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_len_header</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_magic</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x4C\x66\x4C\x65</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">));</span>
+    <span class="n">m_version_major</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_version_minor</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_ofs_start</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_ofs_end</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_cur_rec_idx</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_oldest_rec_idx</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_len_file_max</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_flags</span> <span class="o">=</span> <span class="k">new</span> <span class="n">flags_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_retention</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_len_header_2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="p">}</span>
 
-windows_evt_log_t::header_t::~header_t() {
-    delete m_flags;
-}
+<span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::~</span><span class="n">header_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_flags</span><span class="p">;</span>
+<span class="p">}</span>
 
-windows_evt_log_t::header_t::flags_t::flags_t(kaitai::kstream* p__io, windows_evt_log_t::header_t* p__parent, windows_evt_log_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">flags_t</span><span class="o">::</span><span class="n">flags_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void windows_evt_log_t::header_t::flags_t::_read() {
-    m_reserved = m__io-&gt;read_bits_int(28);
-    m_archive = m__io-&gt;read_bits_int(1);
-    m_log_full = m__io-&gt;read_bits_int(1);
-    m_wrap = m__io-&gt;read_bits_int(1);
-    m_dirty = m__io-&gt;read_bits_int(1);
-}
+<span class="kt">void</span> <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">flags_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_reserved</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">28</span><span class="p">);</span>
+    <span class="n">m_archive</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_log_full</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_wrap</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_dirty</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
 
-windows_evt_log_t::header_t::flags_t::~flags_t() {
-}
+<span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">header_t</span><span class="o">::</span><span class="n">flags_t</span><span class="o">::~</span><span class="n">flags_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-windows_evt_log_t::record_t::record_t(kaitai::kstream* p__io, windows_evt_log_t* p__parent, windows_evt_log_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">::</span><span class="n">record_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void windows_evt_log_t::record_t::_read() {
-    m_len_record = m__io-&gt;read_u4le();
-    m_type = m__io-&gt;read_u4le();
-    n_body = true;
-    switch (type()) {
-    case 1699505740: {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes((len_record() - 12));
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new record_body_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    case 286331153: {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes((len_record() - 12));
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new cursor_record_body_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    default: {
-        m__raw_body = m__io-&gt;read_bytes((len_record() - 12));
-        break;
-    }
-    }
-    m_len_record2 = m__io-&gt;read_u4le();
-}
+<span class="kt">void</span> <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_len_record</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_type</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">n_body</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">type</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="mi">1699505740</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_record</span><span class="p">()</span> <span class="o">-</span> <span class="mi">12</span><span class="p">));</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">record_body_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="mi">286331153</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_record</span><span class="p">()</span> <span class="o">-</span> <span class="mi">12</span><span class="p">));</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">cursor_record_body_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">default</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">len_record</span><span class="p">()</span> <span class="o">-</span> <span class="mi">12</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">m_len_record2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="p">}</span>
 
-windows_evt_log_t::record_t::~record_t() {
-    if (!n_body) {
-        delete m__io__raw_body;
-        delete m_body;
-    }
-}
+<span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">::~</span><span class="n">record_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_body</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="n">m_body</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-windows_evt_log_t::record_body_t::record_body_t(kaitai::kstream* p__io, windows_evt_log_t::record_t* p__parent, windows_evt_log_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_user_sid = false;
-    f_data = false;
-    _read();
-}
+<span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_body_t</span><span class="o">::</span><span class="n">record_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_user_sid</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_data</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void windows_evt_log_t::record_body_t::_read() {
-    m_idx = m__io-&gt;read_u4le();
-    m_time_generated = m__io-&gt;read_u4le();
-    m_time_written = m__io-&gt;read_u4le();
-    m_event_id = m__io-&gt;read_u4le();
-    m_event_type = static_cast&lt;windows_evt_log_t::record_body_t::event_types_t&gt;(m__io-&gt;read_u2le());
-    m_num_strings = m__io-&gt;read_u2le();
-    m_event_category = m__io-&gt;read_u2le();
-    m_reserved = m__io-&gt;read_bytes(6);
-    m_ofs_strings = m__io-&gt;read_u4le();
-    m_len_user_sid = m__io-&gt;read_u4le();
-    m_ofs_user_sid = m__io-&gt;read_u4le();
-    m_len_data = m__io-&gt;read_u4le();
-    m_ofs_data = m__io-&gt;read_u4le();
-}
+<span class="kt">void</span> <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_body_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_idx</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_time_generated</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_time_written</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_event_id</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_event_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_body_t</span><span class="o">::</span><span class="n">event_types_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">());</span>
+    <span class="n">m_num_strings</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_event_category</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_reserved</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+    <span class="n">m_ofs_strings</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_len_user_sid</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_ofs_user_sid</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_len_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_ofs_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="p">}</span>
 
-windows_evt_log_t::record_body_t::~record_body_t() {
-    if (f_user_sid) {
-    }
-    if (f_data) {
-    }
-}
+<span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_body_t</span><span class="o">::~</span><span class="n">record_body_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_user_sid</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-std::string windows_evt_log_t::record_body_t::user_sid() {
-    if (f_user_sid)
-        return m_user_sid;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek((ofs_user_sid() - 8));
-    m_user_sid = m__io-&gt;read_bytes(len_user_sid());
-    m__io-&gt;seek(_pos);
-    f_user_sid = true;
-    return m_user_sid;
-}
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_body_t</span><span class="o">::</span><span class="n">user_sid</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_user_sid</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_user_sid</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">((</span><span class="n">ofs_user_sid</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
+    <span class="n">m_user_sid</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_user_sid</span><span class="p">());</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_user_sid</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_user_sid</span><span class="p">;</span>
+<span class="p">}</span>
 
-std::string windows_evt_log_t::record_body_t::data() {
-    if (f_data)
-        return m_data;
-    std::streampos _pos = m__io-&gt;pos();
-    m__io-&gt;seek((ofs_data() - 8));
-    m_data = m__io-&gt;read_bytes(len_data());
-    m__io-&gt;seek(_pos);
-    f_data = true;
-    return m_data;
-}
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_body_t</span><span class="o">::</span><span class="n">data</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_data</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">((</span><span class="n">ofs_data</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
+    <span class="n">m_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">());</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_data</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_data</span><span class="p">;</span>
+<span class="p">}</span>
 
-windows_evt_log_t::cursor_record_body_t::cursor_record_body_t(kaitai::kstream* p__io, windows_evt_log_t::record_t* p__parent, windows_evt_log_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">cursor_record_body_t</span><span class="o">::</span><span class="n">cursor_record_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">record_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">windows_evt_log_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void windows_evt_log_t::cursor_record_body_t::_read() {
-    m_magic = m__io-&gt;ensure_fixed_contents(std::string(&quot;\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44&quot;, 12));
-    m_ofs_first_record = m__io-&gt;read_u4le();
-    m_ofs_next_record = m__io-&gt;read_u4le();
-    m_idx_next_record = m__io-&gt;read_u4le();
-    m_idx_first_record = m__io-&gt;read_u4le();
-}
+<span class="kt">void</span> <span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">cursor_record_body_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_magic</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">ensure_fixed_contents</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x22\x22\x22\x22\x33\x33\x33\x33\x44\x44\x44\x44</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">12</span><span class="p">));</span>
+    <span class="n">m_ofs_first_record</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_ofs_next_record</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_idx_next_record</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_idx_first_record</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+<span class="p">}</span>
 
-windows_evt_log_t::cursor_record_body_t::~cursor_record_body_t() {
-}
-</code></pre>
+<span class="n">windows_evt_log_t</span><span class="o">::</span><span class="n">cursor_record_body_t</span><span class="o">::~</span><span class="n">cursor_record_body_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -922,8 +919,8 @@ windows_evt_log_t::cursor_record_body_t::~cursor_record_body_t() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -241,160 +238,160 @@ frames with the <code>fin</code> bit set.</p>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * The WebSocket protocol establishes a two-way communication channel via TCP.
- * Messages are made up of one or more dataframes, and are delineated by
- * frames with the `fin` bit set.
- */
+<span class="sd">/**</span>
+<span class="sd"> * The WebSocket protocol establishes a two-way communication channel via TCP.</span>
+<span class="sd"> * Messages are made up of one or more dataframes, and are delineated by</span>
+<span class="sd"> * frames with the `fin` bit set.</span>
+<span class="sd"> */</span>
 
-class Websocket extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Websocket $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Websocket</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Websocket</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_initialFrame = new \Websocket\InitialFrame($this-&gt;_io, $this, $this-&gt;_root);
-        if ($this-&gt;initialFrame()-&gt;header()-&gt;finished() != true) {
-            $this-&gt;_m_trailingFrames = [];
-            $i = 0;
-            do {
-                $_ = new \Websocket\Dataframe($this-&gt;_io, $this, $this-&gt;_root);
-                $this-&gt;_m_trailingFrames[] = $_;
-                $i++;
-            } while (!($_-&gt;header()-&gt;finished()));
-        }
-    }
-    protected $_m_initialFrame;
-    protected $_m_trailingFrames;
-    public function initialFrame() { return $this-&gt;_m_initialFrame; }
-    public function trailingFrames() { return $this-&gt;_m_trailingFrames; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_initialFrame</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Websocket\InitialFrame</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">initialFrame</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">finished</span><span class="p">()</span> <span class="o">!=</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trailingFrames</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">do</span> <span class="p">{</span>
+                <span class="nv">$_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Websocket\Dataframe</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trailingFrames</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$_</span><span class="p">;</span>
+                <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$_</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">finished</span><span class="p">()));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_initialFrame</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_trailingFrames</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">initialFrame</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_initialFrame</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">trailingFrames</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trailingFrames</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Websocket;
+<span class="k">namespace</span> <span class="nx">\Websocket</span><span class="p">;</span>
 
-class FrameHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Websocket $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">FrameHeader</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Websocket</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_finished = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_reserved = $this-&gt;_io-&gt;readBitsInt(3);
-        $this-&gt;_m_opcode = $this-&gt;_io-&gt;readBitsInt(4);
-        $this-&gt;_m_isMasked = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_lenPayloadPrimary = $this-&gt;_io-&gt;readBitsInt(7);
-        $this-&gt;_io-&gt;alignToByte();
-        if ($this-&gt;lenPayloadPrimary() == 126) {
-            $this-&gt;_m_lenPayloadExtended1 = $this-&gt;_io-&gt;readU2be();
-        }
-        if ($this-&gt;lenPayloadPrimary() == 127) {
-            $this-&gt;_m_lenPayloadExtended2 = $this-&gt;_io-&gt;readU4be();
-        }
-        if ($this-&gt;isMasked()) {
-            $this-&gt;_m_maskKey = $this-&gt;_io-&gt;readU4be();
-        }
-    }
-    protected $_m_lenPayload;
-    public function lenPayload() {
-        if ($this-&gt;_m_lenPayload !== null)
-            return $this-&gt;_m_lenPayload;
-        $this-&gt;_m_lenPayload = ($this-&gt;lenPayloadPrimary() &lt;= 125 ? $this-&gt;lenPayloadPrimary() : ($this-&gt;lenPayloadPrimary() == 126 ? $this-&gt;lenPayloadExtended1() : $this-&gt;lenPayloadExtended2()));
-        return $this-&gt;_m_lenPayload;
-    }
-    protected $_m_finished;
-    protected $_m_reserved;
-    protected $_m_opcode;
-    protected $_m_isMasked;
-    protected $_m_lenPayloadPrimary;
-    protected $_m_lenPayloadExtended1;
-    protected $_m_lenPayloadExtended2;
-    protected $_m_maskKey;
-    public function finished() { return $this-&gt;_m_finished; }
-    public function reserved() { return $this-&gt;_m_reserved; }
-    public function opcode() { return $this-&gt;_m_opcode; }
-    public function isMasked() { return $this-&gt;_m_isMasked; }
-    public function lenPayloadPrimary() { return $this-&gt;_m_lenPayloadPrimary; }
-    public function lenPayloadExtended1() { return $this-&gt;_m_lenPayloadExtended1; }
-    public function lenPayloadExtended2() { return $this-&gt;_m_lenPayloadExtended2; }
-    public function maskKey() { return $this-&gt;_m_maskKey; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_finished</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_opcode</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isMasked</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayloadPrimary</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">alignToByte</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenPayloadPrimary</span><span class="p">()</span> <span class="o">==</span> <span class="mi">126</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayloadExtended1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenPayloadPrimary</span><span class="p">()</span> <span class="o">==</span> <span class="mi">127</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayloadExtended2</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isMasked</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskKey</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4be</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenPayload</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenPayload</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayload</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayload</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayload</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenPayloadPrimary</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">125</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenPayloadPrimary</span><span class="p">()</span> <span class="o">:</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenPayloadPrimary</span><span class="p">()</span> <span class="o">==</span> <span class="mi">126</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenPayloadExtended1</span><span class="p">()</span> <span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenPayloadExtended2</span><span class="p">()));</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayload</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_finished</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_reserved</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_opcode</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_isMasked</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenPayloadPrimary</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenPayloadExtended1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_lenPayloadExtended2</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_maskKey</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">finished</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_finished</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">reserved</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_reserved</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">opcode</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_opcode</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isMasked</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isMasked</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenPayloadPrimary</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayloadPrimary</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenPayloadExtended1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayloadExtended1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">lenPayloadExtended2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_lenPayloadExtended2</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">maskKey</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskKey</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Websocket;
+<span class="k">namespace</span> <span class="nx">\Websocket</span><span class="p">;</span>
 
-class InitialFrame extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Websocket $_parent = null, \Websocket $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">InitialFrame</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Websocket</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Websocket</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_header = new \Websocket\FrameHeader($this-&gt;_io, $this, $this-&gt;_root);
-        if ($this-&gt;header()-&gt;opcode() != \Websocket\Opcode::TEXT) {
-            $this-&gt;_m_payloadBytes = $this-&gt;_io-&gt;readBytes($this-&gt;header()-&gt;lenPayload());
-        }
-        if ($this-&gt;header()-&gt;opcode() == \Websocket\Opcode::TEXT) {
-            $this-&gt;_m_payloadText = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;header()-&gt;lenPayload()), &quot;UTF-8&quot;);
-        }
-    }
-    protected $_m_header;
-    protected $_m_payloadBytes;
-    protected $_m_payloadText;
-    public function header() { return $this-&gt;_m_header; }
-    public function payloadBytes() { return $this-&gt;_m_payloadBytes; }
-    public function payloadText() { return $this-&gt;_m_payloadText; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Websocket\FrameHeader</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">opcode</span><span class="p">()</span> <span class="o">!=</span> <span class="nx">\Websocket\Opcode</span><span class="o">::</span><span class="na">TEXT</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payloadBytes</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">lenPayload</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">opcode</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Websocket\Opcode</span><span class="o">::</span><span class="na">TEXT</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payloadText</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">lenPayload</span><span class="p">()),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_header</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_payloadBytes</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_payloadText</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">payloadBytes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payloadBytes</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">payloadText</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payloadText</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Websocket;
+<span class="k">namespace</span> <span class="nx">\Websocket</span><span class="p">;</span>
 
-class Dataframe extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Websocket $_parent = null, \Websocket $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">Dataframe</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Websocket</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Websocket</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_header = new \Websocket\FrameHeader($this-&gt;_io, $this, $this-&gt;_root);
-        if ($this-&gt;_root()-&gt;initialFrame()-&gt;header()-&gt;opcode() != \Websocket\Opcode::TEXT) {
-            $this-&gt;_m_payloadBytes = $this-&gt;_io-&gt;readBytes($this-&gt;header()-&gt;lenPayload());
-        }
-        if ($this-&gt;_root()-&gt;initialFrame()-&gt;header()-&gt;opcode() == \Websocket\Opcode::TEXT) {
-            $this-&gt;_m_payloadText = \Kaitai\Struct\Stream::bytesToStr($this-&gt;_io-&gt;readBytes($this-&gt;header()-&gt;lenPayload()), &quot;UTF-8&quot;);
-        }
-    }
-    protected $_m_header;
-    protected $_m_payloadBytes;
-    protected $_m_payloadText;
-    public function header() { return $this-&gt;_m_header; }
-    public function payloadBytes() { return $this-&gt;_m_payloadBytes; }
-    public function payloadText() { return $this-&gt;_m_payloadText; }
-}
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Websocket\FrameHeader</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">initialFrame</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">opcode</span><span class="p">()</span> <span class="o">!=</span> <span class="nx">\Websocket\Opcode</span><span class="o">::</span><span class="na">TEXT</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payloadBytes</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">lenPayload</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">initialFrame</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">opcode</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Websocket\Opcode</span><span class="o">::</span><span class="na">TEXT</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payloadText</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">lenPayload</span><span class="p">()),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_header</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_payloadBytes</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_payloadText</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">payloadBytes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payloadBytes</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">payloadText</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_payloadText</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \Websocket;
+<span class="k">namespace</span> <span class="nx">\Websocket</span><span class="p">;</span>
 
-class Opcode {
-    const CONTINUATION = 0;
-    const TEXT = 1;
-    const BINARY = 2;
-    const RESERVED_3 = 3;
-    const RESERVED_4 = 4;
-    const RESERVED_5 = 5;
-    const RESERVED_6 = 6;
-    const RESERVED_7 = 7;
-    const CLOSE = 8;
-    const PING = 9;
-    const PONG = 10;
-    const RESERVED_CONTROL_B = 11;
-    const RESERVED_CONTROL_C = 12;
-    const RESERVED_CONTROL_D = 13;
-    const RESERVED_CONTROL_E = 14;
-    const RESERVED_CONTROL_F = 15;
-}
-</code></pre>
+<span class="k">class</span> <span class="nc">Opcode</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">CONTINUATION</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">TEXT</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">BINARY</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RESERVED_3</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RESERVED_4</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RESERVED_5</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RESERVED_6</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RESERVED_7</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CLOSE</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">PING</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">PONG</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RESERVED_CONTROL_B</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RESERVED_CONTROL_C</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RESERVED_CONTROL_D</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RESERVED_CONTROL_E</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RESERVED_CONTROL_F</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -421,8 +418,8 @@ class Opcode {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

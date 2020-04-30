@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -243,457 +240,457 @@ data = QuicktimeMov.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# @see https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF Source
-class QuicktimeMov &lt; Kaitai::Struct::Struct
+<span class="c1">##</span>
+<span class="c1"># @see https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-BBCGDDDF Source</span>
+<span class="k">class</span> <span class="nc">QuicktimeMov</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
-  ATOM_TYPE = {
-    1484026465 =&gt; :atom_type_xtra,
-    1684631142 =&gt; :atom_type_dinf,
-    1685218662 =&gt; :atom_type_dref,
-    1701082227 =&gt; :atom_type_edts,
-    1701606260 =&gt; :atom_type_elst,
-    1718773093 =&gt; :atom_type_free,
-    1718909296 =&gt; :atom_type_ftyp,
-    1751411826 =&gt; :atom_type_hdlr,
-    1768907891 =&gt; :atom_type_iods,
-    1835295092 =&gt; :atom_type_mdat,
-    1835296868 =&gt; :atom_type_mdhd,
-    1835297121 =&gt; :atom_type_mdia,
-    1835365473 =&gt; :atom_type_meta,
-    1835626086 =&gt; :atom_type_minf,
-    1836019558 =&gt; :atom_type_moof,
-    1836019574 =&gt; :atom_type_moov,
-    1836476516 =&gt; :atom_type_mvhd,
-    1936549988 =&gt; :atom_type_smhd,
-    1937007212 =&gt; :atom_type_stbl,
-    1937007471 =&gt; :atom_type_stco,
-    1937011555 =&gt; :atom_type_stsc,
-    1937011556 =&gt; :atom_type_stsd,
-    1937011578 =&gt; :atom_type_stsz,
-    1937011827 =&gt; :atom_type_stts,
-    1953196132 =&gt; :atom_type_tkhd,
-    1953653094 =&gt; :atom_type_traf,
-    1953653099 =&gt; :atom_type_trak,
-    1953654118 =&gt; :atom_type_tref,
-    1969517665 =&gt; :atom_type_udta,
-    1986881636 =&gt; :atom_type_vmhd,
-  }
-  I__ATOM_TYPE = ATOM_TYPE.invert
+  <span class="no">ATOM_TYPE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">1484026465</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_xtra</span><span class="p">,</span>
+    <span class="mi">1684631142</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_dinf</span><span class="p">,</span>
+    <span class="mi">1685218662</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_dref</span><span class="p">,</span>
+    <span class="mi">1701082227</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_edts</span><span class="p">,</span>
+    <span class="mi">1701606260</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_elst</span><span class="p">,</span>
+    <span class="mi">1718773093</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_free</span><span class="p">,</span>
+    <span class="mi">1718909296</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_ftyp</span><span class="p">,</span>
+    <span class="mi">1751411826</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_hdlr</span><span class="p">,</span>
+    <span class="mi">1768907891</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_iods</span><span class="p">,</span>
+    <span class="mi">1835295092</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_mdat</span><span class="p">,</span>
+    <span class="mi">1835296868</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_mdhd</span><span class="p">,</span>
+    <span class="mi">1835297121</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_mdia</span><span class="p">,</span>
+    <span class="mi">1835365473</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_meta</span><span class="p">,</span>
+    <span class="mi">1835626086</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_minf</span><span class="p">,</span>
+    <span class="mi">1836019558</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_moof</span><span class="p">,</span>
+    <span class="mi">1836019574</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_moov</span><span class="p">,</span>
+    <span class="mi">1836476516</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_mvhd</span><span class="p">,</span>
+    <span class="mi">1936549988</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_smhd</span><span class="p">,</span>
+    <span class="mi">1937007212</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_stbl</span><span class="p">,</span>
+    <span class="mi">1937007471</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_stco</span><span class="p">,</span>
+    <span class="mi">1937011555</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_stsc</span><span class="p">,</span>
+    <span class="mi">1937011556</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_stsd</span><span class="p">,</span>
+    <span class="mi">1937011578</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_stsz</span><span class="p">,</span>
+    <span class="mi">1937011827</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_stts</span><span class="p">,</span>
+    <span class="mi">1953196132</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_tkhd</span><span class="p">,</span>
+    <span class="mi">1953653094</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_traf</span><span class="p">,</span>
+    <span class="mi">1953653099</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_trak</span><span class="p">,</span>
+    <span class="mi">1953654118</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_tref</span><span class="p">,</span>
+    <span class="mi">1969517665</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_udta</span><span class="p">,</span>
+    <span class="mi">1986881636</span> <span class="o">=&gt;</span> <span class="ss">:atom_type_vmhd</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__ATOM_TYPE</span> <span class="o">=</span> <span class="no">ATOM_TYPE</span><span class="o">.</span><span class="n">invert</span>
 
-  BRAND = {
-    862401121 =&gt; :brand_x_3g2a,
-    862414134 =&gt; :brand_x_3ge6,
-    862414137 =&gt; :brand_x_3ge9,
-    862414393 =&gt; :brand_x_3gf9,
-    862414646 =&gt; :brand_x_3gg6,
-    862414649 =&gt; :brand_x_3gg9,
-    862414905 =&gt; :brand_x_3gh9,
-    862416185 =&gt; :brand_x_3gm9,
-    862416948 =&gt; :brand_x_3gp4,
-    862416949 =&gt; :brand_x_3gp5,
-    862416950 =&gt; :brand_x_3gp6,
-    862416951 =&gt; :brand_x_3gp7,
-    862416952 =&gt; :brand_x_3gp8,
-    862416953 =&gt; :brand_x_3gp9,
-    862417462 =&gt; :brand_x_3gr6,
-    862417465 =&gt; :brand_x_3gr9,
-    862417718 =&gt; :brand_x_3gs6,
-    862417721 =&gt; :brand_x_3gs9,
-    862417977 =&gt; :brand_x_3gt9,
-    1095914057 =&gt; :brand_arri,
-    1128351056 =&gt; :brand_caep,
-    1128555891 =&gt; :brand_cdes,
-    1244811312 =&gt; :brand_j2p0,
-    1244811313 =&gt; :brand_j2p1,
-    1279476039 =&gt; :brand_lcag,
-    1295270176 =&gt; :brand_m4a,
-    1295270432 =&gt; :brand_m4b,
-    1295274016 =&gt; :brand_m4p,
-    1295275552 =&gt; :brand_m4v,
-    1296454477 =&gt; :brand_mfsm,
-    1296520022 =&gt; :brand_mgsv,
-    1297109065 =&gt; :brand_mppi,
-    1297305174 =&gt; :brand_msnv,
-    1380930387 =&gt; :brand_ross,
-    1397047637 =&gt; :brand_seau,
-    1397047883 =&gt; :brand_sebk,
-    1480676931 =&gt; :brand_xavc,
-    1635148593 =&gt; :brand_avc1,
-    1650620525 =&gt; :brand_bbxm,
-    1667330422 =&gt; :brand_caqv,
-    1667458662 =&gt; :brand_ccff,
-    1684090977 =&gt; :brand_da0a,
-    1684090978 =&gt; :brand_da0b,
-    1684091233 =&gt; :brand_da1a,
-    1684091234 =&gt; :brand_da1b,
-    1684091489 =&gt; :brand_da2a,
-    1684091490 =&gt; :brand_da2b,
-    1684091745 =&gt; :brand_da3a,
-    1684091746 =&gt; :brand_da3b,
-    1684108136 =&gt; :brand_dash,
-    1684175153 =&gt; :brand_dby1,
-    1684890161 =&gt; :brand_dmb1,
-    1685286259 =&gt; :brand_dsms,
-    1685467489 =&gt; :brand_dv1a,
-    1685467490 =&gt; :brand_dv1b,
-    1685467745 =&gt; :brand_dv2a,
-    1685467746 =&gt; :brand_dv2b,
-    1685468001 =&gt; :brand_dv3a,
-    1685468002 =&gt; :brand_dv3b,
-    1685484081 =&gt; :brand_dvr1,
-    1685484593 =&gt; :brand_dvt1,
-    1685614368 =&gt; :brand_dxo,
-    1701671783 =&gt; :brand_emsg,
-    1768321645 =&gt; :brand_ifrm,
-    1769169714 =&gt; :brand_isc2,
-    1769172786 =&gt; :brand_iso2,
-    1769172787 =&gt; :brand_iso3,
-    1769172788 =&gt; :brand_iso4,
-    1769172789 =&gt; :brand_iso5,
-    1769172790 =&gt; :brand_iso6,
-    1769172845 =&gt; :brand_isom,
-    1785737760 =&gt; :brand_jp2,
-    1785752864 =&gt; :brand_jpm,
-    1785754473 =&gt; :brand_jpsi,
-    1785755680 =&gt; :brand_jpx,
-    1785755746 =&gt; :brand_jpxb,
-    1819112295 =&gt; :brand_lmsg,
-    1835676275 =&gt; :brand_mj2s,
-    1835692082 =&gt; :brand_mjp2,
-    1836069425 =&gt; :brand_mp21,
-    1836069937 =&gt; :brand_mp41,
-    1836069938 =&gt; :brand_mp42,
-    1836070705 =&gt; :brand_mp71,
-    1836278888 =&gt; :brand_msdh,
-    1836280184 =&gt; :brand_msix,
-    1852402543 =&gt; :brand_niko,
-    1868850022 =&gt; :brand_odcf,
-    1869637170 =&gt; :brand_opf2,
-    1869641778 =&gt; :brand_opx2,
-    1885433441 =&gt; :brand_pana,
-    1885955686 =&gt; :brand_piff,
-    1886287465 =&gt; :brand_pnvi,
-    1903435808 =&gt; :brand_qt,
-    1919513464 =&gt; :brand_risx,
-    1935963680 =&gt; :brand_sdv,
-    1936027254 =&gt; :brand_senv,
-    1936289139 =&gt; :brand_sims,
-    1936290680 =&gt; :brand_sisx,
-    1936946035 =&gt; :brand_ssss,
-    1970697845 =&gt; :brand_uvvu,
-  }
-  I__BRAND = BRAND.invert
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+  <span class="no">BRAND</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">862401121</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3g2a</span><span class="p">,</span>
+    <span class="mi">862414134</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3ge6</span><span class="p">,</span>
+    <span class="mi">862414137</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3ge9</span><span class="p">,</span>
+    <span class="mi">862414393</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gf9</span><span class="p">,</span>
+    <span class="mi">862414646</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gg6</span><span class="p">,</span>
+    <span class="mi">862414649</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gg9</span><span class="p">,</span>
+    <span class="mi">862414905</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gh9</span><span class="p">,</span>
+    <span class="mi">862416185</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gm9</span><span class="p">,</span>
+    <span class="mi">862416948</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gp4</span><span class="p">,</span>
+    <span class="mi">862416949</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gp5</span><span class="p">,</span>
+    <span class="mi">862416950</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gp6</span><span class="p">,</span>
+    <span class="mi">862416951</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gp7</span><span class="p">,</span>
+    <span class="mi">862416952</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gp8</span><span class="p">,</span>
+    <span class="mi">862416953</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gp9</span><span class="p">,</span>
+    <span class="mi">862417462</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gr6</span><span class="p">,</span>
+    <span class="mi">862417465</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gr9</span><span class="p">,</span>
+    <span class="mi">862417718</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gs6</span><span class="p">,</span>
+    <span class="mi">862417721</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gs9</span><span class="p">,</span>
+    <span class="mi">862417977</span> <span class="o">=&gt;</span> <span class="ss">:brand_x_3gt9</span><span class="p">,</span>
+    <span class="mi">1095914057</span> <span class="o">=&gt;</span> <span class="ss">:brand_arri</span><span class="p">,</span>
+    <span class="mi">1128351056</span> <span class="o">=&gt;</span> <span class="ss">:brand_caep</span><span class="p">,</span>
+    <span class="mi">1128555891</span> <span class="o">=&gt;</span> <span class="ss">:brand_cdes</span><span class="p">,</span>
+    <span class="mi">1244811312</span> <span class="o">=&gt;</span> <span class="ss">:brand_j2p0</span><span class="p">,</span>
+    <span class="mi">1244811313</span> <span class="o">=&gt;</span> <span class="ss">:brand_j2p1</span><span class="p">,</span>
+    <span class="mi">1279476039</span> <span class="o">=&gt;</span> <span class="ss">:brand_lcag</span><span class="p">,</span>
+    <span class="mi">1295270176</span> <span class="o">=&gt;</span> <span class="ss">:brand_m4a</span><span class="p">,</span>
+    <span class="mi">1295270432</span> <span class="o">=&gt;</span> <span class="ss">:brand_m4b</span><span class="p">,</span>
+    <span class="mi">1295274016</span> <span class="o">=&gt;</span> <span class="ss">:brand_m4p</span><span class="p">,</span>
+    <span class="mi">1295275552</span> <span class="o">=&gt;</span> <span class="ss">:brand_m4v</span><span class="p">,</span>
+    <span class="mi">1296454477</span> <span class="o">=&gt;</span> <span class="ss">:brand_mfsm</span><span class="p">,</span>
+    <span class="mi">1296520022</span> <span class="o">=&gt;</span> <span class="ss">:brand_mgsv</span><span class="p">,</span>
+    <span class="mi">1297109065</span> <span class="o">=&gt;</span> <span class="ss">:brand_mppi</span><span class="p">,</span>
+    <span class="mi">1297305174</span> <span class="o">=&gt;</span> <span class="ss">:brand_msnv</span><span class="p">,</span>
+    <span class="mi">1380930387</span> <span class="o">=&gt;</span> <span class="ss">:brand_ross</span><span class="p">,</span>
+    <span class="mi">1397047637</span> <span class="o">=&gt;</span> <span class="ss">:brand_seau</span><span class="p">,</span>
+    <span class="mi">1397047883</span> <span class="o">=&gt;</span> <span class="ss">:brand_sebk</span><span class="p">,</span>
+    <span class="mi">1480676931</span> <span class="o">=&gt;</span> <span class="ss">:brand_xavc</span><span class="p">,</span>
+    <span class="mi">1635148593</span> <span class="o">=&gt;</span> <span class="ss">:brand_avc1</span><span class="p">,</span>
+    <span class="mi">1650620525</span> <span class="o">=&gt;</span> <span class="ss">:brand_bbxm</span><span class="p">,</span>
+    <span class="mi">1667330422</span> <span class="o">=&gt;</span> <span class="ss">:brand_caqv</span><span class="p">,</span>
+    <span class="mi">1667458662</span> <span class="o">=&gt;</span> <span class="ss">:brand_ccff</span><span class="p">,</span>
+    <span class="mi">1684090977</span> <span class="o">=&gt;</span> <span class="ss">:brand_da0a</span><span class="p">,</span>
+    <span class="mi">1684090978</span> <span class="o">=&gt;</span> <span class="ss">:brand_da0b</span><span class="p">,</span>
+    <span class="mi">1684091233</span> <span class="o">=&gt;</span> <span class="ss">:brand_da1a</span><span class="p">,</span>
+    <span class="mi">1684091234</span> <span class="o">=&gt;</span> <span class="ss">:brand_da1b</span><span class="p">,</span>
+    <span class="mi">1684091489</span> <span class="o">=&gt;</span> <span class="ss">:brand_da2a</span><span class="p">,</span>
+    <span class="mi">1684091490</span> <span class="o">=&gt;</span> <span class="ss">:brand_da2b</span><span class="p">,</span>
+    <span class="mi">1684091745</span> <span class="o">=&gt;</span> <span class="ss">:brand_da3a</span><span class="p">,</span>
+    <span class="mi">1684091746</span> <span class="o">=&gt;</span> <span class="ss">:brand_da3b</span><span class="p">,</span>
+    <span class="mi">1684108136</span> <span class="o">=&gt;</span> <span class="ss">:brand_dash</span><span class="p">,</span>
+    <span class="mi">1684175153</span> <span class="o">=&gt;</span> <span class="ss">:brand_dby1</span><span class="p">,</span>
+    <span class="mi">1684890161</span> <span class="o">=&gt;</span> <span class="ss">:brand_dmb1</span><span class="p">,</span>
+    <span class="mi">1685286259</span> <span class="o">=&gt;</span> <span class="ss">:brand_dsms</span><span class="p">,</span>
+    <span class="mi">1685467489</span> <span class="o">=&gt;</span> <span class="ss">:brand_dv1a</span><span class="p">,</span>
+    <span class="mi">1685467490</span> <span class="o">=&gt;</span> <span class="ss">:brand_dv1b</span><span class="p">,</span>
+    <span class="mi">1685467745</span> <span class="o">=&gt;</span> <span class="ss">:brand_dv2a</span><span class="p">,</span>
+    <span class="mi">1685467746</span> <span class="o">=&gt;</span> <span class="ss">:brand_dv2b</span><span class="p">,</span>
+    <span class="mi">1685468001</span> <span class="o">=&gt;</span> <span class="ss">:brand_dv3a</span><span class="p">,</span>
+    <span class="mi">1685468002</span> <span class="o">=&gt;</span> <span class="ss">:brand_dv3b</span><span class="p">,</span>
+    <span class="mi">1685484081</span> <span class="o">=&gt;</span> <span class="ss">:brand_dvr1</span><span class="p">,</span>
+    <span class="mi">1685484593</span> <span class="o">=&gt;</span> <span class="ss">:brand_dvt1</span><span class="p">,</span>
+    <span class="mi">1685614368</span> <span class="o">=&gt;</span> <span class="ss">:brand_dxo</span><span class="p">,</span>
+    <span class="mi">1701671783</span> <span class="o">=&gt;</span> <span class="ss">:brand_emsg</span><span class="p">,</span>
+    <span class="mi">1768321645</span> <span class="o">=&gt;</span> <span class="ss">:brand_ifrm</span><span class="p">,</span>
+    <span class="mi">1769169714</span> <span class="o">=&gt;</span> <span class="ss">:brand_isc2</span><span class="p">,</span>
+    <span class="mi">1769172786</span> <span class="o">=&gt;</span> <span class="ss">:brand_iso2</span><span class="p">,</span>
+    <span class="mi">1769172787</span> <span class="o">=&gt;</span> <span class="ss">:brand_iso3</span><span class="p">,</span>
+    <span class="mi">1769172788</span> <span class="o">=&gt;</span> <span class="ss">:brand_iso4</span><span class="p">,</span>
+    <span class="mi">1769172789</span> <span class="o">=&gt;</span> <span class="ss">:brand_iso5</span><span class="p">,</span>
+    <span class="mi">1769172790</span> <span class="o">=&gt;</span> <span class="ss">:brand_iso6</span><span class="p">,</span>
+    <span class="mi">1769172845</span> <span class="o">=&gt;</span> <span class="ss">:brand_isom</span><span class="p">,</span>
+    <span class="mi">1785737760</span> <span class="o">=&gt;</span> <span class="ss">:brand_jp2</span><span class="p">,</span>
+    <span class="mi">1785752864</span> <span class="o">=&gt;</span> <span class="ss">:brand_jpm</span><span class="p">,</span>
+    <span class="mi">1785754473</span> <span class="o">=&gt;</span> <span class="ss">:brand_jpsi</span><span class="p">,</span>
+    <span class="mi">1785755680</span> <span class="o">=&gt;</span> <span class="ss">:brand_jpx</span><span class="p">,</span>
+    <span class="mi">1785755746</span> <span class="o">=&gt;</span> <span class="ss">:brand_jpxb</span><span class="p">,</span>
+    <span class="mi">1819112295</span> <span class="o">=&gt;</span> <span class="ss">:brand_lmsg</span><span class="p">,</span>
+    <span class="mi">1835676275</span> <span class="o">=&gt;</span> <span class="ss">:brand_mj2s</span><span class="p">,</span>
+    <span class="mi">1835692082</span> <span class="o">=&gt;</span> <span class="ss">:brand_mjp2</span><span class="p">,</span>
+    <span class="mi">1836069425</span> <span class="o">=&gt;</span> <span class="ss">:brand_mp21</span><span class="p">,</span>
+    <span class="mi">1836069937</span> <span class="o">=&gt;</span> <span class="ss">:brand_mp41</span><span class="p">,</span>
+    <span class="mi">1836069938</span> <span class="o">=&gt;</span> <span class="ss">:brand_mp42</span><span class="p">,</span>
+    <span class="mi">1836070705</span> <span class="o">=&gt;</span> <span class="ss">:brand_mp71</span><span class="p">,</span>
+    <span class="mi">1836278888</span> <span class="o">=&gt;</span> <span class="ss">:brand_msdh</span><span class="p">,</span>
+    <span class="mi">1836280184</span> <span class="o">=&gt;</span> <span class="ss">:brand_msix</span><span class="p">,</span>
+    <span class="mi">1852402543</span> <span class="o">=&gt;</span> <span class="ss">:brand_niko</span><span class="p">,</span>
+    <span class="mi">1868850022</span> <span class="o">=&gt;</span> <span class="ss">:brand_odcf</span><span class="p">,</span>
+    <span class="mi">1869637170</span> <span class="o">=&gt;</span> <span class="ss">:brand_opf2</span><span class="p">,</span>
+    <span class="mi">1869641778</span> <span class="o">=&gt;</span> <span class="ss">:brand_opx2</span><span class="p">,</span>
+    <span class="mi">1885433441</span> <span class="o">=&gt;</span> <span class="ss">:brand_pana</span><span class="p">,</span>
+    <span class="mi">1885955686</span> <span class="o">=&gt;</span> <span class="ss">:brand_piff</span><span class="p">,</span>
+    <span class="mi">1886287465</span> <span class="o">=&gt;</span> <span class="ss">:brand_pnvi</span><span class="p">,</span>
+    <span class="mi">1903435808</span> <span class="o">=&gt;</span> <span class="ss">:brand_qt</span><span class="p">,</span>
+    <span class="mi">1919513464</span> <span class="o">=&gt;</span> <span class="ss">:brand_risx</span><span class="p">,</span>
+    <span class="mi">1935963680</span> <span class="o">=&gt;</span> <span class="ss">:brand_sdv</span><span class="p">,</span>
+    <span class="mi">1936027254</span> <span class="o">=&gt;</span> <span class="ss">:brand_senv</span><span class="p">,</span>
+    <span class="mi">1936289139</span> <span class="o">=&gt;</span> <span class="ss">:brand_sims</span><span class="p">,</span>
+    <span class="mi">1936290680</span> <span class="o">=&gt;</span> <span class="ss">:brand_sisx</span><span class="p">,</span>
+    <span class="mi">1936946035</span> <span class="o">=&gt;</span> <span class="ss">:brand_ssss</span><span class="p">,</span>
+    <span class="mi">1970697845</span> <span class="o">=&gt;</span> <span class="ss">:brand_uvvu</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__BRAND</span> <span class="o">=</span> <span class="no">BRAND</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @atoms = AtomList.new(@_io, self, @_root)
-    self
-  end
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@atoms</span> <span class="o">=</span> <span class="no">AtomList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG Source
-  class MvhdBody &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-BBCGFGJG Source</span>
+  <span class="k">class</span> <span class="nc">MvhdBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @version = @_io.read_u1
-      @flags = @_io.read_bytes(3)
-      @creation_time = @_io.read_u4be
-      @modification_time = @_io.read_u4be
-      @time_scale = @_io.read_u4be
-      @duration = @_io.read_u4be
-      @preferred_rate = Fixed32.new(@_io, self, @_root)
-      @preferred_volume = Fixed16.new(@_io, self, @_root)
-      @reserved1 = @_io.read_bytes(10)
-      @matrix = @_io.read_bytes(36)
-      @preview_time = @_io.read_u4be
-      @preview_duration = @_io.read_u4be
-      @poster_time = @_io.read_u4be
-      @selection_time = @_io.read_u4be
-      @selection_duration = @_io.read_u4be
-      @current_time = @_io.read_u4be
-      @next_track_id = @_io.read_u4be
-      self
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+      <span class="vi">@creation_time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@modification_time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@time_scale</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@duration</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@preferred_rate</span> <span class="o">=</span> <span class="no">Fixed32</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@preferred_volume</span> <span class="o">=</span> <span class="no">Fixed16</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@reserved1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+      <span class="vi">@matrix</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span>
+      <span class="vi">@preview_time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@preview_duration</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@poster_time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@selection_time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@selection_duration</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@current_time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@next_track_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
 
-    ##
-    # Version of this movie header atom
-    attr_reader :version
-    attr_reader :flags
-    attr_reader :creation_time
-    attr_reader :modification_time
+    <span class="c1">##</span>
+    <span class="c1"># Version of this movie header atom</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:creation_time</span>
+    <span class="kp">attr_reader</span> <span class="ss">:modification_time</span>
 
-    ##
-    # A time value that indicates the time scale for this
-    # movie—that is, the number of time units that pass per second
-    # in its time coordinate system. A time coordinate system that
-    # measures time in sixtieths of a second, for example, has a
-    # time scale of 60.
-    attr_reader :time_scale
+    <span class="c1">##</span>
+    <span class="c1"># A time value that indicates the time scale for this</span>
+    <span class="c1"># movie—that is, the number of time units that pass per second</span>
+    <span class="c1"># in its time coordinate system. A time coordinate system that</span>
+    <span class="c1"># measures time in sixtieths of a second, for example, has a</span>
+    <span class="c1"># time scale of 60.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:time_scale</span>
 
-    ##
-    # A time value that indicates the duration of the movie in
-    # time scale units. Note that this property is derived from
-    # the movie’s tracks. The value of this field corresponds to
-    # the duration of the longest track in the movie.
-    attr_reader :duration
+    <span class="c1">##</span>
+    <span class="c1"># A time value that indicates the duration of the movie in</span>
+    <span class="c1"># time scale units. Note that this property is derived from</span>
+    <span class="c1"># the movie’s tracks. The value of this field corresponds to</span>
+    <span class="c1"># the duration of the longest track in the movie.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:duration</span>
 
-    ##
-    # The rate at which to play this movie. A value of 1.0 indicates normal rate.
-    attr_reader :preferred_rate
+    <span class="c1">##</span>
+    <span class="c1"># The rate at which to play this movie. A value of 1.0 indicates normal rate.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:preferred_rate</span>
 
-    ##
-    # How loud to play this movie’s sound. A value of 1.0 indicates full volume.
-    attr_reader :preferred_volume
-    attr_reader :reserved1
+    <span class="c1">##</span>
+    <span class="c1"># How loud to play this movie’s sound. A value of 1.0 indicates full volume.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:preferred_volume</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved1</span>
 
-    ##
-    # A matrix shows how to map points from one coordinate space into another.
-    attr_reader :matrix
+    <span class="c1">##</span>
+    <span class="c1"># A matrix shows how to map points from one coordinate space into another.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:matrix</span>
 
-    ##
-    # The time value in the movie at which the preview begins.
-    attr_reader :preview_time
+    <span class="c1">##</span>
+    <span class="c1"># The time value in the movie at which the preview begins.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:preview_time</span>
 
-    ##
-    # The duration of the movie preview in movie time scale units.
-    attr_reader :preview_duration
+    <span class="c1">##</span>
+    <span class="c1"># The duration of the movie preview in movie time scale units.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:preview_duration</span>
 
-    ##
-    # The time value of the time of the movie poster.
-    attr_reader :poster_time
+    <span class="c1">##</span>
+    <span class="c1"># The time value of the time of the movie poster.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:poster_time</span>
 
-    ##
-    # The time value for the start time of the current selection.
-    attr_reader :selection_time
+    <span class="c1">##</span>
+    <span class="c1"># The time value for the start time of the current selection.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:selection_time</span>
 
-    ##
-    # The duration of the current selection in movie time scale units.
-    attr_reader :selection_duration
+    <span class="c1">##</span>
+    <span class="c1"># The duration of the current selection in movie time scale units.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:selection_duration</span>
 
-    ##
-    # The time value for current time position within the movie.
-    attr_reader :current_time
+    <span class="c1">##</span>
+    <span class="c1"># The time value for current time position within the movie.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:current_time</span>
 
-    ##
-    # Indicates a value to use for the track ID number of the next
-    # track added to this movie. Note that 0 is not a valid track
-    # ID value.
-    attr_reader :next_track_id
-  end
+    <span class="c1">##</span>
+    <span class="c1"># Indicates a value to use for the track ID number of the next</span>
+    <span class="c1"># track added to this movie. Note that 0 is not a valid track</span>
+    <span class="c1"># ID value.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:next_track_id</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF Source
-  class FtypBody &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap1/qtff1.html#//apple_ref/doc/uid/TP40000939-CH203-CJBCBIFF Source</span>
+  <span class="k">class</span> <span class="nc">FtypBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @major_brand = Kaitai::Struct::Stream::resolve_enum(BRAND, @_io.read_u4be)
-      @minor_version = @_io.read_bytes(4)
-      @compatible_brands = []
-      i = 0
-      while not @_io.eof?
-        @compatible_brands &lt;&lt; Kaitai::Struct::Stream::resolve_enum(BRAND, @_io.read_u4be)
-        i += 1
-      end
-      self
-    end
-    attr_reader :major_brand
-    attr_reader :minor_version
-    attr_reader :compatible_brands
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@major_brand</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">BRAND</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">)</span>
+      <span class="vi">@minor_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="vi">@compatible_brands</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+        <span class="vi">@compatible_brands</span> <span class="o">&lt;&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">BRAND</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:major_brand</span>
+    <span class="kp">attr_reader</span> <span class="ss">:minor_version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:compatible_brands</span>
+  <span class="k">end</span>
 
-  ##
-  # Fixed-point 32-bit number.
-  class Fixed32 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Fixed-point 32-bit number.</span>
+  <span class="k">class</span> <span class="nc">Fixed32</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @int_part = @_io.read_s2be
-      @frac_part = @_io.read_u2be
-      self
-    end
-    attr_reader :int_part
-    attr_reader :frac_part
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@int_part</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2be</span>
+      <span class="vi">@frac_part</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:int_part</span>
+    <span class="kp">attr_reader</span> <span class="ss">:frac_part</span>
+  <span class="k">end</span>
 
-  ##
-  # Fixed-point 16-bit number.
-  class Fixed16 &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># Fixed-point 16-bit number.</span>
+  <span class="k">class</span> <span class="nc">Fixed16</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @int_part = @_io.read_s1
-      @frac_part = @_io.read_u1
-      self
-    end
-    attr_reader :int_part
-    attr_reader :frac_part
-  end
-  class Atom &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@int_part</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
+      <span class="vi">@frac_part</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:int_part</span>
+    <span class="kp">attr_reader</span> <span class="ss">:frac_part</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Atom</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @len32 = @_io.read_u4be
-      @atom_type = Kaitai::Struct::Stream::resolve_enum(ATOM_TYPE, @_io.read_u4be)
-      if len32 == 1
-        @len64 = @_io.read_u8be
-      end
-      case atom_type
-      when :atom_type_stbl
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
-      when :atom_type_moof
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
-      when :atom_type_mvhd
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = MvhdBody.new(io, self, @_root)
-      when :atom_type_minf
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
-      when :atom_type_trak
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
-      when :atom_type_traf
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
-      when :atom_type_mdia
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
-      when :atom_type_ftyp
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = FtypBody.new(io, self, @_root)
-      when :atom_type_moov
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
-      when :atom_type_tkhd
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = TkhdBody.new(io, self, @_root)
-      when :atom_type_dinf
-        @_raw_body = @_io.read_bytes(len)
-        io = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = AtomList.new(io, self, @_root)
-      else
-        @body = @_io.read_bytes(len)
-      end
-      self
-    end
-    def len
-      return @len unless @len.nil?
-      @len = (len32 == 0 ? (_io.size - 8) : (len32 == 1 ? (len64 - 16) : (len32 - 8)))
-      @len
-    end
-    attr_reader :len32
-    attr_reader :atom_type
-    attr_reader :len64
-    attr_reader :body
-    attr_reader :_raw_body
-  end
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len32</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@atom_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">ATOM_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">len32</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="vi">@len64</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8be</span>
+      <span class="k">end</span>
+      <span class="k">case</span> <span class="n">atom_type</span>
+      <span class="k">when</span> <span class="ss">:atom_type_stbl</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">AtomList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:atom_type_moof</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">AtomList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:atom_type_mvhd</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">MvhdBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:atom_type_minf</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">AtomList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:atom_type_trak</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">AtomList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:atom_type_traf</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">AtomList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:atom_type_mdia</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">AtomList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:atom_type_ftyp</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">FtypBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:atom_type_moov</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">AtomList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:atom_type_tkhd</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">TkhdBody</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:atom_type_dinf</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">io</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">AtomList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">else</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">len</span>
+      <span class="k">return</span> <span class="vi">@len</span> <span class="k">unless</span> <span class="vi">@len</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@len</span> <span class="o">=</span> <span class="p">(</span><span class="n">len32</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="p">(</span><span class="n">_io</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">len32</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="p">(</span><span class="n">len64</span> <span class="o">-</span> <span class="mi">16</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">len32</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)))</span>
+      <span class="vi">@len</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len32</span>
+    <span class="kp">attr_reader</span> <span class="ss">:atom_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len64</span>
+    <span class="kp">attr_reader</span> <span class="ss">:body</span>
+    <span class="kp">attr_reader</span> <span class="ss">:_raw_body</span>
+  <span class="k">end</span>
 
-  ##
-  # @see https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550 Source
-  class TkhdBody &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+  <span class="c1">##</span>
+  <span class="c1"># @see https://developer.apple.com/library/content/documentation/QuickTime/QTFF/QTFFChap2/qtff2.html#//apple_ref/doc/uid/TP40000939-CH204-25550 Source</span>
+  <span class="k">class</span> <span class="nc">TkhdBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @version = @_io.read_u1
-      @flags = @_io.read_bytes(3)
-      @creation_time = @_io.read_u4be
-      @modification_time = @_io.read_u4be
-      @track_id = @_io.read_u4be
-      @reserved1 = @_io.read_bytes(4)
-      @duration = @_io.read_u4be
-      @reserved2 = @_io.read_bytes(8)
-      @layer = @_io.read_u2be
-      @alternative_group = @_io.read_u2be
-      @volume = @_io.read_u2be
-      @reserved3 = @_io.read_u2be
-      @matrix = @_io.read_bytes(36)
-      @width = Fixed32.new(@_io, self, @_root)
-      @height = Fixed32.new(@_io, self, @_root)
-      self
-    end
-    attr_reader :version
-    attr_reader :flags
-    attr_reader :creation_time
-    attr_reader :modification_time
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+      <span class="vi">@creation_time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@modification_time</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@track_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@reserved1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="vi">@duration</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@reserved2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+      <span class="vi">@layer</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@alternative_group</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@volume</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@reserved3</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@matrix</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span>
+      <span class="vi">@width</span> <span class="o">=</span> <span class="no">Fixed32</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@height</span> <span class="o">=</span> <span class="no">Fixed32</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version</span>
+    <span class="kp">attr_reader</span> <span class="ss">:flags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:creation_time</span>
+    <span class="kp">attr_reader</span> <span class="ss">:modification_time</span>
 
-    ##
-    # Integer that uniquely identifies the track. The value 0 cannot be used.
-    attr_reader :track_id
-    attr_reader :reserved1
-    attr_reader :duration
-    attr_reader :reserved2
-    attr_reader :layer
-    attr_reader :alternative_group
-    attr_reader :volume
-    attr_reader :reserved3
-    attr_reader :matrix
-    attr_reader :width
-    attr_reader :height
-  end
-  class AtomList &lt; Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
-      super(_io, _parent, _root)
-      _read
-    end
+    <span class="c1">##</span>
+    <span class="c1"># Integer that uniquely identifies the track. The value 0 cannot be used.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:track_id</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved1</span>
+    <span class="kp">attr_reader</span> <span class="ss">:duration</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved2</span>
+    <span class="kp">attr_reader</span> <span class="ss">:layer</span>
+    <span class="kp">attr_reader</span> <span class="ss">:alternative_group</span>
+    <span class="kp">attr_reader</span> <span class="ss">:volume</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved3</span>
+    <span class="kp">attr_reader</span> <span class="ss">:matrix</span>
+    <span class="kp">attr_reader</span> <span class="ss">:width</span>
+    <span class="kp">attr_reader</span> <span class="ss">:height</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">AtomList</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
 
-    def _read
-      @items = []
-      i = 0
-      while not @_io.eof?
-        @items &lt;&lt; Atom.new(@_io, self, @_root)
-        i += 1
-      end
-      self
-    end
-    attr_reader :items
-  end
-  attr_reader :atoms
-end
-</code></pre>
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@items</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+        <span class="vi">@items</span> <span class="o">&lt;&lt;</span> <span class="no">Atom</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:items</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:atoms</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -720,8 +717,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

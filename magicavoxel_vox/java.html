@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -250,555 +247,555 @@ MagicavoxelVox data = new MagicavoxelVox(new ByteBufferKaitaiStream(someArray));
         </div>
 
         <div class="row">
-            <pre><code class="java">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-import io.kaitai.struct.ByteBufferKaitaiStream;
-import io.kaitai.struct.KaitaiStruct;
-import io.kaitai.struct.KaitaiStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.ByteBufferKaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStruct</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">io.kaitai.struct.KaitaiStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Map</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
 
 
-/**
- * @see &lt;a href=&quot;https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt&quot;&gt;Format Description&lt;/a&gt;
- */
-public class MagicavoxelVox extends KaitaiStruct {
-    public static MagicavoxelVox fromFile(String fileName) throws IOException {
-        return new MagicavoxelVox(new ByteBufferKaitaiStream(fileName));
-    }
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.txt&quot;&gt;Format Description&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MagicavoxelVox</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">MagicavoxelVox</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">MagicavoxelVox</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+    <span class="p">}</span>
 
-    public enum ChunkType {
-        MAIN(1296124238),
-        MATT(1296127060),
-        PACK(1346454347),
-        RGBA(1380401729),
-        SIZE(1397316165),
-        XYZI(1482250825);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">ChunkType</span> <span class="p">{</span>
+        <span class="n">MAIN</span><span class="p">(</span><span class="mi">1296124238</span><span class="p">),</span>
+        <span class="n">MATT</span><span class="p">(</span><span class="mi">1296127060</span><span class="p">),</span>
+        <span class="n">PACK</span><span class="p">(</span><span class="mi">1346454347</span><span class="p">),</span>
+        <span class="n">RGBA</span><span class="p">(</span><span class="mi">1380401729</span><span class="p">),</span>
+        <span class="n">SIZE</span><span class="p">(</span><span class="mi">1397316165</span><span class="p">),</span>
+        <span class="n">XYZI</span><span class="p">(</span><span class="mi">1482250825</span><span class="p">);</span>
 
-        private final long id;
-        ChunkType(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, ChunkType&gt; byId = new HashMap&lt;Long, ChunkType&gt;(6);
-        static {
-            for (ChunkType e : ChunkType.values())
-                byId.put(e.id(), e);
-        }
-        public static ChunkType byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">ChunkType</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">ChunkType</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">ChunkType</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">ChunkType</span> <span class="n">e</span> <span class="p">:</span> <span class="n">ChunkType</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">ChunkType</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public enum MaterialType {
-        DIFFUSE(0),
-        METAL(1),
-        GLASS(2),
-        EMISSIVE(3);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">MaterialType</span> <span class="p">{</span>
+        <span class="n">DIFFUSE</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+        <span class="n">METAL</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">GLASS</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">EMISSIVE</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
 
-        private final long id;
-        MaterialType(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, MaterialType&gt; byId = new HashMap&lt;Long, MaterialType&gt;(4);
-        static {
-            for (MaterialType e : MaterialType.values())
-                byId.put(e.id(), e);
-        }
-        public static MaterialType byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">MaterialType</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">MaterialType</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">MaterialType</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">MaterialType</span> <span class="n">e</span> <span class="p">:</span> <span class="n">MaterialType</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">MaterialType</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public enum PropertyBitsType {
-        PLASTIC(1),
-        ROUGHNESS(2),
-        SPECULAR(4),
-        IOR(8),
-        ATTENUATION(16),
-        POWER(32),
-        GLOW(64),
-        IS_TOTAL_POWER(128);
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">PropertyBitsType</span> <span class="p">{</span>
+        <span class="n">PLASTIC</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">ROUGHNESS</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+        <span class="n">SPECULAR</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+        <span class="n">IOR</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span>
+        <span class="n">ATTENUATION</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span>
+        <span class="n">POWER</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span>
+        <span class="n">GLOW</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span>
+        <span class="n">IS_TOTAL_POWER</span><span class="p">(</span><span class="mi">128</span><span class="p">);</span>
 
-        private final long id;
-        PropertyBitsType(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map&lt;Long, PropertyBitsType&gt; byId = new HashMap&lt;Long, PropertyBitsType&gt;(8);
-        static {
-            for (PropertyBitsType e : PropertyBitsType.values())
-                byId.put(e.id(), e);
-        }
-        public static PropertyBitsType byId(long id) { return byId.get(id); }
-    }
+        <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">PropertyBitsType</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">PropertyBitsType</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">PropertyBitsType</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+        <span class="kd">static</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">PropertyBitsType</span> <span class="n">e</span> <span class="p">:</span> <span class="n">PropertyBitsType</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
+                <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PropertyBitsType</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
 
-    public MagicavoxelVox(KaitaiStream _io) {
-        this(_io, null, null);
-    }
+    <span class="kd">public</span> <span class="nf">MagicavoxelVox</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public MagicavoxelVox(KaitaiStream _io, KaitaiStruct _parent) {
-        this(_io, _parent, null);
-    }
+    <span class="kd">public</span> <span class="nf">MagicavoxelVox</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    public MagicavoxelVox(KaitaiStream _io, KaitaiStruct _parent, MagicavoxelVox _root) {
-        super(_io);
-        this._parent = _parent;
-        this._root = _root == null ? this : _root;
-        _read();
-    }
-    private void _read() {
-        this.magic = this._io.ensureFixedContents(new byte[] { 86, 79, 88, 32 });
-        this.version = this._io.readU4le();
-        this.main = new Chunk(this._io, this, _root);
-    }
-    public static class Chunk extends KaitaiStruct {
-        public static Chunk fromFile(String fileName) throws IOException {
-            return new Chunk(new ByteBufferKaitaiStream(fileName));
-        }
+    <span class="kd">public</span> <span class="nf">MagicavoxelVox</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span> <span class="p">:</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">79</span><span class="p">,</span> <span class="mi">88</span><span class="p">,</span> <span class="mi">32</span> <span class="p">});</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="na">main</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Chunk</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Chunk</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Chunk</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Chunk</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Chunk(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Chunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Chunk(KaitaiStream _io, KaitaiStruct _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Chunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Chunk(KaitaiStream _io, KaitaiStruct _parent, MagicavoxelVox _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.chunkId = MagicavoxelVox.ChunkType.byId(this._io.readU4be());
-            this.numBytesOfChunkContent = this._io.readU4le();
-            this.numBytesOfChildrenChunks = this._io.readU4le();
-            if (numBytesOfChunkContent() != 0) {
-                switch (chunkId()) {
-                case SIZE: {
-                    this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                    KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
-                    this.chunkContent = new Size(_io__raw_chunkContent, this, _root);
-                    break;
-                }
-                case MATT: {
-                    this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                    KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
-                    this.chunkContent = new Matt(_io__raw_chunkContent, this, _root);
-                    break;
-                }
-                case XYZI: {
-                    this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                    KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
-                    this.chunkContent = new Xyzi(_io__raw_chunkContent, this, _root);
-                    break;
-                }
-                case PACK: {
-                    this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                    KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
-                    this.chunkContent = new Pack(_io__raw_chunkContent, this, _root);
-                    break;
-                }
-                case RGBA: {
-                    this._raw_chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                    KaitaiStream _io__raw_chunkContent = new ByteBufferKaitaiStream(_raw_chunkContent);
-                    this.chunkContent = new Rgba(_io__raw_chunkContent, this, _root);
-                    break;
-                }
-                default: {
-                    this.chunkContent = this._io.readBytes(numBytesOfChunkContent());
-                    break;
-                }
-                }
-            }
-            if (numBytesOfChildrenChunks() != 0) {
-                this.childrenChunks = new ArrayList&lt;Chunk&gt;();
-                {
-                    int i = 0;
-                    while (!this._io.isEof()) {
-                        this.childrenChunks.add(new Chunk(this._io, this, _root));
-                        i++;
-                    }
-                }
-            }
-        }
-        private ChunkType chunkId;
-        private long numBytesOfChunkContent;
-        private long numBytesOfChildrenChunks;
-        private Object chunkContent;
-        private ArrayList&lt;Chunk&gt; childrenChunks;
-        private MagicavoxelVox _root;
-        private KaitaiStruct _parent;
-        private byte[] _raw_chunkContent;
-        public ChunkType chunkId() { return chunkId; }
-        public long numBytesOfChunkContent() { return numBytesOfChunkContent; }
-        public long numBytesOfChildrenChunks() { return numBytesOfChildrenChunks; }
-        public Object chunkContent() { return chunkContent; }
-        public ArrayList&lt;Chunk&gt; childrenChunks() { return childrenChunks; }
-        public MagicavoxelVox _root() { return _root; }
-        public KaitaiStruct _parent() { return _parent; }
-        public byte[] _raw_chunkContent() { return _raw_chunkContent; }
-    }
-    public static class Size extends KaitaiStruct {
-        public static Size fromFile(String fileName) throws IOException {
-            return new Size(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">Chunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">chunkId</span> <span class="o">=</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">ChunkType</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4be</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numBytesOfChunkContent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numBytesOfChildrenChunks</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">numBytesOfChunkContent</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="n">chunkId</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="n">SIZE</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_raw_chunkContent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">numBytesOfChunkContent</span><span class="p">());</span>
+                    <span class="n">KaitaiStream</span> <span class="n">_io__raw_chunkContent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_chunkContent</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">chunkContent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Size</span><span class="p">(</span><span class="n">_io__raw_chunkContent</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">MATT</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_raw_chunkContent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">numBytesOfChunkContent</span><span class="p">());</span>
+                    <span class="n">KaitaiStream</span> <span class="n">_io__raw_chunkContent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_chunkContent</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">chunkContent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Matt</span><span class="p">(</span><span class="n">_io__raw_chunkContent</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">XYZI</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_raw_chunkContent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">numBytesOfChunkContent</span><span class="p">());</span>
+                    <span class="n">KaitaiStream</span> <span class="n">_io__raw_chunkContent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_chunkContent</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">chunkContent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Xyzi</span><span class="p">(</span><span class="n">_io__raw_chunkContent</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PACK</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_raw_chunkContent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">numBytesOfChunkContent</span><span class="p">());</span>
+                    <span class="n">KaitaiStream</span> <span class="n">_io__raw_chunkContent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_chunkContent</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">chunkContent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Pack</span><span class="p">(</span><span class="n">_io__raw_chunkContent</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">RGBA</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">_raw_chunkContent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">numBytesOfChunkContent</span><span class="p">());</span>
+                    <span class="n">KaitaiStream</span> <span class="n">_io__raw_chunkContent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_chunkContent</span><span class="p">);</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">chunkContent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Rgba</span><span class="p">(</span><span class="n">_io__raw_chunkContent</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">chunkContent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">numBytesOfChunkContent</span><span class="p">());</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">numBytesOfChildrenChunks</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">childrenChunks</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Chunk</span><span class="o">&gt;</span><span class="p">();</span>
+                <span class="p">{</span>
+                    <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+                    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">childrenChunks</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Chunk</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+                        <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">ChunkType</span> <span class="n">chunkId</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numBytesOfChunkContent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numBytesOfChildrenChunks</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Object</span> <span class="n">chunkContent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Chunk</span><span class="o">&gt;</span> <span class="n">childrenChunks</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">_raw_chunkContent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">ChunkType</span> <span class="nf">chunkId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">chunkId</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numBytesOfChunkContent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numBytesOfChunkContent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numBytesOfChildrenChunks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numBytesOfChildrenChunks</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Object</span> <span class="nf">chunkContent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">chunkContent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Chunk</span><span class="o">&gt;</span> <span class="nf">childrenChunks</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">childrenChunks</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MagicavoxelVox</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_chunkContent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_chunkContent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Size</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Size</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Size</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Size(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Size</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Size(KaitaiStream _io, MagicavoxelVox.Chunk _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Size</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Size(KaitaiStream _io, MagicavoxelVox.Chunk _parent, MagicavoxelVox _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.sizeX = this._io.readU4le();
-            this.sizeY = this._io.readU4le();
-            this.sizeZ = this._io.readU4le();
-        }
-        private long sizeX;
-        private long sizeY;
-        private long sizeZ;
-        private MagicavoxelVox _root;
-        private MagicavoxelVox.Chunk _parent;
-        public long sizeX() { return sizeX; }
-        public long sizeY() { return sizeY; }
-        public long sizeZ() { return sizeZ; }
-        public MagicavoxelVox _root() { return _root; }
-        public MagicavoxelVox.Chunk _parent() { return _parent; }
-    }
-    public static class Rgba extends KaitaiStruct {
-        public static Rgba fromFile(String fileName) throws IOException {
-            return new Rgba(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">Size</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">sizeX</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">sizeY</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">sizeZ</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">sizeX</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">sizeY</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">sizeZ</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">sizeX</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">sizeX</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">sizeY</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">sizeY</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">sizeZ</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">sizeZ</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MagicavoxelVox</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Rgba</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Rgba</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Rgba</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Rgba(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Rgba</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Rgba(KaitaiStream _io, MagicavoxelVox.Chunk _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Rgba</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Rgba(KaitaiStream _io, MagicavoxelVox.Chunk _parent, MagicavoxelVox _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            colors = new ArrayList&lt;Color&gt;((int) (256));
-            for (int i = 0; i &lt; 256; i++) {
-                this.colors.add(new Color(this._io, this, _root));
-            }
-        }
-        private ArrayList&lt;Color&gt; colors;
-        private MagicavoxelVox _root;
-        private MagicavoxelVox.Chunk _parent;
-        public ArrayList&lt;Color&gt; colors() { return colors; }
-        public MagicavoxelVox _root() { return _root; }
-        public MagicavoxelVox.Chunk _parent() { return _parent; }
-    }
-    public static class Pack extends KaitaiStruct {
-        public static Pack fromFile(String fileName) throws IOException {
-            return new Pack(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">Rgba</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Color</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="mi">256</span><span class="p">));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">256</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">colors</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Color</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Color</span><span class="o">&gt;</span> <span class="n">colors</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Color</span><span class="o">&gt;</span> <span class="nf">colors</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">colors</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MagicavoxelVox</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Pack</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Pack</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Pack</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Pack(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Pack</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Pack(KaitaiStream _io, MagicavoxelVox.Chunk _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Pack</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Pack(KaitaiStream _io, MagicavoxelVox.Chunk _parent, MagicavoxelVox _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numModels = this._io.readU4le();
-        }
-        private long numModels;
-        private MagicavoxelVox _root;
-        private MagicavoxelVox.Chunk _parent;
-        public long numModels() { return numModels; }
-        public MagicavoxelVox _root() { return _root; }
-        public MagicavoxelVox.Chunk _parent() { return _parent; }
-    }
-    public static class Matt extends KaitaiStruct {
-        public static Matt fromFile(String fileName) throws IOException {
-            return new Matt(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">Pack</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numModels</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numModels</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numModels</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numModels</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MagicavoxelVox</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Matt</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Matt</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Matt</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Matt(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Matt</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Matt(KaitaiStream _io, MagicavoxelVox.Chunk _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Matt</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Matt(KaitaiStream _io, MagicavoxelVox.Chunk _parent, MagicavoxelVox _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.id = this._io.readU4le();
-            this.materialType = MagicavoxelVox.MaterialType.byId(this._io.readU4le());
-            this.materialWeight = this._io.readF4le();
-            this.propertyBits = this._io.readU4le();
-            if (hasPlastic()) {
-                this.plastic = this._io.readF4le();
-            }
-            if (hasRoughness()) {
-                this.roughness = this._io.readF4le();
-            }
-            if (hasSpecular()) {
-                this.specular = this._io.readF4le();
-            }
-            if (hasIor()) {
-                this.ior = this._io.readF4le();
-            }
-            if (hasAttenuation()) {
-                this.attenuation = this._io.readF4le();
-            }
-            if (hasPower()) {
-                this.power = this._io.readF4le();
-            }
-            if (hasGlow()) {
-                this.glow = this._io.readF4le();
-            }
-            if (hasIsTotalPower()) {
-                this.isTotalPower = this._io.readF4le();
-            }
-        }
-        private Boolean hasIsTotalPower;
-        public Boolean hasIsTotalPower() {
-            if (this.hasIsTotalPower != null)
-                return this.hasIsTotalPower;
-            boolean _tmp = (boolean) ((propertyBits() &amp; 128) != 0);
-            this.hasIsTotalPower = _tmp;
-            return this.hasIsTotalPower;
-        }
-        private Boolean hasPlastic;
-        public Boolean hasPlastic() {
-            if (this.hasPlastic != null)
-                return this.hasPlastic;
-            boolean _tmp = (boolean) ((propertyBits() &amp; 1) != 0);
-            this.hasPlastic = _tmp;
-            return this.hasPlastic;
-        }
-        private Boolean hasAttenuation;
-        public Boolean hasAttenuation() {
-            if (this.hasAttenuation != null)
-                return this.hasAttenuation;
-            boolean _tmp = (boolean) ((propertyBits() &amp; 16) != 0);
-            this.hasAttenuation = _tmp;
-            return this.hasAttenuation;
-        }
-        private Boolean hasPower;
-        public Boolean hasPower() {
-            if (this.hasPower != null)
-                return this.hasPower;
-            boolean _tmp = (boolean) ((propertyBits() &amp; 32) != 0);
-            this.hasPower = _tmp;
-            return this.hasPower;
-        }
-        private Boolean hasRoughness;
-        public Boolean hasRoughness() {
-            if (this.hasRoughness != null)
-                return this.hasRoughness;
-            boolean _tmp = (boolean) ((propertyBits() &amp; 2) != 0);
-            this.hasRoughness = _tmp;
-            return this.hasRoughness;
-        }
-        private Boolean hasSpecular;
-        public Boolean hasSpecular() {
-            if (this.hasSpecular != null)
-                return this.hasSpecular;
-            boolean _tmp = (boolean) ((propertyBits() &amp; 4) != 0);
-            this.hasSpecular = _tmp;
-            return this.hasSpecular;
-        }
-        private Boolean hasIor;
-        public Boolean hasIor() {
-            if (this.hasIor != null)
-                return this.hasIor;
-            boolean _tmp = (boolean) ((propertyBits() &amp; 8) != 0);
-            this.hasIor = _tmp;
-            return this.hasIor;
-        }
-        private Boolean hasGlow;
-        public Boolean hasGlow() {
-            if (this.hasGlow != null)
-                return this.hasGlow;
-            boolean _tmp = (boolean) ((propertyBits() &amp; 64) != 0);
-            this.hasGlow = _tmp;
-            return this.hasGlow;
-        }
-        private long id;
-        private MaterialType materialType;
-        private float materialWeight;
-        private long propertyBits;
-        private Float plastic;
-        private Float roughness;
-        private Float specular;
-        private Float ior;
-        private Float attenuation;
-        private Float power;
-        private Float glow;
-        private Float isTotalPower;
-        private MagicavoxelVox _root;
-        private MagicavoxelVox.Chunk _parent;
-        public long id() { return id; }
-        public MaterialType materialType() { return materialType; }
-        public float materialWeight() { return materialWeight; }
-        public long propertyBits() { return propertyBits; }
-        public Float plastic() { return plastic; }
-        public Float roughness() { return roughness; }
-        public Float specular() { return specular; }
-        public Float ior() { return ior; }
-        public Float attenuation() { return attenuation; }
-        public Float power() { return power; }
-        public Float glow() { return glow; }
-        public Float isTotalPower() { return isTotalPower; }
-        public MagicavoxelVox _root() { return _root; }
-        public MagicavoxelVox.Chunk _parent() { return _parent; }
-    }
-    public static class Xyzi extends KaitaiStruct {
-        public static Xyzi fromFile(String fileName) throws IOException {
-            return new Xyzi(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">Matt</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">materialType</span> <span class="o">=</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">MaterialType</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">());</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">materialWeight</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readF4le</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">propertyBits</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hasPlastic</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">plastic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readF4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hasRoughness</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">roughness</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readF4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hasSpecular</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">specular</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readF4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hasIor</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">ior</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readF4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hasAttenuation</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">attenuation</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readF4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hasPower</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">power</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readF4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hasGlow</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">glow</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readF4le</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hasIsTotalPower</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">isTotalPower</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readF4le</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">hasIsTotalPower</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">hasIsTotalPower</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">hasIsTotalPower</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasIsTotalPower</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">propertyBits</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasIsTotalPower</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasIsTotalPower</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">hasPlastic</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">hasPlastic</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">hasPlastic</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasPlastic</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">propertyBits</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasPlastic</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasPlastic</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">hasAttenuation</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">hasAttenuation</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">hasAttenuation</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasAttenuation</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">propertyBits</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasAttenuation</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasAttenuation</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">hasPower</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">hasPower</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">hasPower</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasPower</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">propertyBits</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasPower</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasPower</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">hasRoughness</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">hasRoughness</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">hasRoughness</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasRoughness</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">propertyBits</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasRoughness</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasRoughness</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">hasSpecular</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">hasSpecular</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">hasSpecular</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasSpecular</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">propertyBits</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasSpecular</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasSpecular</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">hasIor</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">hasIor</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">hasIor</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasIor</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">propertyBits</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasIor</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasIor</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">hasGlow</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">hasGlow</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">hasGlow</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasGlow</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">propertyBits</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">hasGlow</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">hasGlow</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MaterialType</span> <span class="n">materialType</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">float</span> <span class="n">materialWeight</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">propertyBits</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Float</span> <span class="n">plastic</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Float</span> <span class="n">roughness</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Float</span> <span class="n">specular</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Float</span> <span class="n">ior</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Float</span> <span class="n">attenuation</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Float</span> <span class="n">power</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Float</span> <span class="n">glow</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Float</span> <span class="n">isTotalPower</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MaterialType</span> <span class="nf">materialType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">materialType</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">float</span> <span class="nf">materialWeight</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">materialWeight</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">propertyBits</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">propertyBits</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Float</span> <span class="nf">plastic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">plastic</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Float</span> <span class="nf">roughness</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">roughness</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Float</span> <span class="nf">specular</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">specular</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Float</span> <span class="nf">ior</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ior</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Float</span> <span class="nf">attenuation</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">attenuation</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Float</span> <span class="nf">power</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">power</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Float</span> <span class="nf">glow</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">glow</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Float</span> <span class="nf">isTotalPower</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">isTotalPower</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MagicavoxelVox</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Xyzi</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Xyzi</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Xyzi</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Xyzi(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Xyzi</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Xyzi(KaitaiStream _io, MagicavoxelVox.Chunk _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Xyzi</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Xyzi(KaitaiStream _io, MagicavoxelVox.Chunk _parent, MagicavoxelVox _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.numVoxels = this._io.readU4le();
-            voxels = new ArrayList&lt;Voxel&gt;((int) (numVoxels()));
-            for (int i = 0; i &lt; numVoxels(); i++) {
-                this.voxels.add(new Voxel(this._io, this, _root));
-            }
-        }
-        private long numVoxels;
-        private ArrayList&lt;Voxel&gt; voxels;
-        private MagicavoxelVox _root;
-        private MagicavoxelVox.Chunk _parent;
-        public long numVoxels() { return numVoxels; }
-        public ArrayList&lt;Voxel&gt; voxels() { return voxels; }
-        public MagicavoxelVox _root() { return _root; }
-        public MagicavoxelVox.Chunk _parent() { return _parent; }
-    }
-    public static class Color extends KaitaiStruct {
-        public static Color fromFile(String fileName) throws IOException {
-            return new Color(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">Xyzi</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numVoxels</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+            <span class="n">voxels</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Voxel</span><span class="o">&gt;</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">numVoxels</span><span class="p">()));</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">numVoxels</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">voxels</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Voxel</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numVoxels</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Voxel</span><span class="o">&gt;</span> <span class="n">voxels</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numVoxels</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numVoxels</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Voxel</span><span class="o">&gt;</span> <span class="nf">voxels</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">voxels</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MagicavoxelVox</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Chunk</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Color</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Color</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Color</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Color(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Color</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Color(KaitaiStream _io, MagicavoxelVox.Rgba _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Color</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Rgba</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Color(KaitaiStream _io, MagicavoxelVox.Rgba _parent, MagicavoxelVox _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.r = this._io.readU1();
-            this.g = this._io.readU1();
-            this.b = this._io.readU1();
-            this.a = this._io.readU1();
-        }
-        private int r;
-        private int g;
-        private int b;
-        private int a;
-        private MagicavoxelVox _root;
-        private MagicavoxelVox.Rgba _parent;
-        public int r() { return r; }
-        public int g() { return g; }
-        public int b() { return b; }
-        public int a() { return a; }
-        public MagicavoxelVox _root() { return _root; }
-        public MagicavoxelVox.Rgba _parent() { return _parent; }
-    }
-    public static class Voxel extends KaitaiStruct {
-        public static Voxel fromFile(String fileName) throws IOException {
-            return new Voxel(new ByteBufferKaitaiStream(fileName));
-        }
+        <span class="kd">public</span> <span class="nf">Color</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Rgba</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">r</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">g</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">b</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">a</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">r</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">g</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Rgba</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">r</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">r</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">g</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">g</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">b</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">b</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">a</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">a</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MagicavoxelVox</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Rgba</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Voxel</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">Voxel</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">Voxel</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
 
-        public Voxel(KaitaiStream _io) {
-            this(_io, null, null);
-        }
+        <span class="kd">public</span> <span class="nf">Voxel</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Voxel(KaitaiStream _io, MagicavoxelVox.Xyzi _parent) {
-            this(_io, _parent, null);
-        }
+        <span class="kd">public</span> <span class="nf">Voxel</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Xyzi</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
 
-        public Voxel(KaitaiStream _io, MagicavoxelVox.Xyzi _parent, MagicavoxelVox _root) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            _read();
-        }
-        private void _read() {
-            this.x = this._io.readU1();
-            this.y = this._io.readU1();
-            this.z = this._io.readU1();
-            this.colorIndex = this._io.readU1();
-        }
-        private int x;
-        private int y;
-        private int z;
-        private int colorIndex;
-        private MagicavoxelVox _root;
-        private MagicavoxelVox.Xyzi _parent;
-        public int x() { return x; }
-        public int y() { return y; }
-        public int z() { return z; }
-        public int colorIndex() { return colorIndex; }
-        public MagicavoxelVox _root() { return _root; }
-        public MagicavoxelVox.Xyzi _parent() { return _parent; }
-    }
-    private byte[] magic;
-    private long version;
-    private Chunk main;
-    private MagicavoxelVox _root;
-    private KaitaiStruct _parent;
-    public byte[] magic() { return magic; }
+        <span class="kd">public</span> <span class="nf">Voxel</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Xyzi</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">x</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">y</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">z</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">colorIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">z</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">colorIndex</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Xyzi</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">x</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">y</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">z</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">z</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">colorIndex</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">colorIndex</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MagicavoxelVox</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MagicavoxelVox</span><span class="p">.</span><span class="na">Xyzi</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">magic</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kt">long</span> <span class="n">version</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">Chunk</span> <span class="n">main</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">MagicavoxelVox</span> <span class="n">_root</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">_parent</span><span class="p">;</span>
+    <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">magic</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * 150 expected
-     */
-    public long version() { return version; }
-    public Chunk main() { return main; }
-    public MagicavoxelVox _root() { return _root; }
-    public KaitaiStruct _parent() { return _parent; }
-}
-</code></pre>
+    <span class="cm">/**</span>
+<span class="cm">     * 150 expected</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">long</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">version</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">Chunk</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">main</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">MagicavoxelVox</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -825,8 +822,8 @@ public class MagicavoxelVox extends KaitaiStruct {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

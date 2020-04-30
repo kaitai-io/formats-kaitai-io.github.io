@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -184,333 +181,333 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: php_serialized_value
-  title: Serialized PHP value
-  application: PHP
-  license: CC0-1.0
-  ks-version: 0.9
-  # No endianness, since all numbers are stored as ASCII decimal.
-  # This encoding is only used to parse numbers. All strings, class names, etc.
-  # are treated as raw byte arrays, because PHP strings are byte strings
-  # with no particular encoding.
-  encoding: ASCII
-doc: |
-  A serialized PHP value, in the format used by PHP&#39;s built-in `serialize` and
-  `unserialize` functions. This format closely mirrors PHP&#39;s data model:
-  it supports all of PHP&#39;s scalar types (`NULL`, booleans, numbers, strings),
-  associative arrays, objects, and recursive data structures using references.
-  The only PHP values not supported by this format are *resources*,
-  which usually correspond to native file or connection handles and cannot be
-  meaningfully serialized.
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">php_serialized_value</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Serialized PHP value</span>
+  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PHP</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.9</span>
+  <span class="c1"># No endianness, since all numbers are stored as ASCII decimal.</span>
+  <span class="c1"># This encoding is only used to parse numbers. All strings, class names, etc.</span>
+  <span class="c1"># are treated as raw byte arrays, because PHP strings are byte strings</span>
+  <span class="c1"># with no particular encoding.</span>
+  <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">A serialized PHP value, in the format used by PHP&#39;s built-in `serialize` and</span>
+  <span class="no">`unserialize` functions. This format closely mirrors PHP&#39;s data model:</span>
+  <span class="no">it supports all of PHP&#39;s scalar types (`NULL`, booleans, numbers, strings),</span>
+  <span class="no">associative arrays, objects, and recursive data structures using references.</span>
+  <span class="no">The only PHP values not supported by this format are *resources*,</span>
+  <span class="no">which usually correspond to native file or connection handles and cannot be</span>
+  <span class="no">meaningfully serialized.</span>
   
-  There is no official documentation for this data format;
-  this spec was created based on the PHP source code and the behavior of
-  `serialize`/`unserialize`. PHP makes no guarantees about compatibility of
-  serialized data between PHP versions, but in practice, the format has
-  remained fully backwards-compatible - values serialized by an older
-  PHP version can be unserialized on any newer PHP version.
-  This spec supports serialized values from PHP 7.3 or any earlier version.
-doc-ref:
-  - &#39;https://www.php.net/manual/en/function.serialize.php&#39;
-  - &#39;https://www.php.net/manual/en/function.serialize.php#66147&#39;
-  - &#39;https://www.php.net/manual/en/function.unserialize.php&#39;
-  - &#39;https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var_unserializer.re&#39;
-  - &#39;https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var.c#L822&#39;
-seq:
-  - id: type
-    type: u1
-    enum: value_type
-    doc: A single-character code indicating the type of the serialized value.
-  - id: contents
-    type:
-      switch-on: type
-      cases:
-        &#39;value_type::null&#39;: null_contents
-        &#39;value_type::bool&#39;: bool_contents
-        &#39;value_type::int&#39;: int_contents
-        &#39;value_type::float&#39;: float_contents
-        &#39;value_type::string&#39;: string_contents
-        &#39;value_type::php_6_string&#39;: string_contents
-        &#39;value_type::array&#39;: array_contents
-        &#39;value_type::php_3_object&#39;: php_3_object_contents
-        &#39;value_type::object&#39;: object_contents
-        &#39;value_type::custom_serialized_object&#39;:
-          custom_serialized_object_contents
-        &#39;value_type::variable_reference&#39;: int_contents
-        &#39;value_type::object_reference&#39;: int_contents
-    doc: |
-      The contents of the serialized value, which vary depending on the type.
-enums:
-  value_type:
-    0x43: # &#39;C&#39;
-      id: custom_serialized_object
-      doc: |
-        An `object` whose class implements a custom serialized format using
-        `Serializable`. Available since PHP 5.1.
-    0x4e: # &#39;N&#39;
-      id: &#39;null&#39;
-      doc: A `NULL` value.
-    0x4f: # &#39;O&#39;
-      id: object
-      doc: |
-        An `object` value (including its class name) serialized in the
-        default format. Available since PHP 4.
-    0x52: # &#39;R&#39;
-      id: variable_reference
-      doc: |
-        An additional reference to a value that has already appeared earlier.
-        Available since PHP 4.0.4.
-    0x53: # &#39;S&#39;
-      id: php_6_string
-      doc: |
-        A `string` value from PHP 6. PHP 6 was never released, but support for
-        deserializing PHP 6 strings was added in PHP 5.2.1 and is still present
-        as of PHP 7.3. In all versions that support them (other than PHP 6),
-        they are deserialized exactly like regular strings.
-    0x61: # &#39;a&#39;
-      id: array
-      doc: An `array` value.
-    0x62: # &#39;b&#39;
-      id: bool
-      doc: A `bool` value. Available since PHP 4.
-    0x64: # &#39;d&#39;
-      id: float
-      doc: A `float` value.
-    0x69: # &#39;i&#39;
-      id: int
-      doc: An `int` value.
-    0x6f: # &#39;o&#39;
-      id: php_3_object
-      doc: |
-        An `object` value (without a class name), as serialized by PHP 3.
+  <span class="no">There is no official documentation for this data format;</span>
+  <span class="no">this spec was created based on the PHP source code and the behavior of</span>
+  <span class="no">`serialize`/`unserialize`. PHP makes no guarantees about compatibility of</span>
+  <span class="no">serialized data between PHP versions, but in practice, the format has</span>
+  <span class="no">remained fully backwards-compatible - values serialized by an older</span>
+  <span class="no">PHP version can be unserialized on any newer PHP version.</span>
+  <span class="no">This spec supports serialized values from PHP 7.3 or any earlier version.</span>
+<span class="nt">doc-ref</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="s">&#39;https://www.php.net/manual/en/function.serialize.php&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="s">&#39;https://www.php.net/manual/en/function.serialize.php#66147&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="s">&#39;https://www.php.net/manual/en/function.unserialize.php&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="s">&#39;https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var_unserializer.re&#39;</span>
+  <span class="p p-Indicator">-</span> <span class="s">&#39;https://github.com/php/php-src/blob/php-7.3.5/ext/standard/var.c#L822&#39;</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+    <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value_type</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">A single-character code indicating the type of the serialized value.</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">contents</span>
+    <span class="nt">type</span><span class="p">:</span>
+      <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+      <span class="nt">cases</span><span class="p">:</span>
+        <span class="s">&#39;value_type::null&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">null_contents</span>
+        <span class="s">&#39;value_type::bool&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">bool_contents</span>
+        <span class="s">&#39;value_type::int&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">int_contents</span>
+        <span class="s">&#39;value_type::float&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">float_contents</span>
+        <span class="s">&#39;value_type::string&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">string_contents</span>
+        <span class="s">&#39;value_type::php_6_string&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">string_contents</span>
+        <span class="s">&#39;value_type::array&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">array_contents</span>
+        <span class="s">&#39;value_type::php_3_object&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">php_3_object_contents</span>
+        <span class="s">&#39;value_type::object&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">object_contents</span>
+        <span class="s">&#39;value_type::custom_serialized_object&#39;</span><span class="p p-Indicator">:</span>
+          <span class="l l-Scalar l-Scalar-Plain">custom_serialized_object_contents</span>
+        <span class="s">&#39;value_type::variable_reference&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">int_contents</span>
+        <span class="s">&#39;value_type::object_reference&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">int_contents</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">The contents of the serialized value, which vary depending on the type.</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">value_type</span><span class="p">:</span>
+    <span class="nt">0x43</span><span class="p">:</span> <span class="c1"># &#39;C&#39;</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">custom_serialized_object</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">An `object` whose class implements a custom serialized format using</span>
+        <span class="no">`Serializable`. Available since PHP 5.1.</span>
+    <span class="nt">0x4e</span><span class="p">:</span> <span class="c1"># &#39;N&#39;</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="s">&#39;null&#39;</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">A `NULL` value.</span>
+    <span class="nt">0x4f</span><span class="p">:</span> <span class="c1"># &#39;O&#39;</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">object</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">An `object` value (including its class name) serialized in the</span>
+        <span class="no">default format. Available since PHP 4.</span>
+    <span class="nt">0x52</span><span class="p">:</span> <span class="c1"># &#39;R&#39;</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">variable_reference</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">An additional reference to a value that has already appeared earlier.</span>
+        <span class="no">Available since PHP 4.0.4.</span>
+    <span class="nt">0x53</span><span class="p">:</span> <span class="c1"># &#39;S&#39;</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">php_6_string</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">A `string` value from PHP 6. PHP 6 was never released, but support for</span>
+        <span class="no">deserializing PHP 6 strings was added in PHP 5.2.1 and is still present</span>
+        <span class="no">as of PHP 7.3. In all versions that support them (other than PHP 6),</span>
+        <span class="no">they are deserialized exactly like regular strings.</span>
+    <span class="nt">0x61</span><span class="p">:</span> <span class="c1"># &#39;a&#39;</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">array</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">An `array` value.</span>
+    <span class="nt">0x62</span><span class="p">:</span> <span class="c1"># &#39;b&#39;</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bool</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">A `bool` value. Available since PHP 4.</span>
+    <span class="nt">0x64</span><span class="p">:</span> <span class="c1"># &#39;d&#39;</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">float</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">A `float` value.</span>
+    <span class="nt">0x69</span><span class="p">:</span> <span class="c1"># &#39;i&#39;</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">int</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">An `int` value.</span>
+    <span class="nt">0x6f</span><span class="p">:</span> <span class="c1"># &#39;o&#39;</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">php_3_object</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">An `object` value (without a class name), as serialized by PHP 3.</span>
         
-        PHP 4 through 7.3 included code to deserialize PHP 3 objects,
-        which has now been removed from the development repo and will likely
-        no longer be included in PHP 7.4. However, apparently this code
-        has been broken ever since it was added - it cannot even deserialize
-        a simple PHP 3 object like `o:0:{}`. If the code worked, PHP 3 objects
-        deserialized under PHP 4 and higher would have the class `stdClass`.
-    0x72: # &#39;r&#39;
-      id: object_reference
-      doc: |
-        An `object` value which shares its identity with another `object`
-        that has already appeared earlier. Available since PHP 5.
-    0x73: # &#39;s&#39;
-      id: string
-      doc: A `string` value.
-  bool_value:
-    0x30: false # &#39;0&#39;
-    0x31: true # &#39;1&#39;
-types:
-  null_contents:
-    seq:
-      - id: semicolon
-        contents: &#39;;&#39;
-    doc: |
-      The contents of a null value (`value_type::null`). This structure
-      contains no actual data, since there is only a single `NULL` value.
-  bool_contents:
-    seq:
-      - id: colon
-        contents: &#39;:&#39;
-      - id: value_dec
-        type: u1
-        enum: bool_value
-        doc: |
-          The value of the `bool`: `0` for `false` or `1` for `true`.
-      - id: semicolon
-        contents: &#39;;&#39;
-    instances:
-      value:
-        value: &#39;value_dec == bool_value::true&#39;
-        doc: The value of the `bool`, parsed as a boolean.
-    doc: The contents of a boolean value (`value_type::bool`).
-  int_contents:
-    seq:
-      - id: colon
-        contents: &#39;:&#39;
-      - id: value_dec
-        type: str
-        terminator: 0x3b # &#39;;&#39;
-        doc: The value of the `int`, in ASCII decimal.
-    instances:
-      value:
-        value: value_dec.to_i
-        doc: The value of the `int`, parsed as an integer.
-    doc: |
-      The contents of an integer-like value:
-      either an actual integer (`value_type::int`) or a reference
-      (`value_type::variable_reference`, `value_type::object_reference`).
-  float_contents:
-    seq:
-      - id: colon
-        contents: &#39;:&#39;
-      - id: value_dec
-        type: str
-        terminator: 0x3b # &#39;;&#39;
-        doc: |
-          The value of the `float`, in ASCII decimal, as generated by PHP&#39;s
-          usual double-to-string conversion. In particular, this means that:
+        <span class="no">PHP 4 through 7.3 included code to deserialize PHP 3 objects,</span>
+        <span class="no">which has now been removed from the development repo and will likely</span>
+        <span class="no">no longer be included in PHP 7.4. However, apparently this code</span>
+        <span class="no">has been broken ever since it was added - it cannot even deserialize</span>
+        <span class="no">a simple PHP 3 object like `o:0:{}`. If the code worked, PHP 3 objects</span>
+        <span class="no">deserialized under PHP 4 and higher would have the class `stdClass`.</span>
+    <span class="nt">0x72</span><span class="p">:</span> <span class="c1"># &#39;r&#39;</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">object_reference</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">An `object` value which shares its identity with another `object`</span>
+        <span class="no">that has already appeared earlier. Available since PHP 5.</span>
+    <span class="nt">0x73</span><span class="p">:</span> <span class="c1"># &#39;s&#39;</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">A `string` value.</span>
+  <span class="nt">bool_value</span><span class="p">:</span>
+    <span class="nt">0x30</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span> <span class="c1"># &#39;0&#39;</span>
+    <span class="nt">0x31</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span> <span class="c1"># &#39;1&#39;</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">null_contents</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">semicolon</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;;&#39;</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">The contents of a null value (`value_type::null`). This structure</span>
+      <span class="no">contains no actual data, since there is only a single `NULL` value.</span>
+  <span class="nt">bool_contents</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value_dec</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bool_value</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The value of the `bool`: `0` for `false` or `1` for `true`.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">semicolon</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;;&#39;</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">value</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;value_dec</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">bool_value::true&#39;</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The value of the `bool`, parsed as a boolean.</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The contents of a boolean value (`value_type::bool`).</span>
+  <span class="nt">int_contents</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value_dec</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x3b</span> <span class="c1"># &#39;;&#39;</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The value of the `int`, in ASCII decimal.</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">value</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value_dec.to_i</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The value of the `int`, parsed as an integer.</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">The contents of an integer-like value:</span>
+      <span class="no">either an actual integer (`value_type::int`) or a reference</span>
+      <span class="no">(`value_type::variable_reference`, `value_type::object_reference`).</span>
+  <span class="nt">float_contents</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value_dec</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x3b</span> <span class="c1"># &#39;;&#39;</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The value of the `float`, in ASCII decimal, as generated by PHP&#39;s</span>
+          <span class="no">usual double-to-string conversion. In particular, this means that:</span>
           
-          * A decimal point may not be included (for integral numbers)
-          * The number may use exponent notation (e. g. `1.0E+16`)
-          * Positive and negative infinity are represented as `INF`
-            and `-INF`, respectively
-          * Not-a-number is represented as `NAN`
-    doc: The contents of a floating-point value.
-  length_prefixed_quoted_string:
-    seq:
-      - id: len_data_dec
-        type: str
-        terminator: 0x3a # &#39;:&#39;
-        doc: |
-          The length of the string&#39;s data in bytes, in ASCII decimal.
-          The quotes are not counted in this length number.
-      - id: opening_quote
-        contents: &#39;&quot;&#39;
-      - id: data
-        size: len_data
-        doc: The data contained in the string. The quotes are not included.
-      - id: closing_quote
-        contents: &#39;&quot;&#39;
-    instances:
-      len_data:
-        value: len_data_dec.to_i
-        doc: |
-          The length of the string&#39;s contents in bytes, parsed as an integer.
-          The quotes are not counted in this size number.
-    doc: |
-      A quoted string prefixed with its length.
+          <span class="no">* A decimal point may not be included (for integral numbers)</span>
+          <span class="no">* The number may use exponent notation (e. g. `1.0E+16`)</span>
+          <span class="no">* Positive and negative infinity are represented as `INF`</span>
+            <span class="no">and `-INF`, respectively</span>
+          <span class="no">* Not-a-number is represented as `NAN`</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The contents of a floating-point value.</span>
+  <span class="nt">length_prefixed_quoted_string</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data_dec</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x3a</span> <span class="c1"># &#39;:&#39;</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The length of the string&#39;s data in bytes, in ASCII decimal.</span>
+          <span class="no">The quotes are not counted in this length number.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opening_quote</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;&quot;&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The data contained in the string. The quotes are not included.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">closing_quote</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;&quot;&#39;</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">len_data</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data_dec.to_i</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The length of the string&#39;s contents in bytes, parsed as an integer.</span>
+          <span class="no">The quotes are not counted in this size number.</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">A quoted string prefixed with its length.</span>
       
-      Despite the quotes surrounding the string data, it can contain
-      arbitrary bytes, which are never escaped in any way.
-      This does not cause any ambiguities when parsing - the bounds of
-      the string are determined only by the length field, not by the quotes.
-  string_contents:
-    seq:
-      - id: colon
-        contents: &#39;:&#39;
-      - id: string
-        type: length_prefixed_quoted_string
-      - id: semicolon
-        contents: &#39;;&#39;
-    instances:
-      value:
-        value: string.data
-        doc: The value of the string, as a byte array.
-    doc: |
-      The contents of a string value.
+      <span class="no">Despite the quotes surrounding the string data, it can contain</span>
+      <span class="no">arbitrary bytes, which are never escaped in any way.</span>
+      <span class="no">This does not cause any ambiguities when parsing - the bounds of</span>
+      <span class="no">the string are determined only by the length field, not by the quotes.</span>
+  <span class="nt">string_contents</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length_prefixed_quoted_string</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">semicolon</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;;&#39;</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">value</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string.data</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The value of the string, as a byte array.</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">The contents of a string value.</span>
       
-      Note: PHP strings can contain arbitrary byte sequences.
-      They are not necessarily valid text in any specific encoding.
-  mapping_entry:
-    seq:
-      - id: key
-        type: php_serialized_value
-        doc: The key of the entry.
-      - id: value
-        type: php_serialized_value
-        doc: The value of the entry.
-    doc: A mapping entry consisting of a key and a value.
-  count_prefixed_mapping:
-    seq:
-      - id: num_entries_dec
-        type: str
-        terminator: 0x3a # &#39;:&#39;
-        doc: The number of key-value pairs in the mapping, in ASCII decimal.
-      - id: opening_brace
-        contents: &#39;{&#39;
-      - id: entries
-        type: mapping_entry
-        repeat: expr
-        repeat-expr: num_entries
-        doc: The key-value pairs contained in the mapping.
-      - id: closing_brace
-        contents: &#39;}&#39;
-    instances:
-      num_entries:
-        value: num_entries_dec.to_i
-        doc: |
-          The number of key-value pairs in the mapping, parsed as an integer.
-    doc: A mapping (a sequence of key-value pairs) prefixed with its size.
-  array_contents:
-    seq:
-      - id: colon
-        contents: &#39;:&#39;
-      - id: elements
-        type: count_prefixed_mapping
-        doc: |
-          The array&#39;s elements. Keys must be of type `int` or `string`,
-          values may have any type.
-    doc: The contents of an array value.
-  php_3_object_contents:
-    seq:
-      - id: colon
-        contents: &#39;:&#39;
-      - id: properties
-        type: count_prefixed_mapping
-        doc: |
-          The object&#39;s properties. Keys must be of type `string`,
-          values may have any type.
-    doc: |
-      The contents of a PHP 3 object value. Unlike its counterpart in PHP 4
-      and above, it does not contain a class name.
-  object_contents:
-    seq:
-      - id: colon1
-        contents: &#39;:&#39;
-      - id: class_name
-        type: length_prefixed_quoted_string
-        doc: The name of the object&#39;s class.
-      - id: colon2
-        contents: &#39;:&#39;
-      - id: properties
-        type: count_prefixed_mapping
-        doc: |
-          The object&#39;s properties. Keys ust be of type `string`,
-          values may have any type.
-    doc: |
-      The contents of an object value serialized in the default format.
-      Unlike its PHP 3 counterpart, it contains a class name.
-  custom_serialized_object_contents:
-    seq:
-      - id: colon1
-        contents: &#39;:&#39;
-      - id: class_name
-        type: length_prefixed_quoted_string
-        doc: The name of the object&#39;s class.
-      - id: colon2
-        contents: &#39;:&#39;
-      - id: len_data_dec
-        type: str
-        terminator: 0x3a # &#39;:&#39;
-        doc: |
-          The length of the serialized data in bytes, in ASCII decimal.
-          The braces are not counted in this size number.
-      - id: opening_brace
-        contents: &#39;{&#39;
-      - id: data
-        size: len_data
-        doc: |
-          The custom serialized data. The braces are not included.
+      <span class="no">Note: PHP strings can contain arbitrary byte sequences.</span>
+      <span class="no">They are not necessarily valid text in any specific encoding.</span>
+  <span class="nt">mapping_entry</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">php_serialized_value</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The key of the entry.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">php_serialized_value</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The value of the entry.</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">A mapping entry consisting of a key and a value.</span>
+  <span class="nt">count_prefixed_mapping</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_entries_dec</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x3a</span> <span class="c1"># &#39;:&#39;</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The number of key-value pairs in the mapping, in ASCII decimal.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opening_brace</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;{&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mapping_entry</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_entries</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The key-value pairs contained in the mapping.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">closing_brace</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;}&#39;</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">num_entries</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_entries_dec.to_i</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The number of key-value pairs in the mapping, parsed as an integer.</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">A mapping (a sequence of key-value pairs) prefixed with its size.</span>
+  <span class="nt">array_contents</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">elements</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">count_prefixed_mapping</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The array&#39;s elements. Keys must be of type `int` or `string`,</span>
+          <span class="no">values may have any type.</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The contents of an array value.</span>
+  <span class="nt">php_3_object_contents</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">properties</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">count_prefixed_mapping</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The object&#39;s properties. Keys must be of type `string`,</span>
+          <span class="no">values may have any type.</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">The contents of a PHP 3 object value. Unlike its counterpart in PHP 4</span>
+      <span class="no">and above, it does not contain a class name.</span>
+  <span class="nt">object_contents</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon1</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">class_name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length_prefixed_quoted_string</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The name of the object&#39;s class.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon2</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">properties</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">count_prefixed_mapping</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The object&#39;s properties. Keys ust be of type `string`,</span>
+          <span class="no">values may have any type.</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">The contents of an object value serialized in the default format.</span>
+      <span class="no">Unlike its PHP 3 counterpart, it contains a class name.</span>
+  <span class="nt">custom_serialized_object_contents</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon1</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">class_name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">length_prefixed_quoted_string</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The name of the object&#39;s class.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">colon2</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;:&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data_dec</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x3a</span> <span class="c1"># &#39;:&#39;</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The length of the serialized data in bytes, in ASCII decimal.</span>
+          <span class="no">The braces are not counted in this size number.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opening_brace</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;{&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The custom serialized data. The braces are not included.</span>
           
-          Although the surrounding braces make it look like a regular
-          serialized object, this field is actually more similar to a string:
-          it can contain arbitrary data that is not required to follow
-          any common structure.
-      - id: closing_quote
-        contents: &#39;}&#39;
-    instances:
-      len_data:
-        value: len_data_dec.to_i
-        doc: |
-          The length of the serialized data in bytes, parsed as an integer.
-          The braces are not counted in this length number.
-    doc: |
-      The contents of an object value that implements a custom
-      serialized format using `Serializable`.
-</code></pre>
+          <span class="no">Although the surrounding braces make it look like a regular</span>
+          <span class="no">serialized object, this field is actually more similar to a string:</span>
+          <span class="no">it can contain arbitrary data that is not required to follow</span>
+          <span class="no">any common structure.</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">closing_quote</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;}&#39;</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">len_data</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data_dec.to_i</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The length of the serialized data in bytes, parsed as an integer.</span>
+          <span class="no">The braces are not counted in this length number.</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">The contents of an object value that implements a custom</span>
+      <span class="no">serialized format using `Serializable`.</span>
+</pre></div>
     </div>
 </section>
 
@@ -534,8 +531,8 @@ types:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

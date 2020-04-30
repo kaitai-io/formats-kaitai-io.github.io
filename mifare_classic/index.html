@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -171,252 +168,252 @@ section#format-index .row {
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: mifare_classic
-  title: Mifare Classic RFID tag dump
-  file-extension: mfd
-  license: BSD-2-Clause
-  ks-version: 0.9
-  endian: le
-doc-ref: |
-  https://github.com/nfc-tools/libnfc
-  https://www.nxp.com/docs/en/data-sheet/MF1S70YYX_V1.pdf
-doc: |
-  You can get a dump for testing by the link: https://github.com/zhovner/mfdread/raw/master/dump.mfd
-seq:
-  - id: sectors
-    size: ((_index &gt;= 32)?4:1)*4*16 #sorry for this doubling of `block_size` (16), but we need `sector` be self-sufficient so we cannot use _root there
-    type: sector(_index == 0)
-    repeat: eos
-types:
-  key:
-    seq:
-      - id: key
-        size: 6
-  sector:
-    params:
-      - id: has_manufacturer
-        type: bool
-    seq:
-      - id: manufacturer
-        type: manufacturer
-        if: has_manufacturer
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mifare_classic</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Mifare Classic RFID tag dump</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mfd</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BSD-2-Clause</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.9</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">https://github.com/nfc-tools/libnfc</span>
+  <span class="no">https://www.nxp.com/docs/en/data-sheet/MF1S70YYX_V1.pdf</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">You can get a dump for testing by the link: https://github.com/zhovner/mfdread/raw/master/dump.mfd</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sectors</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">((_index &gt;= 32)?4:1)*4*16</span> <span class="c1">#sorry for this doubling of `block_size` (16), but we need `sector` be self-sufficient so we cannot use _root there</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sector(_index == 0)</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">key</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">6</span>
+  <span class="nt">sector</span><span class="p">:</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_manufacturer</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bool</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">manufacturer</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">manufacturer</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_manufacturer</span>
       
-      - id: data_filler
-        -orig-id: abtData
-        size: _io.size - _io.pos - 16 # sizeof(trailer)
-        type: filler
-      - id: trailer
-        type: trailer
-    instances:
-      block_size:
-        value: 16
-      data:
-        value: data_filler.data
-      blocks:
-        pos: 0
-        io: data_filler._io
-        size: block_size
-        repeat: eos
-      values:
-        pos: 0
-        io: data_filler._io
-        type: values
-    types:
-      values:
-        seq:
-          - id: values
-            type: value_block
-            repeat: eos
-        types:
-          value_block:
-            seq:
-              - id: valuez
-                type: u4
-                repeat: expr
-                repeat-expr: 3
-              - id: addrz
-                type: u1
-                repeat: expr
-                repeat-expr: 4
-            instances:
-              value_valid:
-                value: &#39;valuez[0]==~valuez[1] and valuez[0]==valuez[2]&#39;
-              addr_valid:
-                value: &#39;addrz[0]==~addrz[1] and addrz[0]==addrz[2] and addrz[1]==addrz[3]&#39;
-              valid:
-                value: &#39;value_valid and addr_valid&#39;
-              addr:
-                value: &#39;addrz[0]&#39;
-                if: valid
-              value:
-                value: valuez[0]
-                if: valid
-      filler:
-        doc: &quot;only to create _io&quot;
-        seq:
-          - id: data
-            size: _io.size
-  manufacturer:
-    seq:
-      - id: nuid
-        -orig-id: abtUID
-        type: u4
-        doc: beware for 7bytes UID it goes over next fields
-      - id: bcc
-        -orig-id: btBCC
-        type: u1
-      - id: sak # beware it&#39;s not always exactly SAK
-        -orig-id: btSAK
-        type: u1
-      - id: atqa
-        -orig-id: abtATQA
-        type: u2
-      - id: manufacturer
-        -orig-id: abtManufacturer
-        size: 8
-        doc: may contain manufacture date as BCD
-  trailer:
-    seq:
-      - id: key_a
-        -orig-id: abtKeyA
-        type: key
-      - id: access_bits
-        -orig-id: abtAccessBits
-        size: 3
-        type: access_conditions
-      - id: user_byte
-        -orig-id: abtAccessBits
-        type: u1
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_filler</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">abtData</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_io.size - _io.pos - 16</span> <span class="c1"># sizeof(trailer)</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filler</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trailer</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trailer</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">block_size</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+      <span class="nt">data</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_filler.data</span>
+      <span class="nt">blocks</span><span class="p">:</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+        <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_filler._io</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">block_size</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+      <span class="nt">values</span><span class="p">:</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+        <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_filler._io</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">values</span>
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">values</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">values</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value_block</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+        <span class="nt">types</span><span class="p">:</span>
+          <span class="nt">value_block</span><span class="p">:</span>
+            <span class="nt">seq</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">valuez</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+                <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">addrz</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+                <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+            <span class="nt">instances</span><span class="p">:</span>
+              <span class="nt">value_valid</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;valuez[0]==~valuez[1]</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">valuez[0]==valuez[2]&#39;</span>
+              <span class="nt">addr_valid</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;addrz[0]==~addrz[1]</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">addrz[0]==addrz[2]</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">addrz[1]==addrz[3]&#39;</span>
+              <span class="nt">valid</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;value_valid</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">addr_valid&#39;</span>
+              <span class="nt">addr</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;addrz[0]&#39;</span>
+                <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">valid</span>
+              <span class="nt">value</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">valuez[0]</span>
+                <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">valid</span>
+      <span class="nt">filler</span><span class="p">:</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;only</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">create</span><span class="nv"> </span><span class="s">_io&quot;</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_io.size</span>
+  <span class="nt">manufacturer</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nuid</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">abtUID</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">beware for 7bytes UID it goes over next fields</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bcc</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">btBCC</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sak</span> <span class="c1"># beware it&#39;s not always exactly SAK</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">btSAK</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">atqa</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">abtATQA</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">manufacturer</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">abtManufacturer</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">may contain manufacture date as BCD</span>
+  <span class="nt">trailer</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key_a</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">abtKeyA</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">access_bits</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">abtAccessBits</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">access_conditions</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">user_byte</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">abtAccessBits</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
 
-      - id: key_b
-        -orig-id: abtKeyB
-        type: key
-    instances:
-      ac_bits:
-        value: 3
-      acs_in_sector:
-        value: 4
-      ac_count_of_chunks:
-        value: ac_bits*2 #6
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key_b</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">abtKeyB</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">ac_bits</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+      <span class="nt">acs_in_sector</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+      <span class="nt">ac_count_of_chunks</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ac_bits*2</span> <span class="c1">#6</span>
     
-    types:
-      access_conditions:
-        seq:
-          - id: raw_chunks
-            type: b4 # _parent.acs_in_sector
-            repeat: expr
-            repeat-expr: _parent.ac_count_of_chunks
-        instances:
-          remaps:
-            pos: 0
-            repeat: expr
-            repeat-expr: _parent.ac_bits
-            type: chunk_bit_remap(_index)
-          chunks:
-            pos: 0
-            type: valid_chunk(raw_chunks[remaps[_index].inv_chunk_no], raw_chunks[remaps[_index].chunk_no])
-            repeat: expr
-            repeat-expr: _parent.ac_bits
-          acs_raw:
-            pos: 0
-            type: ac(_index)
-            repeat: expr
-            repeat-expr: _parent.acs_in_sector
-          data_acs:
-            pos: 0
-            type: data_ac(acs_raw[_index])
-            repeat: expr
-            repeat-expr: _parent.acs_in_sector-1
-          trailer_ac:
-            pos: 0
-            type: trailer_ac(acs_raw[_parent.acs_in_sector-1])
-        types:
-          chunk_bit_remap:
-            params:
-              - id: bit_no
-                type: u1
-            instances:
-              shift_value:
-                value: (bit_no==1?-1:1)
-              chunk_no:
-                value: &#39;((inv_chunk_no+shift_value+_parent._parent.ac_count_of_chunks)%_parent._parent.ac_count_of_chunks)&#39;
-              inv_chunk_no:
-                value: &#39;bit_no+shift_value&#39;
-          valid_chunk:
-            params:
-              - id: inv_chunk
-                type: u1
-              - id: chunk
-                type: u1
-                doc: &quot;c3 c2 c1 c0&quot;
-            instances:
-              valid:
-                value: inv_chunk ^ chunk == 0b1111
-          ac:
-            params:
-              - id: index
-                type: u1
-            instances:
-              bits:
-                pos: 0
-                repeat: expr
-                repeat-expr: _parent._parent.ac_bits
-                type: ac_bit(index, _parent.chunks[_index].chunk)
+    <span class="nt">types</span><span class="p">:</span>
+      <span class="nt">access_conditions</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">raw_chunks</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b4</span> <span class="c1"># _parent.acs_in_sector</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.ac_count_of_chunks</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">remaps</span><span class="p">:</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.ac_bits</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chunk_bit_remap(_index)</span>
+          <span class="nt">chunks</span><span class="p">:</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">valid_chunk(raw_chunks[remaps[_index].inv_chunk_no], raw_chunks[remaps[_index].chunk_no])</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.ac_bits</span>
+          <span class="nt">acs_raw</span><span class="p">:</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ac(_index)</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.acs_in_sector</span>
+          <span class="nt">data_acs</span><span class="p">:</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_ac(acs_raw[_index])</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+            <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.acs_in_sector-1</span>
+          <span class="nt">trailer_ac</span><span class="p">:</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trailer_ac(acs_raw[_parent.acs_in_sector-1])</span>
+        <span class="nt">types</span><span class="p">:</span>
+          <span class="nt">chunk_bit_remap</span><span class="p">:</span>
+            <span class="nt">params</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bit_no</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">instances</span><span class="p">:</span>
+              <span class="nt">shift_value</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(bit_no==1?-1:1)</span>
+              <span class="nt">chunk_no</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;((inv_chunk_no+shift_value+_parent._parent.ac_count_of_chunks)%_parent._parent.ac_count_of_chunks)&#39;</span>
+              <span class="nt">inv_chunk_no</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;bit_no+shift_value&#39;</span>
+          <span class="nt">valid_chunk</span><span class="p">:</span>
+            <span class="nt">params</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inv_chunk</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chunk</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;c3</span><span class="nv"> </span><span class="s">c2</span><span class="nv"> </span><span class="s">c1</span><span class="nv"> </span><span class="s">c0&quot;</span>
+            <span class="nt">instances</span><span class="p">:</span>
+              <span class="nt">valid</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inv_chunk ^ chunk == 0b1111</span>
+          <span class="nt">ac</span><span class="p">:</span>
+            <span class="nt">params</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">index</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+            <span class="nt">instances</span><span class="p">:</span>
+              <span class="nt">bits</span><span class="p">:</span>
+                <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+                <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+                <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent._parent.ac_bits</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ac_bit(index, _parent.chunks[_index].chunk)</span>
 
-              val:
-                value: (bits[2].n &lt;&lt; 2) | (bits[1].n &lt;&lt; 1) | bits[0].n
-                doc: &quot;c3 c2 c1&quot;
-              inv_shift_val:
-                value: (bits[0].n &lt;&lt; 2) | (bits[1].n &lt;&lt; 1) | bits[2].n
+              <span class="nt">val</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(bits[2].n &lt;&lt; 2) | (bits[1].n &lt;&lt; 1) | bits[0].n</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;c3</span><span class="nv"> </span><span class="s">c2</span><span class="nv"> </span><span class="s">c1&quot;</span>
+              <span class="nt">inv_shift_val</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(bits[0].n &lt;&lt; 2) | (bits[1].n &lt;&lt; 1) | bits[2].n</span>
               
-            types:
-              ac_bit:
-                params:
-                  - id: i
-                    type: u1
-                  - id: chunk
-                    type: u1
-                instances:
-                  n:
-                    value: (chunk &gt;&gt; i) &amp; 1
-                  b:
-                    value: n == 1
+            <span class="nt">types</span><span class="p">:</span>
+              <span class="nt">ac_bit</span><span class="p">:</span>
+                <span class="nt">params</span><span class="p">:</span>
+                  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">i</span>
+                    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">chunk</span>
+                    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+                <span class="nt">instances</span><span class="p">:</span>
+                  <span class="nt">n</span><span class="p">:</span>
+                    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(chunk &gt;&gt; i) &amp; 1</span>
+                  <span class="nt">b</span><span class="p">:</span>
+                    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">n == 1</span>
                     
-          trailer_ac:
-            params:
-              - id: ac
-                type: ac
-            instances:
-              can_read_key_b:
-                value: ac.inv_shift_val &lt;= 0b010
-                doc: key A is required
-              can_write_keys:
-                value: &quot;(ac.inv_shift_val+1)%3 != 0 and (ac.inv_shift_val&lt;6)&quot;
-              can_write_access_bits:
-                value: ac.bits[2].b
-              key_b_controls_write:
-                value: not can_read_key_b
-          data_ac:
-            params:
-              - id: ac
-                type: ac
-            instances:
-              read_key_a_required:
-                value: ac.val &lt;= 0b100
-              read_key_b_required:
-                value: ac.val &lt;= 0b110
-              write_key_a_required:
-                value: ac.val == 0
+          <span class="nt">trailer_ac</span><span class="p">:</span>
+            <span class="nt">params</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ac</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ac</span>
+            <span class="nt">instances</span><span class="p">:</span>
+              <span class="nt">can_read_key_b</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ac.inv_shift_val &lt;= 0b010</span>
+                <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">key A is required</span>
+              <span class="nt">can_write_keys</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="s">&quot;(ac.inv_shift_val+1)%3</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">(ac.inv_shift_val&lt;6)&quot;</span>
+              <span class="nt">can_write_access_bits</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ac.bits[2].b</span>
+              <span class="nt">key_b_controls_write</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not can_read_key_b</span>
+          <span class="nt">data_ac</span><span class="p">:</span>
+            <span class="nt">params</span><span class="p">:</span>
+              <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ac</span>
+                <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ac</span>
+            <span class="nt">instances</span><span class="p">:</span>
+              <span class="nt">read_key_a_required</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ac.val &lt;= 0b100</span>
+              <span class="nt">read_key_b_required</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ac.val &lt;= 0b110</span>
+              <span class="nt">write_key_a_required</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ac.val == 0</span>
               
 
-              write_key_b_required:
-                value: (not read_key_a_required or read_key_b_required) and not ac.bits[0].b
-              increment_available:
-                value: (not ac.bits[0].b and not read_key_a_required and not read_key_b_required) or (not ac.bits[0].b and read_key_a_required and read_key_b_required)
-              decrement_available:
-                value: (ac.bits[1].b or not ac.bits[0].b) and not ac.bits[2].b
-</code></pre>
+              <span class="nt">write_key_b_required</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(not read_key_a_required or read_key_b_required) and not ac.bits[0].b</span>
+              <span class="nt">increment_available</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(not ac.bits[0].b and not read_key_a_required and not read_key_b_required) or (not ac.bits[0].b and read_key_a_required and read_key_b_required)</span>
+              <span class="nt">decrement_available</span><span class="p">:</span>
+                <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(ac.bits[1].b or not ac.bits[0].b) and not ac.bits[2].b</span>
+</pre></div>
     </div>
 </section>
 
@@ -440,8 +437,8 @@ types:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

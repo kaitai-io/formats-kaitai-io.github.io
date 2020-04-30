@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -233,152 +230,152 @@ provides an opportunity for use of a smaller system flash part.</p>
     <div class="container">
         <h2>Format specification in Kaitai Struct YAML</h2>
 
-        <pre><code class="yaml">meta:
-  id: uefi_te
-  title: TE (Terse Executable) file
-  application: UEFI
-  file-extension:
-    - efi
-    - te
-  ks-version: 0.7
-  license: CC0-1.0
-  endian: le
-doc: |
-  This type of executables could be found inside the UEFI firmware. The UEFI 
-  firmware is stored in SPI flash memory, which is a chip soldered on a 
-  system’s motherboard. UEFI firmware is very modular: it usually contains 
-  dozens, if not hundreds, of executables. To store all these separates files, 
-  the firmware is laid out in volumes using the Firmware File System (FFS), a 
-  file system specifically designed to store firmware images. The volumes 
-  contain files that are identified by GUIDs and each of these files contain 
-  one or more sections holding the data. One of these sections contains the 
-  actual executable image. Most of the executable images follow the PE format. 
-  However, some of them follow the TE format.
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uefi_te</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">TE (Terse Executable) file</span>
+  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UEFI</span>
+  <span class="nt">file-extension</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">efi</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">te</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.7</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">This type of executables could be found inside the UEFI firmware. The UEFI </span>
+  <span class="no">firmware is stored in SPI flash memory, which is a chip soldered on a </span>
+  <span class="no">system’s motherboard. UEFI firmware is very modular: it usually contains </span>
+  <span class="no">dozens, if not hundreds, of executables. To store all these separates files, </span>
+  <span class="no">the firmware is laid out in volumes using the Firmware File System (FFS), a </span>
+  <span class="no">file system specifically designed to store firmware images. The volumes </span>
+  <span class="no">contain files that are identified by GUIDs and each of these files contain </span>
+  <span class="no">one or more sections holding the data. One of these sections contains the </span>
+  <span class="no">actual executable image. Most of the executable images follow the PE format. </span>
+  <span class="no">However, some of them follow the TE format.</span>
 
-  The Terse Executable (TE) image format was created as a mechanism to reduce
-  the overhead of the PE/COFF headers in PE32/PE32+ images, resulting in a 
-  corresponding reduction of image sizes for executables running in the PI 
-  (Platform Initialization) Architecture environment. Reducing image size 
-  provides an opportunity for use of a smaller system flash part.
+  <span class="no">The Terse Executable (TE) image format was created as a mechanism to reduce</span>
+  <span class="no">the overhead of the PE/COFF headers in PE32/PE32+ images, resulting in a </span>
+  <span class="no">corresponding reduction of image sizes for executables running in the PI </span>
+  <span class="no">(Platform Initialization) Architecture environment. Reducing image size </span>
+  <span class="no">provides an opportunity for use of a smaller system flash part.</span>
 
-  So the TE format is basically a stripped version of PE.
+  <span class="no">So the TE format is basically a stripped version of PE.</span>
 
-doc-ref: https://uefi.org/sites/default/files/resources/PI_Spec_1_6.pdf
-seq:
-  - id: te_hdr
-    size: 0x28
-    type: te_header
-  - id: sections
-    type: section
-    repeat: expr
-    repeat-expr: te_hdr.num_sections
-types:
-  te_header:
-    seq:
-      - id: magic
-        contents: &quot;VZ&quot;
-      - id: machine
-        type: u2
-        enum: machine_type
-      - id: num_sections
-        type: u1
-      - id: subsystem
-        type: u1
-        enum: subsystem_enum
-      - id: stripped_size
-        type: u2
-      - id: entry_point_addr
-        type: u4
-      - id: base_of_code
-        type: u4
-      - id: image_base
-        type: u8
-      - id: data_dirs
-        type: header_data_dirs
-    enums:
-      machine_type:
-        0x0: unknown
-        0x1d3: am33
-        0x8664: amd64
-        0x1c0: arm
-        0xaa64: arm64
-        0x1c4: armnt
-        0xebc: ebc
-        0x14c: i386
-        0x200: ia64
-        0x9041: m32r
-        0x266: mips16
-        0x366: mipsfpu
-        0x466: mipsfpu16
-        0x1f0: powerpc
-        0x1f1: powerpcfp
-        0x166: r4000
-        0x5032: riscv32
-        0x5064: riscv64
-        0x5128: riscv128
-        0x1a2: sh3
-        0x1a3: sh3dsp
-        0x1a6: sh4
-        0x1a8: sh5
-        0x1c2: thumb
-        0x169: wcemipsv2
-        # Not mentioned in Microsoft documentation, but widely regarded
-        0x184: alpha
-      subsystem_enum:
-        0: unknown
-        1: native
-        2: windows_gui
-        3: windows_cui
-        7: posix_cui
-        9: windows_ce_gui
-        10: efi_application
-        11: efi_boot_service_driver
-        12: efi_runtime_driver
-        13: efi_rom
-        14: xbox
-        16: windows_boot_application
-  header_data_dirs:
-    seq:
-      - id: base_relocation_table
-        type: data_dir
-      - id: debug
-        type: data_dir
-  data_dir:
-    seq:
-      - id: virtual_address
-        type: u4
-      - id: size
-        type: u4
-  section:
-    seq:
-      - id: name
-        type: str
-        encoding: UTF-8
-        size: 8
-        pad-right: 0
-      - id: virtual_size
-        type: u4
-      - id: virtual_address
-        type: u4
-      - id: size_of_raw_data
-        type: u4
-      - id: pointer_to_raw_data
-        type: u4
-      - id: pointer_to_relocations
-        type: u4
-      - id: pointer_to_linenumbers
-        type: u4
-      - id: num_relocations
-        type: u2
-      - id: num_linenumbers
-        type: u2
-      - id: characteristics
-        type: u4
-    instances:
-      body:
-        pos: pointer_to_raw_data - _root.te_hdr.stripped_size + _root.te_hdr._io.size
-        size: size_of_raw_data
-</code></pre>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://uefi.org/sites/default/files/resources/PI_Spec_1_6.pdf</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">te_hdr</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0x28</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">te_header</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sections</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">section</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">te_hdr.num_sections</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">te_header</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&quot;VZ&quot;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">machine</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">machine_type</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_sections</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">subsystem</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">subsystem_enum</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">stripped_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entry_point_addr</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">base_of_code</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_base</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_dirs</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_data_dirs</span>
+    <span class="nt">enums</span><span class="p">:</span>
+      <span class="nt">machine_type</span><span class="p">:</span>
+        <span class="nt">0x0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown</span>
+        <span class="nt">0x1d3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">am33</span>
+        <span class="nt">0x8664</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amd64</span>
+        <span class="nt">0x1c0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arm</span>
+        <span class="nt">0xaa64</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arm64</span>
+        <span class="nt">0x1c4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">armnt</span>
+        <span class="nt">0xebc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ebc</span>
+        <span class="nt">0x14c</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">i386</span>
+        <span class="nt">0x200</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ia64</span>
+        <span class="nt">0x9041</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">m32r</span>
+        <span class="nt">0x266</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mips16</span>
+        <span class="nt">0x366</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mipsfpu</span>
+        <span class="nt">0x466</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mipsfpu16</span>
+        <span class="nt">0x1f0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">powerpc</span>
+        <span class="nt">0x1f1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">powerpcfp</span>
+        <span class="nt">0x166</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">r4000</span>
+        <span class="nt">0x5032</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">riscv32</span>
+        <span class="nt">0x5064</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">riscv64</span>
+        <span class="nt">0x5128</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">riscv128</span>
+        <span class="nt">0x1a2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh3</span>
+        <span class="nt">0x1a3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh3dsp</span>
+        <span class="nt">0x1a6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh4</span>
+        <span class="nt">0x1a8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh5</span>
+        <span class="nt">0x1c2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">thumb</span>
+        <span class="nt">0x169</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">wcemipsv2</span>
+        <span class="c1"># Not mentioned in Microsoft documentation, but widely regarded</span>
+        <span class="nt">0x184</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alpha</span>
+      <span class="nt">subsystem_enum</span><span class="p">:</span>
+        <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unknown</span>
+        <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">native</span>
+        <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">windows_gui</span>
+        <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">windows_cui</span>
+        <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">posix_cui</span>
+        <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">windows_ce_gui</span>
+        <span class="nt">10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">efi_application</span>
+        <span class="nt">11</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">efi_boot_service_driver</span>
+        <span class="nt">12</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">efi_runtime_driver</span>
+        <span class="nt">13</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">efi_rom</span>
+        <span class="nt">14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xbox</span>
+        <span class="nt">16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">windows_boot_application</span>
+  <span class="nt">header_data_dirs</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">base_relocation_table</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_dir</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">debug</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data_dir</span>
+  <span class="nt">data_dir</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">virtual_address</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="nt">section</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">8</span>
+        <span class="nt">pad-right</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">virtual_size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">virtual_address</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size_of_raw_data</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pointer_to_raw_data</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pointer_to_relocations</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pointer_to_linenumbers</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_relocations</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_linenumbers</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">characteristics</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">body</span><span class="p">:</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pointer_to_raw_data - _root.te_hdr.stripped_size + _root.te_hdr._io.size</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size_of_raw_data</span>
+</pre></div>
     </div>
 </section>
 
@@ -402,8 +399,8 @@ types:
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

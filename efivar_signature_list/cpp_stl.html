@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -280,380 +277,380 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef EFIVAR_SIGNATURE_LIST_H_
-#define EFIVAR_SIGNATURE_LIST_H_
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef EFIVAR_SIGNATURE_LIST_H_</span>
+<span class="cp">#define EFIVAR_SIGNATURE_LIST_H_</span>
 
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;kaitai/kaitaistruct.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
 
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
 
-/**
- * Parse UEFI variables db and dbx that contain signatures, certificates and
- * hashes. On a Linux system using UEFI, these variables are readable from
- * /sys/firmware/efi/efivars/db-d719b2cb-3d3a-4596-a3bc-dad00e67656f,
- * /sys/firmware/efi/efivars/dbDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c,
- * /sys/firmware/efi/efivars/dbx-d719b2cb-3d3a-4596-a3bc-dad00e67656f and
- * /sys/firmware/efi/efivars/dbxDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c.
- * (&quot;d719b2cb-3d3a-4596-a3bc-dad00e67656f&quot; is defined as
- * EFI_IMAGE_SECURITY_DATABASE_GUID and &quot;8be4df61-93ca-11d2-aa0d-00e098032b8c&quot;
- * as EFI_GLOBAL_VARIABLE).
- * Each file contains an EFI attribute (32-bit integer) followed by a list of
- * EFI_SIGNATURE_LIST structures.
- * \sa Source
- */
+<span class="cm">/**</span>
+<span class="cm"> * Parse UEFI variables db and dbx that contain signatures, certificates and</span>
+<span class="cm"> * hashes. On a Linux system using UEFI, these variables are readable from</span>
+<span class="cm"> * /sys/firmware/efi/efivars/db-d719b2cb-3d3a-4596-a3bc-dad00e67656f,</span>
+<span class="cm"> * /sys/firmware/efi/efivars/dbDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c,</span>
+<span class="cm"> * /sys/firmware/efi/efivars/dbx-d719b2cb-3d3a-4596-a3bc-dad00e67656f and</span>
+<span class="cm"> * /sys/firmware/efi/efivars/dbxDefault-8be4df61-93ca-11d2-aa0d-00e098032b8c.</span>
+<span class="cm"> * (&quot;d719b2cb-3d3a-4596-a3bc-dad00e67656f&quot; is defined as</span>
+<span class="cm"> * EFI_IMAGE_SECURITY_DATABASE_GUID and &quot;8be4df61-93ca-11d2-aa0d-00e098032b8c&quot;</span>
+<span class="cm"> * as EFI_GLOBAL_VARIABLE).</span>
+<span class="cm"> * Each file contains an EFI attribute (32-bit integer) followed by a list of</span>
+<span class="cm"> * EFI_SIGNATURE_LIST structures.</span>
+<span class="cm"> * \sa Source</span>
+<span class="cm"> */</span>
 
-class efivar_signature_list_t : public kaitai::kstruct {
+<span class="k">class</span> <span class="nc">efivar_signature_list_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-public:
-    class signature_list_t;
-    class signature_data_t;
-    class efi_var_attr_t;
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">signature_list_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">signature_data_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">efi_var_attr_t</span><span class="p">;</span>
 
-    efivar_signature_list_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, efivar_signature_list_t* p__root = 0);
+    <span class="n">efivar_signature_list_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-private:
-    void _read();
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-public:
-    ~efivar_signature_list_t();
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">efivar_signature_list_t</span><span class="p">();</span>
 
-    /**
-     * \sa EFI_SIGNATURE_LIST
-     */
+    <span class="cm">/**</span>
+<span class="cm">     * \sa EFI_SIGNATURE_LIST</span>
+<span class="cm">     */</span>
 
-    class signature_list_t : public kaitai::kstruct {
+    <span class="k">class</span> <span class="nc">signature_list_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        signature_list_t(kaitai::kstream* p__io, efivar_signature_list_t* p__parent = 0, efivar_signature_list_t* p__root = 0);
+        <span class="n">signature_list_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
-    private:
-        void _read();
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
 
-    public:
-        ~signature_list_t();
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">signature_list_t</span><span class="p">();</span>
 
-    private:
-        bool f_is_cert_sha512_x509;
-        bool m_is_cert_sha512_x509;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_cert_sha512_x509</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_cert_sha512_x509</span><span class="p">;</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        /**
-         * SHA512 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation
-         * \sa EFI_CERT_X509_SHA512_GUID
-         */
-        bool is_cert_sha512_x509();
+        <span class="cm">/**</span>
+<span class="cm">         * SHA512 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation</span>
+<span class="cm">         * \sa EFI_CERT_X509_SHA512_GUID</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">is_cert_sha512_x509</span><span class="p">();</span>
 
-    private:
-        bool f_is_cert_sha224;
-        bool m_is_cert_sha224;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_cert_sha224</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_cert_sha224</span><span class="p">;</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        /**
-         * SHA-224 hash
-         * \sa EFI_CERT_SHA224_GUID
-         */
-        bool is_cert_sha224();
+        <span class="cm">/**</span>
+<span class="cm">         * SHA-224 hash</span>
+<span class="cm">         * \sa EFI_CERT_SHA224_GUID</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">is_cert_sha224</span><span class="p">();</span>
 
-    private:
-        bool f_is_cert_x509;
-        bool m_is_cert_x509;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_cert_x509</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_cert_x509</span><span class="p">;</span>
 
-    public:
+    <span class="k">public</span><span class="o">:</span>
 
-        /**
-         * X.509 certificate
-         * \sa EFI_CERT_X509_GUID
-         */
-        bool is_cert_x509();
+        <span class="cm">/**</span>
+<span class="cm">         * X.509 certificate</span>
+<span class="cm">         * \sa EFI_CERT_X509_GUID</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">is_cert_x509</span><span class="p">();</span>
 
-    private:
-        bool f_is_cert_sha256_x509;
-        bool m_is_cert_sha256_x509;
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_cert_sha256_x509</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_cert_sha256_x509</span><span class="p">;</span>
 
-    public:
-
-        /**
-         * SHA256 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation
-         * \sa EFI_CERT_X509_SHA256_GUID
-         */
-        bool is_cert_sha256_x509();
-
-    private:
-        bool f_is_cert_rsa2048_key;
-        bool m_is_cert_rsa2048_key;
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * SHA256 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation</span>
+<span class="cm">         * \sa EFI_CERT_X509_SHA256_GUID</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">is_cert_sha256_x509</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_cert_rsa2048_key</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_cert_rsa2048_key</span><span class="p">;</span>
 
-    public:
-
-        /**
-         * RSA-2048 key (only the modulus since the public key exponent is known to be 0x10001)
-         * \sa EFI_CERT_RSA2048_GUID
-         */
-        bool is_cert_rsa2048_key();
-
-    private:
-        bool f_is_cert_sha512;
-        bool m_is_cert_sha512;
-
-    public:
-
-        /**
-         * SHA-512 hash
-         * \sa EFI_CERT_SHA512_GUID
-         */
-        bool is_cert_sha512();
-
-    private:
-        bool f_is_cert_sha384;
-        bool m_is_cert_sha384;
-
-    public:
-
-        /**
-         * SHA-384 hash
-         * \sa EFI_CERT_SHA384_GUID
-         */
-        bool is_cert_sha384();
-
-    private:
-        bool f_is_cert_sha1;
-        bool m_is_cert_sha1;
-
-    public:
-
-        /**
-         * SHA-1 hash
-         * \sa EFI_CERT_SHA1_GUID
-         */
-        bool is_cert_sha1();
-
-    private:
-        bool f_is_cert_rsa2048_sha1;
-        bool m_is_cert_rsa2048_sha1;
-
-    public:
-
-        /**
-         * RSA-2048 signature of a SHA-1 hash
-         * \sa EFI_CERT_RSA2048_SHA1_GUID
-         */
-        bool is_cert_rsa2048_sha1();
-
-    private:
-        bool f_is_cert_sha256;
-        bool m_is_cert_sha256;
-
-    public:
-
-        /**
-         * SHA-256 hash
-         * \sa EFI_CERT_SHA256_GUID
-         */
-        bool is_cert_sha256();
-
-    private:
-        bool f_is_cert_sha384_x509;
-        bool m_is_cert_sha384_x509;
-
-    public:
-
-        /**
-         * SHA384 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation
-         * \sa EFI_CERT_X509_SHA384_GUID
-         */
-        bool is_cert_sha384_x509();
-
-    private:
-        bool f_is_cert_rsa2048_sha256;
-        bool m_is_cert_rsa2048_sha256;
-
-    public:
-
-        /**
-         * RSA-2048 signature of a SHA-256 hash
-         * \sa EFI_CERT_RSA2048_SHA256_GUID
-         */
-        bool is_cert_rsa2048_sha256();
-
-    private:
-        bool f_is_cert_der_pkcs7;
-        bool m_is_cert_der_pkcs7;
-
-    public:
-
-        /**
-         * DER-encoded PKCS #7 version 1.5 [RFC2315]
-         * \sa EFI_CERT_TYPE_PKCS7_GUID
-         */
-        bool is_cert_der_pkcs7();
-
-    private:
-        std::string m_signature_type;
-        uint32_t m_len_signature_list;
-        uint32_t m_len_signature_header;
-        uint32_t m_len_signature;
-        std::string m_header;
-        std::vector&lt;signature_data_t*&gt;* m_signatures;
-        bool n_signatures;
-
-    public:
-        bool _is_null_signatures() { signatures(); return n_signatures; };
-
-    private:
-        efivar_signature_list_t* m__root;
-        efivar_signature_list_t* m__parent;
-        std::vector&lt;std::string&gt;* m__raw_signatures;
-        std::vector&lt;kaitai::kstream*&gt;* m__io__raw_signatures;
-
-    public:
-
-        /**
-         * Type of the signature as a GUID
-         */
-        std::string signature_type() const { return m_signature_type; }
-
-        /**
-         * Total size of the signature list, including this header
-         */
-        uint32_t len_signature_list() const { return m_len_signature_list; }
-
-        /**
-         * Size of the signature header which precedes the array of signatures
-         */
-        uint32_t len_signature_header() const { return m_len_signature_header; }
-
-        /**
-         * Size of each signature
-         */
-        uint32_t len_signature() const { return m_len_signature; }
-
-        /**
-         * Header before the array of signatures
-         */
-        std::string header() const { return m_header; }
-
-        /**
-         * An array of signatures
-         */
-        std::vector&lt;signature_data_t*&gt;* signatures() const { return m_signatures; }
-        efivar_signature_list_t* _root() const { return m__root; }
-        efivar_signature_list_t* _parent() const { return m__parent; }
-        std::vector&lt;std::string&gt;* _raw_signatures() const { return m__raw_signatures; }
-        std::vector&lt;kaitai::kstream*&gt;* _io__raw_signatures() const { return m__io__raw_signatures; }
-    };
-
-    /**
-     * \sa EFI_SIGNATURE_DATA
-     */
-
-    class signature_data_t : public kaitai::kstruct {
-
-    public:
-
-        signature_data_t(kaitai::kstream* p__io, efivar_signature_list_t::signature_list_t* p__parent = 0, efivar_signature_list_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~signature_data_t();
-
-    private:
-        std::string m_owner;
-        std::string m_data;
-        efivar_signature_list_t* m__root;
-        efivar_signature_list_t::signature_list_t* m__parent;
-
-    public:
-
-        /**
-         * An identifier which identifies the agent which added the signature to the list
-         */
-        std::string owner() const { return m_owner; }
-
-        /**
-         * The format of the signature is defined by the SignatureType.
-         */
-        std::string data() const { return m_data; }
-        efivar_signature_list_t* _root() const { return m__root; }
-        efivar_signature_list_t::signature_list_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * Attributes of a UEFI variable
-     */
-
-    class efi_var_attr_t : public kaitai::kstruct {
-
-    public:
-
-        efi_var_attr_t(kaitai::kstream* p__io, efivar_signature_list_t* p__parent = 0, efivar_signature_list_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~efi_var_attr_t();
-
-    private:
-        bool m_enhanced_authenticated_access;
-        bool m_append_write;
-        bool m_time_based_authenticated_write_access;
-        bool m_authenticated_write_access;
-        bool m_hardware_error_record;
-        bool m_runtime_access;
-        bool m_bootservice_access;
-        bool m_non_volatile;
-        uint64_t m_reserved1;
-        efivar_signature_list_t* m__root;
-        efivar_signature_list_t* m__parent;
-
-    public:
-        bool enhanced_authenticated_access() const { return m_enhanced_authenticated_access; }
-        bool append_write() const { return m_append_write; }
-        bool time_based_authenticated_write_access() const { return m_time_based_authenticated_write_access; }
-        bool authenticated_write_access() const { return m_authenticated_write_access; }
-        bool hardware_error_record() const { return m_hardware_error_record; }
-        bool runtime_access() const { return m_runtime_access; }
-        bool bootservice_access() const { return m_bootservice_access; }
-        bool non_volatile() const { return m_non_volatile; }
-
-        /**
-         * Reserved (unused) bits
-         */
-        uint64_t reserved1() const { return m_reserved1; }
-        efivar_signature_list_t* _root() const { return m__root; }
-        efivar_signature_list_t* _parent() const { return m__parent; }
-    };
-
-private:
-    efi_var_attr_t* m_var_attributes;
-    std::vector&lt;signature_list_t*&gt;* m_signatures;
-    efivar_signature_list_t* m__root;
-    kaitai::kstruct* m__parent;
-
-public:
-
-    /**
-     * Attributes of the UEFI variable
-     */
-    efi_var_attr_t* var_attributes() const { return m_var_attributes; }
-    std::vector&lt;signature_list_t*&gt;* signatures() const { return m_signatures; }
-    efivar_signature_list_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-};
-
-#endif  // EFIVAR_SIGNATURE_LIST_H_
-</code></pre>
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * RSA-2048 key (only the modulus since the public key exponent is known to be 0x10001)</span>
+<span class="cm">         * \sa EFI_CERT_RSA2048_GUID</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">is_cert_rsa2048_key</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_cert_sha512</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_cert_sha512</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * SHA-512 hash</span>
+<span class="cm">         * \sa EFI_CERT_SHA512_GUID</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">is_cert_sha512</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_cert_sha384</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_cert_sha384</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * SHA-384 hash</span>
+<span class="cm">         * \sa EFI_CERT_SHA384_GUID</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">is_cert_sha384</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_cert_sha1</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_cert_sha1</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * SHA-1 hash</span>
+<span class="cm">         * \sa EFI_CERT_SHA1_GUID</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">is_cert_sha1</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_cert_rsa2048_sha1</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_cert_rsa2048_sha1</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * RSA-2048 signature of a SHA-1 hash</span>
+<span class="cm">         * \sa EFI_CERT_RSA2048_SHA1_GUID</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">is_cert_rsa2048_sha1</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_cert_sha256</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_cert_sha256</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * SHA-256 hash</span>
+<span class="cm">         * \sa EFI_CERT_SHA256_GUID</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">is_cert_sha256</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_cert_sha384_x509</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_cert_sha384_x509</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * SHA384 hash of an X.509 certificate&#39;s To-Be-Signed contents, and a time of revocation</span>
+<span class="cm">         * \sa EFI_CERT_X509_SHA384_GUID</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">is_cert_sha384_x509</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_cert_rsa2048_sha256</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_cert_rsa2048_sha256</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * RSA-2048 signature of a SHA-256 hash</span>
+<span class="cm">         * \sa EFI_CERT_RSA2048_SHA256_GUID</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">is_cert_rsa2048_sha256</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_cert_der_pkcs7</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_cert_der_pkcs7</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * DER-encoded PKCS #7 version 1.5 [RFC2315]</span>
+<span class="cm">         * \sa EFI_CERT_TYPE_PKCS7_GUID</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">is_cert_der_pkcs7</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_signature_type</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_len_signature_list</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_len_signature_header</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_len_signature</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_header</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">signature_data_t</span><span class="o">*&gt;*</span> <span class="n">m_signatures</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_signatures</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_signatures</span><span class="p">()</span> <span class="p">{</span> <span class="n">signatures</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_signatures</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;*</span> <span class="n">m__raw_signatures</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*&gt;*</span> <span class="n">m__io__raw_signatures</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Type of the signature as a GUID</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">signature_type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_signature_type</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Total size of the signature list, including this header</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">len_signature_list</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_signature_list</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Size of the signature header which precedes the array of signatures</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">len_signature_header</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_signature_header</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Size of each signature</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">len_signature</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len_signature</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Header before the array of signatures</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">header</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_header</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * An array of signatures</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">signature_data_t</span><span class="o">*&gt;*</span> <span class="n">signatures</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_signatures</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;*</span> <span class="n">_raw_signatures</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_signatures</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*&gt;*</span> <span class="n">_io__raw_signatures</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_signatures</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa EFI_SIGNATURE_DATA</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">signature_data_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">signature_data_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">signature_data_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_owner</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_data</span><span class="p">;</span>
+        <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * An identifier which identifies the agent which added the signature to the list</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">owner</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_owner</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The format of the signature is defined by the SignatureType.</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Attributes of a UEFI variable</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">efi_var_attr_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">efi_var_attr_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">efi_var_attr_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">m_enhanced_authenticated_access</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_append_write</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_time_based_authenticated_write_access</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_authenticated_write_access</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_hardware_error_record</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_runtime_access</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_bootservice_access</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_non_volatile</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_reserved1</span><span class="p">;</span>
+        <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">enhanced_authenticated_access</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_enhanced_authenticated_access</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">bool</span> <span class="n">append_write</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_append_write</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">bool</span> <span class="n">time_based_authenticated_write_access</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_time_based_authenticated_write_access</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">bool</span> <span class="n">authenticated_write_access</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_authenticated_write_access</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">bool</span> <span class="n">hardware_error_record</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_hardware_error_record</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">bool</span> <span class="n">runtime_access</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_runtime_access</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">bool</span> <span class="n">bootservice_access</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_bootservice_access</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">bool</span> <span class="n">non_volatile</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_non_volatile</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Reserved (unused) bits</span>
+<span class="cm">         */</span>
+        <span class="kt">uint64_t</span> <span class="n">reserved1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved1</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">efi_var_attr_t</span><span class="o">*</span> <span class="n">m_var_attributes</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">signature_list_t</span><span class="o">*&gt;*</span> <span class="n">m_signatures</span><span class="p">;</span>
+    <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Attributes of the UEFI variable</span>
+<span class="cm">     */</span>
+    <span class="n">efi_var_attr_t</span><span class="o">*</span> <span class="n">var_attributes</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_var_attributes</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">signature_list_t</span><span class="o">*&gt;*</span> <span class="n">signatures</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_signatures</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cp">#endif  </span><span class="c1">// EFIVAR_SIGNATURE_LIST_H_</span>
+</pre></div>
 
         </div>
         
@@ -669,235 +666,235 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;efivar_signature_list.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;efivar_signature_list.h&quot;</span><span class="cp"></span>
 
 
 
-efivar_signature_list_t::efivar_signature_list_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, efivar_signature_list_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    _read();
-}
+<span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">efivar_signature_list_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void efivar_signature_list_t::_read() {
-    m_var_attributes = new efi_var_attr_t(m__io, this, m__root);
-    m_signatures = new std::vector&lt;signature_list_t*&gt;();
-    {
-        int i = 0;
-        while (!m__io-&gt;is_eof()) {
-            m_signatures-&gt;push_back(new signature_list_t(m__io, this, m__root));
-            i++;
-        }
-    }
-}
+<span class="kt">void</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_var_attributes</span> <span class="o">=</span> <span class="k">new</span> <span class="n">efi_var_attr_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_signatures</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">signature_list_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">m_signatures</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">signature_list_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-efivar_signature_list_t::~efivar_signature_list_t() {
-    delete m_var_attributes;
-    for (std::vector&lt;signature_list_t*&gt;::iterator it = m_signatures-&gt;begin(); it != m_signatures-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_signatures;
-}
+<span class="n">efivar_signature_list_t</span><span class="o">::~</span><span class="n">efivar_signature_list_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_var_attributes</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">signature_list_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_signatures</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_signatures</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_signatures</span><span class="p">;</span>
+<span class="p">}</span>
 
-efivar_signature_list_t::signature_list_t::signature_list_t(kaitai::kstream* p__io, efivar_signature_list_t* p__parent, efivar_signature_list_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_is_cert_sha512_x509 = false;
-    f_is_cert_sha224 = false;
-    f_is_cert_x509 = false;
-    f_is_cert_sha256_x509 = false;
-    f_is_cert_rsa2048_key = false;
-    f_is_cert_sha512 = false;
-    f_is_cert_sha384 = false;
-    f_is_cert_sha1 = false;
-    f_is_cert_rsa2048_sha1 = false;
-    f_is_cert_sha256 = false;
-    f_is_cert_sha384_x509 = false;
-    f_is_cert_rsa2048_sha256 = false;
-    f_is_cert_der_pkcs7 = false;
-    _read();
-}
+<span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_is_cert_sha512_x509</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_cert_sha224</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_cert_x509</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_cert_sha256_x509</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_cert_rsa2048_key</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_cert_sha512</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_cert_sha384</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_cert_sha1</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_cert_rsa2048_sha1</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_cert_sha256</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_cert_sha384_x509</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_cert_rsa2048_sha256</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_cert_der_pkcs7</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void efivar_signature_list_t::signature_list_t::_read() {
-    m_signature_type = m__io-&gt;read_bytes(16);
-    m_len_signature_list = m__io-&gt;read_u4le();
-    m_len_signature_header = m__io-&gt;read_u4le();
-    m_len_signature = m__io-&gt;read_u4le();
-    m_header = m__io-&gt;read_bytes(len_signature_header());
-    n_signatures = true;
-    if (len_signature() &gt; 0) {
-        n_signatures = false;
-        int l_signatures = (((len_signature_list() - len_signature_header()) - 28) / len_signature());
-        m__raw_signatures = new std::vector&lt;std::string&gt;();
-        m__raw_signatures-&gt;reserve(l_signatures);
-        m__io__raw_signatures = new std::vector&lt;kaitai::kstream*&gt;();
-        m__io__raw_signatures-&gt;reserve(l_signatures);
-        m_signatures = new std::vector&lt;signature_data_t*&gt;();
-        m_signatures-&gt;reserve(l_signatures);
-        for (int i = 0; i &lt; l_signatures; i++) {
-            m__raw_signatures-&gt;push_back(m__io-&gt;read_bytes(len_signature()));
-            kaitai::kstream* io__raw_signatures = new kaitai::kstream(m__raw_signatures-&gt;at(m__raw_signatures-&gt;size() - 1));
-            m__io__raw_signatures-&gt;push_back(io__raw_signatures);
-            m_signatures-&gt;push_back(new signature_data_t(io__raw_signatures, this, m__root));
-        }
-    }
-}
+<span class="kt">void</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_signature_type</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+    <span class="n">m_len_signature_list</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_len_signature_header</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_len_signature</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">m_header</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_signature_header</span><span class="p">());</span>
+    <span class="n">n_signatures</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">len_signature</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_signatures</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">l_signatures</span> <span class="o">=</span> <span class="p">(((</span><span class="n">len_signature_list</span><span class="p">()</span> <span class="o">-</span> <span class="n">len_signature_header</span><span class="p">())</span> <span class="o">-</span> <span class="mi">28</span><span class="p">)</span> <span class="o">/</span> <span class="n">len_signature</span><span class="p">());</span>
+        <span class="n">m__raw_signatures</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">();</span>
+        <span class="n">m__raw_signatures</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_signatures</span><span class="p">);</span>
+        <span class="n">m__io__raw_signatures</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*&gt;</span><span class="p">();</span>
+        <span class="n">m__io__raw_signatures</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_signatures</span><span class="p">);</span>
+        <span class="n">m_signatures</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">signature_data_t</span><span class="o">*&gt;</span><span class="p">();</span>
+        <span class="n">m_signatures</span><span class="o">-&gt;</span><span class="n">reserve</span><span class="p">(</span><span class="n">l_signatures</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l_signatures</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">m__raw_signatures</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_signature</span><span class="p">()));</span>
+            <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">io__raw_signatures</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_signatures</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">m__raw_signatures</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
+            <span class="n">m__io__raw_signatures</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">io__raw_signatures</span><span class="p">);</span>
+            <span class="n">m_signatures</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">signature_data_t</span><span class="p">(</span><span class="n">io__raw_signatures</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-efivar_signature_list_t::signature_list_t::~signature_list_t() {
-    if (!n_signatures) {
-        delete m__raw_signatures;
-        for (std::vector&lt;kaitai::kstream*&gt;::iterator it = m__io__raw_signatures-&gt;begin(); it != m__io__raw_signatures-&gt;end(); ++it) {
-            delete *it;
-        }
-        delete m__io__raw_signatures;
-        for (std::vector&lt;signature_data_t*&gt;::iterator it = m_signatures-&gt;begin(); it != m_signatures-&gt;end(); ++it) {
-            delete *it;
-        }
-        delete m_signatures;
-    }
-}
+<span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::~</span><span class="n">signature_list_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_signatures</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__raw_signatures</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m__io__raw_signatures</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m__io__raw_signatures</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_signatures</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">signature_data_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_signatures</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_signatures</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">delete</span> <span class="n">m_signatures</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-bool efivar_signature_list_t::signature_list_t::is_cert_sha512_x509() {
-    if (f_is_cert_sha512_x509)
-        return m_is_cert_sha512_x509;
-    m_is_cert_sha512_x509 = signature_type() == std::string(&quot;\x63\xBF\x6D\x44\x02\x25\xDA\x4C\xBC\xFA\x24\x65\xD2\xB0\xFE\x9D&quot;, 16);
-    f_is_cert_sha512_x509 = true;
-    return m_is_cert_sha512_x509;
-}
+<span class="kt">bool</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::</span><span class="n">is_cert_sha512_x509</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_cert_sha512_x509</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_cert_sha512_x509</span><span class="p">;</span>
+    <span class="n">m_is_cert_sha512_x509</span> <span class="o">=</span> <span class="n">signature_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x63\xBF\x6D\x44\x02\x25\xDA\x4C\xBC\xFA\x24\x65\xD2\xB0\xFE\x9D</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="n">f_is_cert_sha512_x509</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_cert_sha512_x509</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool efivar_signature_list_t::signature_list_t::is_cert_sha224() {
-    if (f_is_cert_sha224)
-        return m_is_cert_sha224;
-    m_is_cert_sha224 = signature_type() == std::string(&quot;\x33\x52\x6E\x0B\x5C\xA6\xC9\x44\x94\x07\xD9\xAB\x83\xBF\xC8\xBD&quot;, 16);
-    f_is_cert_sha224 = true;
-    return m_is_cert_sha224;
-}
+<span class="kt">bool</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::</span><span class="n">is_cert_sha224</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_cert_sha224</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_cert_sha224</span><span class="p">;</span>
+    <span class="n">m_is_cert_sha224</span> <span class="o">=</span> <span class="n">signature_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x33\x52\x6E\x0B\x5C\xA6\xC9\x44\x94\x07\xD9\xAB\x83\xBF\xC8\xBD</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="n">f_is_cert_sha224</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_cert_sha224</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool efivar_signature_list_t::signature_list_t::is_cert_x509() {
-    if (f_is_cert_x509)
-        return m_is_cert_x509;
-    m_is_cert_x509 = signature_type() == std::string(&quot;\xA1\x59\xC0\xA5\xE4\x94\xA7\x4A\x87\xB5\xAB\x15\x5C\x2B\xF0\x72&quot;, 16);
-    f_is_cert_x509 = true;
-    return m_is_cert_x509;
-}
+<span class="kt">bool</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::</span><span class="n">is_cert_x509</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_cert_x509</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_cert_x509</span><span class="p">;</span>
+    <span class="n">m_is_cert_x509</span> <span class="o">=</span> <span class="n">signature_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\xA1\x59\xC0\xA5\xE4\x94\xA7\x4A\x87\xB5\xAB\x15\x5C\x2B\xF0\x72</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="n">f_is_cert_x509</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_cert_x509</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool efivar_signature_list_t::signature_list_t::is_cert_sha256_x509() {
-    if (f_is_cert_sha256_x509)
-        return m_is_cert_sha256_x509;
-    m_is_cert_sha256_x509 = signature_type() == std::string(&quot;\x92\xA4\xD2\x3B\xC0\x96\x79\x40\xB4\x20\xFC\xF9\x8E\xF1\x03\xED&quot;, 16);
-    f_is_cert_sha256_x509 = true;
-    return m_is_cert_sha256_x509;
-}
+<span class="kt">bool</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::</span><span class="n">is_cert_sha256_x509</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_cert_sha256_x509</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_cert_sha256_x509</span><span class="p">;</span>
+    <span class="n">m_is_cert_sha256_x509</span> <span class="o">=</span> <span class="n">signature_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x92\xA4\xD2\x3B\xC0\x96\x79\x40\xB4\x20\xFC\xF9\x8E\xF1\x03\xED</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="n">f_is_cert_sha256_x509</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_cert_sha256_x509</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool efivar_signature_list_t::signature_list_t::is_cert_rsa2048_key() {
-    if (f_is_cert_rsa2048_key)
-        return m_is_cert_rsa2048_key;
-    m_is_cert_rsa2048_key = signature_type() == std::string(&quot;\xE8\x66\x57\x3C\x9C\x26\x34\x4E\xAA\x14\xED\x77\x6E\x85\xB3\xB6&quot;, 16);
-    f_is_cert_rsa2048_key = true;
-    return m_is_cert_rsa2048_key;
-}
+<span class="kt">bool</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::</span><span class="n">is_cert_rsa2048_key</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_cert_rsa2048_key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_cert_rsa2048_key</span><span class="p">;</span>
+    <span class="n">m_is_cert_rsa2048_key</span> <span class="o">=</span> <span class="n">signature_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\xE8\x66\x57\x3C\x9C\x26\x34\x4E\xAA\x14\xED\x77\x6E\x85\xB3\xB6</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="n">f_is_cert_rsa2048_key</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_cert_rsa2048_key</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool efivar_signature_list_t::signature_list_t::is_cert_sha512() {
-    if (f_is_cert_sha512)
-        return m_is_cert_sha512;
-    m_is_cert_sha512 = signature_type() == std::string(&quot;\xAE\x0F\x3E\x09\xC4\xA6\x50\x4F\x9F\x1B\xD4\x1E\x2B\x89\xC1\x9A&quot;, 16);
-    f_is_cert_sha512 = true;
-    return m_is_cert_sha512;
-}
+<span class="kt">bool</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::</span><span class="n">is_cert_sha512</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_cert_sha512</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_cert_sha512</span><span class="p">;</span>
+    <span class="n">m_is_cert_sha512</span> <span class="o">=</span> <span class="n">signature_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\xAE\x0F\x3E\x09\xC4\xA6\x50\x4F\x9F\x1B\xD4\x1E\x2B\x89\xC1\x9A</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="n">f_is_cert_sha512</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_cert_sha512</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool efivar_signature_list_t::signature_list_t::is_cert_sha384() {
-    if (f_is_cert_sha384)
-        return m_is_cert_sha384;
-    m_is_cert_sha384 = signature_type() == std::string(&quot;\x07\x53\x3E\xFF\xD0\x9F\xC9\x48\x85\xF1\x8A\xD5\x6C\x70\x1E\x01&quot;, 16);
-    f_is_cert_sha384 = true;
-    return m_is_cert_sha384;
-}
+<span class="kt">bool</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::</span><span class="n">is_cert_sha384</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_cert_sha384</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_cert_sha384</span><span class="p">;</span>
+    <span class="n">m_is_cert_sha384</span> <span class="o">=</span> <span class="n">signature_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x07\x53\x3E\xFF\xD0\x9F\xC9\x48\x85\xF1\x8A\xD5\x6C\x70\x1E\x01</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="n">f_is_cert_sha384</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_cert_sha384</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool efivar_signature_list_t::signature_list_t::is_cert_sha1() {
-    if (f_is_cert_sha1)
-        return m_is_cert_sha1;
-    m_is_cert_sha1 = signature_type() == std::string(&quot;\x12\xA5\x6C\x82\x10\xCF\xC9\x4A\xB1\x87\xBE\x01\x49\x66\x31\xBD&quot;, 16);
-    f_is_cert_sha1 = true;
-    return m_is_cert_sha1;
-}
+<span class="kt">bool</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::</span><span class="n">is_cert_sha1</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_cert_sha1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_cert_sha1</span><span class="p">;</span>
+    <span class="n">m_is_cert_sha1</span> <span class="o">=</span> <span class="n">signature_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x12\xA5\x6C\x82\x10\xCF\xC9\x4A\xB1\x87\xBE\x01\x49\x66\x31\xBD</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="n">f_is_cert_sha1</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_cert_sha1</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool efivar_signature_list_t::signature_list_t::is_cert_rsa2048_sha1() {
-    if (f_is_cert_rsa2048_sha1)
-        return m_is_cert_rsa2048_sha1;
-    m_is_cert_rsa2048_sha1 = signature_type() == std::string(&quot;\x4F\x44\xF8\x67\x43\x87\xF1\x48\xA3\x28\x1E\xAA\xB8\x73\x60\x80&quot;, 16);
-    f_is_cert_rsa2048_sha1 = true;
-    return m_is_cert_rsa2048_sha1;
-}
+<span class="kt">bool</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::</span><span class="n">is_cert_rsa2048_sha1</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_cert_rsa2048_sha1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_cert_rsa2048_sha1</span><span class="p">;</span>
+    <span class="n">m_is_cert_rsa2048_sha1</span> <span class="o">=</span> <span class="n">signature_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x4F\x44\xF8\x67\x43\x87\xF1\x48\xA3\x28\x1E\xAA\xB8\x73\x60\x80</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="n">f_is_cert_rsa2048_sha1</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_cert_rsa2048_sha1</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool efivar_signature_list_t::signature_list_t::is_cert_sha256() {
-    if (f_is_cert_sha256)
-        return m_is_cert_sha256;
-    m_is_cert_sha256 = signature_type() == std::string(&quot;\x26\x16\xC4\xC1\x4C\x50\x92\x40\xAC\xA9\x41\xF9\x36\x93\x43\x28&quot;, 16);
-    f_is_cert_sha256 = true;
-    return m_is_cert_sha256;
-}
+<span class="kt">bool</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::</span><span class="n">is_cert_sha256</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_cert_sha256</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_cert_sha256</span><span class="p">;</span>
+    <span class="n">m_is_cert_sha256</span> <span class="o">=</span> <span class="n">signature_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x26\x16\xC4\xC1\x4C\x50\x92\x40\xAC\xA9\x41\xF9\x36\x93\x43\x28</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="n">f_is_cert_sha256</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_cert_sha256</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool efivar_signature_list_t::signature_list_t::is_cert_sha384_x509() {
-    if (f_is_cert_sha384_x509)
-        return m_is_cert_sha384_x509;
-    m_is_cert_sha384_x509 = signature_type() == std::string(&quot;\x6E\x87\x76\x70\xC2\x80\xE6\x4E\xAA\xD2\x28\xB3\x49\xA6\x86\x5B&quot;, 16);
-    f_is_cert_sha384_x509 = true;
-    return m_is_cert_sha384_x509;
-}
+<span class="kt">bool</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::</span><span class="n">is_cert_sha384_x509</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_cert_sha384_x509</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_cert_sha384_x509</span><span class="p">;</span>
+    <span class="n">m_is_cert_sha384_x509</span> <span class="o">=</span> <span class="n">signature_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x6E\x87\x76\x70\xC2\x80\xE6\x4E\xAA\xD2\x28\xB3\x49\xA6\x86\x5B</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="n">f_is_cert_sha384_x509</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_cert_sha384_x509</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool efivar_signature_list_t::signature_list_t::is_cert_rsa2048_sha256() {
-    if (f_is_cert_rsa2048_sha256)
-        return m_is_cert_rsa2048_sha256;
-    m_is_cert_rsa2048_sha256 = signature_type() == std::string(&quot;\x90\x61\xB3\xE2\x9B\x87\x3D\x4A\xAD\x8D\xF2\xE7\xBB\xA3\x27\x84&quot;, 16);
-    f_is_cert_rsa2048_sha256 = true;
-    return m_is_cert_rsa2048_sha256;
-}
+<span class="kt">bool</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::</span><span class="n">is_cert_rsa2048_sha256</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_cert_rsa2048_sha256</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_cert_rsa2048_sha256</span><span class="p">;</span>
+    <span class="n">m_is_cert_rsa2048_sha256</span> <span class="o">=</span> <span class="n">signature_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x90\x61\xB3\xE2\x9B\x87\x3D\x4A\xAD\x8D\xF2\xE7\xBB\xA3\x27\x84</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="n">f_is_cert_rsa2048_sha256</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_cert_rsa2048_sha256</span><span class="p">;</span>
+<span class="p">}</span>
 
-bool efivar_signature_list_t::signature_list_t::is_cert_der_pkcs7() {
-    if (f_is_cert_der_pkcs7)
-        return m_is_cert_der_pkcs7;
-    m_is_cert_der_pkcs7 = signature_type() == std::string(&quot;\x9D\xD2\xAF\x4A\xDF\x68\xEE\x49\x8A\xA9\x34\x7D\x37\x56\x65\xA7&quot;, 16);
-    f_is_cert_der_pkcs7 = true;
-    return m_is_cert_der_pkcs7;
-}
+<span class="kt">bool</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">::</span><span class="n">is_cert_der_pkcs7</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_cert_der_pkcs7</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_cert_der_pkcs7</span><span class="p">;</span>
+    <span class="n">m_is_cert_der_pkcs7</span> <span class="o">=</span> <span class="n">signature_type</span><span class="p">()</span> <span class="o">==</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\x9D\xD2\xAF\x4A\xDF\x68\xEE\x49\x8A\xA9\x34\x7D\x37\x56\x65\xA7</span><span class="s">&quot;</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+    <span class="n">f_is_cert_der_pkcs7</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_cert_der_pkcs7</span><span class="p">;</span>
+<span class="p">}</span>
 
-efivar_signature_list_t::signature_data_t::signature_data_t(kaitai::kstream* p__io, efivar_signature_list_t::signature_list_t* p__parent, efivar_signature_list_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_data_t</span><span class="o">::</span><span class="n">signature_data_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_list_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void efivar_signature_list_t::signature_data_t::_read() {
-    m_owner = m__io-&gt;read_bytes(16);
-    m_data = m__io-&gt;read_bytes_full();
-}
+<span class="kt">void</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_data_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_owner</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">);</span>
+    <span class="n">m_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
+<span class="p">}</span>
 
-efivar_signature_list_t::signature_data_t::~signature_data_t() {
-}
+<span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">signature_data_t</span><span class="o">::~</span><span class="n">signature_data_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-efivar_signature_list_t::efi_var_attr_t::efi_var_attr_t(kaitai::kstream* p__io, efivar_signature_list_t* p__parent, efivar_signature_list_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">efi_var_attr_t</span><span class="o">::</span><span class="n">efi_var_attr_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">efivar_signature_list_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void efivar_signature_list_t::efi_var_attr_t::_read() {
-    m_enhanced_authenticated_access = m__io-&gt;read_bits_int(1);
-    m_append_write = m__io-&gt;read_bits_int(1);
-    m_time_based_authenticated_write_access = m__io-&gt;read_bits_int(1);
-    m_authenticated_write_access = m__io-&gt;read_bits_int(1);
-    m_hardware_error_record = m__io-&gt;read_bits_int(1);
-    m_runtime_access = m__io-&gt;read_bits_int(1);
-    m_bootservice_access = m__io-&gt;read_bits_int(1);
-    m_non_volatile = m__io-&gt;read_bits_int(1);
-    m_reserved1 = m__io-&gt;read_bits_int(24);
-}
+<span class="kt">void</span> <span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">efi_var_attr_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_enhanced_authenticated_access</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_append_write</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_time_based_authenticated_write_access</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_authenticated_write_access</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_hardware_error_record</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_runtime_access</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_bootservice_access</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_non_volatile</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">m_reserved1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int</span><span class="p">(</span><span class="mi">24</span><span class="p">);</span>
+<span class="p">}</span>
 
-efivar_signature_list_t::efi_var_attr_t::~efi_var_attr_t() {
-}
-</code></pre>
+<span class="n">efivar_signature_list_t</span><span class="o">::</span><span class="n">efi_var_attr_t</span><span class="o">::~</span><span class="n">efi_var_attr_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -924,8 +921,8 @@ efivar_signature_list_t::efi_var_attr_t::~efi_var_attr_t() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

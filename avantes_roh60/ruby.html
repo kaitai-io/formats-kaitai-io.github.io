@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -265,90 +262,90 @@ data = AvantesRoh60.new(Kaitai::Struct::Stream.new(bytes))</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="ruby"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-require &#39;kaitai/struct/struct&#39;
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
 
-unless Gem::Version.new(Kaitai::Struct::VERSION) &gt;= Gem::Version.new(&#39;0.7&#39;)
-  raise &quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have #{Kaitai::Struct::VERSION}&quot;
-end
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.7&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.7 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
 
 
-##
-# Avantes USB spectrometers are supplied with a Windows binary which 
-# generates one ROH and one RCM file when the user clicks &quot;Save
-# experiment&quot;. In the version of 6.0, the ROH file contains a header 
-# of 22 four-byte floats, then the spectrum as a float array and a 
-# footer of 3 floats. The first and last pixel numbers are specified in the 
-# header and determine the (length+1) of the spectral data. In the tested 
-# files, the length is (2032-211-1)=1820 pixels, but Kaitai determines this 
-# automatically anyway.
-# 
-# The wavelength calibration is stored as a polynomial with coefficients
-# of &#39;wlintercept&#39;, &#39;wlx1&#39;, ... &#39;wlx4&#39;, the argument of which is the
-# (pixel number + 1), as found out by comparing with the original 
-# Avantes converted data files. There is no intensity calibration saved,
-# but it is recommended to do it in your program - the CCD in the spectrometer 
-# is so uneven that one should prepare exact pixel-to-pixel calibration curves 
-# to get reasonable spectral results.
-# 
-# The rest of the header floats is not known to the author. Note that the 
-# newer version of Avantes software has a different format, see also
-# https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration
-# 
-# The RCM file contains the user-specified comment, so it may be useful
-# for automatic conversion of data. You may wish to divide the spectra by 
-# the integration time before comparing them.
-# 
-# Written and tested by Filip Dominec, 2017-2018
-class AvantesRoh60 &lt; Kaitai::Struct::Struct
-  def initialize(_io, _parent = nil, _root = self)
-    super(_io, _parent, _root)
-    _read
-  end
+<span class="c1">##</span>
+<span class="c1"># Avantes USB spectrometers are supplied with a Windows binary which </span>
+<span class="c1"># generates one ROH and one RCM file when the user clicks &quot;Save</span>
+<span class="c1"># experiment&quot;. In the version of 6.0, the ROH file contains a header </span>
+<span class="c1"># of 22 four-byte floats, then the spectrum as a float array and a </span>
+<span class="c1"># footer of 3 floats. The first and last pixel numbers are specified in the </span>
+<span class="c1"># header and determine the (length+1) of the spectral data. In the tested </span>
+<span class="c1"># files, the length is (2032-211-1)=1820 pixels, but Kaitai determines this </span>
+<span class="c1"># automatically anyway.</span>
+<span class="c1"># </span>
+<span class="c1"># The wavelength calibration is stored as a polynomial with coefficients</span>
+<span class="c1"># of &#39;wlintercept&#39;, &#39;wlx1&#39;, ... &#39;wlx4&#39;, the argument of which is the</span>
+<span class="c1"># (pixel number + 1), as found out by comparing with the original </span>
+<span class="c1"># Avantes converted data files. There is no intensity calibration saved,</span>
+<span class="c1"># but it is recommended to do it in your program - the CCD in the spectrometer </span>
+<span class="c1"># is so uneven that one should prepare exact pixel-to-pixel calibration curves </span>
+<span class="c1"># to get reasonable spectral results.</span>
+<span class="c1"># </span>
+<span class="c1"># The rest of the header floats is not known to the author. Note that the </span>
+<span class="c1"># newer version of Avantes software has a different format, see also</span>
+<span class="c1"># https://kr.mathworks.com/examples/matlab/community/20341-reading-spectra-from-avantes-binary-files-demonstration</span>
+<span class="c1"># </span>
+<span class="c1"># The RCM file contains the user-specified comment, so it may be useful</span>
+<span class="c1"># for automatic conversion of data. You may wish to divide the spectra by </span>
+<span class="c1"># the integration time before comparing them.</span>
+<span class="c1"># </span>
+<span class="c1"># Written and tested by Filip Dominec, 2017-2018</span>
+<span class="k">class</span> <span class="nc">AvantesRoh60</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
 
-  def _read
-    @unknown1 = @_io.read_f4le
-    @wlintercept = @_io.read_f4le
-    @wlx1 = @_io.read_f4le
-    @wlx2 = @_io.read_f4le
-    @wlx3 = @_io.read_f4le
-    @wlx4 = @_io.read_f4le
-    @unknown2 = Array.new(9)
-    (9).times { |i|
-      @unknown2[i] = @_io.read_f4le
-    }
-    @ipixfirst = @_io.read_f4le
-    @ipixlast = @_io.read_f4le
-    @unknown3 = Array.new(4)
-    (4).times { |i|
-      @unknown3[i] = @_io.read_f4le
-    }
-    @spectrum = Array.new((((ipixlast).to_i - (ipixfirst).to_i) - 1))
-    ((((ipixlast).to_i - (ipixfirst).to_i) - 1)).times { |i|
-      @spectrum[i] = @_io.read_f4le
-    }
-    @integration_ms = @_io.read_f4le
-    @averaging = @_io.read_f4le
-    @pixel_smoothing = @_io.read_f4le
-    self
-  end
-  attr_reader :unknown1
-  attr_reader :wlintercept
-  attr_reader :wlx1
-  attr_reader :wlx2
-  attr_reader :wlx3
-  attr_reader :wlx4
-  attr_reader :unknown2
-  attr_reader :ipixfirst
-  attr_reader :ipixlast
-  attr_reader :unknown3
-  attr_reader :spectrum
-  attr_reader :integration_ms
-  attr_reader :averaging
-  attr_reader :pixel_smoothing
-end
-</code></pre>
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@unknown1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+    <span class="vi">@wlintercept</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+    <span class="vi">@wlx1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+    <span class="vi">@wlx2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+    <span class="vi">@wlx3</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+    <span class="vi">@wlx4</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+    <span class="vi">@unknown2</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">9</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@unknown2</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+    <span class="p">}</span>
+    <span class="vi">@ipixfirst</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+    <span class="vi">@ipixlast</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+    <span class="vi">@unknown3</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@unknown3</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+    <span class="p">}</span>
+    <span class="vi">@spectrum</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">((((</span><span class="n">ipixlast</span><span class="p">)</span><span class="o">.</span><span class="n">to_i</span> <span class="o">-</span> <span class="p">(</span><span class="n">ipixfirst</span><span class="p">)</span><span class="o">.</span><span class="n">to_i</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="p">((((</span><span class="n">ipixlast</span><span class="p">)</span><span class="o">.</span><span class="n">to_i</span> <span class="o">-</span> <span class="p">(</span><span class="n">ipixfirst</span><span class="p">)</span><span class="o">.</span><span class="n">to_i</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@spectrum</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+    <span class="p">}</span>
+    <span class="vi">@integration_ms</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+    <span class="vi">@averaging</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+    <span class="vi">@pixel_smoothing</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:unknown1</span>
+  <span class="kp">attr_reader</span> <span class="ss">:wlintercept</span>
+  <span class="kp">attr_reader</span> <span class="ss">:wlx1</span>
+  <span class="kp">attr_reader</span> <span class="ss">:wlx2</span>
+  <span class="kp">attr_reader</span> <span class="ss">:wlx3</span>
+  <span class="kp">attr_reader</span> <span class="ss">:wlx4</span>
+  <span class="kp">attr_reader</span> <span class="ss">:unknown2</span>
+  <span class="kp">attr_reader</span> <span class="ss">:ipixfirst</span>
+  <span class="kp">attr_reader</span> <span class="ss">:ipixlast</span>
+  <span class="kp">attr_reader</span> <span class="ss">:unknown3</span>
+  <span class="kp">attr_reader</span> <span class="ss">:spectrum</span>
+  <span class="kp">attr_reader</span> <span class="ss">:integration_ms</span>
+  <span class="kp">attr_reader</span> <span class="ss">:averaging</span>
+  <span class="kp">attr_reader</span> <span class="ss">:pixel_smoothing</span>
+<span class="k">end</span>
+</pre></div>
 
         </div>
         
@@ -375,8 +372,8 @@ end
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

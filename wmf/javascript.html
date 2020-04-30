@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -270,583 +267,583 @@ var data = new Wmf(new KaitaiStream(arrayBuffer));</code></pre>
         </div>
 
         <div class="row">
-            <pre><code class="javascript">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-(function (root, factory) {
-  if (typeof define === &#39;function&#39; &amp;&amp; define.amd) {
-    define([&#39;kaitai-struct/KaitaiStream&#39;], factory);
-  } else if (typeof module === &#39;object&#39; &amp;&amp; module.exports) {
-    module.exports = factory(require(&#39;kaitai-struct/KaitaiStream&#39;));
-  } else {
-    root.Wmf = factory(root.KaitaiStream);
-  }
-}(this, function (KaitaiStream) {
-/**
- * WMF (Windows Metafile) is a relatively early vector image format
- * introduced for Microsoft Windows in 1990.
- * 
- * Inside, it provides a serialized list of Windows GDI (Graphics
- * Device Interface) function calls, which, if played back, result in
- * an image being drawn on a given surface (display, off-screen buffer,
- * printer, etc).
- * @see {@link http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf|Source}
- */
-
-var Wmf = (function() {
-  Wmf.Func = Object.freeze({
-    EOF: 0,
-    SAVEDC: 30,
-    REALIZEPALETTE: 53,
-    SETPALENTRIES: 55,
-    CREATEPALETTE: 247,
-    SETBKMODE: 258,
-    SETMAPMODE: 259,
-    SETROP2: 260,
-    SETRELABS: 261,
-    SETPOLYFILLMODE: 262,
-    SETSTRETCHBLTMODE: 263,
-    SETTEXTCHAREXTRA: 264,
-    RESTOREDC: 295,
-    INVERTREGION: 298,
-    PAINTREGION: 299,
-    SELECTCLIPREGION: 300,
-    SELECTOBJECT: 301,
-    SETTEXTALIGN: 302,
-    RESIZEPALETTE: 313,
-    DIBCREATEPATTERNBRUSH: 322,
-    SETLAYOUT: 329,
-    DELETEOBJECT: 496,
-    CREATEPATTERNBRUSH: 505,
-    SETBKCOLOR: 513,
-    SETTEXTCOLOR: 521,
-    SETTEXTJUSTIFICATION: 522,
-    SETWINDOWORG: 523,
-    SETWINDOWEXT: 524,
-    SETVIEWPORTORG: 525,
-    SETVIEWPORTEXT: 526,
-    OFFSETWINDOWORG: 527,
-    OFFSETVIEWPORTORG: 529,
-    LINETO: 531,
-    MOVETO: 532,
-    OFFSETCLIPRGN: 544,
-    FILLREGION: 552,
-    SETMAPPERFLAGS: 561,
-    SELECTPALETTE: 564,
-    CREATEPENINDIRECT: 762,
-    CREATEFONTINDIRECT: 763,
-    CREATEBRUSHINDIRECT: 764,
-    POLYGON: 804,
-    POLYLINE: 805,
-    SCALEWINDOWEXT: 1040,
-    SCALEVIEWPORTEXT: 1042,
-    EXCLUDECLIPRECT: 1045,
-    INTERSECTCLIPRECT: 1046,
-    ELLIPSE: 1048,
-    FLOODFILL: 1049,
-    RECTANGLE: 1051,
-    SETPIXEL: 1055,
-    FRAMEREGION: 1065,
-    ANIMATEPALETTE: 1078,
-    TEXTOUT: 1313,
-    POLYPOLYGON: 1336,
-    EXTFLOODFILL: 1352,
-    ROUNDRECT: 1564,
-    PATBLT: 1565,
-    ESCAPE: 1574,
-    CREATEREGION: 1791,
-    ARC: 2071,
-    PIE: 2074,
-    CHORD: 2096,
-    BITBLT: 2338,
-    DIBBITBLT: 2368,
-    EXTTEXTOUT: 2610,
-    STRETCHBLT: 2851,
-    DIBSTRETCHBLT: 2881,
-    SETDIBTODEV: 3379,
-    STRETCHDIB: 3907,
-
-    0: &quot;EOF&quot;,
-    30: &quot;SAVEDC&quot;,
-    53: &quot;REALIZEPALETTE&quot;,
-    55: &quot;SETPALENTRIES&quot;,
-    247: &quot;CREATEPALETTE&quot;,
-    258: &quot;SETBKMODE&quot;,
-    259: &quot;SETMAPMODE&quot;,
-    260: &quot;SETROP2&quot;,
-    261: &quot;SETRELABS&quot;,
-    262: &quot;SETPOLYFILLMODE&quot;,
-    263: &quot;SETSTRETCHBLTMODE&quot;,
-    264: &quot;SETTEXTCHAREXTRA&quot;,
-    295: &quot;RESTOREDC&quot;,
-    298: &quot;INVERTREGION&quot;,
-    299: &quot;PAINTREGION&quot;,
-    300: &quot;SELECTCLIPREGION&quot;,
-    301: &quot;SELECTOBJECT&quot;,
-    302: &quot;SETTEXTALIGN&quot;,
-    313: &quot;RESIZEPALETTE&quot;,
-    322: &quot;DIBCREATEPATTERNBRUSH&quot;,
-    329: &quot;SETLAYOUT&quot;,
-    496: &quot;DELETEOBJECT&quot;,
-    505: &quot;CREATEPATTERNBRUSH&quot;,
-    513: &quot;SETBKCOLOR&quot;,
-    521: &quot;SETTEXTCOLOR&quot;,
-    522: &quot;SETTEXTJUSTIFICATION&quot;,
-    523: &quot;SETWINDOWORG&quot;,
-    524: &quot;SETWINDOWEXT&quot;,
-    525: &quot;SETVIEWPORTORG&quot;,
-    526: &quot;SETVIEWPORTEXT&quot;,
-    527: &quot;OFFSETWINDOWORG&quot;,
-    529: &quot;OFFSETVIEWPORTORG&quot;,
-    531: &quot;LINETO&quot;,
-    532: &quot;MOVETO&quot;,
-    544: &quot;OFFSETCLIPRGN&quot;,
-    552: &quot;FILLREGION&quot;,
-    561: &quot;SETMAPPERFLAGS&quot;,
-    564: &quot;SELECTPALETTE&quot;,
-    762: &quot;CREATEPENINDIRECT&quot;,
-    763: &quot;CREATEFONTINDIRECT&quot;,
-    764: &quot;CREATEBRUSHINDIRECT&quot;,
-    804: &quot;POLYGON&quot;,
-    805: &quot;POLYLINE&quot;,
-    1040: &quot;SCALEWINDOWEXT&quot;,
-    1042: &quot;SCALEVIEWPORTEXT&quot;,
-    1045: &quot;EXCLUDECLIPRECT&quot;,
-    1046: &quot;INTERSECTCLIPRECT&quot;,
-    1048: &quot;ELLIPSE&quot;,
-    1049: &quot;FLOODFILL&quot;,
-    1051: &quot;RECTANGLE&quot;,
-    1055: &quot;SETPIXEL&quot;,
-    1065: &quot;FRAMEREGION&quot;,
-    1078: &quot;ANIMATEPALETTE&quot;,
-    1313: &quot;TEXTOUT&quot;,
-    1336: &quot;POLYPOLYGON&quot;,
-    1352: &quot;EXTFLOODFILL&quot;,
-    1564: &quot;ROUNDRECT&quot;,
-    1565: &quot;PATBLT&quot;,
-    1574: &quot;ESCAPE&quot;,
-    1791: &quot;CREATEREGION&quot;,
-    2071: &quot;ARC&quot;,
-    2074: &quot;PIE&quot;,
-    2096: &quot;CHORD&quot;,
-    2338: &quot;BITBLT&quot;,
-    2368: &quot;DIBBITBLT&quot;,
-    2610: &quot;EXTTEXTOUT&quot;,
-    2851: &quot;STRETCHBLT&quot;,
-    2881: &quot;DIBSTRETCHBLT&quot;,
-    3379: &quot;SETDIBTODEV&quot;,
-    3907: &quot;STRETCHDIB&quot;,
-  });
-
-  Wmf.BinRasterOp = Object.freeze({
-    BLACK: 1,
-    NOTMERGEPEN: 2,
-    MASKNOTPEN: 3,
-    NOTCOPYPEN: 4,
-    MASKPENNOT: 5,
-    NOT: 6,
-    XORPEN: 7,
-    NOTMASKPEN: 8,
-    MASKPEN: 9,
-    NOTXORPEN: 10,
-    NOP: 11,
-    MERGENOTPEN: 12,
-    COPYPEN: 13,
-    MERGEPENNOT: 14,
-    MERGEPEN: 15,
-    WHITE: 16,
-
-    1: &quot;BLACK&quot;,
-    2: &quot;NOTMERGEPEN&quot;,
-    3: &quot;MASKNOTPEN&quot;,
-    4: &quot;NOTCOPYPEN&quot;,
-    5: &quot;MASKPENNOT&quot;,
-    6: &quot;NOT&quot;,
-    7: &quot;XORPEN&quot;,
-    8: &quot;NOTMASKPEN&quot;,
-    9: &quot;MASKPEN&quot;,
-    10: &quot;NOTXORPEN&quot;,
-    11: &quot;NOP&quot;,
-    12: &quot;MERGENOTPEN&quot;,
-    13: &quot;COPYPEN&quot;,
-    14: &quot;MERGEPENNOT&quot;,
-    15: &quot;MERGEPEN&quot;,
-    16: &quot;WHITE&quot;,
-  });
-
-  Wmf.MixMode = Object.freeze({
-    TRANSPARENT: 1,
-    OPAQUE: 2,
-
-    1: &quot;TRANSPARENT&quot;,
-    2: &quot;OPAQUE&quot;,
-  });
-
-  Wmf.PolyFillMode = Object.freeze({
-    ALTERNATE: 1,
-    WINDING: 2,
-
-    1: &quot;ALTERNATE&quot;,
-    2: &quot;WINDING&quot;,
-  });
-
-  function Wmf(_io, _parent, _root) {
-    this._io = _io;
-    this._parent = _parent;
-    this._root = _root || this;
-
-    this._read();
-  }
-  Wmf.prototype._read = function() {
-    this.specialHeader = new SpecialHeader(this._io, this, this._root);
-    this.header = new Header(this._io, this, this._root);
-    this.records = []
-    var i = 0;
-    do {
-      var _ = new Record(this._io, this, this._root);
-      this.records.push(_);
-      i++;
-    } while (!(_.function == Wmf.Func.EOF));
-  }
-
-  /**
-   * @see section 2.3.5.31
-   */
-
-  var ParamsSetwindoworg = Wmf.ParamsSetwindoworg = (function() {
-    function ParamsSetwindoworg(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ParamsSetwindoworg.prototype._read = function() {
-      this.y = this._io.readS2le();
-      this.x = this._io.readS2le();
-    }
-
-    /**
-     * Y coordinate of the window origin, in logical units.
-     */
-
-    /**
-     * X coordinate of the window origin, in logical units.
-     */
-
-    return ParamsSetwindoworg;
-  })();
-
-  /**
-   * @see section 2.3.5.15
-   */
-
-  var ParamsSetbkmode = Wmf.ParamsSetbkmode = (function() {
-    function ParamsSetbkmode(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ParamsSetbkmode.prototype._read = function() {
-      this.bkMode = this._io.readU2le();
-    }
-
-    /**
-     * Defines current graphic context background mix mode.
-     */
-
-    return ParamsSetbkmode;
-  })();
-
-  /**
-   * @see section 2.2.1.12
-   */
-
-  var PointS = Wmf.PointS = (function() {
-    function PointS(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    PointS.prototype._read = function() {
-      this.x = this._io.readS2le();
-      this.y = this._io.readS2le();
-    }
-
-    /**
-     * X coordinate of the point, in logical units.
-     */
-
-    /**
-     * Y coordinate of the point, in logical units.
-     */
-
-    return PointS;
-  })();
-
-  /**
-   * @see section 2.3.5.30
-   */
-
-  var ParamsSetwindowext = Wmf.ParamsSetwindowext = (function() {
-    function ParamsSetwindowext(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ParamsSetwindowext.prototype._read = function() {
-      this.y = this._io.readS2le();
-      this.x = this._io.readS2le();
-    }
-
-    /**
-     * Vertical extent of the window in logical units.
-     */
-
-    /**
-     * Horizontal extent of the window in logical units.
-     */
-
-    return ParamsSetwindowext;
-  })();
-
-  /**
-   * @see section 2.3.3.15 = params_polyline
-   */
-
-  var ParamsPolygon = Wmf.ParamsPolygon = (function() {
-    function ParamsPolygon(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ParamsPolygon.prototype._read = function() {
-      this.numPoints = this._io.readS2le();
-      this.points = new Array(this.numPoints);
-      for (var i = 0; i &lt; this.numPoints; i++) {
-        this.points[i] = new PointS(this._io, this, this._root);
-      }
-    }
-
-    return ParamsPolygon;
-  })();
-
-  var Header = Wmf.Header = (function() {
-    Header.MetafileType = Object.freeze({
-      MEMORY_METAFILE: 1,
-      DISK_METAFILE: 2,
-
-      1: &quot;MEMORY_METAFILE&quot;,
-      2: &quot;DISK_METAFILE&quot;,
-    });
-
-    function Header(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Header.prototype._read = function() {
-      this.metafileType = this._io.readU2le();
-      this.headerSize = this._io.readU2le();
-      this.version = this._io.readU2le();
-      this.size = this._io.readU4le();
-      this.numberOfObjects = this._io.readU2le();
-      this.maxRecord = this._io.readU4le();
-      this.numberOfMembers = this._io.readU2le();
-    }
-
-    return Header;
-  })();
-
-  /**
-   * @see section 2.2.1.7
-   */
-
-  var ColorRef = Wmf.ColorRef = (function() {
-    function ColorRef(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ColorRef.prototype._read = function() {
-      this.red = this._io.readU1();
-      this.green = this._io.readU1();
-      this.blue = this._io.readU1();
-      this.reserved = this._io.readU1();
-    }
-
-    return ColorRef;
-  })();
-
-  /**
-   * @see section 2.3.5.22
-   */
-
-  var ParamsSetrop2 = Wmf.ParamsSetrop2 = (function() {
-    function ParamsSetrop2(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ParamsSetrop2.prototype._read = function() {
-      this.drawMode = this._io.readU2le();
-    }
-
-    /**
-     * Defines current foreground binary raster operation mixing mode.
-     */
-
-    return ParamsSetrop2;
-  })();
-
-  /**
-   * @see section 2.3.5.20
-   */
-
-  var ParamsSetpolyfillmode = Wmf.ParamsSetpolyfillmode = (function() {
-    function ParamsSetpolyfillmode(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ParamsSetpolyfillmode.prototype._read = function() {
-      this.polyFillMode = this._io.readU2le();
-    }
-
-    /**
-     * Defines current polygon fill mode.
-     */
-
-    return ParamsSetpolyfillmode;
-  })();
-
-  /**
-   * @see section 2.3.3.14
-   */
-
-  var ParamsPolyline = Wmf.ParamsPolyline = (function() {
-    function ParamsPolyline(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    ParamsPolyline.prototype._read = function() {
-      this.numPoints = this._io.readS2le();
-      this.points = new Array(this.numPoints);
-      for (var i = 0; i &lt; this.numPoints; i++) {
-        this.points[i] = new PointS(this._io, this, this._root);
-      }
-    }
-
-    return ParamsPolyline;
-  })();
-
-  var SpecialHeader = Wmf.SpecialHeader = (function() {
-    function SpecialHeader(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    SpecialHeader.prototype._read = function() {
-      this.magic = this._io.ensureFixedContents([215, 205, 198, 154]);
-      this.handle = this._io.ensureFixedContents([0, 0]);
-      this.left = this._io.readS2le();
-      this.top = this._io.readS2le();
-      this.right = this._io.readS2le();
-      this.bottom = this._io.readS2le();
-      this.inch = this._io.readU2le();
-      this.reserved = this._io.ensureFixedContents([0, 0, 0, 0]);
-      this.checksum = this._io.readU2le();
-    }
-
-    return SpecialHeader;
-  })();
-
-  var Record = Wmf.Record = (function() {
-    function Record(_io, _parent, _root) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-
-      this._read();
-    }
-    Record.prototype._read = function() {
-      this.size = this._io.readU4le();
-      this.function = this._io.readU2le();
-      switch (this.function) {
-      case Wmf.Func.SETBKMODE:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
-        var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsSetbkmode(_io__raw_params, this, this._root);
-        break;
-      case Wmf.Func.SETBKCOLOR:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
-        var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ColorRef(_io__raw_params, this, this._root);
-        break;
-      case Wmf.Func.SETROP2:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
-        var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsSetrop2(_io__raw_params, this, this._root);
-        break;
-      case Wmf.Func.POLYLINE:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
-        var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsPolyline(_io__raw_params, this, this._root);
-        break;
-      case Wmf.Func.SETWINDOWORG:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
-        var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsSetwindoworg(_io__raw_params, this, this._root);
-        break;
-      case Wmf.Func.POLYGON:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
-        var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsPolygon(_io__raw_params, this, this._root);
-        break;
-      case Wmf.Func.SETWINDOWEXT:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
-        var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsSetwindowext(_io__raw_params, this, this._root);
-        break;
-      case Wmf.Func.SETPOLYFILLMODE:
-        this._raw_params = this._io.readBytes(((this.size - 3) * 2));
-        var _io__raw_params = new KaitaiStream(this._raw_params);
-        this.params = new ParamsSetpolyfillmode(_io__raw_params, this, this._root);
-        break;
-      default:
-        this.params = this._io.readBytes(((this.size - 3) * 2));
-        break;
-      }
-    }
-
-    return Record;
-  })();
-
-  return Wmf;
-})();
-return Wmf;
-}));
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">Wmf</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="cm">/**</span>
+<span class="cm"> * WMF (Windows Metafile) is a relatively early vector image format</span>
+<span class="cm"> * introduced for Microsoft Windows in 1990.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Inside, it provides a serialized list of Windows GDI (Graphics</span>
+<span class="cm"> * Device Interface) function calls, which, if played back, result in</span>
+<span class="cm"> * an image being drawn on a given surface (display, off-screen buffer,</span>
+<span class="cm"> * printer, etc).</span>
+<span class="cm"> * @see {@link http://www.digitalpreservation.gov/formats/digformatspecs/WindowsMetafileFormat(wmf)Specification.pdf|Source}</span>
+<span class="cm"> */</span>
+
+<span class="kd">var</span> <span class="nx">Wmf</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">Wmf</span><span class="p">.</span><span class="nx">Func</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">EOF</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">SAVEDC</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span>
+    <span class="nx">REALIZEPALETTE</span><span class="o">:</span> <span class="mi">53</span><span class="p">,</span>
+    <span class="nx">SETPALENTRIES</span><span class="o">:</span> <span class="mi">55</span><span class="p">,</span>
+    <span class="nx">CREATEPALETTE</span><span class="o">:</span> <span class="mi">247</span><span class="p">,</span>
+    <span class="nx">SETBKMODE</span><span class="o">:</span> <span class="mi">258</span><span class="p">,</span>
+    <span class="nx">SETMAPMODE</span><span class="o">:</span> <span class="mi">259</span><span class="p">,</span>
+    <span class="nx">SETROP2</span><span class="o">:</span> <span class="mi">260</span><span class="p">,</span>
+    <span class="nx">SETRELABS</span><span class="o">:</span> <span class="mi">261</span><span class="p">,</span>
+    <span class="nx">SETPOLYFILLMODE</span><span class="o">:</span> <span class="mi">262</span><span class="p">,</span>
+    <span class="nx">SETSTRETCHBLTMODE</span><span class="o">:</span> <span class="mi">263</span><span class="p">,</span>
+    <span class="nx">SETTEXTCHAREXTRA</span><span class="o">:</span> <span class="mi">264</span><span class="p">,</span>
+    <span class="nx">RESTOREDC</span><span class="o">:</span> <span class="mi">295</span><span class="p">,</span>
+    <span class="nx">INVERTREGION</span><span class="o">:</span> <span class="mi">298</span><span class="p">,</span>
+    <span class="nx">PAINTREGION</span><span class="o">:</span> <span class="mi">299</span><span class="p">,</span>
+    <span class="nx">SELECTCLIPREGION</span><span class="o">:</span> <span class="mi">300</span><span class="p">,</span>
+    <span class="nx">SELECTOBJECT</span><span class="o">:</span> <span class="mi">301</span><span class="p">,</span>
+    <span class="nx">SETTEXTALIGN</span><span class="o">:</span> <span class="mi">302</span><span class="p">,</span>
+    <span class="nx">RESIZEPALETTE</span><span class="o">:</span> <span class="mi">313</span><span class="p">,</span>
+    <span class="nx">DIBCREATEPATTERNBRUSH</span><span class="o">:</span> <span class="mi">322</span><span class="p">,</span>
+    <span class="nx">SETLAYOUT</span><span class="o">:</span> <span class="mi">329</span><span class="p">,</span>
+    <span class="nx">DELETEOBJECT</span><span class="o">:</span> <span class="mi">496</span><span class="p">,</span>
+    <span class="nx">CREATEPATTERNBRUSH</span><span class="o">:</span> <span class="mi">505</span><span class="p">,</span>
+    <span class="nx">SETBKCOLOR</span><span class="o">:</span> <span class="mi">513</span><span class="p">,</span>
+    <span class="nx">SETTEXTCOLOR</span><span class="o">:</span> <span class="mi">521</span><span class="p">,</span>
+    <span class="nx">SETTEXTJUSTIFICATION</span><span class="o">:</span> <span class="mi">522</span><span class="p">,</span>
+    <span class="nx">SETWINDOWORG</span><span class="o">:</span> <span class="mi">523</span><span class="p">,</span>
+    <span class="nx">SETWINDOWEXT</span><span class="o">:</span> <span class="mi">524</span><span class="p">,</span>
+    <span class="nx">SETVIEWPORTORG</span><span class="o">:</span> <span class="mi">525</span><span class="p">,</span>
+    <span class="nx">SETVIEWPORTEXT</span><span class="o">:</span> <span class="mi">526</span><span class="p">,</span>
+    <span class="nx">OFFSETWINDOWORG</span><span class="o">:</span> <span class="mi">527</span><span class="p">,</span>
+    <span class="nx">OFFSETVIEWPORTORG</span><span class="o">:</span> <span class="mi">529</span><span class="p">,</span>
+    <span class="nx">LINETO</span><span class="o">:</span> <span class="mi">531</span><span class="p">,</span>
+    <span class="nx">MOVETO</span><span class="o">:</span> <span class="mi">532</span><span class="p">,</span>
+    <span class="nx">OFFSETCLIPRGN</span><span class="o">:</span> <span class="mi">544</span><span class="p">,</span>
+    <span class="nx">FILLREGION</span><span class="o">:</span> <span class="mi">552</span><span class="p">,</span>
+    <span class="nx">SETMAPPERFLAGS</span><span class="o">:</span> <span class="mi">561</span><span class="p">,</span>
+    <span class="nx">SELECTPALETTE</span><span class="o">:</span> <span class="mi">564</span><span class="p">,</span>
+    <span class="nx">CREATEPENINDIRECT</span><span class="o">:</span> <span class="mi">762</span><span class="p">,</span>
+    <span class="nx">CREATEFONTINDIRECT</span><span class="o">:</span> <span class="mi">763</span><span class="p">,</span>
+    <span class="nx">CREATEBRUSHINDIRECT</span><span class="o">:</span> <span class="mi">764</span><span class="p">,</span>
+    <span class="nx">POLYGON</span><span class="o">:</span> <span class="mi">804</span><span class="p">,</span>
+    <span class="nx">POLYLINE</span><span class="o">:</span> <span class="mi">805</span><span class="p">,</span>
+    <span class="nx">SCALEWINDOWEXT</span><span class="o">:</span> <span class="mi">1040</span><span class="p">,</span>
+    <span class="nx">SCALEVIEWPORTEXT</span><span class="o">:</span> <span class="mi">1042</span><span class="p">,</span>
+    <span class="nx">EXCLUDECLIPRECT</span><span class="o">:</span> <span class="mi">1045</span><span class="p">,</span>
+    <span class="nx">INTERSECTCLIPRECT</span><span class="o">:</span> <span class="mi">1046</span><span class="p">,</span>
+    <span class="nx">ELLIPSE</span><span class="o">:</span> <span class="mi">1048</span><span class="p">,</span>
+    <span class="nx">FLOODFILL</span><span class="o">:</span> <span class="mi">1049</span><span class="p">,</span>
+    <span class="nx">RECTANGLE</span><span class="o">:</span> <span class="mi">1051</span><span class="p">,</span>
+    <span class="nx">SETPIXEL</span><span class="o">:</span> <span class="mi">1055</span><span class="p">,</span>
+    <span class="nx">FRAMEREGION</span><span class="o">:</span> <span class="mi">1065</span><span class="p">,</span>
+    <span class="nx">ANIMATEPALETTE</span><span class="o">:</span> <span class="mi">1078</span><span class="p">,</span>
+    <span class="nx">TEXTOUT</span><span class="o">:</span> <span class="mi">1313</span><span class="p">,</span>
+    <span class="nx">POLYPOLYGON</span><span class="o">:</span> <span class="mi">1336</span><span class="p">,</span>
+    <span class="nx">EXTFLOODFILL</span><span class="o">:</span> <span class="mi">1352</span><span class="p">,</span>
+    <span class="nx">ROUNDRECT</span><span class="o">:</span> <span class="mi">1564</span><span class="p">,</span>
+    <span class="nx">PATBLT</span><span class="o">:</span> <span class="mi">1565</span><span class="p">,</span>
+    <span class="nx">ESCAPE</span><span class="o">:</span> <span class="mi">1574</span><span class="p">,</span>
+    <span class="nx">CREATEREGION</span><span class="o">:</span> <span class="mi">1791</span><span class="p">,</span>
+    <span class="nx">ARC</span><span class="o">:</span> <span class="mi">2071</span><span class="p">,</span>
+    <span class="nx">PIE</span><span class="o">:</span> <span class="mi">2074</span><span class="p">,</span>
+    <span class="nx">CHORD</span><span class="o">:</span> <span class="mi">2096</span><span class="p">,</span>
+    <span class="nx">BITBLT</span><span class="o">:</span> <span class="mi">2338</span><span class="p">,</span>
+    <span class="nx">DIBBITBLT</span><span class="o">:</span> <span class="mi">2368</span><span class="p">,</span>
+    <span class="nx">EXTTEXTOUT</span><span class="o">:</span> <span class="mi">2610</span><span class="p">,</span>
+    <span class="nx">STRETCHBLT</span><span class="o">:</span> <span class="mi">2851</span><span class="p">,</span>
+    <span class="nx">DIBSTRETCHBLT</span><span class="o">:</span> <span class="mi">2881</span><span class="p">,</span>
+    <span class="nx">SETDIBTODEV</span><span class="o">:</span> <span class="mi">3379</span><span class="p">,</span>
+    <span class="nx">STRETCHDIB</span><span class="o">:</span> <span class="mi">3907</span><span class="p">,</span>
+
+    <span class="mi">0</span><span class="o">:</span> <span class="s2">&quot;EOF&quot;</span><span class="p">,</span>
+    <span class="mi">30</span><span class="o">:</span> <span class="s2">&quot;SAVEDC&quot;</span><span class="p">,</span>
+    <span class="mi">53</span><span class="o">:</span> <span class="s2">&quot;REALIZEPALETTE&quot;</span><span class="p">,</span>
+    <span class="mi">55</span><span class="o">:</span> <span class="s2">&quot;SETPALENTRIES&quot;</span><span class="p">,</span>
+    <span class="mi">247</span><span class="o">:</span> <span class="s2">&quot;CREATEPALETTE&quot;</span><span class="p">,</span>
+    <span class="mi">258</span><span class="o">:</span> <span class="s2">&quot;SETBKMODE&quot;</span><span class="p">,</span>
+    <span class="mi">259</span><span class="o">:</span> <span class="s2">&quot;SETMAPMODE&quot;</span><span class="p">,</span>
+    <span class="mi">260</span><span class="o">:</span> <span class="s2">&quot;SETROP2&quot;</span><span class="p">,</span>
+    <span class="mi">261</span><span class="o">:</span> <span class="s2">&quot;SETRELABS&quot;</span><span class="p">,</span>
+    <span class="mi">262</span><span class="o">:</span> <span class="s2">&quot;SETPOLYFILLMODE&quot;</span><span class="p">,</span>
+    <span class="mi">263</span><span class="o">:</span> <span class="s2">&quot;SETSTRETCHBLTMODE&quot;</span><span class="p">,</span>
+    <span class="mi">264</span><span class="o">:</span> <span class="s2">&quot;SETTEXTCHAREXTRA&quot;</span><span class="p">,</span>
+    <span class="mi">295</span><span class="o">:</span> <span class="s2">&quot;RESTOREDC&quot;</span><span class="p">,</span>
+    <span class="mi">298</span><span class="o">:</span> <span class="s2">&quot;INVERTREGION&quot;</span><span class="p">,</span>
+    <span class="mi">299</span><span class="o">:</span> <span class="s2">&quot;PAINTREGION&quot;</span><span class="p">,</span>
+    <span class="mi">300</span><span class="o">:</span> <span class="s2">&quot;SELECTCLIPREGION&quot;</span><span class="p">,</span>
+    <span class="mi">301</span><span class="o">:</span> <span class="s2">&quot;SELECTOBJECT&quot;</span><span class="p">,</span>
+    <span class="mi">302</span><span class="o">:</span> <span class="s2">&quot;SETTEXTALIGN&quot;</span><span class="p">,</span>
+    <span class="mi">313</span><span class="o">:</span> <span class="s2">&quot;RESIZEPALETTE&quot;</span><span class="p">,</span>
+    <span class="mi">322</span><span class="o">:</span> <span class="s2">&quot;DIBCREATEPATTERNBRUSH&quot;</span><span class="p">,</span>
+    <span class="mi">329</span><span class="o">:</span> <span class="s2">&quot;SETLAYOUT&quot;</span><span class="p">,</span>
+    <span class="mi">496</span><span class="o">:</span> <span class="s2">&quot;DELETEOBJECT&quot;</span><span class="p">,</span>
+    <span class="mi">505</span><span class="o">:</span> <span class="s2">&quot;CREATEPATTERNBRUSH&quot;</span><span class="p">,</span>
+    <span class="mi">513</span><span class="o">:</span> <span class="s2">&quot;SETBKCOLOR&quot;</span><span class="p">,</span>
+    <span class="mi">521</span><span class="o">:</span> <span class="s2">&quot;SETTEXTCOLOR&quot;</span><span class="p">,</span>
+    <span class="mi">522</span><span class="o">:</span> <span class="s2">&quot;SETTEXTJUSTIFICATION&quot;</span><span class="p">,</span>
+    <span class="mi">523</span><span class="o">:</span> <span class="s2">&quot;SETWINDOWORG&quot;</span><span class="p">,</span>
+    <span class="mi">524</span><span class="o">:</span> <span class="s2">&quot;SETWINDOWEXT&quot;</span><span class="p">,</span>
+    <span class="mi">525</span><span class="o">:</span> <span class="s2">&quot;SETVIEWPORTORG&quot;</span><span class="p">,</span>
+    <span class="mi">526</span><span class="o">:</span> <span class="s2">&quot;SETVIEWPORTEXT&quot;</span><span class="p">,</span>
+    <span class="mi">527</span><span class="o">:</span> <span class="s2">&quot;OFFSETWINDOWORG&quot;</span><span class="p">,</span>
+    <span class="mi">529</span><span class="o">:</span> <span class="s2">&quot;OFFSETVIEWPORTORG&quot;</span><span class="p">,</span>
+    <span class="mi">531</span><span class="o">:</span> <span class="s2">&quot;LINETO&quot;</span><span class="p">,</span>
+    <span class="mi">532</span><span class="o">:</span> <span class="s2">&quot;MOVETO&quot;</span><span class="p">,</span>
+    <span class="mi">544</span><span class="o">:</span> <span class="s2">&quot;OFFSETCLIPRGN&quot;</span><span class="p">,</span>
+    <span class="mi">552</span><span class="o">:</span> <span class="s2">&quot;FILLREGION&quot;</span><span class="p">,</span>
+    <span class="mi">561</span><span class="o">:</span> <span class="s2">&quot;SETMAPPERFLAGS&quot;</span><span class="p">,</span>
+    <span class="mi">564</span><span class="o">:</span> <span class="s2">&quot;SELECTPALETTE&quot;</span><span class="p">,</span>
+    <span class="mi">762</span><span class="o">:</span> <span class="s2">&quot;CREATEPENINDIRECT&quot;</span><span class="p">,</span>
+    <span class="mi">763</span><span class="o">:</span> <span class="s2">&quot;CREATEFONTINDIRECT&quot;</span><span class="p">,</span>
+    <span class="mi">764</span><span class="o">:</span> <span class="s2">&quot;CREATEBRUSHINDIRECT&quot;</span><span class="p">,</span>
+    <span class="mi">804</span><span class="o">:</span> <span class="s2">&quot;POLYGON&quot;</span><span class="p">,</span>
+    <span class="mi">805</span><span class="o">:</span> <span class="s2">&quot;POLYLINE&quot;</span><span class="p">,</span>
+    <span class="mi">1040</span><span class="o">:</span> <span class="s2">&quot;SCALEWINDOWEXT&quot;</span><span class="p">,</span>
+    <span class="mi">1042</span><span class="o">:</span> <span class="s2">&quot;SCALEVIEWPORTEXT&quot;</span><span class="p">,</span>
+    <span class="mi">1045</span><span class="o">:</span> <span class="s2">&quot;EXCLUDECLIPRECT&quot;</span><span class="p">,</span>
+    <span class="mi">1046</span><span class="o">:</span> <span class="s2">&quot;INTERSECTCLIPRECT&quot;</span><span class="p">,</span>
+    <span class="mi">1048</span><span class="o">:</span> <span class="s2">&quot;ELLIPSE&quot;</span><span class="p">,</span>
+    <span class="mi">1049</span><span class="o">:</span> <span class="s2">&quot;FLOODFILL&quot;</span><span class="p">,</span>
+    <span class="mi">1051</span><span class="o">:</span> <span class="s2">&quot;RECTANGLE&quot;</span><span class="p">,</span>
+    <span class="mi">1055</span><span class="o">:</span> <span class="s2">&quot;SETPIXEL&quot;</span><span class="p">,</span>
+    <span class="mi">1065</span><span class="o">:</span> <span class="s2">&quot;FRAMEREGION&quot;</span><span class="p">,</span>
+    <span class="mi">1078</span><span class="o">:</span> <span class="s2">&quot;ANIMATEPALETTE&quot;</span><span class="p">,</span>
+    <span class="mi">1313</span><span class="o">:</span> <span class="s2">&quot;TEXTOUT&quot;</span><span class="p">,</span>
+    <span class="mi">1336</span><span class="o">:</span> <span class="s2">&quot;POLYPOLYGON&quot;</span><span class="p">,</span>
+    <span class="mi">1352</span><span class="o">:</span> <span class="s2">&quot;EXTFLOODFILL&quot;</span><span class="p">,</span>
+    <span class="mi">1564</span><span class="o">:</span> <span class="s2">&quot;ROUNDRECT&quot;</span><span class="p">,</span>
+    <span class="mi">1565</span><span class="o">:</span> <span class="s2">&quot;PATBLT&quot;</span><span class="p">,</span>
+    <span class="mi">1574</span><span class="o">:</span> <span class="s2">&quot;ESCAPE&quot;</span><span class="p">,</span>
+    <span class="mi">1791</span><span class="o">:</span> <span class="s2">&quot;CREATEREGION&quot;</span><span class="p">,</span>
+    <span class="mi">2071</span><span class="o">:</span> <span class="s2">&quot;ARC&quot;</span><span class="p">,</span>
+    <span class="mi">2074</span><span class="o">:</span> <span class="s2">&quot;PIE&quot;</span><span class="p">,</span>
+    <span class="mi">2096</span><span class="o">:</span> <span class="s2">&quot;CHORD&quot;</span><span class="p">,</span>
+    <span class="mi">2338</span><span class="o">:</span> <span class="s2">&quot;BITBLT&quot;</span><span class="p">,</span>
+    <span class="mi">2368</span><span class="o">:</span> <span class="s2">&quot;DIBBITBLT&quot;</span><span class="p">,</span>
+    <span class="mi">2610</span><span class="o">:</span> <span class="s2">&quot;EXTTEXTOUT&quot;</span><span class="p">,</span>
+    <span class="mi">2851</span><span class="o">:</span> <span class="s2">&quot;STRETCHBLT&quot;</span><span class="p">,</span>
+    <span class="mi">2881</span><span class="o">:</span> <span class="s2">&quot;DIBSTRETCHBLT&quot;</span><span class="p">,</span>
+    <span class="mi">3379</span><span class="o">:</span> <span class="s2">&quot;SETDIBTODEV&quot;</span><span class="p">,</span>
+    <span class="mi">3907</span><span class="o">:</span> <span class="s2">&quot;STRETCHDIB&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="nx">Wmf</span><span class="p">.</span><span class="nx">BinRasterOp</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">BLACK</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">NOTMERGEPEN</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">MASKNOTPEN</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="nx">NOTCOPYPEN</span><span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="nx">MASKPENNOT</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="nx">NOT</span><span class="o">:</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="nx">XORPEN</span><span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="nx">NOTMASKPEN</span><span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="nx">MASKPEN</span><span class="o">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="nx">NOTXORPEN</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="nx">NOP</span><span class="o">:</span> <span class="mi">11</span><span class="p">,</span>
+    <span class="nx">MERGENOTPEN</span><span class="o">:</span> <span class="mi">12</span><span class="p">,</span>
+    <span class="nx">COPYPEN</span><span class="o">:</span> <span class="mi">13</span><span class="p">,</span>
+    <span class="nx">MERGEPENNOT</span><span class="o">:</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="nx">MERGEPEN</span><span class="o">:</span> <span class="mi">15</span><span class="p">,</span>
+    <span class="nx">WHITE</span><span class="o">:</span> <span class="mi">16</span><span class="p">,</span>
+
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;BLACK&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;NOTMERGEPEN&quot;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="o">:</span> <span class="s2">&quot;MASKNOTPEN&quot;</span><span class="p">,</span>
+    <span class="mi">4</span><span class="o">:</span> <span class="s2">&quot;NOTCOPYPEN&quot;</span><span class="p">,</span>
+    <span class="mi">5</span><span class="o">:</span> <span class="s2">&quot;MASKPENNOT&quot;</span><span class="p">,</span>
+    <span class="mi">6</span><span class="o">:</span> <span class="s2">&quot;NOT&quot;</span><span class="p">,</span>
+    <span class="mi">7</span><span class="o">:</span> <span class="s2">&quot;XORPEN&quot;</span><span class="p">,</span>
+    <span class="mi">8</span><span class="o">:</span> <span class="s2">&quot;NOTMASKPEN&quot;</span><span class="p">,</span>
+    <span class="mi">9</span><span class="o">:</span> <span class="s2">&quot;MASKPEN&quot;</span><span class="p">,</span>
+    <span class="mi">10</span><span class="o">:</span> <span class="s2">&quot;NOTXORPEN&quot;</span><span class="p">,</span>
+    <span class="mi">11</span><span class="o">:</span> <span class="s2">&quot;NOP&quot;</span><span class="p">,</span>
+    <span class="mi">12</span><span class="o">:</span> <span class="s2">&quot;MERGENOTPEN&quot;</span><span class="p">,</span>
+    <span class="mi">13</span><span class="o">:</span> <span class="s2">&quot;COPYPEN&quot;</span><span class="p">,</span>
+    <span class="mi">14</span><span class="o">:</span> <span class="s2">&quot;MERGEPENNOT&quot;</span><span class="p">,</span>
+    <span class="mi">15</span><span class="o">:</span> <span class="s2">&quot;MERGEPEN&quot;</span><span class="p">,</span>
+    <span class="mi">16</span><span class="o">:</span> <span class="s2">&quot;WHITE&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="nx">Wmf</span><span class="p">.</span><span class="nx">MixMode</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">TRANSPARENT</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">OPAQUE</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;TRANSPARENT&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;OPAQUE&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="nx">Wmf</span><span class="p">.</span><span class="nx">PolyFillMode</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">ALTERNATE</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nx">WINDING</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+
+    <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;ALTERNATE&quot;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;WINDING&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="kd">function</span> <span class="nx">Wmf</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="nx">Wmf</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">specialHeader</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SpecialHeader</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Header</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">records</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">do</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Record</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">records</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_</span><span class="p">);</span>
+      <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="kd">function</span> <span class="o">==</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">Func</span><span class="p">.</span><span class="nx">EOF</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see section 2.3.5.31</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">ParamsSetwindoworg</span> <span class="o">=</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">ParamsSetwindoworg</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ParamsSetwindoworg</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ParamsSetwindoworg</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Y coordinate of the window origin, in logical units.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * X coordinate of the window origin, in logical units.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">ParamsSetwindoworg</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see section 2.3.5.15</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">ParamsSetbkmode</span> <span class="o">=</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">ParamsSetbkmode</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ParamsSetbkmode</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ParamsSetbkmode</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">bkMode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Defines current graphic context background mix mode.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">ParamsSetbkmode</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see section 2.2.1.12</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">PointS</span> <span class="o">=</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">PointS</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">PointS</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">PointS</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * X coordinate of the point, in logical units.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Y coordinate of the point, in logical units.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">PointS</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see section 2.3.5.30</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">ParamsSetwindowext</span> <span class="o">=</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">ParamsSetwindowext</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ParamsSetwindowext</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ParamsSetwindowext</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Vertical extent of the window in logical units.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Horizontal extent of the window in logical units.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">ParamsSetwindowext</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see section 2.3.3.15 = params_polyline</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">ParamsPolygon</span> <span class="o">=</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">ParamsPolygon</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ParamsPolygon</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ParamsPolygon</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numPoints</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">points</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numPoints</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numPoints</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PointS</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">ParamsPolygon</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Header</span> <span class="o">=</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">Header</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">Header</span><span class="p">.</span><span class="nx">MetafileType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+      <span class="nx">MEMORY_METAFILE</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">DISK_METAFILE</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+
+      <span class="mi">1</span><span class="o">:</span> <span class="s2">&quot;MEMORY_METAFILE&quot;</span><span class="p">,</span>
+      <span class="mi">2</span><span class="o">:</span> <span class="s2">&quot;DISK_METAFILE&quot;</span><span class="p">,</span>
+    <span class="p">});</span>
+
+    <span class="kd">function</span> <span class="nx">Header</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Header</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">metafileType</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">headerSize</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">version</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numberOfObjects</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">maxRecord</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numberOfMembers</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Header</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see section 2.2.1.7</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">ColorRef</span> <span class="o">=</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">ColorRef</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ColorRef</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ColorRef</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">red</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">green</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">blue</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">ColorRef</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see section 2.3.5.22</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">ParamsSetrop2</span> <span class="o">=</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">ParamsSetrop2</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ParamsSetrop2</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ParamsSetrop2</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">drawMode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Defines current foreground binary raster operation mixing mode.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">ParamsSetrop2</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see section 2.3.5.20</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">ParamsSetpolyfillmode</span> <span class="o">=</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">ParamsSetpolyfillmode</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ParamsSetpolyfillmode</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ParamsSetpolyfillmode</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">polyFillMode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Defines current polygon fill mode.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">ParamsSetpolyfillmode</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see section 2.3.3.14</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">ParamsPolyline</span> <span class="o">=</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">ParamsPolyline</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">ParamsPolyline</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">ParamsPolyline</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">numPoints</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">points</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">numPoints</span><span class="p">);</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">numPoints</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">points</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PointS</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">ParamsPolyline</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">SpecialHeader</span> <span class="o">=</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">SpecialHeader</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">SpecialHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">SpecialHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">215</span><span class="p">,</span> <span class="mi">205</span><span class="p">,</span> <span class="mi">198</span><span class="p">,</span> <span class="mi">154</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">handle</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">top</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">right</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">bottom</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">inch</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">reserved</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ensureFixedContents</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">checksum</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">SpecialHeader</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Record</span> <span class="o">=</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">Record</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">Record</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">Record</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+      <span class="k">this</span><span class="p">.</span><span class="kd">function</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+      <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="kd">function</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">Func</span><span class="p">.</span><span class="nx">SETBKMODE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ParamsSetbkmode</span><span class="p">(</span><span class="nx">_io__raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">Func</span><span class="p">.</span><span class="nx">SETBKCOLOR</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ColorRef</span><span class="p">(</span><span class="nx">_io__raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">Func</span><span class="p">.</span><span class="nx">SETROP2</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ParamsSetrop2</span><span class="p">(</span><span class="nx">_io__raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">Func</span><span class="p">.</span><span class="nx">POLYLINE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ParamsPolyline</span><span class="p">(</span><span class="nx">_io__raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">Func</span><span class="p">.</span><span class="nx">SETWINDOWORG</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ParamsSetwindoworg</span><span class="p">(</span><span class="nx">_io__raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">Func</span><span class="p">.</span><span class="nx">POLYGON</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ParamsPolygon</span><span class="p">(</span><span class="nx">_io__raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">Func</span><span class="p">.</span><span class="nx">SETWINDOWEXT</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ParamsSetwindowext</span><span class="p">(</span><span class="nx">_io__raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">Wmf</span><span class="p">.</span><span class="nx">Func</span><span class="p">.</span><span class="nx">SETPOLYFILLMODE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_params</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">params</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ParamsSetpolyfillmode</span><span class="p">(</span><span class="nx">_io__raw_params</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">default</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">params</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(((</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">Record</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="k">return</span> <span class="nx">Wmf</span><span class="p">;</span>
+<span class="p">})();</span>
+<span class="k">return</span> <span class="nx">Wmf</span><span class="p">;</span>
+<span class="p">}));</span>
+</pre></div>
 
         </div>
         
@@ -873,8 +870,8 @@ return Wmf;
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

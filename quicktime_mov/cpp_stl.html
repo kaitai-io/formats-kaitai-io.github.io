@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -276,535 +273,535 @@ kaitai::kstream ks(&amp;is);</code></pre></li>
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">#ifndef QUICKTIME_MOV_H_
-#define QUICKTIME_MOV_H_
-
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-#include &quot;kaitai/kaitaistruct.h&quot;
-
-#include &lt;stdint.h&gt;
-#include &lt;vector&gt;
-
-#if KAITAI_STRUCT_VERSION &lt; 7000L
-#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;
-#endif
-
-/**
- * \sa Source
- */
-
-class quicktime_mov_t : public kaitai::kstruct {
-
-public:
-    class mvhd_body_t;
-    class ftyp_body_t;
-    class fixed32_t;
-    class fixed16_t;
-    class atom_t;
-    class tkhd_body_t;
-    class atom_list_t;
-
-    enum atom_type_t {
-        ATOM_TYPE_XTRA = 1484026465,
-        ATOM_TYPE_DINF = 1684631142,
-        ATOM_TYPE_DREF = 1685218662,
-        ATOM_TYPE_EDTS = 1701082227,
-        ATOM_TYPE_ELST = 1701606260,
-        ATOM_TYPE_FREE = 1718773093,
-        ATOM_TYPE_FTYP = 1718909296,
-        ATOM_TYPE_HDLR = 1751411826,
-        ATOM_TYPE_IODS = 1768907891,
-        ATOM_TYPE_MDAT = 1835295092,
-        ATOM_TYPE_MDHD = 1835296868,
-        ATOM_TYPE_MDIA = 1835297121,
-        ATOM_TYPE_META = 1835365473,
-        ATOM_TYPE_MINF = 1835626086,
-        ATOM_TYPE_MOOF = 1836019558,
-        ATOM_TYPE_MOOV = 1836019574,
-        ATOM_TYPE_MVHD = 1836476516,
-        ATOM_TYPE_SMHD = 1936549988,
-        ATOM_TYPE_STBL = 1937007212,
-        ATOM_TYPE_STCO = 1937007471,
-        ATOM_TYPE_STSC = 1937011555,
-        ATOM_TYPE_STSD = 1937011556,
-        ATOM_TYPE_STSZ = 1937011578,
-        ATOM_TYPE_STTS = 1937011827,
-        ATOM_TYPE_TKHD = 1953196132,
-        ATOM_TYPE_TRAF = 1953653094,
-        ATOM_TYPE_TRAK = 1953653099,
-        ATOM_TYPE_TREF = 1953654118,
-        ATOM_TYPE_UDTA = 1969517665,
-        ATOM_TYPE_VMHD = 1986881636
-    };
-
-    enum brand_t {
-        BRAND_X_3G2A = 862401121,
-        BRAND_X_3GE6 = 862414134,
-        BRAND_X_3GE9 = 862414137,
-        BRAND_X_3GF9 = 862414393,
-        BRAND_X_3GG6 = 862414646,
-        BRAND_X_3GG9 = 862414649,
-        BRAND_X_3GH9 = 862414905,
-        BRAND_X_3GM9 = 862416185,
-        BRAND_X_3GP4 = 862416948,
-        BRAND_X_3GP5 = 862416949,
-        BRAND_X_3GP6 = 862416950,
-        BRAND_X_3GP7 = 862416951,
-        BRAND_X_3GP8 = 862416952,
-        BRAND_X_3GP9 = 862416953,
-        BRAND_X_3GR6 = 862417462,
-        BRAND_X_3GR9 = 862417465,
-        BRAND_X_3GS6 = 862417718,
-        BRAND_X_3GS9 = 862417721,
-        BRAND_X_3GT9 = 862417977,
-        BRAND_ARRI = 1095914057,
-        BRAND_CAEP = 1128351056,
-        BRAND_CDES = 1128555891,
-        BRAND_J2P0 = 1244811312,
-        BRAND_J2P1 = 1244811313,
-        BRAND_LCAG = 1279476039,
-        BRAND_M4A = 1295270176,
-        BRAND_M4B = 1295270432,
-        BRAND_M4P = 1295274016,
-        BRAND_M4V = 1295275552,
-        BRAND_MFSM = 1296454477,
-        BRAND_MGSV = 1296520022,
-        BRAND_MPPI = 1297109065,
-        BRAND_MSNV = 1297305174,
-        BRAND_ROSS = 1380930387,
-        BRAND_SEAU = 1397047637,
-        BRAND_SEBK = 1397047883,
-        BRAND_XAVC = 1480676931,
-        BRAND_AVC1 = 1635148593,
-        BRAND_BBXM = 1650620525,
-        BRAND_CAQV = 1667330422,
-        BRAND_CCFF = 1667458662,
-        BRAND_DA0A = 1684090977,
-        BRAND_DA0B = 1684090978,
-        BRAND_DA1A = 1684091233,
-        BRAND_DA1B = 1684091234,
-        BRAND_DA2A = 1684091489,
-        BRAND_DA2B = 1684091490,
-        BRAND_DA3A = 1684091745,
-        BRAND_DA3B = 1684091746,
-        BRAND_DASH = 1684108136,
-        BRAND_DBY1 = 1684175153,
-        BRAND_DMB1 = 1684890161,
-        BRAND_DSMS = 1685286259,
-        BRAND_DV1A = 1685467489,
-        BRAND_DV1B = 1685467490,
-        BRAND_DV2A = 1685467745,
-        BRAND_DV2B = 1685467746,
-        BRAND_DV3A = 1685468001,
-        BRAND_DV3B = 1685468002,
-        BRAND_DVR1 = 1685484081,
-        BRAND_DVT1 = 1685484593,
-        BRAND_DXO = 1685614368,
-        BRAND_EMSG = 1701671783,
-        BRAND_IFRM = 1768321645,
-        BRAND_ISC2 = 1769169714,
-        BRAND_ISO2 = 1769172786,
-        BRAND_ISO3 = 1769172787,
-        BRAND_ISO4 = 1769172788,
-        BRAND_ISO5 = 1769172789,
-        BRAND_ISO6 = 1769172790,
-        BRAND_ISOM = 1769172845,
-        BRAND_JP2 = 1785737760,
-        BRAND_JPM = 1785752864,
-        BRAND_JPSI = 1785754473,
-        BRAND_JPX = 1785755680,
-        BRAND_JPXB = 1785755746,
-        BRAND_LMSG = 1819112295,
-        BRAND_MJ2S = 1835676275,
-        BRAND_MJP2 = 1835692082,
-        BRAND_MP21 = 1836069425,
-        BRAND_MP41 = 1836069937,
-        BRAND_MP42 = 1836069938,
-        BRAND_MP71 = 1836070705,
-        BRAND_MSDH = 1836278888,
-        BRAND_MSIX = 1836280184,
-        BRAND_NIKO = 1852402543,
-        BRAND_ODCF = 1868850022,
-        BRAND_OPF2 = 1869637170,
-        BRAND_OPX2 = 1869641778,
-        BRAND_PANA = 1885433441,
-        BRAND_PIFF = 1885955686,
-        BRAND_PNVI = 1886287465,
-        BRAND_QT = 1903435808,
-        BRAND_RISX = 1919513464,
-        BRAND_SDV = 1935963680,
-        BRAND_SENV = 1936027254,
-        BRAND_SIMS = 1936289139,
-        BRAND_SISX = 1936290680,
-        BRAND_SSSS = 1936946035,
-        BRAND_UVVU = 1970697845
-    };
-
-    quicktime_mov_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, quicktime_mov_t* p__root = 0);
-
-private:
-    void _read();
-
-public:
-    ~quicktime_mov_t();
-
-    /**
-     * \sa Source
-     */
-
-    class mvhd_body_t : public kaitai::kstruct {
-
-    public:
-
-        mvhd_body_t(kaitai::kstream* p__io, quicktime_mov_t::atom_t* p__parent = 0, quicktime_mov_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~mvhd_body_t();
-
-    private:
-        uint8_t m_version;
-        std::string m_flags;
-        uint32_t m_creation_time;
-        uint32_t m_modification_time;
-        uint32_t m_time_scale;
-        uint32_t m_duration;
-        fixed32_t* m_preferred_rate;
-        fixed16_t* m_preferred_volume;
-        std::string m_reserved1;
-        std::string m_matrix;
-        uint32_t m_preview_time;
-        uint32_t m_preview_duration;
-        uint32_t m_poster_time;
-        uint32_t m_selection_time;
-        uint32_t m_selection_duration;
-        uint32_t m_current_time;
-        uint32_t m_next_track_id;
-        quicktime_mov_t* m__root;
-        quicktime_mov_t::atom_t* m__parent;
-
-    public:
-
-        /**
-         * Version of this movie header atom
-         */
-        uint8_t version() const { return m_version; }
-        std::string flags() const { return m_flags; }
-        uint32_t creation_time() const { return m_creation_time; }
-        uint32_t modification_time() const { return m_modification_time; }
-
-        /**
-         * A time value that indicates the time scale for this
-         * movie—that is, the number of time units that pass per second
-         * in its time coordinate system. A time coordinate system that
-         * measures time in sixtieths of a second, for example, has a
-         * time scale of 60.
-         */
-        uint32_t time_scale() const { return m_time_scale; }
-
-        /**
-         * A time value that indicates the duration of the movie in
-         * time scale units. Note that this property is derived from
-         * the movie’s tracks. The value of this field corresponds to
-         * the duration of the longest track in the movie.
-         */
-        uint32_t duration() const { return m_duration; }
-
-        /**
-         * The rate at which to play this movie. A value of 1.0 indicates normal rate.
-         */
-        fixed32_t* preferred_rate() const { return m_preferred_rate; }
-
-        /**
-         * How loud to play this movie’s sound. A value of 1.0 indicates full volume.
-         */
-        fixed16_t* preferred_volume() const { return m_preferred_volume; }
-        std::string reserved1() const { return m_reserved1; }
-
-        /**
-         * A matrix shows how to map points from one coordinate space into another.
-         */
-        std::string matrix() const { return m_matrix; }
-
-        /**
-         * The time value in the movie at which the preview begins.
-         */
-        uint32_t preview_time() const { return m_preview_time; }
-
-        /**
-         * The duration of the movie preview in movie time scale units.
-         */
-        uint32_t preview_duration() const { return m_preview_duration; }
-
-        /**
-         * The time value of the time of the movie poster.
-         */
-        uint32_t poster_time() const { return m_poster_time; }
-
-        /**
-         * The time value for the start time of the current selection.
-         */
-        uint32_t selection_time() const { return m_selection_time; }
-
-        /**
-         * The duration of the current selection in movie time scale units.
-         */
-        uint32_t selection_duration() const { return m_selection_duration; }
-
-        /**
-         * The time value for current time position within the movie.
-         */
-        uint32_t current_time() const { return m_current_time; }
-
-        /**
-         * Indicates a value to use for the track ID number of the next
-         * track added to this movie. Note that 0 is not a valid track
-         * ID value.
-         */
-        uint32_t next_track_id() const { return m_next_track_id; }
-        quicktime_mov_t* _root() const { return m__root; }
-        quicktime_mov_t::atom_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * \sa Source
-     */
-
-    class ftyp_body_t : public kaitai::kstruct {
-
-    public:
-
-        ftyp_body_t(kaitai::kstream* p__io, quicktime_mov_t::atom_t* p__parent = 0, quicktime_mov_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~ftyp_body_t();
-
-    private:
-        brand_t m_major_brand;
-        std::string m_minor_version;
-        std::vector&lt;brand_t&gt;* m_compatible_brands;
-        quicktime_mov_t* m__root;
-        quicktime_mov_t::atom_t* m__parent;
-
-    public:
-        brand_t major_brand() const { return m_major_brand; }
-        std::string minor_version() const { return m_minor_version; }
-        std::vector&lt;brand_t&gt;* compatible_brands() const { return m_compatible_brands; }
-        quicktime_mov_t* _root() const { return m__root; }
-        quicktime_mov_t::atom_t* _parent() const { return m__parent; }
-    };
-
-    /**
-     * Fixed-point 32-bit number.
-     */
-
-    class fixed32_t : public kaitai::kstruct {
-
-    public:
-
-        fixed32_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, quicktime_mov_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~fixed32_t();
-
-    private:
-        int16_t m_int_part;
-        uint16_t m_frac_part;
-        quicktime_mov_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        int16_t int_part() const { return m_int_part; }
-        uint16_t frac_part() const { return m_frac_part; }
-        quicktime_mov_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-    /**
-     * Fixed-point 16-bit number.
-     */
-
-    class fixed16_t : public kaitai::kstruct {
-
-    public:
-
-        fixed16_t(kaitai::kstream* p__io, quicktime_mov_t::mvhd_body_t* p__parent = 0, quicktime_mov_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~fixed16_t();
-
-    private:
-        int8_t m_int_part;
-        uint8_t m_frac_part;
-        quicktime_mov_t* m__root;
-        quicktime_mov_t::mvhd_body_t* m__parent;
-
-    public:
-        int8_t int_part() const { return m_int_part; }
-        uint8_t frac_part() const { return m_frac_part; }
-        quicktime_mov_t* _root() const { return m__root; }
-        quicktime_mov_t::mvhd_body_t* _parent() const { return m__parent; }
-    };
-
-    class atom_t : public kaitai::kstruct {
-
-    public:
-
-        atom_t(kaitai::kstream* p__io, quicktime_mov_t::atom_list_t* p__parent = 0, quicktime_mov_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~atom_t();
-
-    private:
-        bool f_len;
-        int32_t m_len;
-
-    public:
-        int32_t len();
-
-    private:
-        uint32_t m_len32;
-        atom_type_t m_atom_type;
-        uint64_t m_len64;
-        bool n_len64;
-
-    public:
-        bool _is_null_len64() { len64(); return n_len64; };
-
-    private:
-        kaitai::kstruct* m_body;
-        bool n_body;
-
-    public:
-        bool _is_null_body() { body(); return n_body; };
-
-    private:
-        quicktime_mov_t* m__root;
-        quicktime_mov_t::atom_list_t* m__parent;
-        std::string m__raw_body;
-        kaitai::kstream* m__io__raw_body;
-
-    public:
-        uint32_t len32() const { return m_len32; }
-        atom_type_t atom_type() const { return m_atom_type; }
-        uint64_t len64() const { return m_len64; }
-        kaitai::kstruct* body() const { return m_body; }
-        quicktime_mov_t* _root() const { return m__root; }
-        quicktime_mov_t::atom_list_t* _parent() const { return m__parent; }
-        std::string _raw_body() const { return m__raw_body; }
-        kaitai::kstream* _io__raw_body() const { return m__io__raw_body; }
-    };
-
-    /**
-     * \sa Source
-     */
-
-    class tkhd_body_t : public kaitai::kstruct {
-
-    public:
-
-        tkhd_body_t(kaitai::kstream* p__io, quicktime_mov_t::atom_t* p__parent = 0, quicktime_mov_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~tkhd_body_t();
-
-    private:
-        uint8_t m_version;
-        std::string m_flags;
-        uint32_t m_creation_time;
-        uint32_t m_modification_time;
-        uint32_t m_track_id;
-        std::string m_reserved1;
-        uint32_t m_duration;
-        std::string m_reserved2;
-        uint16_t m_layer;
-        uint16_t m_alternative_group;
-        uint16_t m_volume;
-        uint16_t m_reserved3;
-        std::string m_matrix;
-        fixed32_t* m_width;
-        fixed32_t* m_height;
-        quicktime_mov_t* m__root;
-        quicktime_mov_t::atom_t* m__parent;
-
-    public:
-        uint8_t version() const { return m_version; }
-        std::string flags() const { return m_flags; }
-        uint32_t creation_time() const { return m_creation_time; }
-        uint32_t modification_time() const { return m_modification_time; }
-
-        /**
-         * Integer that uniquely identifies the track. The value 0 cannot be used.
-         */
-        uint32_t track_id() const { return m_track_id; }
-        std::string reserved1() const { return m_reserved1; }
-        uint32_t duration() const { return m_duration; }
-        std::string reserved2() const { return m_reserved2; }
-        uint16_t layer() const { return m_layer; }
-        uint16_t alternative_group() const { return m_alternative_group; }
-        uint16_t volume() const { return m_volume; }
-        uint16_t reserved3() const { return m_reserved3; }
-        std::string matrix() const { return m_matrix; }
-        fixed32_t* width() const { return m_width; }
-        fixed32_t* height() const { return m_height; }
-        quicktime_mov_t* _root() const { return m__root; }
-        quicktime_mov_t::atom_t* _parent() const { return m__parent; }
-    };
-
-    class atom_list_t : public kaitai::kstruct {
-
-    public:
-
-        atom_list_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, quicktime_mov_t* p__root = 0);
-
-    private:
-        void _read();
-
-    public:
-        ~atom_list_t();
-
-    private:
-        std::vector&lt;atom_t*&gt;* m_items;
-        quicktime_mov_t* m__root;
-        kaitai::kstruct* m__parent;
-
-    public:
-        std::vector&lt;atom_t*&gt;* items() const { return m_items; }
-        quicktime_mov_t* _root() const { return m__root; }
-        kaitai::kstruct* _parent() const { return m__parent; }
-    };
-
-private:
-    atom_list_t* m_atoms;
-    quicktime_mov_t* m__root;
-    kaitai::kstruct* m__parent;
-
-public:
-    atom_list_t* atoms() const { return m_atoms; }
-    quicktime_mov_t* _root() const { return m__root; }
-    kaitai::kstruct* _parent() const { return m__parent; }
-};
-
-#endif  // QUICKTIME_MOV_H_
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="cp">#ifndef QUICKTIME_MOV_H_</span>
+<span class="cp">#define QUICKTIME_MOV_H_</span>
+
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
+
+<span class="cp">#if KAITAI_STRUCT_VERSION &lt; 7000L</span>
+<span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.7 or later is required&quot;</span>
+<span class="cp">#endif</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * \sa Source</span>
+<span class="cm"> */</span>
+
+<span class="k">class</span> <span class="nc">quicktime_mov_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">class</span> <span class="nc">mvhd_body_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">ftyp_body_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">fixed32_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">fixed16_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">atom_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">tkhd_body_t</span><span class="p">;</span>
+    <span class="k">class</span> <span class="nc">atom_list_t</span><span class="p">;</span>
+
+    <span class="k">enum</span> <span class="n">atom_type_t</span> <span class="p">{</span>
+        <span class="n">ATOM_TYPE_XTRA</span> <span class="o">=</span> <span class="mi">1484026465</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_DINF</span> <span class="o">=</span> <span class="mi">1684631142</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_DREF</span> <span class="o">=</span> <span class="mi">1685218662</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_EDTS</span> <span class="o">=</span> <span class="mi">1701082227</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_ELST</span> <span class="o">=</span> <span class="mi">1701606260</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_FREE</span> <span class="o">=</span> <span class="mi">1718773093</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_FTYP</span> <span class="o">=</span> <span class="mi">1718909296</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_HDLR</span> <span class="o">=</span> <span class="mi">1751411826</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_IODS</span> <span class="o">=</span> <span class="mi">1768907891</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_MDAT</span> <span class="o">=</span> <span class="mi">1835295092</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_MDHD</span> <span class="o">=</span> <span class="mi">1835296868</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_MDIA</span> <span class="o">=</span> <span class="mi">1835297121</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_META</span> <span class="o">=</span> <span class="mi">1835365473</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_MINF</span> <span class="o">=</span> <span class="mi">1835626086</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_MOOF</span> <span class="o">=</span> <span class="mi">1836019558</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_MOOV</span> <span class="o">=</span> <span class="mi">1836019574</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_MVHD</span> <span class="o">=</span> <span class="mi">1836476516</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_SMHD</span> <span class="o">=</span> <span class="mi">1936549988</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_STBL</span> <span class="o">=</span> <span class="mi">1937007212</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_STCO</span> <span class="o">=</span> <span class="mi">1937007471</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_STSC</span> <span class="o">=</span> <span class="mi">1937011555</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_STSD</span> <span class="o">=</span> <span class="mi">1937011556</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_STSZ</span> <span class="o">=</span> <span class="mi">1937011578</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_STTS</span> <span class="o">=</span> <span class="mi">1937011827</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_TKHD</span> <span class="o">=</span> <span class="mi">1953196132</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_TRAF</span> <span class="o">=</span> <span class="mi">1953653094</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_TRAK</span> <span class="o">=</span> <span class="mi">1953653099</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_TREF</span> <span class="o">=</span> <span class="mi">1953654118</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_UDTA</span> <span class="o">=</span> <span class="mi">1969517665</span><span class="p">,</span>
+        <span class="n">ATOM_TYPE_VMHD</span> <span class="o">=</span> <span class="mi">1986881636</span>
+    <span class="p">};</span>
+
+    <span class="k">enum</span> <span class="n">brand_t</span> <span class="p">{</span>
+        <span class="n">BRAND_X_3G2A</span> <span class="o">=</span> <span class="mi">862401121</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GE6</span> <span class="o">=</span> <span class="mi">862414134</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GE9</span> <span class="o">=</span> <span class="mi">862414137</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GF9</span> <span class="o">=</span> <span class="mi">862414393</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GG6</span> <span class="o">=</span> <span class="mi">862414646</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GG9</span> <span class="o">=</span> <span class="mi">862414649</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GH9</span> <span class="o">=</span> <span class="mi">862414905</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GM9</span> <span class="o">=</span> <span class="mi">862416185</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GP4</span> <span class="o">=</span> <span class="mi">862416948</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GP5</span> <span class="o">=</span> <span class="mi">862416949</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GP6</span> <span class="o">=</span> <span class="mi">862416950</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GP7</span> <span class="o">=</span> <span class="mi">862416951</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GP8</span> <span class="o">=</span> <span class="mi">862416952</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GP9</span> <span class="o">=</span> <span class="mi">862416953</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GR6</span> <span class="o">=</span> <span class="mi">862417462</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GR9</span> <span class="o">=</span> <span class="mi">862417465</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GS6</span> <span class="o">=</span> <span class="mi">862417718</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GS9</span> <span class="o">=</span> <span class="mi">862417721</span><span class="p">,</span>
+        <span class="n">BRAND_X_3GT9</span> <span class="o">=</span> <span class="mi">862417977</span><span class="p">,</span>
+        <span class="n">BRAND_ARRI</span> <span class="o">=</span> <span class="mi">1095914057</span><span class="p">,</span>
+        <span class="n">BRAND_CAEP</span> <span class="o">=</span> <span class="mi">1128351056</span><span class="p">,</span>
+        <span class="n">BRAND_CDES</span> <span class="o">=</span> <span class="mi">1128555891</span><span class="p">,</span>
+        <span class="n">BRAND_J2P0</span> <span class="o">=</span> <span class="mi">1244811312</span><span class="p">,</span>
+        <span class="n">BRAND_J2P1</span> <span class="o">=</span> <span class="mi">1244811313</span><span class="p">,</span>
+        <span class="n">BRAND_LCAG</span> <span class="o">=</span> <span class="mi">1279476039</span><span class="p">,</span>
+        <span class="n">BRAND_M4A</span> <span class="o">=</span> <span class="mi">1295270176</span><span class="p">,</span>
+        <span class="n">BRAND_M4B</span> <span class="o">=</span> <span class="mi">1295270432</span><span class="p">,</span>
+        <span class="n">BRAND_M4P</span> <span class="o">=</span> <span class="mi">1295274016</span><span class="p">,</span>
+        <span class="n">BRAND_M4V</span> <span class="o">=</span> <span class="mi">1295275552</span><span class="p">,</span>
+        <span class="n">BRAND_MFSM</span> <span class="o">=</span> <span class="mi">1296454477</span><span class="p">,</span>
+        <span class="n">BRAND_MGSV</span> <span class="o">=</span> <span class="mi">1296520022</span><span class="p">,</span>
+        <span class="n">BRAND_MPPI</span> <span class="o">=</span> <span class="mi">1297109065</span><span class="p">,</span>
+        <span class="n">BRAND_MSNV</span> <span class="o">=</span> <span class="mi">1297305174</span><span class="p">,</span>
+        <span class="n">BRAND_ROSS</span> <span class="o">=</span> <span class="mi">1380930387</span><span class="p">,</span>
+        <span class="n">BRAND_SEAU</span> <span class="o">=</span> <span class="mi">1397047637</span><span class="p">,</span>
+        <span class="n">BRAND_SEBK</span> <span class="o">=</span> <span class="mi">1397047883</span><span class="p">,</span>
+        <span class="n">BRAND_XAVC</span> <span class="o">=</span> <span class="mi">1480676931</span><span class="p">,</span>
+        <span class="n">BRAND_AVC1</span> <span class="o">=</span> <span class="mi">1635148593</span><span class="p">,</span>
+        <span class="n">BRAND_BBXM</span> <span class="o">=</span> <span class="mi">1650620525</span><span class="p">,</span>
+        <span class="n">BRAND_CAQV</span> <span class="o">=</span> <span class="mi">1667330422</span><span class="p">,</span>
+        <span class="n">BRAND_CCFF</span> <span class="o">=</span> <span class="mi">1667458662</span><span class="p">,</span>
+        <span class="n">BRAND_DA0A</span> <span class="o">=</span> <span class="mi">1684090977</span><span class="p">,</span>
+        <span class="n">BRAND_DA0B</span> <span class="o">=</span> <span class="mi">1684090978</span><span class="p">,</span>
+        <span class="n">BRAND_DA1A</span> <span class="o">=</span> <span class="mi">1684091233</span><span class="p">,</span>
+        <span class="n">BRAND_DA1B</span> <span class="o">=</span> <span class="mi">1684091234</span><span class="p">,</span>
+        <span class="n">BRAND_DA2A</span> <span class="o">=</span> <span class="mi">1684091489</span><span class="p">,</span>
+        <span class="n">BRAND_DA2B</span> <span class="o">=</span> <span class="mi">1684091490</span><span class="p">,</span>
+        <span class="n">BRAND_DA3A</span> <span class="o">=</span> <span class="mi">1684091745</span><span class="p">,</span>
+        <span class="n">BRAND_DA3B</span> <span class="o">=</span> <span class="mi">1684091746</span><span class="p">,</span>
+        <span class="n">BRAND_DASH</span> <span class="o">=</span> <span class="mi">1684108136</span><span class="p">,</span>
+        <span class="n">BRAND_DBY1</span> <span class="o">=</span> <span class="mi">1684175153</span><span class="p">,</span>
+        <span class="n">BRAND_DMB1</span> <span class="o">=</span> <span class="mi">1684890161</span><span class="p">,</span>
+        <span class="n">BRAND_DSMS</span> <span class="o">=</span> <span class="mi">1685286259</span><span class="p">,</span>
+        <span class="n">BRAND_DV1A</span> <span class="o">=</span> <span class="mi">1685467489</span><span class="p">,</span>
+        <span class="n">BRAND_DV1B</span> <span class="o">=</span> <span class="mi">1685467490</span><span class="p">,</span>
+        <span class="n">BRAND_DV2A</span> <span class="o">=</span> <span class="mi">1685467745</span><span class="p">,</span>
+        <span class="n">BRAND_DV2B</span> <span class="o">=</span> <span class="mi">1685467746</span><span class="p">,</span>
+        <span class="n">BRAND_DV3A</span> <span class="o">=</span> <span class="mi">1685468001</span><span class="p">,</span>
+        <span class="n">BRAND_DV3B</span> <span class="o">=</span> <span class="mi">1685468002</span><span class="p">,</span>
+        <span class="n">BRAND_DVR1</span> <span class="o">=</span> <span class="mi">1685484081</span><span class="p">,</span>
+        <span class="n">BRAND_DVT1</span> <span class="o">=</span> <span class="mi">1685484593</span><span class="p">,</span>
+        <span class="n">BRAND_DXO</span> <span class="o">=</span> <span class="mi">1685614368</span><span class="p">,</span>
+        <span class="n">BRAND_EMSG</span> <span class="o">=</span> <span class="mi">1701671783</span><span class="p">,</span>
+        <span class="n">BRAND_IFRM</span> <span class="o">=</span> <span class="mi">1768321645</span><span class="p">,</span>
+        <span class="n">BRAND_ISC2</span> <span class="o">=</span> <span class="mi">1769169714</span><span class="p">,</span>
+        <span class="n">BRAND_ISO2</span> <span class="o">=</span> <span class="mi">1769172786</span><span class="p">,</span>
+        <span class="n">BRAND_ISO3</span> <span class="o">=</span> <span class="mi">1769172787</span><span class="p">,</span>
+        <span class="n">BRAND_ISO4</span> <span class="o">=</span> <span class="mi">1769172788</span><span class="p">,</span>
+        <span class="n">BRAND_ISO5</span> <span class="o">=</span> <span class="mi">1769172789</span><span class="p">,</span>
+        <span class="n">BRAND_ISO6</span> <span class="o">=</span> <span class="mi">1769172790</span><span class="p">,</span>
+        <span class="n">BRAND_ISOM</span> <span class="o">=</span> <span class="mi">1769172845</span><span class="p">,</span>
+        <span class="n">BRAND_JP2</span> <span class="o">=</span> <span class="mi">1785737760</span><span class="p">,</span>
+        <span class="n">BRAND_JPM</span> <span class="o">=</span> <span class="mi">1785752864</span><span class="p">,</span>
+        <span class="n">BRAND_JPSI</span> <span class="o">=</span> <span class="mi">1785754473</span><span class="p">,</span>
+        <span class="n">BRAND_JPX</span> <span class="o">=</span> <span class="mi">1785755680</span><span class="p">,</span>
+        <span class="n">BRAND_JPXB</span> <span class="o">=</span> <span class="mi">1785755746</span><span class="p">,</span>
+        <span class="n">BRAND_LMSG</span> <span class="o">=</span> <span class="mi">1819112295</span><span class="p">,</span>
+        <span class="n">BRAND_MJ2S</span> <span class="o">=</span> <span class="mi">1835676275</span><span class="p">,</span>
+        <span class="n">BRAND_MJP2</span> <span class="o">=</span> <span class="mi">1835692082</span><span class="p">,</span>
+        <span class="n">BRAND_MP21</span> <span class="o">=</span> <span class="mi">1836069425</span><span class="p">,</span>
+        <span class="n">BRAND_MP41</span> <span class="o">=</span> <span class="mi">1836069937</span><span class="p">,</span>
+        <span class="n">BRAND_MP42</span> <span class="o">=</span> <span class="mi">1836069938</span><span class="p">,</span>
+        <span class="n">BRAND_MP71</span> <span class="o">=</span> <span class="mi">1836070705</span><span class="p">,</span>
+        <span class="n">BRAND_MSDH</span> <span class="o">=</span> <span class="mi">1836278888</span><span class="p">,</span>
+        <span class="n">BRAND_MSIX</span> <span class="o">=</span> <span class="mi">1836280184</span><span class="p">,</span>
+        <span class="n">BRAND_NIKO</span> <span class="o">=</span> <span class="mi">1852402543</span><span class="p">,</span>
+        <span class="n">BRAND_ODCF</span> <span class="o">=</span> <span class="mi">1868850022</span><span class="p">,</span>
+        <span class="n">BRAND_OPF2</span> <span class="o">=</span> <span class="mi">1869637170</span><span class="p">,</span>
+        <span class="n">BRAND_OPX2</span> <span class="o">=</span> <span class="mi">1869641778</span><span class="p">,</span>
+        <span class="n">BRAND_PANA</span> <span class="o">=</span> <span class="mi">1885433441</span><span class="p">,</span>
+        <span class="n">BRAND_PIFF</span> <span class="o">=</span> <span class="mi">1885955686</span><span class="p">,</span>
+        <span class="n">BRAND_PNVI</span> <span class="o">=</span> <span class="mi">1886287465</span><span class="p">,</span>
+        <span class="n">BRAND_QT</span> <span class="o">=</span> <span class="mi">1903435808</span><span class="p">,</span>
+        <span class="n">BRAND_RISX</span> <span class="o">=</span> <span class="mi">1919513464</span><span class="p">,</span>
+        <span class="n">BRAND_SDV</span> <span class="o">=</span> <span class="mi">1935963680</span><span class="p">,</span>
+        <span class="n">BRAND_SENV</span> <span class="o">=</span> <span class="mi">1936027254</span><span class="p">,</span>
+        <span class="n">BRAND_SIMS</span> <span class="o">=</span> <span class="mi">1936289139</span><span class="p">,</span>
+        <span class="n">BRAND_SISX</span> <span class="o">=</span> <span class="mi">1936290680</span><span class="p">,</span>
+        <span class="n">BRAND_SSSS</span> <span class="o">=</span> <span class="mi">1936946035</span><span class="p">,</span>
+        <span class="n">BRAND_UVVU</span> <span class="o">=</span> <span class="mi">1970697845</span>
+    <span class="p">};</span>
+
+    <span class="n">quicktime_mov_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="o">~</span><span class="n">quicktime_mov_t</span><span class="p">();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">mvhd_body_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">mvhd_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">mvhd_body_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_version</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_flags</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_creation_time</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_modification_time</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_time_scale</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_duration</span><span class="p">;</span>
+        <span class="n">fixed32_t</span><span class="o">*</span> <span class="n">m_preferred_rate</span><span class="p">;</span>
+        <span class="n">fixed16_t</span><span class="o">*</span> <span class="n">m_preferred_volume</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_reserved1</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_matrix</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_preview_time</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_preview_duration</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_poster_time</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_selection_time</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_selection_duration</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_current_time</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_next_track_id</span><span class="p">;</span>
+        <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Version of this movie header atom</span>
+<span class="cm">         */</span>
+        <span class="kt">uint8_t</span> <span class="n">version</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_version</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">creation_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_creation_time</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">modification_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_modification_time</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * A time value that indicates the time scale for this</span>
+<span class="cm">         * movie—that is, the number of time units that pass per second</span>
+<span class="cm">         * in its time coordinate system. A time coordinate system that</span>
+<span class="cm">         * measures time in sixtieths of a second, for example, has a</span>
+<span class="cm">         * time scale of 60.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">time_scale</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_time_scale</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * A time value that indicates the duration of the movie in</span>
+<span class="cm">         * time scale units. Note that this property is derived from</span>
+<span class="cm">         * the movie’s tracks. The value of this field corresponds to</span>
+<span class="cm">         * the duration of the longest track in the movie.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">duration</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_duration</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The rate at which to play this movie. A value of 1.0 indicates normal rate.</span>
+<span class="cm">         */</span>
+        <span class="n">fixed32_t</span><span class="o">*</span> <span class="n">preferred_rate</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_preferred_rate</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * How loud to play this movie’s sound. A value of 1.0 indicates full volume.</span>
+<span class="cm">         */</span>
+        <span class="n">fixed16_t</span><span class="o">*</span> <span class="n">preferred_volume</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_preferred_volume</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reserved1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved1</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * A matrix shows how to map points from one coordinate space into another.</span>
+<span class="cm">         */</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">matrix</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_matrix</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The time value in the movie at which the preview begins.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">preview_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_preview_time</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The duration of the movie preview in movie time scale units.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">preview_duration</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_preview_duration</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The time value of the time of the movie poster.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">poster_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_poster_time</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The time value for the start time of the current selection.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">selection_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_selection_time</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The duration of the current selection in movie time scale units.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">selection_duration</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_selection_duration</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The time value for current time position within the movie.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">current_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_current_time</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Indicates a value to use for the track ID number of the next</span>
+<span class="cm">         * track added to this movie. Note that 0 is not a valid track</span>
+<span class="cm">         * ID value.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">next_track_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_next_track_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">ftyp_body_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">ftyp_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">ftyp_body_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">brand_t</span> <span class="n">m_major_brand</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_minor_version</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">brand_t</span><span class="o">&gt;*</span> <span class="n">m_compatible_brands</span><span class="p">;</span>
+        <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">brand_t</span> <span class="n">major_brand</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_major_brand</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">minor_version</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_minor_version</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">brand_t</span><span class="o">&gt;*</span> <span class="n">compatible_brands</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_compatible_brands</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Fixed-point 32-bit number.</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">fixed32_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">fixed32_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">fixed32_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">int16_t</span> <span class="n">m_int_part</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_frac_part</span><span class="p">;</span>
+        <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int16_t</span> <span class="n">int_part</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_int_part</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">frac_part</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_frac_part</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Fixed-point 16-bit number.</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">fixed16_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">fixed16_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">mvhd_body_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">fixed16_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">int8_t</span> <span class="n">m_int_part</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_frac_part</span><span class="p">;</span>
+        <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">mvhd_body_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int8_t</span> <span class="n">int_part</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_int_part</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint8_t</span> <span class="n">frac_part</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_frac_part</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">mvhd_body_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">atom_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">atom_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_list_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">atom_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_len</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_len</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">len</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">m_len32</span><span class="p">;</span>
+        <span class="n">atom_type_t</span> <span class="n">m_atom_type</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_len64</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_len64</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_len64</span><span class="p">()</span> <span class="p">{</span> <span class="n">len64</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_len64</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m_body</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_body</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_body</span><span class="p">()</span> <span class="p">{</span> <span class="n">body</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_body</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_list_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_body</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_body</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint32_t</span> <span class="n">len32</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len32</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">atom_type_t</span> <span class="n">atom_type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_atom_type</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">len64</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_len64</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_list_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_body</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * \sa Source</span>
+<span class="cm">     */</span>
+
+    <span class="k">class</span> <span class="nc">tkhd_body_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">tkhd_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">tkhd_body_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">m_version</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_flags</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_creation_time</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_modification_time</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_track_id</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_reserved1</span><span class="p">;</span>
+        <span class="kt">uint32_t</span> <span class="n">m_duration</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_reserved2</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_layer</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_alternative_group</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_volume</span><span class="p">;</span>
+        <span class="kt">uint16_t</span> <span class="n">m_reserved3</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_matrix</span><span class="p">;</span>
+        <span class="n">fixed32_t</span><span class="o">*</span> <span class="n">m_width</span><span class="p">;</span>
+        <span class="n">fixed32_t</span><span class="o">*</span> <span class="n">m_height</span><span class="p">;</span>
+        <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">version</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_version</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">flags</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_flags</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">creation_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_creation_time</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">modification_time</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_modification_time</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Integer that uniquely identifies the track. The value 0 cannot be used.</span>
+<span class="cm">         */</span>
+        <span class="kt">uint32_t</span> <span class="n">track_id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_track_id</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reserved1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved1</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint32_t</span> <span class="n">duration</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_duration</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">reserved2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved2</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">layer</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_layer</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">alternative_group</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_alternative_group</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">volume</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_volume</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint16_t</span> <span class="n">reserved3</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_reserved3</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">matrix</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_matrix</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">fixed32_t</span><span class="o">*</span> <span class="n">width</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_width</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">fixed32_t</span><span class="o">*</span> <span class="n">height</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_height</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="k">class</span> <span class="nc">atom_list_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="n">atom_list_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="o">~</span><span class="n">atom_list_t</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">atom_t</span><span class="o">*&gt;*</span> <span class="n">m_items</span><span class="p">;</span>
+        <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">atom_t</span><span class="o">*&gt;*</span> <span class="n">items</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_items</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">atom_list_t</span><span class="o">*</span> <span class="n">m_atoms</span><span class="p">;</span>
+    <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">atom_list_t</span><span class="o">*</span> <span class="n">atoms</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_atoms</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cp">#endif  </span><span class="c1">// QUICKTIME_MOV_H_</span>
+</pre></div>
 
         </div>
         
@@ -820,279 +817,279 @@ public:
         </div>
 
         <div class="row">
-            <pre><code class="cpp_stl">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-#include &quot;quicktime_mov.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;quicktime_mov.h&quot;</span><span class="cp"></span>
 
 
 
-quicktime_mov_t::quicktime_mov_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, quicktime_mov_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = this;
-    _read();
-}
+<span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">quicktime_mov_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void quicktime_mov_t::_read() {
-    m_atoms = new atom_list_t(m__io, this, m__root);
-}
+<span class="kt">void</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_atoms</span> <span class="o">=</span> <span class="k">new</span> <span class="n">atom_list_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+<span class="p">}</span>
 
-quicktime_mov_t::~quicktime_mov_t() {
-    delete m_atoms;
-}
+<span class="n">quicktime_mov_t</span><span class="o">::~</span><span class="n">quicktime_mov_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_atoms</span><span class="p">;</span>
+<span class="p">}</span>
 
-quicktime_mov_t::mvhd_body_t::mvhd_body_t(kaitai::kstream* p__io, quicktime_mov_t::atom_t* p__parent, quicktime_mov_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">mvhd_body_t</span><span class="o">::</span><span class="n">mvhd_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void quicktime_mov_t::mvhd_body_t::_read() {
-    m_version = m__io-&gt;read_u1();
-    m_flags = m__io-&gt;read_bytes(3);
-    m_creation_time = m__io-&gt;read_u4be();
-    m_modification_time = m__io-&gt;read_u4be();
-    m_time_scale = m__io-&gt;read_u4be();
-    m_duration = m__io-&gt;read_u4be();
-    m_preferred_rate = new fixed32_t(m__io, this, m__root);
-    m_preferred_volume = new fixed16_t(m__io, this, m__root);
-    m_reserved1 = m__io-&gt;read_bytes(10);
-    m_matrix = m__io-&gt;read_bytes(36);
-    m_preview_time = m__io-&gt;read_u4be();
-    m_preview_duration = m__io-&gt;read_u4be();
-    m_poster_time = m__io-&gt;read_u4be();
-    m_selection_time = m__io-&gt;read_u4be();
-    m_selection_duration = m__io-&gt;read_u4be();
-    m_current_time = m__io-&gt;read_u4be();
-    m_next_track_id = m__io-&gt;read_u4be();
-}
+<span class="kt">void</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">mvhd_body_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_version</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+    <span class="n">m_creation_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_modification_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_time_scale</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_duration</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_preferred_rate</span> <span class="o">=</span> <span class="k">new</span> <span class="n">fixed32_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_preferred_volume</span> <span class="o">=</span> <span class="k">new</span> <span class="n">fixed16_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_reserved1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+    <span class="n">m_matrix</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">36</span><span class="p">);</span>
+    <span class="n">m_preview_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_preview_duration</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_poster_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_selection_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_selection_duration</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_current_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_next_track_id</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+<span class="p">}</span>
 
-quicktime_mov_t::mvhd_body_t::~mvhd_body_t() {
-    delete m_preferred_rate;
-    delete m_preferred_volume;
-}
+<span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">mvhd_body_t</span><span class="o">::~</span><span class="n">mvhd_body_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_preferred_rate</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_preferred_volume</span><span class="p">;</span>
+<span class="p">}</span>
 
-quicktime_mov_t::ftyp_body_t::ftyp_body_t(kaitai::kstream* p__io, quicktime_mov_t::atom_t* p__parent, quicktime_mov_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">ftyp_body_t</span><span class="o">::</span><span class="n">ftyp_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void quicktime_mov_t::ftyp_body_t::_read() {
-    m_major_brand = static_cast&lt;quicktime_mov_t::brand_t&gt;(m__io-&gt;read_u4be());
-    m_minor_version = m__io-&gt;read_bytes(4);
-    m_compatible_brands = new std::vector&lt;brand_t&gt;();
-    {
-        int i = 0;
-        while (!m__io-&gt;is_eof()) {
-            m_compatible_brands-&gt;push_back(static_cast&lt;quicktime_mov_t::brand_t&gt;(m__io-&gt;read_u4be()));
-            i++;
-        }
-    }
-}
+<span class="kt">void</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">ftyp_body_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_major_brand</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">brand_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">());</span>
+    <span class="n">m_minor_version</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+    <span class="n">m_compatible_brands</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">brand_t</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">m_compatible_brands</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">brand_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">()));</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-quicktime_mov_t::ftyp_body_t::~ftyp_body_t() {
-    delete m_compatible_brands;
-}
+<span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">ftyp_body_t</span><span class="o">::~</span><span class="n">ftyp_body_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_compatible_brands</span><span class="p">;</span>
+<span class="p">}</span>
 
-quicktime_mov_t::fixed32_t::fixed32_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, quicktime_mov_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">fixed32_t</span><span class="o">::</span><span class="n">fixed32_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void quicktime_mov_t::fixed32_t::_read() {
-    m_int_part = m__io-&gt;read_s2be();
-    m_frac_part = m__io-&gt;read_u2be();
-}
+<span class="kt">void</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">fixed32_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_int_part</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s2be</span><span class="p">();</span>
+    <span class="n">m_frac_part</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+<span class="p">}</span>
 
-quicktime_mov_t::fixed32_t::~fixed32_t() {
-}
+<span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">fixed32_t</span><span class="o">::~</span><span class="n">fixed32_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-quicktime_mov_t::fixed16_t::fixed16_t(kaitai::kstream* p__io, quicktime_mov_t::mvhd_body_t* p__parent, quicktime_mov_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">fixed16_t</span><span class="o">::</span><span class="n">fixed16_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">mvhd_body_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void quicktime_mov_t::fixed16_t::_read() {
-    m_int_part = m__io-&gt;read_s1();
-    m_frac_part = m__io-&gt;read_u1();
-}
+<span class="kt">void</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">fixed16_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_int_part</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_s1</span><span class="p">();</span>
+    <span class="n">m_frac_part</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="p">}</span>
 
-quicktime_mov_t::fixed16_t::~fixed16_t() {
-}
+<span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">fixed16_t</span><span class="o">::~</span><span class="n">fixed16_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-quicktime_mov_t::atom_t::atom_t(kaitai::kstream* p__io, quicktime_mov_t::atom_list_t* p__parent, quicktime_mov_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    f_len = false;
-    _read();
-}
+<span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">::</span><span class="n">atom_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_list_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_len</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void quicktime_mov_t::atom_t::_read() {
-    m_len32 = m__io-&gt;read_u4be();
-    m_atom_type = static_cast&lt;quicktime_mov_t::atom_type_t&gt;(m__io-&gt;read_u4be());
-    n_len64 = true;
-    if (len32() == 1) {
-        n_len64 = false;
-        m_len64 = m__io-&gt;read_u8be();
-    }
-    n_body = true;
-    switch (atom_type()) {
-    case ATOM_TYPE_STBL: {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(len());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new atom_list_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    case ATOM_TYPE_MOOF: {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(len());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new atom_list_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    case ATOM_TYPE_MVHD: {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(len());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new mvhd_body_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    case ATOM_TYPE_MINF: {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(len());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new atom_list_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    case ATOM_TYPE_TRAK: {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(len());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new atom_list_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    case ATOM_TYPE_TRAF: {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(len());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new atom_list_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    case ATOM_TYPE_MDIA: {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(len());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new atom_list_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    case ATOM_TYPE_FTYP: {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(len());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new ftyp_body_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    case ATOM_TYPE_MOOV: {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(len());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new atom_list_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    case ATOM_TYPE_TKHD: {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(len());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new tkhd_body_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    case ATOM_TYPE_DINF: {
-        n_body = false;
-        m__raw_body = m__io-&gt;read_bytes(len());
-        m__io__raw_body = new kaitai::kstream(m__raw_body);
-        m_body = new atom_list_t(m__io__raw_body, this, m__root);
-        break;
-    }
-    default: {
-        m__raw_body = m__io-&gt;read_bytes(len());
-        break;
-    }
-    }
-}
+<span class="kt">void</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_len32</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_atom_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">());</span>
+    <span class="n">n_len64</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">len32</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_len64</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_len64</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">n_body</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">atom_type</span><span class="p">())</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nl">ATOM_TYPE_STBL</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">atom_list_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">ATOM_TYPE_MOOF</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">atom_list_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">ATOM_TYPE_MVHD</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">mvhd_body_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">ATOM_TYPE_MINF</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">atom_list_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">ATOM_TYPE_TRAK</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">atom_list_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">ATOM_TYPE_TRAF</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">atom_list_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">ATOM_TYPE_MDIA</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">atom_list_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">ATOM_TYPE_FTYP</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ftyp_body_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">ATOM_TYPE_MOOV</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">atom_list_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">ATOM_TYPE_TKHD</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">tkhd_body_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nl">ATOM_TYPE_DINF</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">atom_list_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">default</span><span class="o">:</span> <span class="p">{</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">());</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-quicktime_mov_t::atom_t::~atom_t() {
-    if (!n_len64) {
-    }
-    if (!n_body) {
-        delete m__io__raw_body;
-        delete m_body;
-    }
-}
+<span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">::~</span><span class="n">atom_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_len64</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_body</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="n">m__io__raw_body</span><span class="p">;</span>
+        <span class="k">delete</span> <span class="n">m_body</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-int32_t quicktime_mov_t::atom_t::len() {
-    if (f_len)
-        return m_len;
-    m_len = ((len32() == 0) ? ((_io()-&gt;size() - 8)) : (((len32() == 1) ? ((len64() - 16)) : ((len32() - 8)))));
-    f_len = true;
-    return m_len;
-}
+<span class="kt">int32_t</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">::</span><span class="n">len</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_len</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_len</span><span class="p">;</span>
+    <span class="n">m_len</span> <span class="o">=</span> <span class="p">((</span><span class="n">len32</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="p">((</span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span> <span class="o">:</span> <span class="p">(((</span><span class="n">len32</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="p">((</span><span class="n">len64</span><span class="p">()</span> <span class="o">-</span> <span class="mi">16</span><span class="p">))</span> <span class="o">:</span> <span class="p">((</span><span class="n">len32</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)))));</span>
+    <span class="n">f_len</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_len</span><span class="p">;</span>
+<span class="p">}</span>
 
-quicktime_mov_t::tkhd_body_t::tkhd_body_t(kaitai::kstream* p__io, quicktime_mov_t::atom_t* p__parent, quicktime_mov_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">tkhd_body_t</span><span class="o">::</span><span class="n">tkhd_body_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void quicktime_mov_t::tkhd_body_t::_read() {
-    m_version = m__io-&gt;read_u1();
-    m_flags = m__io-&gt;read_bytes(3);
-    m_creation_time = m__io-&gt;read_u4be();
-    m_modification_time = m__io-&gt;read_u4be();
-    m_track_id = m__io-&gt;read_u4be();
-    m_reserved1 = m__io-&gt;read_bytes(4);
-    m_duration = m__io-&gt;read_u4be();
-    m_reserved2 = m__io-&gt;read_bytes(8);
-    m_layer = m__io-&gt;read_u2be();
-    m_alternative_group = m__io-&gt;read_u2be();
-    m_volume = m__io-&gt;read_u2be();
-    m_reserved3 = m__io-&gt;read_u2be();
-    m_matrix = m__io-&gt;read_bytes(36);
-    m_width = new fixed32_t(m__io, this, m__root);
-    m_height = new fixed32_t(m__io, this, m__root);
-}
+<span class="kt">void</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">tkhd_body_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_version</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m_flags</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+    <span class="n">m_creation_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_modification_time</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_track_id</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_reserved1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+    <span class="n">m_duration</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">m_reserved2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+    <span class="n">m_layer</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">m_alternative_group</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">m_volume</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">m_reserved3</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">m_matrix</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">36</span><span class="p">);</span>
+    <span class="n">m_width</span> <span class="o">=</span> <span class="k">new</span> <span class="n">fixed32_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+    <span class="n">m_height</span> <span class="o">=</span> <span class="k">new</span> <span class="n">fixed32_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+<span class="p">}</span>
 
-quicktime_mov_t::tkhd_body_t::~tkhd_body_t() {
-    delete m_width;
-    delete m_height;
-}
+<span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">tkhd_body_t</span><span class="o">::~</span><span class="n">tkhd_body_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">m_width</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">m_height</span><span class="p">;</span>
+<span class="p">}</span>
 
-quicktime_mov_t::atom_list_t::atom_list_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, quicktime_mov_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
+<span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_list_t</span><span class="o">::</span><span class="n">atom_list_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">quicktime_mov_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">_read</span><span class="p">();</span>
+<span class="p">}</span>
 
-void quicktime_mov_t::atom_list_t::_read() {
-    m_items = new std::vector&lt;atom_t*&gt;();
-    {
-        int i = 0;
-        while (!m__io-&gt;is_eof()) {
-            m_items-&gt;push_back(new atom_t(m__io, this, m__root));
-            i++;
-        }
-    }
-}
+<span class="kt">void</span> <span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_list_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_items</span> <span class="o">=</span> <span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">atom_t</span><span class="o">*&gt;</span><span class="p">();</span>
+    <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="n">m_items</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">atom_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+            <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-quicktime_mov_t::atom_list_t::~atom_list_t() {
-    for (std::vector&lt;atom_t*&gt;::iterator it = m_items-&gt;begin(); it != m_items-&gt;end(); ++it) {
-        delete *it;
-    }
-    delete m_items;
-}
-</code></pre>
+<span class="n">quicktime_mov_t</span><span class="o">::</span><span class="n">atom_list_t</span><span class="o">::~</span><span class="n">atom_list_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">atom_t</span><span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">it</span> <span class="o">=</span> <span class="n">m_items</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">m_items</span><span class="o">-&gt;</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">delete</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">delete</span> <span class="n">m_items</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1119,8 +1116,8 @@ quicktime_mov_t::atom_list_t::~atom_list_t() {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

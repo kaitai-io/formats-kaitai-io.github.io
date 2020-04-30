@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -245,145 +242,145 @@ in-file dumps adopted the same format for encapsulation purposes.</p>
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
 
-/**
- * Ethernet frame is a OSI data link layer (layer 2) protocol data unit
- * for Ethernet networks. In practice, many other networks and/or
- * in-file dumps adopted the same format for encapsulation purposes.
- */
+<span class="sd">/**</span>
+<span class="sd"> * Ethernet frame is a OSI data link layer (layer 2) protocol data unit</span>
+<span class="sd"> * for Ethernet networks. In practice, many other networks and/or</span>
+<span class="sd"> * in-file dumps adopted the same format for encapsulation purposes.</span>
+<span class="sd"> */</span>
 
-class EthernetFrame extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \EthernetFrame $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">EthernetFrame</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\EthernetFrame</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_dstMac = $this-&gt;_io-&gt;readBytes(6);
-        $this-&gt;_m_srcMac = $this-&gt;_io-&gt;readBytes(6);
-        $this-&gt;_m_etherType1 = $this-&gt;_io-&gt;readU2be();
-        if ($this-&gt;etherType1() == \EthernetFrame\EtherTypeEnum::IEEE_802_1Q_TPID) {
-            $this-&gt;_m_tci = new \EthernetFrame\TagControlInfo($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        if ($this-&gt;etherType1() == \EthernetFrame\EtherTypeEnum::IEEE_802_1Q_TPID) {
-            $this-&gt;_m_etherType2 = $this-&gt;_io-&gt;readU2be();
-        }
-        switch ($this-&gt;etherType()) {
-            case \EthernetFrame\EtherTypeEnum::IPV4:
-                $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytesFull();
-                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \Ipv4Packet($io);
-                break;
-            case \EthernetFrame\EtherTypeEnum::IPV6:
-                $this-&gt;_m__raw_body = $this-&gt;_io-&gt;readBytesFull();
-                $io = new \Kaitai\Struct\Stream($this-&gt;_m__raw_body);
-                $this-&gt;_m_body = new \Ipv6Packet($io);
-                break;
-            default:
-                $this-&gt;_m_body = $this-&gt;_io-&gt;readBytesFull();
-                break;
-        }
-    }
-    protected $_m_etherType;
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dstMac</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_srcMac</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_etherType1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">etherType1</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\EthernetFrame\EtherTypeEnum</span><span class="o">::</span><span class="na">IEEE_802_1Q_TPID</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tci</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\EthernetFrame\TagControlInfo</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">etherType1</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\EthernetFrame\EtherTypeEnum</span><span class="o">::</span><span class="na">IEEE_802_1Q_TPID</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_etherType2</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">etherType</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="nx">\EthernetFrame\EtherTypeEnum</span><span class="o">::</span><span class="na">IPV4</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Ipv4Packet</span><span class="p">(</span><span class="nv">$io</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">\EthernetFrame\EtherTypeEnum</span><span class="o">::</span><span class="na">IPV6</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Ipv6Packet</span><span class="p">(</span><span class="nv">$io</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">default</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_etherType</span><span class="p">;</span>
 
-    /**
-     * Ether type can be specied in several places in the frame. If
-     * first location bears special marker (0x8100), then it is not the
-     * real ether frame yet, an additional payload (`tci`) is expected
-     * and real ether type is upcoming next.
-     */
-    public function etherType() {
-        if ($this-&gt;_m_etherType !== null)
-            return $this-&gt;_m_etherType;
-        $this-&gt;_m_etherType = ($this-&gt;etherType1() == \EthernetFrame\EtherTypeEnum::IEEE_802_1Q_TPID ? $this-&gt;etherType2() : $this-&gt;etherType1());
-        return $this-&gt;_m_etherType;
-    }
-    protected $_m_dstMac;
-    protected $_m_srcMac;
-    protected $_m_etherType1;
-    protected $_m_tci;
-    protected $_m_etherType2;
-    protected $_m_body;
-    protected $_m__raw_body;
+    <span class="sd">/**</span>
+<span class="sd">     * Ether type can be specied in several places in the frame. If</span>
+<span class="sd">     * first location bears special marker (0x8100), then it is not the</span>
+<span class="sd">     * real ether frame yet, an additional payload (`tci`) is expected</span>
+<span class="sd">     * and real ether type is upcoming next.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">etherType</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_etherType</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_etherType</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_etherType</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">etherType1</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\EthernetFrame\EtherTypeEnum</span><span class="o">::</span><span class="na">IEEE_802_1Q_TPID</span> <span class="o">?</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">etherType2</span><span class="p">()</span> <span class="o">:</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">etherType1</span><span class="p">());</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_etherType</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_dstMac</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_srcMac</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_etherType1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_tci</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_etherType2</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_body</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m__raw_body</span><span class="p">;</span>
 
-    /**
-     * Destination MAC address
-     */
-    public function dstMac() { return $this-&gt;_m_dstMac; }
+    <span class="sd">/**</span>
+<span class="sd">     * Destination MAC address</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">dstMac</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dstMac</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Source MAC address
-     */
-    public function srcMac() { return $this-&gt;_m_srcMac; }
+    <span class="sd">/**</span>
+<span class="sd">     * Source MAC address</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">srcMac</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_srcMac</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Either ether type or TPID if it is a IEEE 802.1Q frame
-     */
-    public function etherType1() { return $this-&gt;_m_etherType1; }
-    public function tci() { return $this-&gt;_m_tci; }
-    public function etherType2() { return $this-&gt;_m_etherType2; }
-    public function body() { return $this-&gt;_m_body; }
-    public function _raw_body() { return $this-&gt;_m__raw_body; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * Either ether type or TPID if it is a IEEE 802.1Q frame</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">etherType1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_etherType1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">tci</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tci</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">etherType2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_etherType2</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">_raw_body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-/**
- * Tag Control Information (TCI) is an extension of IEEE 802.1Q to
- * support VLANs on normal IEEE 802.3 Ethernet network.
- */
+<span class="sd">/**</span>
+<span class="sd"> * Tag Control Information (TCI) is an extension of IEEE 802.1Q to</span>
+<span class="sd"> * support VLANs on normal IEEE 802.3 Ethernet network.</span>
+<span class="sd"> */</span>
 
-namespace \EthernetFrame;
+<span class="k">namespace</span> <span class="nx">\EthernetFrame</span><span class="p">;</span>
 
-class TagControlInfo extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \EthernetFrame $_parent = null, \EthernetFrame $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
+<span class="k">class</span> <span class="nc">TagControlInfo</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\EthernetFrame</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\EthernetFrame</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    private function _read() {
-        $this-&gt;_m_priority = $this-&gt;_io-&gt;readBitsInt(3);
-        $this-&gt;_m_dropEligible = $this-&gt;_io-&gt;readBitsInt(1) != 0;
-        $this-&gt;_m_vlanId = $this-&gt;_io-&gt;readBitsInt(12);
-    }
-    protected $_m_priority;
-    protected $_m_dropEligible;
-    protected $_m_vlanId;
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_priority</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dropEligible</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_vlanId</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBitsInt</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_priority</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_dropEligible</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_vlanId</span><span class="p">;</span>
 
-    /**
-     * Priority Code Point (PCP) is used to specify priority for
-     * different kinds of traffic.
-     */
-    public function priority() { return $this-&gt;_m_priority; }
+    <span class="sd">/**</span>
+<span class="sd">     * Priority Code Point (PCP) is used to specify priority for</span>
+<span class="sd">     * different kinds of traffic.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">priority</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_priority</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * Drop Eligible Indicator (DEI) specifies if frame is eligible
-     * to dropping while congestion is detected for certain classes
-     * of traffic.
-     */
-    public function dropEligible() { return $this-&gt;_m_dropEligible; }
+    <span class="sd">/**</span>
+<span class="sd">     * Drop Eligible Indicator (DEI) specifies if frame is eligible</span>
+<span class="sd">     * to dropping while congestion is detected for certain classes</span>
+<span class="sd">     * of traffic.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">dropEligible</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dropEligible</span><span class="p">;</span> <span class="p">}</span>
 
-    /**
-     * VLAN Identifier (VID) specifies which VLAN this frame
-     * belongs to.
-     */
-    public function vlanId() { return $this-&gt;_m_vlanId; }
-}
+    <span class="sd">/**</span>
+<span class="sd">     * VLAN Identifier (VID) specifies which VLAN this frame</span>
+<span class="sd">     * belongs to.</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">vlanId</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_vlanId</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
 
-namespace \EthernetFrame;
+<span class="k">namespace</span> <span class="nx">\EthernetFrame</span><span class="p">;</span>
 
-class EtherTypeEnum {
-    const IPV4 = 2048;
-    const X_75_INTERNET = 2049;
-    const NBS_INTERNET = 2050;
-    const ECMA_INTERNET = 2051;
-    const CHAOSNET = 2052;
-    const X_25_LEVEL_3 = 2053;
-    const ARP = 2054;
-    const IEEE_802_1Q_TPID = 33024;
-    const IPV6 = 34525;
-}
-</code></pre>
+<span class="k">class</span> <span class="nc">EtherTypeEnum</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">IPV4</span> <span class="o">=</span> <span class="mi">2048</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">X_75_INTERNET</span> <span class="o">=</span> <span class="mi">2049</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">NBS_INTERNET</span> <span class="o">=</span> <span class="mi">2050</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ECMA_INTERNET</span> <span class="o">=</span> <span class="mi">2051</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">CHAOSNET</span> <span class="o">=</span> <span class="mi">2052</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">X_25_LEVEL_3</span> <span class="o">=</span> <span class="mi">2053</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">ARP</span> <span class="o">=</span> <span class="mi">2054</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">IEEE_802_1Q_TPID</span> <span class="o">=</span> <span class="mi">33024</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">IPV6</span> <span class="o">=</span> <span class="mi">34525</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -410,8 +407,8 @@ class EtherTypeEnum {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

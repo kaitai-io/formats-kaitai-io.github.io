@@ -9,15 +9,14 @@
   <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
   <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
-  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/bootstrap-theme.min.css">
   <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-
-  <link rel="stylesheet" href="//kaitai.io/styles/highlight/default.css">
+  <link rel="stylesheet" href="https://kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -47,8 +46,6 @@ section#format-index .row {
 }
 
   </style>
-  <script src="//kaitai.io/js/highlight.pack.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body data-spy="scroll" data-target="#main-navbar" data-offset="100">
 
@@ -221,774 +218,774 @@ section#format-index .row {
         </div>
 
         <div class="row">
-            <pre><code class="php">&lt;?php
-// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
-
-class ShapefileMain extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_header = new \ShapefileMain\FileHeader($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_records = [];
-        $i = 0;
-        while (!$this-&gt;_io-&gt;isEof()) {
-            $this-&gt;_m_records[] = new \ShapefileMain\Record($this-&gt;_io, $this, $this-&gt;_root);
-            $i++;
-        }
-    }
-    protected $_m_header;
-    protected $_m_records;
-    public function header() { return $this-&gt;_m_header; }
-
-    /**
-     * the size of this section of the file in bytes must equal (header.file_length * 2) - 100
-     */
-    public function records() { return $this-&gt;_m_records; }
-}
-
-namespace \ShapefileMain;
-
-class MultiPointM extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_boundingBox = new \ShapefileMain\BoundingBoxXY($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_numberOfPoints = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_points = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_points[] = new \ShapefileMain\Point($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        $this-&gt;_m_mRange = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_mValues = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_mValues[] = $this-&gt;_io-&gt;readF8le();
-        }
-    }
-    protected $_m_boundingBox;
-    protected $_m_numberOfPoints;
-    protected $_m_points;
-    protected $_m_mRange;
-    protected $_m_mValues;
-    public function boundingBox() { return $this-&gt;_m_boundingBox; }
-    public function numberOfPoints() { return $this-&gt;_m_numberOfPoints; }
-    public function points() { return $this-&gt;_m_points; }
-    public function mRange() { return $this-&gt;_m_mRange; }
-    public function mValues() { return $this-&gt;_m_mValues; }
-}
-
-namespace \ShapefileMain;
-
-class BoundingBoxXYZM extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\FileHeader $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_x = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_y = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_z = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_m = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-    }
-    protected $_m_x;
-    protected $_m_y;
-    protected $_m_z;
-    protected $_m_m;
-    public function x() { return $this-&gt;_m_x; }
-    public function y() { return $this-&gt;_m_y; }
-    public function z() { return $this-&gt;_m_z; }
-    public function m() { return $this-&gt;_m_m; }
-}
-
-namespace \ShapefileMain;
-
-class Point extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_x = $this-&gt;_io-&gt;readF8le();
-        $this-&gt;_m_y = $this-&gt;_io-&gt;readF8le();
-    }
-    protected $_m_x;
-    protected $_m_y;
-    public function x() { return $this-&gt;_m_x; }
-    public function y() { return $this-&gt;_m_y; }
-}
-
-namespace \ShapefileMain;
-
-class Polygon extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_boundingBox = new \ShapefileMain\BoundingBoxXY($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_numberOfParts = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_numberOfPoints = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_parts = [];
-        $n = $this-&gt;numberOfParts();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_parts[] = $this-&gt;_io-&gt;readS4le();
-        }
-        $this-&gt;_m_points = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_points[] = new \ShapefileMain\Point($this-&gt;_io, $this, $this-&gt;_root);
-        }
-    }
-    protected $_m_boundingBox;
-    protected $_m_numberOfParts;
-    protected $_m_numberOfPoints;
-    protected $_m_parts;
-    protected $_m_points;
-    public function boundingBox() { return $this-&gt;_m_boundingBox; }
-    public function numberOfParts() { return $this-&gt;_m_numberOfParts; }
-    public function numberOfPoints() { return $this-&gt;_m_numberOfPoints; }
-    public function parts() { return $this-&gt;_m_parts; }
-    public function points() { return $this-&gt;_m_points; }
-}
-
-namespace \ShapefileMain;
-
-class BoundsMinMax extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_min = $this-&gt;_io-&gt;readF8le();
-        $this-&gt;_m_max = $this-&gt;_io-&gt;readF8le();
-    }
-    protected $_m_min;
-    protected $_m_max;
-    public function min() { return $this-&gt;_m_min; }
-    public function max() { return $this-&gt;_m_max; }
-}
-
-namespace \ShapefileMain;
-
-class PolyLine extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_boundingBox = new \ShapefileMain\BoundingBoxXY($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_numberOfParts = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_numberOfPoints = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_parts = [];
-        $n = $this-&gt;numberOfParts();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_parts[] = $this-&gt;_io-&gt;readS4le();
-        }
-        $this-&gt;_m_points = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_points[] = new \ShapefileMain\Point($this-&gt;_io, $this, $this-&gt;_root);
-        }
-    }
-    protected $_m_boundingBox;
-    protected $_m_numberOfParts;
-    protected $_m_numberOfPoints;
-    protected $_m_parts;
-    protected $_m_points;
-    public function boundingBox() { return $this-&gt;_m_boundingBox; }
-    public function numberOfParts() { return $this-&gt;_m_numberOfParts; }
-    public function numberOfPoints() { return $this-&gt;_m_numberOfPoints; }
-    public function parts() { return $this-&gt;_m_parts; }
-    public function points() { return $this-&gt;_m_points; }
-}
-
-namespace \ShapefileMain;
-
-class MultiPointZ extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_boundingBox = new \ShapefileMain\BoundingBoxXY($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_numberOfPoints = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_points = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_points[] = new \ShapefileMain\Point($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        $this-&gt;_m_zRange = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_zValues = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_zValues[] = $this-&gt;_io-&gt;readF8le();
-        }
-        $this-&gt;_m_mRange = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_mValues = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_mValues[] = $this-&gt;_io-&gt;readF8le();
-        }
-    }
-    protected $_m_boundingBox;
-    protected $_m_numberOfPoints;
-    protected $_m_points;
-    protected $_m_zRange;
-    protected $_m_zValues;
-    protected $_m_mRange;
-    protected $_m_mValues;
-    public function boundingBox() { return $this-&gt;_m_boundingBox; }
-    public function numberOfPoints() { return $this-&gt;_m_numberOfPoints; }
-    public function points() { return $this-&gt;_m_points; }
-    public function zRange() { return $this-&gt;_m_zRange; }
-    public function zValues() { return $this-&gt;_m_zValues; }
-    public function mRange() { return $this-&gt;_m_mRange; }
-    public function mValues() { return $this-&gt;_m_mValues; }
-}
-
-namespace \ShapefileMain;
-
-class PolyLineZ extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_boundingBox = new \ShapefileMain\BoundingBoxXY($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_numberOfParts = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_numberOfPoints = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_parts = [];
-        $n = $this-&gt;numberOfParts();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_parts[] = $this-&gt;_io-&gt;readS4le();
-        }
-        $this-&gt;_m_points = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_points[] = new \ShapefileMain\Point($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        $this-&gt;_m_zRange = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_zValues = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_zValues[] = $this-&gt;_io-&gt;readF8le();
-        }
-        $this-&gt;_m_mRange = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_mValues = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_mValues[] = $this-&gt;_io-&gt;readF8le();
-        }
-    }
-    protected $_m_boundingBox;
-    protected $_m_numberOfParts;
-    protected $_m_numberOfPoints;
-    protected $_m_parts;
-    protected $_m_points;
-    protected $_m_zRange;
-    protected $_m_zValues;
-    protected $_m_mRange;
-    protected $_m_mValues;
-    public function boundingBox() { return $this-&gt;_m_boundingBox; }
-    public function numberOfParts() { return $this-&gt;_m_numberOfParts; }
-    public function numberOfPoints() { return $this-&gt;_m_numberOfPoints; }
-    public function parts() { return $this-&gt;_m_parts; }
-    public function points() { return $this-&gt;_m_points; }
-    public function zRange() { return $this-&gt;_m_zRange; }
-    public function zValues() { return $this-&gt;_m_zValues; }
-    public function mRange() { return $this-&gt;_m_mRange; }
-    public function mValues() { return $this-&gt;_m_mValues; }
-}
-
-namespace \ShapefileMain;
-
-class PolygonZ extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_boundingBox = new \ShapefileMain\BoundingBoxXY($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_numberOfParts = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_numberOfPoints = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_parts = [];
-        $n = $this-&gt;numberOfParts();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_parts[] = $this-&gt;_io-&gt;readS4le();
-        }
-        $this-&gt;_m_points = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_points[] = new \ShapefileMain\Point($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        $this-&gt;_m_zRange = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_zValues = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_zValues[] = $this-&gt;_io-&gt;readF8le();
-        }
-        $this-&gt;_m_mRange = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_mValues = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_mValues[] = $this-&gt;_io-&gt;readF8le();
-        }
-    }
-    protected $_m_boundingBox;
-    protected $_m_numberOfParts;
-    protected $_m_numberOfPoints;
-    protected $_m_parts;
-    protected $_m_points;
-    protected $_m_zRange;
-    protected $_m_zValues;
-    protected $_m_mRange;
-    protected $_m_mValues;
-    public function boundingBox() { return $this-&gt;_m_boundingBox; }
-    public function numberOfParts() { return $this-&gt;_m_numberOfParts; }
-    public function numberOfPoints() { return $this-&gt;_m_numberOfPoints; }
-    public function parts() { return $this-&gt;_m_parts; }
-    public function points() { return $this-&gt;_m_points; }
-    public function zRange() { return $this-&gt;_m_zRange; }
-    public function zValues() { return $this-&gt;_m_zValues; }
-    public function mRange() { return $this-&gt;_m_mRange; }
-    public function mValues() { return $this-&gt;_m_mValues; }
-}
-
-namespace \ShapefileMain;
-
-class BoundingBoxXY extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_x = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_y = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-    }
-    protected $_m_x;
-    protected $_m_y;
-    public function x() { return $this-&gt;_m_x; }
-    public function y() { return $this-&gt;_m_y; }
-}
-
-namespace \ShapefileMain;
-
-class PointM extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_x = $this-&gt;_io-&gt;readF8le();
-        $this-&gt;_m_y = $this-&gt;_io-&gt;readF8le();
-        $this-&gt;_m_m = $this-&gt;_io-&gt;readF8le();
-    }
-    protected $_m_x;
-    protected $_m_y;
-    protected $_m_m;
-    public function x() { return $this-&gt;_m_x; }
-    public function y() { return $this-&gt;_m_y; }
-    public function m() { return $this-&gt;_m_m; }
-}
-
-namespace \ShapefileMain;
-
-class PolygonM extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_boundingBox = new \ShapefileMain\BoundingBoxXY($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_numberOfParts = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_numberOfPoints = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_parts = [];
-        $n = $this-&gt;numberOfParts();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_parts[] = $this-&gt;_io-&gt;readS4le();
-        }
-        $this-&gt;_m_points = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_points[] = new \ShapefileMain\Point($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        $this-&gt;_m_mRange = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_mValues = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_mValues[] = $this-&gt;_io-&gt;readF8le();
-        }
-    }
-    protected $_m_boundingBox;
-    protected $_m_numberOfParts;
-    protected $_m_numberOfPoints;
-    protected $_m_parts;
-    protected $_m_points;
-    protected $_m_mRange;
-    protected $_m_mValues;
-    public function boundingBox() { return $this-&gt;_m_boundingBox; }
-    public function numberOfParts() { return $this-&gt;_m_numberOfParts; }
-    public function numberOfPoints() { return $this-&gt;_m_numberOfPoints; }
-    public function parts() { return $this-&gt;_m_parts; }
-    public function points() { return $this-&gt;_m_points; }
-    public function mRange() { return $this-&gt;_m_mRange; }
-    public function mValues() { return $this-&gt;_m_mValues; }
-}
-
-namespace \ShapefileMain;
-
-class RecordHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\Record $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_recordNumber = $this-&gt;_io-&gt;readS4be();
-        $this-&gt;_m_contentLength = $this-&gt;_io-&gt;readS4be();
-    }
-    protected $_m_recordNumber;
-    protected $_m_contentLength;
-    public function recordNumber() { return $this-&gt;_m_recordNumber; }
-    public function contentLength() { return $this-&gt;_m_contentLength; }
-}
-
-namespace \ShapefileMain;
-
-class MultiPoint extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_boundingBox = new \ShapefileMain\BoundingBoxXY($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_numberOfPoints = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_points = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_points[] = new \ShapefileMain\Point($this-&gt;_io, $this, $this-&gt;_root);
-        }
-    }
-    protected $_m_boundingBox;
-    protected $_m_numberOfPoints;
-    protected $_m_points;
-    public function boundingBox() { return $this-&gt;_m_boundingBox; }
-    public function numberOfPoints() { return $this-&gt;_m_numberOfPoints; }
-    public function points() { return $this-&gt;_m_points; }
-}
-
-namespace \ShapefileMain;
-
-class FileHeader extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_fileCode = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00\x00\x27\x0A&quot;);
-        $this-&gt;_m_unusedField1 = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00\x00\x00\x00&quot;);
-        $this-&gt;_m_unusedField2 = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00\x00\x00\x00&quot;);
-        $this-&gt;_m_unusedField3 = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00\x00\x00\x00&quot;);
-        $this-&gt;_m_unusedField4 = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00\x00\x00\x00&quot;);
-        $this-&gt;_m_unusedField5 = $this-&gt;_io-&gt;ensureFixedContents(&quot;\x00\x00\x00\x00&quot;);
-        $this-&gt;_m_fileLength = $this-&gt;_io-&gt;readS4be();
-        $this-&gt;_m_version = $this-&gt;_io-&gt;ensureFixedContents(&quot;\xE8\x03\x00\x00&quot;);
-        $this-&gt;_m_shapeType = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_boundingBox = new \ShapefileMain\BoundingBoxXYZM($this-&gt;_io, $this, $this-&gt;_root);
-    }
-    protected $_m_fileCode;
-    protected $_m_unusedField1;
-    protected $_m_unusedField2;
-    protected $_m_unusedField3;
-    protected $_m_unusedField4;
-    protected $_m_unusedField5;
-    protected $_m_fileLength;
-    protected $_m_version;
-    protected $_m_shapeType;
-    protected $_m_boundingBox;
-
-    /**
-     * corresponds to s4be value of 9994
-     */
-    public function fileCode() { return $this-&gt;_m_fileCode; }
-    public function unusedField1() { return $this-&gt;_m_unusedField1; }
-    public function unusedField2() { return $this-&gt;_m_unusedField2; }
-    public function unusedField3() { return $this-&gt;_m_unusedField3; }
-    public function unusedField4() { return $this-&gt;_m_unusedField4; }
-    public function unusedField5() { return $this-&gt;_m_unusedField5; }
-    public function fileLength() { return $this-&gt;_m_fileLength; }
-
-    /**
-     * corresponds to s4le value of 1000
-     */
-    public function version() { return $this-&gt;_m_version; }
-    public function shapeType() { return $this-&gt;_m_shapeType; }
-    public function boundingBox() { return $this-&gt;_m_boundingBox; }
-}
-
-namespace \ShapefileMain;
-
-class PointZ extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_x = $this-&gt;_io-&gt;readF8le();
-        $this-&gt;_m_y = $this-&gt;_io-&gt;readF8le();
-        $this-&gt;_m_z = $this-&gt;_io-&gt;readF8le();
-        $this-&gt;_m_m = $this-&gt;_io-&gt;readF8le();
-    }
-    protected $_m_x;
-    protected $_m_y;
-    protected $_m_z;
-    protected $_m_m;
-    public function x() { return $this-&gt;_m_x; }
-    public function y() { return $this-&gt;_m_y; }
-    public function z() { return $this-&gt;_m_z; }
-    public function m() { return $this-&gt;_m_m; }
-}
-
-namespace \ShapefileMain;
-
-class Record extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_header = new \ShapefileMain\RecordHeader($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_contents = new \ShapefileMain\RecordContents($this-&gt;_io, $this, $this-&gt;_root);
-    }
-    protected $_m_header;
-    protected $_m_contents;
-    public function header() { return $this-&gt;_m_header; }
-
-    /**
-     * the size of this contents section in bytes must equal header.content_length * 2
-     */
-    public function contents() { return $this-&gt;_m_contents; }
-}
-
-namespace \ShapefileMain;
-
-class RecordContents extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\Record $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_shapeType = $this-&gt;_io-&gt;readS4le();
-        if ($this-&gt;shapeType() != \ShapefileMain\ShapeType::NULL_SHAPE) {
-            switch ($this-&gt;shapeType()) {
-                case \ShapefileMain\ShapeType::POINT_M:
-                    $this-&gt;_m_shapeParameters = new \ShapefileMain\PointM($this-&gt;_io, $this, $this-&gt;_root);
-                    break;
-                case \ShapefileMain\ShapeType::POLYGON_Z:
-                    $this-&gt;_m_shapeParameters = new \ShapefileMain\PolygonZ($this-&gt;_io, $this, $this-&gt;_root);
-                    break;
-                case \ShapefileMain\ShapeType::MULTI_POINT_M:
-                    $this-&gt;_m_shapeParameters = new \ShapefileMain\MultiPointM($this-&gt;_io, $this, $this-&gt;_root);
-                    break;
-                case \ShapefileMain\ShapeType::POLY_LINE_Z:
-                    $this-&gt;_m_shapeParameters = new \ShapefileMain\PolyLineZ($this-&gt;_io, $this, $this-&gt;_root);
-                    break;
-                case \ShapefileMain\ShapeType::MULTI_POINT_Z:
-                    $this-&gt;_m_shapeParameters = new \ShapefileMain\MultiPointZ($this-&gt;_io, $this, $this-&gt;_root);
-                    break;
-                case \ShapefileMain\ShapeType::MULTI_POINT:
-                    $this-&gt;_m_shapeParameters = new \ShapefileMain\MultiPoint($this-&gt;_io, $this, $this-&gt;_root);
-                    break;
-                case \ShapefileMain\ShapeType::POLYGON_M:
-                    $this-&gt;_m_shapeParameters = new \ShapefileMain\PolygonM($this-&gt;_io, $this, $this-&gt;_root);
-                    break;
-                case \ShapefileMain\ShapeType::POLYGON:
-                    $this-&gt;_m_shapeParameters = new \ShapefileMain\Polygon($this-&gt;_io, $this, $this-&gt;_root);
-                    break;
-                case \ShapefileMain\ShapeType::POINT:
-                    $this-&gt;_m_shapeParameters = new \ShapefileMain\Point($this-&gt;_io, $this, $this-&gt;_root);
-                    break;
-                case \ShapefileMain\ShapeType::POLY_LINE_M:
-                    $this-&gt;_m_shapeParameters = new \ShapefileMain\PolyLineM($this-&gt;_io, $this, $this-&gt;_root);
-                    break;
-                case \ShapefileMain\ShapeType::POLY_LINE:
-                    $this-&gt;_m_shapeParameters = new \ShapefileMain\PolyLine($this-&gt;_io, $this, $this-&gt;_root);
-                    break;
-                case \ShapefileMain\ShapeType::POINT_Z:
-                    $this-&gt;_m_shapeParameters = new \ShapefileMain\PointZ($this-&gt;_io, $this, $this-&gt;_root);
-                    break;
-                case \ShapefileMain\ShapeType::MULTI_PATCH:
-                    $this-&gt;_m_shapeParameters = new \ShapefileMain\MultiPatch($this-&gt;_io, $this, $this-&gt;_root);
-                    break;
-            }
-        }
-    }
-    protected $_m_shapeType;
-    protected $_m_shapeParameters;
-    public function shapeType() { return $this-&gt;_m_shapeType; }
-    public function shapeParameters() { return $this-&gt;_m_shapeParameters; }
-}
-
-namespace \ShapefileMain;
-
-class MultiPatch extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_boundingBox = new \ShapefileMain\BoundingBoxXY($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_numberOfParts = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_numberOfPoints = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_parts = [];
-        $n = $this-&gt;numberOfParts();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_parts[] = $this-&gt;_io-&gt;readS4le();
-        }
-        $this-&gt;_m_partTypes = [];
-        $n = $this-&gt;numberOfParts();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_partTypes[] = $this-&gt;_io-&gt;readS4le();
-        }
-        $this-&gt;_m_points = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_points[] = new \ShapefileMain\Point($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        $this-&gt;_m_zRange = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_zValues = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_zValues[] = $this-&gt;_io-&gt;readF8le();
-        }
-        $this-&gt;_m_mRange = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_mValues = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_mValues[] = $this-&gt;_io-&gt;readF8le();
-        }
-    }
-    protected $_m_boundingBox;
-    protected $_m_numberOfParts;
-    protected $_m_numberOfPoints;
-    protected $_m_parts;
-    protected $_m_partTypes;
-    protected $_m_points;
-    protected $_m_zRange;
-    protected $_m_zValues;
-    protected $_m_mRange;
-    protected $_m_mValues;
-    public function boundingBox() { return $this-&gt;_m_boundingBox; }
-    public function numberOfParts() { return $this-&gt;_m_numberOfParts; }
-    public function numberOfPoints() { return $this-&gt;_m_numberOfPoints; }
-    public function parts() { return $this-&gt;_m_parts; }
-    public function partTypes() { return $this-&gt;_m_partTypes; }
-    public function points() { return $this-&gt;_m_points; }
-    public function zRange() { return $this-&gt;_m_zRange; }
-    public function zValues() { return $this-&gt;_m_zValues; }
-    public function mRange() { return $this-&gt;_m_mRange; }
-    public function mValues() { return $this-&gt;_m_mValues; }
-}
-
-namespace \ShapefileMain;
-
-class PolyLineM extends \Kaitai\Struct\Struct {
-    public function __construct(\Kaitai\Struct\Stream $_io, \ShapefileMain\RecordContents $_parent = null, \ShapefileMain $_root = null) {
-        parent::__construct($_io, $_parent, $_root);
-        $this-&gt;_read();
-    }
-
-    private function _read() {
-        $this-&gt;_m_boundingBox = new \ShapefileMain\BoundingBoxXY($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_numberOfParts = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_numberOfPoints = $this-&gt;_io-&gt;readS4le();
-        $this-&gt;_m_parts = [];
-        $n = $this-&gt;numberOfParts();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_parts[] = $this-&gt;_io-&gt;readS4le();
-        }
-        $this-&gt;_m_points = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_points[] = new \ShapefileMain\Point($this-&gt;_io, $this, $this-&gt;_root);
-        }
-        $this-&gt;_m_mRange = new \ShapefileMain\BoundsMinMax($this-&gt;_io, $this, $this-&gt;_root);
-        $this-&gt;_m_mValues = [];
-        $n = $this-&gt;numberOfPoints();
-        for ($i = 0; $i &lt; $n; $i++) {
-            $this-&gt;_m_mValues[] = $this-&gt;_io-&gt;readF8le();
-        }
-    }
-    protected $_m_boundingBox;
-    protected $_m_numberOfParts;
-    protected $_m_numberOfPoints;
-    protected $_m_parts;
-    protected $_m_points;
-    protected $_m_mRange;
-    protected $_m_mValues;
-    public function boundingBox() { return $this-&gt;_m_boundingBox; }
-    public function numberOfParts() { return $this-&gt;_m_numberOfParts; }
-    public function numberOfPoints() { return $this-&gt;_m_numberOfPoints; }
-    public function parts() { return $this-&gt;_m_parts; }
-    public function points() { return $this-&gt;_m_points; }
-    public function mRange() { return $this-&gt;_m_mRange; }
-    public function mValues() { return $this-&gt;_m_mValues; }
-}
-
-namespace \ShapefileMain;
-
-class ShapeType {
-    const NULL_SHAPE = 0;
-    const POINT = 1;
-    const POLY_LINE = 3;
-    const POLYGON = 5;
-    const MULTI_POINT = 8;
-    const POINT_Z = 11;
-    const POLY_LINE_Z = 13;
-    const POLYGON_Z = 15;
-    const MULTI_POINT_Z = 18;
-    const POINT_M = 21;
-    const POLY_LINE_M = 23;
-    const POLYGON_M = 25;
-    const MULTI_POINT_M = 28;
-    const MULTI_PATCH = 31;
-}
-
-namespace \ShapefileMain;
-
-class PartType {
-    const TRIANGLE_STRIP = 0;
-    const TRIANGLE_FAN = 1;
-    const OUTER_RING = 2;
-    const INNER_RING = 3;
-    const FIRST_RING = 4;
-    const RING = 5;
-}
-</code></pre>
+            <div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+<span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="k">class</span> <span class="nc">ShapefileMain</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\FileHeader</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_records</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_records</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\Record</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_header</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_records</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * the size of this section of the file in bytes must equal (header.file_length * 2) - 100</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">records</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_records</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">MultiPointM</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain\RecordContents</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundingBoxXY</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mRange</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_boundingBox</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfPoints</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_points</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_mRange</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_mValues</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">boundingBox</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfPoints</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">points</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mRange</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mRange</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mValues</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">BoundingBoxXYZM</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain\FileHeader</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_z</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_m</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_x</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_y</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_z</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_m</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">z</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_z</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">m</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_m</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Point</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_x</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_y</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Polygon</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain\RecordContents</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundingBoxXY</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfParts</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfParts</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_boundingBox</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfParts</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfPoints</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_parts</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_points</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">boundingBox</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfParts</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfParts</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfPoints</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">parts</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">points</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">BoundsMinMax</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_min</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_max</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_min</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_max</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">min</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_min</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">max</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_max</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PolyLine</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain\RecordContents</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundingBoxXY</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfParts</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfParts</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_boundingBox</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfParts</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfPoints</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_parts</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_points</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">boundingBox</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfParts</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfParts</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfPoints</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">parts</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">points</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">MultiPointZ</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain\RecordContents</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundingBoxXY</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zRange</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zValues</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zValues</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mRange</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_boundingBox</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfPoints</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_points</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_zRange</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_zValues</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_mRange</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_mValues</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">boundingBox</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfPoints</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">points</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">zRange</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zRange</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">zValues</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zValues</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mRange</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mRange</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mValues</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PolyLineZ</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain\RecordContents</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundingBoxXY</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfParts</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfParts</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zRange</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zValues</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zValues</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mRange</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_boundingBox</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfParts</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfPoints</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_parts</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_points</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_zRange</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_zValues</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_mRange</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_mValues</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">boundingBox</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfParts</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfParts</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfPoints</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">parts</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">points</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">zRange</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zRange</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">zValues</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zValues</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mRange</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mRange</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mValues</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PolygonZ</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain\RecordContents</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundingBoxXY</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfParts</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfParts</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zRange</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zValues</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zValues</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mRange</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_boundingBox</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfParts</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfPoints</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_parts</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_points</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_zRange</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_zValues</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_mRange</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_mValues</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">boundingBox</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfParts</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfParts</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfPoints</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">parts</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">points</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">zRange</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zRange</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">zValues</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zValues</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mRange</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mRange</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mValues</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">BoundingBoxXY</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_x</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_y</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PointM</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain\RecordContents</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_m</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_x</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_y</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_m</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">m</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_m</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PolygonM</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain\RecordContents</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundingBoxXY</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfParts</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfParts</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mRange</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_boundingBox</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfParts</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfPoints</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_parts</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_points</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_mRange</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_mValues</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">boundingBox</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfParts</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfParts</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfPoints</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">parts</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">points</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mRange</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mRange</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mValues</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">RecordHeader</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain\Record</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_recordNumber</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_contentLength</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_recordNumber</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_contentLength</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">recordNumber</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_recordNumber</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">contentLength</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_contentLength</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">MultiPoint</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain\RecordContents</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundingBoxXY</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_boundingBox</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfPoints</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_points</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">boundingBox</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfPoints</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">points</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">FileHeader</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileCode</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00\x00\x27\x0A</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unusedField1</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00\x00\x00\x00</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unusedField2</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00\x00\x00\x00</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unusedField3</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00\x00\x00\x00</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unusedField4</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00\x00\x00\x00</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unusedField5</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00\x00\x00\x00</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileLength</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4be</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">ensureFixedContents</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\xE8\x03\x00\x00</span><span class="s2">&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundingBoxXYZM</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_fileCode</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_unusedField1</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_unusedField2</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_unusedField3</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_unusedField4</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_unusedField5</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_fileLength</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_version</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_shapeType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_boundingBox</span><span class="p">;</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * corresponds to s4be value of 9994</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fileCode</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileCode</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">unusedField1</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unusedField1</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">unusedField2</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unusedField2</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">unusedField3</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unusedField3</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">unusedField4</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unusedField4</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">unusedField5</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_unusedField5</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">fileLength</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_fileLength</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * corresponds to s4le value of 1000</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">version</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">shapeType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">boundingBox</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PointZ</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain\RecordContents</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_z</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_m</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_x</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_y</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_z</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_m</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">x</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_x</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">y</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_y</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">z</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_z</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">m</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_m</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">Record</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\RecordHeader</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_contents</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\RecordContents</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_header</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_contents</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">header</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_header</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="sd">/**</span>
+<span class="sd">     * the size of this contents section in bytes must equal header.content_length * 2</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">contents</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_contents</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">RecordContents</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain\Record</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">shapeType</span><span class="p">()</span> <span class="o">!=</span> <span class="nx">\ShapefileMain\ShapeType</span><span class="o">::</span><span class="na">NULL_SHAPE</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">shapeType</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="nx">\ShapefileMain\ShapeType</span><span class="o">::</span><span class="na">POINT_M</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeParameters</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\PointM</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\ShapefileMain\ShapeType</span><span class="o">::</span><span class="na">POLYGON_Z</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeParameters</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\PolygonZ</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\ShapefileMain\ShapeType</span><span class="o">::</span><span class="na">MULTI_POINT_M</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeParameters</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\MultiPointM</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\ShapefileMain\ShapeType</span><span class="o">::</span><span class="na">POLY_LINE_Z</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeParameters</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\PolyLineZ</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\ShapefileMain\ShapeType</span><span class="o">::</span><span class="na">MULTI_POINT_Z</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeParameters</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\MultiPointZ</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\ShapefileMain\ShapeType</span><span class="o">::</span><span class="na">MULTI_POINT</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeParameters</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\MultiPoint</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\ShapefileMain\ShapeType</span><span class="o">::</span><span class="na">POLYGON_M</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeParameters</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\PolygonM</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\ShapefileMain\ShapeType</span><span class="o">::</span><span class="na">POLYGON</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeParameters</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\Polygon</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\ShapefileMain\ShapeType</span><span class="o">::</span><span class="na">POINT</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeParameters</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\ShapefileMain\ShapeType</span><span class="o">::</span><span class="na">POLY_LINE_M</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeParameters</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\PolyLineM</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\ShapefileMain\ShapeType</span><span class="o">::</span><span class="na">POLY_LINE</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeParameters</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\PolyLine</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\ShapefileMain\ShapeType</span><span class="o">::</span><span class="na">POINT_Z</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeParameters</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\PointZ</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\ShapefileMain\ShapeType</span><span class="o">::</span><span class="na">MULTI_PATCH</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeParameters</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\MultiPatch</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_shapeType</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_shapeParameters</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">shapeType</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeType</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">shapeParameters</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_shapeParameters</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">MultiPatch</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain\RecordContents</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundingBoxXY</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfParts</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfParts</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_partTypes</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfParts</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_partTypes</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zRange</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zValues</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zValues</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mRange</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_boundingBox</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfParts</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfPoints</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_parts</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_partTypes</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_points</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_zRange</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_zValues</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_mRange</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_mValues</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">boundingBox</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfParts</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfParts</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfPoints</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">parts</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">partTypes</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_partTypes</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">points</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">zRange</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zRange</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">zValues</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_zValues</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mRange</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mRange</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mValues</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PolyLineM</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\ShapefileMain\RecordContents</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\ShapefileMain</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundingBoxXY</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfParts</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfParts</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readS4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\Point</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mRange</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\ShapefileMain\BoundsMinMax</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$n</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">numberOfPoints</span><span class="p">();</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$n</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readF8le</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">protected</span> <span class="nv">$_m_boundingBox</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfParts</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_numberOfPoints</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_parts</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_points</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_mRange</span><span class="p">;</span>
+    <span class="k">protected</span> <span class="nv">$_m_mValues</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">boundingBox</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_boundingBox</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfParts</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfParts</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberOfPoints</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numberOfPoints</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">parts</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_parts</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">points</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_points</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mRange</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mRange</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">mValues</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_mValues</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">ShapeType</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">NULL_SHAPE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">POINT</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">POLY_LINE</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">POLYGON</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MULTI_POINT</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">POINT_Z</span> <span class="o">=</span> <span class="mi">11</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">POLY_LINE_Z</span> <span class="o">=</span> <span class="mi">13</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">POLYGON_Z</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MULTI_POINT_Z</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">POINT_M</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">POLY_LINE_M</span> <span class="o">=</span> <span class="mi">23</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">POLYGON_M</span> <span class="o">=</span> <span class="mi">25</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MULTI_POINT_M</span> <span class="o">=</span> <span class="mi">28</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MULTI_PATCH</span> <span class="o">=</span> <span class="mi">31</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">\ShapefileMain</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">PartType</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="no">TRIANGLE_STRIP</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">TRIANGLE_FAN</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">OUTER_RING</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">INNER_RING</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">FIRST_RING</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">RING</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
         </div>
         
@@ -1015,8 +1012,8 @@ class PartType {
         </div>
     </footer>
 
-  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
-  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+  <script src="https://kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="https://kaitai.io/js/bootstrap.min.js"></script>
 
   <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
